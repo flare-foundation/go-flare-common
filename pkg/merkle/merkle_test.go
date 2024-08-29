@@ -1,8 +1,8 @@
 package merkle_test
 
 import (
-	"flare-common/merkle"
 	"fmt"
+	"gitlab.com/ryancollingham/flare-common/pkg/merkle"
 	"testing"
 
 	"github.com/bradleyjkemp/cupaloy"

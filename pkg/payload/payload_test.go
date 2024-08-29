@@ -1,9 +1,9 @@
 package payload_test
 
 import (
-	"flare-common/database"
-	"flare-common/payload"
 	"fmt"
+	"gitlab.com/ryancollingham/flare-common/pkg/database"
+	"gitlab.com/ryancollingham/flare-common/pkg/payload"
 	"testing"
 
 	"github.com/stretchr/testify/require"

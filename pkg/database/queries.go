@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/hex"
 	"errors"
-	"flare-common/logger"
+	"gitlab.com/ryancollingham/flare-common/pkg/logger"
 	"time"
 
 	"github.com/cenkalti/backoff/v4"

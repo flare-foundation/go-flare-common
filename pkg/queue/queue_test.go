@@ -2,7 +2,7 @@ package queue_test
 
 import (
 	"context"
-	"flare-common/queue"
+	"gitlab.com/ryancollingham/flare-common/pkg/queue"
 	"sync"
 	"testing"
 	"time"
