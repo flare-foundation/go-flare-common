@@ -1,8 +1,8 @@
 package payload_test
 
 import (
-	"flare-common/database"
-	"flare-common/payload"
+	"gitlab.com/ryancollingham/flare-common/pkg/database"
+	"gitlab.com/ryancollingham/flare-common/pkg/payload"
 	"fmt"
 	"testing"
 

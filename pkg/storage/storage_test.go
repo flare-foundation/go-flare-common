@@ -1,7 +1,7 @@
 package storage_test
 
 import (
-	"flare-common/storage"
+	"gitlab.com/ryancollingham/flare-common/pkg/storage"
 	"testing"
 )
 

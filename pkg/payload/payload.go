@@ -4,7 +4,7 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"errors"
-	"flare-common/database"
+	"gitlab.com/ryancollingham/flare-common/pkg/database"
 	"fmt"
 	"strconv"
 	"strings"

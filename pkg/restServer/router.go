@@ -1,7 +1,7 @@
 package restServer
 
 import (
-	"flare-common/logger"
+	"gitlab.com/ryancollingham/flare-common/pkg/logger"
 
 	swagger "github.com/davidebianchi/gswagger"
 	"github.com/davidebianchi/gswagger/support/gorilla"

@@ -1,7 +1,7 @@
 package merkle_test
 
 import (
-	"flare-common/merkle"
+	"gitlab.com/ryancollingham/flare-common/pkg/merkle"
 	"fmt"
 	"testing"
 

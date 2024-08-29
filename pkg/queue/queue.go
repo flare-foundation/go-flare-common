@@ -2,7 +2,7 @@ package queue
 
 import (
 	"context"
-	"flare-common/logger"
+	"gitlab.com/ryancollingham/flare-common/pkg/logger"
 	"time"
 
 	"github.com/cenkalti/backoff/v4"

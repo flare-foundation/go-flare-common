@@ -5,8 +5,8 @@ import (
 	"math/big"
 	"testing"
 
-	"flare-common/database"
-	"flare-common/policy"
+	"gitlab.com/ryancollingham/flare-common/pkg/database"
+	"gitlab.com/ryancollingham/flare-common/pkg/policy"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/require"
