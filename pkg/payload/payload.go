@@ -4,8 +4,8 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"errors"
-	"gitlab.com/ryancollingham/flare-common/pkg/database"
 	"fmt"
+	"gitlab.com/ryancollingham/flare-common/pkg/database"
 	"strconv"
 	"strings"
 
