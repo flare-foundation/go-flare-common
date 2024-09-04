@@ -2,8 +2,8 @@ package payload_test
 
 import (
 	"fmt"
-	"gitlab.com/ryancollingham/flare-common/pkg/database"
-	"gitlab.com/ryancollingham/flare-common/pkg/payload"
+	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/database"
+	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/payload"
 	"testing"
 
 	"github.com/stretchr/testify/require"

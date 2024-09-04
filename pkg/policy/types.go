@@ -1,7 +1,7 @@
 package policy
 
 import (
-	relayContract "gitlab.com/ryancollingham/flare-common/pkg/contracts/relay"
+	relayContract "gitlab.com/flarenetwork/libs/go-flare-common/pkg/contracts/relay"
 	"math/big"
 	"sync"
 

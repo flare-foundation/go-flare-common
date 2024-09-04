@@ -2,7 +2,7 @@ package merkle_test
 
 import (
 	"fmt"
-	"gitlab.com/ryancollingham/flare-common/pkg/merkle"
+	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/merkle"
 	"testing"
 
 	"github.com/bradleyjkemp/cupaloy"

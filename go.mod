@@ -1,4 +1,4 @@
-module gitlab.com/ryancollingham/flare-common
+module gitlab.com/flarenetwork/libs/go-flare-common
 
 go 1.23.0
 

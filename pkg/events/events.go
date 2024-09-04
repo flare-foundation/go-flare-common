@@ -2,7 +2,7 @@ package events
 
 import (
 	"encoding/hex"
-	"gitlab.com/ryancollingham/flare-common/pkg/database"
+	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/database"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
