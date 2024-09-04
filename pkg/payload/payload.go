@@ -5,7 +5,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"gitlab.com/ryancollingham/flare-common/pkg/database"
+	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/database"
 	"strconv"
 	"strings"
 

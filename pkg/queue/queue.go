@@ -2,7 +2,7 @@ package queue
 
 import (
 	"context"
-	"gitlab.com/ryancollingham/flare-common/pkg/logger"
+	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/logger"
 	"time"
 
 	"github.com/cenkalti/backoff/v4"

@@ -2,7 +2,7 @@ package queue_test
 
 import (
 	"context"
-	"gitlab.com/ryancollingham/flare-common/pkg/queue"
+	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/queue"
 	"sync"
 	"testing"
 	"time"

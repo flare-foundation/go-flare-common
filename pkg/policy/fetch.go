@@ -1,10 +1,10 @@
 package policy
 
 import (
-	"gitlab.com/ryancollingham/flare-common/pkg/contracts/relay"
-	"gitlab.com/ryancollingham/flare-common/pkg/database"
-	"gitlab.com/ryancollingham/flare-common/pkg/events"
-	"gitlab.com/ryancollingham/flare-common/pkg/logger"
+	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/contracts/relay"
+	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/database"
+	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/events"
+	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/logger"
 
 	"github.com/ethereum/go-ethereum/common"
 )
