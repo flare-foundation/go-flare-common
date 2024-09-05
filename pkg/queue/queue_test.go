@@ -2,7 +2,6 @@ package queue_test
 
 import (
 	"context"
-	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/queue"
 	"sync"
 	"testing"
 	"time"
@@ -11,6 +10,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/queue"
 )
 
 const (
@@ -256,7 +256,7 @@ func TestMaxAttempts(t *testing.T) {
 
 	q := queue.NewPriority[int](&queue.PriorityQueueParams{Size: size, MaxAttempts: maxAttempts})
 
-	dlq := q.DeadLetterQueue()
+	dlq := q.DeadLetterQueue
 
 	err := q.Enqueue(ctx, 1)
 	require.NoError(t, err)
