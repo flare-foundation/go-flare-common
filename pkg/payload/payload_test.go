@@ -78,7 +78,7 @@ func TestExtractPayloads(t *testing.T) {
 
 		require.True(t, ok, fmt.Sprintf("missing payload in test %d", i))
 
-		require.Equal(t, test.protocol, payloadFTSO.Protocol, fmt.Sprintf("wrong protocol id in test %d", i))
+		require.Equal(t, test.protocol, payloadFTSO.Protocol, fmt.Sprintf("wrong protocol ID in test %d", i))
 
 		require.Equal(t, test.votingRound, payloadFTSO.VotingRound, fmt.Sprintf("wrong voting round in test %d", i))
 
@@ -184,4 +184,71 @@ func TestExtractPayloadsError(t *testing.T) {
 		require.Error(t, err, fmt.Sprintf("error in test %d", i))
 
 	}
+}
+
+func TestBuildMessage(t *testing.T) {
+
+	tests := []struct {
+		protocolID  uint64
+		votingRound uint64
+		payload     string
+		result      string
+	}{
+		{
+			protocolID:  1,
+			votingRound: 1,
+			payload:     "00",
+			result:      "0x0100000001000100",
+		},
+		{
+			protocolID:  255,
+			votingRound: 256,
+			payload:     "110011",
+			result:      "0xff000001000003110011",
+		},
+	}
+
+	for _, test := range tests {
+
+		payloadMsg, err := payload.BuildMessage(test.protocolID, test.votingRound, test.payload)
+
+		require.NoError(t, err)
+
+		require.Equal(t, test.result, payloadMsg)
+	}
+
+}
+
+func TestBuildMessageError(t *testing.T) {
+
+	tests := []struct {
+		protocolID  uint64
+		votingRound uint64
+		payload     string
+	}{
+		{
+			protocolID:  256,
+			votingRound: 1,
+			payload:     "00",
+		},
+		{
+			protocolID:  255,
+			votingRound: 256,
+			payload:     "1100110",
+		},
+		{
+			protocolID:  255,
+			votingRound: 100000000000000,
+			payload:     "110011",
+		},
+	}
+
+	for _, test := range tests {
+
+		_, err := payload.BuildMessage(test.protocolID, test.votingRound, test.payload)
+
+		require.Error(t, err)
+
+	}
+
 }
