@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
+
 	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/database"
 )
 

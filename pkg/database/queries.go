@@ -8,11 +8,11 @@ import (
 
 	"github.com/cenkalti/backoff/v4"
 	"github.com/ethereum/go-ethereum/common"
+
 	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/logger"
+
 	"gorm.io/gorm"
 )
-
-var log = logger.GetLogger()
 
 type LatestLogsParams struct {
 	Address common.Address
@@ -202,7 +202,7 @@ func RetryWrapper[F any, P any](query func(context.Context, *gorm.DB, P) (F, err
 			},
 			backoff.WithContext(backoff.NewExponentialBackOff(backoff.WithMaxElapsedTime(15*time.Second)), ctx),
 			func(err error, duration time.Duration) {
-				log.Errorf("error %s: %v, retrying after %v", errorMsg, err, duration)
+				logger.Errorf("error %s: %v, retrying after %v", errorMsg, err, duration)
 			},
 		)
 

@@ -2,6 +2,7 @@ package policy
 
 import (
 	"github.com/ethereum/go-ethereum/common"
+
 	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/contracts/registry"
 	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/contracts/relay"
 	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/database"
@@ -13,19 +14,17 @@ var RelayFilterer *relay.RelayFilterer
 
 var RegistryFilterer *registry.RegistryFilterer
 
-var log = logger.GetLogger()
-
 func init() {
 	var err error
 	RelayFilterer, err = relay.NewRelayFilterer(common.Address{}, nil)
 	if err != nil {
-		log.Panic(err)
+		logger.Panic(err)
 	}
 
 	RegistryFilterer, err = registry.NewRegistryFilterer(common.Address{}, nil)
 
 	if err != nil {
-		log.Panic(err)
+		logger.Panic(err)
 	}
 }
 

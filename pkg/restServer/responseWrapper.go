@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/schema"
+	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/logger"
 	"gorm.io/gorm"
 )
 
@@ -42,8 +43,8 @@ func WriteAPIResponseError(
 	errorDetails string,
 ) {
 	writeResponseError(w, errorMessage)
-	log.Info(errorMessage)
-	log.Info(errorDetails)
+	logger.Info(errorMessage)
+	logger.Info(errorDetails)
 }
 
 // Decode body from the request into value.

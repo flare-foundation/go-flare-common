@@ -2,6 +2,7 @@ package policy
 
 import (
 	"github.com/ethereum/go-ethereum/common"
+	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/logger"
 )
 
 type VoterData struct {
@@ -33,7 +34,7 @@ func NewVoterSet(voters []common.Address, weights []uint16, SubmitToSigningAddre
 
 	vMap := make(map[common.Address]VoterData)
 	for i, voter := range vs.voters {
-		log.Debugf("New voter: %v", voter)
+		logger.Debugf("New voter: %v", voter)
 
 		if _, ok := vMap[voter]; !ok {
 			vMap[voter] = VoterData{
@@ -44,6 +45,6 @@ func NewVoterSet(voters []common.Address, weights []uint16, SubmitToSigningAddre
 	}
 	vs.VoterDataMap = vMap
 	vs.SubmitToSigningAddress = SubmitToSigningAddress
-	
+
 	return &vs
 }

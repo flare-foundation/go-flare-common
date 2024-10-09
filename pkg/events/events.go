@@ -8,7 +8,7 @@ import (
 	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/database"
 )
 
-// DBLogToChainLog converts a database event log to a chain event log for use in the log decoder.
+// ConvertDatabaseLogToChainLog converts a database event log to a chain event log for use in the log decoder.
 // It only converts the fields used by the abigen log decoder (Topics and Data).
 func ConvertDatabaseLogToChainLog(dbLog database.Log) (*types.Log, error) {
 	data, err := hex.DecodeString(dbLog.Data)

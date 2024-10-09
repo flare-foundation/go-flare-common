@@ -42,12 +42,14 @@ func Build(hashes []common.Hash, initialHash bool) Tree {
 	}
 
 	// Hashes must be sorted to enable binary search.
-	sort.Slice(hashes, func(i, j int) bool {
-		return hashes[i].Hex() < hashes[j].Hex()
+	sortedHashes := make([]common.Hash, n)
+	copy(sortedHashes, hashes)
+	sort.Slice(sortedHashes, func(i, j int) bool {
+		return sortedHashes[i].Hex() < sortedHashes[j].Hex()
 	})
 
 	tree := make([]common.Hash, n-1, (2*n)-1)
-	tree = append(tree, hashes...)
+	tree = append(tree, sortedHashes...)
 
 	for i := n - 2; i >= 0; i-- {
 		tree[i] = SortedHashPair(tree[2*i+1], tree[2*i+2])

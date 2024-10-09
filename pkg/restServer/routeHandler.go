@@ -143,17 +143,3 @@ func createRequestBodyDescription(bodyObject interface{}) *swagger.ContentValue 
 		},
 	}
 }
-
-// // Create openapi request body description from a struct
-// func createResponseBodyDescription[R interface{}](respObject interface{}, responseCode int) map[int]swagger.ContentValue {
-// 	if respObject == nil {
-// 		return nil
-// 	}
-// 	return map[int]swagger.ContentValue{
-// 		responseCode: {
-// 			Content: swagger.Content{
-// 				"application/json": {Value: ApiResponseWrapper[R]{Data: respObject}},
-// 			},
-// 		},
-// 	}
-// }
