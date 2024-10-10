@@ -20,28 +20,29 @@ var (
 )
 
 func init() {
-	sugaredLogger = createSugaredLogger(DefaultLoggerConfig())
+	sugaredLogger = createSugared(DefaultConfig())
 }
 
-type LoggerConfig struct {
+type Config struct {
 	Level       string `toml:"level"` // valid values are: DEBUG, INFO, WARN, ERROR, DPANIC, PANIC, FATAL (zap)
 	File        string `toml:"file"`
 	MaxFileSize int    `toml:"max_file_size"` // In megabytes
 	Console     bool   `toml:"console"`
 }
 
-func DefaultLoggerConfig() LoggerConfig {
-	return LoggerConfig{
+func DefaultConfig() Config {
+	return Config{
 		Level:   "DEBUG",
 		Console: true,
 	}
 }
 
-func SetLogger(config LoggerConfig) {
-	createSugaredLogger(config)
+// Set configures logger according to Config.
+func Set(cfg Config) {
+	createSugared(cfg)
 }
 
-func createSugaredLogger(config LoggerConfig) *zap.SugaredLogger {
+func createSugared(config Config) *zap.SugaredLogger {
 	atom := zap.NewAtomicLevel()
 	cores := make([]zapcore.Core, 0)
 	if config.Console {
@@ -74,7 +75,7 @@ func createSugaredLogger(config LoggerConfig) *zap.SugaredLogger {
 	return sugaredLogger
 }
 
-func createFileLoggerCore(config LoggerConfig, atom zap.AtomicLevel) zapcore.Core {
+func createFileLoggerCore(config Config, atom zap.AtomicLevel) zapcore.Core {
 	w := zapcore.AddSync(&lumberjack.Logger{
 		Filename: config.File,
 		MaxSize:  config.MaxFileSize,
@@ -112,50 +113,70 @@ func fileLevelEncoder(l zapcore.Level, enc zapcore.PrimitiveArrayEncoder) {
 	enc.AppendString(l.CapitalString())
 }
 
-func Warnf(msg string, args ...interface{}) {
-	sugaredLogger.Warnf(msg, args...)
-}
-
-func Errorf(msg string, args ...interface{}) {
-	sugaredLogger.Errorf(msg, args...)
-}
-
-func Infof(msg string, args ...interface{}) {
-	sugaredLogger.Infof(msg, args...)
-}
-
+// Debugf formats the message and logs it at DEBUG level.
 func Debugf(msg string, args ...interface{}) {
 	sugaredLogger.Debugf(msg, args...)
 }
 
-func Fatalf(msg string, args ...interface{}) {
-	sugaredLogger.Fatalf(msg, args...)
+// Infof formats the message and logs it at INFO level.
+func Infof(msg string, args ...interface{}) {
+	sugaredLogger.Infof(msg, args...)
 }
 
+// Warnf formats the message and logs it at WARN level.
+func Warnf(msg string, args ...interface{}) {
+	sugaredLogger.Warnf(msg, args...)
+}
+
+// Errorf formats the message and logs it at ERROR level.
+func Errorf(msg string, args ...interface{}) {
+	sugaredLogger.Errorf(msg, args...)
+}
+
+// Panicf formats the message and logs it at PANIC level and panics.
+//
+// Defers will be executed.
 func Panicf(msg string, args ...interface{}) {
 	sugaredLogger.Panicf(msg, args...)
 }
 
-func Warn(args ...interface{}) {
-	sugaredLogger.Warn(args...)
+// Fatalf formats the message and logs it at FATAL level and calls os.Exit.
+//
+// Defers will not be executed.
+func Fatalf(msg string, args ...interface{}) {
+	sugaredLogger.Fatalf(msg, args...)
 }
 
-func Error(args ...interface{}) {
-	sugaredLogger.Error(args...)
-}
-
-func Info(args ...interface{}) {
-	sugaredLogger.Info(args...)
-}
-
+// Debug logs arguments at DEBUG level.
 func Debug(args ...interface{}) {
 	sugaredLogger.Debug(args...)
 }
 
-func Fatal(args ...interface{}) {
-	sugaredLogger.Fatal(args...)
+// Info logs arguments at INFO level.
+func Info(args ...interface{}) {
+	sugaredLogger.Info(args...)
 }
 
+// Warn logs arguments at WARN level.
+func Warn(args ...interface{}) {
+	sugaredLogger.Warn(args...)
+}
+
+// Error logs arguments at ERROR level.
+func Error(args ...interface{}) {
+	sugaredLogger.Error(args...)
+}
+
+// Panic logs arguments at PANIC level and panics.
+//
+// Defers will be executed.
 func Panic(args ...interface{}) {
 	sugaredLogger.Panic(args...)
+}
+
+// Fatal logs arguments at FATAL level  and calls os.Exit.
+//
+// Defers will not be executed.
+func Fatal(args ...interface{}) {
+	sugaredLogger.Fatal(args...)
 }
