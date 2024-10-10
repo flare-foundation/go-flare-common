@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-type DBConfig struct {
+type Config struct {
 	Host       string `toml:"host" envconfig:"DB_HOST"`
 	Port       int    `toml:"port" envconfig:"DB_PORT"`
 	Database   string `toml:"database" envconfig:"DB_DATABASE"`
@@ -18,8 +18,8 @@ type DBConfig struct {
 	LogQueries bool   `toml:"log_queries"`
 }
 
-func Connect(cfg *DBConfig) (*gorm.DB, error) {
-	// Connect to the database
+// Connect returns a gorm.DB specified in the config.
+func Connect(cfg *Config) (*gorm.DB, error) {
 	dbConfig := mysql.Config{
 		User:                 cfg.Username,
 		Passwd:               cfg.Password,
