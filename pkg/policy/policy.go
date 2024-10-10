@@ -20,6 +20,10 @@ type SigningPolicy struct {
 	Voters *voters.Set
 }
 
+func (sp SigningPolicy) RawBytes() []byte {
+	return sp.rawBytes
+}
+
 func NewSigningPolicy(r *relay.RelaySigningPolicyInitialized, submitToSigning map[common.Address]common.Address) *SigningPolicy {
 	return &SigningPolicy{
 		RewardEpochID:      r.RewardEpochId.Int64(),
