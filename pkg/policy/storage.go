@@ -7,7 +7,7 @@ import (
 	"sync"
 )
 
-type SigningPolicyStorage struct {
+type Storage struct {
 
 	// sorted list of signing policies, sorted by rewardEpochID (and also by startVotingRoundID)
 	spList []*SigningPolicy
@@ -16,15 +16,15 @@ type SigningPolicyStorage struct {
 	sync.Mutex
 }
 
-func NewStorage() *SigningPolicyStorage {
-	return &SigningPolicyStorage{
+func NewStorage() *Storage {
+	return &Storage{
 		spList: make([]*SigningPolicy, 0, 10),
 	}
 }
 
 // Does not lock the structure, should be called from a function that does lock.
 // We assume that the list is sorted by rewardEpochID and also by startVotingRoundID.
-func (s *SigningPolicyStorage) findByVotingRoundID(votingRoundID uint32) *SigningPolicy {
+func (s *Storage) findByVotingRoundID(votingRoundID uint32) *SigningPolicy {
 	i, found := sort.Find(len(s.spList), func(i int) int {
 		return cmp.Compare(votingRoundID, s.spList[i].startVotingRoundID)
 	})
@@ -37,7 +37,7 @@ func (s *SigningPolicyStorage) findByVotingRoundID(votingRoundID uint32) *Signin
 	return s.spList[i-1]
 }
 
-func (s *SigningPolicyStorage) Add(sp *SigningPolicy) error {
+func (s *Storage) Add(sp *SigningPolicy) error {
 	s.Lock()
 	defer s.Unlock()
 
@@ -59,7 +59,7 @@ func (s *SigningPolicyStorage) Add(sp *SigningPolicy) error {
 
 // Return the signing policy for the voting round, or nil if not found.
 // Also returns true if the policy is the last one or false otherwise.
-func (s *SigningPolicyStorage) ForVotingRound(votingRoundID uint32) (*SigningPolicy, bool) {
+func (s *Storage) ForVotingRound(votingRoundID uint32) (*SigningPolicy, bool) {
 	s.Lock()
 	defer s.Unlock()
 
@@ -72,7 +72,7 @@ func (s *SigningPolicyStorage) ForVotingRound(votingRoundID uint32) (*SigningPol
 
 // RemoveBefore removes all signing policies that ended strictly before votingRoundID.
 // Returns the list of removed reward epoch ids.
-func (s *SigningPolicyStorage) RemoveBefore(votingRoundID uint32) []uint32 {
+func (s *Storage) RemoveBefore(votingRoundID uint32) []uint32 {
 	s.Lock()
 	defer s.Unlock()
 
@@ -83,4 +83,14 @@ func (s *SigningPolicyStorage) RemoveBefore(votingRoundID uint32) []uint32 {
 		s.spList = s.spList[1:]
 	}
 	return removedRewardEpochIDs
+}
+
+func (s *Storage) OldestStored() *SigningPolicy {
+	s.Lock()
+	defer s.Unlock()
+
+	if len(s.spList) == 0 {
+		return nil
+	}
+	return s.spList[0]
 }

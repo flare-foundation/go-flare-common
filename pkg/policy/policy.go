@@ -5,6 +5,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/contracts/relay"
+	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/voters"
 )
 
 type SigningPolicy struct {
@@ -16,7 +17,7 @@ type SigningPolicy struct {
 	blockTimestamp     uint64
 
 	// The set of all Voters and their weights
-	Voters *VoterSet
+	Voters *voters.Set
 }
 
 func NewSigningPolicy(r *relay.RelaySigningPolicyInitialized, submitToSigning map[common.Address]common.Address) *SigningPolicy {
@@ -27,6 +28,6 @@ func NewSigningPolicy(r *relay.RelaySigningPolicyInitialized, submitToSigning ma
 		seed:               r.Seed,
 		rawBytes:           r.SigningPolicyBytes,
 		blockTimestamp:     r.Timestamp,
-		Voters:             NewVoterSet(r.Voters, r.Weights, submitToSigning),
+		Voters:             voters.NewSet(r.Voters, r.Weights, submitToSigning),
 	}
 }
