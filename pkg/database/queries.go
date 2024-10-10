@@ -160,9 +160,30 @@ func fetchTransactionsByAddressAndSelectorBlockNumber(ctx context.Context, db *g
 	return transactions, nil
 }
 
+// FetchTransactionsByAddressAndSelectorBlockNumber fetches all transactions matching ToAddress and FunctionSel with blockNumber higher than From, order by timestamp.
+func FetchTransactionsByAddressAndSelectorFromBlockNumber(ctx context.Context, db *gorm.DB, params TxParams) ([]Transaction, error) {
+	return RetryWrapper(fetchTransactionsByAddressAndSelectorFromBlockNumber, "fetching transactions")(ctx, db, params)
+}
+
+func fetchTransactionsByAddressAndSelectorFromBlockNumber(ctx context.Context, db *gorm.DB, params TxParams) ([]Transaction, error) {
+	var transactions []Transaction
+
+	err := db.WithContext(ctx).Where(
+		"to_address = ? AND function_sig = ? AND block_number > ?",
+		hex.EncodeToString(params.ToAddress[:]), // encodes without 0x prefix and without checksum
+		hex.EncodeToString(params.FunctionSel[:]),
+		params.From,
+	).Order("timestamp").Find(&transactions).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return transactions, nil
+}
+
 // FetchState returns the state of the indexer database.
 func FetchState(ctx context.Context, db *gorm.DB, _ any) (State, error) {
-	return RetryWrapper(fetchState, "fetching, state")(ctx, db, nil)
+	return RetryWrapper(fetchState, "fetching state")(ctx, db, nil)
 
 }
 
