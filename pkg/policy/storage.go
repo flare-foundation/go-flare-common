@@ -26,7 +26,7 @@ func NewStorage() *Storage {
 // We assume that the list is sorted by rewardEpochID and also by startVotingRoundID.
 func (s *Storage) findByVotingRoundID(votingRoundID uint32) *SigningPolicy {
 	i, found := sort.Find(len(s.spList), func(i int) int {
-		return cmp.Compare(votingRoundID, s.spList[i].startVotingRoundID)
+		return cmp.Compare(votingRoundID, s.spList[i].StartVotingRoundID)
 	})
 	if found {
 		return s.spList[i]
@@ -47,7 +47,7 @@ func (s *Storage) Add(sp *SigningPolicy) error {
 			return fmt.Errorf("missing signing policy for reward epoch ID %d", sp.RewardEpochID-1)
 		}
 		// should be sorted by voting round ID, should not happen
-		if sp.startVotingRoundID < s.spList[len(s.spList)-1].startVotingRoundID {
+		if sp.StartVotingRoundID < s.spList[len(s.spList)-1].StartVotingRoundID {
 			return fmt.Errorf("signing policy for reward epoch ID %d has larger start voting round ID than previous policy",
 				sp.RewardEpochID)
 		}
@@ -77,7 +77,7 @@ func (s *Storage) RemoveBefore(votingRoundID uint32) []uint32 {
 	defer s.Unlock()
 
 	var removedRewardEpochIDs []uint32
-	for len(s.spList) > 1 && s.spList[1].startVotingRoundID < votingRoundID {
+	for len(s.spList) > 1 && s.spList[1].StartVotingRoundID < votingRoundID {
 		removedRewardEpochIDs = append(removedRewardEpochIDs, uint32(s.spList[0].RewardEpochID))
 		s.spList[0] = nil
 		s.spList = s.spList[1:]

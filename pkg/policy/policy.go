@@ -10,7 +10,7 @@ import (
 
 type SigningPolicy struct {
 	RewardEpochID      int64
-	startVotingRoundID uint32
+	StartVotingRoundID uint32
 	threshold          uint16
 	seed               *big.Int
 	rawBytes           []byte
@@ -27,7 +27,7 @@ func (sp SigningPolicy) RawBytes() []byte {
 func NewSigningPolicy(r *relay.RelaySigningPolicyInitialized, submitToSigning map[common.Address]common.Address) *SigningPolicy {
 	return &SigningPolicy{
 		RewardEpochID:      r.RewardEpochId.Int64(),
-		startVotingRoundID: r.StartVotingRoundId,
+		StartVotingRoundID: r.StartVotingRoundId,
 		threshold:          r.Threshold,
 		seed:               r.Seed,
 		rawBytes:           r.SigningPolicyBytes,
