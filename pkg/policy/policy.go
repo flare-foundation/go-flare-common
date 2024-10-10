@@ -12,7 +12,7 @@ type SigningPolicy struct {
 	RewardEpochID      int64
 	StartVotingRoundID uint32
 	Threshold          uint16
-	seed               *big.Int
+	Seed               *big.Int
 	rawBytes           []byte
 	blockTimestamp     uint64
 
@@ -29,7 +29,7 @@ func NewSigningPolicy(r *relay.RelaySigningPolicyInitialized, submitToSigning ma
 		RewardEpochID:      r.RewardEpochId.Int64(),
 		StartVotingRoundID: r.StartVotingRoundId,
 		Threshold:          r.Threshold,
-		seed:               r.Seed,
+		Seed:               r.Seed,
 		rawBytes:           r.SigningPolicyBytes,
 		blockTimestamp:     r.Timestamp,
 		Voters:             voters.NewSet(r.Voters, r.Weights, submitToSigning),
