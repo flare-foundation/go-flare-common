@@ -1,6 +1,8 @@
 package policy
 
 import (
+	"log"
+
 	"github.com/ethereum/go-ethereum/common"
 
 	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/contracts/registry"
@@ -25,6 +27,12 @@ func init() {
 
 	if err != nil {
 		logger.Panic(err)
+	}
+
+	RegistryFilterer, err = registry.NewRegistryFilterer(common.Address{}, nil)
+
+	if err != nil {
+		log.Panic(err)
 	}
 }
 

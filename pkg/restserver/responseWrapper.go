@@ -7,7 +7,9 @@ import (
 	"net/http"
 
 	"github.com/gorilla/schema"
+
 	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/logger"
+
 	"gorm.io/gorm"
 )
 

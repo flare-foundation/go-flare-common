@@ -85,6 +85,7 @@ func (s *Storage) RemoveBefore(votingRoundID uint32) []uint32 {
 	return removedRewardEpochIDs
 }
 
+// OldestStored returns the oldest signing policy that is in the storage or nil if the storage is empty.
 func (s *Storage) OldestStored() *SigningPolicy {
 	s.Lock()
 	defer s.Unlock()
