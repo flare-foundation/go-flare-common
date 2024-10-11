@@ -83,9 +83,6 @@ func TestExtractPayloads(t *testing.T) {
 		require.Equal(t, test.protocol, payloadFTSO.ProtocolID, fmt.Sprintf("wrong protocol ID in test %d", i))
 
 		require.Equal(t, test.votingRound, payloadFTSO.VotingRound, fmt.Sprintf("wrong voting round in test %d", i))
-
-		require.Equal(t, test.length, payloadFTSO.Length)
-
 	}
 
 }

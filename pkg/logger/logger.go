@@ -30,6 +30,10 @@ type Config struct {
 	Console     bool   `toml:"console"`
 }
 
+// DefaultConfig is:
+//
+//	Level: "DEBUG"
+//	Console: true
 func DefaultConfig() Config {
 	return Config{
 		Level:   "DEBUG",

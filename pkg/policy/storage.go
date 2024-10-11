@@ -7,9 +7,9 @@ import (
 	"sync"
 )
 
+// Storage stores signingPolicies.
 type Storage struct {
-
-	// sorted list of signing policies, sorted by rewardEpochID (and also by startVotingRoundID)
+	// sorted list of signingPolicies, sorted by rewardEpochID (and also by startVotingRoundID)
 	spList []*SigningPolicy
 
 	// mutex
@@ -37,6 +37,8 @@ func (s *Storage) findByVotingRoundID(votingRoundID uint32) *SigningPolicy {
 	return s.spList[i-1]
 }
 
+// Add adds a signingPolicy to the storage.
+// The added signingPolicy must be a successor of the latest signingPolicy in the storage.
 func (s *Storage) Add(sp *SigningPolicy) error {
 	s.Lock()
 	defer s.Unlock()
@@ -57,7 +59,7 @@ func (s *Storage) Add(sp *SigningPolicy) error {
 	return nil
 }
 
-// Return the signing policy for the voting round, or nil if not found.
+// Return the signingPolicy for the voting round, or nil if not found.
 // Also returns true if the policy is the last one or false otherwise.
 func (s *Storage) ForVotingRound(votingRoundID uint32) (*SigningPolicy, bool) {
 	s.Lock()
@@ -70,7 +72,7 @@ func (s *Storage) ForVotingRound(votingRoundID uint32) (*SigningPolicy, bool) {
 	return sp, sp.RewardEpochID == s.spList[len(s.spList)-1].RewardEpochID
 }
 
-// RemoveBefore removes all signing policies that ended strictly before votingRoundID.
+// RemoveBefore removes all signingPolicies that ended strictly before votingRoundID.
 // Returns the list of removed reward epoch ids.
 func (s *Storage) RemoveBefore(votingRoundID uint32) []uint32 {
 	s.Lock()
@@ -85,7 +87,7 @@ func (s *Storage) RemoveBefore(votingRoundID uint32) []uint32 {
 	return removedRewardEpochIDs
 }
 
-// OldestStored returns the oldest signing policy that is in the storage or nil if the storage is empty.
+// OldestStored returns the oldest signingPolicy that is in the storage or nil if the storage is empty.
 func (s *Storage) OldestStored() *SigningPolicy {
 	s.Lock()
 	defer s.Unlock()

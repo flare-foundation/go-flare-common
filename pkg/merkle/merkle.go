@@ -14,7 +14,7 @@ var (
 	ErrHashNotFound = errors.New("hash not found")
 )
 
-// Tree implementation with helper functions.
+// Merkle Tree implementation with helper functions.
 type Tree []common.Hash
 
 // NewFromHex creates a new Merkle tree from the given hex values. It is
@@ -150,6 +150,8 @@ func parent(i int) int {
 	return (i - 1) / 2
 }
 
+// GetProofFromHash returns the proof that hash is stored in a leaf of the tree.
+// Returns nil if hash is not stored in the tree.
 func (t Tree) GetProofFromHash(hash common.Hash) ([]common.Hash, error) {
 	i, err := t.binarySearch(hash)
 	if err != nil {
@@ -172,7 +174,7 @@ func (t Tree) binarySearch(hash common.Hash) (int, error) {
 	return 0, ErrHashNotFound
 }
 
-// VerifyProof verifies a Merkle proof for a given leaf.
+// VerifyProof verifies a Merkle proof for a given leaf against the Merkle root.
 func VerifyProof(leaf common.Hash, proof []common.Hash, root common.Hash) bool {
 	hash := leaf
 	for _, pair := range proof {

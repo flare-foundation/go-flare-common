@@ -2,21 +2,21 @@ package database
 
 import "time"
 
-// Abstract entity, all other entities should be derived from it
+// Abstract entity, all other entities should be derived from it.
 type BaseEntity struct {
 	ID uint64 `gorm:"primaryKey"`
 }
 
-// Should be synchronized with the flare-ftso-indexer project
+// Should be synchronized with the the c-chain indexer.
 type State struct {
 	BaseEntity
-	Name           string `gorm:"type:varchar(50);index"`
+	Name           string `gorm:"type:varchar(50);index"` // first_database_block", “last_database_block”, or “last_chain_block”
 	Index          uint64 // blockNumber
 	BlockTimestamp uint64
 	Updated        time.Time
 }
 
-// Should be synchronized with the flare-ftso-indexer project
+// Should be synchronized with the c-chain indexer.
 type Transaction struct {
 	BaseEntity
 	Hash             string `gorm:"type:varchar(64);index;unique"`
@@ -34,10 +34,10 @@ type Transaction struct {
 	Timestamp        uint64 `gorm:"index"`
 }
 
-// Should be synchronized with the flare-ftso-indexer project
+// Should be synchronized with the the c-chain indexer.
 type Log struct {
 	BaseEntity
-	TransactionID   uint64       `gorm:"default:null"`
+	TransactionID   uint64       `gorm:"default:null"` // database ID of the transaction, should not be confused wit the hash of the transaction
 	Transaction     *Transaction `gorm:"foreignKey:TransactionID;references:ID;constraint:OnUpdate:CASCADE"`
 	Address         string       `gorm:"type:varchar(40);index"`
 	Data            string       `gorm:"type:string"`

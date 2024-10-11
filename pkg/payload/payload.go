@@ -25,11 +25,10 @@ type Message struct {
 	Timestamp        uint64
 	BlockNumber      uint64
 	TransactionIndex uint64
-	Length           uint16 //length of payload in bytes
 	Payload          []byte
 }
 
-// ExtractPayloads extracts Payloads from transactions to submission contract to functions submit1, submit2, submitSignatures.
+// ExtractPayloads extracts Payloads from transactions to submission contract to functions submit1, submit2, submitSignatures and builds a map protocolID -> payload message.
 func ExtractPayloads(tx *database.Transaction) (map[uint8]Message, error) {
 	messages := make(map[uint8]Message)
 
@@ -68,7 +67,6 @@ func ExtractPayloads(tx *database.Transaction) (map[uint8]Message, error) {
 			Timestamp:        tx.Timestamp,
 			BlockNumber:      tx.BlockNumber,
 			TransactionIndex: tx.TransactionIndex,
-			Length:           length,
 			Payload:          payload,
 		}
 
