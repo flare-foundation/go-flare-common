@@ -1,4 +1,4 @@
-# Go Flare Common
+# Go Flare Common V0
 
 Golang packages that are used across multiple Flare projects.
 
