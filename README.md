@@ -1,18 +1,16 @@
-# Flare Common
+# Go Flare Common
 
-This folder should eventually become a library. It contains components that are used in multiple projects, and can be mainlined, tested and audited only once.  
+Golang packages that are used across multiple Flare projects.
 
-This contains:
+Contains the following packages:
 
-* Merkle tree implementation
-* Database Client
-    * connection to database and 
-* Event decoding/encoding
-* Calldata array encoding/decoding
-* voting/reward epoch timings 
-* Server-utils
-    * Implements all utility/helper methods that are used by the server such us
-    * how to properly define typed endpoints (swagger)
-    * authentication logic
-    * cors protection 
-* ABI encoding / decoding
+    - database: connecting and reading the c-chain indexer database
+    - events: parsing event logs as stored in c-chain indexer database
+    - logger: logging solution
+    - merkle: Merkle tree implementation
+    - payload: working with transaction inputs to submission contract
+    - policy: storing and parsing signing policies
+    - queue: an implementation of a priority queue with two lanes
+    - restserver
+    - storage: an implementation of a cyclic storage
+    - voters: working with Flare entities
