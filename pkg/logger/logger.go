@@ -41,6 +41,10 @@ func DefaultConfig() Config {
 	}
 }
 
+func GetLogger() *zap.SugaredLogger {
+	return sugaredLogger
+}
+
 // Set configures logger according to Config.
 func Set(cfg Config) {
 	createSugared(cfg)
