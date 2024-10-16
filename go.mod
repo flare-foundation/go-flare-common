@@ -1,4 +1,4 @@
-module github.com/flare-fundation/go-flare-common
+module github.com/flare-foundation/go-flare-common
 
 go 1.23.0
 

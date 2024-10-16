@@ -7,7 +7,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/flare-fundation/go-flare-common/pkg/logger"
+	"github.com/flare-foundation/go-flare-common/pkg/logger"
 )
 
 type VoterData struct {

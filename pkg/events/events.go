@@ -5,7 +5,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/flare-fundation/go-flare-common/pkg/database"
+	"github.com/flare-foundation/go-flare-common/pkg/database"
 )
 
 // ConvertDatabaseLogToChainLog converts a database event log to a chain event log for use in the log decoder.

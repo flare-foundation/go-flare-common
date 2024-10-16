@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff/v4"
-	"github.com/flare-fundation/go-flare-common/pkg/logger"
+	"github.com/flare-foundation/go-flare-common/pkg/logger"
 )
 
 const defaultMaxAttempts uint64 = 10

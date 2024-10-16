@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/flare-fundation/go-flare-common/pkg/database"
-	"github.com/flare-fundation/go-flare-common/pkg/payload"
+	"github.com/flare-foundation/go-flare-common/pkg/database"
+	"github.com/flare-foundation/go-flare-common/pkg/payload"
 	"github.com/stretchr/testify/require"
 )
 

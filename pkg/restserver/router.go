@@ -3,7 +3,7 @@ package restserver
 import (
 	swagger "github.com/davidebianchi/gswagger"
 	"github.com/davidebianchi/gswagger/support/gorilla"
-	"github.com/flare-fundation/go-flare-common/pkg/logger"
+	"github.com/flare-foundation/go-flare-common/pkg/logger"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/gorilla/mux"
 	"github.com/swaggest/swgui"

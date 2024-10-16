@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/flare-fundation/go-flare-common/pkg/database"
-	"github.com/flare-fundation/go-flare-common/pkg/policy"
+	"github.com/flare-foundation/go-flare-common/pkg/database"
+	"github.com/flare-foundation/go-flare-common/pkg/policy"
 	"github.com/stretchr/testify/require"
 )
 

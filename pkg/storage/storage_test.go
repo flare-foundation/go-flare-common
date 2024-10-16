@@ -3,7 +3,7 @@ package storage_test
 import (
 	"testing"
 
-	"github.com/flare-fundation/go-flare-common/pkg/storage"
+	"github.com/flare-foundation/go-flare-common/pkg/storage"
 )
 
 func TestCyclicSimple(t *testing.T) {

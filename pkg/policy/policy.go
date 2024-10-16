@@ -4,8 +4,8 @@ import (
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/flare-fundation/go-flare-common/pkg/contracts/relay"
-	"github.com/flare-fundation/go-flare-common/pkg/voters"
+	"github.com/flare-foundation/go-flare-common/pkg/contracts/relay"
+	"github.com/flare-foundation/go-flare-common/pkg/voters"
 )
 
 type SigningPolicy struct {
