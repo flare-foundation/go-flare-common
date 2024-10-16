@@ -7,10 +7,10 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff/v4"
+	"github.com/flare-fundation/go-flare-common/pkg/queue"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/queue"
 )
 
 const (

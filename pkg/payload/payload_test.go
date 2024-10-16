@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/flare-fundation/go-flare-common/pkg/database"
+	"github.com/flare-fundation/go-flare-common/pkg/payload"
 	"github.com/stretchr/testify/require"
-	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/database"
-	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/payload"
 )
 
 var tx = &database.Transaction{

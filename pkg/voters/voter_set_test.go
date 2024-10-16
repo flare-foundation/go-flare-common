@@ -9,7 +9,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/require"
 
-	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/voters"
+	"github.com/flare-fundation/go-flare-common/pkg/voters"
 )
 
 var (

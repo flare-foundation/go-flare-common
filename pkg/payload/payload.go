@@ -9,7 +9,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 
-	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/database"
+	"github.com/flare-fundation/go-flare-common/pkg/database"
 )
 
 type Round struct {

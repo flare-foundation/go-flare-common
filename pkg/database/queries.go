@@ -9,7 +9,7 @@ import (
 	"github.com/cenkalti/backoff/v4"
 	"github.com/ethereum/go-ethereum/common"
 
-	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/logger"
+	"github.com/flare-fundation/go-flare-common/pkg/logger"
 
 	"gorm.io/gorm"
 )

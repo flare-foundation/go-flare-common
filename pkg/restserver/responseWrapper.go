@@ -8,7 +8,7 @@ import (
 
 	"github.com/gorilla/schema"
 
-	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/logger"
+	"github.com/flare-fundation/go-flare-common/pkg/logger"
 
 	"gorm.io/gorm"
 )

@@ -6,9 +6,9 @@ import (
 
 	"github.com/bradleyjkemp/cupaloy"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/flare-fundation/go-flare-common/pkg/merkle"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/merkle"
 )
 
 func TestEmptyTree(t *testing.T) {

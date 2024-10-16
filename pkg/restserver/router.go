@@ -3,11 +3,11 @@ package restserver
 import (
 	swagger "github.com/davidebianchi/gswagger"
 	"github.com/davidebianchi/gswagger/support/gorilla"
+	"github.com/flare-fundation/go-flare-common/pkg/logger"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/gorilla/mux"
 	"github.com/swaggest/swgui"
 	v3 "github.com/swaggest/swgui/v3"
-	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/logger"
 )
 
 type Router interface {

@@ -5,11 +5,11 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 
-	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/contracts/registry"
-	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/contracts/relay"
-	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/database"
-	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/events"
-	"gitlab.com/flarenetwork/libs/go-flare-common/pkg/logger"
+	"github.com/flare-fundation/go-flare-common/pkg/contracts/registry"
+	"github.com/flare-fundation/go-flare-common/pkg/contracts/relay"
+	"github.com/flare-fundation/go-flare-common/pkg/database"
+	"github.com/flare-fundation/go-flare-common/pkg/events"
+	"github.com/flare-fundation/go-flare-common/pkg/logger"
 )
 
 var RelayFilterer *relay.RelayFilterer
