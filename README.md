@@ -14,3 +14,4 @@ Contains the following packages:
     - restserver
     - storage: an implementation of a cyclic storage
     - voters: working with Flare entities
+    - abigen binding for Flare contracts (generated using [abigen](https://geth.ethereum.org/docs/tools/abigen))

@@ -1,2 +1,2 @@
-//go:generate  abigen --abi=contracts/fdc/fdchub.abi --pkg=fdchub --type=FdcHub --out=contracts/fdc/autogen.go
+//go:generate  abigen --abi=pkg/contracts/fdchub/fdchub.abi --pkg=fdchub --type=FdcHub --out=pkg/contracts/fdchub/autogen.go
 package fdchub
