@@ -50,7 +50,7 @@ func (s *Storage) Add(sp *SigningPolicy) error {
 		}
 		// should be sorted by voting round ID, should not happen
 		if sp.StartVotingRoundID < s.spList[len(s.spList)-1].StartVotingRoundID {
-			return fmt.Errorf("signing policy for reward epoch ID %d has larger start voting round ID than previous policy",
+			return fmt.Errorf("signing policy for reward epoch ID %d has lower start voting round ID than previous policy",
 				sp.RewardEpochID)
 		}
 	}
