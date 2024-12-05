@@ -17,27 +17,32 @@ type Storage struct {
 }
 
 func NewStorage() *Storage {
-	return &Storage{
-		spList: make([]*SigningPolicy, 0, 10),
-	}
+	return &Storage{spList: make([]*SigningPolicy, 0, 10)}
 }
 
+// findByVotingRoundID finds signingPolicy that is active in votingRoundID.
+//
 // Does not lock the structure, should be called from a function that does lock.
-// We assume that the list is sorted by rewardEpochID and also by startVotingRoundID.
+// We assume that the list is up to date and sorted by rewardEpochID (and also by startVotingRoundID).
 func (s *Storage) findByVotingRoundID(votingRoundID uint32) *SigningPolicy {
+	// i is the smallest integer 0<= i <len(s.spList) such that votingRoundID <= s.spList[i].StartVotingRoundID
 	i, found := sort.Find(len(s.spList), func(i int) int {
 		return cmp.Compare(votingRoundID, s.spList[i].StartVotingRoundID)
 	})
+	// votingRoundID = s.spList[i].StartVotingRoundID
 	if found {
 		return s.spList[i]
 	}
+	// earliest stored signing policy starts before votingRoundID
 	if i == 0 {
 		return nil
 	}
+	// votingRoundID < s.spList[i].StartVotingRoundID => votingRoundID > s.spList[i-1].StartVotingRoundID
 	return s.spList[i-1]
 }
 
 // Add adds a signingPolicy to the storage.
+//
 // The added signingPolicy must be a successor of the latest signingPolicy in the storage.
 func (s *Storage) Add(sp *SigningPolicy) error {
 	s.Lock()
@@ -64,7 +69,6 @@ func (s *Storage) Add(sp *SigningPolicy) error {
 func (s *Storage) ForVotingRound(votingRoundID uint32) (*SigningPolicy, bool) {
 	s.Lock()
 	defer s.Unlock()
-
 	sp := s.findByVotingRoundID(votingRoundID)
 	if sp == nil {
 		return nil, false
