@@ -316,13 +316,14 @@ func TestQueue(t *testing.T) {
 		MaxDequeuesPerSecond: 0,
 		MaxWorkers:           0,
 		MaxAttempts:          maxAttempts,
-		TimeOff:              50 * time.Millisecond,
+		TimeOff:              20 * time.Millisecond,
 	})
 
 	nuOfRequest := 4
 
 	for j := range nuOfRequest {
-		q.Enqueue(ctx, j)
+		err := q.Enqueue(ctx, j)
+		require.NoError(t, err)
 	}
 
 	errs := map[int]bool{3: true}
@@ -330,11 +331,11 @@ func TestQueue(t *testing.T) {
 	activity := make(chan bool, 10)
 
 	go func() {
-		timer := time.NewTimer(500 * time.Millisecond)
+		timer := time.NewTimer(100 * time.Millisecond)
 		for {
 			select {
 			case <-activity:
-				timer.Reset(500 * time.Millisecond)
+				timer.Reset(100 * time.Millisecond)
 			case <-timer.C:
 				cancel()
 				return
@@ -350,17 +351,20 @@ func TestQueue(t *testing.T) {
 			require.Equal(t, counter[j], maxAttempts)
 		} else {
 			require.Equal(t, counter[j], 1)
-
 		}
 	}
 }
 
 func run[T any](ctx context.Context, q queue.PriorityQueue[T], handler func(context.Context, T) error) {
 	for {
-		q.Dequeue(ctx, handler)
-
 		if ctx.Err() != nil {
 			return
+		}
+
+		err := q.Dequeue(ctx, handler)
+
+		if err != nil {
+			continue
 		}
 	}
 }
