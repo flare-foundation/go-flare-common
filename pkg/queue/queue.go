@@ -170,6 +170,7 @@ func (q *PriorityQueue[T]) handleError(ctx context.Context, item priorityQueueIt
 
 		default:
 		}
+		return
 	}
 
 	go func() {
