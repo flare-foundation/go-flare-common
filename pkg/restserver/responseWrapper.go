@@ -8,8 +8,6 @@ import (
 
 	"github.com/gorilla/schema"
 
-	"github.com/flare-foundation/go-flare-common/pkg/logger"
-
 	"gorm.io/gorm"
 )
 
@@ -23,9 +21,9 @@ func writeResponse(w http.ResponseWriter, value any) {
 	}
 }
 
-func writeResponseError(w http.ResponseWriter, message string) {
+func writeResponseError(w http.ResponseWriter, code int, message string) {
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusBadRequest)
+	w.WriteHeader(code)
 	err := json.NewEncoder(w).Encode(map[string]string{"error": message})
 	if err != nil {
 		http.Error(w, fmt.Sprintf("error writing response: %s", err), http.StatusInternalServerError)
@@ -41,12 +39,10 @@ func WriteAPIResponseOk[T any](w http.ResponseWriter, value T) {
 // Use for error responses
 func WriteAPIResponseError(
 	w http.ResponseWriter,
+	code int,
 	errorMessage string,
-	errorDetails string,
 ) {
-	writeResponseError(w, errorMessage)
-	logger.Info(errorMessage)
-	logger.Info(errorDetails)
+	writeResponseError(w, code, errorMessage)
 }
 
 // Decode body from the request into value.
@@ -56,14 +52,20 @@ func DecodeBody(w http.ResponseWriter, r *http.Request, value interface{}) bool 
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&value)
 	if err != nil {
-		WriteAPIResponseError(w,
-			fmt.Sprintf("error parsing request body on endpoint: %v", r.URL.Path), err.Error())
+		WriteAPIResponseError(
+			w,
+			http.StatusBadRequest,
+			fmt.Sprintf("error parsing request body on endpoint: %v", r.URL.Path),
+		)
 		return false
 	}
 	err = validate.Struct(value)
 	if err != nil {
-		WriteAPIResponseError(w,
-			fmt.Sprintf("error validating request body on endpoint: %v", r.URL.Path), err.Error())
+		WriteAPIResponseError(
+			w,
+			http.StatusBadRequest,
+			fmt.Sprintf("error validating request body on endpoint: %v", r.URL.Path),
+		)
 		return false
 	}
 	return true
@@ -73,14 +75,20 @@ func DecodeQueryParams(w http.ResponseWriter, r *http.Request, value interface{}
 	decoder := schema.NewDecoder()
 	err := decoder.Decode(value, r.URL.Query())
 	if err != nil {
-		WriteAPIResponseError(w,
-			fmt.Sprintf("error parsing query params on endpoint: %v", r.URL.Path), err.Error())
+		WriteAPIResponseError(
+			w,
+			http.StatusBadRequest,
+			fmt.Sprintf("error parsing query params on endpoint: %v", r.URL.Path),
+		)
 		return false
 	}
 	err = validate.Struct(value)
 	if err != nil {
-		WriteAPIResponseError(w,
-			fmt.Sprintf("error validating query params on endpoint: %v", r.URL.Path), err.Error())
+		WriteAPIResponseError(
+			w,
+			http.StatusBadRequest,
+			fmt.Sprintf("error validating query params on endpoint: %v", r.URL.Path),
+		)
 		return false
 	}
 	return true
@@ -92,7 +100,11 @@ func BadParamsErrorHandler(err error) *ErrorHandler {
 	}
 	return &ErrorHandler{
 		Handler: func(w http.ResponseWriter) {
-			WriteAPIResponseError(w, "Error with params", err.Error())
+			WriteAPIResponseError(
+				w,
+				http.StatusBadRequest,
+				"Error with params",
+			)
 		},
 	}
 }
@@ -100,7 +112,7 @@ func BadParamsErrorHandler(err error) *ErrorHandler {
 func InternalServerErrorHandler(err error) *ErrorHandler {
 	return &ErrorHandler{
 		Handler: func(w http.ResponseWriter) {
-			WriteAPIResponseError(w, "internal server error", err.Error())
+			WriteAPIResponseError(w, http.StatusInternalServerError, "internal server error")
 		},
 	}
 }
@@ -108,7 +120,7 @@ func InternalServerErrorHandler(err error) *ErrorHandler {
 func ToEarlyErrorHandler(err error) *ErrorHandler {
 	return &ErrorHandler{
 		Handler: func(w http.ResponseWriter) {
-			WriteAPIResponseError(w, "Request to early", err.Error())
+			WriteAPIResponseError(w, http.StatusBadRequest, "request to early")
 		},
 	}
 }
@@ -116,7 +128,7 @@ func ToEarlyErrorHandler(err error) *ErrorHandler {
 func NotAvailableErrorHandler(err error) *ErrorHandler {
 	return &ErrorHandler{
 		Handler: func(w http.ResponseWriter) {
-			WriteAPIResponseError(w, "Data not available yet", err.Error())
+			WriteAPIResponseError(w, http.StatusBadRequest, "data not available yet")
 		},
 	}
 }
