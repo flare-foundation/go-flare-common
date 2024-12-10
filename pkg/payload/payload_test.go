@@ -2,10 +2,12 @@ package payload_test
 
 import (
 	"encoding/hex"
+	"strings"
 
 	"fmt"
 	"testing"
 
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/flare-foundation/go-flare-common/pkg/database"
 	"github.com/flare-foundation/go-flare-common/pkg/payload"
 	"github.com/stretchr/testify/require"
@@ -44,7 +46,6 @@ var txMultiple = &database.Transaction{
 }
 
 func TestExtractPayloads(t *testing.T) {
-
 	tests := []struct {
 		tx           *database.Transaction
 		protocol     uint8
@@ -69,19 +70,13 @@ func TestExtractPayloads(t *testing.T) {
 	}
 
 	for i, test := range tests {
-
 		payloads, err := payload.ExtractPayloads(test.tx)
-
 		require.NoError(t, err, fmt.Sprintf("error in test %d", i))
-
 		require.Equal(t, test.nuOfPayloads, len(payloads), fmt.Sprintf("wrong number of payloads in test %d", i))
 
 		payloadFTSO, ok := payloads[test.protocol]
-
 		require.True(t, ok, fmt.Sprintf("missing payload in test %d", i))
-
 		require.Equal(t, test.protocol, payloadFTSO.ProtocolID, fmt.Sprintf("wrong protocol ID in test %d", i))
-
 		require.Equal(t, test.votingRound, payloadFTSO.VotingRound, fmt.Sprintf("wrong voting round in test %d", i))
 	}
 
@@ -168,7 +163,6 @@ var txError5 = &database.Transaction{
 }
 
 func TestExtractPayloadsError(t *testing.T) {
-
 	txs := []*database.Transaction{
 		txError1,
 		txError2,
@@ -186,7 +180,6 @@ func TestExtractPayloadsError(t *testing.T) {
 }
 
 func TestBuildMessage(t *testing.T) {
-
 	tests := []struct {
 		protocolID  uint8
 		votingRound uint32
@@ -208,16 +201,40 @@ func TestBuildMessage(t *testing.T) {
 	}
 
 	for _, test := range tests {
-
 		payloadBytes, err := hex.DecodeString(test.payload)
-
 		require.NoError(t, err)
 
 		payloadMsg := payload.BuildMessage(test.protocolID, test.votingRound, payloadBytes)
-
-		require.NoError(t, err)
-
 		require.Equal(t, test.result, payloadMsg)
 	}
+}
 
+func TestBuildMessageForSigning(t *testing.T) {
+	tests := []struct {
+		protocolID     uint8
+		roundID        uint32
+		isSecureRandom bool
+		hash           common.Hash
+		expected       string
+	}{
+		{
+			protocolID:     0,
+			roundID:        0,
+			isSecureRandom: false,
+			hash:           [32]byte{},
+			expected:       "0x" + strings.Repeat("0", 38*2),
+		},
+		{
+			protocolID:     200,
+			roundID:        12345,
+			isSecureRandom: true,
+			hash:           [32]byte{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31},
+			expected:       "0x" + "c8" + "00003039" + "01" + "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+		},
+	}
+
+	for i, test := range tests {
+		result := payload.BuildMessageForSigning(test.protocolID, test.roundID, test.isSecureRandom, test.hash)
+		require.Equal(t, test.expected, result, fmt.Sprintf("Error in test %v", i))
+	}
 }
