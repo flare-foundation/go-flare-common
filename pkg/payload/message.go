@@ -35,7 +35,7 @@ func BuildMessage(protocolID uint8, votingRoundID uint32, payload []byte) string
 	return "0x" + hex.EncodeToString(message)
 }
 
-// buildMessageForSigning builds payload message for submitSignatures.
+// BuildMessageForSigning builds payload message for submitSignatures.
 //
 // protocolID (1 byte)
 // roundID (4 bytes)

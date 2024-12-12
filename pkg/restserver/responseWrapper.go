@@ -55,7 +55,7 @@ func DecodeBody(w http.ResponseWriter, r *http.Request, value interface{}) bool 
 		WriteAPIResponseError(
 			w,
 			http.StatusBadRequest,
-			fmt.Sprintf("error parsing request body on endpoint: %v", r.URL.Path),
+			fmt.Sprintf("error parsing request body on endpoint: %s: %s", r.URL.Path, err),
 		)
 		return false
 	}
@@ -64,7 +64,7 @@ func DecodeBody(w http.ResponseWriter, r *http.Request, value interface{}) bool 
 		WriteAPIResponseError(
 			w,
 			http.StatusBadRequest,
-			fmt.Sprintf("error validating request body on endpoint: %v", r.URL.Path),
+			fmt.Sprintf("error validating request body on endpoint: %s: %s", r.URL.Path, err),
 		)
 		return false
 	}
@@ -78,7 +78,7 @@ func DecodeQueryParams(w http.ResponseWriter, r *http.Request, value interface{}
 		WriteAPIResponseError(
 			w,
 			http.StatusBadRequest,
-			fmt.Sprintf("error parsing query params on endpoint: %v", r.URL.Path),
+			fmt.Sprintf("error parsing query params on endpoint: %s", r.URL.Path),
 		)
 		return false
 	}
@@ -87,7 +87,7 @@ func DecodeQueryParams(w http.ResponseWriter, r *http.Request, value interface{}
 		WriteAPIResponseError(
 			w,
 			http.StatusBadRequest,
-			fmt.Sprintf("error validating query params on endpoint: %v", r.URL.Path),
+			fmt.Sprintf("error validating query params on endpoint: %s", r.URL.Path),
 		)
 		return false
 	}
@@ -103,7 +103,7 @@ func BadParamsErrorHandler(err error) *ErrorHandler {
 			WriteAPIResponseError(
 				w,
 				http.StatusBadRequest,
-				"Error with params",
+				fmt.Sprintf("Error with params: %s", err),
 			)
 		},
 	}
