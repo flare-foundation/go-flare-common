@@ -2,6 +2,7 @@ package queue_test
 
 import (
 	"context"
+	"fmt"
 	"sync"
 	"testing"
 	"time"
@@ -18,11 +19,12 @@ const (
 	benchmarkSize = 100000
 	numWorkers    = 4
 	maxAttempts   = 3
+
+	defaultTimeout = 10 * time.Second
 )
 
 var (
-	defaultTimeout = 10 * time.Second
-	backoffTime    = 10 * time.Millisecond
+	backoffTime = 10 * time.Millisecond
 )
 
 func TestEnqueueDequeue(t *testing.T) {
@@ -303,6 +305,80 @@ func TestConstantBackOff(t *testing.T) {
 	elapsed := time.Since(start)
 
 	require.GreaterOrEqual(t, elapsed, (maxAttempts-1)*backoffTime)
+}
+
+func TestQueue(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
+	defer cancel()
+
+	q := queue.NewPriority[int](&queue.PriorityQueueParams{
+		Size:                 size,
+		MaxDequeuesPerSecond: 0,
+		MaxWorkers:           0,
+		MaxAttempts:          maxAttempts,
+		TimeOff:              20 * time.Millisecond,
+	})
+
+	nuOfRequest := 4
+
+	for j := range nuOfRequest {
+		err := q.Enqueue(ctx, j)
+		require.NoError(t, err)
+	}
+
+	errs := map[int]bool{3: true}
+	counter := make(map[int]int)
+	activity := make(chan bool, 10)
+
+	go func() {
+		timer := time.NewTimer(100 * time.Millisecond)
+		for {
+			select {
+			case <-activity:
+				timer.Reset(100 * time.Millisecond)
+			case <-timer.C:
+				cancel()
+				return
+			}
+		}
+	}()
+
+	run(ctx, q, testHandlerFactory(errs, counter, activity))
+	require.Len(t, counter, nuOfRequest)
+
+	for j := range counter {
+		if errs[j] {
+			require.Equal(t, counter[j], maxAttempts)
+		} else {
+			require.Equal(t, counter[j], 1)
+		}
+	}
+}
+
+func run[T any](ctx context.Context, q queue.PriorityQueue[T], handler func(context.Context, T) error) {
+	for {
+		if ctx.Err() != nil {
+			return
+		}
+
+		err := q.Dequeue(ctx, handler)
+
+		if err != nil {
+			continue
+		}
+	}
+}
+
+func testHandlerFactory(errs map[int]bool, counter map[int]int, activity chan bool) func(context.Context, int) error {
+	return func(ctx context.Context, j int) error {
+		fmt.Printf("j: %v\n", j)
+		activity <- true
+		counter[j]++
+		if errs[j] {
+			return fmt.Errorf("%v returns error", j)
+		}
+		return nil
+	}
 }
 
 func itemCheckCallback(expected int) func(context.Context, int) error {

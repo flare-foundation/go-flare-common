@@ -33,11 +33,11 @@ type priorityQueueItem[T any] struct {
 
 // PriorityQueueInput values are used to construct a new PriorityQueue.
 type PriorityQueueParams struct {
-	Size                 int    `toml:"size"`
-	MaxDequeuesPerSecond int    `toml:"max_dequeues_per_second"` // Set to 0 to disable rate-limiting.
-	MaxWorkers           int    `toml:"max_workers"`             // Set to 0 for unlimited workers.
-	MaxAttempts          int32  `toml:"max_attempts"`            // Set to negative for unlimited retry attempts. If unset or set to 0, the default value (10) is applied.
-	TimeOff              uint32 `toml:"time_off"`                // In seconds. Only relevant if Backoff is not set.
+	Size                 int           `toml:"size"`
+	MaxDequeuesPerSecond int           `toml:"max_dequeues_per_second"` // Set to 0 to disable rate-limiting.
+	MaxWorkers           int           `toml:"max_workers"`             // Set to 0 for unlimited workers.
+	MaxAttempts          int32         `toml:"max_attempts"`            // Set to negative for unlimited retry attempts. If unset or set to 0, the default value (10) is applied.
+	TimeOff              time.Duration `toml:"time_off"`                // Only relevant if Backoff is not set.
 
 	// Pass a callback to specify the backoff policy which affects when items
 	// are returned to the queue after an error. By default, items are
@@ -55,7 +55,7 @@ func NewPriority[T any](input *PriorityQueueParams) PriorityQueue[T] {
 		regular:  make(chan priorityQueueItem[T], input.Size),
 		priority: make(chan priorityQueueItem[T], input.Size),
 		backoff:  input.Backoff,
-		timeOff:  time.Duration(input.TimeOff) * time.Second,
+		timeOff:  input.TimeOff,
 	}
 
 	if input.MaxDequeuesPerSecond > 0 {
@@ -166,7 +166,7 @@ func (q *PriorityQueue[T]) handleError(ctx context.Context, item priorityQueueIt
 		// in that case the item will be discarded.
 		select {
 		case q.DeadLetterQueue <- item.value:
-			logger.Errorf("max retry attempts reached, sent item to dead letter queue: %v", item.value)
+			logger.Debugf("max retry attempts reached, sent item to dead letter queue: %v", item.value)
 
 		default:
 		}
