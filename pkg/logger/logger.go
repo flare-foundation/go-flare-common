@@ -1,10 +1,8 @@
 package logger
 
 import (
-	"errors"
-	"log"
+	"io"
 	"os"
-	"syscall"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -66,12 +64,6 @@ func createSugared(config Config) *zap.SugaredLogger {
 		zap.AddCaller(),
 		zap.AddCallerSkip(1),
 	)
-	defer func() {
-		err := logger.Sync()
-		if err != nil && !errors.Is(err, syscall.ENOTTY) && !errors.Is(err, syscall.EBADF) {
-			log.Print("Failed to sync logger", err)
-		}
-	}()
 
 	sugaredLogger = logger.Sugar()
 
@@ -81,6 +73,17 @@ func createSugared(config Config) *zap.SugaredLogger {
 	}
 	atom.SetLevel(level)
 	return sugaredLogger
+}
+
+// This function synchronizes the file logger (but not the console logger). It is 
+// automatically called during fatal or panic log events. If you need to manually 
+// synchronize the logger at other points in your application, you can invoke this function as needed.
+func SyncFileLogger() {
+	sugaredLogger.Infof("Syncing file logger.")
+	err := sugaredLogger.Sync()
+	if err != nil {
+		sugaredLogger.Infof("Failed to sync logger: %v", err)
+	}
 }
 
 func createFileLoggerCore(config Config, atom zap.AtomicLevel) zapcore.Core {
@@ -98,13 +101,21 @@ func createFileLoggerCore(config Config, atom zap.AtomicLevel) zapcore.Core {
 	)
 }
 
+type noSyncWriterWrapper struct {
+	io.Writer
+}
+
+func (n noSyncWriterWrapper) Sync() error {
+	return nil
+}
+
 func createConsoleLoggerCore(atom zap.AtomicLevel) zapcore.Core {
 	encoderCfg := zap.NewProductionEncoderConfig()
 	encoderCfg.EncodeLevel = consoleColorLevelEncoder
 	encoderCfg.EncodeTime = zapcore.TimeEncoderOfLayout(timeFormat)
 	return zapcore.NewCore(
 		zapcore.NewConsoleEncoder(encoderCfg),
-		zapcore.AddSync(os.Stdout),
+		noSyncWriterWrapper{os.Stdout},
 		atom,
 	)
 }
@@ -145,6 +156,7 @@ func Errorf(msg string, args ...interface{}) {
 //
 // Defers will be executed.
 func Panicf(msg string, args ...interface{}) {
+	SyncFileLogger()
 	sugaredLogger.Panicf(msg, args...)
 }
 
@@ -152,6 +164,7 @@ func Panicf(msg string, args ...interface{}) {
 //
 // Defers will not be executed.
 func Fatalf(msg string, args ...interface{}) {
+	SyncFileLogger()
 	sugaredLogger.Fatalf(msg, args...)
 }
 
@@ -179,6 +192,7 @@ func Error(args ...interface{}) {
 //
 // Defers will be executed.
 func Panic(args ...interface{}) {
+	SyncFileLogger()
 	sugaredLogger.Panic(args...)
 }
 
@@ -186,5 +200,6 @@ func Panic(args ...interface{}) {
 //
 // Defers will not be executed.
 func Fatal(args ...interface{}) {
+	SyncFileLogger()
 	sugaredLogger.Fatal(args...)
 }
