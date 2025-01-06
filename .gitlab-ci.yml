@@ -18,10 +18,6 @@ workflow:
         - if: $CI_COMMIT_TAG
         - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
-default:
-    before_script:
-        - echo -e "machine gitlab.com\nlogin gitlab-ci-token\npassword ${CI_JOB_TOKEN}" > ~/.netrc
-
 build:
     stage: build
     image: golang:${GOLANG_VERSION}
