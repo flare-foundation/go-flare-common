@@ -75,7 +75,7 @@ func createSugared(config Config) *zap.SugaredLogger {
 	return sugaredLogger
 }
 
-// This function synchronizes the file logger (but not the console logger). It is 
+// SyncFileLogger synchronizes the file logger (but not the console logger). It is 
 // automatically called during fatal or panic log events. If you need to manually 
 // synchronize the logger at other points in your application, you can invoke this function as needed.
 func SyncFileLogger() {
@@ -101,11 +101,11 @@ func createFileLoggerCore(config Config, atom zap.AtomicLevel) zapcore.Core {
 	)
 }
 
-type noSyncWriterWrapper struct {
+type noSyncWriter struct {
 	io.Writer
 }
 
-func (n noSyncWriterWrapper) Sync() error {
+func (n noSyncWriter) Sync() error {
 	return nil
 }
 
@@ -115,7 +115,7 @@ func createConsoleLoggerCore(atom zap.AtomicLevel) zapcore.Core {
 	encoderCfg.EncodeTime = zapcore.TimeEncoderOfLayout(timeFormat)
 	return zapcore.NewCore(
 		zapcore.NewConsoleEncoder(encoderCfg),
-		noSyncWriterWrapper{os.Stdout},
+		noSyncWriter{os.Stdout},
 		atom,
 	)
 }
