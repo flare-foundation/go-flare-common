@@ -28,7 +28,7 @@ type PriorityQueue[T any] struct {
 	regular         chan priorityQueueItem[T]
 	priority        chan priorityQueueItem[T]
 	minDequeueDelta time.Duration
-	lastDequeue     lastDequeueMutex
+	lastDequeue     *lastDequeueMutex
 	workersSem      chan struct{}
 	maxAttempts     uint64
 	DeadLetterQueue chan T
@@ -62,11 +62,15 @@ func NewPriority[T any](input *PriorityQueueParams) PriorityQueue[T] {
 		input = new(PriorityQueueParams)
 	}
 
+	lastDequeue := new(lastDequeueMutex)
+	lastDequeue.time = time.Now()
+
 	q := PriorityQueue[T]{
-		regular:  make(chan priorityQueueItem[T], input.Size),
-		priority: make(chan priorityQueueItem[T], input.Size),
-		backoff:  input.Backoff,
-		timeOff:  input.TimeOff,
+		regular:     make(chan priorityQueueItem[T], input.Size),
+		priority:    make(chan priorityQueueItem[T], input.Size),
+		lastDequeue: lastDequeue,
+		backoff:     input.Backoff,
+		timeOff:     input.TimeOff,
 	}
 
 	if input.MaxDequeuesPerSecond > 0 {
