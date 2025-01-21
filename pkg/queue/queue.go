@@ -2,6 +2,7 @@ package queue
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"github.com/cenkalti/backoff/v4"
@@ -9,6 +10,8 @@ import (
 )
 
 const defaultMaxAttempts uint64 = 10
+
+const NotRatedDequeue string = "!!NotRatedDequeue!!"
 
 // PriorityQueue is made up of two sub-queues - one regular and one with
 // higher priority. Items can be enqueued in either queue and when dequeueing
@@ -130,7 +133,8 @@ func (q *PriorityQueue[T]) newBackoff() (bOff backoff.BackOff) {
 // This function will block if an item is not immediately available for
 // processing or if necessary to enforce limits.
 func (q *PriorityQueue[T]) Dequeue(ctx context.Context, handler func(context.Context, T) error) error {
-	result, err := q.dequeueWithRateLimit(ctx)
+	lastDequeue := q.lastDequeue
+	item, err := q.dequeueWithRateLimit(ctx)
 	if err != nil {
 		return err
 	}
@@ -147,11 +151,17 @@ func (q *PriorityQueue[T]) Dequeue(ctx context.Context, handler func(context.Con
 		return nil
 	}
 
-	err = handler(ctx, result.value)
+	err = handler(ctx, item.value)
 
-	// If there was any error we re-queue the item for processing again.
+	// do not retry and do not affect rate limit
+	if NotRated(err) {
+		q.lastDequeue = lastDequeue
+		return nil
+	}
+
+	// If there was any error, we re-queue the item for processing again.
 	if err != nil {
-		q.handleError(ctx, result)
+		q.handleError(ctx, item)
 		return err
 	}
 
@@ -293,4 +303,9 @@ func (q *PriorityQueue[T]) decrementWorkers() {
 	default:
 		logger.Panic("should never block")
 	}
+}
+
+// ExistsAsSubstring returns true if any of the strings in the slice is a substring of s.
+func NotRated(err error) bool {
+	return strings.Contains(err.Error(), NotRatedDequeue)
 }
