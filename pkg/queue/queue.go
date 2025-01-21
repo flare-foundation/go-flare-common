@@ -133,7 +133,10 @@ func (q *PriorityQueue[T]) newBackoff() (bOff backoff.BackOff) {
 // This function will block if an item is not immediately available for
 // processing or if necessary to enforce limits.
 func (q *PriorityQueue[T]) Dequeue(ctx context.Context, handler func(context.Context, T) error) error {
-	lastDequeue := q.lastDequeue
+	var lastDequeue time.Time
+	if q.minDequeueDelta > 0 {
+		lastDequeue = q.lastDequeue
+	}
 	item, err := q.dequeueWithRateLimit(ctx)
 	if err != nil {
 		return err
@@ -155,7 +158,9 @@ func (q *PriorityQueue[T]) Dequeue(ctx context.Context, handler func(context.Con
 
 	// do not retry and do not affect rate limit
 	if NotRated(err) {
-		q.lastDequeue = lastDequeue
+		if q.minDequeueDelta > 0 {
+			q.lastDequeue = lastDequeue
+		}
 		return nil
 	}
 
@@ -307,5 +312,9 @@ func (q *PriorityQueue[T]) decrementWorkers() {
 
 // ExistsAsSubstring returns true if any of the strings in the slice is a substring of s.
 func NotRated(err error) bool {
-	return strings.Contains(err.Error(), NotRatedDequeue)
+	if err != nil {
+		return strings.Contains(err.Error(), NotRatedDequeue)
+	}
+
+	return false
 }
