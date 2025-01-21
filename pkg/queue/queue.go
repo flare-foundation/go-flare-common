@@ -3,6 +3,7 @@ package queue
 import (
 	"context"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/cenkalti/backoff/v4"
@@ -13,6 +14,13 @@ const defaultMaxAttempts uint64 = 10
 
 const NotRatedDequeue string = "!!NotRatedDequeue!!"
 
+type lastDequeueMutex struct {
+	time time.Time
+
+	// mutex
+	sync.RWMutex
+}
+
 // PriorityQueue is made up of two sub-queues - one regular and one with
 // higher priority. Items can be enqueued in either queue and when dequeueing
 // items from the priority queue are returned first.
@@ -20,7 +28,7 @@ type PriorityQueue[T any] struct {
 	regular         chan priorityQueueItem[T]
 	priority        chan priorityQueueItem[T]
 	minDequeueDelta time.Duration
-	lastDequeue     time.Time
+	lastDequeue     lastDequeueMutex
 	workersSem      chan struct{}
 	maxAttempts     uint64
 	DeadLetterQueue chan T
@@ -135,7 +143,9 @@ func (q *PriorityQueue[T]) newBackoff() (bOff backoff.BackOff) {
 func (q *PriorityQueue[T]) Dequeue(ctx context.Context, handler func(context.Context, T) error) error {
 	var lastDequeue time.Time
 	if q.minDequeueDelta > 0 {
-		lastDequeue = q.lastDequeue
+		q.lastDequeue.RLock()
+		lastDequeue = q.lastDequeue.time
+		q.lastDequeue.RUnlock()
 	}
 	item, err := q.dequeueWithRateLimit(ctx)
 	if err != nil {
@@ -157,9 +167,12 @@ func (q *PriorityQueue[T]) Dequeue(ctx context.Context, handler func(context.Con
 	err = handler(ctx, item.value)
 
 	// do not retry and do not affect rate limit
-	if NotRated(err) {
+	if notRated(err) {
 		if q.minDequeueDelta > 0 {
-			q.lastDequeue = lastDequeue
+			q.lastDequeue.Lock()
+			q.lastDequeue.time = lastDequeue
+			q.lastDequeue.Unlock()
+
 		}
 		return nil
 	}
@@ -222,7 +235,11 @@ func (q *PriorityQueue[T]) dequeueWithRateLimit(ctx context.Context) (result pri
 
 		defer func() {
 			if err == nil {
-				q.lastDequeue = time.Now()
+				q.lastDequeue.Lock()
+
+				q.lastDequeue.time = time.Now()
+				q.lastDequeue.Unlock()
+
 			}
 		}()
 	}
@@ -255,7 +272,7 @@ func (q *PriorityQueue[T]) dequeue(ctx context.Context) (priorityQueueItem[T], e
 
 func (q *PriorityQueue[T]) enforceRateLimit(ctx context.Context) error {
 	now := time.Now()
-	delta := now.Sub(q.lastDequeue)
+	delta := now.Sub(q.lastDequeue.time)
 	if delta >= q.minDequeueDelta {
 		return nil
 	}
@@ -310,11 +327,16 @@ func (q *PriorityQueue[T]) decrementWorkers() {
 	}
 }
 
-// ExistsAsSubstring returns true if any of the strings in the slice is a substring of s.
-func NotRated(err error) bool {
+// notRated checks whether error returned by handle should be included in the rate limit
+func notRated(err error) bool {
 	if err != nil {
 		return strings.Contains(err.Error(), NotRatedDequeue)
 	}
 
 	return false
+}
+
+// Length return the number of item in the queue
+func (q *PriorityQueue[T]) Length() int {
+	return len(q.priority) + len(q.regular)
 }
