@@ -2,34 +2,27 @@ package queue
 
 import (
 	"context"
-	"strings"
-	"sync"
 	"time"
 
 	"github.com/cenkalti/backoff/v4"
 	"github.com/flare-foundation/go-flare-common/pkg/logger"
+	"golang.org/x/time/rate"
 )
 
 const defaultMaxAttempts uint64 = 10
 
+const bucketSize = 10
+
 const NotRatedDequeue string = "!!NotRatedDequeue!!"
-
-type lastDequeueMutex struct {
-	time time.Time
-
-	// mutex
-	sync.RWMutex
-}
 
 // PriorityQueue is made up of two sub-queues - one regular and one with
 // higher priority. Items can be enqueued in either queue and when dequeueing
 // items from the priority queue are returned first.
 type PriorityQueue[T any] struct {
-	Name            string
+	name            string
 	regular         chan priorityQueueItem[T]
 	priority        chan priorityQueueItem[T]
-	minDequeueDelta time.Duration
-	lastDequeue     *lastDequeueMutex
+	limiter         *rate.Limiter
 	workersSem      chan struct{}
 	maxAttempts     uint64
 	DeadLetterQueue chan T
@@ -63,20 +56,20 @@ func NewPriority[T any](input *PriorityQueueParams) PriorityQueue[T] {
 		input = new(PriorityQueueParams)
 	}
 
-	lastDequeue := new(lastDequeueMutex)
-	lastDequeue.time = time.Now()
-
-	q := PriorityQueue[T]{
-		regular:     make(chan priorityQueueItem[T], input.Size),
-		priority:    make(chan priorityQueueItem[T], input.Size),
-		lastDequeue: lastDequeue,
-		backoff:     input.Backoff,
-		timeOff:     input.TimeOff,
-	}
+	var limiter *rate.Limiter
 
 	if input.MaxDequeuesPerSecond > 0 {
-		q.minDequeueDelta = time.Second / time.Duration(input.MaxDequeuesPerSecond)
-		logger.Info("minDequeueDelta:", q.minDequeueDelta)
+		limiter = rate.NewLimiter(rate.Limit(input.MaxDequeuesPerSecond), bucketSize)
+	} else {
+		limiter = rate.NewLimiter(rate.Inf, 0)
+	}
+
+	q := PriorityQueue[T]{
+		regular:  make(chan priorityQueueItem[T], input.Size),
+		priority: make(chan priorityQueueItem[T], input.Size),
+		limiter:  limiter,
+		backoff:  input.Backoff,
+		timeOff:  input.TimeOff,
 	}
 
 	if input.MaxWorkers > 0 {
@@ -146,12 +139,6 @@ func (q *PriorityQueue[T]) newBackoff() (bOff backoff.BackOff) {
 // This function will block if an item is not immediately available for
 // processing or if necessary to enforce limits.
 func (q *PriorityQueue[T]) Dequeue(ctx context.Context, handler func(context.Context, T) error) error {
-	var lastDequeue time.Time
-	if q.minDequeueDelta > 0 {
-		q.lastDequeue.RLock()
-		lastDequeue = q.lastDequeue.time
-		q.lastDequeue.RUnlock()
-	}
 	item, err := q.dequeueWithRateLimit(ctx)
 	if err != nil {
 		return err
@@ -171,17 +158,6 @@ func (q *PriorityQueue[T]) Dequeue(ctx context.Context, handler func(context.Con
 
 	err = handler(ctx, item.value)
 
-	// do not retry and do not affect rate limit
-	if notRated(err) {
-		if q.minDequeueDelta > 0 {
-			q.lastDequeue.Lock()
-			q.lastDequeue.time = lastDequeue
-			q.lastDequeue.Unlock()
-
-		}
-		return nil
-	}
-
 	// If there was any error, we re-queue the item for processing again.
 	if err != nil {
 		q.handleError(ctx, item)
@@ -191,18 +167,14 @@ func (q *PriorityQueue[T]) Dequeue(ctx context.Context, handler func(context.Con
 	return nil
 }
 
-// Dequeue removes an item from the queue and processes it using the provided handler
+// DequeueAsync removes an item from the queue and processes it using the provided handler
 // function in a goroutine. If configured, rate limits and concurrent worker limits will be enforced.
+// Function discard checks if the item can be discarded.
+// If it is discarded dequeue does not affect the rate limit.
 // This function will block if an item is not immediately available for
 // processing or if necessary to enforce limits.
-func (q *PriorityQueue[T]) DequeueAsync(ctx context.Context, handler func(context.Context, T) error) error {
-	var lastDequeue time.Time
-	if q.minDequeueDelta > 0 {
-		q.lastDequeue.RLock()
-		lastDequeue = q.lastDequeue.time
-		q.lastDequeue.RUnlock()
-	}
-	item, err := q.dequeueWithRateLimit(ctx)
+func (q *PriorityQueue[T]) DequeueAsync(ctx context.Context, handler func(context.Context, T) error, discard func(context.Context, T) bool) error {
+	item, err := q.dequeue(ctx)
 	if err != nil {
 		return err
 	}
@@ -210,6 +182,16 @@ func (q *PriorityQueue[T]) DequeueAsync(ctx context.Context, handler func(contex
 	// Avoid panic if the handler is nil - could be used to pop an item without processing.
 	if handler == nil {
 		return nil
+	}
+
+	if discard != nil && discard(ctx, item.value) {
+		return nil
+	}
+
+	// apply rate limit
+	err = q.wait(ctx)
+	if err != nil {
+		return err
 	}
 
 	if q.workersSem != nil {
@@ -223,16 +205,6 @@ func (q *PriorityQueue[T]) DequeueAsync(ctx context.Context, handler func(contex
 			defer q.decrementWorkers()
 		}
 		err = handler(ctx, item.value)
-
-		// do not retry and do not affect rate limit
-		if notRated(err) {
-			if q.minDequeueDelta > 0 {
-				q.lastDequeue.Lock()
-				q.lastDequeue.time = lastDequeue
-				q.lastDequeue.Unlock()
-			}
-			return
-		}
 
 		// If there was any error, we re-queue the item for processing again.
 		if err != nil {
@@ -251,24 +223,21 @@ func (q *PriorityQueue[T]) handleError(ctx context.Context, item priorityQueueIt
 		// in that case the item will be discarded.
 		select {
 		case q.DeadLetterQueue <- item.value:
-			logger.Debugf("max retry attempts reached in queue %s, sent item to dead letter queue: %v", q.Name, item.value)
-
+			logger.Debugf("max retry attempts reached in queue %s, sent item to dead letter queue: %v", q.Name(), item.value)
 		default:
-			logger.Debugf("DeadLetterQueue in queue %s full, discarding item: %v", item.value)
-
 		}
 		return
 	}
 
 	go func() {
 		if waitDuration > 0 {
-			logger.Debugf("queue %s sleeping for %v before retrying", q.Name, waitDuration)
+			logger.Debugf("queue %s sleeping for %v before retrying", q.Name(), waitDuration)
 
 			select {
 			case <-time.After(waitDuration):
 
 			case <-ctx.Done():
-				logger.Errorf("context cancelled while waiting to retry item %v in queue %s", item.value, q.Name)
+				logger.Errorf("context cancelled while waiting to retry item %v in queue %s", item.value, q.Name())
 				return
 			}
 		}
@@ -276,30 +245,20 @@ func (q *PriorityQueue[T]) handleError(ctx context.Context, item priorityQueueIt
 		if item.priority {
 			err := q.enqueuePriority(ctx, item)
 			if err != nil {
-				logger.Errorf("error enqueing to %s priority item %v for retry: %v", q.Name, item.value, err)
+				logger.Errorf("error enqueing to %s priority item %v for retry: %v", q.Name(), item.value, err)
 
 			}
 		} else if err := q.enqueue(ctx, item); err != nil {
-			logger.Errorf("error enqueing to %s item %v for retry: %v", q.Name, item.value, err)
+			logger.Errorf("error enqueing to %s item %v for retry: %v", q.Name(), item.value, err)
 		}
 	}()
 
 }
 
 func (q *PriorityQueue[T]) dequeueWithRateLimit(ctx context.Context) (result priorityQueueItem[T], err error) {
-	if q.minDequeueDelta > 0 {
-		if err = q.enforceRateLimit(ctx); err != nil {
-			return result, err
-		}
-
-		defer func() {
-			if err == nil {
-				q.lastDequeue.Lock()
-				q.lastDequeue.time = time.Now()
-				q.lastDequeue.Unlock()
-
-			}
-		}()
+	err = q.wait(ctx)
+	if err != nil {
+		return result, err
 	}
 
 	// Set the err variable so that the deferred function can read it.
@@ -325,28 +284,6 @@ func (q *PriorityQueue[T]) dequeue(ctx context.Context) (priorityQueueItem[T], e
 		case <-ctx.Done():
 			return result, ctx.Err()
 		}
-	}
-}
-
-func (q *PriorityQueue[T]) enforceRateLimit(ctx context.Context) error {
-	now := time.Now()
-	q.lastDequeue.RLock()
-	delta := now.Sub(q.lastDequeue.time)
-	q.lastDequeue.RUnlock()
-
-	if delta >= q.minDequeueDelta {
-		return nil
-	}
-
-	sleepDuration := q.minDequeueDelta - delta
-	logger.Debugf("enforcing rate limit - sleeping for %s", sleepDuration)
-
-	select {
-	case <-time.After(sleepDuration):
-		return nil
-
-	case <-ctx.Done():
-		return ctx.Err()
 	}
 }
 
@@ -388,16 +325,19 @@ func (q *PriorityQueue[T]) decrementWorkers() {
 	}
 }
 
-// notRated checks whether error returned by handle should be included in the rate limit
-func notRated(err error) bool {
-	if err != nil {
-		return strings.Contains(err.Error(), NotRatedDequeue)
-	}
-
-	return false
+func (q *PriorityQueue[T]) wait(ctx context.Context) error {
+	return q.limiter.Wait(ctx)
 }
 
 // Length return the number of item in the queue
 func (q *PriorityQueue[T]) Length() int {
 	return len(q.priority) + len(q.regular)
+}
+
+// Name return the nam of the queue or "unnamed"
+func (q *PriorityQueue[T]) Name() string {
+	if len(q.name) > 0 {
+		return q.name
+	}
+	return "unnamed"
 }

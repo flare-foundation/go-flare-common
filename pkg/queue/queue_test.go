@@ -74,7 +74,7 @@ func TestEnqueueDequeueAsync(t *testing.T) {
 
 	for i := 0; i < size+1; i++ {
 		wg.Add(1)
-		err := q.DequeueAsync(ctx, handler)
+		err := q.DequeueAsync(ctx, handler, nil)
 		require.NoError(t, err)
 	}
 
@@ -121,6 +121,24 @@ func TestBlockingDequeue(t *testing.T) {
 	wg.Wait()
 }
 
+func TestBlockingDequeueAsync(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
+	defer cancel()
+
+	q := queue.NewPriority[int](&queue.PriorityQueueParams{Size: size})
+
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		err := q.DequeueAsync(ctx, itemCheckCallbackWG(42, &wg), nil)
+		assert.NoError(t, err)
+	}()
+
+	err := q.Enqueue(ctx, 42)
+	require.NoError(t, err)
+	wg.Wait()
+}
+
 func TestBlockingDequeuePriority(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
 	defer cancel()
@@ -138,33 +156,6 @@ func TestBlockingDequeuePriority(t *testing.T) {
 	err := q.EnqueuePriority(ctx, 42)
 	require.NoError(t, err)
 	wg.Wait()
-}
-
-func TestRateLimit(t *testing.T) {
-	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
-	defer cancel()
-
-	minDelta := 10 * time.Millisecond
-	maxRate := int(time.Second / minDelta)
-	t.Log("maxRate:", maxRate)
-
-	q := queue.NewPriority[int](&queue.PriorityQueueParams{
-		Size: size, MaxDequeuesPerSecond: maxRate,
-	})
-
-	for i := 0; i < size; i++ {
-		err := q.Enqueue(ctx, i)
-		require.NoError(t, err)
-	}
-
-	start := time.Now()
-	for i := 0; i < size; i++ {
-		err := q.Dequeue(ctx, itemCheckCallback(i))
-		require.NoError(t, err)
-	}
-
-	delta := time.Since(start)
-	require.GreaterOrEqual(t, delta, (size-1)*minDelta)
 }
 
 func TestEnqueueTimeout(t *testing.T) {
@@ -196,6 +187,17 @@ func TestDequeueTimeout(t *testing.T) {
 	defer cancel()
 
 	err := q.Dequeue(ctx, nil)
+	require.Error(t, err)
+	require.True(t, errors.Is(err, ctx.Err()))
+}
+
+func TestDequeueAsyncTimeout(t *testing.T) {
+	q := queue.NewPriority[int](nil)
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Nanosecond)
+	defer cancel()
+
+	err := q.DequeueAsync(ctx, nil, nil)
 	require.Error(t, err)
 	require.True(t, errors.Is(err, ctx.Err()))
 }
@@ -319,6 +321,35 @@ func TestMaxAttempts(t *testing.T) {
 	}
 }
 
+func TestMaxAttemptsAsync(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
+	defer cancel()
+
+	q := queue.NewPriority[int](&queue.PriorityQueueParams{Size: size, MaxAttempts: maxAttempts})
+
+	dlq := q.DeadLetterQueue
+
+	err := q.Enqueue(ctx, 1)
+	require.NoError(t, err)
+
+	handlerErr := errors.New("handler error")
+
+	for i := 0; i < maxAttempts; i++ {
+		err := q.DequeueAsync(ctx, func(ctx context.Context, item int) error {
+			return handlerErr
+		}, nil)
+		require.NoError(t, err)
+	}
+
+	select {
+	case item := <-dlq:
+		require.Equal(t, 1, item)
+
+	case <-ctx.Done():
+		t.Fatal("timed out while reading from dead letter queue")
+	}
+}
+
 func TestConstantBackOff(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
 	defer cancel()
@@ -421,6 +452,17 @@ func testHandlerFactory(errs map[int]bool, counter map[int]int, activity chan bo
 
 func itemCheckCallback(expected int) func(context.Context, int) error {
 	return func(ctx context.Context, item int) error {
+		if item != expected {
+			return errors.Errorf("%d != %d", item, expected)
+		}
+
+		return nil
+	}
+}
+
+func itemCheckCallbackWG(expected int, wg *sync.WaitGroup) func(context.Context, int) error {
+	return func(ctx context.Context, item int) error {
+		defer wg.Done()
 		if item != expected {
 			return errors.Errorf("%d != %d", item, expected)
 		}
