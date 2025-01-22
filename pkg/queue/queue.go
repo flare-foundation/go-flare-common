@@ -25,6 +25,7 @@ type lastDequeueMutex struct {
 // higher priority. Items can be enqueued in either queue and when dequeueing
 // items from the priority queue are returned first.
 type PriorityQueue[T any] struct {
+	Name            string
 	regular         chan priorityQueueItem[T]
 	priority        chan priorityQueueItem[T]
 	minDequeueDelta time.Duration
@@ -190,6 +191,58 @@ func (q *PriorityQueue[T]) Dequeue(ctx context.Context, handler func(context.Con
 	return nil
 }
 
+// Dequeue removes an item from the queue and processes it using the provided handler
+// function in a goroutine. If configured, rate limits and concurrent worker limits will be enforced.
+// This function will block if an item is not immediately available for
+// processing or if necessary to enforce limits.
+func (q *PriorityQueue[T]) DequeueAsync(ctx context.Context, handler func(context.Context, T) error) error {
+	var lastDequeue time.Time
+	if q.minDequeueDelta > 0 {
+		q.lastDequeue.RLock()
+		lastDequeue = q.lastDequeue.time
+		q.lastDequeue.RUnlock()
+	}
+	item, err := q.dequeueWithRateLimit(ctx)
+	if err != nil {
+		return err
+	}
+
+	// Avoid panic if the handler is nil - could be used to pop an item without processing.
+	if handler == nil {
+		return nil
+	}
+
+	if q.workersSem != nil {
+		if err := q.incrementWorkers(ctx); err != nil {
+			return err
+		}
+	}
+
+	go func() {
+		if q.workersSem != nil {
+			defer q.decrementWorkers()
+		}
+		err = handler(ctx, item.value)
+
+		// do not retry and do not affect rate limit
+		if notRated(err) {
+			if q.minDequeueDelta > 0 {
+				q.lastDequeue.Lock()
+				q.lastDequeue.time = lastDequeue
+				q.lastDequeue.Unlock()
+			}
+			return
+		}
+
+		// If there was any error, we re-queue the item for processing again.
+		if err != nil {
+			q.handleError(ctx, item)
+		}
+	}()
+
+	return nil
+}
+
 func (q *PriorityQueue[T]) handleError(ctx context.Context, item priorityQueueItem[T]) {
 	waitDuration := item.backoff.NextBackOff()
 
@@ -198,22 +251,24 @@ func (q *PriorityQueue[T]) handleError(ctx context.Context, item priorityQueueIt
 		// in that case the item will be discarded.
 		select {
 		case q.DeadLetterQueue <- item.value:
-			logger.Debugf("max retry attempts reached, sent item to dead letter queue: %v", item.value)
+			logger.Debugf("max retry attempts reached in queue %s, sent item to dead letter queue: %v", q.Name, item.value)
 
 		default:
+			logger.Debugf("DeadLetterQueue in queue %s full, discarding item: %v", item.value)
+
 		}
 		return
 	}
 
 	go func() {
 		if waitDuration > 0 {
-			logger.Debugf("sleeping for %v before retrying", waitDuration)
+			logger.Debugf("queue %s sleeping for %v before retrying", q.Name, waitDuration)
 
 			select {
 			case <-time.After(waitDuration):
 
 			case <-ctx.Done():
-				logger.Errorf("context cancelled while waiting to retry item %v", item.value)
+				logger.Errorf("context cancelled while waiting to retry item %v in queue %s", item.value, q.Name)
 				return
 			}
 		}
@@ -221,11 +276,11 @@ func (q *PriorityQueue[T]) handleError(ctx context.Context, item priorityQueueIt
 		if item.priority {
 			err := q.enqueuePriority(ctx, item)
 			if err != nil {
-				logger.Errorf("error enqueing priority item %v for retry: %v", item.value, err)
+				logger.Errorf("error enqueing to %s priority item %v for retry: %v", q.Name, item.value, err)
 
 			}
 		} else if err := q.enqueue(ctx, item); err != nil {
-			logger.Errorf("error enqueing item %v for retry: %v", item.value, err)
+			logger.Errorf("error enqueing to %s item %v for retry: %v", q.Name, item.value, err)
 		}
 	}()
 
@@ -240,7 +295,6 @@ func (q *PriorityQueue[T]) dequeueWithRateLimit(ctx context.Context) (result pri
 		defer func() {
 			if err == nil {
 				q.lastDequeue.Lock()
-
 				q.lastDequeue.time = time.Now()
 				q.lastDequeue.Unlock()
 
@@ -276,7 +330,10 @@ func (q *PriorityQueue[T]) dequeue(ctx context.Context) (priorityQueueItem[T], e
 
 func (q *PriorityQueue[T]) enforceRateLimit(ctx context.Context) error {
 	now := time.Now()
+	q.lastDequeue.RLock()
 	delta := now.Sub(q.lastDequeue.time)
+	q.lastDequeue.RUnlock()
+
 	if delta >= q.minDequeueDelta {
 		return nil
 	}

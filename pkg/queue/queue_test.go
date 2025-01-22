@@ -45,6 +45,44 @@ func TestEnqueueDequeue(t *testing.T) {
 	}
 }
 
+func TestEnqueueDequeueAsync(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
+	defer cancel()
+
+	q := queue.NewPriority[int](&queue.PriorityQueueParams{Size: size})
+
+	var wg sync.WaitGroup
+	list := struct {
+		sync.Mutex
+		nums []int
+	}{}
+	handler := func(ctx context.Context, i int) error {
+		list.Lock()
+		list.nums = append(list.nums, i)
+		list.Unlock()
+		wg.Done()
+		return nil
+	}
+
+	for i := 0; i < size; i++ {
+		err := q.Enqueue(ctx, i)
+		require.NoError(t, err)
+	}
+
+	err := q.EnqueuePriority(ctx, size+1)
+	require.NoError(t, err)
+
+	for i := 0; i < size+1; i++ {
+		wg.Add(1)
+		err := q.DequeueAsync(ctx, handler)
+		require.NoError(t, err)
+	}
+
+	wg.Wait()
+
+	require.Equal(t, size+1, len(list.nums))
+}
+
 func TestEnqueuePriority(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
 	defer cancel()
