@@ -14,7 +14,7 @@ type Priority[T any] struct {
 	fast    QueueMutex[T]
 	in      chan *Item[T]
 	inFast  chan *Item[T]
-	limiter *rate.Limiter
+	Limiter *rate.Limiter
 }
 
 func (p *Priority[T]) InitiateAndRun(ctx context.Context) {
@@ -68,7 +68,7 @@ func (p *Priority[T]) processInFast(ctx context.Context) {
 	}
 }
 
-func (p *Priority[T]) getNext() T {
+func (p *Priority[T]) GetNext() T {
 	p.fast.Lock()
 	if p.fast.Len() > 0 {
 		item, _ := heapt.Pop(&p.fast)

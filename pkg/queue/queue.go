@@ -39,7 +39,6 @@ type priorityQueueItem[T any] struct {
 // PriorityQueueInput values are used to construct a new PriorityQueue.
 type PriorityQueueParams struct {
 	Size                 int           `toml:"size"`                    // Capacity of the queue and priority queue
-	DLQSize              int           `toml:"dlq_size"`                //
 	MaxDequeuesPerSecond int           `toml:"max_dequeues_per_second"` // Set to 0 to disable rate-limiting.
 	MaxWorkers           int           `toml:"max_workers"`             // Set to 0 for unlimited workers.
 	MaxAttempts          int32         `toml:"max_attempts"`            // Set to negative for unlimited attempts. If unset or set to 0, the default value (10) is applied.
@@ -78,14 +77,11 @@ func NewPriority[T any](input *PriorityQueueParams) PriorityQueue[T] {
 	}
 
 	if input.MaxAttempts > -1 {
-
 		q.maxAttempts = uint64(input.MaxAttempts)
-
 		if input.MaxAttempts == 0 {
 			q.maxAttempts = defaultMaxAttempts
 		}
-
-		q.DeadLetterQueue = make(chan T, input.DLQSize)
+		q.DeadLetterQueue = make(chan T, input.Size)
 	}
 
 	return q
