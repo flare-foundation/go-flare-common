@@ -39,7 +39,7 @@ type PriorityQueue[T any] struct {
 	maxAttempts int
 	timeOff     time.Duration
 
-	Limiter *rate.Limiter
+	limiter *rate.Limiter
 }
 
 // New returns new Priority from params.
@@ -66,7 +66,7 @@ func New[T any](params Params, name string) PriorityQueue[T] {
 		maxAttempts: params.MaxAttempts,
 		timeOff:     params.TimeOff,
 
-		Limiter: limiter,
+		limiter: limiter,
 	}
 }
 
@@ -221,7 +221,7 @@ func (p *PriorityQueue[T]) Dequeue(ctx context.Context, handler func(context.Con
 		}
 	}
 
-	err := p.Limiter.Wait(ctx)
+	err := p.limiter.Wait(ctx)
 	if err != nil {
 		logger.Errorf("queue %s wait error %v", p.Name(), err)
 		return
@@ -279,7 +279,7 @@ func (p *PriorityQueue[T]) decrementWorkers() {
 	}
 }
 
-// handleRetry re-enqueues an item after timeOff if maxAttempts has not been reached.
+// handleRetry re-enqueues an item from the regular lane after timeOff if maxAttempts has not been reached.
 func (p *PriorityQueue[T]) handleRetry(item *Item[wrapped[T]]) {
 	item.value.attemptsLeft--
 	if item.value.attemptsLeft <= 0 || item.value.fast {

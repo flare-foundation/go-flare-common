@@ -2,6 +2,7 @@ package queue_test
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"sync"
 	"testing"
@@ -9,7 +10,6 @@ import (
 
 	"github.com/cenkalti/backoff/v4"
 	"github.com/flare-foundation/go-flare-common/pkg/queue"
-	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -166,7 +166,7 @@ func TestEnqueueTimeout(t *testing.T) {
 
 	err := q.Enqueue(ctx, 1)
 	require.Error(t, err)
-	require.True(t, errors.Is(err, ctx.Err()))
+	require.EqualError(t, err, ctx.Err().Error())
 }
 
 func TestEnqueuePriorityTimeout(t *testing.T) {
@@ -177,7 +177,7 @@ func TestEnqueuePriorityTimeout(t *testing.T) {
 
 	err := q.EnqueuePriority(ctx, 1)
 	require.Error(t, err)
-	require.True(t, errors.Is(err, ctx.Err()))
+	require.EqualError(t, err, ctx.Err().Error())
 }
 
 func TestDequeueTimeout(t *testing.T) {
@@ -188,7 +188,7 @@ func TestDequeueTimeout(t *testing.T) {
 
 	err := q.Dequeue(ctx, nil)
 	require.Error(t, err)
-	require.True(t, errors.Is(err, ctx.Err()))
+	require.EqualError(t, err, ctx.Err().Error())
 }
 
 func TestDequeueAsyncTimeout(t *testing.T) {
@@ -199,7 +199,8 @@ func TestDequeueAsyncTimeout(t *testing.T) {
 
 	err := q.DequeueAsync(ctx, nil, nil)
 	require.Error(t, err)
-	require.True(t, errors.Is(err, ctx.Err()))
+	require.EqualError(t, err, ctx.Err().Error())
+
 }
 
 func TestDequeueRateLimitTimeout(t *testing.T) {
@@ -229,7 +230,7 @@ func TestDequeueRateLimitTimeout(t *testing.T) {
 
 	err = q.Dequeue(ctx, nil)
 	require.Error(t, err)
-	require.True(t, errors.Is(err, ctx.Err()))
+	require.EqualError(t, err, ctx.Err().Error())
 
 	// Check that we wait much less than a full second before exiting.
 	delta := time.Since(start)
@@ -267,8 +268,8 @@ func TestWorkersLimit(t *testing.T) {
 				return ctx.Err()
 			})
 
-			assert.Error(t, err)
-			assert.True(t, errors.Is(err, context.Canceled), err)
+			require.Error(t, err)
+			require.EqualError(t, err, context.Canceled.Error())
 		}(ctx, i)
 	}
 
@@ -286,7 +287,7 @@ func TestWorkersLimit(t *testing.T) {
 		return errors.New("shouldn't reach here")
 	})
 	require.Error(t, err)
-	require.True(t, errors.Is(err, context.DeadlineExceeded), err)
+	require.EqualError(t, err, context.DeadlineExceeded.Error())
 
 	cancel1()
 	finishedGroup.Wait()
@@ -453,7 +454,7 @@ func testHandlerFactory(errs map[int]bool, counter map[int]int, activity chan bo
 func itemCheckCallback(expected int) func(context.Context, int) error {
 	return func(ctx context.Context, item int) error {
 		if item != expected {
-			return errors.Errorf("%d != %d", item, expected)
+			return fmt.Errorf("%d != %d", item, expected)
 		}
 
 		return nil
@@ -464,7 +465,7 @@ func itemCheckCallbackWG(expected int, wg *sync.WaitGroup) func(context.Context,
 	return func(ctx context.Context, item int) error {
 		defer wg.Done()
 		if item != expected {
-			return errors.Errorf("%d != %d", item, expected)
+			return fmt.Errorf("%d != %d", item, expected)
 		}
 
 		return nil
