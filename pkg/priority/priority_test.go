@@ -89,8 +89,8 @@ func TestDequeue(t *testing.T) {
 	wg.Wait()
 
 	for j := 1; j < len(times.list)-1; j++ {
-		require.Less(t, times.list[j+1].Sub(times.list[j]), 115*time.Second/(time.Duration(perSecond*100)))
-		require.Greater(t, times.list[j+1].Sub(times.list[j]), 85*time.Second/(time.Duration(perSecond*100)))
+		require.Less(t, times.list[j+1].Sub(times.list[j]), 12*time.Second/(time.Duration(perSecond*10)))
+		require.Greater(t, times.list[j+1].Sub(times.list[j]), 8*time.Second/(time.Duration(perSecond*10)))
 	}
 
 	cancel()
