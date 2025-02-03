@@ -7,20 +7,26 @@ import (
 )
 
 type Item[T any] struct {
-	value    T   // The value of the item; arbitrary.
-	priority int // The priority of the item in the queue.
-	// The index is needed by update and is maintained by the heap.Interface methods.
+	value  T   // The value of the item; arbitrary.
+	weight int // The weight of the item in the queue.
+	// The index is needed by update and is maintained by the heapt.Interface methods.
 	index int // The index of the item in the heap.
 }
 
 // A Queue implements heapt.Interface
 type Queue[T any] []*Item[T]
 
+type QueueMutex[T any] struct {
+	Queue[T]
+	empty chan bool
+	sync.RWMutex
+}
+
 func (q Queue[T]) Len() int { return len(q) }
 
 func (q Queue[T]) Less(i, j int) bool {
-	// We want Pop to give us the highest, not lowest, priority so we use greater than here.
-	return q[i].priority > q[j].priority
+	// We want Pop to give us the highest, not lowest, weight so we use greater than here.
+	return q[i].weight > q[j].weight
 }
 
 func (q Queue[T]) Swap(i, j int) {
@@ -47,21 +53,14 @@ func (q *Queue[T]) Push(item *Item[T]) {
 
 func (q *Queue[T]) Update(item *Item[T], value T, priority int) {
 	item.value = value
-	item.priority = priority
+	item.weight = priority
 	heapt.Fix(q, item.index)
 }
 
-func (q *Queue[T]) AddValue(value T, priority int) {
+// AddValue creates Item with value and weight, and adds it to teh queue
+func (q *Queue[T]) AddValue(value T, weight int) {
 	item := new(Item[T])
 	item.value = value
-	item.priority = priority
+	item.weight = weight
 	heapt.Push(q, item)
-}
-
-type QueueMutex[T any] struct {
-	Queue[T]
-
-	empty chan bool
-
-	sync.RWMutex
 }
