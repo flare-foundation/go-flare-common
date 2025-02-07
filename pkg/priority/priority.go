@@ -149,7 +149,7 @@ func (p *PriorityQueue[T]) AddFast(value T, weight int) {
 	}
 }
 
-// AddFast adds value with weight to in channel.
+// Add adds value with weight to in channel.
 func (p *PriorityQueue[T]) Add(value T, weight int) {
 	p.in <- &Item[T]{
 		value:  value,
@@ -202,7 +202,7 @@ func (p *PriorityQueue[T]) next() *Item[wrapped[T]] {
 }
 
 // Dequeue gets next item and process it with discard and handler function.
-// Items that are discarded are do to affect rate limit.
+// Items that are discarded are do not affect rate limit.
 // If handler returns an error, item (from regular late) is retried until success of maxAttempts is reached.
 func (p *PriorityQueue[T]) Dequeue(ctx context.Context, handler func(context.Context, T) error, discard func(context.Context, T) bool) {
 	wItem := p.next()

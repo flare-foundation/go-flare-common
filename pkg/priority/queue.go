@@ -57,7 +57,7 @@ func (q *Queue[T]) Update(item *Item[T], value T, priority int) {
 	heapt.Fix(q, item.index)
 }
 
-// AddValue creates Item with value and weight, and adds it to teh queue
+// AddValue creates Item with value and weight, and adds it to the queue
 func (q *Queue[T]) AddValue(value T, weight int) {
 	item := new(Item[T])
 	item.value = value
