@@ -113,7 +113,7 @@ func (p *PriorityQueue[T]) processIn(ctx context.Context) {
 	}
 }
 
-// processIn enqueues items from inFast channel to the fast lane.
+// processInFast enqueues items from inFast channel to the fast lane.
 func (p *PriorityQueue[T]) processInFast(ctx context.Context) {
 	for {
 		select {
@@ -202,8 +202,8 @@ func (p *PriorityQueue[T]) next() *Item[wrapped[T]] {
 }
 
 // Dequeue gets next item and process it with discard and handler function.
-// Items that are discarded are do not affect rate limit.
-// If handler returns an error, item (from regular late) is retried until success of maxAttempts is reached.
+// Items that are discarded do not affect rate limit.
+// If handler returns an error, item (from regular late) is retried until success or maxAttempts is reached.
 func (p *PriorityQueue[T]) Dequeue(ctx context.Context, handler func(context.Context, T) error, discard func(context.Context, T) bool) {
 	wItem := p.next()
 
