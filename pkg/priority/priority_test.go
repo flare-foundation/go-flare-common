@@ -3,6 +3,7 @@ package priority
 import (
 	"context"
 	"errors"
+	"fmt"
 	"sync"
 	"testing"
 	"time"
@@ -15,7 +16,7 @@ func TestFull(t *testing.T) {
 
 	params := Params{}
 
-	pQueue := New[int](params, "test")
+	pQueue := New[int, wInt](params, "test")
 	pQueue.InitiateAndRun(ctx)
 
 	var wg sync.WaitGroup
@@ -34,7 +35,7 @@ func TestFull(t *testing.T) {
 
 	for i := 0; i < 100; i++ {
 		wg.Add(1)
-		pQueue.Add(i, i)
+		pQueue.Add(i, wInt(i))
 	}
 
 	go func() {
@@ -58,7 +59,7 @@ func TestDequeue(t *testing.T) {
 		MaxAttempts:          0,
 	}
 
-	pQueue := New[int](params, "test")
+	pQueue := New[int, wInt](params, "test")
 	pQueue.InitiateAndRun(ctx)
 
 	var wg sync.WaitGroup
@@ -77,7 +78,7 @@ func TestDequeue(t *testing.T) {
 
 	for i := 0; i < 100; i++ {
 		wg.Add(1)
-		pQueue.Add(i, i)
+		pQueue.Add(i, wInt(i))
 	}
 
 	go func() {
@@ -89,6 +90,7 @@ func TestDequeue(t *testing.T) {
 	wg.Wait()
 
 	for j := 1; j < len(times.list)-1; j++ {
+		// require that dequeues happen within the required rate limit with 20% tolerance.
 		require.Less(t, times.list[j+1].Sub(times.list[j]), 12*time.Second/(time.Duration(perSecond*10)))
 		require.Greater(t, times.list[j+1].Sub(times.list[j]), 8*time.Second/(time.Duration(perSecond*10)))
 	}
@@ -103,7 +105,7 @@ func TestMaxAttempts(t *testing.T) {
 		MaxAttempts: 2,
 	}
 
-	pQueue := New[int](params, "test")
+	pQueue := New[int, wInt](params, "test")
 	pQueue.InitiateAndRun(ctx)
 
 	stats := struct {
@@ -126,7 +128,7 @@ func TestMaxAttempts(t *testing.T) {
 	}()
 
 	for i := 0; i < 3; i++ {
-		pQueue.Add(i, i)
+		pQueue.Add(i, wInt(i))
 	}
 
 	time.Sleep(50 * time.Millisecond)
@@ -143,7 +145,7 @@ func TestMaxWorkers(t *testing.T) {
 		MaxWorkers:  2,
 	}
 
-	pQueue := New[int](params, "test")
+	pQueue := New[int, wInt](params, "test")
 	pQueue.InitiateAndRun(ctx)
 
 	stats := struct {
@@ -168,7 +170,7 @@ func TestMaxWorkers(t *testing.T) {
 	}()
 
 	for i := 0; i < 3; i++ {
-		pQueue.Add(i, 3-i)
+		pQueue.Add(i, wInt(3-i))
 	}
 
 	time.Sleep(20 * time.Millisecond)
@@ -185,5 +187,56 @@ func TestMaxWorkers(t *testing.T) {
 	require.Equal(t, 1, stats.attempts[1])
 	require.Equal(t, 1, stats.attempts[2])
 
+	cancel()
+}
+
+type wTup [2]int
+
+func (x wTup) self() wTup {
+	return x
+}
+
+func (x wTup) Less(y wTup) bool {
+	return x[0] < y[0] || (x[0] == y[0] && x[1] < y[1])
+}
+
+func TestDoubleWeights(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+
+	params := Params{}
+
+	pQueue := New[int, wTup](params, "test")
+	pQueue.InitiateAndRun(ctx)
+
+	var wg sync.WaitGroup
+
+	handled := struct {
+		list []int
+		sync.Mutex
+	}{}
+	handle := func(ctx context.Context, item int) error {
+		handled.Lock()
+		defer handled.Unlock()
+		handled.list = append(handled.list, item)
+		wg.Done()
+		return nil
+	}
+
+	for i := 0; i < 100; i++ {
+		wg.Add(1)
+		pQueue.Add(i, wTup{-i, i})
+	}
+
+	time.Sleep(100 * time.Millisecond)
+
+	for j := 0; j < 100; j++ {
+		time.Sleep(time.Millisecond)
+		pQueue.Dequeue(ctx, handle, nil)
+	}
+
+	wg.Wait()
+	require.Len(t, handled.list, 100)
+
+	fmt.Printf("handled.list: %v\n", handled.list)
 	cancel()
 }

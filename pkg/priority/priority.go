@@ -14,8 +14,8 @@ const bucketSize = 2
 type Params struct {
 	MaxDequeuesPerSecond int           `toml:"max_dequeues_per_second"` // Set to 0 to disable rate-limiting.
 	MaxWorkers           int           `toml:"max_workers"`             // Set to 0 for unlimited workers.
-	MaxAttempts          int           `toml:"max_attempts"`
-	TimeOff              time.Duration `toml:"time_off"` // TimeOff between attempts
+	MaxAttempts          int           `toml:"max_attempts"`            // If not positive or unset, it defaults to attempt.
+	TimeOff              time.Duration `toml:"time_off"`                // TimeOff between attempts
 }
 
 type wrapped[T any] struct {
@@ -28,12 +28,12 @@ type wrapped[T any] struct {
 // When dequeuing, items from the fast lane are returned first.
 // The ordering of the queue is based on weight. Items with higher weight are returned first.
 // A rate limit and/or maximal items handled at any time can be set.
-type PriorityQueue[T any] struct {
+type PriorityQueue[T any, W weight[W]] struct {
 	name    string
-	regular QueueMutex[wrapped[T]]
-	fast    QueueMutex[wrapped[T]]
-	in      chan *Item[T]
-	inFast  chan *Item[T]
+	regular QueueMutex[wrapped[T], W]
+	fast    QueueMutex[wrapped[T], W]
+	in      chan *Item[T, W]
+	inFast  chan *Item[T, W]
 	workers chan bool
 
 	maxAttempts int
@@ -43,7 +43,7 @@ type PriorityQueue[T any] struct {
 }
 
 // New returns new Priority from params.
-func New[T any](params Params, name string) PriorityQueue[T] {
+func New[T any, W weight[W]](params Params, name string) PriorityQueue[T, W] {
 	var limiter *rate.Limiter
 
 	if params.MaxDequeuesPerSecond > 0 {
@@ -57,10 +57,10 @@ func New[T any](params Params, name string) PriorityQueue[T] {
 		workers = make(chan bool, params.MaxWorkers)
 	}
 
-	return PriorityQueue[T]{
+	return PriorityQueue[T, W]{
 		name:    name,
-		regular: QueueMutex[wrapped[T]]{},
-		fast:    QueueMutex[wrapped[T]]{},
+		regular: QueueMutex[wrapped[T], W]{},
+		fast:    QueueMutex[wrapped[T], W]{},
 		workers: workers,
 
 		maxAttempts: params.MaxAttempts,
@@ -71,9 +71,9 @@ func New[T any](params Params, name string) PriorityQueue[T] {
 }
 
 // InitiateAndRun starts accepting new items to priority queue
-func (p *PriorityQueue[T]) InitiateAndRun(ctx context.Context) {
-	in := make(chan *Item[T])
-	inFast := make(chan *Item[T])
+func (p *PriorityQueue[T, W]) InitiateAndRun(ctx context.Context) {
+	in := make(chan *Item[T, W])
+	inFast := make(chan *Item[T, W])
 	emptyR := make(chan bool)
 	emptyF := make(chan bool)
 
@@ -87,11 +87,11 @@ func (p *PriorityQueue[T]) InitiateAndRun(ctx context.Context) {
 }
 
 // processIn enqueues items from in channel to the regular lane.
-func (p *PriorityQueue[T]) processIn(ctx context.Context) {
+func (p *PriorityQueue[T, W]) processIn(ctx context.Context) {
 	for {
 		select {
 		case item := <-p.in:
-			wItem := Item[wrapped[T]]{
+			wItem := Item[wrapped[T], W]{
 				value: wrapped[T]{
 					item:         item.value,
 					attemptsLeft: p.maxAttempts,
@@ -114,11 +114,11 @@ func (p *PriorityQueue[T]) processIn(ctx context.Context) {
 }
 
 // processInFast enqueues items from inFast channel to the fast lane.
-func (p *PriorityQueue[T]) processInFast(ctx context.Context) {
+func (p *PriorityQueue[T, W]) processInFast(ctx context.Context) {
 	for {
 		select {
 		case item := <-p.inFast:
-			wItem := Item[wrapped[T]]{
+			wItem := Item[wrapped[T], W]{
 				value: wrapped[T]{
 					item:         item.value,
 					attemptsLeft: p.maxAttempts,
@@ -142,23 +142,23 @@ func (p *PriorityQueue[T]) processInFast(ctx context.Context) {
 }
 
 // AddFast adds value with weight to inFast channel.
-func (p *PriorityQueue[T]) AddFast(value T, weight int) {
-	p.inFast <- &Item[T]{
+func (p *PriorityQueue[T, W]) AddFast(value T, weight W) {
+	p.inFast <- &Item[T, W]{
 		value:  value,
 		weight: weight,
 	}
 }
 
 // Add adds value with weight to in channel.
-func (p *PriorityQueue[T]) Add(value T, weight int) {
-	p.in <- &Item[T]{
+func (p *PriorityQueue[T, W]) Add(value T, weight W) {
+	p.in <- &Item[T, W]{
 		value:  value,
 		weight: weight,
 	}
 }
 
 // next returns the item that is next in line.
-func (p *PriorityQueue[T]) next() *Item[wrapped[T]] {
+func (p *PriorityQueue[T, W]) next() *Item[wrapped[T], W] {
 	p.fast.Lock()
 	if p.fast.Len() > 0 {
 		item, _ := heapt.Pop(&p.fast)
@@ -204,7 +204,7 @@ func (p *PriorityQueue[T]) next() *Item[wrapped[T]] {
 // Dequeue gets next item and processes it with discard and handler function.
 // Items that are discarded do not affect rate limit.
 // If handler returns an error, item (from regular late) is retried until success or maxAttempts is reached.
-func (p *PriorityQueue[T]) Dequeue(ctx context.Context, handler func(context.Context, T) error, discard func(context.Context, T) bool) {
+func (p *PriorityQueue[T, W]) Dequeue(ctx context.Context, handler func(context.Context, T) error, discard func(context.Context, T) bool) {
 	wItem := p.next()
 
 	if handler == nil {
@@ -241,7 +241,7 @@ func (p *PriorityQueue[T]) Dequeue(ctx context.Context, handler func(context.Con
 }
 
 // Name of the PriorityQueue. "Unnamed" if not set.
-func (p *PriorityQueue[T]) Name() string {
+func (p *PriorityQueue[T, W]) Name() string {
 	if len(p.name) > 0 {
 		return p.name
 	}
@@ -249,7 +249,7 @@ func (p *PriorityQueue[T]) Name() string {
 }
 
 // incrementWorkers indicates a worker is taken. Blocks if no worker is available.
-func (p *PriorityQueue[T]) incrementWorkers(ctx context.Context) error {
+func (p *PriorityQueue[T, W]) incrementWorkers(ctx context.Context) error {
 	select {
 	case p.workers <- true:
 		return nil
@@ -260,7 +260,7 @@ func (p *PriorityQueue[T]) incrementWorkers(ctx context.Context) error {
 }
 
 // decrementWorkers indicates a worker is not taken anymore.
-func (p *PriorityQueue[T]) decrementWorkers() {
+func (p *PriorityQueue[T, W]) decrementWorkers() {
 	select {
 	case <-p.workers:
 		return
@@ -271,7 +271,7 @@ func (p *PriorityQueue[T]) decrementWorkers() {
 }
 
 // handleRetry re-enqueues an item from the regular lane after timeOff if maxAttempts has not been reached.
-func (p *PriorityQueue[T]) handleRetry(item *Item[wrapped[T]]) {
+func (p *PriorityQueue[T, W]) handleRetry(item *Item[wrapped[T], W]) {
 	item.value.attemptsLeft--
 	if item.value.attemptsLeft <= 0 || item.value.fast {
 		return
