@@ -8,14 +8,15 @@ Golang packages that are used across multiple Flare projects.
 
 Contains the following packages:
 
-    - database: connecting and reading the c-chain indexer database
+    - database: connecting to and reading from the c-chain indexer database
     - events: parsing event logs as stored in Flare's c-chain indexer database
-    - heapt: generically typed heap implementation based on based on "container/heap"
+    - heapt: generically typed heap implementation based on "container/heap"
     - logger: logging solution
     - merkle: Merkle tree implementation
     - payload: working with transaction inputs for Submission smart contract
     - policy: storing and parsing signing policies
-    - queue: an implementation of a priority queue with two lanes
+    - priority: heap implementation of a priority queue with two lanes
+    - queue: channel implementation of a priority queue with two lanes
     - restserver
     - storage: an implementation of a cyclic storage
     - voters: working with Flare entities
