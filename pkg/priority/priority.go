@@ -14,8 +14,8 @@ const bucketSize = 2
 type Params struct {
 	MaxDequeuesPerSecond int           `toml:"max_dequeues_per_second"` // Set to 0 to disable rate-limiting.
 	MaxWorkers           int           `toml:"max_workers"`             // Set to 0 for unlimited workers.
-	MaxAttempts          int           `toml:"max_attempts"`            // Set to negative for unlimited attempts. If unset or set to 0, the default value (10) is applied.
-	TimeOff              time.Duration `toml:"time_off"`                // TimeOff between attempts
+	MaxAttempts          int           `toml:"max_attempts"`
+	TimeOff              time.Duration `toml:"time_off"` // TimeOff between attempts
 }
 
 type wrapped[T any] struct {
@@ -26,7 +26,7 @@ type wrapped[T any] struct {
 
 // PriorityQueue is a priority queue with a regular and a fast lane.
 // When dequeuing, items from the fast lane are returned first.
-// The order of the queue is based on weight.
+// The ordering of the queue is based on weight. Items with higher weight are returned first.
 // A rate limit and/or maximal items handled at any time can be set.
 type PriorityQueue[T any] struct {
 	name    string
@@ -201,7 +201,7 @@ func (p *PriorityQueue[T]) next() *Item[wrapped[T]] {
 	}
 }
 
-// Dequeue gets next item and process it with discard and handler function.
+// Dequeue gets next item and processes it with discard and handler function.
 // Items that are discarded do not affect rate limit.
 // If handler returns an error, item (from regular late) is retried until success or maxAttempts is reached.
 func (p *PriorityQueue[T]) Dequeue(ctx context.Context, handler func(context.Context, T) error, discard func(context.Context, T) bool) {
@@ -256,15 +256,6 @@ func (p *PriorityQueue[T]) incrementWorkers(ctx context.Context) error {
 
 	case <-ctx.Done():
 		return ctx.Err()
-
-	default:
-		select {
-		case p.workers <- true:
-			return nil
-
-		case <-ctx.Done():
-			return ctx.Err()
-		}
 	}
 }
 
