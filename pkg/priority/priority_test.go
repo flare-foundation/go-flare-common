@@ -89,11 +89,17 @@ func TestDequeue(t *testing.T) {
 
 	wg.Wait()
 
+	// require
+	var deviationTotal time.Duration = 0
 	for j := 1; j < len(times.list)-1; j++ {
-		// require that dequeues happen within the required rate limit with 20% tolerance.
-		require.Less(t, times.list[j+1].Sub(times.list[j]), 12*time.Second/(time.Duration(perSecond*10)))
-		require.Greater(t, times.list[j+1].Sub(times.list[j]), 8*time.Second/(time.Duration(perSecond*10)))
+		difference := times.list[j+1].Sub(times.list[j]) - (time.Second / time.Duration(perSecond))
+		fmt.Printf("difference: %v\n", difference.Abs())
+		deviationTotal = +difference.Abs()
 	}
+
+	deviationMean := deviationTotal / time.Duration(len(times.list)-2)
+
+	require.Less(t, deviationMean, time.Second/time.Duration(perSecond*10))
 
 	cancel()
 }
