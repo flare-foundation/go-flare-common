@@ -62,7 +62,7 @@ func TestCallNoKey(t *testing.T) {
 
 	go func() {
 		err := server.ListenAndServe()
-		require.NoError(t, err)
+		require.Error(t, err)
 	}()
 
 	request := RequestData{
