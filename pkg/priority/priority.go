@@ -215,16 +215,16 @@ func (p *PriorityQueue[T, W]) Dequeue(ctx context.Context, handler func(context.
 		return
 	}
 
-	if p.workers != nil {
-		if err := p.incrementWorkers(ctx); err != nil {
-			return
-		}
-	}
-
 	err := p.limiter.Wait(ctx)
 	if err != nil {
 		logger.Errorf("queue %s wait error %v", p.Name(), err)
 		return
+	}
+
+	if p.workers != nil {
+		if err := p.incrementWorkers(ctx); err != nil {
+			return
+		}
 	}
 
 	go func() {
