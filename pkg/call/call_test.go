@@ -60,8 +60,10 @@ func TestCallNoKey(t *testing.T) {
 
 	server := MockServerForTest(t, 5010)
 
-	go server.ListenAndServe()
-	defer server.Shutdown(ctx)
+	go func() {
+		err := server.ListenAndServe()
+		require.NoError(t, err)
+	}()
 
 	request := RequestData{
 		A: 0,
@@ -85,5 +87,6 @@ func TestCallNoKey(t *testing.T) {
 	require.Equal(t, "b", result.B)
 	require.Equal(t, []byte{0, 1, 2, 3}, result.C)
 
-	server.Shutdown(ctx)
+	err = server.Shutdown(ctx)
+	require.NoError(t, err)
 }
