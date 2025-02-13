@@ -16,7 +16,7 @@ type Params struct {
 	MaxWorkers           int           `toml:"max_workers"`             // Set to 0 for unlimited workers.
 	MaxAttempts          int           `toml:"max_attempts"`            // If not positive or unset, it defaults to attempt.
 	TimeOff              time.Duration `toml:"time_off"`                // TimeOff between attempts
-	ErrorChan            bool          `toml:"error_chan"`              // If true, errors, error on final attempt are pushed to the channel
+	ErrorChan            bool          `toml:"error_chan"`              // If true, errors on final attempts are pushed to the channel
 }
 
 type wrapped[T any] struct {
