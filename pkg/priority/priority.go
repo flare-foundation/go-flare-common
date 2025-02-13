@@ -16,6 +16,7 @@ type Params struct {
 	MaxWorkers           int           `toml:"max_workers"`             // Set to 0 for unlimited workers.
 	MaxAttempts          int           `toml:"max_attempts"`            // If not positive or unset, it defaults to attempt.
 	TimeOff              time.Duration `toml:"time_off"`                // TimeOff between attempts
+	ErrorChan            bool          `toml:"error_chan"`              // If true, errors, error on final attempt are pushed to the channel
 }
 
 type wrapped[T any] struct {
@@ -35,6 +36,7 @@ type PriorityQueue[T any, W weight[W]] struct {
 	in      chan *Item[T, W]
 	inFast  chan *Item[T, W]
 	workers chan bool
+	Errors  chan error
 
 	maxAttempts int
 	timeOff     time.Duration
@@ -57,11 +59,17 @@ func New[T any, W weight[W]](params Params, name string) PriorityQueue[T, W] {
 		workers = make(chan bool, params.MaxWorkers)
 	}
 
+	var errors chan error
+	if params.ErrorChan {
+		errors = make(chan error, 10)
+	}
+
 	return PriorityQueue[T, W]{
 		name:    name,
 		regular: QueueMutex[wrapped[T], W]{},
 		fast:    QueueMutex[wrapped[T], W]{},
 		workers: workers,
+		Errors:  errors,
 
 		maxAttempts: params.MaxAttempts,
 		timeOff:     params.TimeOff,
@@ -235,7 +243,7 @@ func (p *PriorityQueue[T, W]) Dequeue(ctx context.Context, handler func(context.
 		}
 
 		if err != nil {
-			p.handleRetry(wItem)
+			p.handleRetry(wItem, err)
 		}
 	}()
 }
@@ -271,9 +279,10 @@ func (p *PriorityQueue[T, W]) decrementWorkers() {
 }
 
 // handleRetry re-enqueues an item from the regular lane after timeOff if maxAttempts has not been reached.
-func (p *PriorityQueue[T, W]) handleRetry(item *Item[wrapped[T], W]) {
+func (p *PriorityQueue[T, W]) handleRetry(item *Item[wrapped[T], W], err error) {
 	item.value.attemptsLeft--
 	if item.value.attemptsLeft <= 0 || item.value.fast {
+		p.addError(err)
 		return
 	}
 
@@ -287,4 +296,17 @@ func (p *PriorityQueue[T, W]) handleRetry(item *Item[wrapped[T], W]) {
 		}
 		p.regular.Unlock()
 	}()
+}
+
+// addError adds error to the Errors channel if it is enabled.
+// If the channel is full, the error is lost.
+func (p *PriorityQueue[T, W]) addError(err error) {
+	if p.Errors == nil {
+		return
+	}
+
+	select {
+	case p.Errors <- err:
+	default:
+	}
 }

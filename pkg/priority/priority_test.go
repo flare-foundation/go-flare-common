@@ -80,6 +80,10 @@ func TestDequeue(t *testing.T) {
 		wg.Add(1)
 		pQueue.Add(i, wInt(i))
 	}
+	for i := 0; i < 20; i++ {
+		wg.Add(1)
+		pQueue.AddFast(i, wInt(i))
+	}
 
 	go func() {
 		for {
@@ -93,12 +97,10 @@ func TestDequeue(t *testing.T) {
 	var deviationTotal time.Duration = 0
 	for j := 1; j < len(times.list)-1; j++ {
 		difference := times.list[j+1].Sub(times.list[j]) - (time.Second / time.Duration(perSecond))
-		fmt.Printf("difference: %v\n", difference.Abs())
 		deviationTotal = +difference.Abs()
 	}
 
 	deviationMean := deviationTotal / time.Duration(len(times.list)-2)
-
 	require.Less(t, deviationMean, time.Second/time.Duration(perSecond*10))
 
 	cancel()
