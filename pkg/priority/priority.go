@@ -19,7 +19,7 @@ type Params struct {
 	ErrorChan            bool          `toml:"error_chan"`              // If true, errors on final attempts are pushed to the channel
 }
 
-type wrapped[T any] struct {
+type Wrapped[T any] struct {
 	item         T
 	attemptsLeft int
 	fast         bool
@@ -31,10 +31,10 @@ type wrapped[T any] struct {
 // A rate limit and/or maximal items handled at any time can be set.
 type PriorityQueue[T any, W weight[W]] struct {
 	name    string
-	regular QueueMutex[wrapped[T], W]
-	fast    QueueMutex[wrapped[T], W]
-	in      chan *Item[wrapped[T], W]
-	inFast  chan *Item[wrapped[T], W]
+	regular QueueMutex[Wrapped[T], W]
+	fast    QueueMutex[Wrapped[T], W]
+	in      chan *Item[Wrapped[T], W]
+	inFast  chan *Item[Wrapped[T], W]
 	workers chan bool
 	Errors  chan error
 
@@ -66,8 +66,8 @@ func New[T any, W weight[W]](params Params, name string) PriorityQueue[T, W] {
 
 	return PriorityQueue[T, W]{
 		name:    name,
-		regular: QueueMutex[wrapped[T], W]{},
-		fast:    QueueMutex[wrapped[T], W]{},
+		regular: QueueMutex[Wrapped[T], W]{},
+		fast:    QueueMutex[Wrapped[T], W]{},
 		workers: workers,
 		Errors:  errors,
 
@@ -80,8 +80,8 @@ func New[T any, W weight[W]](params Params, name string) PriorityQueue[T, W] {
 
 // InitiateAndRun starts accepting new items to priority queue
 func (p *PriorityQueue[T, W]) InitiateAndRun(ctx context.Context) {
-	in := make(chan *Item[wrapped[T], W])
-	inFast := make(chan *Item[wrapped[T], W])
+	in := make(chan *Item[Wrapped[T], W])
+	inFast := make(chan *Item[Wrapped[T], W])
 	emptyR := make(chan bool)
 	emptyF := make(chan bool)
 
@@ -133,9 +133,9 @@ func (p *PriorityQueue[T, W]) processInFast(ctx context.Context) {
 }
 
 // AddFast adds value with weight to inFast channel.
-func (p *PriorityQueue[T, W]) AddFast(value T, weight W) *Item[wrapped[T], W] {
-	item := &Item[wrapped[T], W]{
-		value: wrapped[T]{
+func (p *PriorityQueue[T, W]) AddFast(value T, weight W) *Item[Wrapped[T], W] {
+	item := &Item[Wrapped[T], W]{
+		value: Wrapped[T]{
 			item:         value,
 			attemptsLeft: 0,
 			fast:         true,
@@ -150,9 +150,9 @@ func (p *PriorityQueue[T, W]) AddFast(value T, weight W) *Item[wrapped[T], W] {
 }
 
 // Add adds value with weight to in channel.
-func (p *PriorityQueue[T, W]) Add(value T, weight W) *Item[wrapped[T], W] {
-	item := &Item[wrapped[T], W]{
-		value: wrapped[T]{
+func (p *PriorityQueue[T, W]) Add(value T, weight W) *Item[Wrapped[T], W] {
+	item := &Item[Wrapped[T], W]{
+		value: Wrapped[T]{
 			item:         value,
 			attemptsLeft: p.maxAttempts,
 			fast:         false,
@@ -166,7 +166,7 @@ func (p *PriorityQueue[T, W]) Add(value T, weight W) *Item[wrapped[T], W] {
 }
 
 // next returns the item that is next in line.
-func (p *PriorityQueue[T, W]) next() *Item[wrapped[T], W] {
+func (p *PriorityQueue[T, W]) next() *Item[Wrapped[T], W] {
 	p.fast.Lock()
 	if p.fast.Len() > 0 {
 		item, _ := heapt.Pop(&p.fast)
@@ -279,7 +279,7 @@ func (p *PriorityQueue[T, W]) decrementWorkers() {
 }
 
 // handleRetry re-enqueues an item from the regular lane after timeOff if maxAttempts has not been reached.
-func (p *PriorityQueue[T, W]) handleRetry(item *Item[wrapped[T], W], err error) {
+func (p *PriorityQueue[T, W]) handleRetry(item *Item[Wrapped[T], W], err error) {
 	item.value.attemptsLeft--
 	if item.value.attemptsLeft <= 0 || item.value.fast {
 		p.addError(err)
