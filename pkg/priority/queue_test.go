@@ -10,7 +10,7 @@ import (
 
 type wInt int
 
-func (x wInt) self() wInt {
+func (x wInt) Self() wInt {
 	return x
 }
 
@@ -35,7 +35,7 @@ func TestPushPopRandom(t *testing.T) {
 		for i := 0; i < size; i++ {
 			item, _ := heapt.Pop(&queue)
 			require.Equal(t, size-1-i, item.value)
-			require.Equal(t, wInt(size-1-i), item.weight.self())
+			require.Equal(t, wInt(size-1-i), item.weight.Self())
 		}
 	}
 }
@@ -54,7 +54,7 @@ func TestAddValuePopRandom(t *testing.T) {
 		for i := 0; i < size; i++ {
 			item, _ := heapt.Pop(&queue)
 			require.Equal(t, size-1-i, item.value)
-			require.Equal(t, wInt(size-1-i), item.weight.self())
+			require.Equal(t, wInt(size-1-i), item.weight.Self())
 		}
 	}
 }

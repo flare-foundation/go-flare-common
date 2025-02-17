@@ -200,7 +200,7 @@ func TestMaxWorkers(t *testing.T) {
 
 type wTup [2]int
 
-func (x wTup) self() wTup {
+func (x wTup) Self() wTup {
 	return x
 }
 

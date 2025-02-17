@@ -7,7 +7,7 @@ import (
 )
 
 type weight[T any] interface {
-	self() T
+	Self() T
 	Less(T) bool
 }
 
@@ -31,7 +31,7 @@ func (q Queue[T, W]) Len() int { return len(q) }
 
 func (q Queue[T, W]) Less(i, j int) bool {
 	// We want Pop to give us the highest, not lowest, weight so we use greater than here.
-	return q[j].weight.Less(q[i].weight.self())
+	return q[j].weight.Less(q[i].weight.Self())
 }
 
 func (q Queue[T, W]) Swap(i, j int) {
