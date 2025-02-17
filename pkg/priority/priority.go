@@ -14,7 +14,7 @@ const bucketSize = 2
 type Params struct {
 	MaxDequeuesPerSecond int           `toml:"max_dequeues_per_second"` // Set to 0 to disable rate-limiting.
 	MaxWorkers           int           `toml:"max_workers"`             // Set to 0 for unlimited workers.
-	MaxAttempts          int           `toml:"max_attempts"`            // If not positive or unset, it defaults to attempt.
+	MaxAttempts          int           `toml:"max_attempts"`            // If not positive or unset, it defaults to one attempt.
 	TimeOff              time.Duration `toml:"time_off"`                // TimeOff between attempts
 	ErrorChan            bool          `toml:"error_chan"`              // If true, errors on final attempts are pushed to the channel
 }
