@@ -33,8 +33,8 @@ type PriorityQueue[T any, W weight[W]] struct {
 	name    string
 	regular QueueMutex[wrapped[T], W]
 	fast    QueueMutex[wrapped[T], W]
-	in      chan *Item[T, W]
-	inFast  chan *Item[T, W]
+	in      chan *Item[wrapped[T], W]
+	inFast  chan *Item[wrapped[T], W]
 	workers chan bool
 	Errors  chan error
 
@@ -80,8 +80,8 @@ func New[T any, W weight[W]](params Params, name string) PriorityQueue[T, W] {
 
 // InitiateAndRun starts accepting new items to priority queue
 func (p *PriorityQueue[T, W]) InitiateAndRun(ctx context.Context) {
-	in := make(chan *Item[T, W])
-	inFast := make(chan *Item[T, W])
+	in := make(chan *Item[wrapped[T], W])
+	inFast := make(chan *Item[wrapped[T], W])
 	emptyR := make(chan bool)
 	emptyF := make(chan bool)
 
@@ -99,16 +99,8 @@ func (p *PriorityQueue[T, W]) processIn(ctx context.Context) {
 	for {
 		select {
 		case item := <-p.in:
-			wItem := Item[wrapped[T], W]{
-				value: wrapped[T]{
-					item:         item.value,
-					attemptsLeft: p.maxAttempts,
-					fast:         false,
-				},
-				weight: item.weight,
-			}
 			p.regular.Lock()
-			heapt.Push(&p.regular.Queue, &wItem)
+			heapt.Push(&p.regular.Queue, item)
 			select {
 			case p.regular.empty <- false:
 			default:
@@ -126,17 +118,8 @@ func (p *PriorityQueue[T, W]) processInFast(ctx context.Context) {
 	for {
 		select {
 		case item := <-p.inFast:
-			wItem := Item[wrapped[T], W]{
-				value: wrapped[T]{
-					item:         item.value,
-					attemptsLeft: p.maxAttempts,
-					fast:         true,
-				},
-				weight: item.weight,
-			}
-
 			p.fast.Lock()
-			heapt.Push(&p.fast.Queue, &wItem)
+			heapt.Push(&p.fast.Queue, item)
 			select {
 			case p.fast.empty <- false:
 			default:
@@ -150,19 +133,36 @@ func (p *PriorityQueue[T, W]) processInFast(ctx context.Context) {
 }
 
 // AddFast adds value with weight to inFast channel.
-func (p *PriorityQueue[T, W]) AddFast(value T, weight W) {
-	p.inFast <- &Item[T, W]{
-		value:  value,
+func (p *PriorityQueue[T, W]) AddFast(value T, weight W) *Item[wrapped[T], W] {
+	item := &Item[wrapped[T], W]{
+		value: wrapped[T]{
+			item:         value,
+			attemptsLeft: 0,
+			fast:         true,
+		},
 		weight: weight,
+		index:  0,
 	}
+
+	p.inFast <- item
+
+	return item
 }
 
 // Add adds value with weight to in channel.
-func (p *PriorityQueue[T, W]) Add(value T, weight W) {
-	p.in <- &Item[T, W]{
-		value:  value,
+func (p *PriorityQueue[T, W]) Add(value T, weight W) *Item[wrapped[T], W] {
+	item := &Item[wrapped[T], W]{
+		value: wrapped[T]{
+			item:         value,
+			attemptsLeft: p.maxAttempts,
+			fast:         false,
+		},
 		weight: weight,
 	}
+
+	p.in <- item
+
+	return item
 }
 
 // next returns the item that is next in line.

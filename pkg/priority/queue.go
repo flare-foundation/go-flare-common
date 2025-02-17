@@ -34,12 +34,14 @@ func (q Queue[T, W]) Less(i, j int) bool {
 	return q[j].weight.Less(q[i].weight.Self())
 }
 
+// Swap SHOULD NOT BE USED DIRECTLY
 func (q Queue[T, W]) Swap(i, j int) {
 	q[i], q[j] = q[j], q[i]
 	q[i].index = i
 	q[j].index = j
 }
 
+// Pop SHOULD NOT BE USED DIRECTLY use heapt.Pop(q) instead
 func (q *Queue[T, W]) Pop() *Item[T, W] {
 	old := *q
 	n := len(old)
@@ -50,14 +52,15 @@ func (q *Queue[T, W]) Pop() *Item[T, W] {
 	return item
 }
 
+// Push SHOULD NOT BE USED DIRECTLY use heapt.Push(q, item)  instead
 func (q *Queue[T, W]) Push(item *Item[T, W]) {
 	n := len(*q)
 	item.index = n
 	*q = append(*q, item)
 }
 
-func (q *Queue[T, W]) Update(item *Item[T, W], value T, weight W) {
-	item.value = value
+// Update updates the weight if the item
+func (q *Queue[T, W]) UpdateWeight(item *Item[T, W], weight W) {
 	item.weight = weight
 	heapt.Fix(q, item.index)
 }

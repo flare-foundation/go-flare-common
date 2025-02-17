@@ -129,8 +129,8 @@ func TestRemove0(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		h.Push(i)
 	}
+	heapt.Init(h)
 	h.verify(t, 0)
-
 	for h.Len() > 0 {
 		i := h.Len() - 1
 		x := heapt.Remove(h, i)
@@ -144,6 +144,7 @@ func TestRemove1(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		h.Push(i)
 	}
+	heapt.Init(h)
 	h.verify(t, 0)
 
 	for i := 0; h.Len() > 0; i++ {
@@ -161,6 +162,7 @@ func TestRemove2(t *testing.T) {
 	for i := 0; i < N; i++ {
 		h.Push(i)
 	}
+	heapt.Init(h)
 	h.verify(t, 0)
 
 	m := make(map[int]bool)
@@ -174,4 +176,17 @@ func TestRemove2(t *testing.T) {
 		require.Truef(t, m[i], "m[%d] doesn't exist", i)
 
 	}
+}
+
+func TestFix(t *testing.T) {
+	N := 10
+
+	h := new(myHeap)
+	for i := 0; i < N; i++ {
+		heapt.Push(h, i)
+	}
+	h.verify(t, 0)
+
+	heapt.Fix(h, -1)
+
 }
