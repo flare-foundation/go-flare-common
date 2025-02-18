@@ -12,7 +12,7 @@ type weight[T any] interface {
 }
 
 type Item[T any, W weight[W]] struct {
-	value  T         // The value of the item; arbitrary.
+	value  T         // The value of the item.
 	weight weight[W] // The weight of the item in the queue.
 	// The index is needed by update and is maintained by the heapt.Interface methods.
 	index int // The index of the item in the heap.
@@ -59,13 +59,15 @@ func (q *Queue[T, W]) Push(item *Item[T, W]) {
 	*q = append(*q, item)
 }
 
-// Update updates the weight if the item
+// Update updates the weight of an item and updates the queue accordingly.
+//
+// Does not effect the queue if the item is not in it.
 func (q *Queue[T, W]) UpdateWeight(item *Item[T, W], weight W) {
 	item.weight = weight
 	heapt.Fix(q, item.index)
 }
 
-// AddValue creates Item with value and weight, and adds it to the queue
+// AddValue creates Item with value and weight, and adds it to the queue.
 func (q *Queue[T, W]) AddValue(value T, weight W) {
 	item := new(Item[T, W])
 	item.value = value

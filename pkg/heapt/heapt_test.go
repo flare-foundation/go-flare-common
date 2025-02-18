@@ -37,22 +37,12 @@ func (h myHeap) verify(t *testing.T, i int) {
 	j1 := 2*i + 1
 	j2 := 2*i + 2
 	if j1 < n {
-
 		require.Truef(t, !h.Less(j1, i), "heap invariant invalidated [%d] = %d > [%d] = %d", i, h[i], j1, h[j1])
-		// if h.Less(j1, i) {
-		// 	t.Errorf("heap invariant invalidated [%d] = %d > [%d] = %d", i, h[i], j1, h[j1])
-		// 	return
-		// }
+
 		h.verify(t, j1)
 	}
 	if j2 < n {
-
 		require.Truef(t, !h.Less(j1, i), "heap invariant invalidated [%d] = %d > [%d] = %d", i, h[i], j2, h[j2])
-
-		// if h.Less(j2, i) {
-		// 	t.Errorf("heap invariant invalidated [%d] = %d > [%d] = %d", i, h[i], j1, h[j2])
-		// 	return
-		// }
 		h.verify(t, j2)
 	}
 }
@@ -187,6 +177,27 @@ func TestFix(t *testing.T) {
 	}
 	h.verify(t, 0)
 
+	(*h)[N/2] = -N
+
+	heapt.Fix(h, N/2)
+
+	h.verify(t, 0)
+}
+
+func TestFixInexistentIndex(t *testing.T) {
+	N := 10
+
+	h := new(myHeap)
+	for i := 0; i < N; i++ {
+		heapt.Push(h, i)
+	}
+	h.verify(t, 0)
+
 	heapt.Fix(h, -1)
 
+	h.verify(t, 0)
+
+	heapt.Fix(h, 2*N)
+
+	h.verify(t, 0)
 }

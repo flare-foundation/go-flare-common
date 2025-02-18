@@ -1,7 +1,6 @@
 package priority
 
 import (
-	"fmt"
 	"math/rand/v2"
 	"testing"
 
@@ -58,21 +57,4 @@ func TestAddValuePopRandom(t *testing.T) {
 			require.Equal(t, wInt(size-1-i), item.weight.Self())
 		}
 	}
-}
-
-func TestSameWeight(t *testing.T) {
-
-	queue := Queue[int, wInt]{}
-
-	for i := 0; i < 10; i++ {
-		queue.AddValue(i, wInt(0))
-	}
-
-	for i := 0; i < 10; i++ {
-
-		item, _ := heapt.Pop(&queue)
-
-		fmt.Printf("k.value: %v\n", item)
-	}
-
 }
