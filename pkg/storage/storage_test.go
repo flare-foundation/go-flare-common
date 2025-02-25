@@ -7,7 +7,6 @@ import (
 )
 
 func TestCyclicSimple(t *testing.T) {
-
 	const size int = 4
 
 	stg := storage.NewCyclic[int, uint64](size)
@@ -50,7 +49,6 @@ func TestCyclicSimple(t *testing.T) {
 	if exists || getOne != 0 {
 		t.Error("not overwritten with larger")
 	}
-
 }
 
 func TestCyclicArray(t *testing.T) {

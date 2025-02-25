@@ -28,7 +28,6 @@ func writeResponseError(w http.ResponseWriter, code int, message string) {
 	if err != nil {
 		http.Error(w, fmt.Sprintf("error writing response: %s", err), http.StatusInternalServerError)
 	}
-
 }
 
 // Equivalent to WriteAPIResponse with status APIResponseStatusOk

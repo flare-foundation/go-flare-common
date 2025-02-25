@@ -79,7 +79,6 @@ func TestExtractPayloads(t *testing.T) {
 		require.Equal(t, test.protocol, payloadFTSO.ProtocolID, fmt.Sprintf("wrong protocol ID in test %d", i))
 		require.Equal(t, test.votingRound, payloadFTSO.VotingRound, fmt.Sprintf("wrong voting round in test %d", i))
 	}
-
 }
 
 var txError1 = &database.Transaction{
@@ -172,7 +171,6 @@ func TestExtractPayloadsError(t *testing.T) {
 	}
 
 	for i, tx := range txs {
-
 		_, err := payload.ExtractPayloads(tx)
 		require.Error(t, err, fmt.Sprintf("error in test %d", i))
 

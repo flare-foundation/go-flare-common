@@ -59,7 +59,6 @@ func TestParseDatabaseLog(t *testing.T) {
 	}
 
 	for i, test := range tests {
-
 		event, err := policy.ParseSigningPolicyInitializedEvent(test.log)
 
 		require.NoError(t, err)
@@ -67,9 +66,7 @@ func TestParseDatabaseLog(t *testing.T) {
 		require.Equal(t, test.startVotingRoundID, event.StartVotingRoundId, fmt.Sprintf("error start voting round in test %d", i))
 
 		require.Equal(t, big.NewInt(test.rewardEpochID), event.RewardEpochId)
-
 	}
-
 }
 
 func TestNewSiginigPolicyLogs(t *testing.T) {
@@ -153,5 +150,4 @@ func TestStorage(t *testing.T) {
 
 	removeOne := storage.RemoveBefore(667080)
 	require.Len(t, removeOne, 1)
-
 }

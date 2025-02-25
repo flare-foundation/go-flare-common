@@ -48,7 +48,6 @@ func TestBuildEmpty(t *testing.T) {
 	if len(treeHashed) > 0 {
 		t.Error("not empty tree")
 	}
-
 }
 
 func TestBuildOne(t *testing.T) {

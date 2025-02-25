@@ -249,7 +249,6 @@ func (q *PriorityQueue[T]) handleError(ctx context.Context, item priorityQueueIt
 			logger.Errorf("error enqueing to %s item %v for retry: %v", q.Name(), item.value, err)
 		}
 	}()
-
 }
 
 func (q *PriorityQueue[T]) dequeueWithRateLimit(ctx context.Context) (result priorityQueueItem[T], err error) {

@@ -184,7 +184,6 @@ func fetchTransactionsByAddressAndSelectorFromBlockNumber(ctx context.Context, d
 // FetchState returns the state of the indexer database.
 func FetchState(ctx context.Context, db *gorm.DB, _ any) (State, error) {
 	return RetryWrapper(fetchState, "fetching state")(ctx, db, nil)
-
 }
 
 // _ any is here to match the input type of the RetryWrapper

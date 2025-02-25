@@ -200,7 +200,6 @@ func TestDequeueAsyncTimeout(t *testing.T) {
 	err := q.DequeueAsync(ctx, nil, nil)
 	require.Error(t, err)
 	require.EqualError(t, err, ctx.Err().Error())
-
 }
 
 func TestDequeueRateLimitTimeout(t *testing.T) {
