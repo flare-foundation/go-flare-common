@@ -40,7 +40,6 @@ func TestEnqueueDequeue(t *testing.T) {
 
 	for i := 0; i < size; i++ {
 		err := q.Dequeue(ctx, itemCheckCallback(i))
-
 		require.NoError(t, err)
 	}
 }

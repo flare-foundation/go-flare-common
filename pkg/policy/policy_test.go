@@ -60,11 +60,8 @@ func TestParseDatabaseLog(t *testing.T) {
 
 	for i, test := range tests {
 		event, err := policy.ParseSigningPolicyInitializedEvent(test.log)
-
 		require.NoError(t, err)
-
 		require.Equal(t, test.startVotingRoundID, event.StartVotingRoundId, fmt.Sprintf("error start voting round in test %d", i))
-
 		require.Equal(t, big.NewInt(test.rewardEpochID), event.RewardEpochId)
 	}
 }

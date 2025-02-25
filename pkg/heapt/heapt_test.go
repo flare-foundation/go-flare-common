@@ -164,7 +164,6 @@ func TestRemove2(t *testing.T) {
 	require.Equalf(t, N, len(m), "len(m) = %d; want %d", len(m), N)
 	for i := 0; i < len(m); i++ {
 		require.Truef(t, m[i], "m[%d] doesn't exist", i)
-
 	}
 }
 
@@ -178,9 +177,7 @@ func TestFix(t *testing.T) {
 	h.verify(t, 0)
 
 	(*h)[N/2] = -N
-
 	heapt.Fix(h, N/2)
-
 	h.verify(t, 0)
 }
 
@@ -194,10 +191,8 @@ func TestFixInexistentIndex(t *testing.T) {
 	h.verify(t, 0)
 
 	heapt.Fix(h, -1)
-
 	h.verify(t, 0)
 
 	heapt.Fix(h, 2*N)
-
 	h.verify(t, 0)
 }

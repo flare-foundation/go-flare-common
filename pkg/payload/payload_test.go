@@ -173,7 +173,6 @@ func TestExtractPayloadsError(t *testing.T) {
 	for i, tx := range txs {
 		_, err := payload.ExtractPayloads(tx)
 		require.Error(t, err, fmt.Sprintf("error in test %d", i))
-
 	}
 }
 

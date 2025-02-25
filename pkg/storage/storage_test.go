@@ -16,7 +16,6 @@ func TestCyclicSimple(t *testing.T) {
 	}
 
 	getEmpty, exists := stg.Get(123)
-
 	if exists || getEmpty != 0 {
 		t.Error("unset but exists")
 	}
@@ -24,7 +23,6 @@ func TestCyclicSimple(t *testing.T) {
 	stg.Store(1, 1)
 
 	getOne, exists := stg.Get(1)
-
 	if !exists || getOne != 1 {
 		t.Error("not stored")
 	}
@@ -67,7 +65,6 @@ func TestCyclicArray(t *testing.T) {
 	stg.Store(1, ar)
 
 	getOne, exists := stg.Get(1)
-
 	if !exists || len(getOne) != 1 {
 		t.Error("not stored")
 	}
@@ -75,13 +72,11 @@ func TestCyclicArray(t *testing.T) {
 	ar = append(ar, 1)
 
 	getOne, exists = stg.Get(1)
-
 	if !exists || len(getOne) != 1 || len(ar) != 2 {
 		t.Error("copy not made 1")
 	}
 
 	getOne = append(getOne, 1)
-
 	if len(getOne) != 2 {
 		t.Error("element no added")
 	}

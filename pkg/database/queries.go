@@ -203,7 +203,6 @@ func fetchState(ctx context.Context, db *gorm.DB, _ any) (State, error) {
 	if len(states) == 0 {
 		var state State
 		return state, errors.New("no states in database")
-
 	}
 
 	return states[0], nil
