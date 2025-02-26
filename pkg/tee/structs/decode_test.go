@@ -62,7 +62,8 @@ func TestDecodeStruct(t *testing.T) {
         }`
 
 	arg := abi.Argument{}
-	arg.UnmarshalJSON([]byte(abiJson))
+	err := arg.UnmarshalJSON([]byte(abiJson))
+	require.NoError(t, err)
 
 	pre := Neki{"a", 2, "c"}
 
@@ -85,7 +86,8 @@ func TestDecodeArray(t *testing.T) {
 	  }`
 
 	arg := abi.Argument{}
-	arg.UnmarshalJSON([]byte(abiJson))
+	err := arg.UnmarshalJSON([]byte(abiJson))
+	require.NoError(t, err)
 
 	a := common.HexToHash("a")
 	pre := [2][32]byte{a, a}
@@ -98,5 +100,4 @@ func TestDecodeArray(t *testing.T) {
 	err = Decode(arg, packed, &unpacked)
 	require.NoError(t, err)
 	require.Equal(t, pre, unpacked)
-
 }
