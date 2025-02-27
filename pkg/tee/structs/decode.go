@@ -59,9 +59,7 @@ func DecodeTo2[T any](arg abi.Argument, data []byte, dest *T) error {
 	return nil
 }
 
-// DecodeTo decodes abi encoded data and writes it to destination.
-//
-// dest has to be a pointer to a struct that is structured as arg describes.
+// DecodeTo decodes abi encoded data and returns it as
 func Decode[T any](arg abi.Argument, data []byte) (T, error) {
 	var t T
 	args := abi.Arguments{arg}
