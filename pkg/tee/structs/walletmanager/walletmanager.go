@@ -54,6 +54,7 @@ func init() {
 		logger.Panicf("methods, opCommands miss match")
 	}
 
+	MessageArguments = make(map[OPCommand]abi.Argument)
 	for j := range opCommands {
 		method, ok := walletmanagerAbi.Methods[methods[j]]
 		if !ok {
