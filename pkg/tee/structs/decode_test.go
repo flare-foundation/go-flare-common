@@ -5,6 +5,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/registry"
 	"github.com/stretchr/testify/require"
 )
 
@@ -206,4 +207,22 @@ func TestDecodeArray(t *testing.T) {
 	require.Equal(t, pre, unpacked)
 	require.Equal(t, pre, unpacked2)
 	require.Equal(t, pre, unpacked3)
+}
+
+func TestDecodeInstructionMessage(t *testing.T) {
+	arg := registry.MessageArguments[registry.ToPauseForUpgrade]
+
+	id := common.HexToAddress("neki")
+
+	pre := registry.ITeeRegistryPauseForUpgrade{TeeId: id}
+
+	encoded, err := abi.Arguments{arg}.Pack(pre)
+	require.NoError(t, err)
+
+	var unpacked registry.ITeeRegistryPauseForUpgrade
+
+	err = DecodeTo(arg, encoded, &unpacked)
+	require.NoError(t, err)
+
+	require.Equal(t, pre, unpacked)
 }
