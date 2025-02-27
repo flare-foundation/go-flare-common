@@ -24,11 +24,22 @@ func TestDecodeUint8(t *testing.T) {
 	require.NoError(t, err)
 
 	var unpacked uint8
+	var unpacked2 uint8
+	var unpacked3 uint8
 
-	err = Decode(arg, packed, &unpacked)
+	unpacked2, err = Decode[uint8](arg, packed)
+	require.NoError(t, err)
+
+	err = DecodeTo(arg, packed, &unpacked)
+	require.NoError(t, err)
+
+	err = DecodeTo2(arg, packed, &unpacked3)
 	require.NoError(t, err)
 
 	require.Equal(t, eight, unpacked)
+	require.Equal(t, eight, unpacked2)
+	require.Equal(t, eight, unpacked3)
+
 }
 
 func TestDecodeStruct(t *testing.T) {
@@ -71,11 +82,21 @@ func TestDecodeStruct(t *testing.T) {
 	require.NoError(t, err)
 
 	var unpacked Neki
+	var unpacked2 Neki
+	var unpacked3 Neki
 
-	err = Decode(arg, packed, &unpacked)
+	err = DecodeTo(arg, packed, &unpacked)
+	require.NoError(t, err)
+
+	unpacked2, err = Decode[Neki](arg, packed)
+	require.NoError(t, err)
+
+	err = DecodeTo2(arg, packed, &unpacked3)
 	require.NoError(t, err)
 
 	require.Equal(t, pre, unpacked)
+	require.Equal(t, pre, unpacked2)
+	require.Equal(t, pre, unpacked3)
 }
 
 func TestDecodeStructNested(t *testing.T) {
@@ -135,11 +156,21 @@ func TestDecodeStructNested(t *testing.T) {
 	require.NoError(t, err)
 
 	var unpacked Neki2
+	var unpacked2 Neki2
+	var unpacked3 Neki2
 
-	err = Decode(arg, packed, &unpacked)
+	err = DecodeTo(arg, packed, &unpacked)
+	require.NoError(t, err)
+
+	unpacked2, err = Decode[Neki2](arg, packed)
+	require.NoError(t, err)
+
+	err = DecodeTo2(arg, packed, &unpacked3)
 	require.NoError(t, err)
 
 	require.Equal(t, pre, unpacked)
+	require.Equal(t, pre, unpacked2)
+	require.Equal(t, pre, unpacked3)
 }
 
 func TestDecodeArray(t *testing.T) {
@@ -159,9 +190,20 @@ func TestDecodeArray(t *testing.T) {
 	packed, err := abi.Arguments{arg}.Pack(pre)
 	require.NoError(t, err)
 
-	unpacked := [2][32]byte{}
+	var unpacked [2][32]byte
+	var unpacked2 [2][32]byte
+	var unpacked3 [2][32]byte
 
-	err = Decode(arg, packed, &unpacked)
+	err = DecodeTo(arg, packed, &unpacked)
 	require.NoError(t, err)
+
+	unpacked2, err = Decode[[2][32]byte](arg, packed)
+	require.NoError(t, err)
+
+	err = DecodeTo2(arg, packed, &unpacked3)
+	require.NoError(t, err)
+
 	require.Equal(t, pre, unpacked)
+	require.Equal(t, pre, unpacked2)
+	require.Equal(t, pre, unpacked3)
 }
