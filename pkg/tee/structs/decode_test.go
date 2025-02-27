@@ -31,12 +31,6 @@ func TestDecodeUint8(t *testing.T) {
 	require.Equal(t, eight, unpacked)
 }
 
-type Neki struct {
-	A string
-	B uint8
-	C string
-}
-
 func TestDecodeStruct(t *testing.T) {
 	abiJson := `{
           "components": [
@@ -65,12 +59,82 @@ func TestDecodeStruct(t *testing.T) {
 	err := arg.UnmarshalJSON([]byte(abiJson))
 	require.NoError(t, err)
 
+	type Neki struct {
+		A string
+		B uint8
+		C string
+	}
+
 	pre := Neki{"a", 2, "c"}
 
 	packed, err := abi.Arguments{arg}.PackValues([]any{pre})
 	require.NoError(t, err)
 
 	var unpacked Neki
+
+	err = Decode(arg, packed, &unpacked)
+	require.NoError(t, err)
+
+	require.Equal(t, pre, unpacked)
+}
+
+func TestDecodeStructNested(t *testing.T) {
+	abiJson := `{
+		"components": [
+		  {
+			"internalType": "string",
+			"name": "A",
+			"type": "string"
+		  },
+		  {
+			"internalType": "uint8",
+			"name": "B",
+			"type": "uint8"
+		  },
+		  {
+			"components": [
+			  {
+				"internalType": "string",
+				"name": "A",
+				"type": "string"
+			  },
+			  {
+				"internalType": "uint8",
+				"name": "B",
+				"type": "uint8"
+			  }
+			],
+			"internalType": "struct",
+			"name": "C",
+			"type": "tuple"
+		  }
+		],
+		"internalType": "struct IEntityManager.VoterAddresses",
+		"name": "Neki2",
+		"type": "tuple"
+	  }`
+
+	arg := abi.Argument{}
+	err := arg.UnmarshalJSON([]byte(abiJson))
+	require.NoError(t, err)
+
+	type Neki struct {
+		A string
+		B uint8
+	}
+
+	type Neki2 struct {
+		A string
+		B uint8
+		C Neki
+	}
+
+	pre := Neki2{"a", 2, Neki{"a", 2}}
+
+	packed, err := abi.Arguments{arg}.PackValues([]any{pre})
+	require.NoError(t, err)
+
+	var unpacked Neki2
 
 	err = Decode(arg, packed, &unpacked)
 	require.NoError(t, err)
