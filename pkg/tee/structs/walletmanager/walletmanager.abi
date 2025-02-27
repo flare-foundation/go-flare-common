@@ -1,0 +1,400 @@
+[
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "teeId",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "walletId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "keyId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "backupId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "shamirThreshold",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes[]",
+            "name": "custodianPublicKeys",
+            "type": "bytes[]"
+          }
+        ],
+        "internalType": "struct ITeeWalletManager.KeyCustodianBackup",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "keyCustodianBackupStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "teeId",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "walletId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "keyId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "backupId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "opType",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "publicKey",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes[]",
+            "name": "custodianPublicKeys",
+            "type": "bytes[]"
+          }
+        ],
+        "internalType": "struct ITeeWalletManager.KeyCustodianRestore",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "keyCustodianRestoreStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "teeId",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "walletId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "keyId",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct ITeeWalletManager.KeyDelete",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "keyDeleteStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "teeId",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "walletId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "keyId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "opType",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct ITeeWalletManager.KeyGenerate",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "keyGenerateStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address[]",
+            "name": "teeIds",
+            "type": "address[]"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "walletId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "keyId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "backupId",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct ITeeWalletManager.KeyMachineBackupRemove",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "keyMachineBackupRemoveStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "teeId",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+              },
+              {
+                "internalType": "string",
+                "name": "url",
+                "type": "string"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "codeHash",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "platform",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct ITeeRegistry.TeeMachineWithAttestationData",
+            "name": "teeMachine",
+            "type": "tuple"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "walletId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "keyId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "backupId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "shamirThreshold",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "teeId",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+              },
+              {
+                "internalType": "string",
+                "name": "url",
+                "type": "string"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "codeHash",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "platform",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct ITeeRegistry.TeeMachineWithAttestationData[]",
+            "name": "backupTeeMachines",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct ITeeWalletManager.KeyMachineBackup",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "keyMachineBackupStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "teeId",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+              },
+              {
+                "internalType": "string",
+                "name": "url",
+                "type": "string"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "codeHash",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "platform",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct ITeeRegistry.TeeMachineWithAttestationData",
+            "name": "teeMachine",
+            "type": "tuple"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "walletId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "keyId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "backupId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "opType",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "publicKey",
+            "type": "bytes"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "teeId",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+              },
+              {
+                "internalType": "string",
+                "name": "url",
+                "type": "string"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "codeHash",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "platform",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct ITeeRegistry.TeeMachineWithAttestationData[]",
+            "name": "backupTeeMachines",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct ITeeWalletManager.KeyMachineRestore",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "keyMachineRestoreStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
