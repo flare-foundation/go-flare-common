@@ -1,0 +1,136 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "instructionId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint24",
+        "name": "rewardEpochId",
+        "type": "uint24"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "teeId",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "owner",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "url",
+            "type": "string"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct ITeeRegistry.TeeMachine[]",
+        "name": "teeMachines",
+        "type": "tuple[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "opType",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "instruction",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "message",
+        "type": "bytes"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "fee",
+        "type": "uint256"
+      }
+    ],
+    "name": "TeeInstructionsSent",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "getInstructionInitiators",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_instructionId",
+        "type": "bytes32"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "teeId",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "owner",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "url",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct ITeeRegistry.TeeMachine[]",
+        "name": "_teeMachines",
+        "type": "tuple[]"
+      },
+      {
+        "internalType": "uint24",
+        "name": "_rewardEpochId",
+        "type": "uint24"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_opType",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_opCommand",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_message",
+        "type": "bytes"
+      }
+    ],
+    "name": "sendInstructions",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  }
+]
