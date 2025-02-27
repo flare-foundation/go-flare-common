@@ -42,6 +42,7 @@ func init() {
 		logger.Panicf("methods, opCommands miss match")
 	}
 
+	MessageArguments = make(map[OPCommand]abi.Argument)
 	for j := range opCommands {
 		method, ok := registryAbi.Methods[methods[j]]
 		if !ok {
