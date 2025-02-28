@@ -212,7 +212,7 @@ func TestDecodeArray(t *testing.T) {
 func TestDecodeInstructionMessage(t *testing.T) {
 	arg := registry.MessageArguments[registry.ToPauseForUpgrade]
 
-	id := common.HexToAddress("neki")
+	id := common.HexToAddress("6e656b69")
 
 	pre := registry.ITeeRegistryPauseForUpgrade{TeeId: id}
 
