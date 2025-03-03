@@ -1,4 +1,4 @@
-package instructions
+package instruction
 
 import (
 	"crypto/ecdsa"
