@@ -46,7 +46,7 @@
       {
         "indexed": false,
         "internalType": "bytes32",
-        "name": "instruction",
+        "name": "opCommand",
         "type": "bytes32"
       },
       {
