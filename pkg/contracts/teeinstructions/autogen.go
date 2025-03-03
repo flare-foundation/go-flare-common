@@ -38,7 +38,7 @@ type ITeeRegistryTeeMachine struct {
 
 // TeeInstructionsMetaData contains all meta data concerning the TeeInstructions contract.
 var TeeInstructionsMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"uint24\",\"name\":\"rewardEpochId\",\"type\":\"uint24\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"}],\"indexed\":false,\"internalType\":\"structITeeRegistry.TeeMachine[]\",\"name\":\"teeMachines\",\"type\":\"tuple[]\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"instruction\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"message\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"}],\"name\":\"TeeInstructionsSent\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"getInstructionInitiators\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_instructionId\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"}],\"internalType\":\"structITeeRegistry.TeeMachine[]\",\"name\":\"_teeMachines\",\"type\":\"tuple[]\"},{\"internalType\":\"uint24\",\"name\":\"_rewardEpochId\",\"type\":\"uint24\"},{\"internalType\":\"bytes32\",\"name\":\"_opType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_opCommand\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"_message\",\"type\":\"bytes\"}],\"name\":\"sendInstructions\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"uint24\",\"name\":\"rewardEpochId\",\"type\":\"uint24\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"}],\"indexed\":false,\"internalType\":\"structITeeRegistry.TeeMachine[]\",\"name\":\"teeMachines\",\"type\":\"tuple[]\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"opCommand\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"message\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"}],\"name\":\"TeeInstructionsSent\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"getInstructionInitiators\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_instructionId\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"}],\"internalType\":\"structITeeRegistry.TeeMachine[]\",\"name\":\"_teeMachines\",\"type\":\"tuple[]\"},{\"internalType\":\"uint24\",\"name\":\"_rewardEpochId\",\"type\":\"uint24\"},{\"internalType\":\"bytes32\",\"name\":\"_opType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_opCommand\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"_message\",\"type\":\"bytes\"}],\"name\":\"sendInstructions\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}]",
 }
 
 // TeeInstructionsABI is the input ABI used to generate the binding from.
@@ -312,7 +312,7 @@ type TeeInstructionsTeeInstructionsSent struct {
 	RewardEpochId *big.Int
 	TeeMachines   []ITeeRegistryTeeMachine
 	OpType        [32]byte
-	Instruction   [32]byte
+	OpCommand     [32]byte
 	Message       []byte
 	Fee           *big.Int
 	Raw           types.Log // Blockchain specific contextual infos
@@ -320,7 +320,7 @@ type TeeInstructionsTeeInstructionsSent struct {
 
 // FilterTeeInstructionsSent is a free log retrieval operation binding the contract event 0xde9f7143f1f7c75c63309d31548e8decbeaefc90b4f7f72b15c4a83d45f6ea77.
 //
-// Solidity: event TeeInstructionsSent(bytes32 indexed instructionId, uint24 indexed rewardEpochId, (address,address,string)[] teeMachines, bytes32 opType, bytes32 instruction, bytes message, uint256 fee)
+// Solidity: event TeeInstructionsSent(bytes32 indexed instructionId, uint24 indexed rewardEpochId, (address,address,string)[] teeMachines, bytes32 opType, bytes32 opCommand, bytes message, uint256 fee)
 func (_TeeInstructions *TeeInstructionsFilterer) FilterTeeInstructionsSent(opts *bind.FilterOpts, instructionId [][32]byte, rewardEpochId []*big.Int) (*TeeInstructionsTeeInstructionsSentIterator, error) {
 
 	var instructionIdRule []interface{}
@@ -341,7 +341,7 @@ func (_TeeInstructions *TeeInstructionsFilterer) FilterTeeInstructionsSent(opts 
 
 // WatchTeeInstructionsSent is a free log subscription operation binding the contract event 0xde9f7143f1f7c75c63309d31548e8decbeaefc90b4f7f72b15c4a83d45f6ea77.
 //
-// Solidity: event TeeInstructionsSent(bytes32 indexed instructionId, uint24 indexed rewardEpochId, (address,address,string)[] teeMachines, bytes32 opType, bytes32 instruction, bytes message, uint256 fee)
+// Solidity: event TeeInstructionsSent(bytes32 indexed instructionId, uint24 indexed rewardEpochId, (address,address,string)[] teeMachines, bytes32 opType, bytes32 opCommand, bytes message, uint256 fee)
 func (_TeeInstructions *TeeInstructionsFilterer) WatchTeeInstructionsSent(opts *bind.WatchOpts, sink chan<- *TeeInstructionsTeeInstructionsSent, instructionId [][32]byte, rewardEpochId []*big.Int) (event.Subscription, error) {
 
 	var instructionIdRule []interface{}
@@ -387,7 +387,7 @@ func (_TeeInstructions *TeeInstructionsFilterer) WatchTeeInstructionsSent(opts *
 
 // ParseTeeInstructionsSent is a log parse operation binding the contract event 0xde9f7143f1f7c75c63309d31548e8decbeaefc90b4f7f72b15c4a83d45f6ea77.
 //
-// Solidity: event TeeInstructionsSent(bytes32 indexed instructionId, uint24 indexed rewardEpochId, (address,address,string)[] teeMachines, bytes32 opType, bytes32 instruction, bytes message, uint256 fee)
+// Solidity: event TeeInstructionsSent(bytes32 indexed instructionId, uint24 indexed rewardEpochId, (address,address,string)[] teeMachines, bytes32 opType, bytes32 opCommand, bytes message, uint256 fee)
 func (_TeeInstructions *TeeInstructionsFilterer) ParseTeeInstructionsSent(log types.Log) (*TeeInstructionsTeeInstructionsSent, error) {
 	event := new(TeeInstructionsTeeInstructionsSent)
 	if err := _TeeInstructions.contract.UnpackLog(event, "TeeInstructionsSent", log); err != nil {
