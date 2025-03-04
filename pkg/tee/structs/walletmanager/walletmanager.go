@@ -11,7 +11,7 @@ const OPType = "WALLET"
 type OPCommand string
 
 const (
-	KeyGeneration          OPCommand = "KEY_GENERATE"
+	KeyGenerate            OPCommand = "KEY_GENERATE"
 	KeyDelete              OPCommand = "KEY_DELETE"
 	KeyMachineBackup       OPCommand = "KEY_MACHINE_BACKUP"
 	KeyMachineRestore      OPCommand = "KEY_MACHINE_RESTORE"
@@ -21,7 +21,7 @@ const (
 )
 
 var opCommands = []OPCommand{
-	KeyGeneration,
+	KeyGenerate,
 	KeyDelete,
 	KeyMachineBackup,
 	KeyMachineRestore,
