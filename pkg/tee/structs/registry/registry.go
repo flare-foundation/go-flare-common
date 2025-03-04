@@ -43,6 +43,7 @@ func init() {
 	}
 
 	MessageArguments = make(map[OPCommand]abi.Argument)
+
 	for j := range opCommands {
 		method, ok := registryAbi.Methods[methods[j]]
 		if !ok {
