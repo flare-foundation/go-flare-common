@@ -7,6 +7,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
@@ -16,9 +17,9 @@ type Data struct {
 	RewardEpochID             *big.Int       `json:"rewardEpochId"`
 	OPType                    common.Hash    `json:"opType"`
 	OPCommand                 common.Hash    `json:"opCommand"`
-	OriginalMessage           []byte         `json:"originalMessage"`
-	AdditionalFixedMessage    []byte         `json:"additionalFixedMessage"`
-	AdditionalVariableMessage []byte         `json:"additionalVariableMessage"`
+	OriginalMessage           hexutil.Bytes  `json:"originalMessage"`
+	AdditionalFixedMessage    hexutil.Bytes  `json:"additionalFixedMessage"`
+	AdditionalVariableMessage hexutil.Bytes  `json:"additionalVariableMessage"`
 }
 
 func (d Data) HashForSigning() (common.Hash, error) {
@@ -39,9 +40,9 @@ func SignInstructionHash(hash common.Hash, pk *ecdsa.PrivateKey) ([]byte, error)
 }
 
 type Instruction struct {
-	Challenge any    `json:"challenge"`
-	Data      Data   `json:"data"`
-	Signature []byte `json:"signature"`
+	Challenge common.Hash   `json:"challenge"`
+	Data      Data          `json:"data"`
+	Signature hexutil.Bytes `json:"signature"`
 }
 
 func (i Instruction) RecoverSignersPubKey() ([]byte, error) {
