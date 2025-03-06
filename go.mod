@@ -13,6 +13,7 @@ require (
 	github.com/gorilla/mux v1.8.1
 	github.com/gorilla/schema v1.4.1
 	github.com/pkg/errors v0.9.1
+	github.com/naoina/toml v0.1.2-0.20170918210437-9fafd6967416
 	github.com/stretchr/testify v1.10.0
 	github.com/swaggest/swgui v1.8.2
 	go.uber.org/zap v1.27.0
@@ -58,6 +59,7 @@ require (
 	github.com/mailru/easyjson v0.9.0 // indirect
 	github.com/mmcloughlin/addchain v0.4.0 // indirect
 	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 // indirect
+	github.com/naoina/go-stringutil v0.1.0 // indirect
 	github.com/perimeterx/marshmallow v1.1.5 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/shirou/gopsutil v3.21.11+incompatible // indirect
