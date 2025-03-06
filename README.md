@@ -19,8 +19,10 @@ Contains the following packages:
 - queue: channel implementation of a priority queue with two lanes
 - restserver
 - storage: an implementation of a cyclic storage
-- voters: working with Flare entities
-- abigen binding for Flare contracts (generated using [abigen](https://geth.ethereum.org/docs/tools/abigen))
 - tee
   - instructions: working with tee instructions
   - structs: decoding messages from tee instructions events
+- toml: reading toml files
+- voters: working with Flare entities
+
+- abigen binding for Flare contracts (generated using [abigen](https://geth.ethereum.org/docs/tools/abigen))
