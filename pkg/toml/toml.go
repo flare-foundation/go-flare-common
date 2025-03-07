@@ -9,12 +9,13 @@ import (
 )
 
 // ReadToml reads toml file from filePath and marshals it into struct of type T.
+// If allowUnknownFields is set to false, any unknown field in toml file will trigger error.
 func ReadToml[T any](filePath string, allowUnknownFields bool) (T, error) {
-	var config T
+	var dest T
 
 	file, err := os.ReadFile(filePath)
 	if err != nil {
-		return config, fmt.Errorf("failed reading file %s with: %s", filePath, err)
+		return dest, fmt.Errorf("failed reading file %s with: %s", filePath, err)
 	}
 
 	tomlCfg := toml.DefaultConfig
@@ -23,22 +24,28 @@ func ReadToml[T any](filePath string, allowUnknownFields bool) (T, error) {
 		tomlCfg.MissingField = func(typ reflect.Type, key string) error { return nil }
 	}
 
-	err = tomlCfg.Unmarshal(file, &config)
+	err = tomlCfg.Unmarshal(file, &dest)
 	if err != nil {
-		return config, fmt.Errorf("failed unmarshaling file %s with: %s", filePath, err)
+		return dest, fmt.Errorf("failed unmarshaling file %s with: %s", filePath, err)
 	}
 
-	return config, nil
+	return dest, nil
 }
 
-// ReadToml reads toml file from filePath and marshals it into struct of type T.
-func ReadTomlTo[T any](filePath string, dest *T) error {
+// ReadTomlTo reads toml file from filePath and marshals it into dest.
+// If allowUnknownFields is set to false, any unknown field in toml file will trigger error.
+func ReadTomlTo[T any](filePath string, dest *T, allowUnknownFields bool) error {
 	file, err := os.ReadFile(filePath)
 	if err != nil {
 		return fmt.Errorf("failed reading file %s with: %s", filePath, err)
 	}
 
-	err = toml.Unmarshal(file, dest)
+	tomlCfg := toml.DefaultConfig
+	if allowUnknownFields {
+		tomlCfg.MissingField = func(typ reflect.Type, key string) error { return nil }
+	}
+
+	err = tomlCfg.Unmarshal(file, dest)
 	if err != nil {
 		return fmt.Errorf("failed unmarshaling file %s with: %s", filePath, err)
 	}
