@@ -1,0 +1,17 @@
+
+#  int
+a = -10
+
+# uint
+b = 10
+
+# uint8
+c = 11
+
+# common.address
+addr1 = "0xE3D78e09f8464f82d1F248d74E2FdEb21010e3Ec"
+
+# big.int
+bn = 184467440737095516160
+bns = "184467440737095516160"
+bnh = "0xA0000000000000000"
