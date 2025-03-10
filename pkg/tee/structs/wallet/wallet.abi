@@ -34,7 +34,7 @@
             "type": "bytes[]"
           }
         ],
-        "internalType": "struct ITeeWalletManager.KeyCustodianBackup",
+        "internalType": "struct ITeeWalletBackupManager.KeyCustodianBackup",
         "name": "",
         "type": "tuple"
       }
@@ -84,7 +84,7 @@
             "type": "bytes[]"
           }
         ],
-        "internalType": "struct ITeeWalletManager.KeyCustodianRestore",
+        "internalType": "struct ITeeWalletBackupManager.KeyCustodianRestore",
         "name": "",
         "type": "tuple"
       }
@@ -184,7 +184,7 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct ITeeWalletManager.KeyMachineBackupRemove",
+        "internalType": "struct ITeeWalletBackupManager.KeyMachineBackupRemove",
         "name": "",
         "type": "tuple"
       }
@@ -283,7 +283,7 @@
             "type": "tuple[]"
           }
         ],
-        "internalType": "struct ITeeWalletManager.KeyMachineBackup",
+        "internalType": "struct ITeeWalletBackupManager.KeyMachineBackup",
         "name": "",
         "type": "tuple"
       }
@@ -387,7 +387,7 @@
             "type": "tuple[]"
           }
         ],
-        "internalType": "struct ITeeWalletManager.KeyMachineRestore",
+        "internalType": "struct ITeeWalletBackupManager.KeyMachineRestore",
         "name": "",
         "type": "tuple"
       }
