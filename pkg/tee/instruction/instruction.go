@@ -14,6 +14,7 @@ import (
 type Data struct {
 	InstructionID             common.Hash    `json:"instructionId"`
 	TeeID                     common.Address `json:"teeId"`
+	Timestamp                 uint32         `json:"timestamp"`
 	RewardEpochID             *big.Int       `json:"rewardEpochId"`
 	OPType                    common.Hash    `json:"opType"`
 	OPCommand                 common.Hash    `json:"opCommand"`
