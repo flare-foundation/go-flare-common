@@ -1,0 +1,248 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_walletId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getSenderAddress",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "_senderAddress",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_walletId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getWalletSettings",
+    "outputs": [
+      {
+        "internalType": "uint64",
+        "name": "_batchSize",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_batchDurationSeconds",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint96",
+        "name": "_maxFee",
+        "type": "uint96"
+      },
+      {
+        "internalType": "uint32",
+        "name": "_maxFeeTolerancePPM",
+        "type": "uint32"
+      },
+      {
+        "internalType": "address",
+        "name": "_controlAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "uint96",
+        "name": "_maxControlFee",
+        "type": "uint96"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_walletId",
+        "type": "bytes32"
+      },
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "recipientAddress",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "paymentReference",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct ITeePayments.PaymentInstruction",
+        "name": "_paymentInstruction",
+        "type": "tuple"
+      }
+    ],
+    "name": "pay",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "_subNonce",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_walletId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_nonce",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_firstSubNonce",
+        "type": "uint64"
+      },
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "recipientAddress",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "paymentReference",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct ITeePayments.PaymentInstruction[]",
+        "name": "_paymentInstruction",
+        "type": "tuple[]"
+      },
+      {
+        "internalType": "uint96",
+        "name": "_fee",
+        "type": "uint96"
+      },
+      {
+        "internalType": "bool",
+        "name": "_nullify",
+        "type": "bool"
+      }
+    ],
+    "name": "reissue",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_walletId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_batchSize",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_batchDurationSeconds",
+        "type": "uint64"
+      }
+    ],
+    "name": "setBatchSettings",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_walletId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "_controlAddress",
+        "type": "address"
+      }
+    ],
+    "name": "setControlAddress",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_walletId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint96",
+        "name": "_maxFee",
+        "type": "uint96"
+      },
+      {
+        "internalType": "uint32",
+        "name": "_maxFeeTolerancePPM",
+        "type": "uint32"
+      },
+      {
+        "internalType": "uint96",
+        "name": "_maxControlFee",
+        "type": "uint96"
+      }
+    ],
+    "name": "setFees",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_walletId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "string",
+        "name": "_senderAddress",
+        "type": "string"
+      }
+    ],
+    "name": "setSenderAddress",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
