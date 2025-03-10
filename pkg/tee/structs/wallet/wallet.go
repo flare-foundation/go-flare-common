@@ -1,5 +1,5 @@
-//go:generate  abigen --abi=pkg/tee/structs/walletmanager/walletmanager.abi --pkg=walletmanager --type=Walletmanager --out=pkg/tee/structs/walletmanager/autogen.go
-package walletmanager
+//go:generate  abigen --abi=pkg/tee/structs/wallet/wallet.abi --pkg=wallet --type=Wallet --out=pkg/tee/structs/wallet/autogen.go
+package wallet
 
 import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
@@ -45,7 +45,7 @@ var methods = []string{
 var MessageArguments map[OPCommand]abi.Argument
 
 func init() {
-	walletmanagerAbi, err := WalletmanagerMetaData.GetAbi()
+	walletmanagerAbi, err := WalletMetaData.GetAbi()
 	if err != nil {
 		logger.Panicf("error getting registry abi: %v", err)
 	}
