@@ -19,6 +19,7 @@ Contains the following packages:
 - queue: channel implementation of a priority queue with two lanes
 - restserver
 - storage: an implementation of a cyclic storage
+- signer: signer server for remote eth messages signing
 - tee
   - instructions: working with tee instructions
   - structs: decoding messages from tee instructions events
