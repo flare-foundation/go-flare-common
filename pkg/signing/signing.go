@@ -10,6 +10,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/flare-foundation/go-flare-common/pkg/logger"
 )
@@ -114,7 +115,7 @@ type RequestBody struct {
 
 // Response body format
 type ResponseBody struct {
-	Signatures [][]byte `json:"signatures"`
+	Signatures []hexutil.Bytes `json:"signatures"`
 }
 
 // signHandler returns a HandlerFunction that authorizes requests with encoded RequestBody and responses with the signatures of the provided hashes.
@@ -161,7 +162,7 @@ func signHandler(prv *ecdsa.PrivateKey, ak apiKeys) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		response := ResponseBody{signatures}
+		response := ResponseBody{Signatures: signatures}
 
 		encoder := json.NewEncoder(w)
 
@@ -174,14 +175,14 @@ func signHandler(prv *ecdsa.PrivateKey, ak apiKeys) http.HandlerFunc {
 }
 
 // signEthMessage computes keccak256("\x19Ethereum Signed Message:\n"32{message}) and (ECDSA) signs it with private key.
-func SignEthMessage(hash common.Hash, prv *ecdsa.PrivateKey) ([]byte, error) {
+func SignEthMessage(hash common.Hash, prv *ecdsa.PrivateKey) (hexutil.Bytes, error) {
 	toSign := accounts.TextHash(hash[:])
 	return crypto.Sign(toSign, prv)
 }
 
 // signHashes creates Eth Message sign of each hash and returns it in a slice.
-func signHashes(hashes []common.Hash, prv *ecdsa.PrivateKey) ([][]byte, error) {
-	signatures := make([][]byte, len(hashes))
+func signHashes(hashes []common.Hash, prv *ecdsa.PrivateKey) ([]hexutil.Bytes, error) {
+	signatures := make([]hexutil.Bytes, len(hashes))
 
 	for j := range hashes {
 		signature, err := SignEthMessage(hashes[j], prv)
