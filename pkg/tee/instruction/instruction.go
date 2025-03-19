@@ -27,7 +27,17 @@ type DataFixed struct {
 	AdditionalFixedMessage hexutil.Bytes  `json:"additionalFixedMessage"`
 }
 
-// HashForSigning computes the hash of d that is sent to signer server.
+// Hash computes the hash of the DataFixed d.
+func (d DataFixed) HashFixed() (common.Hash, error) {
+	m, err := json.Marshal(d)
+	if err != nil {
+		return common.Hash{}, err
+	}
+
+	return crypto.Keccak256Hash(m), nil
+}
+
+// HashForSigning computes the hash of the Data d that is signed by the provider.
 func (d Data) HashForSigning() (common.Hash, error) {
 	m, err := json.Marshal(d)
 	if err != nil {
