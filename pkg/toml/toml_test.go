@@ -16,6 +16,7 @@ type testStructHappy struct {
 	BN    *big.Int       `toml:"bn"`
 	BNS   *big.Int       `toml:"bns"`
 	BNH   *big.Int       `toml:"bnh"`
+	Z     *common.Hash   `toml:"z"`
 }
 
 func TestReadTomlHappy(t *testing.T) {
@@ -36,6 +37,7 @@ func TestReadTomlHappy(t *testing.T) {
 		BN:    bn,
 		BNS:   bn,
 		BNH:   bn,
+		Z:     nil,
 	}
 
 	require.Equal(t, expected, a)
