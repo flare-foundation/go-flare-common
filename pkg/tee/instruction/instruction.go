@@ -12,17 +12,22 @@ import (
 )
 
 type Data struct {
-	InstructionID             common.Hash    `json:"instructionId"`
-	TeeID                     common.Address `json:"teeId"`
-	Timestamp                 uint32         `json:"timestamp"`
-	RewardEpochID             *big.Int       `json:"rewardEpochId"`
-	OPType                    common.Hash    `json:"opType"`
-	OPCommand                 common.Hash    `json:"opCommand"`
-	OriginalMessage           hexutil.Bytes  `json:"originalMessage"`
-	AdditionalFixedMessage    hexutil.Bytes  `json:"additionalFixedMessage"`
-	AdditionalVariableMessage hexutil.Bytes  `json:"additionalVariableMessage"`
+	DataFixed
+	AdditionalVariableMessage hexutil.Bytes `json:"additionalVariableMessage"`
 }
 
+type DataFixed struct {
+	InstructionID          common.Hash    `json:"instructionId"`
+	TeeID                  common.Address `json:"teeId"`
+	Timestamp              uint32         `json:"timestamp"`
+	RewardEpochID          *big.Int       `json:"rewardEpochId"`
+	OPType                 common.Hash    `json:"opType"`
+	OPCommand              common.Hash    `json:"opCommand"`
+	OriginalMessage        hexutil.Bytes  `json:"originalMessage"`
+	AdditionalFixedMessage hexutil.Bytes  `json:"additionalFixedMessage"`
+}
+
+// HashForSigning computes the hash of d that is sent to signer server.
 func (d Data) HashForSigning() (common.Hash, error) {
 	m, err := json.Marshal(d)
 	if err != nil {
@@ -46,6 +51,7 @@ type Instruction struct {
 	Signature hexutil.Bytes `json:"signature"`
 }
 
+// RecoverSignersPubKey recovers the signers public key from Data and Signature.
 func (i Instruction) RecoverSignersPubKey() ([]byte, error) {
 	hash, err := i.Data.HashForSigning()
 	if err != nil {
