@@ -1,5 +1,5 @@
-//go:generate  abigen --abi=pkg/tee/structs/payment/payment.abi --pkg=payment --type=Payment --out=pkg/tee/structs/payment/autogen.go
-package payment
+//go:generate  abigen --abi=pkg/tee/structs/connector/connector.abi --pkg=connector --type=Connector --out=pkg/tee/structs/connector/autogen.go
+package connector
 
 import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
@@ -9,28 +9,25 @@ import (
 type OPCommand string
 
 const (
-	Pay     OPCommand = "PAY"
-	Reissue OPCommand = "REISSUE"
+	Prove OPCommand = "PROVE"
 )
 
 var opCommands = []OPCommand{
-	Pay,
-	Reissue,
+	Prove,
 }
 
-// i-th method correspond to a method in TeePaymentStruct interface whose
+// i-th method correspond to a method in TeeDataConnectorStruct interface whose
 // input is the type of message emitted with i-th opCommands
 var methods = []string{
-	"paymentInstructionMessageStruct",
-	"paymentInstructionMessageStruct",
+	"ftdcProveStruct",
 }
 
 var MessageArguments map[OPCommand]abi.Argument
 
 func init() {
-	paymentAbi, err := PaymentMetaData.GetAbi()
+	paymentAbi, err := ConnectorMetaData.GetAbi()
 	if err != nil {
-		logger.Panicf("error getting payment abi: %v", err)
+		logger.Panicf("error getting tee data connector abi: %v", err)
 	}
 
 	if len(methods) != len(opCommands) {
