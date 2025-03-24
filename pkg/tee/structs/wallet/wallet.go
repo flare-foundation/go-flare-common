@@ -30,7 +30,7 @@ var opCommands = []OPCommand{
 	KeyCustodianRestore,
 }
 
-// i-th method correspond to a method in TeeRegistryStruct interface whose
+// i-th method correspond to a method in TeeWalletStruct interface whose
 // input is the type of message emitted with i-th opCommands
 var methods = []string{
 	"keyGenerateStruct",

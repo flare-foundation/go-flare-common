@@ -1,1 +1,1007 @@
-[{"inputs":[{"internalType":"contract IGovernanceSettings","name":"_governanceSettings","type":"address"},{"internalType":"address","name":"_initialGovernance","type":"address"},{"internalType":"address","name":"_addressUpdater","type":"address"},{"internalType":"uint256","name":"_pauseBeforeUpgradeMinDurationSeconds","type":"uint256"},{"internalType":"uint256","name":"_availabilityCheckValidityDurationSeconds","type":"uint256"},{"internalType":"uint256","name":"_minSupportedVersion","type":"uint256"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"bytes4","name":"selector","type":"bytes4"},{"indexed":false,"internalType":"uint256","name":"allowedAfterTimestamp","type":"uint256"},{"indexed":false,"internalType":"bytes","name":"encodedCall","type":"bytes"}],"name":"GovernanceCallTimelocked","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"initialGovernance","type":"address"}],"name":"GovernanceInitialised","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"governanceSettings","type":"address"}],"name":"GovernedProductionModeEntered","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"bytes4","name":"selector","type":"bytes4"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"TimelockedGovernanceCallCanceled","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"bytes4","name":"selector","type":"bytes4"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"TimelockedGovernanceCallExecuted","type":"event"},{"inputs":[],"name":"AVAILABILITY_CHECK","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"REG_OP_TYPE","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"REPLICATE_FROM","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"TO_PAUSE_FOR_UPGRADE","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_version","type":"uint256"},{"internalType":"bytes32","name":"_codeHash","type":"bytes32"},{"internalType":"bytes32[]","name":"_platforms","type":"bytes32[]"},{"internalType":"bytes32[]","name":"_opTypes","type":"bytes32[]"}],"name":"addNewTeeVersion","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_teeId","type":"address"},{"internalType":"address[]","name":"_backupTeeIds","type":"address[]"}],"name":"arePlatformsCompatible","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"availabilityCheckValidityDurationSeconds","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes4","name":"_selector","type":"bytes4"}],"name":"cancelGovernanceCall","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_teeId","type":"address"}],"name":"confirmOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_newTeeId","type":"address"},{"components":[{"internalType":"bytes","name":"relayMessage","type":"bytes"},{"components":[{"internalType":"uint8","name":"v","type":"uint8"},{"internalType":"bytes32","name":"r","type":"bytes32"},{"internalType":"bytes32","name":"s","type":"bytes32"}],"internalType":"struct Signature[]","name":"teeSignatures","type":"tuple[]"},{"components":[{"internalType":"bytes32","name":"attestationType","type":"bytes32"},{"internalType":"bytes32","name":"sourceId","type":"bytes32"},{"internalType":"uint16","name":"thresholdBIPS","type":"uint16"},{"internalType":"uint64","name":"timestamp","type":"uint64"},{"components":[{"components":[{"internalType":"address","name":"teeId","type":"address"},{"internalType":"address","name":"owner","type":"address"},{"internalType":"string","name":"url","type":"string"},{"internalType":"bytes32","name":"codeHash","type":"bytes32"},{"internalType":"bytes32","name":"platform","type":"bytes32"}],"internalType":"struct ITeeRegistry.TeeMachineWithAttestationData","name":"teeMachine","type":"tuple"},{"internalType":"uint24","name":"rewardEpochId","type":"uint24"}],"internalType":"struct ITeeAvailabilityCheck.RequestBody","name":"requestBody","type":"tuple"},{"components":[{"internalType":"enum ITeeAvailabilityCheck.AvailabilityCheckStatus","name":"status","type":"uint8"}],"internalType":"struct ITeeAvailabilityCheck.ResponseBody","name":"responseBody","type":"tuple"}],"internalType":"struct ITeeAvailabilityCheck.Response","name":"data","type":"tuple"}],"internalType":"struct ITeeAvailabilityCheck.Proof","name":"_proof","type":"tuple"}],"name":"confirmReplicate","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"bytes4","name":"_selector","type":"bytes4"}],"name":"executeGovernanceCall","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"flareSystemsManager","outputs":[{"internalType":"contract IFlareSystemsManager","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getActiveTeeIds","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getAddressUpdater","outputs":[{"internalType":"address","name":"_addressUpdater","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"_codeHash","type":"bytes32"}],"name":"getCodeHashVersion","outputs":[{"internalType":"uint256","name":"_version","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_teeId","type":"address"}],"name":"getTeeMachine","outputs":[{"components":[{"internalType":"address","name":"teeId","type":"address"},{"internalType":"address","name":"owner","type":"address"},{"internalType":"string","name":"url","type":"string"}],"internalType":"struct ITeeRegistry.TeeMachine","name":"_teeMachine","type":"tuple"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_teeId","type":"address"}],"name":"getTeeMachineStatus","outputs":[{"internalType":"enum ITeeRegistry.TeeStatus","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_teeId","type":"address"}],"name":"getTeeMachineVersion","outputs":[{"internalType":"uint256","name":"_version","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_teeId","type":"address"}],"name":"getTeeMachineWithAttestationData","outputs":[{"components":[{"internalType":"address","name":"teeId","type":"address"},{"internalType":"address","name":"owner","type":"address"},{"internalType":"string","name":"url","type":"string"},{"internalType":"bytes32","name":"codeHash","type":"bytes32"},{"internalType":"bytes32","name":"platform","type":"bytes32"}],"internalType":"struct ITeeRegistry.TeeMachineWithAttestationData","name":"_teeMachine","type":"tuple"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_version","type":"uint256"}],"name":"getVersionInfo","outputs":[{"internalType":"bytes32","name":"_codeHash","type":"bytes32"},{"internalType":"bytes32[]","name":"_platforms","type":"bytes32[]"},{"internalType":"bytes32[]","name":"_opTypes","type":"bytes32[]"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"governance","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"governanceSettings","outputs":[{"internalType":"contract IGovernanceSettings","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"contract IGovernanceSettings","name":"_governanceSettings","type":"address"},{"internalType":"address","name":"_initialGovernance","type":"address"}],"name":"initialise","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_address","type":"address"}],"name":"isExecutor","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_teeId","type":"address"},{"internalType":"bytes32","name":"_opType","type":"bytes32"}],"name":"isOpTypeSupported","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"latestVersion","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"minSupportedVersion","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_teeId","type":"address"}],"name":"pause","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"pauseBeforeUpgradeMinDurationSeconds","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"components":[{"internalType":"bytes","name":"relayMessage","type":"bytes"},{"components":[{"internalType":"uint8","name":"v","type":"uint8"},{"internalType":"bytes32","name":"r","type":"bytes32"},{"internalType":"bytes32","name":"s","type":"bytes32"}],"internalType":"struct Signature[]","name":"teeSignatures","type":"tuple[]"},{"components":[{"internalType":"bytes32","name":"attestationType","type":"bytes32"},{"internalType":"bytes32","name":"sourceId","type":"bytes32"},{"internalType":"uint16","name":"thresholdBIPS","type":"uint16"},{"internalType":"uint64","name":"timestamp","type":"uint64"},{"components":[{"components":[{"internalType":"address","name":"teeId","type":"address"},{"internalType":"address","name":"owner","type":"address"},{"internalType":"string","name":"url","type":"string"},{"internalType":"bytes32","name":"codeHash","type":"bytes32"},{"internalType":"bytes32","name":"platform","type":"bytes32"}],"internalType":"struct ITeeRegistry.TeeMachineWithAttestationData","name":"teeMachine","type":"tuple"},{"internalType":"uint24","name":"rewardEpochId","type":"uint24"}],"internalType":"struct ITeeAvailabilityCheck.RequestBody","name":"requestBody","type":"tuple"},{"components":[{"internalType":"enum ITeeAvailabilityCheck.AvailabilityCheckStatus","name":"status","type":"uint8"}],"internalType":"struct ITeeAvailabilityCheck.ResponseBody","name":"responseBody","type":"tuple"}],"internalType":"struct ITeeAvailabilityCheck.Response","name":"data","type":"tuple"}],"internalType":"struct ITeeAvailabilityCheck.Proof","name":"_proof","type":"tuple"}],"name":"pauseWithProof","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"productionMode","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_teeId","type":"address"},{"internalType":"address","name":"_newOwner","type":"address"}],"name":"proposeNewOwner","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"teeId","type":"address"}],"name":"proposedTeeOwner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_teeId","type":"address"},{"internalType":"string","name":"_url","type":"string"},{"internalType":"bytes32","name":"_codeHash","type":"bytes32"},{"internalType":"bytes32","name":"_platform","type":"bytes32"}],"name":"register","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[],"name":"relay","outputs":[{"internalType":"contract IRelay","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_oldTeeId","type":"address"},{"components":[{"internalType":"bytes","name":"relayMessage","type":"bytes"},{"components":[{"internalType":"uint8","name":"v","type":"uint8"},{"internalType":"bytes32","name":"r","type":"bytes32"},{"internalType":"bytes32","name":"s","type":"bytes32"}],"internalType":"struct Signature[]","name":"teeSignatures","type":"tuple[]"},{"components":[{"internalType":"bytes32","name":"attestationType","type":"bytes32"},{"internalType":"bytes32","name":"sourceId","type":"bytes32"},{"internalType":"uint16","name":"thresholdBIPS","type":"uint16"},{"internalType":"uint64","name":"timestamp","type":"uint64"},{"components":[{"components":[{"internalType":"address","name":"teeId","type":"address"},{"internalType":"address","name":"owner","type":"address"},{"internalType":"string","name":"url","type":"string"},{"internalType":"bytes32","name":"codeHash","type":"bytes32"},{"internalType":"bytes32","name":"platform","type":"bytes32"}],"internalType":"struct ITeeRegistry.TeeMachineWithAttestationData","name":"teeMachine","type":"tuple"},{"internalType":"uint24","name":"rewardEpochId","type":"uint24"}],"internalType":"struct ITeeAvailabilityCheck.RequestBody","name":"requestBody","type":"tuple"},{"components":[{"internalType":"enum ITeeAvailabilityCheck.AvailabilityCheckStatus","name":"status","type":"uint8"}],"internalType":"struct ITeeAvailabilityCheck.ResponseBody","name":"responseBody","type":"tuple"}],"internalType":"struct ITeeAvailabilityCheck.Response","name":"data","type":"tuple"}],"internalType":"struct ITeeAvailabilityCheck.Proof","name":"_proof","type":"tuple"}],"name":"replicateFrom","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"address","name":"oldTeeId","type":"address"}],"name":"replications","outputs":[{"internalType":"address","name":"newTeeId","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_availabilityCheckValidityDurationSeconds","type":"uint256"}],"name":"setAvailabilityCheckValidityDurationSeconds","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_minSupportedVersion","type":"uint256"}],"name":"setMinSupportedVersion","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_pauseBeforeUpgradeMinDurationSeconds","type":"uint256"}],"name":"setPauseBeforeUpgradeMinDurationSeconds","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"switchToProductionMode","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"teeFeeCalculator","outputs":[{"internalType":"contract ITeeFeeCalculator","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"teeInstructions","outputs":[{"internalType":"contract ITeeInstructions","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes4","name":"selector","type":"bytes4"}],"name":"timelockedCalls","outputs":[{"internalType":"uint256","name":"allowedAfterTimestamp","type":"uint256"},{"internalType":"bytes","name":"encodedCall","type":"bytes"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_teeId","type":"address"}],"name":"toPauseForUpgrade","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"components":[{"internalType":"bytes","name":"relayMessage","type":"bytes"},{"components":[{"internalType":"uint8","name":"v","type":"uint8"},{"internalType":"bytes32","name":"r","type":"bytes32"},{"internalType":"bytes32","name":"s","type":"bytes32"}],"internalType":"struct Signature[]","name":"teeSignatures","type":"tuple[]"},{"components":[{"internalType":"bytes32","name":"attestationType","type":"bytes32"},{"internalType":"bytes32","name":"sourceId","type":"bytes32"},{"internalType":"uint16","name":"thresholdBIPS","type":"uint16"},{"internalType":"uint64","name":"timestamp","type":"uint64"},{"components":[{"components":[{"internalType":"address","name":"teeId","type":"address"},{"internalType":"address","name":"owner","type":"address"},{"internalType":"string","name":"url","type":"string"},{"internalType":"bytes32","name":"codeHash","type":"bytes32"},{"internalType":"bytes32","name":"platform","type":"bytes32"}],"internalType":"struct ITeeRegistry.TeeMachineWithAttestationData","name":"teeMachine","type":"tuple"},{"internalType":"uint24","name":"rewardEpochId","type":"uint24"}],"internalType":"struct ITeeAvailabilityCheck.RequestBody","name":"requestBody","type":"tuple"},{"components":[{"internalType":"enum ITeeAvailabilityCheck.AvailabilityCheckStatus","name":"status","type":"uint8"}],"internalType":"struct ITeeAvailabilityCheck.ResponseBody","name":"responseBody","type":"tuple"}],"internalType":"struct ITeeAvailabilityCheck.Response","name":"data","type":"tuple"}],"internalType":"struct ITeeAvailabilityCheck.Proof","name":"_proof","type":"tuple"}],"name":"toProduction","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32[]","name":"_contractNameHashes","type":"bytes32[]"},{"internalType":"address[]","name":"_contractAddresses","type":"address[]"}],"name":"updateContractAddresses","outputs":[],"stateMutability":"nonpayable","type":"function"}]
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "teeId",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "endTs",
+        "type": "uint256"
+      }
+    ],
+    "name": "AvailabilityCheckValidityExtended",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_teeId",
+        "type": "address"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_backupTeeIds",
+        "type": "address[]"
+      }
+    ],
+    "name": "arePlatformsCompatible",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes",
+            "name": "relayMessage",
+            "type": "bytes"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint8",
+                "name": "v",
+                "type": "uint8"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "r",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "s",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct Signature[]",
+            "name": "teeSignatures",
+            "type": "tuple[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "attestationType",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "sourceId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint16",
+                "name": "thresholdBIPS",
+                "type": "uint16"
+              },
+              {
+                "internalType": "uint64",
+                "name": "timestamp",
+                "type": "uint64"
+              },
+              {
+                "components": [
+                  {
+                    "components": [
+                      {
+                        "internalType": "address",
+                        "name": "teeId",
+                        "type": "address"
+                      },
+                      {
+                        "internalType": "address",
+                        "name": "owner",
+                        "type": "address"
+                      },
+                      {
+                        "internalType": "string",
+                        "name": "url",
+                        "type": "string"
+                      },
+                      {
+                        "internalType": "bytes32",
+                        "name": "codeHash",
+                        "type": "bytes32"
+                      },
+                      {
+                        "internalType": "bytes32",
+                        "name": "platform",
+                        "type": "bytes32"
+                      }
+                    ],
+                    "internalType": "struct ITeeRegistry.TeeMachineWithAttestationData",
+                    "name": "teeMachine",
+                    "type": "tuple"
+                  },
+                  {
+                    "internalType": "uint24",
+                    "name": "rewardEpochId",
+                    "type": "uint24"
+                  }
+                ],
+                "internalType": "struct ITeeAvailabilityCheck.RequestBody",
+                "name": "requestBody",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "enum ITeeAvailabilityCheck.AvailabilityCheckStatus",
+                    "name": "status",
+                    "type": "uint8"
+                  }
+                ],
+                "internalType": "struct ITeeAvailabilityCheck.ResponseBody",
+                "name": "responseBody",
+                "type": "tuple"
+              }
+            ],
+            "internalType": "struct ITeeAvailabilityCheck.Response",
+            "name": "data",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct ITeeAvailabilityCheck.Proof",
+        "name": "_proof",
+        "type": "tuple"
+      }
+    ],
+    "name": "confirmAvailability",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_teeId",
+        "type": "address"
+      }
+    ],
+    "name": "confirmOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_newTeeId",
+        "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "bytes",
+            "name": "relayMessage",
+            "type": "bytes"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint8",
+                "name": "v",
+                "type": "uint8"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "r",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "s",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct Signature[]",
+            "name": "teeSignatures",
+            "type": "tuple[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "attestationType",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "sourceId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint16",
+                "name": "thresholdBIPS",
+                "type": "uint16"
+              },
+              {
+                "internalType": "uint64",
+                "name": "timestamp",
+                "type": "uint64"
+              },
+              {
+                "components": [
+                  {
+                    "components": [
+                      {
+                        "internalType": "address",
+                        "name": "teeId",
+                        "type": "address"
+                      },
+                      {
+                        "internalType": "address",
+                        "name": "owner",
+                        "type": "address"
+                      },
+                      {
+                        "internalType": "string",
+                        "name": "url",
+                        "type": "string"
+                      },
+                      {
+                        "internalType": "bytes32",
+                        "name": "codeHash",
+                        "type": "bytes32"
+                      },
+                      {
+                        "internalType": "bytes32",
+                        "name": "platform",
+                        "type": "bytes32"
+                      }
+                    ],
+                    "internalType": "struct ITeeRegistry.TeeMachineWithAttestationData",
+                    "name": "teeMachine",
+                    "type": "tuple"
+                  },
+                  {
+                    "internalType": "uint24",
+                    "name": "rewardEpochId",
+                    "type": "uint24"
+                  }
+                ],
+                "internalType": "struct ITeeAvailabilityCheck.RequestBody",
+                "name": "requestBody",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "enum ITeeAvailabilityCheck.AvailabilityCheckStatus",
+                    "name": "status",
+                    "type": "uint8"
+                  }
+                ],
+                "internalType": "struct ITeeAvailabilityCheck.ResponseBody",
+                "name": "responseBody",
+                "type": "tuple"
+              }
+            ],
+            "internalType": "struct ITeeAvailabilityCheck.Response",
+            "name": "data",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct ITeeAvailabilityCheck.Proof",
+        "name": "_proof",
+        "type": "tuple"
+      }
+    ],
+    "name": "confirmReplicate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getActiveTeeIds",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_codeHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getCodeHashVersion",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_count",
+        "type": "uint256"
+      }
+    ],
+    "name": "getRandomTeeIds",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_teeId",
+        "type": "address"
+      }
+    ],
+    "name": "getTeeMachine",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "teeId",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "owner",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "url",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct ITeeRegistry.TeeMachine",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_teeId",
+        "type": "address"
+      }
+    ],
+    "name": "getTeeMachineStatus",
+    "outputs": [
+      {
+        "internalType": "enum ITeeRegistry.TeeStatus",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_teeId",
+        "type": "address"
+      }
+    ],
+    "name": "getTeeMachineVersion",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_teeId",
+        "type": "address"
+      }
+    ],
+    "name": "getTeeMachineWithAttestationData",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "teeId",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "owner",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "codeHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "platform",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct ITeeRegistry.TeeMachineWithAttestationData",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_version",
+        "type": "uint256"
+      }
+    ],
+    "name": "getVersionInfo",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_codeHash",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32[]",
+        "name": "_platforms",
+        "type": "bytes32[]"
+      },
+      {
+        "internalType": "bytes32[]",
+        "name": "_opTypes",
+        "type": "bytes32[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_teeId",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_opType",
+        "type": "bytes32"
+      }
+    ],
+    "name": "isOpTypeSupported",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_teeId",
+        "type": "address"
+      }
+    ],
+    "name": "pause",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes",
+            "name": "relayMessage",
+            "type": "bytes"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint8",
+                "name": "v",
+                "type": "uint8"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "r",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "s",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct Signature[]",
+            "name": "teeSignatures",
+            "type": "tuple[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "attestationType",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "sourceId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint16",
+                "name": "thresholdBIPS",
+                "type": "uint16"
+              },
+              {
+                "internalType": "uint64",
+                "name": "timestamp",
+                "type": "uint64"
+              },
+              {
+                "components": [
+                  {
+                    "components": [
+                      {
+                        "internalType": "address",
+                        "name": "teeId",
+                        "type": "address"
+                      },
+                      {
+                        "internalType": "address",
+                        "name": "owner",
+                        "type": "address"
+                      },
+                      {
+                        "internalType": "string",
+                        "name": "url",
+                        "type": "string"
+                      },
+                      {
+                        "internalType": "bytes32",
+                        "name": "codeHash",
+                        "type": "bytes32"
+                      },
+                      {
+                        "internalType": "bytes32",
+                        "name": "platform",
+                        "type": "bytes32"
+                      }
+                    ],
+                    "internalType": "struct ITeeRegistry.TeeMachineWithAttestationData",
+                    "name": "teeMachine",
+                    "type": "tuple"
+                  },
+                  {
+                    "internalType": "uint24",
+                    "name": "rewardEpochId",
+                    "type": "uint24"
+                  }
+                ],
+                "internalType": "struct ITeeAvailabilityCheck.RequestBody",
+                "name": "requestBody",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "enum ITeeAvailabilityCheck.AvailabilityCheckStatus",
+                    "name": "status",
+                    "type": "uint8"
+                  }
+                ],
+                "internalType": "struct ITeeAvailabilityCheck.ResponseBody",
+                "name": "responseBody",
+                "type": "tuple"
+              }
+            ],
+            "internalType": "struct ITeeAvailabilityCheck.Response",
+            "name": "data",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct ITeeAvailabilityCheck.Proof",
+        "name": "_proof",
+        "type": "tuple"
+      }
+    ],
+    "name": "pauseWithProof",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_teeId",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "proposeNewOwner",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_teeId",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "_url",
+        "type": "string"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_codeHash",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_platform",
+        "type": "bytes32"
+      }
+    ],
+    "name": "register",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_oldTeeId",
+        "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "bytes",
+            "name": "relayMessage",
+            "type": "bytes"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint8",
+                "name": "v",
+                "type": "uint8"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "r",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "s",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct Signature[]",
+            "name": "teeSignatures",
+            "type": "tuple[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "attestationType",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "sourceId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint16",
+                "name": "thresholdBIPS",
+                "type": "uint16"
+              },
+              {
+                "internalType": "uint64",
+                "name": "timestamp",
+                "type": "uint64"
+              },
+              {
+                "components": [
+                  {
+                    "components": [
+                      {
+                        "internalType": "address",
+                        "name": "teeId",
+                        "type": "address"
+                      },
+                      {
+                        "internalType": "address",
+                        "name": "owner",
+                        "type": "address"
+                      },
+                      {
+                        "internalType": "string",
+                        "name": "url",
+                        "type": "string"
+                      },
+                      {
+                        "internalType": "bytes32",
+                        "name": "codeHash",
+                        "type": "bytes32"
+                      },
+                      {
+                        "internalType": "bytes32",
+                        "name": "platform",
+                        "type": "bytes32"
+                      }
+                    ],
+                    "internalType": "struct ITeeRegistry.TeeMachineWithAttestationData",
+                    "name": "teeMachine",
+                    "type": "tuple"
+                  },
+                  {
+                    "internalType": "uint24",
+                    "name": "rewardEpochId",
+                    "type": "uint24"
+                  }
+                ],
+                "internalType": "struct ITeeAvailabilityCheck.RequestBody",
+                "name": "requestBody",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "enum ITeeAvailabilityCheck.AvailabilityCheckStatus",
+                    "name": "status",
+                    "type": "uint8"
+                  }
+                ],
+                "internalType": "struct ITeeAvailabilityCheck.ResponseBody",
+                "name": "responseBody",
+                "type": "tuple"
+              }
+            ],
+            "internalType": "struct ITeeAvailabilityCheck.Response",
+            "name": "data",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct ITeeAvailabilityCheck.Proof",
+        "name": "_proof",
+        "type": "tuple"
+      }
+    ],
+    "name": "replicateFrom",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_teeId",
+        "type": "address"
+      }
+    ],
+    "name": "toPauseForUpgrade",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes",
+            "name": "relayMessage",
+            "type": "bytes"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint8",
+                "name": "v",
+                "type": "uint8"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "r",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "s",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct Signature[]",
+            "name": "teeSignatures",
+            "type": "tuple[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "attestationType",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "sourceId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint16",
+                "name": "thresholdBIPS",
+                "type": "uint16"
+              },
+              {
+                "internalType": "uint64",
+                "name": "timestamp",
+                "type": "uint64"
+              },
+              {
+                "components": [
+                  {
+                    "components": [
+                      {
+                        "internalType": "address",
+                        "name": "teeId",
+                        "type": "address"
+                      },
+                      {
+                        "internalType": "address",
+                        "name": "owner",
+                        "type": "address"
+                      },
+                      {
+                        "internalType": "string",
+                        "name": "url",
+                        "type": "string"
+                      },
+                      {
+                        "internalType": "bytes32",
+                        "name": "codeHash",
+                        "type": "bytes32"
+                      },
+                      {
+                        "internalType": "bytes32",
+                        "name": "platform",
+                        "type": "bytes32"
+                      }
+                    ],
+                    "internalType": "struct ITeeRegistry.TeeMachineWithAttestationData",
+                    "name": "teeMachine",
+                    "type": "tuple"
+                  },
+                  {
+                    "internalType": "uint24",
+                    "name": "rewardEpochId",
+                    "type": "uint24"
+                  }
+                ],
+                "internalType": "struct ITeeAvailabilityCheck.RequestBody",
+                "name": "requestBody",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "enum ITeeAvailabilityCheck.AvailabilityCheckStatus",
+                    "name": "status",
+                    "type": "uint8"
+                  }
+                ],
+                "internalType": "struct ITeeAvailabilityCheck.ResponseBody",
+                "name": "responseBody",
+                "type": "tuple"
+              }
+            ],
+            "internalType": "struct ITeeAvailabilityCheck.Response",
+            "name": "data",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct ITeeAvailabilityCheck.Proof",
+        "name": "_proof",
+        "type": "tuple"
+      }
+    ],
+    "name": "toProduction",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_teeId",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_testOnTeeId",
+        "type": "address"
+      }
+    ],
+    "name": "triggerAvailabilityCheck",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  }
+]
