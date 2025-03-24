@@ -38,7 +38,7 @@ type ITeePaymentsPaymentInstruction struct {
 
 // TeePaymentMetaData contains all meta data concerning the TeePayment contract.
 var TeePaymentMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"getSenderAddress\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"_senderAddress\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"getWalletSettings\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"_batchSize\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"_batchDurationSeconds\",\"type\":\"uint64\"},{\"internalType\":\"uint96\",\"name\":\"_maxFee\",\"type\":\"uint96\"},{\"internalType\":\"uint32\",\"name\":\"_maxFeeTolerancePPM\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"_controlAddress\",\"type\":\"address\"},{\"internalType\":\"uint96\",\"name\":\"_maxControlFee\",\"type\":\"uint96\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"}],\"internalType\":\"structITeePayments.PaymentInstruction\",\"name\":\"_paymentInstruction\",\"type\":\"tuple\"}],\"name\":\"pay\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_subNonce\",\"type\":\"uint256\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_nonce\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"_firstSubNonce\",\"type\":\"uint64\"},{\"components\":[{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"}],\"internalType\":\"structITeePayments.PaymentInstruction[]\",\"name\":\"_paymentInstruction\",\"type\":\"tuple[]\"},{\"internalType\":\"uint96\",\"name\":\"_fee\",\"type\":\"uint96\"},{\"internalType\":\"bool\",\"name\":\"_nullify\",\"type\":\"bool\"}],\"name\":\"reissue\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_batchSize\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"_batchDurationSeconds\",\"type\":\"uint64\"}],\"name\":\"setBatchSettings\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"_controlAddress\",\"type\":\"address\"}],\"name\":\"setControlAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint96\",\"name\":\"_maxFee\",\"type\":\"uint96\"},{\"internalType\":\"uint32\",\"name\":\"_maxFeeTolerancePPM\",\"type\":\"uint32\"},{\"internalType\":\"uint96\",\"name\":\"_maxControlFee\",\"type\":\"uint96\"}],\"name\":\"setFees\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"_senderAddress\",\"type\":\"string\"}],\"name\":\"setSenderAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"batchSize\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"batchDurationSeconds\",\"type\":\"uint64\"}],\"name\":\"BatchSettingsSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"controlAddress\",\"type\":\"address\"}],\"name\":\"ControlAddressSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint96\",\"name\":\"maxFee\",\"type\":\"uint96\"},{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"maxFeeTolerancePPM\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"uint96\",\"name\":\"maxControlFee\",\"type\":\"uint96\"}],\"name\":\"FeesSet\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"getSenderAddress\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"_senderAddress\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"getWalletSettings\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"_batchSize\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"_batchDurationSeconds\",\"type\":\"uint64\"},{\"internalType\":\"uint96\",\"name\":\"_maxFee\",\"type\":\"uint96\"},{\"internalType\":\"uint32\",\"name\":\"_maxFeeTolerancePPM\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"_controlAddress\",\"type\":\"address\"},{\"internalType\":\"uint96\",\"name\":\"_maxControlFee\",\"type\":\"uint96\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"}],\"internalType\":\"structITeePayments.PaymentInstruction\",\"name\":\"_paymentInstruction\",\"type\":\"tuple\"}],\"name\":\"pay\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_subNonce\",\"type\":\"uint256\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_nonce\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"_firstSubNonce\",\"type\":\"uint64\"},{\"components\":[{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"}],\"internalType\":\"structITeePayments.PaymentInstruction[]\",\"name\":\"_paymentInstruction\",\"type\":\"tuple[]\"},{\"internalType\":\"uint96\",\"name\":\"_fee\",\"type\":\"uint96\"},{\"internalType\":\"bool\",\"name\":\"_nullify\",\"type\":\"bool\"}],\"name\":\"reissue\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_batchSize\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"_batchDurationSeconds\",\"type\":\"uint64\"}],\"name\":\"setBatchSettings\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"_controlAddress\",\"type\":\"address\"}],\"name\":\"setControlAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint96\",\"name\":\"_maxFee\",\"type\":\"uint96\"},{\"internalType\":\"uint32\",\"name\":\"_maxFeeTolerancePPM\",\"type\":\"uint32\"},{\"internalType\":\"uint96\",\"name\":\"_maxControlFee\",\"type\":\"uint96\"}],\"name\":\"setFees\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"_senderAddress\",\"type\":\"string\"},{\"internalType\":\"uint64\",\"name\":\"_initialNonce\",\"type\":\"uint64\"}],\"name\":\"setSenderAddressAndInitialNonce\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // TeePaymentABI is the input ABI used to generate the binding from.
@@ -388,23 +388,461 @@ func (_TeePayment *TeePaymentTransactorSession) SetFees(_walletId [32]byte, _max
 	return _TeePayment.Contract.SetFees(&_TeePayment.TransactOpts, _walletId, _maxFee, _maxFeeTolerancePPM, _maxControlFee)
 }
 
-// SetSenderAddress is a paid mutator transaction binding the contract method 0x300af900.
+// SetSenderAddressAndInitialNonce is a paid mutator transaction binding the contract method 0xb9a853c3.
 //
-// Solidity: function setSenderAddress(bytes32 _walletId, string _senderAddress) returns()
-func (_TeePayment *TeePaymentTransactor) SetSenderAddress(opts *bind.TransactOpts, _walletId [32]byte, _senderAddress string) (*types.Transaction, error) {
-	return _TeePayment.contract.Transact(opts, "setSenderAddress", _walletId, _senderAddress)
+// Solidity: function setSenderAddressAndInitialNonce(bytes32 _walletId, string _senderAddress, uint64 _initialNonce) returns()
+func (_TeePayment *TeePaymentTransactor) SetSenderAddressAndInitialNonce(opts *bind.TransactOpts, _walletId [32]byte, _senderAddress string, _initialNonce uint64) (*types.Transaction, error) {
+	return _TeePayment.contract.Transact(opts, "setSenderAddressAndInitialNonce", _walletId, _senderAddress, _initialNonce)
 }
 
-// SetSenderAddress is a paid mutator transaction binding the contract method 0x300af900.
+// SetSenderAddressAndInitialNonce is a paid mutator transaction binding the contract method 0xb9a853c3.
 //
-// Solidity: function setSenderAddress(bytes32 _walletId, string _senderAddress) returns()
-func (_TeePayment *TeePaymentSession) SetSenderAddress(_walletId [32]byte, _senderAddress string) (*types.Transaction, error) {
-	return _TeePayment.Contract.SetSenderAddress(&_TeePayment.TransactOpts, _walletId, _senderAddress)
+// Solidity: function setSenderAddressAndInitialNonce(bytes32 _walletId, string _senderAddress, uint64 _initialNonce) returns()
+func (_TeePayment *TeePaymentSession) SetSenderAddressAndInitialNonce(_walletId [32]byte, _senderAddress string, _initialNonce uint64) (*types.Transaction, error) {
+	return _TeePayment.Contract.SetSenderAddressAndInitialNonce(&_TeePayment.TransactOpts, _walletId, _senderAddress, _initialNonce)
 }
 
-// SetSenderAddress is a paid mutator transaction binding the contract method 0x300af900.
+// SetSenderAddressAndInitialNonce is a paid mutator transaction binding the contract method 0xb9a853c3.
 //
-// Solidity: function setSenderAddress(bytes32 _walletId, string _senderAddress) returns()
-func (_TeePayment *TeePaymentTransactorSession) SetSenderAddress(_walletId [32]byte, _senderAddress string) (*types.Transaction, error) {
-	return _TeePayment.Contract.SetSenderAddress(&_TeePayment.TransactOpts, _walletId, _senderAddress)
+// Solidity: function setSenderAddressAndInitialNonce(bytes32 _walletId, string _senderAddress, uint64 _initialNonce) returns()
+func (_TeePayment *TeePaymentTransactorSession) SetSenderAddressAndInitialNonce(_walletId [32]byte, _senderAddress string, _initialNonce uint64) (*types.Transaction, error) {
+	return _TeePayment.Contract.SetSenderAddressAndInitialNonce(&_TeePayment.TransactOpts, _walletId, _senderAddress, _initialNonce)
+}
+
+// TeePaymentBatchSettingsSetIterator is returned from FilterBatchSettingsSet and is used to iterate over the raw logs and unpacked data for BatchSettingsSet events raised by the TeePayment contract.
+type TeePaymentBatchSettingsSetIterator struct {
+	Event *TeePaymentBatchSettingsSet // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeePaymentBatchSettingsSetIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeePaymentBatchSettingsSet)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeePaymentBatchSettingsSet)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeePaymentBatchSettingsSetIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeePaymentBatchSettingsSetIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeePaymentBatchSettingsSet represents a BatchSettingsSet event raised by the TeePayment contract.
+type TeePaymentBatchSettingsSet struct {
+	WalletId             [32]byte
+	BatchSize            uint64
+	BatchDurationSeconds uint64
+	Raw                  types.Log // Blockchain specific contextual infos
+}
+
+// FilterBatchSettingsSet is a free log retrieval operation binding the contract event 0xfa2da2b02c35a83b9a69ec27c4d6fbf1c4cf31d416e5783d45a39bdfbc36deff.
+//
+// Solidity: event BatchSettingsSet(bytes32 indexed walletId, uint64 batchSize, uint64 batchDurationSeconds)
+func (_TeePayment *TeePaymentFilterer) FilterBatchSettingsSet(opts *bind.FilterOpts, walletId [][32]byte) (*TeePaymentBatchSettingsSetIterator, error) {
+
+	var walletIdRule []interface{}
+	for _, walletIdItem := range walletId {
+		walletIdRule = append(walletIdRule, walletIdItem)
+	}
+
+	logs, sub, err := _TeePayment.contract.FilterLogs(opts, "BatchSettingsSet", walletIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return &TeePaymentBatchSettingsSetIterator{contract: _TeePayment.contract, event: "BatchSettingsSet", logs: logs, sub: sub}, nil
+}
+
+// WatchBatchSettingsSet is a free log subscription operation binding the contract event 0xfa2da2b02c35a83b9a69ec27c4d6fbf1c4cf31d416e5783d45a39bdfbc36deff.
+//
+// Solidity: event BatchSettingsSet(bytes32 indexed walletId, uint64 batchSize, uint64 batchDurationSeconds)
+func (_TeePayment *TeePaymentFilterer) WatchBatchSettingsSet(opts *bind.WatchOpts, sink chan<- *TeePaymentBatchSettingsSet, walletId [][32]byte) (event.Subscription, error) {
+
+	var walletIdRule []interface{}
+	for _, walletIdItem := range walletId {
+		walletIdRule = append(walletIdRule, walletIdItem)
+	}
+
+	logs, sub, err := _TeePayment.contract.WatchLogs(opts, "BatchSettingsSet", walletIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeePaymentBatchSettingsSet)
+				if err := _TeePayment.contract.UnpackLog(event, "BatchSettingsSet", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseBatchSettingsSet is a log parse operation binding the contract event 0xfa2da2b02c35a83b9a69ec27c4d6fbf1c4cf31d416e5783d45a39bdfbc36deff.
+//
+// Solidity: event BatchSettingsSet(bytes32 indexed walletId, uint64 batchSize, uint64 batchDurationSeconds)
+func (_TeePayment *TeePaymentFilterer) ParseBatchSettingsSet(log types.Log) (*TeePaymentBatchSettingsSet, error) {
+	event := new(TeePaymentBatchSettingsSet)
+	if err := _TeePayment.contract.UnpackLog(event, "BatchSettingsSet", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// TeePaymentControlAddressSetIterator is returned from FilterControlAddressSet and is used to iterate over the raw logs and unpacked data for ControlAddressSet events raised by the TeePayment contract.
+type TeePaymentControlAddressSetIterator struct {
+	Event *TeePaymentControlAddressSet // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeePaymentControlAddressSetIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeePaymentControlAddressSet)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeePaymentControlAddressSet)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeePaymentControlAddressSetIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeePaymentControlAddressSetIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeePaymentControlAddressSet represents a ControlAddressSet event raised by the TeePayment contract.
+type TeePaymentControlAddressSet struct {
+	WalletId       [32]byte
+	ControlAddress common.Address
+	Raw            types.Log // Blockchain specific contextual infos
+}
+
+// FilterControlAddressSet is a free log retrieval operation binding the contract event 0x996301706402921996c1da682c26acf8bfe8381043ca0c62636312f6ced8e44a.
+//
+// Solidity: event ControlAddressSet(bytes32 indexed walletId, address controlAddress)
+func (_TeePayment *TeePaymentFilterer) FilterControlAddressSet(opts *bind.FilterOpts, walletId [][32]byte) (*TeePaymentControlAddressSetIterator, error) {
+
+	var walletIdRule []interface{}
+	for _, walletIdItem := range walletId {
+		walletIdRule = append(walletIdRule, walletIdItem)
+	}
+
+	logs, sub, err := _TeePayment.contract.FilterLogs(opts, "ControlAddressSet", walletIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return &TeePaymentControlAddressSetIterator{contract: _TeePayment.contract, event: "ControlAddressSet", logs: logs, sub: sub}, nil
+}
+
+// WatchControlAddressSet is a free log subscription operation binding the contract event 0x996301706402921996c1da682c26acf8bfe8381043ca0c62636312f6ced8e44a.
+//
+// Solidity: event ControlAddressSet(bytes32 indexed walletId, address controlAddress)
+func (_TeePayment *TeePaymentFilterer) WatchControlAddressSet(opts *bind.WatchOpts, sink chan<- *TeePaymentControlAddressSet, walletId [][32]byte) (event.Subscription, error) {
+
+	var walletIdRule []interface{}
+	for _, walletIdItem := range walletId {
+		walletIdRule = append(walletIdRule, walletIdItem)
+	}
+
+	logs, sub, err := _TeePayment.contract.WatchLogs(opts, "ControlAddressSet", walletIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeePaymentControlAddressSet)
+				if err := _TeePayment.contract.UnpackLog(event, "ControlAddressSet", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseControlAddressSet is a log parse operation binding the contract event 0x996301706402921996c1da682c26acf8bfe8381043ca0c62636312f6ced8e44a.
+//
+// Solidity: event ControlAddressSet(bytes32 indexed walletId, address controlAddress)
+func (_TeePayment *TeePaymentFilterer) ParseControlAddressSet(log types.Log) (*TeePaymentControlAddressSet, error) {
+	event := new(TeePaymentControlAddressSet)
+	if err := _TeePayment.contract.UnpackLog(event, "ControlAddressSet", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// TeePaymentFeesSetIterator is returned from FilterFeesSet and is used to iterate over the raw logs and unpacked data for FeesSet events raised by the TeePayment contract.
+type TeePaymentFeesSetIterator struct {
+	Event *TeePaymentFeesSet // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeePaymentFeesSetIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeePaymentFeesSet)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeePaymentFeesSet)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeePaymentFeesSetIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeePaymentFeesSetIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeePaymentFeesSet represents a FeesSet event raised by the TeePayment contract.
+type TeePaymentFeesSet struct {
+	WalletId           [32]byte
+	MaxFee             *big.Int
+	MaxFeeTolerancePPM uint32
+	MaxControlFee      *big.Int
+	Raw                types.Log // Blockchain specific contextual infos
+}
+
+// FilterFeesSet is a free log retrieval operation binding the contract event 0x6104aa749f5a8c1d1c75a44525f12df2f0127c671fcfb9fab4afafb1f46d4c40.
+//
+// Solidity: event FeesSet(bytes32 indexed walletId, uint96 maxFee, uint32 maxFeeTolerancePPM, uint96 maxControlFee)
+func (_TeePayment *TeePaymentFilterer) FilterFeesSet(opts *bind.FilterOpts, walletId [][32]byte) (*TeePaymentFeesSetIterator, error) {
+
+	var walletIdRule []interface{}
+	for _, walletIdItem := range walletId {
+		walletIdRule = append(walletIdRule, walletIdItem)
+	}
+
+	logs, sub, err := _TeePayment.contract.FilterLogs(opts, "FeesSet", walletIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return &TeePaymentFeesSetIterator{contract: _TeePayment.contract, event: "FeesSet", logs: logs, sub: sub}, nil
+}
+
+// WatchFeesSet is a free log subscription operation binding the contract event 0x6104aa749f5a8c1d1c75a44525f12df2f0127c671fcfb9fab4afafb1f46d4c40.
+//
+// Solidity: event FeesSet(bytes32 indexed walletId, uint96 maxFee, uint32 maxFeeTolerancePPM, uint96 maxControlFee)
+func (_TeePayment *TeePaymentFilterer) WatchFeesSet(opts *bind.WatchOpts, sink chan<- *TeePaymentFeesSet, walletId [][32]byte) (event.Subscription, error) {
+
+	var walletIdRule []interface{}
+	for _, walletIdItem := range walletId {
+		walletIdRule = append(walletIdRule, walletIdItem)
+	}
+
+	logs, sub, err := _TeePayment.contract.WatchLogs(opts, "FeesSet", walletIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeePaymentFeesSet)
+				if err := _TeePayment.contract.UnpackLog(event, "FeesSet", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseFeesSet is a log parse operation binding the contract event 0x6104aa749f5a8c1d1c75a44525f12df2f0127c671fcfb9fab4afafb1f46d4c40.
+//
+// Solidity: event FeesSet(bytes32 indexed walletId, uint96 maxFee, uint32 maxFeeTolerancePPM, uint96 maxControlFee)
+func (_TeePayment *TeePaymentFilterer) ParseFeesSet(log types.Log) (*TeePaymentFeesSet, error) {
+	event := new(TeePaymentFeesSet)
+	if err := _TeePayment.contract.UnpackLog(event, "FeesSet", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
 }
