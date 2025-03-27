@@ -1,2 +1,2 @@
-//go:generate  abigen --abi=pkg/contracts/submission/submission.abi --pkg=submission --type=Submission --out=pkg/contracts/submission/autogen.go
+//go:generate  abigen --abi=submission.abi --pkg=submission --type=Submission --out=autogen.go
 package submission

@@ -1,2 +1,2 @@
-//go:generate  abigen --abi=pkg/contracts/teepayment/teepayment.abi --pkg=teepayment --type=TeePayment --out=pkg/contracts/teepayment/autogen.go
+//go:generate  abigen --abi=teepayment.abi --pkg=teepayment --type=TeePayment --out=autogen.go
 package teepayment
