@@ -1,2 +1,2 @@
-//go:generate  abigen --abi=pkg/contracts/teeregistry/teeregistry.abi --pkg=teeregistry --type=TeeRegistry --out=pkg/contracts/teeregistry/autogen.go
+//go:generate  abigen --abi=teeregistry.abi --pkg=teeregistry --type=TeeRegistry --out=autogen.go
 package teeregistry

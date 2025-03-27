@@ -1,2 +1,2 @@
-//go:generate  abigen --abi=pkg/contracts/relay/relay.abi --pkg=relay --type=Relay --out=pkg/contracts/relay/autogen.go
+//go:generate  abigen --abi=relay.abi --pkg=relay --type=Relay --out=autogen.go
 package relay
