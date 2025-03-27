@@ -1,2 +1,2 @@
-//go:generate  abigen --abi=pkg/contracts/teewalletbackupmanager/teewalletbackupmanager.abi --pkg=teewalletbackupmanager --type=TeeWalletBackupManager --out=pkg/contracts/teewalletbackupmanager/autogen.go
+//go:generate  abigen --abi=teewalletbackupmanager.abi --pkg=teewalletbackupmanager --type=TeeWalletBackupManager --out=autogen.go
 package teewalletbackupmanager

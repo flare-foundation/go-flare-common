@@ -854,6 +854,24 @@
         "internalType": "address",
         "name": "_teeId",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_testOnTeeId",
+        "type": "address"
+      }
+    ],
+    "name": "requestAvailabilityCheckAttestation",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_teeId",
+        "type": "address"
       }
     ],
     "name": "toPauseForUpgrade",
@@ -984,24 +1002,6 @@
     "name": "toProduction",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_teeId",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_testOnTeeId",
-        "type": "address"
-      }
-    ],
-    "name": "triggerAvailabilityCheck",
-    "outputs": [],
-    "stateMutability": "payable",
     "type": "function"
   }
 ]
