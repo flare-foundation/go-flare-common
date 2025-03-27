@@ -17,7 +17,7 @@ type APIKey struct {
 	Key  string
 }
 
-type CallParams struct {
+type Params struct {
 	Timeout         time.Duration // maximal time to wait for a response
 	MaxResponseSize int64         // maximal response size in bytes
 }
@@ -25,7 +25,7 @@ type CallParams struct {
 var NoAPIKey = APIKey{"", ""}
 
 // PostRaw sends a post request with body and apiKey in header to url and unmarshals the response to a struct of type T.
-func PostRaw[T any](ctx context.Context, url string, apiKey APIKey, body io.Reader, p CallParams) (*T, error) {
+func PostRaw[T any](ctx context.Context, url string, apiKey APIKey, body io.Reader, p Params) (*T, error) {
 	client := &http.Client{Timeout: p.Timeout}
 
 	request, err := http.NewRequestWithContext(ctx, http.MethodPost, url, body)
@@ -65,7 +65,7 @@ func PostRaw[T any](ctx context.Context, url string, apiKey APIKey, body io.Read
 }
 
 // PostRawWithRetry sends a post request and retries on unsuccessful attempts according to retry parameters.
-func PostRawWithRetry[T any](ctx context.Context, url string, apiKey APIKey, body io.Reader, p CallParams, rp retry.Params) (*T, error) {
+func PostRawWithRetry[T any](ctx context.Context, url string, apiKey APIKey, body io.Reader, p Params, rp retry.Params) (*T, error) {
 	fn := func() (*T, error) {
 		return PostRaw[T](ctx, url, apiKey, body, p)
 	}
@@ -76,7 +76,7 @@ func PostRawWithRetry[T any](ctx context.Context, url string, apiKey APIKey, bod
 }
 
 // Post sends a post request with marshaled body and apiKey in header to url and unmarshals the response of type T.
-func Post[S, T any](ctx context.Context, url string, apiKey APIKey, body S, p CallParams) (*T, error) {
+func Post[S, T any](ctx context.Context, url string, apiKey APIKey, body S, p Params) (*T, error) {
 	b, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
@@ -86,7 +86,7 @@ func Post[S, T any](ctx context.Context, url string, apiKey APIKey, body S, p Ca
 }
 
 // PostWithRetry sends a post request with marshaled body and retries on unsuccessful attempts according to retry parameters.
-func PostWithRetry[S, T any](ctx context.Context, url string, apiKey APIKey, body S, p CallParams, rp retry.Params) (*T, error) {
+func PostWithRetry[S, T any](ctx context.Context, url string, apiKey APIKey, body S, p Params, rp retry.Params) (*T, error) {
 	fn := func() (*T, error) {
 		return Post[S, T](ctx, url, apiKey, body, p)
 	}
