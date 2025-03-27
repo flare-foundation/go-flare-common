@@ -560,6 +560,29 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "_teeId",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_walletId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_keyId",
+        "type": "uint64"
+      }
+    ],
+    "name": "requestKeyExistenceAttestation",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "bytes32",
         "name": "_walletId",
         "type": "bytes32"
