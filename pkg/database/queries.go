@@ -181,28 +181,44 @@ func fetchTransactionsByAddressAndSelectorFromBlockNumber(ctx context.Context, d
 	return transactions, nil
 }
 
-// FetchState returns the state of the indexer database.
+// FetchFirstDbBlockTs retrieves the first indexed block timestamp from the database.
+func FetchFirstDbBlockTs(ctx context.Context, db *gorm.DB) (uint64, error) {
+	state, err := RetryWrapper(fetchState, "fetching first db block state")(ctx, db, "first_database_block")
+	if err != nil {
+		return 0, err
+	}
+	return state.BlockTimestamp, nil
+}
+
+// FetchLastDbBlockTs retrieves the last indexed block timestamp from the database.
+func FetchLastDbBlockTs(ctx context.Context, db *gorm.DB) (uint64, error) {
+	state, err := RetryWrapper(fetchState, "fetching last db block state")(ctx, db, "last_database_block")
+	if err != nil {
+		return 0, err
+	}
+	return state.BlockTimestamp, nil
+}
+
+// FetchState returns the "last_database_block" state from the indexer database.
 func FetchState(ctx context.Context, db *gorm.DB, _ any) (State, error) {
-	return RetryWrapper(fetchState, "fetching state")(ctx, db, nil)
+	return RetryWrapper(fetchState, "fetching state")(ctx, db, "last_database_block")
 }
 
 // _ any is here to match the input type of the RetryWrapper
-func fetchState(ctx context.Context, db *gorm.DB, _ any) (State, error) {
+func fetchState(ctx context.Context, db *gorm.DB, stateName string) (State, error) {
 	var states []State
 
 	err := db.WithContext(ctx).Where(
 		"name = ?",
-		"last_database_block",
+		stateName,
 	).Find(&states).Error
 
 	if err != nil {
-		var state State
-		return state, err
+		return State{}, err
 	}
 
 	if len(states) == 0 {
-		var state State
-		return state, errors.New("no states in database")
+		return State{}, errors.New("no states in database")
 	}
 
 	return states[0], nil
