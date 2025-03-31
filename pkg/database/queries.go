@@ -204,7 +204,6 @@ func FetchState(ctx context.Context, db *gorm.DB, _ any) (State, error) {
 	return RetryWrapper(fetchState, "fetching state")(ctx, db, "last_database_block")
 }
 
-// _ any is here to match the input type of the RetryWrapper
 func fetchState(ctx context.Context, db *gorm.DB, stateName string) (State, error) {
 	var states []State
 
