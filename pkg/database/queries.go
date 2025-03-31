@@ -181,8 +181,8 @@ func fetchTransactionsByAddressAndSelectorFromBlockNumber(ctx context.Context, d
 	return transactions, nil
 }
 
-// FetchFirstDbBlockTs retrieves the first indexed block timestamp from the database.
-func FetchFirstDbBlockTs(ctx context.Context, db *gorm.DB) (uint64, error) {
+// FetchFirstDBBlockTs retrieves the first indexed block timestamp from the database.
+func FetchFirstDBBlockTs(ctx context.Context, db *gorm.DB) (uint64, error) {
 	state, err := RetryWrapper(fetchState, "fetching first db block state")(ctx, db, "first_database_block")
 	if err != nil {
 		return 0, err
@@ -190,8 +190,8 @@ func FetchFirstDbBlockTs(ctx context.Context, db *gorm.DB) (uint64, error) {
 	return state.BlockTimestamp, nil
 }
 
-// FetchLastDbBlockTs retrieves the last indexed block timestamp from the database.
-func FetchLastDbBlockTs(ctx context.Context, db *gorm.DB) (uint64, error) {
+// FetchLastDBBlockTs retrieves the last indexed block timestamp from the database.
+func FetchLastDBBlockTs(ctx context.Context, db *gorm.DB) (uint64, error) {
 	state, err := RetryWrapper(fetchState, "fetching last db block state")(ctx, db, "last_database_block")
 	if err != nil {
 		return 0, err
