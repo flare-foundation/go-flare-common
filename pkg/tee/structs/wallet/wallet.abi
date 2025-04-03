@@ -19,56 +19,6 @@
             "type": "uint256"
           },
           {
-            "internalType": "uint256",
-            "name": "backupId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "shamirThreshold",
-            "type": "uint256"
-          },
-          {
-            "internalType": "bytes[]",
-            "name": "custodianPublicKeys",
-            "type": "bytes[]"
-          }
-        ],
-        "internalType": "struct ITeeWalletBackupManager.KeyCustodianBackup",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "name": "keyCustodianBackupStruct",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "teeId",
-            "type": "address"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "walletId",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "uint256",
-            "name": "keyId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "backupId",
-            "type": "uint256"
-          },
-          {
             "internalType": "bytes32",
             "name": "opType",
             "type": "bytes32"
@@ -79,17 +29,17 @@
             "type": "bytes"
           },
           {
-            "internalType": "bytes[]",
-            "name": "custodianPublicKeys",
-            "type": "bytes[]"
+            "internalType": "uint24",
+            "name": "rewardEpochId",
+            "type": "uint24"
           }
         ],
-        "internalType": "struct ITeeWalletBackupManager.KeyCustodianRestore",
+        "internalType": "struct ITeeWalletBackupManager.KeyDataProviderRestore",
         "name": "",
         "type": "tuple"
       }
     ],
-    "name": "keyCustodianRestoreStruct",
+    "name": "keyDataProviderRestoreStruct",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -147,6 +97,43 @@
             "internalType": "bytes32",
             "name": "opType",
             "type": "bytes32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "opTypeConstants",
+            "type": "bytes"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "x",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "y",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct ITeeWalletManager.PublicKey[]",
+            "name": "adminsPublicKeys",
+            "type": "tuple[]"
+          },
+          {
+            "internalType": "uint256",
+            "name": "adminsThreshold",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address[]",
+            "name": "cosigners",
+            "type": "address[]"
+          },
+          {
+            "internalType": "uint256",
+            "name": "cosignersThreshold",
+            "type": "uint256"
           }
         ],
         "internalType": "struct ITeeWalletManager.KeyGenerate",
