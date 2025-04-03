@@ -26,8 +26,8 @@ var opCommands = []OPCommand{
 	KeyMachineBackup,
 	KeyMachineRestore,
 	KeyMachineBackupRemove,
-	KeyCustodianBackup,
-	KeyCustodianRestore,
+	// KeyCustodianBackup,
+	// KeyCustodianRestore,
 }
 
 // i-th method correspond to a method in TeeWalletStruct interface whose
@@ -38,8 +38,8 @@ var methods = []string{
 	"keyMachineBackupStruct",
 	"keyMachineRestoreStruct",
 	"keyMachineBackupRemoveStruct",
-	"keyCustodianBackupStruct",
-	"keyCustodianRestoreStruct",
+	// "keyCustodianBackupStruct",
+	// "keyCustodianRestoreStruct",
 }
 
 var MessageArguments map[OPCommand]abi.Argument
