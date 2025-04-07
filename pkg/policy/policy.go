@@ -25,7 +25,7 @@ type SigningPolicy struct {
 	Voters *voters.Set
 }
 
-func (sp SigningPolicy) RawBytes() []byte {
+func (sp *SigningPolicy) RawBytes() []byte {
 	return sp.rawBytes
 }
 
