@@ -5,11 +5,12 @@ import (
 	"fmt"
 )
 
-type hash struct {
+type hashInternal struct {
 	length int
 }
 
-func (h *hash) ToBytes(value any, _ bool) ([]byte, error) {
+// ToBytes serializes byte strings.
+func (h *hashInternal) ToBytes(value any, _ bool) ([]byte, error) {
 	s, ok := value.(string)
 	if !ok {
 		return nil, fmt.Errorf("not of type string %v", value)
@@ -25,8 +26,17 @@ func (h *hash) ToBytes(value any, _ bool) ([]byte, error) {
 	return v, nil
 }
 
-var Blob = &hash{length: 0}
-var Hash128 = &hash{length: 16}
-var Hash160 = &hash{length: 20}
-var Hash192 = &hash{length: 24}
-var Hash256 = &hash{length: 32}
+// Blob is used for serialization of Blob fields. https://xrpl.org/docs/references/protocol/binary-format#blob-fields
+var Blob = &hashInternal{length: 0}
+
+// Hash128 is used for serialization of Hash128 fields. https://xrpl.org/docs/references/protocol/binary-format#hash-fields
+var Hash128 = &hashInternal{length: 16}
+
+// Hash160 is used for serialization of Hash160 fields. https://xrpl.org/docs/references/protocol/binary-format#hash-fields
+var Hash160 = &hashInternal{length: 20}
+
+// Hash192 is used for serialization of Hash193 fields. https://xrpl.org/docs/references/protocol/binary-format#hash-fields
+var Hash192 = &hashInternal{length: 24}
+
+// Hash256 is used for serialization of Hash256 fields. https://xrpl.org/docs/references/protocol/binary-format#hash-fields
+var Hash256 = &hashInternal{length: 32}

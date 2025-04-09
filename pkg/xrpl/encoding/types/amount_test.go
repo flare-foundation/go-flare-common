@@ -2,6 +2,7 @@ package types
 
 import (
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"strings"
 	"testing"
@@ -61,7 +62,7 @@ func TestXRPAmount(t *testing.T) {
 	}
 
 	for j, test := range tests {
-		output, err := xrpAmountToBytes(test.input)
+		output, err := xrpToBytes(test.input)
 		require.NoError(t, err)
 
 		to, err := hex.DecodeString(test.output)
@@ -88,7 +89,7 @@ func TestXRPAmount(t *testing.T) {
 	}
 
 	for j, test := range testsFail {
-		_, err := xrpAmountToBytes(test.input)
+		_, err := xrpToBytes(test.input)
 		require.Error(t, err, fmt.Sprintf("fail test %d failed. input: %s ", j, test.input))
 	}
 }
@@ -114,6 +115,33 @@ func TestExtractString(t *testing.T) {
 	for _, key := range []string{"int", "bool", "bytes", "unknown", "nil"} {
 		_, err := extractString(testMap, key)
 		require.Error(t, err, fmt.Sprintf("fail test failed: %s", key))
+	}
+}
+
+func TestCurrencyAmount(t *testing.T) {
+	tests := []string{
+		`{
+	"currency":"524C555344000000000000000000000000000000",
+	"issuer":"rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+	"value":"12991.49972373237"
+	}`,
+		`{
+	"currency":"ETH",
+	"issuer":"rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+	"value":"0"
+	}`,
+	}
+
+	for j := range tests {
+		var value any
+
+		err := json.Unmarshal([]byte(tests[j]), &value)
+		require.NoError(t, err)
+
+		serialized, err := (&Amount{}).ToBytes(value, false)
+		require.NoError(t, err)
+
+		require.Len(t, serialized, 48)
 	}
 }
 
