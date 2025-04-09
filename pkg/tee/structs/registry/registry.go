@@ -1,4 +1,4 @@
-//go:generate  abigen --abi=pkg/tee/structs/registry/registry.abi --pkg=registry --type=Registry --out=pkg/tee/structs/registry/autogen.go
+//go:generate  abigen --abi=registry.abi --pkg=registry --type=Registry --out=autogen.go
 package registry
 
 import (

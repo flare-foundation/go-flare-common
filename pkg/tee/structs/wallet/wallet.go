@@ -1,4 +1,4 @@
-//go:generate  abigen --abi=pkg/tee/structs/wallet/wallet.abi --pkg=wallet --type=Wallet --out=pkg/tee/structs/wallet/autogen.go
+//go:generate  abigen --abi=wallet.abi --pkg=wallet --type=Wallet --out=autogen.go
 package wallet
 
 import (
