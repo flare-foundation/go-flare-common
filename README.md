@@ -1,5 +1,5 @@
 <p align="left">
-  <a href="https://flare.network/" target="blank"><img src="https://flare.network/wp-content/uploads/Artboard-1-1.svg" width="400" height="300" alt="Flare Logo" /></a>
+  <a href="https://flare.network/" target="blank"><img src="https://content.flare.network/Flare-2.svg" width="500" height="100" alt="Flare Logo" /></a>
 </p>
 
 # Go Flare Common V1
@@ -25,5 +25,10 @@ Contains the following packages:
   - structs: decoding messages from tee instructions events
 - toml: reading toml files
 - voters: working with Flare entities
+- xrpl
+
+  - working with xrpl transactions
+  -
+  -
 
 - abigen binding for Flare contracts (generated using [abigen](https://geth.ethereum.org/docs/tools/abigen))
