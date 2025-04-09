@@ -6,8 +6,10 @@ import (
 
 const objectEnd byte = 0xe1
 
+// STObject is used for serialization of Object Fields. https://xrpl.org/docs/references/protocol/binary-format#object-fields
 type STObject struct{}
 
+// ToBytes serializes value of Object Fields
 func (o *STObject) ToBytes(value any, signing bool) ([]byte, error) {
 	valuerObj, ok := value.(Object)
 	if !ok {
@@ -15,19 +17,11 @@ func (o *STObject) ToBytes(value any, signing bool) ([]byte, error) {
 	}
 
 	bytes, err := Encode(valuerObj, signing)
-
-	bytes = append(bytes, objectEnd)
 	if err != nil {
 		return nil, fmt.Errorf("encoding object %v: %v", value, err)
 	}
 
-	return bytes, nil
-}
+	bytes = append(bytes, objectEnd)
 
-func keys[K comparable, V any](m map[K]V) []K {
-	keys := make([]K, 0, len(m))
-	for k := range m {
-		keys = append(keys, k)
-	}
-	return keys
+	return bytes, nil
 }

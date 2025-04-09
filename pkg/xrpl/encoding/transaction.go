@@ -13,12 +13,11 @@ func SetMultisig(prv *ecdsa.PrivateKey, sequence int, signer string) (string, er
 		"TransactionType": "SignerListSet",
 		"Fee":             "120000",
 		"SignerQuorum":    1,
-		"SignerEntries": []map[string]map[string]any{
-			{"SignerEntry": {
-				"Account":      signer,
-				"SignerWeight": 1,
-			},
-			},
+		"SignerEntries": []any{map[string]any{"SignerEntry": map[string]any{
+			"Account":      signer,
+			"SignerWeight": 1,
+		},
+		},
 		},
 	}
 
@@ -46,8 +45,8 @@ func PaymentMultisig(prv ed25519.PrivateKey, account string, sequence int) (stri
 		return "", err
 	}
 
-	tx["Signers"] = []map[string]map[string]any{
-		{"Signer": {
+	tx["Signers"] = []any{
+		map[string]any{"Signer": map[string]any{
 			"Account":       signed.Account,
 			"TxnSignature":  signed.TxnSignature,
 			"SigningPubKey": signed.SigningPubKey,

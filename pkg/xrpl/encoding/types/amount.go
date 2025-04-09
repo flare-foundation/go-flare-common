@@ -12,8 +12,6 @@ import (
 
 // TODO amounts without issuer/amount.... MPT support
 
-type Amount struct{}
-
 const e = byte(69) // E in utf8 encoding
 
 const (
@@ -33,19 +31,25 @@ const (
 
 const StandardCodeRegex = `[0-9A-Za-z?!@#$%^&*<>(){}\[\]|]`
 
+// Amount is for serialization of Amount fields. https://xrpl.org/docs/references/protocol/binary-format#amount-fields
+//
+// Amount implements Encoder interface.
+type Amount struct{}
+
+// ToBytes serializes Amount field.
 func (a *Amount) ToBytes(value any, _ bool) ([]byte, error) {
 	switch value := value.(type) {
 	case string:
-		return xrpAmountToBytes(value)
+		return xrpToBytes(value)
 	case map[string]any:
-		return currencyAmountToBytes(value)
+		return currencyToBytes(value)
 	default:
 		return nil, fmt.Errorf("invalid amount: %v", value)
 	}
 }
 
-// xrpAmountToBytes serializes an XRP amount value.
-func xrpAmountToBytes(amount string) ([]byte, error) {
+// xrpToBytes serializes an XRP amount.
+func xrpToBytes(amount string) ([]byte, error) {
 	val, err := strconv.ParseUint(amount, 10, 62)
 	if err != nil {
 		return nil, fmt.Errorf("parsing xrp amount %v", err)
@@ -62,7 +66,8 @@ func xrpAmountToBytes(amount string) ([]byte, error) {
 	return valBytes, nil
 }
 
-func currencyAmountToBytes(amount map[string]any) ([]byte, error) {
+// currencyToBytes serializes an issued currency amount.
+func currencyToBytes(amount map[string]any) ([]byte, error) {
 	if len(amount) != 3 {
 		return nil, fmt.Errorf("wrong number of fields")
 	}
@@ -80,7 +85,7 @@ func currencyAmountToBytes(amount map[string]any) ([]byte, error) {
 		return nil, fmt.Errorf("extracting issuer: %v", err)
 	}
 
-	issuerBytes, err := trimAddress(issuer)
+	issuerBytes, err := id(issuer)
 	if err != nil {
 		return nil, fmt.Errorf("issuer address: %v", err)
 	}
