@@ -55,19 +55,42 @@ func TestEncodeNotSigning(t *testing.T) {
     }`,
 			output: "1200002280000000240000000161D4838D7EA4C6800000000000000000000000000055534400000000004B4E9C06F24296074F7BC48F92A97916C6DC5EA968400000000000000A732103AB40A0490F9B7ED8DF29D246BF2D6269820A0EE7742ACDD457BEA7C7D0931EDB74473045022100F8A650C1D58325FE8D74634C1DC0802BB2271EB84773793EF34085CFC7E32B1302206ECE43AFE94B7F9F0359D53E6B195C2D526DFDFBBBF328D6FE3A598F1D51DEBA81144B4E9C06F24296074F7BC48F92A97916C6DC5EA983143E9D4A2B8AA0780F682D136F7A56D6724EF53754",
 		},
+		{
+			name: "memo",
+			json: `{
+      "TakerPays": "223174650",
+      "Account": "rPk2dXr27rMw9G5Ej9ad2Tt7RJzGy8ycBp",
+      "TransactionType": "OfferCreate",
+      "Memos": [{
+        "Memo": {
+          "MemoType": "584D4D2076616C7565",
+          "MemoData": "322E3230393635"
+                }}],
+                "Fee": "15",
+                "OfferSequence": 1002,
+                "TakerGets": {
+                    "currency": "XMM",
+                    "value": "100",
+                    "issuer": "rExAPEZvbkZqYPuNcZ7XEBLENEshsWDQc8"
+                },
+                "Flags": 524288,
+                "Sequence": 1003,
+                "LastLedgerSequence": 6220135
+            }`,
+			output: "120007220008000024000003EB2019000003EA201B005EE96764400000000D4D5FFA65D5038D7EA4C68000000000000000000000000000584D4D0000000000A426093A78AA86EB2B878E5C2E33FEC224A0184968400000000000000F8114F990B9E746546554A7B50A5E013BCB57095C6BB8F9EA7C09584D4D2076616C75657D07322E3230393635E1F1",
+		},
 	}
 
 	for _, test := range tests {
-
 		blob, err := hex.DecodeString(test.output)
 		require.NoError(t, err, test.name)
 
-		var parseJSON Object
+		var parsedJSON any
 
-		err = json.Unmarshal([]byte(test.json), &parseJSON)
+		err = json.Unmarshal([]byte(test.json), &parsedJSON)
 		require.NoError(t, err, test.name)
 
-		bytes, err := Encode(parseJSON, false)
+		bytes, err := Encode(parsedJSON, false)
 		require.NoError(t, err, test.name)
 
 		require.Equal(t, blob, bytes, test.name)

@@ -9,7 +9,7 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/logger"
 )
 
-const AlphabetXRPL = "rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz"
+const AlphabetXRPL = "rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz" // alphabet used for base 58 encoding by XRPL: https://xrpl.org/docs/references/protocol/data-types/base58-encodings
 
 // Purloined from https://github.com/btcsuite/btcd/blob/master/btcutil/base58/base58.go
 var (
@@ -40,18 +40,22 @@ func init() {
 	}
 }
 
+// Coder holds a base58 alphabet.
 type Coder struct {
 	alphabet string
 }
 
-func (c *Coder) Decode(b string) ([]byte, error) {
-	return decode(b, c.alphabet)
+// Decode decodes base58 encoded string to byte slice.
+func (c *Coder) Decode(s string) ([]byte, error) {
+	return decode(s, c.alphabet)
 }
 
+// Encode encodes byte slice to base58 string.
 func (c *Coder) Encode(b []byte) string {
 	return encode(b, c.alphabet)
 }
 
+// NewCoder returns a coder for base58 alphabet. It checks that the alphabet is valid.
 func NewCoder(alphabet string) (*Coder, error) {
 	if len(alphabet) != 58 {
 		return nil, fmt.Errorf("alphabet %s is not 58 characters long", alphabet)
@@ -67,12 +71,13 @@ func NewCoder(alphabet string) (*Coder, error) {
 	return &Coder{alphabet: alphabet}, nil
 }
 
+// uniqueCharacters errors if there any of the runes in string s appears more than once.
 func uniqueCharacters(s string) error {
 	check := make(map[rune]bool)
 	for _, c := range s {
 		_, exists := check[c]
 		if exists {
-			return fmt.Errorf("character %s appears twice", string(c))
+			return fmt.Errorf("character %s appears multiple times", string(c))
 		}
 		check[c] = true
 	}
@@ -135,7 +140,7 @@ func decode(b, alphabet string) ([]byte, error) {
 	return val, nil
 }
 
-// encode encodes a byte slice to a modified base58 string.
+// encode encodes a byte slice to a base58 string in a given alphabet.
 func encode(b []byte, alphabet string) string {
 	x := new(big.Int)
 	x.SetBytes(b)

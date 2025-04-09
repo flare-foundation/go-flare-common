@@ -2,15 +2,13 @@ package encoding
 
 import (
 	"crypto/ecdsa"
-	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
 	"strings"
 
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/base58"
-
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/hash"
 	//nolint
-	"golang.org/x/crypto/ripemd160"
 )
 
 const (
@@ -21,20 +19,24 @@ const (
 	pubKeyOddPrefix  = 0x03
 )
 
-func Secp256k1PrivateToAddress(prv *ecdsa.PrivateKey) string {
-	accountID := Secp256k1PrivateToID(prv)
-	return accountIDToAddress(accountID)
+// Secp256k1PrvToAddress calculates XRPL address for ECDSA private key.
+func Secp256k1PrvToAddress(prv *ecdsa.PrivateKey) string {
+	accountID := Secp256k1PrvToID(prv)
+	return idToAddress(accountID)
 }
 
-func Secp256k1PrivateToID(prv *ecdsa.PrivateKey) []byte {
-	return sha256RipeMD160(secp256k1PrivateToPub(prv))
+// Secp256k1PrvToID calculates account ID for ECDSA private key.
+func Secp256k1PrvToID(prv *ecdsa.PrivateKey) []byte {
+	return hash.Sha256RipeMD160(secp256k1PrvToPub(prv))
 }
 
-func Secp256k1PrivateToPub(prv *ecdsa.PrivateKey) string {
-	return hex.EncodeToString(secp256k1PrivateToPub(prv))
+// Secp256k1PrvToPub return public Key for ECDSA private key in hex string.
+func Secp256k1PrvToPub(prv *ecdsa.PrivateKey) string {
+	return strings.ToUpper(hex.EncodeToString(secp256k1PrvToPub(prv)))
 }
 
-func secp256k1PrivateToPub(prv *ecdsa.PrivateKey) []byte {
+// Secp256k1PrivateToPub return public Key for ECDSA private key in byte slice.
+func secp256k1PrvToPub(prv *ecdsa.PrivateKey) []byte {
 	xrpPub := make([]byte, 0, 33)
 
 	pub := prv.PublicKey
@@ -50,21 +52,18 @@ func secp256k1PrivateToPub(prv *ecdsa.PrivateKey) []byte {
 	return xrpPub
 }
 
-func Ed25519PrivateToAddress(prv []byte) (string, error) {
-	if len(prv) != 64 {
-		return "", fmt.Errorf("wrong length prv is %d bytes long, should be 64", len(prv))
+// Ed25519PrvToAddress calculates xrpl address for Ed25519 private key.
+func Ed25519PrvToAddress(prv []byte) (string, error) {
+	accountID, err := Ed25519PrvToID(prv)
+	if err != nil {
+		return "", err
 	}
 
-	pub := make([]byte, 0, 33)
-	pub = append(pub, ed25519Prefix)
-	pub = append(pub, prv[32:]...)
-
-	accountID := sha256RipeMD160(pub)
-
-	return accountIDToAddress(accountID), nil
+	return idToAddress(accountID), nil
 }
 
-func Ed25519PrivateToID(prv []byte) ([]byte, error) {
+// Ed25519PrvToID calculates xrpl account ID for Ed25519 private key.
+func Ed25519PrvToID(prv []byte) ([]byte, error) {
 	if len(prv) != 64 {
 		return nil, fmt.Errorf("wrong length prv is %d bytes long, should be 64", len(prv))
 	}
@@ -73,12 +72,11 @@ func Ed25519PrivateToID(prv []byte) ([]byte, error) {
 	pub = append(pub, ed25519Prefix)
 	pub = append(pub, prv[32:]...)
 
-	accountID := sha256RipeMD160(pub)
-
-	return accountID, nil
+	return hash.Sha256RipeMD160(pub), nil
 }
 
-func Ed25519PrivateToPub(prv []byte) (string, error) {
+// Ed25519PrvToPub calculates public key in hex string for Ed25519 private key.
+func Ed25519PrvToPub(prv []byte) (string, error) {
 	if len(prv) != 64 {
 		return "", fmt.Errorf("wrong length prv is %d bytes long, should be 64", len(prv))
 	}
@@ -90,29 +88,16 @@ func Ed25519PrivateToPub(prv []byte) (string, error) {
 	return strings.ToUpper(hex.EncodeToString(pub)), nil
 }
 
-func accountIDToAddress(accountID []byte) string {
-	augmented := make([]byte, 0, len(accountID)+1+4)
+// idToAddress calculates XRPL address from accountID.
+func idToAddress(id []byte) string {
+	augmented := make([]byte, 0, len(id)+1+4)
 
-	augmented = append(augmented, accountPrefix)
-	augmented = append(augmented, accountID...)
+	augmented = append(augmented, accountPrefix) // account prefix
+	augmented = append(augmented, id...)
 
-	cs := checksum(augmented)
+	cs := hash.Checksum(augmented) // checksum
 
 	augmented = append(augmented, cs...)
 
 	return base58.XRPLCoder.Encode(augmented)
-}
-
-func sha256RipeMD160(b []byte) []byte {
-	ripe := ripemd160.New()
-	sha := sha256.New()
-	sha.Write(b)
-	ripe.Write(sha.Sum(nil))
-	return ripe.Sum(nil)
-}
-
-func checksum(input []byte) []byte {
-	h := sha256.Sum256(input)
-	h2 := sha256.Sum256(h[:])
-	return h2[:4]
 }

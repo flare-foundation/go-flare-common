@@ -27,6 +27,7 @@ func InvalidUInt8(v any) *InvalidType {
 	return &InvalidType{t: "UInt8", v: v}
 }
 
+// ToBytes serializes values of UInt8 fields.
 func (u *UInt8) ToBytes(value any, _ bool) ([]byte, error) {
 	tempInt, err := convertInt64(value, "UInt8")
 	if err != nil {
@@ -41,6 +42,7 @@ func (u *UInt8) ToBytes(value any, _ bool) ([]byte, error) {
 type UInt16 struct {
 }
 
+// ToBytes serializes values of UInt16 fields.
 func (u *UInt16) ToBytes(value any, _ bool) ([]byte, error) {
 	var valueUint uint16
 
@@ -80,6 +82,7 @@ func (u *UInt16) ToBytes(value any, _ bool) ([]byte, error) {
 type UInt32 struct {
 }
 
+// ToBytes serializes values of UInt32 fields.
 func (u *UInt32) ToBytes(value any, _ bool) ([]byte, error) {
 	tempInt, err := convertInt64(value, "UInt32")
 	if err != nil {
@@ -101,6 +104,7 @@ func (u *UInt32) ToBytes(value any, _ bool) ([]byte, error) {
 type UInt64 struct {
 }
 
+// ToBytes serializes values of UInt64 fields.
 func (u *UInt64) ToBytes(value any, _ bool) ([]byte, error) {
 	var valueUint uint64
 	var err error
@@ -121,6 +125,10 @@ func (u *UInt64) ToBytes(value any, _ bool) ([]byte, error) {
 	return out, nil
 }
 
+// convertInt64 converts a value of a number type to int64.
+//
+// a value of type uint64 to fit in int64, otherwise an error is returned.
+// a value of type float32 or float64 has to be an integer and fit in int64, otherwise an error is returned.
 func convertInt64(value any, t string) (int64, error) {
 	switch value := value.(type) {
 	case uint8:
@@ -132,6 +140,8 @@ func convertInt64(value any, t string) (int64, error) {
 	case uint32:
 		return int64(value), nil
 	case int:
+		return int64(value), nil
+	case int8:
 		return int64(value), nil
 	case int16:
 		return int64(value), nil

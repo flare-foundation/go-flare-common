@@ -79,7 +79,7 @@ func stepToBytes(step map[string]string) ([]byte, error) {
 			return nil, fmt.Errorf("invalid path %v, account can only be by itself", step)
 		}
 
-		accountBytes, err := trimAddress(account)
+		accountBytes, err := id(account)
 		if err != nil {
 			return nil, fmt.Errorf("invalid account %v", step)
 		}
@@ -108,7 +108,7 @@ func stepToBytes(step map[string]string) ([]byte, error) {
 
 	// issuer
 	if ie {
-		issuerBytes, err := trimAddress(issuer)
+		issuerBytes, err := id(issuer)
 		if err != nil {
 			return nil, fmt.Errorf("invalid issuer %v", step)
 		}

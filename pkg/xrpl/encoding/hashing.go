@@ -1,8 +1,9 @@
 package encoding
 
 import (
-	"crypto/sha512"
 	"encoding/binary"
+
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/hash"
 )
 
 const (
@@ -11,10 +12,9 @@ const (
 	signedPrefix uint32 = 0x54584E00
 )
 
-// MessageToSign computes a hash of a transaction for signing.
-// If multiSig is true, hash is for multi-signing. Otherwise for single-signing.
-//
-// For multi-signing, accountID of the signer should be provided.
+// MessageToSign creates a tx message for signing.
+// If multiSig is true, txBlob is prefixed with multi-signing prefix and postfixed with accountID. For multi-signing, accountID of the signer should be provided.
+// If multiSig is false, txBlob is prefixed with single-signing prefix
 func MessageToSign(txBlob []byte, multiSig bool, accountID []byte) []byte {
 	length := len(txBlob) + 4
 	if multiSig {
@@ -44,11 +44,5 @@ func HashSigned(txBlob []byte) []byte {
 	prefixed = binary.BigEndian.AppendUint32(prefixed, signedPrefix)
 	prefixed = append(prefixed, txBlob...)
 
-	return Sha512Half(prefixed)
-}
-
-// Sha512Half returns the first half of sha512 hash
-func Sha512Half(blob []byte) []byte {
-	hash := sha512.Sum512(blob)
-	return hash[:32]
+	return hash.Sha512Half(prefixed)
 }

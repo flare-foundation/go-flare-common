@@ -101,6 +101,7 @@ func typeEncoder(xt defs.XType) (Encoder, error) {
 	}
 }
 
+// lengthPrefix computes prefix for a bytes array of length n.
 func lengthPrefix(n int) ([]byte, error) {
 	var prefix []byte
 	switch {
@@ -119,6 +120,8 @@ func lengthPrefix(n int) ([]byte, error) {
 	return prefix, nil
 }
 
+// encodeInner encodes value according to definition that corresponds to its name.
+// If the field is not serialized or the signing is false and the field is not a signing field, empty byte slice is returned.
 func encodeInner(name string, value any, signing bool) ([]byte, error) {
 	field, ok := defs.NameToField[name]
 	if !ok {
@@ -168,6 +171,8 @@ func encodeInner(name string, value any, signing bool) ([]byte, error) {
 	return out, nil
 }
 
+// sortFunc returns a function that is used to sort fields.
+// If an unknown field is entered, the value of the provided err is set.
 func sortFunc(err *error) func(string, string) int {
 	return func(a, b string) int {
 		aField, ok := defs.NameToField[a]
@@ -185,11 +190,12 @@ func sortFunc(err *error) func(string, string) int {
 	}
 }
 
+// sortFields returns sorted names of fields in order in which they should be serialized.
+// If an unknown field is among names, an error is returned.
 func sortFields(names []string) ([]string, error) {
 	var err error
 
 	slices.SortFunc(names, sortFunc(&err))
-
 	if err != nil {
 		return nil, err
 	}
@@ -199,17 +205,23 @@ func sortFields(names []string) ([]string, error) {
 
 type Object = map[string]any
 
-func Encode(value Object, signing bool) ([]byte, error) {
+// Encode serializes an object.
+func Encode(value any, signing bool) ([]byte, error) {
+	valueObj, ok := value.(Object)
+	if !ok {
+		return nil, fmt.Errorf("invalid object %v", value)
+	}
+
 	outBuff := bytes.NewBuffer(nil)
 
-	names := keys(value)
+	names := keys(valueObj)
 	sortedNames, err := sortFields(names)
 	if err != nil {
 		return nil, fmt.Errorf("cannot sort: %v", err)
 	}
 
 	for _, name := range sortedNames {
-		bytes, err := encodeInner(name, value[name], signing)
+		bytes, err := encodeInner(name, valueObj[name], signing)
 		if err != nil {
 			return nil, fmt.Errorf("cannot encode %s: %v", name, err)
 		}
@@ -220,4 +232,14 @@ func Encode(value Object, signing bool) ([]byte, error) {
 	}
 
 	return outBuff.Bytes(), nil
+}
+
+// keys extract keys from map and returns them into an array.
+// The order of keys is not deterministic.
+func keys[K comparable, V any](m map[K]V) []K {
+	keys := make([]K, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	return keys
 }

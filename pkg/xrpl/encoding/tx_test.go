@@ -69,7 +69,7 @@ func TestMakeAndSign(t *testing.T) {
 
 	rawPriv := ed25519.NewKeyFromSeed(seedBytes)
 
-	signer, err := encoding.Ed25519PrivateToAddress(rawPriv)
+	signer, err := encoding.Ed25519PrvToAddress(rawPriv)
 	require.NoError(t, err)
 
 	fmt.Printf("signer: %v\n", signer)
@@ -79,7 +79,7 @@ func TestMakeAndSign(t *testing.T) {
 	privSecp, err := crypto.ToECDSA(seedBytes)
 	require.NoError(t, err)
 
-	addSec := encoding.Secp256k1PrivateToAddress(privSecp)
+	addSec := encoding.Secp256k1PrvToAddress(privSecp)
 
 	tx, err := encoding.SetMultisig(privSecp, 6303020, signer)
 	require.NoError(t, err)
@@ -100,18 +100,18 @@ func TestMake(t *testing.T) {
 	privSecp, err := crypto.ToECDSA(prvBytes)
 	require.NoError(t, err)
 
-	addrED, err := encoding.Ed25519PrivateToAddress(privED)
+	addrED, err := encoding.Ed25519PrvToAddress(privED)
 	require.NoError(t, err)
 
-	pubED, err := encoding.Ed25519PrivateToPub(privED)
+	pubED, err := encoding.Ed25519PrvToPub(privED)
 	require.NoError(t, err)
 
 	fmt.Printf("pubED: %v\n", pubED)
 	fmt.Printf("addrED: %v\n", addrED)
 
-	addrSecp := encoding.Secp256k1PrivateToAddress(privSecp)
+	addrSecp := encoding.Secp256k1PrvToAddress(privSecp)
 
-	pubSecp := encoding.Secp256k1PrivateToPub(privSecp)
+	pubSecp := encoding.Secp256k1PrvToPub(privSecp)
 
 	fmt.Printf("addrSep: %v\n", addrSecp)
 	fmt.Printf("pubSecp: %v\n", pubSecp)
@@ -145,18 +145,18 @@ func TestMake2(t *testing.T) {
 	privSecp, err := crypto.ToECDSA(prvBytes)
 	require.NoError(t, err)
 
-	addrED, err := encoding.Ed25519PrivateToAddress(privED)
+	addrED, err := encoding.Ed25519PrvToAddress(privED)
 	require.NoError(t, err)
 
-	pubED, err := encoding.Ed25519PrivateToPub(privED)
+	pubED, err := encoding.Ed25519PrvToPub(privED)
 	require.NoError(t, err)
 
 	fmt.Printf("pubED: %v\n", pubED)
 	fmt.Printf("addrED: %v\n", addrED)
 
-	addrSecp := encoding.Secp256k1PrivateToAddress(privSecp)
+	addrSecp := encoding.Secp256k1PrvToAddress(privSecp)
 
-	pubSecp := encoding.Secp256k1PrivateToPub(privSecp)
+	pubSecp := encoding.Secp256k1PrvToPub(privSecp)
 
 	fmt.Printf("addrSep: %v\n", addrSecp)
 	fmt.Printf("pubSecp: %v\n", pubSecp)
