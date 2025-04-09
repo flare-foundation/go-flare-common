@@ -1,4 +1,4 @@
-//go:generate  abigen --abi=pkg/tee/structs/connector/connector.abi --pkg=connector --type=Connector --out=pkg/tee/structs/connector/autogen.go
+//go:generate  abigen --abi=connector.abi --pkg=connector --type=Connector --out=autogen.go
 package connector
 
 import (
