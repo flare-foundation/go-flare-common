@@ -79,13 +79,13 @@ func TestPOST(t *testing.T) {
 
 	url := fmt.Sprintf("http://localhost:%d/abs", port)
 
-	responseRaw, err := PostRaw[res](context.Background(), url, NoAPIKey, bytes.NewReader(reqMarshaled), CallParams{
+	responseRaw, err := PostRaw[res](context.Background(), url, NoAPIKey, bytes.NewReader(reqMarshaled), Params{
 		Timeout:         3 * time.Second,
 		MaxResponseSize: 300,
 	})
 	require.NoError(t, err)
 
-	response, err := Post[req, res](context.Background(), url, NoAPIKey, request, CallParams{
+	response, err := Post[req, res](context.Background(), url, NoAPIKey, request, Params{
 		Timeout:         3 * time.Second,
 		MaxResponseSize: 300,
 	})

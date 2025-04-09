@@ -52,7 +52,7 @@ func (q *Queue[T, W]) Pop() *Item[T, W] {
 	return item
 }
 
-// Push SHOULD NOT BE USED DIRECTLY use heapt.Push(q, item)  instead
+// Push SHOULD NOT BE USED DIRECTLY use heapt.Push(q, item) instead
 func (q *Queue[T, W]) Push(item *Item[T, W]) {
 	n := len(*q)
 	item.index = n
