@@ -1,12 +1,11 @@
 package defs
 
 import (
+	"bytes"
 	"fmt"
 )
 
 type XType int16
-
-type TransactionType int16
 
 type Field struct {
 	IsSerialized   bool
@@ -38,6 +37,40 @@ func (f Field) ID() ([]byte, error) {
 		b = []byte{0, t, n}
 	}
 	return b, err
+}
+
+func IDDecode(b *bytes.Buffer) (int16, XType, error) {
+	byte1, err := b.ReadByte()
+	if err != nil {
+		return -1, NotPresent, fmt.Errorf("cannot read first byte %v", err)
+	}
+
+	tCode := byte1 & 0xf0
+	tCode >>= 4
+
+	fCode := byte1 & 0x0f
+
+	if tCode == 0 {
+		tCode, err = b.ReadByte()
+		if err != nil {
+			return -1, NotPresent, fmt.Errorf("cannot read type code byte %v", err)
+		}
+		if tCode < 16 {
+			return -1, NotPresent, fmt.Errorf("invalid encoding type code %v", []byte{byte1, tCode})
+		}
+	}
+
+	if fCode == 0 {
+		fCode, err = b.ReadByte()
+		if err != nil {
+			return -1, NotPresent, fmt.Errorf("cannot read field code byte %v", err)
+		}
+		if fCode < 16 {
+			return -1, NotPresent, fmt.Errorf("invalid encoding field code%v", []byte{byte1, fCode})
+		}
+	}
+
+	return int16(fCode), XType(tCode), nil
 }
 
 // Less returns

@@ -41,7 +41,7 @@ func (h *Issue) ToBytes(value any, _ bool) ([]byte, error) {
 		return nil, fmt.Errorf("invalid issuer %v", issuer)
 	}
 
-	issuerBytes, err := id(issuerStr)
+	issuerBytes, err := ID(issuerStr)
 	if err != nil {
 		return nil, fmt.Errorf("issuer address: %v", err)
 	}

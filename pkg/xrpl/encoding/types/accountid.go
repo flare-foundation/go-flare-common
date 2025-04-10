@@ -2,14 +2,16 @@ package types
 
 import (
 	"bytes"
+	"encoding/hex"
 	"fmt"
 
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/base58"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/hash"
 )
 
-// AccountID is used for serialization of AccountID fields. https://xrpl.org/docs/references/protocol/binary-format#accountid-fields
+const accountPrefix = 0x00
 
+// AccountID is used for serialization of AccountID fields. https://xrpl.org/docs/references/protocol/binary-format#accountid-fields
 type accountID struct{}
 
 var AccountID = &accountID{}
@@ -21,7 +23,7 @@ func (a *accountID) ToBytes(value any, _ bool) ([]byte, error) {
 		return nil, fmt.Errorf("value %v is not string", value)
 	}
 
-	out, err := id(address)
+	out, err := ID(address)
 	if err != nil {
 		return nil, fmt.Errorf("invalid address: %v", err)
 	}
@@ -29,8 +31,8 @@ func (a *accountID) ToBytes(value any, _ bool) ([]byte, error) {
 	return out, nil
 }
 
-// id returns accountID of an address. If the address has an invalid checksum an error is returned.
-func id(address string) ([]byte, error) {
+// ID returns accountID of an address. If the address has an invalid checksum an error is returned.
+func ID(address string) ([]byte, error) {
 	addressBytes, err := base58.XRPLCoder.Decode(address)
 	if err != nil {
 		return nil, fmt.Errorf("decoding address: %v", err)
@@ -56,4 +58,32 @@ func id(address string) ([]byte, error) {
 
 	// trim leading byte and checksum
 	return addressBytes[1:21], nil
+}
+
+// Address calculates XRPL Address from accountID.
+// It does not check that id is 20 bytes long.
+func Address(id []byte) (string, error) {
+	if len(id) != 20 {
+		return "", fmt.Errorf("invalid id length %d, should be 20", len(id))
+	}
+
+	augmented := make([]byte, 0, len(id)+1+4)
+
+	augmented = append(augmented, accountPrefix) // account prefix
+	augmented = append(augmented, id...)
+
+	cs := hash.Checksum(augmented) // checksum
+
+	augmented = append(augmented, cs...)
+
+	return base58.XRPLCoder.Encode(augmented), nil
+}
+
+func (a *accountID) ToJson(value []byte) (any, error) {
+	addr, err := Address(value)
+	if err != nil {
+		return nil, fmt.Errorf("deserializing accountID %v: %v", hex.EncodeToString(value), err)
+	}
+
+	return addr, nil
 }

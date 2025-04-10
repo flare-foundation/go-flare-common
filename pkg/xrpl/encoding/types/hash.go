@@ -26,6 +26,16 @@ func (h *hashInternal) ToBytes(value any, _ bool) ([]byte, error) {
 	return v, nil
 }
 
+// ToBytes serializes byte strings.
+func (h *hashInternal) ToJson(value []byte) (any, error) {
+	if h.length != 0 && h.length != len(value) {
+		return nil, fmt.Errorf("wrong length, expected %d bytes", h.length)
+	}
+	v := hex.EncodeToString(value)
+
+	return v, nil
+}
+
 // Blob is used for serialization of Blob fields. https://xrpl.org/docs/references/protocol/binary-format#blob-fields
 var Blob = &hashInternal{length: 0}
 
