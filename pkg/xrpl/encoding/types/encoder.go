@@ -101,8 +101,8 @@ func typeEncoder(xt defs.XType) (Encoder, error) {
 	}
 }
 
-// lengthPrefix computes prefix for a bytes array of length n.
-func lengthPrefix(n int) ([]byte, error) {
+// lengthEncode computes length prefix.
+func lengthEncode(n int) ([]byte, error) {
 	var prefix []byte
 	switch {
 	case n < 0 || n > 918744:
@@ -118,6 +118,39 @@ func lengthPrefix(n int) ([]byte, error) {
 	}
 
 	return prefix, nil
+}
+
+// lengthDecode decodes length prefix.
+func lengthDecode(encoded *bytes.Buffer) (int, error) {
+	byte1, err := encoded.ReadByte()
+	if err != nil {
+		return -1, fmt.Errorf("cannot read first byte %v", err)
+	}
+
+	if byte1 < 193 {
+		return int(byte1), nil
+	} else if byte1 < 241 {
+		byte2, err := encoded.ReadByte()
+		if err != nil {
+			return -1, fmt.Errorf("cannot read second byte %v", err)
+		}
+		return 193 + ((int(byte1) - 193) * 256) + int(byte2), nil
+	} else if byte1 < 255 {
+		bytes := make([]byte, 2)
+		n, err := encoded.Read(bytes)
+		if n != 2 || err != nil {
+			return -1, fmt.Errorf("cannot read second and third byte %v", err)
+		}
+
+		out := 12481 + ((int(byte1) - 241) * 65536) + (int(bytes[0]) * 256) + int(bytes[1])
+
+		if out > 918744 {
+			return -1, fmt.Errorf("length prefix overflow %d can be at most %d", out, 918744)
+		}
+		return out, nil
+	}
+
+	return -1, fmt.Errorf("invalid first length byte %d", byte1)
 }
 
 // encodeInner encodes value according to definition that corresponds to its name.
@@ -158,7 +191,7 @@ func encodeInner(name string, value any, signing bool) ([]byte, error) {
 	out = append(out, id...)
 
 	if field.IsVLEncoded {
-		prefix, err := lengthPrefix(len(valueBytes))
+		prefix, err := lengthEncode(len(valueBytes))
 		if err != nil {
 			return nil, fmt.Errorf("invalid len of field %v: %v", name, err)
 		}

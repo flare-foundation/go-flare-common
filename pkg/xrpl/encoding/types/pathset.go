@@ -89,7 +89,7 @@ func stepToBytes(step map[string]any) ([]byte, error) {
 			return nil, fmt.Errorf("invalid account %v", account)
 		}
 
-		accountBytes, err := id(accStr)
+		accountBytes, err := ID(accStr)
 		if err != nil {
 			return nil, fmt.Errorf("invalid account %v", step)
 		}
@@ -129,7 +129,7 @@ func stepToBytes(step map[string]any) ([]byte, error) {
 			return nil, fmt.Errorf("invalid issuer %v", issuer)
 		}
 
-		issuerBytes, err := id(i)
+		issuerBytes, err := ID(i)
 		if err != nil {
 			return nil, fmt.Errorf("invalid issuer %v", step)
 		}

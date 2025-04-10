@@ -1,6 +1,7 @@
 package types
 
 import (
+	"bytes"
 	"encoding/hex"
 	"encoding/json"
 	"testing"
@@ -154,5 +155,58 @@ func TestEncodeNotSigning(t *testing.T) {
 		require.NoError(t, err, test.name)
 
 		require.Equal(t, blob, bytes, test.name)
+	}
+}
+
+func TestLengthEncodeDecode(t *testing.T) {
+	inputs := []int{0, 1, 100, 192, 193, 240, 241, 12480, 12481, 918744}
+
+	for _, input := range inputs {
+		prefix, err := lengthEncode(input)
+		require.NoError(t, err)
+
+		b := bytes.NewBuffer(prefix)
+		length, err := lengthDecode(b)
+		require.NoError(t, err)
+
+		require.Equal(t, input, length)
+
+		require.Equal(t, b.Len(), 0)
+	}
+}
+
+func TestLengthEncodeFail(t *testing.T) {
+	inputs := []int{-1, 918745}
+
+	for _, input := range inputs {
+		_, err := lengthEncode(input)
+		require.Error(t, err)
+	}
+}
+
+func TestLengthDecodeEncode(t *testing.T) {
+	inputs := [][]byte{{0}, {1}, {192}, {193, 0}, {193, 1}, {193, 255}, {194, 0}, {241, 0, 0}, {254, 212, 23}}
+
+	for _, input := range inputs {
+		b := bytes.NewBuffer(input)
+		length, err := lengthDecode(b)
+		require.NoError(t, err)
+
+		require.Equal(t, b.Len(), 0, input)
+
+		prefix, err := lengthEncode(length)
+		require.NoError(t, err)
+
+		require.Equal(t, input, prefix)
+	}
+}
+
+func TestLengthDecodeFail(t *testing.T) {
+	inputs := [][]byte{{255}, {193}, {241, 0}, {254, 212, 24}}
+
+	for _, input := range inputs {
+		b := bytes.NewBuffer(input)
+		_, err := lengthDecode(b)
+		require.Error(t, err)
 	}
 }

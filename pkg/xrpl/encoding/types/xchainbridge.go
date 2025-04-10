@@ -36,7 +36,7 @@ func (x *XChainBridge) ToBytes(value any, _ bool) ([]byte, error) {
 
 	out := bytes.NewBuffer(nil)
 
-	lockingChainDoorID, err := id(lockingChainDoor)
+	lockingChainDoorID, err := ID(lockingChainDoor)
 	if err != nil {
 		return nil, fmt.Errorf("invalid LockingChainDoor, %v: %v", lockingChainDoor, err)
 	}
@@ -58,7 +58,7 @@ func (x *XChainBridge) ToBytes(value any, _ bool) ([]byte, error) {
 		return nil, fmt.Errorf("writing to buffer, %v: %v", lockingChain, err)
 	}
 
-	issuingChainDoorID, err := id(issuingChainDoor)
+	issuingChainDoorID, err := ID(issuingChainDoor)
 	if err != nil {
 		return nil, fmt.Errorf("invalid IssuingChainDoor, %v: %v", issuingChainDoor, err)
 	}
