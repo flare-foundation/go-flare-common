@@ -87,7 +87,7 @@ func currencyToBytes(amount map[string]any) ([]byte, error) {
 		return nil, fmt.Errorf("extracting issuer: %v", err)
 	}
 
-	issuerBytes, err := id(issuer)
+	issuerBytes, err := ID(issuer)
 	if err != nil {
 		return nil, fmt.Errorf("issuer address: %v", err)
 	}
