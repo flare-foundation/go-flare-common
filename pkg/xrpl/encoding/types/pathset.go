@@ -17,7 +17,7 @@ const (
 type PathSet struct{}
 
 func (p *PathSet) ToBytes(value any, _ bool) ([]byte, error) {
-	paths, ok := value.([][]map[string]string)
+	paths, ok := value.([]any)
 	if !ok {
 		return nil, fmt.Errorf("invalid pathSet %v", value)
 	}
@@ -28,7 +28,12 @@ func (p *PathSet) ToBytes(value any, _ bool) ([]byte, error) {
 	out := make([]byte, 0, 83*len(paths))
 
 	for j, path := range paths {
-		pathBytes, err := pathToBytes(path)
+		pathSlice, ok := path.([]any)
+		if !ok {
+			return nil, fmt.Errorf("invalid pathSet %v, path %v", value, path)
+		}
+
+		pathBytes, err := pathToBytes(pathSlice)
 		if err != nil {
 			return nil, fmt.Errorf("invalid path set: %v", err)
 		}
@@ -45,7 +50,7 @@ func (p *PathSet) ToBytes(value any, _ bool) ([]byte, error) {
 	return out, nil
 }
 
-func stepToBytes(step map[string]string) ([]byte, error) {
+func stepToBytes(step map[string]any) ([]byte, error) {
 	flag := uint8(0)
 	fieldCount := 0
 
@@ -75,11 +80,16 @@ func stepToBytes(step map[string]string) ([]byte, error) {
 
 	//account
 	if ae {
-		if ce || ae {
+		if ce || ie {
 			return nil, fmt.Errorf("invalid path %v, account can only be by itself", step)
 		}
 
-		accountBytes, err := id(account)
+		accStr, ok := account.(string)
+		if !ok {
+			return nil, fmt.Errorf("invalid account %v", account)
+		}
+
+		accountBytes, err := id(accStr)
 		if err != nil {
 			return nil, fmt.Errorf("invalid account %v", step)
 		}
@@ -91,13 +101,18 @@ func stepToBytes(step map[string]string) ([]byte, error) {
 
 	// currency
 	if ce {
-		xrpCurrency := currency == "XRP" || strings.TrimPrefix(currency, "0x") == "0000000000000000000000000000000000000000"
+		curr, ok := currency.(string)
+		if !ok {
+			return nil, fmt.Errorf("invalid currency %v", currency)
+		}
+
+		xrpCurrency := curr == "XRP" || strings.TrimPrefix(curr, "0x") == "0000000000000000000000000000000000000000"
 		if xrpCurrency && !ie {
 			out = append(out, make([]byte, 20)...)
 		} else if xrpCurrency && ie {
 			return nil, fmt.Errorf("invalid path %v, XRP has no issuer", step)
 		} else {
-			currencyBytes, err := serializeCurrency(currency)
+			currencyBytes, err := serializeCurrency(curr)
 			if err != nil {
 				return nil, fmt.Errorf("invalid path %v, invalid issuer %v", step, err)
 			}
@@ -108,7 +123,13 @@ func stepToBytes(step map[string]string) ([]byte, error) {
 
 	// issuer
 	if ie {
-		issuerBytes, err := id(issuer)
+
+		i, ok := issuer.(string)
+		if !ok {
+			return nil, fmt.Errorf("invalid issuer %v", issuer)
+		}
+
+		issuerBytes, err := id(i)
 		if err != nil {
 			return nil, fmt.Errorf("invalid issuer %v", step)
 		}
@@ -119,14 +140,19 @@ func stepToBytes(step map[string]string) ([]byte, error) {
 	return out, nil
 }
 
-func pathToBytes(path []map[string]string) ([]byte, error) {
+func pathToBytes(path []any) ([]byte, error) {
 	if len(path) < 1 || len(path) > 8 {
 		return nil, fmt.Errorf("invalid path length %v", path)
 	}
 	out := make([]byte, 0, len(path)*41)
 
 	for _, step := range path {
-		stepBytes, err := stepToBytes(step)
+		stepMap, ok := step.(map[string]any)
+		if !ok {
+			return nil, fmt.Errorf("invalid step: %v", step)
+		}
+
+		stepBytes, err := stepToBytes(stepMap)
 		if err != nil {
 			return nil, fmt.Errorf("invalid path: %v", err)
 		}

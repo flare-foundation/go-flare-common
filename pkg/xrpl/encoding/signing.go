@@ -201,7 +201,7 @@ func JoinMultisig(tx map[string]any, signers []*Signer) ([]byte, error) {
 
 // ValidateMultiSig checks that signer is valid for the transaction tx.
 func ValidateMultiSig(tx map[string]any, signer *Signer) (bool, error) {
-	id, err := (&types.AccountID{}).ToBytes(signer.Account, false)
+	id, err := types.AccountID.ToBytes(signer.Account, false)
 	if err != nil {
 		return false, fmt.Errorf("cannot get accountID: %v", err)
 	}
