@@ -13,7 +13,7 @@ type TODOError struct {
 }
 
 func (e *TODOError) Error() string {
-	return fmt.Sprintf("To be  implemented %v", e.xt)
+	return fmt.Sprintf("To be implemented %v", e.xt)
 }
 
 type UnsupportedError struct {
@@ -49,11 +49,11 @@ func typeEncoder(xt defs.XType) (Encoder, error) {
 	case defs.UInt8:
 		return &UInt8{}, nil
 	case defs.XChainBridge:
-		return nil, &TODOError{xt}
+		return &XChainBridge{}, nil
 	case defs.Vector256:
 		return nil, &UnsupportedError{xt}
 	case defs.AccountID:
-		return &AccountID{}, nil
+		return AccountID, nil
 	case defs.Currency:
 		return nil, &TODOError{xt}
 	case defs.Hash128:
@@ -73,7 +73,7 @@ func typeEncoder(xt defs.XType) (Encoder, error) {
 	case defs.Unknown:
 		return nil, &IllegalError{xt}
 	case defs.Amount:
-		return &Amount{}, nil
+		return Amount, nil
 	case defs.Done:
 		return nil, &IllegalError{xt}
 	case defs.Hash256:
@@ -85,7 +85,7 @@ func typeEncoder(xt defs.XType) (Encoder, error) {
 	case defs.Number:
 		return nil, &UnsupportedError{xt}
 	case defs.STArray:
-		return &STArray{}, nil
+		return STArray, nil
 	case defs.STObject:
 		return &STObject{}, nil
 	case defs.UInt16:

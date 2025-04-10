@@ -13,7 +13,7 @@ type STObject struct{}
 func (o *STObject) ToBytes(value any, signing bool) ([]byte, error) {
 	valuerObj, ok := value.(Object)
 	if !ok {
-		return nil, fmt.Errorf("value %v is ont an object", value)
+		return nil, fmt.Errorf("value %v is not an object", value)
 	}
 
 	bytes, err := Encode(valuerObj, signing)

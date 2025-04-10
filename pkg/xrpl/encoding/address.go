@@ -89,6 +89,7 @@ func Ed25519PrvToPub(prv []byte) (string, error) {
 }
 
 // idToAddress calculates XRPL address from accountID.
+// It does not check that id is 20 bytes long.
 func idToAddress(id []byte) string {
 	augmented := make([]byte, 0, len(id)+1+4)
 

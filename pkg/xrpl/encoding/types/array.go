@@ -12,16 +12,20 @@ type ArrayObject = map[string]any
 const arrayEnd byte = 0xf1
 
 // STArray is used for serialization of Array Fields https://xrpl.org/docs/references/protocol/binary-format#array-fields
-type STArray struct{}
+type stArray struct{}
+
+var STArray = &stArray{}
 
 // ToBytes serializes values of Array fields.
-func (a *STArray) ToBytes(value any, signing bool) ([]byte, error) {
+func (a *stArray) ToBytes(value any, signing bool) ([]byte, error) {
 	array, ok := value.([]any)
 	if !ok {
 		return nil, fmt.Errorf("invalid array %v is of type %v ", value, reflect.TypeOf(value))
 	}
 
 	outBuff := bytes.NewBuffer(nil)
+
+	var uniqueKeyCheck string
 
 	for i := range array {
 		arrayObj, ok := array[i].(map[string]any)
@@ -34,6 +38,13 @@ func (a *STArray) ToBytes(value any, signing bool) ([]byte, error) {
 		}
 
 		for key := range arrayObj {
+			// only one wrapper key is allowed
+			if uniqueKeyCheck != "" && key != uniqueKeyCheck {
+				return nil, fmt.Errorf("invalid array multiple wrapper keys")
+			} else if uniqueKeyCheck == "" {
+				uniqueKeyCheck = key
+			}
+
 			bytes, err := encodeInner(key, arrayObj[key], signing)
 			if err != nil {
 				return nil, fmt.Errorf("encoding %v: %v", array[i], err)

@@ -118,18 +118,108 @@ func TestExtractString(t *testing.T) {
 	}
 }
 
-func TestCurrencyAmount(t *testing.T) {
-	tests := []string{
+func TestAmount(t *testing.T) {
+	tests := []struct {
+		json   string
+		output string
+	}{
+		{
+			json:   `"0"`,
+			output: "4000000000000000",
+		},
+		{
+			json:   `"1"`,
+			output: "4000000000000001",
+		},
+		{
+			json: ` {
+                "currency": "USD",
+                "value": "-1",
+                "issuer": "rrrrrrrrrrrrrrrrrrrrBZbvji"
+            }`,
+			output: "94838D7EA4C6800000000000000000000000000055534400000000000000000000000000000000000000000000000001",
+		},
+		{
+			json: `{
+                "currency": "USD",
+                "value": "1",
+                "issuer": "rrrrrrrrrrrrrrrrrrrrBZbvji"
+            }`,
+			output: "D4838D7EA4C6800000000000000000000000000055534400000000000000000000000000000000000000000000000001",
+		},
+		{
+			json: `{
+                "currency": "USD",
+                "value": "0",
+                "issuer": "rrrrrrrrrrrrrrrrrrrrBZbvji"
+            }`,
+			output: "800000000000000000000000000000000000000055534400000000000000000000000000000000000000000000000001",
+		},
+		{
+			json: `{
+                "currency": "USD",
+                "value": "0.000000000000000000000000000000000000000000000000000000000000000000000000001",
+                "issuer": "rrrrrrrrrrrrrrrrrrrrBZbvji"
+            }`,
+			output: "C1C38D7EA4C6800000000000000000000000000055534400000000000000000000000000000000000000000000000001",
+		},
+		{
+			json: `{
+                "currency": "USD",
+                "value": "0.000000000000000000000000000000000000000000000000000000000000000000000000001",
+                "issuer": "rrrrrrrrrrrrrrrrrrrrBZbvji"
+            }`,
+			output: "C1C38D7EA4C6800000000000000000000000000055534400000000000000000000000000000000000000000000000001",
+		},
+	}
+
+	for j := range tests {
+		var value any
+
+		err := json.Unmarshal([]byte(tests[j].json), &value)
+		require.NoError(t, err)
+
+		serialized, err := Amount.ToBytes(value, false)
+		require.NoError(t, err, value)
+
+		bytesOutput, err := hex.DecodeString(tests[j].output)
+		require.NoError(t, err)
+
+		require.Equal(t, bytesOutput, serialized)
+
+	}
+}
+
+func TestAmountFail(t *testing.T) {
+	tests := []string{`{
+                "currency": "USD",
+                "value": "9999999999999999000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                "issuer": "rrrrrrrrrrrrrrrrrrrrBZbvji"
+            }`,
 		`{
-	"currency":"524C555344000000000000000000000000000000",
-	"issuer":"rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
-	"value":"12991.49972373237"
-	}`,
+		        "currency": "USD",
+		        "value": "1111111111111111.1",
+		        "issuer": "rrrrrrrrrrrrrrrrrrrrBZbvji"
+		    }`,
+		`"-10000000000000000000000000"`,
+		`"1000000000000000000"`,
+		`[1]`,
 		`{
-	"currency":"ETH",
-	"issuer":"rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
-	"value":"0"
-	}`,
+		        "currency": "USDC",
+		        "value": "1111111111111111.1",
+		        "issuer": "rrrrrrrrrrrrrrrrrrrrBZbvji"
+		    }`,
+		`{
+		        "currency": "USDC",
+		        "value": "1111111111111111.1",
+		        "issuer": "rrrrrrrrrrrrrrrrrrrrBZbvji",
+				"extra": 10
+		    }`,
+		` {
+                "currency": "USD",
+                "value": 10,
+                "issuer": "rrrrrrrrrrrrrrrrrrrrBZbvji"
+            }`,
 	}
 
 	for j := range tests {
@@ -138,10 +228,8 @@ func TestCurrencyAmount(t *testing.T) {
 		err := json.Unmarshal([]byte(tests[j]), &value)
 		require.NoError(t, err)
 
-		serialized, err := (&Amount{}).ToBytes(value, false)
-		require.NoError(t, err)
-
-		require.Len(t, serialized, 48)
+		_, err = Amount.ToBytes(value, false)
+		require.Error(t, err, value)
 	}
 }
 
