@@ -10,10 +10,12 @@ import (
 
 // AccountID is used for serialization of AccountID fields. https://xrpl.org/docs/references/protocol/binary-format#accountid-fields
 
-type AccountID struct{}
+type accountID struct{}
+
+var AccountID = &accountID{}
 
 // ToBytes serializes value of an AccountID field.
-func (a *AccountID) ToBytes(value any, _ bool) ([]byte, error) {
+func (a *accountID) ToBytes(value any, _ bool) ([]byte, error) {
 	address, ok := value.(string)
 	if !ok {
 		return nil, fmt.Errorf("value %v is not string", value)
@@ -37,6 +39,11 @@ func id(address string) ([]byte, error) {
 	// length
 	if l := len(addressBytes); l != 25 {
 		return nil, fmt.Errorf("wrong length. Expected %d got %d", 25, l)
+	}
+
+	// leading byte
+	if addressBytes[0] != 0 {
+		return nil, fmt.Errorf("wrong leading byte %v", address)
 	}
 
 	// checksum

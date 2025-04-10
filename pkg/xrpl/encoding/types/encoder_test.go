@@ -79,6 +79,66 @@ func TestEncodeNotSigning(t *testing.T) {
             }`,
 			output: "120007220008000024000003EB2019000003EA201B005EE96764400000000D4D5FFA65D5038D7EA4C68000000000000000000000000000584D4D0000000000A426093A78AA86EB2B878E5C2E33FEC224A0184968400000000000000F8114F990B9E746546554A7B50A5E013BCB57095C6BB8F9EA7C09584D4D2076616C75657D07322E3230393635E1F1",
 		},
+		{
+			name: "path",
+			json: `{
+                "Account": "rHXUjUtk5eiPFYpg27izxHeZ1t4x835Ecn",
+                "Destination": "r45dBj4S3VvMMYXxr9vHX4Z4Ma6ifPMCkK",
+                "TransactionType": "Payment",
+                "Amount": {
+                    "currency": "CNY",
+                    "value": "5000",
+                    "issuer": "r45dBj4S3VvMMYXxr9vHX4Z4Ma6ifPMCkK"
+                },
+                "Fee": "12",
+                "SendMax": {
+                    "currency": "CNY",
+                    "value": "5050",
+                    "issuer": "rHXUjUtk5eiPFYpg27izxHeZ1t4x835Ecn"
+                },
+                "Flags": 0,
+                "Sequence": 6,
+                "Paths": [[{
+                    "account": "razqQKzJRdB4UxFPWf5NEpEG3WMkmwgcXA"
+                }]],
+                "DestinationTag": 736049272
+            }`,
+			output: "120000220000000024000000062E2BDF387861D551C37937E08000000000000000000000000000434E590000000000EE39E6D05CFD6A90DAB700A1D70149ECEE29DFEC68400000000000000C69D551F0F2C01DA000000000000000000000000000434E590000000000B53847FA45E828BF9A52E38F7FB39E363493CE8B8114B53847FA45E828BF9A52E38F7FB39E363493CE8B8314EE39E6D05CFD6A90DAB700A1D70149ECEE29DFEC01120141C8BE2C0A6AA17471B9F6D0AF92AAB1C94D5A2500",
+		},
+		{
+			name: "destinationTag",
+			json: `{
+                "Account": "r3ZDv3hLmTKwkgAqcXtX2yaMfnhRD3Grjc",
+                "Destination": "rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q",
+                "TransactionType": "Payment",
+                "Amount": {
+                    "currency": "BTC",
+                    "value": "0.04",
+                    "issuer": "rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q"
+                },
+                "Fee": "106",
+                "SendMax": "3267350000",
+                "Flags": 0,
+                "Sequence": 10,
+                "Paths": [[{
+                    "currency": "BTC",
+                    "issuer": "rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q"
+                }]],
+                "InvoiceID": "342B8D16BEE494D169034AFF0908FDE35874A38E548D4CEC8DFC5C49E9A33B76",
+                "DestinationTag": 1403334172
+            }`,
+			output: "1200002200000000240000000A2E53A52E1C5011342B8D16BEE494D169034AFF0908FDE35874A38E548D4CEC8DFC5C49E9A33B7661D40E35FA931A00000000000000000000000000004254430000000000DD39C650A96EDA48334E70CC4A85B8B2E8502CD368400000000000006A6940000000C2BFCDF0811452E0F910686FB449A23BC78C3D4CE564C988C6C08314DD39C650A96EDA48334E70CC4A85B8B2E8502CD30112300000000000000000000000004254430000000000DD39C650A96EDA48334E70CC4A85B8B2E8502CD300",
+		}, {
+			name: "payment channel",
+			json: `{
+  "Account": "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
+  "TransactionType": "PaymentChannelFund",
+  "Channel": "C1AE6DDDEEC05CF2978C0BAD6FE302948E9533691DC749DCDD3B9E5992CA6198",
+  "Amount": "200000",
+  "Expiration": 543171558
+}`,
+			output: "12000E2A206023E65016C1AE6DDDEEC05CF2978C0BAD6FE302948E9533691DC749DCDD3B9E5992CA6198614000000000030D4081144B4E9C06F24296074F7BC48F92A97916C6DC5EA9",
+		},
 	}
 
 	for _, test := range tests {

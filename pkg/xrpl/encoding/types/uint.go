@@ -33,7 +33,7 @@ func (u *UInt8) ToBytes(value any, _ bool) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	if tempInt > 1<<8 || tempInt < 0 {
+	if tempInt >= 1<<8 || tempInt < 0 {
 		return nil, InvalidUInt8(value)
 	}
 	return []byte{byte(tempInt)}, nil
@@ -49,7 +49,7 @@ func (u *UInt16) ToBytes(value any, _ bool) ([]byte, error) {
 	valueStr, ok := value.(string)
 	if ok {
 		txType, ok := defs.TxTypeToValue[valueStr]
-		if !ok || txType < 0 || txType > 1<<16 {
+		if !ok || txType < 0 || txType >= 1<<16 {
 			return nil, &InvalidType{
 				t: "TransactionType",
 				v: value,
@@ -62,7 +62,7 @@ func (u *UInt16) ToBytes(value any, _ bool) ([]byte, error) {
 			return nil, err
 		}
 
-		if tempInt64 > 1<<16 || tempInt64 < 0 {
+		if tempInt64 >= 1<<16 || tempInt64 < 0 {
 			return nil,
 				&InvalidType{
 					t: "UInt16",
@@ -88,7 +88,7 @@ func (u *UInt32) ToBytes(value any, _ bool) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	if tempInt > 1<<32 || tempInt < 0 {
+	if tempInt >= 1<<32 || tempInt < 0 {
 		return nil, &InvalidType{
 			t: "UInt32",
 			v: value,
@@ -117,6 +117,12 @@ func (u *UInt64) ToBytes(value any, _ bool) ([]byte, error) {
 		}
 	case uint64:
 		valueUint = value
+	default:
+		valueInt, err := convertInt64(value, "int64")
+		if err != nil || valueInt < 0 {
+			return nil, fmt.Errorf("invalid UInt64: %v, error: %v", value, err)
+		}
+		valueUint = uint64(valueInt)
 	}
 
 	out := make([]byte, 8)
@@ -127,7 +133,7 @@ func (u *UInt64) ToBytes(value any, _ bool) ([]byte, error) {
 
 // convertInt64 converts a value of a number type to int64.
 //
-// a value of type uint64 to fit in int64, otherwise an error is returned.
+// a value of type uint64 has to fit in int64, otherwise an error is returned.
 // a value of type float32 or float64 has to be an integer and fit in int64, otherwise an error is returned.
 func convertInt64(value any, t string) (int64, error) {
 	switch value := value.(type) {

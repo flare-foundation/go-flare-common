@@ -18,7 +18,7 @@ func (h *hashInternal) ToBytes(value any, _ bool) ([]byte, error) {
 
 	v, err := hex.DecodeString(s)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("not hex string %v, %v", value, err)
 	}
 	if h.length != 0 && h.length != len(v) {
 		return nil, fmt.Errorf("wrong length, expected %d bytes", h.length)
@@ -35,7 +35,7 @@ var Hash128 = &hashInternal{length: 16}
 // Hash160 is used for serialization of Hash160 fields. https://xrpl.org/docs/references/protocol/binary-format#hash-fields
 var Hash160 = &hashInternal{length: 20}
 
-// Hash192 is used for serialization of Hash193 fields. https://xrpl.org/docs/references/protocol/binary-format#hash-fields
+// Hash192 is used for serialization of Hash192 fields. https://xrpl.org/docs/references/protocol/binary-format#hash-fields
 var Hash192 = &hashInternal{length: 24}
 
 // Hash256 is used for serialization of Hash256 fields. https://xrpl.org/docs/references/protocol/binary-format#hash-fields

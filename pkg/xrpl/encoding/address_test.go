@@ -38,7 +38,7 @@ func TestAddressED(t *testing.T) {
 func TestAccountID(t *testing.T) {
 	addr := "rhbQ2PoSsmzh5XnmWnutCa6dmAC2qj1z1S"
 
-	id, err := (&types.AccountID{}).ToBytes(addr, false)
+	id, err := types.AccountID.ToBytes(addr, false)
 	require.NoError(t, err)
 
 	addrBack := idToAddress(id)

@@ -34,10 +34,12 @@ const StandardCodeRegex = `[0-9A-Za-z?!@#$%^&*<>(){}\[\]|]`
 // Amount is for serialization of Amount fields. https://xrpl.org/docs/references/protocol/binary-format#amount-fields
 //
 // Amount implements Encoder interface.
-type Amount struct{}
+type amount struct{}
+
+var Amount = &amount{}
 
 // ToBytes serializes Amount field.
-func (a *Amount) ToBytes(value any, _ bool) ([]byte, error) {
+func (a *amount) ToBytes(value any, _ bool) ([]byte, error) {
 	switch value := value.(type) {
 	case string:
 		return xrpToBytes(value)
@@ -191,7 +193,39 @@ func normalizeValue(value string) ([]byte, error) {
 		fl = fl.Neg(fl)
 	}
 
-	formatted := fl.Text(e, precision) // "d.ddddddddddddddE±dd"
+	significant, exponent, err := format(fl, precision, 56)
+	if err != nil {
+		return nil, fmt.Errorf("formatting float %v: %v", fl, err)
+	}
+
+	significantCheck, _, err := format(fl, precision+1, 64)
+	if err != nil {
+		return nil, fmt.Errorf("formatting float %v: %v", fl, err)
+	}
+
+	if significant*10 != significantCheck {
+		return nil, fmt.Errorf("precision overflow %v, at most %v nonzero leading digits", value, precision)
+	}
+
+	normalizedExponent := exponent + exponentNormalization - precision
+	if normalizedExponent < minNormalizedExponent || normalizedExponent > maxNormalizedExponent {
+		return nil, fmt.Errorf("exponent %d out of range [%d,%d]", exponent, int64(minNormalizedExponent)-exponentNormalization, int64(maxNormalizedExponent)-exponentNormalization)
+	}
+
+	if significant < minSignificant || significant > maxSignificant {
+		return nil, fmt.Errorf("significant part %d out of range [%d,%d]", significant, minSignificant, maxSignificant)
+	}
+
+	exponentN := uint64(normalizedExponent)
+
+	outUint := 1<<63 | sign<<62 | exponentN<<54 | significant // not xrp (1bit) | sign (1bit) | exponent (8bits) | significant (5bits)
+	binary.BigEndian.PutUint64(out, outUint)
+
+	return out, nil
+}
+
+func format(f *big.Float, p int, bitSize int) (uint64, int64, error) {
+	formatted := f.Text(e, p) // "d.ddddddddd...dddddE±dd"
 
 	separated := strings.Split(formatted, ".")
 
@@ -203,29 +237,16 @@ func normalizeValue(value string) ([]byte, error) {
 	significantDec := leadingDigit + second[0]
 	exponentStr := second[1]
 
-	significant, err := strconv.ParseUint(significantDec, 10, 54)
+	significant, err := strconv.ParseUint(significantDec, 10, bitSize)
 	if err != nil {
-		return nil, fmt.Errorf("parsing significant part: %v", err)
+		return 0, 0, fmt.Errorf("parsing significant part: %v", err)
 	}
 
-	exponentInt, err := strconv.ParseInt(exponentStr, 10, 8)
+	exponent, err := strconv.ParseInt(exponentStr, 10, 8)
 	if err != nil {
-		return nil, fmt.Errorf("parsing exponent: %v", err)
+		return 0, 0, fmt.Errorf("parsing exponent: %v", err)
 	}
 
-	normalizedExponent := exponentInt + exponentNormalization - precision
-	if normalizedExponent < minNormalizedExponent || normalizedExponent > maxNormalizedExponent {
-		return nil, fmt.Errorf("exponent %d out of range [%d,%d]", exponentInt, int64(minNormalizedExponent)-int64(normalizedExponent), int64(maxNormalizedExponent)-int64(normalizedExponent))
-	}
+	return significant, exponent, err
 
-	if significant < minSignificant || significant > maxSignificant {
-		return nil, fmt.Errorf("significant part %d out of range [%d,%d]", significant, minSignificant, maxSignificant)
-	}
-
-	exponent := uint64(normalizedExponent)
-
-	outUint := 1<<63 | sign<<62 | exponent<<54 | significant // not xrp (1bit) | sign (1bit) | exponent (8bits) | significant (5bits)
-	binary.BigEndian.PutUint64(out, outUint)
-
-	return out, nil
 }
