@@ -1,6 +1,7 @@
 package types
 
 import (
+	"bytes"
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
@@ -29,6 +30,10 @@ const (
 	maxSignificant        uint64 = 9999999999999999 // 10^16-1
 )
 
+const xrpBitMask uint8 = 0b10000000
+const signBitMask uint8 = 0b01000000
+const valueBitMask uint8 = 0b00111111
+
 const StandardCodeRegex = `[0-9A-Za-z?!@#$%^&*<>(){}\[\]|]`
 
 // Amount is for serialization of Amount fields. https://xrpl.org/docs/references/protocol/binary-format#amount-fields
@@ -44,7 +49,7 @@ func (a *amount) ToBytes(value any, _ bool) ([]byte, error) {
 	case string:
 		return xrpToBytes(value)
 	case map[string]any:
-		return currencyToBytes(value)
+		return tokenToBytes(value)
 	default:
 		return nil, fmt.Errorf("invalid amount: %v", value)
 	}
@@ -68,8 +73,8 @@ func xrpToBytes(amount string) ([]byte, error) {
 	return valBytes, nil
 }
 
-// currencyToBytes serializes an issued currency amount.
-func currencyToBytes(amount map[string]any) ([]byte, error) {
+// tokenToBytes serializes an issued currency amount.
+func tokenToBytes(amount map[string]any) ([]byte, error) {
 	if len(amount) != 3 {
 		return nil, fmt.Errorf("wrong number of fields")
 	}
@@ -95,7 +100,7 @@ func currencyToBytes(amount map[string]any) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("currency: %v", err)
 	}
-	normalizedValue, err := normalizeValue(value)
+	normalizedValue, err := serializeTokenValue(value)
 	if err != nil {
 		return nil, fmt.Errorf("value: %v", err)
 	}
@@ -148,6 +153,37 @@ func serializeCurrency(currency string) ([]byte, error) {
 	return nil, fmt.Errorf("invalid length. Allowed 3 or 40 got %d", len(currency))
 }
 
+func deserializeCurrency(c []byte) (string, error) {
+	if len(c) != 20 {
+		return "", fmt.Errorf("invalid currency length %v should be 20", len(c))
+	}
+
+	if c[0] == 0 {
+		isIso := true
+		for j := 1; j < 13; j++ {
+			if c[j] != 0 {
+				isIso = false
+			}
+		}
+
+		for j := 15; j < 21; j++ {
+			if c[j] != 0 {
+				isIso = false
+			}
+		}
+
+		if isIso {
+			out := string(c[13:16])
+			if out == "XRP" {
+				return "", fmt.Errorf("invalid currency %v", out)
+			}
+			return out, nil
+		}
+	}
+
+	return hex.EncodeToString(c), nil
+}
+
 func serializeStandardCode(code string) ([]byte, error) {
 	r := regexp.MustCompile(StandardCodeRegex)
 
@@ -172,7 +208,7 @@ func serializeNonstandardCode(code string) ([]byte, error) {
 	return out, nil
 }
 
-func normalizeValue(value string) ([]byte, error) {
+func serializeTokenValue(value string) ([]byte, error) {
 	fl, _, err := new(big.Float).Parse(value, 10)
 	if err != nil {
 		return nil, fmt.Errorf("unparsable value %v", value)
@@ -248,5 +284,124 @@ func format(f *big.Float, p int, bitSize int) (uint64, int64, error) {
 	}
 
 	return significant, exponent, err
+}
 
+const exponentMask = 0xff << 54
+const significantMask = (1 << 54) - 1
+
+func deserializeTokenAmount(a []byte) (string, error) {
+	if len(a) != 8 {
+		return "", fmt.Errorf("invalid token amount %v", a)
+	}
+
+	firstByte := a[0]
+
+	number := binary.BigEndian.Uint64(a)
+
+	exponentNormalized := (number & exponentMask) >> 54
+	exponent := int64(exponentNormalized) - exponentNormalization
+
+	sign := ""
+
+	val := number & significantMask
+
+	if firstByte&signBitMask == 0 && val != 0 {
+		sign = "-"
+	}
+
+	floatStr := sign + strconv.FormatUint(val, 10) + "e" + strconv.FormatInt(exponent, 10)
+
+	fl, ok := new(big.Float).SetString(floatStr)
+	if !ok {
+		return "", fmt.Errorf("not parsable float %v", floatStr)
+	}
+
+	return fl.Text(0x67, -1), nil
+}
+
+func (a *amount) ToJson(b *bytes.Buffer, _ int) (any, error) {
+	firstByte, err := b.ReadByte()
+	if err != nil {
+		return nil, fmt.Errorf("cannot read first byte: %v", err)
+	}
+
+	first := firstByte & xrpBitMask
+
+	switch first {
+	case xrpBitMask:
+		return xrpToJson(firstByte, b)
+	case 0:
+		return tokenToJson(firstByte, b)
+	default:
+		return nil, fmt.Errorf("impossible, first bit neither 1 nor 0: %v", first)
+	}
+}
+
+func xrpToJson(firstByte byte, b *bytes.Buffer) (string, error) {
+	v := make([]byte, 8)
+	v[0] = firstByte & valueBitMask // remove sign and "not XRP bit"
+
+	_, err := b.Read(v[1:])
+	if err != nil {
+		return "", fmt.Errorf("cannot read xrp amount: %v", err)
+	}
+
+	var out string
+
+	sign := firstByte & signBitMask
+	if sign == 0 {
+		out = "-"
+	}
+	value := binary.BigEndian.Uint64(v)
+	out += strconv.FormatUint(value, 10)
+
+	return out, nil
+}
+
+func tokenToJson(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
+	out := make(map[string]any)
+
+	// amount
+	a := make([]byte, 8)
+	a[0] = firstByte & valueBitMask // remove sign and "not XRP bit"
+
+	_, err := b.Read(a[1:])
+	if err != nil {
+		return nil, fmt.Errorf("cannot read token amount: %v", err)
+	}
+
+	amount, err := deserializeTokenAmount(a)
+	if err != nil {
+		return nil, fmt.Errorf("deserializing amount: %v", err)
+	}
+	out["amount"] = amount
+
+	// currency
+	c := make([]byte, 20)
+	_, err = b.Read(c)
+	if err != nil {
+		return nil, fmt.Errorf("cannot read token currency: %v", err)
+	}
+
+	cCode, err := deserializeCurrency(c)
+	if err != nil {
+		return nil, fmt.Errorf("deserializing currency: %v", err)
+	}
+	out["currency"] = cCode
+
+	// issuer
+	i := make([]byte, 20)
+	_, err = b.Read(i)
+	if err != nil {
+		return nil, fmt.Errorf("cannot read token issuer: %v", err)
+	}
+
+	iAddress, err := Address(i)
+	if err != nil {
+		return nil, fmt.Errorf("deserializing issuer: %v", err)
+	}
+
+	out["issuer"] = iAddress
+
+	return out, nil
 }
