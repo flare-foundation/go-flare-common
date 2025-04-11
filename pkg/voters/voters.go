@@ -48,8 +48,6 @@ func NewSet(voters []common.Address, weights []uint16, SubmitToSigningAddress ma
 
 	vMap := make(map[common.Address]VoterData)
 	for i, voter := range vs.voters {
-		logger.Debugf("New voter: %v", voter)
-
 		if _, ok := vMap[voter]; !ok {
 			vMap[voter] = VoterData{
 				Index:  i,
