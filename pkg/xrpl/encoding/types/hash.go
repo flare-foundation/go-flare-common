@@ -1,6 +1,7 @@
 package types
 
 import (
+	"bytes"
 	"encoding/hex"
 	"fmt"
 )
@@ -26,14 +27,24 @@ func (h *hashInternal) ToBytes(value any, _ bool) ([]byte, error) {
 	return v, nil
 }
 
-// ToBytes serializes byte strings.
-func (h *hashInternal) ToJson(value []byte) (any, error) {
-	if h.length != 0 && h.length != len(value) {
-		return nil, fmt.Errorf("wrong length, expected %d bytes", h.length)
-	}
-	v := hex.EncodeToString(value)
+func (a *hashInternal) ToJson(b *bytes.Buffer, length int) (any, error) {
+	l := a.length
+	if l == 0 {
+		l = length
 
-	return v, nil
+		if l < 0 {
+			return nil, fmt.Errorf("invalid length %d", l)
+		}
+	}
+
+	value := make([]byte, l)
+
+	_, err := b.Read(value)
+	if err != nil {
+		return nil, fmt.Errorf("cannot read account id from buffer: %v", err)
+	}
+
+	return hex.EncodeToString(value), nil
 }
 
 // Blob is used for serialization of Blob fields. https://xrpl.org/docs/references/protocol/binary-format#blob-fields

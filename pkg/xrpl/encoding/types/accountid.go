@@ -79,7 +79,14 @@ func Address(id []byte) (string, error) {
 	return base58.XRPLCoder.Encode(augmented), nil
 }
 
-func (a *accountID) ToJson(value []byte) (any, error) {
+func (a *accountID) ToJson(b *bytes.Buffer, _ int) (any, error) {
+	value := make([]byte, 20)
+
+	_, err := b.Read(value)
+	if err != nil {
+		return nil, fmt.Errorf("cannot read account id from buffer: %v", err)
+	}
+
 	addr, err := Address(value)
 	if err != nil {
 		return nil, fmt.Errorf("deserializing accountID %v: %v", hex.EncodeToString(value), err)
