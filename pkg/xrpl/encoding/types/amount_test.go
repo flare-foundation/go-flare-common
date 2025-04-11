@@ -277,7 +277,7 @@ func TestNormalizeValue(t *testing.T) {
 	}{}
 
 	for _, test := range tests {
-		normalized, err := normalizeValue(test.input)
+		normalized, err := serializeTokenValue(test.input)
 		require.NoError(t, err)
 
 		require.NoError(t, err)
@@ -290,5 +290,18 @@ func TestNormalizeValue(t *testing.T) {
 		require.NoError(t, err)
 
 		require.Equal(t, expected, normalized)
+	}
+}
+
+func TestDeserialize(t *testing.T) {
+	inputsExact := []string{"0", "1", "-1", "0.1", "-0.1", "1e+90", "40915.87486543398"}
+	for _, input := range inputsExact {
+		s, err := serializeTokenValue(input)
+		require.NoError(t, err)
+
+		d, err := deserializeTokenAmount(s)
+		require.NoError(t, err)
+
+		require.Equal(t, input, d)
 	}
 }

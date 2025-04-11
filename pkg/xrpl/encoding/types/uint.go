@@ -1,10 +1,13 @@
 package types
 
 import (
+	"bytes"
 	"encoding/binary"
+	"encoding/hex"
 	"fmt"
 	"math"
 	"strconv"
+	"strings"
 
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/defs"
 )
@@ -37,6 +40,14 @@ func (u *UInt8) ToBytes(value any, _ bool) ([]byte, error) {
 		return nil, InvalidUInt8(value)
 	}
 	return []byte{byte(tempInt)}, nil
+}
+
+func (a *UInt8) ToJson(b *bytes.Buffer, _ int) (any, error) {
+	u, err := b.ReadByte()
+	if err != nil {
+		return nil, fmt.Errorf("cannot read uint8 from buffer: %v", err)
+	}
+	return u, nil
 }
 
 type UInt16 struct {
@@ -79,6 +90,18 @@ func (u *UInt16) ToBytes(value any, _ bool) ([]byte, error) {
 	return out, nil
 }
 
+func (a *UInt16) ToJson(b *bytes.Buffer, _ int) (any, error) {
+	v := make([]byte, 2)
+
+	_, err := b.Read(v)
+	if err != nil {
+		return nil, fmt.Errorf("cannot read uint16 from buffer: %v", err)
+	}
+
+	u := binary.BigEndian.Uint16(v)
+	return u, nil
+}
+
 type UInt32 struct {
 }
 
@@ -99,6 +122,18 @@ func (u *UInt32) ToBytes(value any, _ bool) ([]byte, error) {
 	binary.BigEndian.PutUint32(out, uint32(tempInt))
 
 	return out, nil
+}
+
+func (a *UInt32) ToJson(b *bytes.Buffer, _ int) (any, error) {
+	v := make([]byte, 4)
+
+	_, err := b.Read(v)
+	if err != nil {
+		return nil, fmt.Errorf("cannot read uint16 from buffer: %v", err)
+	}
+
+	u := binary.BigEndian.Uint32(v)
+	return u, nil
 }
 
 type UInt64 struct {
@@ -129,6 +164,17 @@ func (u *UInt64) ToBytes(value any, _ bool) ([]byte, error) {
 	binary.BigEndian.PutUint64(out, valueUint)
 
 	return out, nil
+}
+
+func (a *UInt64) ToJson(b *bytes.Buffer, _ int) (any, error) {
+	v := make([]byte, 8)
+
+	_, err := b.Read(v)
+	if err != nil {
+		return nil, fmt.Errorf("cannot read uint16 from buffer: %v", err)
+	}
+
+	return strings.ToUpper(hex.EncodeToString(v)), nil
 }
 
 // convertInt64 converts a value of a number type to int64.

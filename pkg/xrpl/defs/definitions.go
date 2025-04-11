@@ -15,6 +15,27 @@ type Field struct {
 	Type           XType // Type code
 }
 
+type IDPair struct {
+	F int16
+	T XType
+}
+
+// pair of (field code, type code) to field name
+var IDToName map[IDPair]string
+
+func init() {
+	IDToName = make(map[IDPair]string)
+
+	for name := range NameToField {
+		fCode := NameToField[name].Nth
+		tCode := NameToField[name].Type
+
+		key := IDPair{F: fCode, T: tCode}
+
+		IDToName[key] = name
+	}
+}
+
 // ID returns the ID of a field according to https://xrpl.org/docs/references/protocol/binary-format#field-ids.
 func (f Field) ID() ([]byte, error) {
 	if f.Type < 0 || f.Type > 255 || f.Nth < 0 || f.Nth > 255 {
@@ -39,10 +60,10 @@ func (f Field) ID() ([]byte, error) {
 	return b, err
 }
 
-func IDDecode(b *bytes.Buffer) (int16, XType, error) {
+func ReadID(b *bytes.Buffer) (IDPair, error) {
 	byte1, err := b.ReadByte()
 	if err != nil {
-		return -1, NotPresent, fmt.Errorf("cannot read first byte %v", err)
+		return IDPair{-1, NotPresent}, fmt.Errorf("cannot read first byte %v", err)
 	}
 
 	tCode := byte1 & 0xf0
@@ -53,24 +74,24 @@ func IDDecode(b *bytes.Buffer) (int16, XType, error) {
 	if tCode == 0 {
 		tCode, err = b.ReadByte()
 		if err != nil {
-			return -1, NotPresent, fmt.Errorf("cannot read type code byte %v", err)
+			return IDPair{-1, NotPresent}, fmt.Errorf("cannot read type code byte %v", err)
 		}
 		if tCode < 16 {
-			return -1, NotPresent, fmt.Errorf("invalid encoding type code %v", []byte{byte1, tCode})
+			return IDPair{-1, NotPresent}, fmt.Errorf("invalid encoding type code %v", []byte{byte1, tCode})
 		}
 	}
 
 	if fCode == 0 {
 		fCode, err = b.ReadByte()
 		if err != nil {
-			return -1, NotPresent, fmt.Errorf("cannot read field code byte %v", err)
+			return IDPair{-1, NotPresent}, fmt.Errorf("cannot read field code byte %v", err)
 		}
 		if fCode < 16 {
-			return -1, NotPresent, fmt.Errorf("invalid encoding field code%v", []byte{byte1, fCode})
+			return IDPair{-1, NotPresent}, fmt.Errorf("invalid encoding field code%v", []byte{byte1, fCode})
 		}
 	}
 
-	return int16(fCode), XType(tCode), nil
+	return IDPair{F: int16(fCode), T: XType(tCode)}, nil
 }
 
 // Less returns
