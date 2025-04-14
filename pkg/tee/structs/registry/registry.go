@@ -11,13 +11,11 @@ const OPType = "REG"
 type OPCommand string
 
 const (
-	AvailabilityCheck OPCommand = "AVAILABILITY_CHECK"
 	ToPauseForUpgrade OPCommand = "TO_PAUSE_FOR_UPGRADE"
 	ReplicateFrom     OPCommand = "REPLICATE_FROM"
 )
 
 var opCommands = []OPCommand{
-	AvailabilityCheck,
 	ToPauseForUpgrade,
 	ReplicateFrom,
 }
@@ -25,7 +23,6 @@ var opCommands = []OPCommand{
 // i-th method correspond to a method in TeeRegistryStruct interface whose
 // input is the type of message emitted with i-th opCommands
 var methods = []string{
-	"availabilityCheckResponseStruct",
 	"pauseForUpgradeStruct",
 	"replicateTeeMachineStruct",
 }
