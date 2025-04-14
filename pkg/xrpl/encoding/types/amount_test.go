@@ -294,7 +294,7 @@ func TestNormalizeValue(t *testing.T) {
 }
 
 func TestDeserialize(t *testing.T) {
-	inputsExact := []string{"0", "1", "-1", "0.1", "-0.1", "1e+90", "40915.87486543398"}
+	inputsExact := []string{"0", "1", "-1", "0.1", "-0.1", "1e+95", "1e-81", "40915.87486543398"}
 	for _, input := range inputsExact {
 		s, err := serializeTokenValue(input)
 		require.NoError(t, err)

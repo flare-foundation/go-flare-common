@@ -112,9 +112,8 @@ func SignTransactionEDMultisig(tx map[string]any, prv ed25519.PrivateKey) (*Sign
 	}, nil
 }
 
-func SignTransactionSecpSingle(tx map[string]any, sequence uint32, prv *ecdsa.PrivateKey) ([]byte, error) {
-	tx["Sequence"] = float64(sequence)
-
+// SignTransactionSecp256k1Single signs a tra
+func SignTransactionSecp256k1Single(tx map[string]any, prv *ecdsa.PrivateKey) ([]byte, error) {
 	pub := Secp256k1PrvToPub(prv)
 	tx["SigningPubKey"] = pub
 
@@ -141,7 +140,7 @@ func SignTransactionSecpSingle(tx map[string]any, sequence uint32, prv *ecdsa.Pr
 	return signed, nil
 }
 
-func SignTransactionSecpMultisig(tx map[string]any, prv *ecdsa.PrivateKey) (*Signer, error) {
+func SignTransactionSecp256k1Multisig(tx map[string]any, prv *ecdsa.PrivateKey) (*Signer, error) {
 	tx["SigningPubKey"] = ""
 
 	encoded, err := types.Encode(tx, true)
