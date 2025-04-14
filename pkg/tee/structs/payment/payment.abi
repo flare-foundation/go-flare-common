@@ -4,9 +4,46 @@
       {
         "components": [
           {
+            "internalType": "uint256",
+            "name": "chainId",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct ITeePaymentsEVM.OpTypeConstantsEVM",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "opTypeConstantsEVMStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
             "internalType": "bytes32",
             "name": "walletId",
             "type": "bytes32"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "teeId",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "keyId",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct ITeeWalletManager.TeeIdKeyIdPair[]",
+            "name": "teeIdKeyIdPairs",
+            "type": "tuple[]"
           },
           {
             "internalType": "string",

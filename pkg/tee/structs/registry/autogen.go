@@ -29,25 +29,6 @@ var (
 	_ = abi.ConvertType
 )
 
-// ITeeRegistryAvailabilityCheckRequest is an auto generated low-level Go binding around an user-defined struct.
-type ITeeRegistryAvailabilityCheckRequest struct {
-	TeeId     common.Address
-	Url       string
-	CodeHash  [32]byte
-	Platform  [32]byte
-	Timestamp *big.Int
-}
-
-// ITeeRegistryAvailabilityCheckResponse is an auto generated low-level Go binding around an user-defined struct.
-type ITeeRegistryAvailabilityCheckResponse struct {
-	TeeId     common.Address
-	Url       string
-	CodeHash  [32]byte
-	Platform  [32]byte
-	Timestamp *big.Int
-	Status    uint8
-}
-
 // ITeeRegistryPauseForUpgrade is an auto generated low-level Go binding around an user-defined struct.
 type ITeeRegistryPauseForUpgrade struct {
 	TeeId common.Address
@@ -77,7 +58,7 @@ type ITeeRegistryTeeMachineWithAttestationData struct {
 
 // RegistryMetaData contains all meta data concerning the Registry contract.
 var RegistryMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"internalType\":\"structITeeRegistry.AvailabilityCheckRequest\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"availabilityCheckRequestStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"},{\"internalType\":\"enumITeeRegistry.AvailabilityStatus\",\"name\":\"status\",\"type\":\"uint8\"}],\"internalType\":\"structITeeRegistry.AvailabilityCheckResponse\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"availabilityCheckResponseStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"}],\"internalType\":\"structITeeRegistry.PauseForUpgrade\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"pauseForUpgradeStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"oldTeeMachine\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"newTeeMachine\",\"type\":\"tuple\"}],\"internalType\":\"structITeeRegistry.ReplicateTeeMachine\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"replicateTeeMachineStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"}],\"internalType\":\"structITeeRegistry.TeeMachine\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"teeMachineStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"teeMachineWithAttestationDataStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"}],\"internalType\":\"structITeeRegistry.PauseForUpgrade\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"pauseForUpgradeStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"oldTeeMachine\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"newTeeMachine\",\"type\":\"tuple\"}],\"internalType\":\"structITeeRegistry.ReplicateTeeMachine\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"replicateTeeMachineStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"}],\"internalType\":\"structITeeRegistry.TeeMachine\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"teeMachineStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"teeMachineWithAttestationDataStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // RegistryABI is the input ABI used to generate the binding from.
@@ -224,48 +205,6 @@ func (_Registry *RegistryTransactorRaw) Transfer(opts *bind.TransactOpts) (*type
 // Transact invokes the (paid) contract method with params as input values.
 func (_Registry *RegistryTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
 	return _Registry.Contract.contract.Transact(opts, method, params...)
-}
-
-// AvailabilityCheckRequestStruct is a paid mutator transaction binding the contract method 0xa0f09cd4.
-//
-// Solidity: function availabilityCheckRequestStruct((address,string,bytes32,bytes32,uint256) ) returns()
-func (_Registry *RegistryTransactor) AvailabilityCheckRequestStruct(opts *bind.TransactOpts, arg0 ITeeRegistryAvailabilityCheckRequest) (*types.Transaction, error) {
-	return _Registry.contract.Transact(opts, "availabilityCheckRequestStruct", arg0)
-}
-
-// AvailabilityCheckRequestStruct is a paid mutator transaction binding the contract method 0xa0f09cd4.
-//
-// Solidity: function availabilityCheckRequestStruct((address,string,bytes32,bytes32,uint256) ) returns()
-func (_Registry *RegistrySession) AvailabilityCheckRequestStruct(arg0 ITeeRegistryAvailabilityCheckRequest) (*types.Transaction, error) {
-	return _Registry.Contract.AvailabilityCheckRequestStruct(&_Registry.TransactOpts, arg0)
-}
-
-// AvailabilityCheckRequestStruct is a paid mutator transaction binding the contract method 0xa0f09cd4.
-//
-// Solidity: function availabilityCheckRequestStruct((address,string,bytes32,bytes32,uint256) ) returns()
-func (_Registry *RegistryTransactorSession) AvailabilityCheckRequestStruct(arg0 ITeeRegistryAvailabilityCheckRequest) (*types.Transaction, error) {
-	return _Registry.Contract.AvailabilityCheckRequestStruct(&_Registry.TransactOpts, arg0)
-}
-
-// AvailabilityCheckResponseStruct is a paid mutator transaction binding the contract method 0x8b727171.
-//
-// Solidity: function availabilityCheckResponseStruct((address,string,bytes32,bytes32,uint256,uint8) ) returns()
-func (_Registry *RegistryTransactor) AvailabilityCheckResponseStruct(opts *bind.TransactOpts, arg0 ITeeRegistryAvailabilityCheckResponse) (*types.Transaction, error) {
-	return _Registry.contract.Transact(opts, "availabilityCheckResponseStruct", arg0)
-}
-
-// AvailabilityCheckResponseStruct is a paid mutator transaction binding the contract method 0x8b727171.
-//
-// Solidity: function availabilityCheckResponseStruct((address,string,bytes32,bytes32,uint256,uint8) ) returns()
-func (_Registry *RegistrySession) AvailabilityCheckResponseStruct(arg0 ITeeRegistryAvailabilityCheckResponse) (*types.Transaction, error) {
-	return _Registry.Contract.AvailabilityCheckResponseStruct(&_Registry.TransactOpts, arg0)
-}
-
-// AvailabilityCheckResponseStruct is a paid mutator transaction binding the contract method 0x8b727171.
-//
-// Solidity: function availabilityCheckResponseStruct((address,string,bytes32,bytes32,uint256,uint8) ) returns()
-func (_Registry *RegistryTransactorSession) AvailabilityCheckResponseStruct(arg0 ITeeRegistryAvailabilityCheckResponse) (*types.Transaction, error) {
-	return _Registry.Contract.AvailabilityCheckResponseStruct(&_Registry.TransactOpts, arg0)
 }
 
 // PauseForUpgradeStruct is a paid mutator transaction binding the contract method 0x880347fb.
