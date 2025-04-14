@@ -126,7 +126,7 @@ func TestMake(t *testing.T) {
 		"SigningPubKey":   "",
 	}
 
-	signature, err := encoding.SignTransactionSecpMultisig(tx, privSecp)
+	signature, err := encoding.SignTransactionSecp256k1Multisig(tx, privSecp)
 	require.NoError(t, err)
 
 	signers := []*encoding.Signer{signature}
@@ -171,7 +171,7 @@ func TestMake2(t *testing.T) {
 		"SigningPubKey":   pubSecp,
 	}
 
-	signature, err := encoding.SignTransactionSecpSingle(tx, 6303019, privSecp)
+	signature, err := encoding.SignTransactionSecp256k1Single(tx, privSecp)
 	require.NoError(t, err)
 
 	fmt.Printf("signature: %v\n", signature)

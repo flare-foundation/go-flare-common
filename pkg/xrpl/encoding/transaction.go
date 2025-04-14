@@ -8,11 +8,12 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/types"
 )
 
-func SetMultisig(prv *ecdsa.PrivateKey, sequence int, signer string) (string, error) {
+func SetMultisig(prv *ecdsa.PrivateKey, sequence uint32, signer string) (string, error) {
 	tx := map[string]any{
 		"TransactionType": "SignerListSet",
 		"Fee":             "120000",
 		"SignerQuorum":    1,
+		"Sequence":        sequence,
 		"SignerEntries": []any{map[string]any{"SignerEntry": map[string]any{
 			"Account":      signer,
 			"SignerWeight": 1,
@@ -21,7 +22,7 @@ func SetMultisig(prv *ecdsa.PrivateKey, sequence int, signer string) (string, er
 		},
 	}
 
-	signed, err := SignTransactionSecpSingle(tx, uint32(sequence), prv)
+	signed, err := SignTransactionSecp256k1Single(tx, prv)
 	if err != nil {
 		return "", err
 	}

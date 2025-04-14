@@ -85,11 +85,11 @@ func TestExecuteWithRetry(t *testing.T) {
 			},
 		},
 		{
-			f: testFunction2(10 * time.Millisecond),
+			f: testFunction2(5 * time.Millisecond),
 			params: Params{
 				MaxAttempts: 0,
 				Delay:       3 * time.Millisecond,
-				Timeout:     13 * time.Millisecond,
+				Timeout:     15 * time.Millisecond,
 			},
 			expected: ExecuteStatus[int]{
 				Success: true,

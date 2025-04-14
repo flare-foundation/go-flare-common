@@ -14,7 +14,7 @@ const (
 
 // MessageToSign creates a tx message for signing.
 // If multiSig is true, txBlob is prefixed with multi-signing prefix and postfixed with accountID. For multi-signing, accountID of the signer should be provided.
-// If multiSig is false, txBlob is prefixed with single-signing prefix
+// If multiSig is false, txBlob is prefixed with single-signing prefix.
 func MessageToSign(txBlob []byte, multiSig bool, accountID []byte) []byte {
 	length := len(txBlob) + 4
 	if multiSig {
@@ -38,7 +38,7 @@ func MessageToSign(txBlob []byte, multiSig bool, accountID []byte) []byte {
 	return prefixed
 }
 
-// HashSigned computes a hash of a signed transaction
+// HashSigned computes a hash of a signed transaction.
 func HashSigned(txBlob []byte) []byte {
 	prefixed := make([]byte, 0, len(txBlob)+4)
 	prefixed = binary.BigEndian.AppendUint32(prefixed, signedPrefix)
