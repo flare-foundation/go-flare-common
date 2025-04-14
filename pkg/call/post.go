@@ -52,13 +52,13 @@ func PostRaw[T any](ctx context.Context, url string, apiKey APIKey, body io.Read
 	defer resp.Body.Close()
 
 	decoder := json.NewDecoder(respLimited)
-	decoder.DisallowUnknownFields()
+	// decoder.DisallowUnknownFields() // todo make this optional maybe
 
 	response := new(T)
 
 	err = decoder.Decode(response)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("decoding response: %v", err)
 	}
 
 	return response, nil
