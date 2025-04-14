@@ -29,6 +29,11 @@ var (
 	_ = abi.ConvertType
 )
 
+// ITeePaymentsEVMOpTypeConstantsEVM is an auto generated low-level Go binding around an user-defined struct.
+type ITeePaymentsEVMOpTypeConstantsEVM struct {
+	ChainId *big.Int
+}
+
 // ITeePaymentsPaymentInstruction is an auto generated low-level Go binding around an user-defined struct.
 type ITeePaymentsPaymentInstruction struct {
 	RecipientAddress string
@@ -39,6 +44,7 @@ type ITeePaymentsPaymentInstruction struct {
 // ITeePaymentsPaymentInstructionMessage is an auto generated low-level Go binding around an user-defined struct.
 type ITeePaymentsPaymentInstructionMessage struct {
 	WalletId           [32]byte
+	TeeIdKeyIdPairs    []ITeeWalletManagerTeeIdKeyIdPair
 	SenderAddress      string
 	RecipientAddress   string
 	Amount             *big.Int
@@ -50,9 +56,15 @@ type ITeePaymentsPaymentInstructionMessage struct {
 	BatchEndTs         *big.Int
 }
 
+// ITeeWalletManagerTeeIdKeyIdPair is an auto generated low-level Go binding around an user-defined struct.
+type ITeeWalletManagerTeeIdKeyIdPair struct {
+	TeeId common.Address
+	KeyId *big.Int
+}
+
 // PaymentMetaData contains all meta data concerning the Payment contract.
 var PaymentMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"senderAddress\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"subNonce\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFeeTolerancePPM\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"batchEndTs\",\"type\":\"uint256\"}],\"internalType\":\"structITeePayments.PaymentInstructionMessage\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"paymentInstructionMessageStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"}],\"internalType\":\"structITeePayments.PaymentInstruction\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"paymentInstructionStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"}],\"internalType\":\"structITeePaymentsEVM.OpTypeConstantsEVM\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"opTypeConstantsEVMStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"keyId\",\"type\":\"uint256\"}],\"internalType\":\"structITeeWalletManager.TeeIdKeyIdPair[]\",\"name\":\"teeIdKeyIdPairs\",\"type\":\"tuple[]\"},{\"internalType\":\"string\",\"name\":\"senderAddress\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"subNonce\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFeeTolerancePPM\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"batchEndTs\",\"type\":\"uint256\"}],\"internalType\":\"structITeePayments.PaymentInstructionMessage\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"paymentInstructionMessageStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"}],\"internalType\":\"structITeePayments.PaymentInstruction\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"paymentInstructionStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // PaymentABI is the input ABI used to generate the binding from.
@@ -201,23 +213,44 @@ func (_Payment *PaymentTransactorRaw) Transact(opts *bind.TransactOpts, method s
 	return _Payment.Contract.contract.Transact(opts, method, params...)
 }
 
-// PaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0xb1978af6.
+// OpTypeConstantsEVMStruct is a paid mutator transaction binding the contract method 0x82a4aa6c.
 //
-// Solidity: function paymentInstructionMessageStruct((bytes32,string,string,uint256,bytes32,uint256,uint256,uint256,uint256,uint256) ) returns()
+// Solidity: function opTypeConstantsEVMStruct((uint256) ) returns()
+func (_Payment *PaymentTransactor) OpTypeConstantsEVMStruct(opts *bind.TransactOpts, arg0 ITeePaymentsEVMOpTypeConstantsEVM) (*types.Transaction, error) {
+	return _Payment.contract.Transact(opts, "opTypeConstantsEVMStruct", arg0)
+}
+
+// OpTypeConstantsEVMStruct is a paid mutator transaction binding the contract method 0x82a4aa6c.
+//
+// Solidity: function opTypeConstantsEVMStruct((uint256) ) returns()
+func (_Payment *PaymentSession) OpTypeConstantsEVMStruct(arg0 ITeePaymentsEVMOpTypeConstantsEVM) (*types.Transaction, error) {
+	return _Payment.Contract.OpTypeConstantsEVMStruct(&_Payment.TransactOpts, arg0)
+}
+
+// OpTypeConstantsEVMStruct is a paid mutator transaction binding the contract method 0x82a4aa6c.
+//
+// Solidity: function opTypeConstantsEVMStruct((uint256) ) returns()
+func (_Payment *PaymentTransactorSession) OpTypeConstantsEVMStruct(arg0 ITeePaymentsEVMOpTypeConstantsEVM) (*types.Transaction, error) {
+	return _Payment.Contract.OpTypeConstantsEVMStruct(&_Payment.TransactOpts, arg0)
+}
+
+// PaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0xb1db1067.
+//
+// Solidity: function paymentInstructionMessageStruct((bytes32,(address,uint256)[],string,string,uint256,bytes32,uint256,uint256,uint256,uint256,uint256) ) returns()
 func (_Payment *PaymentTransactor) PaymentInstructionMessageStruct(opts *bind.TransactOpts, arg0 ITeePaymentsPaymentInstructionMessage) (*types.Transaction, error) {
 	return _Payment.contract.Transact(opts, "paymentInstructionMessageStruct", arg0)
 }
 
-// PaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0xb1978af6.
+// PaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0xb1db1067.
 //
-// Solidity: function paymentInstructionMessageStruct((bytes32,string,string,uint256,bytes32,uint256,uint256,uint256,uint256,uint256) ) returns()
+// Solidity: function paymentInstructionMessageStruct((bytes32,(address,uint256)[],string,string,uint256,bytes32,uint256,uint256,uint256,uint256,uint256) ) returns()
 func (_Payment *PaymentSession) PaymentInstructionMessageStruct(arg0 ITeePaymentsPaymentInstructionMessage) (*types.Transaction, error) {
 	return _Payment.Contract.PaymentInstructionMessageStruct(&_Payment.TransactOpts, arg0)
 }
 
-// PaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0xb1978af6.
+// PaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0xb1db1067.
 //
-// Solidity: function paymentInstructionMessageStruct((bytes32,string,string,uint256,bytes32,uint256,uint256,uint256,uint256,uint256) ) returns()
+// Solidity: function paymentInstructionMessageStruct((bytes32,(address,uint256)[],string,string,uint256,bytes32,uint256,uint256,uint256,uint256,uint256) ) returns()
 func (_Payment *PaymentTransactorSession) PaymentInstructionMessageStruct(arg0 ITeePaymentsPaymentInstructionMessage) (*types.Transaction, error) {
 	return _Payment.Contract.PaymentInstructionMessageStruct(&_Payment.TransactOpts, arg0)
 }
