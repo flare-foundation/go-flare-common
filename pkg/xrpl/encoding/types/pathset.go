@@ -1,6 +1,8 @@
 package types
 
 import (
+	"bytes"
+	"errors"
 	"fmt"
 	"strings"
 )
@@ -160,4 +162,139 @@ func pathToBytes(path []any) ([]byte, error) {
 	}
 
 	return out, nil
+}
+
+func (p *PathSet) ToJson(b *bytes.Buffer, _ int) (any, error) {
+	out := make([]any, 0)
+	l := 0
+
+	for {
+		flag, path, err := readPath(b)
+		if err != nil {
+			return nil, fmt.Errorf("reading next path: %v", err)
+		}
+		switch flag {
+		case endFlag:
+			out = append(out, path)
+			l++
+			if l > 6 {
+				return nil, errors.New("pathSet too large")
+			}
+			return out, nil
+		case anotherFlag:
+			out = append(out, path)
+			if l > 6 {
+				return nil, errors.New("pathSet too large")
+			}
+			l++
+		default:
+			return nil, fmt.Errorf("unknown end flag %v", flag)
+		}
+	}
+}
+
+func readPath(b *bytes.Buffer) (byte, any, error) {
+	out := make([]any, 0)
+	l := 0
+
+	for {
+		flag, step, err := readStep(b)
+		if err != nil {
+			return flag, nil, fmt.Errorf("reading next step: %v", err)
+		}
+
+		if flag == anotherFlag || flag == endFlag {
+			if l < 1 {
+				return flag, nil, errors.New("empty path")
+			}
+			return flag, out, nil
+		}
+
+		if l >= 6 {
+			return flag, nil, errors.New("path too long")
+		}
+
+		out = append(out, step)
+		l++
+	}
+}
+
+func readStep(b *bytes.Buffer) (byte, any, error) {
+	flag, err := b.ReadByte()
+	if err != nil {
+		return 0, nil, fmt.Errorf("reading flag: %v", err)
+	}
+
+	if flag == anotherFlag || flag == endFlag {
+		return flag, nil, nil
+	}
+
+	out := make(map[string]any)
+
+	switch flag {
+	case 0x01:
+		account, err := AccountID.ToJson(b, 0)
+		if err != nil {
+			return flag, nil, fmt.Errorf("reading account: %v", err)
+		}
+
+		out["account"] = account
+		return flag, out, nil
+
+	case 0x10:
+		currency, err := readCurrency(b)
+		if err != nil {
+			return flag, nil, fmt.Errorf("currency: %v", err)
+		}
+
+		out["currency"] = currency
+		return flag, out, nil
+
+	case 0x20:
+		issuer, err := AccountID.ToJson(b, 0)
+		if err != nil {
+			return flag, nil, fmt.Errorf("issuer: %v", err)
+		}
+
+		out["issuer"] = issuer
+		return flag, out, nil
+
+	case 0x30:
+		currency, err := readCurrency(b)
+		if err != nil {
+			return flag, nil, fmt.Errorf("currency before issuer: %v", err)
+		}
+
+		out["currency"] = currency
+
+		issuer, err := AccountID.ToJson(b, 0)
+		if err != nil {
+			return flag, nil, fmt.Errorf("issuer after currency: %v", err)
+		}
+
+		out["issuer"] = issuer
+
+		return flag, out, nil
+
+	default:
+		return flag, nil, fmt.Errorf("illegal path flag %x", flag)
+	}
+}
+
+func readCurrency(b *bytes.Buffer) (string, error) {
+	c := make([]byte, 20)
+	_, err := b.Read(c)
+	if err != nil {
+		return "", fmt.Errorf("reading bytes: %v", err)
+	}
+
+	if bytes.Equal(c, make([]byte, 20)) {
+		return "XRP", nil
+	}
+	currency, err := deserializeCurrency(c)
+	if err != nil {
+		return "", fmt.Errorf("deserializing currency code: %v", err)
+	}
+
+	return currency, nil
 }

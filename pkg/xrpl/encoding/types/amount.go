@@ -30,8 +30,9 @@ const (
 	maxSignificant        uint64 = 9999999999999999 // 10^16-1
 )
 
-const xrpBitMask uint8 = 0b10000000
+const notXRPBitMask uint8 = 0b10000000
 const signBitMask uint8 = 0b01000000
+const signedValueBitMask uint8 = 0b01111111
 const valueBitMask uint8 = 0b00111111
 
 const StandardCodeRegex = `[0-9A-Za-z?!@#$%^&*<>(){}\[\]|]`
@@ -166,7 +167,7 @@ func deserializeCurrency(c []byte) (string, error) {
 			}
 		}
 
-		for j := 15; j < 21; j++ {
+		for j := 15; j < 20; j++ {
 			if c[j] != 0 {
 				isIso = false
 			}
@@ -301,9 +302,9 @@ func deserializeTokenAmount(a []byte) (string, error) {
 	exponentNormalized := (number & exponentMask) >> 54
 	exponent := int64(exponentNormalized) - exponentNormalization
 
-	sign := ""
-
 	val := number & significantMask
+
+	sign := ""
 
 	if firstByte&signBitMask == 0 && val != 0 {
 		sign = "-"
@@ -325,12 +326,12 @@ func (a *amount) ToJson(b *bytes.Buffer, _ int) (any, error) {
 		return nil, fmt.Errorf("cannot read first byte: %v", err)
 	}
 
-	first := firstByte & xrpBitMask
+	first := firstByte & notXRPBitMask
 
 	switch first {
-	case xrpBitMask:
-		return xrpToJson(firstByte, b)
 	case 0:
+		return xrpToJson(firstByte, b)
+	case notXRPBitMask:
 		return tokenToJson(firstByte, b)
 	default:
 		return nil, fmt.Errorf("impossible, first bit neither 1 nor 0: %v", first)
@@ -339,7 +340,7 @@ func (a *amount) ToJson(b *bytes.Buffer, _ int) (any, error) {
 
 func xrpToJson(firstByte byte, b *bytes.Buffer) (string, error) {
 	v := make([]byte, 8)
-	v[0] = firstByte & valueBitMask // remove sign and "not XRP bit"
+	v[0] = firstByte & valueBitMask // remove "not XRP bit" and sign
 
 	_, err := b.Read(v[1:])
 	if err != nil {
@@ -353,6 +354,7 @@ func xrpToJson(firstByte byte, b *bytes.Buffer) (string, error) {
 		out = "-"
 	}
 	value := binary.BigEndian.Uint64(v)
+
 	out += strconv.FormatUint(value, 10)
 
 	return out, nil
@@ -363,7 +365,7 @@ func tokenToJson(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
 
 	// amount
 	a := make([]byte, 8)
-	a[0] = firstByte & valueBitMask // remove sign and "not XRP bit"
+	a[0] = firstByte & signedValueBitMask // remove "not XRP bit"
 
 	_, err := b.Read(a[1:])
 	if err != nil {
@@ -374,7 +376,7 @@ func tokenToJson(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
 	if err != nil {
 		return nil, fmt.Errorf("deserializing amount: %v", err)
 	}
-	out["amount"] = amount
+	out["value"] = amount
 
 	// currency
 	c := make([]byte, 20)

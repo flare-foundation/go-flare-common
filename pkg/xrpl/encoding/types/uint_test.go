@@ -1,6 +1,7 @@
 package types
 
 import (
+	"bytes"
 	"encoding/hex"
 	"fmt"
 	"reflect"
@@ -38,7 +39,7 @@ func TestToInt64Error(t *testing.T) {
 
 func TestUint(t *testing.T) {
 	tests := []struct {
-		t      Encoder
+		t      Coder
 		inputs []any
 		output string
 		err    bool
@@ -138,5 +139,23 @@ func TestUint(t *testing.T) {
 			}
 		}
 
+	}
+}
+
+func TestUint32(t *testing.T) {
+	inputs := []uint32{0, 1, 1752791}
+
+	for j, input := range inputs {
+		serialized, err := (&UInt32{}).ToBytes(input, false)
+		require.NoError(t, err, j)
+
+		b := bytes.NewBuffer(serialized)
+		deserialized, err := (&UInt32{}).ToJson(b, 0)
+		require.NoError(t, err, j)
+
+		deserializedU, ok := deserialized.(uint32)
+		require.True(t, ok, j)
+
+		require.Equal(t, input, deserializedU)
 	}
 }

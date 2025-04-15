@@ -9,7 +9,7 @@ import (
 
 func TestHashError(t *testing.T) {
 	tests := []struct {
-		t      Encoder
+		t      Coder
 		inputs []any
 	}{
 		{
@@ -45,7 +45,7 @@ func TestHashError(t *testing.T) {
 
 func TestHash(t *testing.T) {
 	tests := []struct {
-		t      Encoder
+		t      Coder
 		input  any
 		output string
 	}{

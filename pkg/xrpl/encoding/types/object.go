@@ -1,6 +1,7 @@
 package types
 
 import (
+	"bytes"
 	"fmt"
 )
 
@@ -24,4 +25,33 @@ func (o *STObject) ToBytes(value any, signing bool) ([]byte, error) {
 	bytes = append(bytes, objectEnd)
 
 	return bytes, nil
+}
+
+func (o *STObject) ToJson(b *bytes.Buffer, _ int) (any, error) {
+	out := make(map[string]any)
+
+	for {
+		nextByte, err := b.ReadByte()
+		if err != nil {
+			return nil, fmt.Errorf("reading next byte: %v", err)
+		}
+
+		if nextByte == objectEnd {
+			break
+		}
+
+		err = b.UnreadByte()
+		if err != nil {
+			return nil, fmt.Errorf("unreading next byte: %v", err)
+		}
+
+		name, value, err := decodeNext(b)
+		if err != nil {
+			return nil, fmt.Errorf("decoding next: %v", err)
+		}
+
+		out[name] = value
+	}
+
+	return out, nil
 }
