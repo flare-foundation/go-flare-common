@@ -21,7 +21,7 @@ func (x *XChainBridge) ToBytes(value any, _ bool) ([]byte, error) {
 
 	lockingChainIssue, ok := valueMap["LockingChainIssue"]
 	if !ok {
-		return nil, fmt.Errorf("XChainBridge %v, missing %s", value, "LockingChainDoor")
+		return nil, fmt.Errorf("XChainBridge %v, missing %s", value, "LockingChainIssue")
 	}
 
 	issuingChainDoor, err := extractString(valueMap, "IssuingChainDoor")
@@ -49,7 +49,7 @@ func (x *XChainBridge) ToBytes(value any, _ bool) ([]byte, error) {
 		return nil, fmt.Errorf("writing to buffer lockingChainDoorID, %v: %v", lockingChainDoorID, err)
 	}
 
-	lockingChain, err := (&Issue{}).ToBytes(lockingChainIssue, false)
+	lockingChain, err := Issue.ToBytes(lockingChainIssue, false)
 	if err != nil {
 		return nil, fmt.Errorf("encoding, %v: %v", value, err)
 	}
@@ -71,7 +71,7 @@ func (x *XChainBridge) ToBytes(value any, _ bool) ([]byte, error) {
 		return nil, fmt.Errorf("writing to buffer issuingChainDoorID, %v: %v", issuingChainDoorID, err)
 	}
 
-	issuingChain, err := (&Issue{}).ToBytes(issuingChainIssue, false)
+	issuingChain, err := Issue.ToBytes(issuingChainIssue, false)
 	if err != nil {
 		return nil, fmt.Errorf("encoding, %v: %v", value, err)
 	}
@@ -81,5 +81,42 @@ func (x *XChainBridge) ToBytes(value any, _ bool) ([]byte, error) {
 	}
 
 	return out.Bytes(), nil
+}
 
+func (x *XChainBridge) ToJson(b *bytes.Buffer, _ int) (any, error) {
+	out := make(map[string]any)
+
+	l, err := b.ReadByte()
+	if err != nil {
+		return nil, fmt.Errorf("reading length byte: %v", err)
+	}
+	if l != 20 {
+		return nil, fmt.Errorf("invalid length byte expected %x is %x", 20, l)
+	}
+
+	lockingChainDoor, err := AccountID.ToJson(b, 0)
+	if err != nil {
+		return nil, fmt.Errorf("reading LockingChainDoor: %v", err)
+	}
+	out["LockingChainDoor"] = lockingChainDoor
+
+	lockingChainIssue, err := Issue.ToJson(b, 0)
+	if err != nil {
+		return nil, fmt.Errorf("reading LockingChainIssue: %v", err)
+	}
+	out["LockingChainIssue"] = lockingChainIssue
+
+	issuingChainDoor, err := AccountID.ToJson(b, 0)
+	if err != nil {
+		return nil, fmt.Errorf("reading IssuingChainDoor: %v", err)
+	}
+	out["IssuingChainDoor"] = issuingChainDoor
+
+	issuingChainIssue, err := Issue.ToJson(b, 0)
+	if err != nil {
+		return nil, fmt.Errorf("reading IssuingChainIssue: %v", err)
+	}
+	out["IssuingChainIssue"] = issuingChainIssue
+
+	return out, nil
 }

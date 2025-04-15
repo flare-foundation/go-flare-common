@@ -79,6 +79,7 @@ func Address(id []byte) (string, error) {
 	return base58.XRPLCoder.Encode(augmented), nil
 }
 
+// ToJson reads next 20 bytes and converts them to xrpl address.
 func (a *accountID) ToJson(b *bytes.Buffer, _ int) (any, error) {
 	value := make([]byte, 20)
 

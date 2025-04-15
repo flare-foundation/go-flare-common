@@ -1,6 +1,7 @@
 package types
 
 import (
+	"bytes"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -186,8 +187,36 @@ func TestAmount(t *testing.T) {
 		require.NoError(t, err)
 
 		require.Equal(t, bytesOutput, serialized)
-
 	}
+}
+
+func TestAmountDeserializeSerialize(t *testing.T) {
+	tests := []struct{ input string }{{"94838D7EA4C6800000000000000000000000000055534400000000000000000000000000000000000000000000000001"}}
+
+	for j, test := range tests {
+		blob, err := hex.DecodeString(test.input)
+		require.NoError(t, err, j)
+		b := bytes.NewBuffer(blob)
+
+		deserialized, err := Amount.ToJson(b, 0)
+		require.NoError(t, err, j)
+
+		fmt.Printf("deserialized: %v\n", deserialized)
+	}
+}
+
+func TestAmountEncodeDecode(t *testing.T) {
+	amount := "15000000000"
+
+	value, err := Amount.ToBytes(amount, false)
+	require.NoError(t, err)
+
+	b := bytes.NewBuffer(value)
+
+	decoded, err := Amount.ToJson(b, 0)
+	require.NoError(t, err)
+
+	require.Equal(t, amount, decoded)
 }
 
 func TestAmountFail(t *testing.T) {
@@ -293,7 +322,7 @@ func TestNormalizeValue(t *testing.T) {
 	}
 }
 
-func TestDeserialize(t *testing.T) {
+func TestDeserializeValue(t *testing.T) {
 	inputsExact := []string{"0", "1", "-1", "0.1", "-0.1", "1e+95", "1e-81", "40915.87486543398"}
 	for _, input := range inputsExact {
 		s, err := serializeTokenValue(input)

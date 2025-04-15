@@ -87,7 +87,7 @@ func ReadID(b *bytes.Buffer) (IDPair, error) {
 			return IDPair{-1, NotPresent}, fmt.Errorf("cannot read field code byte %v", err)
 		}
 		if fCode < 16 {
-			return IDPair{-1, NotPresent}, fmt.Errorf("invalid encoding field code%v", []byte{byte1, fCode})
+			return IDPair{-1, NotPresent}, fmt.Errorf("invalid encoding field code %v", []byte{byte1, fCode})
 		}
 	}
 

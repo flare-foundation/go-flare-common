@@ -32,11 +32,12 @@ func (e *IllegalError) Error() string {
 	return fmt.Sprintf("Illegal type %v", e.xt)
 }
 
-type Encoder interface {
+type Coder interface {
 	ToBytes(value any, signing bool) ([]byte, error)
+	ToJson(b *bytes.Buffer, length int) (any, error)
 }
 
-func typeEncoder(xt defs.XType) (Encoder, error) {
+func typeCoder(xt defs.XType) (Coder, error) {
 	switch xt {
 	case defs.Hash160:
 		return Hash160, nil
@@ -79,7 +80,7 @@ func typeEncoder(xt defs.XType) (Encoder, error) {
 	case defs.Hash256:
 		return Hash256, nil
 	case defs.Issue:
-		return &Issue{}, nil
+		return Issue, nil
 	case defs.LedgerEntry:
 		return nil, &UnsupportedError{xt}
 	case defs.Number:
@@ -121,8 +122,8 @@ func lengthEncode(n int) ([]byte, error) {
 }
 
 // lengthDecode decodes length prefix.
-func lengthDecode(encoded *bytes.Buffer) (int, error) {
-	byte1, err := encoded.ReadByte()
+func lengthDecode(b *bytes.Buffer) (int, error) {
+	byte1, err := b.ReadByte()
 	if err != nil {
 		return -1, fmt.Errorf("cannot read first byte %v", err)
 	}
@@ -130,14 +131,14 @@ func lengthDecode(encoded *bytes.Buffer) (int, error) {
 	if byte1 < 193 {
 		return int(byte1), nil
 	} else if byte1 < 241 {
-		byte2, err := encoded.ReadByte()
+		byte2, err := b.ReadByte()
 		if err != nil {
 			return -1, fmt.Errorf("cannot read second byte %v", err)
 		}
 		return 193 + ((int(byte1) - 193) * 256) + int(byte2), nil
 	} else if byte1 < 255 {
 		bytes := make([]byte, 2)
-		n, err := encoded.Read(bytes)
+		n, err := b.Read(bytes)
 		if n != 2 || err != nil {
 			return -1, fmt.Errorf("cannot read second and third byte %v", err)
 		}
@@ -171,7 +172,7 @@ func encodeInner(name string, value any, signing bool) ([]byte, error) {
 		return []byte{}, nil
 	}
 
-	encoder, err := typeEncoder(field.Type)
+	encoder, err := typeCoder(field.Type)
 	if err != nil {
 		return nil, fmt.Errorf("no encoder: %v", err)
 	}
@@ -275,4 +276,58 @@ func keys[K comparable, V any](m map[K]V) []K {
 		keys = append(keys, k)
 	}
 	return keys
+}
+
+func decodeNext(b *bytes.Buffer) (string, any, error) {
+	idPair, err := defs.ReadID(b)
+	if err != nil {
+		return "", nil, fmt.Errorf("reading id: %v", err)
+	}
+
+	fName, ok := defs.IDToName[idPair]
+	if !ok {
+		return "", nil, fmt.Errorf("unknown pair. Field: %v, type: %v", idPair.F, idPair.T)
+	}
+
+	coder, err := typeCoder(idPair.T)
+	if err != nil {
+		return "", nil, fmt.Errorf("missing coder for %v: %v", idPair.T, err)
+	}
+
+	field, ok := defs.NameToField[fName]
+	if !ok {
+		return "", nil, fmt.Errorf("missing field for %v", fName)
+	}
+
+	length := 0
+	if field.IsVLEncoded {
+		length, err = lengthDecode(b)
+		if err != nil {
+			return "", nil, fmt.Errorf("reading length %v: %v", idPair.T, err)
+		}
+	}
+
+	value, err := coder.ToJson(b, length)
+	if err != nil {
+		return "", nil, fmt.Errorf("decoding %v: %v", fName, err)
+	}
+
+	return fName, value, nil
+}
+
+func Decode(blob []byte) (map[string]any, error) {
+	out := make(map[string]any)
+
+	b := bytes.NewBuffer(blob)
+
+	for b.Len() > 0 {
+		name, value, err := decodeNext(b)
+		if err != nil {
+			return nil, fmt.Errorf("decoding next: %v", err)
+		}
+
+		out[name] = value
+	}
+
+	return out, nil
 }

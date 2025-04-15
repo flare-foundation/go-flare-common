@@ -129,7 +129,7 @@ func (a *UInt32) ToJson(b *bytes.Buffer, _ int) (any, error) {
 
 	_, err := b.Read(v)
 	if err != nil {
-		return nil, fmt.Errorf("cannot read uint16 from buffer: %v", err)
+		return nil, fmt.Errorf("cannot read uint32 from buffer: %v", err)
 	}
 
 	u := binary.BigEndian.Uint32(v)

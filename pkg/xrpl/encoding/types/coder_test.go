@@ -151,10 +151,18 @@ func TestEncodeNotSigning(t *testing.T) {
 		err = json.Unmarshal([]byte(test.json), &parsedJSON)
 		require.NoError(t, err, test.name)
 
-		bytes, err := Encode(parsedJSON, false)
+		encoded, err := Encode(parsedJSON, false)
 		require.NoError(t, err, test.name)
 
-		require.Equal(t, blob, bytes, test.name)
+		require.Equal(t, blob, encoded, test.name)
+
+		decoded, err := Decode(blob)
+		require.NoError(t, err, test.name)
+
+		encodedBack, err := Encode(decoded, false)
+		require.NoError(t, err, test.name)
+
+		require.Equal(t, blob, encodedBack, test.name)
 	}
 }
 

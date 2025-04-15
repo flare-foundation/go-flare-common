@@ -41,7 +41,7 @@ func (a *hashInternal) ToJson(b *bytes.Buffer, length int) (any, error) {
 
 	_, err := b.Read(value)
 	if err != nil {
-		return nil, fmt.Errorf("cannot read account id from buffer: %v", err)
+		return nil, fmt.Errorf("cannot read hash from buffer: %v", err)
 	}
 
 	return hex.EncodeToString(value), nil

@@ -33,7 +33,6 @@ func TestArrayFail(t *testing.T) {
 	}
 
 	for j := range tests {
-
 		var value any
 
 		err := json.Unmarshal([]byte(tests[j]), &value)
@@ -42,5 +41,4 @@ func TestArrayFail(t *testing.T) {
 		_, err = STArray.ToBytes(value, false)
 		require.Error(t, err)
 	}
-
 }

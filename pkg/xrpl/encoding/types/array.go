@@ -64,3 +64,42 @@ func (a *stArray) ToBytes(value any, signing bool) ([]byte, error) {
 
 	return outBuff.Bytes(), nil
 }
+
+func (a *stArray) ToJson(b *bytes.Buffer, _ int) (any, error) {
+	out := make([]any, 0)
+
+	nameCheck := "" // to check that all elements have the same wrapper
+
+	for {
+		nextByte, err := b.ReadByte()
+		if err != nil {
+			return nil, fmt.Errorf("reading next byte: %v", err)
+		}
+		if nextByte == arrayEnd {
+			break
+		}
+
+		err = b.UnreadByte()
+		if err != nil {
+			return nil, fmt.Errorf("unreading next byte: %v", err)
+		}
+
+		name, value, err := decodeNext(b)
+		if err != nil {
+			return nil, fmt.Errorf("decoding next next: %v", err)
+		}
+
+		if nameCheck == "" {
+			nameCheck = name
+		} else if nameCheck != name {
+			return nil, fmt.Errorf("different wrappers in same array, %s, %s", nameCheck, name)
+		}
+
+		wrapped := make(map[string]any)
+
+		wrapped[name] = value
+		out = append(out, wrapped)
+	}
+
+	return out, nil
+}

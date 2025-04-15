@@ -1,14 +1,18 @@
 package types
 
-import "fmt"
+import (
+	"bytes"
+	"fmt"
+)
 
 // add MPT issue
 
-type Issue struct{}
+var Issue = &issue{}
 
-func (h *Issue) ToBytes(value any, _ bool) ([]byte, error) {
+type issue struct{}
+
+func (i *issue) ToBytes(value any, _ bool) ([]byte, error) {
 	valueMap, ok := value.(map[string]any)
-
 	if !ok {
 		return nil, fmt.Errorf("invalid issue %v", value)
 	}
@@ -52,6 +56,44 @@ func (h *Issue) ToBytes(value any, _ bool) ([]byte, error) {
 	}
 
 	out := append(code, issuerBytes...)
+
+	return out, nil
+}
+
+func (i *issue) ToJson(b *bytes.Buffer, _ int) (any, error) {
+	out := make(map[string]any)
+
+	cCode := make([]byte, 20)
+	_, err := b.Read(cCode)
+	if err != nil {
+		return nil, fmt.Errorf("reading currency code: %v", err)
+	}
+
+	if bytes.Equal(cCode, make([]byte, 20)) {
+		out["currency"] = "XRP"
+
+		return out, nil
+	}
+
+	c, err := deserializeCurrency(cCode)
+	if err != nil {
+		return nil, fmt.Errorf("deserializing currency code: %v", err)
+	}
+
+	out["currency"] = c
+
+	issuer := make([]byte, 20)
+	_, err = b.Read(issuer)
+	if err != nil {
+		return nil, fmt.Errorf("reading issuer: %v", err)
+	}
+
+	a, err := Address(issuer)
+	if err != nil {
+		return nil, fmt.Errorf("issuer to address: %v", err)
+	}
+
+	out["issuer"] = a
 
 	return out, nil
 }
