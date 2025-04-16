@@ -9,13 +9,15 @@ import (
 type OPCommand string
 
 const (
-	Pay     OPCommand = "PAY"
-	Reissue OPCommand = "REISSUE"
+	Pay              OPCommand = "PAY"
+	Reissue          OPCommand = "REISSUE"
+	SetPaymentLimits OPCommand = "SET_PAYMENT_LIMITS"
 )
 
 var opCommands = []OPCommand{
 	Pay,
 	Reissue,
+	SetPaymentLimits,
 }
 
 // i-th method correspond to a method in TeePaymentStruct interface whose
@@ -23,6 +25,7 @@ var opCommands = []OPCommand{
 var methods = []string{
 	"paymentInstructionMessageStruct",
 	"paymentInstructionMessageStruct",
+	"setPaymentLimitsStruct",
 }
 
 var MessageArguments map[OPCommand]abi.Argument

@@ -130,5 +130,52 @@
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes32",
+              "name": "walletId",
+              "type": "bytes32"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "teeId",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "keyId",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct TeeIdKeyIdPair[]",
+              "name": "teeIdKeyIdPairs",
+              "type": "tuple[]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "transactionLimit",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "dailyLimit",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct ITeePayments.SetPaymentLimits",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "name": "setPaymentLimitsStruct",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
     }
   ]

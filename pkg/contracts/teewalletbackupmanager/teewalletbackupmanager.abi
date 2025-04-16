@@ -12,9 +12,9 @@
           "type": "bytes32"
         },
         {
-          "internalType": "uint64",
+          "internalType": "uint256",
           "name": "_keyId",
-          "type": "uint64"
+          "type": "uint256"
         },
         {
           "internalType": "uint24",
@@ -40,9 +40,9 @@
           "type": "bytes32"
         },
         {
-          "internalType": "uint64",
+          "internalType": "uint256",
           "name": "_keyId",
-          "type": "uint64"
+          "type": "uint256"
         },
         {
           "internalType": "uint24",
@@ -68,9 +68,9 @@
           "type": "bytes32"
         },
         {
-          "internalType": "uint64",
+          "internalType": "uint256",
           "name": "_keyId",
-          "type": "uint64"
+          "type": "uint256"
         },
         {
           "internalType": "uint256",
@@ -96,9 +96,9 @@
           "type": "bytes32"
         },
         {
-          "internalType": "uint64",
+          "internalType": "uint256",
           "name": "_keyId",
-          "type": "uint64"
+          "type": "uint256"
         },
         {
           "internalType": "uint256",
@@ -129,9 +129,9 @@
           "type": "bytes32"
         },
         {
-          "internalType": "uint64",
+          "internalType": "uint256",
           "name": "_keyId",
-          "type": "uint64"
+          "type": "uint256"
         },
         {
           "internalType": "uint256",
