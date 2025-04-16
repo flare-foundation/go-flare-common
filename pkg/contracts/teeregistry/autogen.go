@@ -82,7 +82,7 @@ type Signature struct {
 
 // TeeRegistryMetaData contains all meta data concerning the TeeRegistry contract.
 var TeeRegistryMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"endTs\",\"type\":\"uint256\"}],\"name\":\"AvailabilityCheckValidityExtended\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"_backupTeeIds\",\"type\":\"address[]\"}],\"name\":\"arePlatformsCompatible\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"relayMessage\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"teeMachine\",\"type\":\"tuple\"},{\"internalType\":\"uint24\",\"name\":\"rewardEpochId\",\"type\":\"uint24\"}],\"internalType\":\"structITeeAvailabilityCheck.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumITeeAvailabilityCheck.AvailabilityCheckStatus\",\"name\":\"status\",\"type\":\"uint8\"}],\"internalType\":\"structITeeAvailabilityCheck.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Response\",\"name\":\"data\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Proof\",\"name\":\"_proof\",\"type\":\"tuple\"}],\"name\":\"confirmAvailability\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"}],\"name\":\"confirmOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newTeeId\",\"type\":\"address\"},{\"components\":[{\"internalType\":\"bytes\",\"name\":\"relayMessage\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"teeMachine\",\"type\":\"tuple\"},{\"internalType\":\"uint24\",\"name\":\"rewardEpochId\",\"type\":\"uint24\"}],\"internalType\":\"structITeeAvailabilityCheck.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumITeeAvailabilityCheck.AvailabilityCheckStatus\",\"name\":\"status\",\"type\":\"uint8\"}],\"internalType\":\"structITeeAvailabilityCheck.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Response\",\"name\":\"data\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Proof\",\"name\":\"_proof\",\"type\":\"tuple\"}],\"name\":\"confirmReplicate\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getActiveTeeIds\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"}],\"name\":\"getCodeHashVersion\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_count\",\"type\":\"uint256\"}],\"name\":\"getRandomTeeIds\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"}],\"name\":\"getTeeMachine\",\"outputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"}],\"internalType\":\"structITeeRegistry.TeeMachine\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"}],\"name\":\"getTeeMachineStatus\",\"outputs\":[{\"internalType\":\"enumITeeRegistry.TeeStatus\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"}],\"name\":\"getTeeMachineVersion\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"}],\"name\":\"getTeeMachineWithAttestationData\",\"outputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_version\",\"type\":\"uint256\"}],\"name\":\"getVersionInfo\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32[]\",\"name\":\"_platforms\",\"type\":\"bytes32[]\"},{\"internalType\":\"bytes32[]\",\"name\":\"_opTypes\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_opType\",\"type\":\"bytes32\"}],\"name\":\"isOpTypeSupported\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"}],\"name\":\"pause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"relayMessage\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"teeMachine\",\"type\":\"tuple\"},{\"internalType\":\"uint24\",\"name\":\"rewardEpochId\",\"type\":\"uint24\"}],\"internalType\":\"structITeeAvailabilityCheck.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumITeeAvailabilityCheck.AvailabilityCheckStatus\",\"name\":\"status\",\"type\":\"uint8\"}],\"internalType\":\"structITeeAvailabilityCheck.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Response\",\"name\":\"data\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Proof\",\"name\":\"_proof\",\"type\":\"tuple\"}],\"name\":\"pauseWithProof\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_newOwner\",\"type\":\"address\"}],\"name\":\"proposeNewOwner\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_platform\",\"type\":\"bytes32\"}],\"name\":\"register\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_oldTeeId\",\"type\":\"address\"},{\"components\":[{\"internalType\":\"bytes\",\"name\":\"relayMessage\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"teeMachine\",\"type\":\"tuple\"},{\"internalType\":\"uint24\",\"name\":\"rewardEpochId\",\"type\":\"uint24\"}],\"internalType\":\"structITeeAvailabilityCheck.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumITeeAvailabilityCheck.AvailabilityCheckStatus\",\"name\":\"status\",\"type\":\"uint8\"}],\"internalType\":\"structITeeAvailabilityCheck.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Response\",\"name\":\"data\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Proof\",\"name\":\"_proof\",\"type\":\"tuple\"}],\"name\":\"replicateFrom\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_testOnTeeId\",\"type\":\"address\"}],\"name\":\"requestAvailabilityCheckAttestation\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"}],\"name\":\"toPauseForUpgrade\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"relayMessage\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"teeMachine\",\"type\":\"tuple\"},{\"internalType\":\"uint24\",\"name\":\"rewardEpochId\",\"type\":\"uint24\"}],\"internalType\":\"structITeeAvailabilityCheck.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumITeeAvailabilityCheck.AvailabilityCheckStatus\",\"name\":\"status\",\"type\":\"uint8\"}],\"internalType\":\"structITeeAvailabilityCheck.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Response\",\"name\":\"data\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Proof\",\"name\":\"_proof\",\"type\":\"tuple\"}],\"name\":\"toProduction\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"endTs\",\"type\":\"uint256\"}],\"name\":\"AvailabilityCheckValidityExtended\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"}],\"name\":\"TeeMachinePaused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"}],\"name\":\"TeeMachinePausedForUpgrade\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"}],\"name\":\"TeeMachinePutIntoProduction\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"name\":\"TeeMachineRegistered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"oldTeeId\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newTeeId\",\"type\":\"address\"}],\"name\":\"TeeMachineReplicationConfirmed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"oldTeeId\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newTeeId\",\"type\":\"address\"}],\"name\":\"TeeMachineReplicationTriggered\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"_backupTeeIds\",\"type\":\"address[]\"}],\"name\":\"areTeeMachinesCompatible\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"relayMessage\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"teeMachine\",\"type\":\"tuple\"},{\"internalType\":\"uint24\",\"name\":\"rewardEpochId\",\"type\":\"uint24\"}],\"internalType\":\"structITeeAvailabilityCheck.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumITeeAvailabilityCheck.AvailabilityCheckStatus\",\"name\":\"status\",\"type\":\"uint8\"}],\"internalType\":\"structITeeAvailabilityCheck.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Response\",\"name\":\"data\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Proof\",\"name\":\"_proof\",\"type\":\"tuple\"}],\"name\":\"confirmAvailability\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"}],\"name\":\"confirmOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newTeeId\",\"type\":\"address\"},{\"components\":[{\"internalType\":\"bytes\",\"name\":\"relayMessage\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"teeMachine\",\"type\":\"tuple\"},{\"internalType\":\"uint24\",\"name\":\"rewardEpochId\",\"type\":\"uint24\"}],\"internalType\":\"structITeeAvailabilityCheck.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumITeeAvailabilityCheck.AvailabilityCheckStatus\",\"name\":\"status\",\"type\":\"uint8\"}],\"internalType\":\"structITeeAvailabilityCheck.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Response\",\"name\":\"data\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Proof\",\"name\":\"_proof\",\"type\":\"tuple\"}],\"name\":\"confirmReplicate\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getActiveTeeIds\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_count\",\"type\":\"uint256\"}],\"name\":\"getRandomTeeIds\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"}],\"name\":\"getTeeMachine\",\"outputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"}],\"internalType\":\"structITeeRegistry.TeeMachine\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"}],\"name\":\"getTeeMachineStatus\",\"outputs\":[{\"internalType\":\"enumITeeRegistry.TeeStatus\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"}],\"name\":\"getTeeMachineWithAttestationData\",\"outputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"}],\"name\":\"pause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"relayMessage\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"teeMachine\",\"type\":\"tuple\"},{\"internalType\":\"uint24\",\"name\":\"rewardEpochId\",\"type\":\"uint24\"}],\"internalType\":\"structITeeAvailabilityCheck.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumITeeAvailabilityCheck.AvailabilityCheckStatus\",\"name\":\"status\",\"type\":\"uint8\"}],\"internalType\":\"structITeeAvailabilityCheck.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Response\",\"name\":\"data\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Proof\",\"name\":\"_proof\",\"type\":\"tuple\"}],\"name\":\"pauseWithProof\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_newOwner\",\"type\":\"address\"}],\"name\":\"proposeNewOwner\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_platform\",\"type\":\"bytes32\"}],\"name\":\"register\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_oldTeeId\",\"type\":\"address\"},{\"components\":[{\"internalType\":\"bytes\",\"name\":\"relayMessage\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"teeMachine\",\"type\":\"tuple\"},{\"internalType\":\"uint24\",\"name\":\"rewardEpochId\",\"type\":\"uint24\"}],\"internalType\":\"structITeeAvailabilityCheck.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumITeeAvailabilityCheck.AvailabilityCheckStatus\",\"name\":\"status\",\"type\":\"uint8\"}],\"internalType\":\"structITeeAvailabilityCheck.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Response\",\"name\":\"data\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Proof\",\"name\":\"_proof\",\"type\":\"tuple\"},{\"internalType\":\"uint256\",\"name\":\"_teeUpgradeId\",\"type\":\"uint256\"}],\"name\":\"replicateFrom\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_testOnTeeId\",\"type\":\"address\"}],\"name\":\"requestAvailabilityCheckAttestation\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"}],\"name\":\"toPauseForUpgrade\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"relayMessage\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"teeMachine\",\"type\":\"tuple\"},{\"internalType\":\"uint24\",\"name\":\"rewardEpochId\",\"type\":\"uint24\"}],\"internalType\":\"structITeeAvailabilityCheck.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumITeeAvailabilityCheck.AvailabilityCheckStatus\",\"name\":\"status\",\"type\":\"uint8\"}],\"internalType\":\"structITeeAvailabilityCheck.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Response\",\"name\":\"data\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Proof\",\"name\":\"_proof\",\"type\":\"tuple\"}],\"name\":\"toProduction\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // TeeRegistryABI is the input ABI used to generate the binding from.
@@ -231,12 +231,12 @@ func (_TeeRegistry *TeeRegistryTransactorRaw) Transact(opts *bind.TransactOpts, 
 	return _TeeRegistry.Contract.contract.Transact(opts, method, params...)
 }
 
-// ArePlatformsCompatible is a free data retrieval call binding the contract method 0x2bcabed9.
+// AreTeeMachinesCompatible is a free data retrieval call binding the contract method 0x94f2ea08.
 //
-// Solidity: function arePlatformsCompatible(address _teeId, address[] _backupTeeIds) view returns(bool)
-func (_TeeRegistry *TeeRegistryCaller) ArePlatformsCompatible(opts *bind.CallOpts, _teeId common.Address, _backupTeeIds []common.Address) (bool, error) {
+// Solidity: function areTeeMachinesCompatible(address _teeId, address[] _backupTeeIds) view returns(bool)
+func (_TeeRegistry *TeeRegistryCaller) AreTeeMachinesCompatible(opts *bind.CallOpts, _teeId common.Address, _backupTeeIds []common.Address) (bool, error) {
 	var out []interface{}
-	err := _TeeRegistry.contract.Call(opts, &out, "arePlatformsCompatible", _teeId, _backupTeeIds)
+	err := _TeeRegistry.contract.Call(opts, &out, "areTeeMachinesCompatible", _teeId, _backupTeeIds)
 
 	if err != nil {
 		return *new(bool), err
@@ -248,18 +248,18 @@ func (_TeeRegistry *TeeRegistryCaller) ArePlatformsCompatible(opts *bind.CallOpt
 
 }
 
-// ArePlatformsCompatible is a free data retrieval call binding the contract method 0x2bcabed9.
+// AreTeeMachinesCompatible is a free data retrieval call binding the contract method 0x94f2ea08.
 //
-// Solidity: function arePlatformsCompatible(address _teeId, address[] _backupTeeIds) view returns(bool)
-func (_TeeRegistry *TeeRegistrySession) ArePlatformsCompatible(_teeId common.Address, _backupTeeIds []common.Address) (bool, error) {
-	return _TeeRegistry.Contract.ArePlatformsCompatible(&_TeeRegistry.CallOpts, _teeId, _backupTeeIds)
+// Solidity: function areTeeMachinesCompatible(address _teeId, address[] _backupTeeIds) view returns(bool)
+func (_TeeRegistry *TeeRegistrySession) AreTeeMachinesCompatible(_teeId common.Address, _backupTeeIds []common.Address) (bool, error) {
+	return _TeeRegistry.Contract.AreTeeMachinesCompatible(&_TeeRegistry.CallOpts, _teeId, _backupTeeIds)
 }
 
-// ArePlatformsCompatible is a free data retrieval call binding the contract method 0x2bcabed9.
+// AreTeeMachinesCompatible is a free data retrieval call binding the contract method 0x94f2ea08.
 //
-// Solidity: function arePlatformsCompatible(address _teeId, address[] _backupTeeIds) view returns(bool)
-func (_TeeRegistry *TeeRegistryCallerSession) ArePlatformsCompatible(_teeId common.Address, _backupTeeIds []common.Address) (bool, error) {
-	return _TeeRegistry.Contract.ArePlatformsCompatible(&_TeeRegistry.CallOpts, _teeId, _backupTeeIds)
+// Solidity: function areTeeMachinesCompatible(address _teeId, address[] _backupTeeIds) view returns(bool)
+func (_TeeRegistry *TeeRegistryCallerSession) AreTeeMachinesCompatible(_teeId common.Address, _backupTeeIds []common.Address) (bool, error) {
+	return _TeeRegistry.Contract.AreTeeMachinesCompatible(&_TeeRegistry.CallOpts, _teeId, _backupTeeIds)
 }
 
 // GetActiveTeeIds is a free data retrieval call binding the contract method 0x5c434d4f.
@@ -291,37 +291,6 @@ func (_TeeRegistry *TeeRegistrySession) GetActiveTeeIds() ([]common.Address, err
 // Solidity: function getActiveTeeIds() view returns(address[])
 func (_TeeRegistry *TeeRegistryCallerSession) GetActiveTeeIds() ([]common.Address, error) {
 	return _TeeRegistry.Contract.GetActiveTeeIds(&_TeeRegistry.CallOpts)
-}
-
-// GetCodeHashVersion is a free data retrieval call binding the contract method 0x0cca1d21.
-//
-// Solidity: function getCodeHashVersion(bytes32 _codeHash) view returns(uint256)
-func (_TeeRegistry *TeeRegistryCaller) GetCodeHashVersion(opts *bind.CallOpts, _codeHash [32]byte) (*big.Int, error) {
-	var out []interface{}
-	err := _TeeRegistry.contract.Call(opts, &out, "getCodeHashVersion", _codeHash)
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// GetCodeHashVersion is a free data retrieval call binding the contract method 0x0cca1d21.
-//
-// Solidity: function getCodeHashVersion(bytes32 _codeHash) view returns(uint256)
-func (_TeeRegistry *TeeRegistrySession) GetCodeHashVersion(_codeHash [32]byte) (*big.Int, error) {
-	return _TeeRegistry.Contract.GetCodeHashVersion(&_TeeRegistry.CallOpts, _codeHash)
-}
-
-// GetCodeHashVersion is a free data retrieval call binding the contract method 0x0cca1d21.
-//
-// Solidity: function getCodeHashVersion(bytes32 _codeHash) view returns(uint256)
-func (_TeeRegistry *TeeRegistryCallerSession) GetCodeHashVersion(_codeHash [32]byte) (*big.Int, error) {
-	return _TeeRegistry.Contract.GetCodeHashVersion(&_TeeRegistry.CallOpts, _codeHash)
 }
 
 // GetRandomTeeIds is a free data retrieval call binding the contract method 0xb4db023e.
@@ -417,37 +386,6 @@ func (_TeeRegistry *TeeRegistryCallerSession) GetTeeMachineStatus(_teeId common.
 	return _TeeRegistry.Contract.GetTeeMachineStatus(&_TeeRegistry.CallOpts, _teeId)
 }
 
-// GetTeeMachineVersion is a free data retrieval call binding the contract method 0x6a1fbb80.
-//
-// Solidity: function getTeeMachineVersion(address _teeId) view returns(uint256)
-func (_TeeRegistry *TeeRegistryCaller) GetTeeMachineVersion(opts *bind.CallOpts, _teeId common.Address) (*big.Int, error) {
-	var out []interface{}
-	err := _TeeRegistry.contract.Call(opts, &out, "getTeeMachineVersion", _teeId)
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// GetTeeMachineVersion is a free data retrieval call binding the contract method 0x6a1fbb80.
-//
-// Solidity: function getTeeMachineVersion(address _teeId) view returns(uint256)
-func (_TeeRegistry *TeeRegistrySession) GetTeeMachineVersion(_teeId common.Address) (*big.Int, error) {
-	return _TeeRegistry.Contract.GetTeeMachineVersion(&_TeeRegistry.CallOpts, _teeId)
-}
-
-// GetTeeMachineVersion is a free data retrieval call binding the contract method 0x6a1fbb80.
-//
-// Solidity: function getTeeMachineVersion(address _teeId) view returns(uint256)
-func (_TeeRegistry *TeeRegistryCallerSession) GetTeeMachineVersion(_teeId common.Address) (*big.Int, error) {
-	return _TeeRegistry.Contract.GetTeeMachineVersion(&_TeeRegistry.CallOpts, _teeId)
-}
-
 // GetTeeMachineWithAttestationData is a free data retrieval call binding the contract method 0x883e6c9a.
 //
 // Solidity: function getTeeMachineWithAttestationData(address _teeId) view returns((address,address,string,bytes32,bytes32))
@@ -477,87 +415,6 @@ func (_TeeRegistry *TeeRegistrySession) GetTeeMachineWithAttestationData(_teeId 
 // Solidity: function getTeeMachineWithAttestationData(address _teeId) view returns((address,address,string,bytes32,bytes32))
 func (_TeeRegistry *TeeRegistryCallerSession) GetTeeMachineWithAttestationData(_teeId common.Address) (ITeeRegistryTeeMachineWithAttestationData, error) {
 	return _TeeRegistry.Contract.GetTeeMachineWithAttestationData(&_TeeRegistry.CallOpts, _teeId)
-}
-
-// GetVersionInfo is a free data retrieval call binding the contract method 0xcb4b9e2c.
-//
-// Solidity: function getVersionInfo(uint256 _version) view returns(bytes32 _codeHash, bytes32[] _platforms, bytes32[] _opTypes)
-func (_TeeRegistry *TeeRegistryCaller) GetVersionInfo(opts *bind.CallOpts, _version *big.Int) (struct {
-	CodeHash  [32]byte
-	Platforms [][32]byte
-	OpTypes   [][32]byte
-}, error) {
-	var out []interface{}
-	err := _TeeRegistry.contract.Call(opts, &out, "getVersionInfo", _version)
-
-	outstruct := new(struct {
-		CodeHash  [32]byte
-		Platforms [][32]byte
-		OpTypes   [][32]byte
-	})
-	if err != nil {
-		return *outstruct, err
-	}
-
-	outstruct.CodeHash = *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
-	outstruct.Platforms = *abi.ConvertType(out[1], new([][32]byte)).(*[][32]byte)
-	outstruct.OpTypes = *abi.ConvertType(out[2], new([][32]byte)).(*[][32]byte)
-
-	return *outstruct, err
-
-}
-
-// GetVersionInfo is a free data retrieval call binding the contract method 0xcb4b9e2c.
-//
-// Solidity: function getVersionInfo(uint256 _version) view returns(bytes32 _codeHash, bytes32[] _platforms, bytes32[] _opTypes)
-func (_TeeRegistry *TeeRegistrySession) GetVersionInfo(_version *big.Int) (struct {
-	CodeHash  [32]byte
-	Platforms [][32]byte
-	OpTypes   [][32]byte
-}, error) {
-	return _TeeRegistry.Contract.GetVersionInfo(&_TeeRegistry.CallOpts, _version)
-}
-
-// GetVersionInfo is a free data retrieval call binding the contract method 0xcb4b9e2c.
-//
-// Solidity: function getVersionInfo(uint256 _version) view returns(bytes32 _codeHash, bytes32[] _platforms, bytes32[] _opTypes)
-func (_TeeRegistry *TeeRegistryCallerSession) GetVersionInfo(_version *big.Int) (struct {
-	CodeHash  [32]byte
-	Platforms [][32]byte
-	OpTypes   [][32]byte
-}, error) {
-	return _TeeRegistry.Contract.GetVersionInfo(&_TeeRegistry.CallOpts, _version)
-}
-
-// IsOpTypeSupported is a free data retrieval call binding the contract method 0xf132d9c8.
-//
-// Solidity: function isOpTypeSupported(address _teeId, bytes32 _opType) view returns(bool)
-func (_TeeRegistry *TeeRegistryCaller) IsOpTypeSupported(opts *bind.CallOpts, _teeId common.Address, _opType [32]byte) (bool, error) {
-	var out []interface{}
-	err := _TeeRegistry.contract.Call(opts, &out, "isOpTypeSupported", _teeId, _opType)
-
-	if err != nil {
-		return *new(bool), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
-
-	return out0, err
-
-}
-
-// IsOpTypeSupported is a free data retrieval call binding the contract method 0xf132d9c8.
-//
-// Solidity: function isOpTypeSupported(address _teeId, bytes32 _opType) view returns(bool)
-func (_TeeRegistry *TeeRegistrySession) IsOpTypeSupported(_teeId common.Address, _opType [32]byte) (bool, error) {
-	return _TeeRegistry.Contract.IsOpTypeSupported(&_TeeRegistry.CallOpts, _teeId, _opType)
-}
-
-// IsOpTypeSupported is a free data retrieval call binding the contract method 0xf132d9c8.
-//
-// Solidity: function isOpTypeSupported(address _teeId, bytes32 _opType) view returns(bool)
-func (_TeeRegistry *TeeRegistryCallerSession) IsOpTypeSupported(_teeId common.Address, _opType [32]byte) (bool, error) {
-	return _TeeRegistry.Contract.IsOpTypeSupported(&_TeeRegistry.CallOpts, _teeId, _opType)
 }
 
 // ConfirmAvailability is a paid mutator transaction binding the contract method 0xe5456585.
@@ -707,25 +564,25 @@ func (_TeeRegistry *TeeRegistryTransactorSession) Register(_teeId common.Address
 	return _TeeRegistry.Contract.Register(&_TeeRegistry.TransactOpts, _teeId, _url, _codeHash, _platform)
 }
 
-// ReplicateFrom is a paid mutator transaction binding the contract method 0xfab5e606.
+// ReplicateFrom is a paid mutator transaction binding the contract method 0xf2f3a963.
 //
-// Solidity: function replicateFrom(address _oldTeeId, (bytes,(uint8,bytes32,bytes32)[],(bytes32,bytes32,uint16,uint64,((address,address,string,bytes32,bytes32),uint24),(uint8))) _proof) payable returns()
-func (_TeeRegistry *TeeRegistryTransactor) ReplicateFrom(opts *bind.TransactOpts, _oldTeeId common.Address, _proof ITeeAvailabilityCheckProof) (*types.Transaction, error) {
-	return _TeeRegistry.contract.Transact(opts, "replicateFrom", _oldTeeId, _proof)
+// Solidity: function replicateFrom(address _oldTeeId, (bytes,(uint8,bytes32,bytes32)[],(bytes32,bytes32,uint16,uint64,((address,address,string,bytes32,bytes32),uint24),(uint8))) _proof, uint256 _teeUpgradeId) payable returns()
+func (_TeeRegistry *TeeRegistryTransactor) ReplicateFrom(opts *bind.TransactOpts, _oldTeeId common.Address, _proof ITeeAvailabilityCheckProof, _teeUpgradeId *big.Int) (*types.Transaction, error) {
+	return _TeeRegistry.contract.Transact(opts, "replicateFrom", _oldTeeId, _proof, _teeUpgradeId)
 }
 
-// ReplicateFrom is a paid mutator transaction binding the contract method 0xfab5e606.
+// ReplicateFrom is a paid mutator transaction binding the contract method 0xf2f3a963.
 //
-// Solidity: function replicateFrom(address _oldTeeId, (bytes,(uint8,bytes32,bytes32)[],(bytes32,bytes32,uint16,uint64,((address,address,string,bytes32,bytes32),uint24),(uint8))) _proof) payable returns()
-func (_TeeRegistry *TeeRegistrySession) ReplicateFrom(_oldTeeId common.Address, _proof ITeeAvailabilityCheckProof) (*types.Transaction, error) {
-	return _TeeRegistry.Contract.ReplicateFrom(&_TeeRegistry.TransactOpts, _oldTeeId, _proof)
+// Solidity: function replicateFrom(address _oldTeeId, (bytes,(uint8,bytes32,bytes32)[],(bytes32,bytes32,uint16,uint64,((address,address,string,bytes32,bytes32),uint24),(uint8))) _proof, uint256 _teeUpgradeId) payable returns()
+func (_TeeRegistry *TeeRegistrySession) ReplicateFrom(_oldTeeId common.Address, _proof ITeeAvailabilityCheckProof, _teeUpgradeId *big.Int) (*types.Transaction, error) {
+	return _TeeRegistry.Contract.ReplicateFrom(&_TeeRegistry.TransactOpts, _oldTeeId, _proof, _teeUpgradeId)
 }
 
-// ReplicateFrom is a paid mutator transaction binding the contract method 0xfab5e606.
+// ReplicateFrom is a paid mutator transaction binding the contract method 0xf2f3a963.
 //
-// Solidity: function replicateFrom(address _oldTeeId, (bytes,(uint8,bytes32,bytes32)[],(bytes32,bytes32,uint16,uint64,((address,address,string,bytes32,bytes32),uint24),(uint8))) _proof) payable returns()
-func (_TeeRegistry *TeeRegistryTransactorSession) ReplicateFrom(_oldTeeId common.Address, _proof ITeeAvailabilityCheckProof) (*types.Transaction, error) {
-	return _TeeRegistry.Contract.ReplicateFrom(&_TeeRegistry.TransactOpts, _oldTeeId, _proof)
+// Solidity: function replicateFrom(address _oldTeeId, (bytes,(uint8,bytes32,bytes32)[],(bytes32,bytes32,uint16,uint64,((address,address,string,bytes32,bytes32),uint24),(uint8))) _proof, uint256 _teeUpgradeId) payable returns()
+func (_TeeRegistry *TeeRegistryTransactorSession) ReplicateFrom(_oldTeeId common.Address, _proof ITeeAvailabilityCheckProof, _teeUpgradeId *big.Int) (*types.Transaction, error) {
+	return _TeeRegistry.Contract.ReplicateFrom(&_TeeRegistry.TransactOpts, _oldTeeId, _proof, _teeUpgradeId)
 }
 
 // RequestAvailabilityCheckAttestation is a paid mutator transaction binding the contract method 0x0c336e35.
@@ -930,6 +787,900 @@ func (_TeeRegistry *TeeRegistryFilterer) WatchAvailabilityCheckValidityExtended(
 func (_TeeRegistry *TeeRegistryFilterer) ParseAvailabilityCheckValidityExtended(log types.Log) (*TeeRegistryAvailabilityCheckValidityExtended, error) {
 	event := new(TeeRegistryAvailabilityCheckValidityExtended)
 	if err := _TeeRegistry.contract.UnpackLog(event, "AvailabilityCheckValidityExtended", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// TeeRegistryTeeMachinePausedIterator is returned from FilterTeeMachinePaused and is used to iterate over the raw logs and unpacked data for TeeMachinePaused events raised by the TeeRegistry contract.
+type TeeRegistryTeeMachinePausedIterator struct {
+	Event *TeeRegistryTeeMachinePaused // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeeRegistryTeeMachinePausedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeeRegistryTeeMachinePaused)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeeRegistryTeeMachinePaused)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeeRegistryTeeMachinePausedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeeRegistryTeeMachinePausedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeeRegistryTeeMachinePaused represents a TeeMachinePaused event raised by the TeeRegistry contract.
+type TeeRegistryTeeMachinePaused struct {
+	TeeId common.Address
+	Raw   types.Log // Blockchain specific contextual infos
+}
+
+// FilterTeeMachinePaused is a free log retrieval operation binding the contract event 0xde5ae0e0f53bc200068db0c7d41dd63811b465bfd5396cf26a087ec901ad81f4.
+//
+// Solidity: event TeeMachinePaused(address indexed teeId)
+func (_TeeRegistry *TeeRegistryFilterer) FilterTeeMachinePaused(opts *bind.FilterOpts, teeId []common.Address) (*TeeRegistryTeeMachinePausedIterator, error) {
+
+	var teeIdRule []interface{}
+	for _, teeIdItem := range teeId {
+		teeIdRule = append(teeIdRule, teeIdItem)
+	}
+
+	logs, sub, err := _TeeRegistry.contract.FilterLogs(opts, "TeeMachinePaused", teeIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return &TeeRegistryTeeMachinePausedIterator{contract: _TeeRegistry.contract, event: "TeeMachinePaused", logs: logs, sub: sub}, nil
+}
+
+// WatchTeeMachinePaused is a free log subscription operation binding the contract event 0xde5ae0e0f53bc200068db0c7d41dd63811b465bfd5396cf26a087ec901ad81f4.
+//
+// Solidity: event TeeMachinePaused(address indexed teeId)
+func (_TeeRegistry *TeeRegistryFilterer) WatchTeeMachinePaused(opts *bind.WatchOpts, sink chan<- *TeeRegistryTeeMachinePaused, teeId []common.Address) (event.Subscription, error) {
+
+	var teeIdRule []interface{}
+	for _, teeIdItem := range teeId {
+		teeIdRule = append(teeIdRule, teeIdItem)
+	}
+
+	logs, sub, err := _TeeRegistry.contract.WatchLogs(opts, "TeeMachinePaused", teeIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeeRegistryTeeMachinePaused)
+				if err := _TeeRegistry.contract.UnpackLog(event, "TeeMachinePaused", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseTeeMachinePaused is a log parse operation binding the contract event 0xde5ae0e0f53bc200068db0c7d41dd63811b465bfd5396cf26a087ec901ad81f4.
+//
+// Solidity: event TeeMachinePaused(address indexed teeId)
+func (_TeeRegistry *TeeRegistryFilterer) ParseTeeMachinePaused(log types.Log) (*TeeRegistryTeeMachinePaused, error) {
+	event := new(TeeRegistryTeeMachinePaused)
+	if err := _TeeRegistry.contract.UnpackLog(event, "TeeMachinePaused", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// TeeRegistryTeeMachinePausedForUpgradeIterator is returned from FilterTeeMachinePausedForUpgrade and is used to iterate over the raw logs and unpacked data for TeeMachinePausedForUpgrade events raised by the TeeRegistry contract.
+type TeeRegistryTeeMachinePausedForUpgradeIterator struct {
+	Event *TeeRegistryTeeMachinePausedForUpgrade // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeeRegistryTeeMachinePausedForUpgradeIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeeRegistryTeeMachinePausedForUpgrade)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeeRegistryTeeMachinePausedForUpgrade)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeeRegistryTeeMachinePausedForUpgradeIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeeRegistryTeeMachinePausedForUpgradeIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeeRegistryTeeMachinePausedForUpgrade represents a TeeMachinePausedForUpgrade event raised by the TeeRegistry contract.
+type TeeRegistryTeeMachinePausedForUpgrade struct {
+	TeeId common.Address
+	Raw   types.Log // Blockchain specific contextual infos
+}
+
+// FilterTeeMachinePausedForUpgrade is a free log retrieval operation binding the contract event 0x9956cba12d00f65e289543db454a9d2065e977680aede4b78298feef6b196e26.
+//
+// Solidity: event TeeMachinePausedForUpgrade(address indexed teeId)
+func (_TeeRegistry *TeeRegistryFilterer) FilterTeeMachinePausedForUpgrade(opts *bind.FilterOpts, teeId []common.Address) (*TeeRegistryTeeMachinePausedForUpgradeIterator, error) {
+
+	var teeIdRule []interface{}
+	for _, teeIdItem := range teeId {
+		teeIdRule = append(teeIdRule, teeIdItem)
+	}
+
+	logs, sub, err := _TeeRegistry.contract.FilterLogs(opts, "TeeMachinePausedForUpgrade", teeIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return &TeeRegistryTeeMachinePausedForUpgradeIterator{contract: _TeeRegistry.contract, event: "TeeMachinePausedForUpgrade", logs: logs, sub: sub}, nil
+}
+
+// WatchTeeMachinePausedForUpgrade is a free log subscription operation binding the contract event 0x9956cba12d00f65e289543db454a9d2065e977680aede4b78298feef6b196e26.
+//
+// Solidity: event TeeMachinePausedForUpgrade(address indexed teeId)
+func (_TeeRegistry *TeeRegistryFilterer) WatchTeeMachinePausedForUpgrade(opts *bind.WatchOpts, sink chan<- *TeeRegistryTeeMachinePausedForUpgrade, teeId []common.Address) (event.Subscription, error) {
+
+	var teeIdRule []interface{}
+	for _, teeIdItem := range teeId {
+		teeIdRule = append(teeIdRule, teeIdItem)
+	}
+
+	logs, sub, err := _TeeRegistry.contract.WatchLogs(opts, "TeeMachinePausedForUpgrade", teeIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeeRegistryTeeMachinePausedForUpgrade)
+				if err := _TeeRegistry.contract.UnpackLog(event, "TeeMachinePausedForUpgrade", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseTeeMachinePausedForUpgrade is a log parse operation binding the contract event 0x9956cba12d00f65e289543db454a9d2065e977680aede4b78298feef6b196e26.
+//
+// Solidity: event TeeMachinePausedForUpgrade(address indexed teeId)
+func (_TeeRegistry *TeeRegistryFilterer) ParseTeeMachinePausedForUpgrade(log types.Log) (*TeeRegistryTeeMachinePausedForUpgrade, error) {
+	event := new(TeeRegistryTeeMachinePausedForUpgrade)
+	if err := _TeeRegistry.contract.UnpackLog(event, "TeeMachinePausedForUpgrade", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// TeeRegistryTeeMachinePutIntoProductionIterator is returned from FilterTeeMachinePutIntoProduction and is used to iterate over the raw logs and unpacked data for TeeMachinePutIntoProduction events raised by the TeeRegistry contract.
+type TeeRegistryTeeMachinePutIntoProductionIterator struct {
+	Event *TeeRegistryTeeMachinePutIntoProduction // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeeRegistryTeeMachinePutIntoProductionIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeeRegistryTeeMachinePutIntoProduction)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeeRegistryTeeMachinePutIntoProduction)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeeRegistryTeeMachinePutIntoProductionIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeeRegistryTeeMachinePutIntoProductionIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeeRegistryTeeMachinePutIntoProduction represents a TeeMachinePutIntoProduction event raised by the TeeRegistry contract.
+type TeeRegistryTeeMachinePutIntoProduction struct {
+	TeeId common.Address
+	Raw   types.Log // Blockchain specific contextual infos
+}
+
+// FilterTeeMachinePutIntoProduction is a free log retrieval operation binding the contract event 0x15c68e0e26236bae5dcac76be19be673430ec7f513cda79db7739b24270f3e69.
+//
+// Solidity: event TeeMachinePutIntoProduction(address indexed teeId)
+func (_TeeRegistry *TeeRegistryFilterer) FilterTeeMachinePutIntoProduction(opts *bind.FilterOpts, teeId []common.Address) (*TeeRegistryTeeMachinePutIntoProductionIterator, error) {
+
+	var teeIdRule []interface{}
+	for _, teeIdItem := range teeId {
+		teeIdRule = append(teeIdRule, teeIdItem)
+	}
+
+	logs, sub, err := _TeeRegistry.contract.FilterLogs(opts, "TeeMachinePutIntoProduction", teeIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return &TeeRegistryTeeMachinePutIntoProductionIterator{contract: _TeeRegistry.contract, event: "TeeMachinePutIntoProduction", logs: logs, sub: sub}, nil
+}
+
+// WatchTeeMachinePutIntoProduction is a free log subscription operation binding the contract event 0x15c68e0e26236bae5dcac76be19be673430ec7f513cda79db7739b24270f3e69.
+//
+// Solidity: event TeeMachinePutIntoProduction(address indexed teeId)
+func (_TeeRegistry *TeeRegistryFilterer) WatchTeeMachinePutIntoProduction(opts *bind.WatchOpts, sink chan<- *TeeRegistryTeeMachinePutIntoProduction, teeId []common.Address) (event.Subscription, error) {
+
+	var teeIdRule []interface{}
+	for _, teeIdItem := range teeId {
+		teeIdRule = append(teeIdRule, teeIdItem)
+	}
+
+	logs, sub, err := _TeeRegistry.contract.WatchLogs(opts, "TeeMachinePutIntoProduction", teeIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeeRegistryTeeMachinePutIntoProduction)
+				if err := _TeeRegistry.contract.UnpackLog(event, "TeeMachinePutIntoProduction", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseTeeMachinePutIntoProduction is a log parse operation binding the contract event 0x15c68e0e26236bae5dcac76be19be673430ec7f513cda79db7739b24270f3e69.
+//
+// Solidity: event TeeMachinePutIntoProduction(address indexed teeId)
+func (_TeeRegistry *TeeRegistryFilterer) ParseTeeMachinePutIntoProduction(log types.Log) (*TeeRegistryTeeMachinePutIntoProduction, error) {
+	event := new(TeeRegistryTeeMachinePutIntoProduction)
+	if err := _TeeRegistry.contract.UnpackLog(event, "TeeMachinePutIntoProduction", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// TeeRegistryTeeMachineRegisteredIterator is returned from FilterTeeMachineRegistered and is used to iterate over the raw logs and unpacked data for TeeMachineRegistered events raised by the TeeRegistry contract.
+type TeeRegistryTeeMachineRegisteredIterator struct {
+	Event *TeeRegistryTeeMachineRegistered // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeeRegistryTeeMachineRegisteredIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeeRegistryTeeMachineRegistered)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeeRegistryTeeMachineRegistered)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeeRegistryTeeMachineRegisteredIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeeRegistryTeeMachineRegisteredIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeeRegistryTeeMachineRegistered represents a TeeMachineRegistered event raised by the TeeRegistry contract.
+type TeeRegistryTeeMachineRegistered struct {
+	TeeId    common.Address
+	Owner    common.Address
+	Url      string
+	CodeHash [32]byte
+	Platform [32]byte
+	Raw      types.Log // Blockchain specific contextual infos
+}
+
+// FilterTeeMachineRegistered is a free log retrieval operation binding the contract event 0x14829e0226b5b5830cc22aea862280b2f6c82005edda69015a3c084cca3d1649.
+//
+// Solidity: event TeeMachineRegistered(address indexed teeId, address indexed owner, string url, bytes32 codeHash, bytes32 platform)
+func (_TeeRegistry *TeeRegistryFilterer) FilterTeeMachineRegistered(opts *bind.FilterOpts, teeId []common.Address, owner []common.Address) (*TeeRegistryTeeMachineRegisteredIterator, error) {
+
+	var teeIdRule []interface{}
+	for _, teeIdItem := range teeId {
+		teeIdRule = append(teeIdRule, teeIdItem)
+	}
+	var ownerRule []interface{}
+	for _, ownerItem := range owner {
+		ownerRule = append(ownerRule, ownerItem)
+	}
+
+	logs, sub, err := _TeeRegistry.contract.FilterLogs(opts, "TeeMachineRegistered", teeIdRule, ownerRule)
+	if err != nil {
+		return nil, err
+	}
+	return &TeeRegistryTeeMachineRegisteredIterator{contract: _TeeRegistry.contract, event: "TeeMachineRegistered", logs: logs, sub: sub}, nil
+}
+
+// WatchTeeMachineRegistered is a free log subscription operation binding the contract event 0x14829e0226b5b5830cc22aea862280b2f6c82005edda69015a3c084cca3d1649.
+//
+// Solidity: event TeeMachineRegistered(address indexed teeId, address indexed owner, string url, bytes32 codeHash, bytes32 platform)
+func (_TeeRegistry *TeeRegistryFilterer) WatchTeeMachineRegistered(opts *bind.WatchOpts, sink chan<- *TeeRegistryTeeMachineRegistered, teeId []common.Address, owner []common.Address) (event.Subscription, error) {
+
+	var teeIdRule []interface{}
+	for _, teeIdItem := range teeId {
+		teeIdRule = append(teeIdRule, teeIdItem)
+	}
+	var ownerRule []interface{}
+	for _, ownerItem := range owner {
+		ownerRule = append(ownerRule, ownerItem)
+	}
+
+	logs, sub, err := _TeeRegistry.contract.WatchLogs(opts, "TeeMachineRegistered", teeIdRule, ownerRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeeRegistryTeeMachineRegistered)
+				if err := _TeeRegistry.contract.UnpackLog(event, "TeeMachineRegistered", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseTeeMachineRegistered is a log parse operation binding the contract event 0x14829e0226b5b5830cc22aea862280b2f6c82005edda69015a3c084cca3d1649.
+//
+// Solidity: event TeeMachineRegistered(address indexed teeId, address indexed owner, string url, bytes32 codeHash, bytes32 platform)
+func (_TeeRegistry *TeeRegistryFilterer) ParseTeeMachineRegistered(log types.Log) (*TeeRegistryTeeMachineRegistered, error) {
+	event := new(TeeRegistryTeeMachineRegistered)
+	if err := _TeeRegistry.contract.UnpackLog(event, "TeeMachineRegistered", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// TeeRegistryTeeMachineReplicationConfirmedIterator is returned from FilterTeeMachineReplicationConfirmed and is used to iterate over the raw logs and unpacked data for TeeMachineReplicationConfirmed events raised by the TeeRegistry contract.
+type TeeRegistryTeeMachineReplicationConfirmedIterator struct {
+	Event *TeeRegistryTeeMachineReplicationConfirmed // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeeRegistryTeeMachineReplicationConfirmedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeeRegistryTeeMachineReplicationConfirmed)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeeRegistryTeeMachineReplicationConfirmed)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeeRegistryTeeMachineReplicationConfirmedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeeRegistryTeeMachineReplicationConfirmedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeeRegistryTeeMachineReplicationConfirmed represents a TeeMachineReplicationConfirmed event raised by the TeeRegistry contract.
+type TeeRegistryTeeMachineReplicationConfirmed struct {
+	OldTeeId common.Address
+	NewTeeId common.Address
+	Raw      types.Log // Blockchain specific contextual infos
+}
+
+// FilterTeeMachineReplicationConfirmed is a free log retrieval operation binding the contract event 0xadc0656d4db250edd81c851803025dab7b77ed8409cb0dffa5c9a417edd1e5c6.
+//
+// Solidity: event TeeMachineReplicationConfirmed(address indexed oldTeeId, address indexed newTeeId)
+func (_TeeRegistry *TeeRegistryFilterer) FilterTeeMachineReplicationConfirmed(opts *bind.FilterOpts, oldTeeId []common.Address, newTeeId []common.Address) (*TeeRegistryTeeMachineReplicationConfirmedIterator, error) {
+
+	var oldTeeIdRule []interface{}
+	for _, oldTeeIdItem := range oldTeeId {
+		oldTeeIdRule = append(oldTeeIdRule, oldTeeIdItem)
+	}
+	var newTeeIdRule []interface{}
+	for _, newTeeIdItem := range newTeeId {
+		newTeeIdRule = append(newTeeIdRule, newTeeIdItem)
+	}
+
+	logs, sub, err := _TeeRegistry.contract.FilterLogs(opts, "TeeMachineReplicationConfirmed", oldTeeIdRule, newTeeIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return &TeeRegistryTeeMachineReplicationConfirmedIterator{contract: _TeeRegistry.contract, event: "TeeMachineReplicationConfirmed", logs: logs, sub: sub}, nil
+}
+
+// WatchTeeMachineReplicationConfirmed is a free log subscription operation binding the contract event 0xadc0656d4db250edd81c851803025dab7b77ed8409cb0dffa5c9a417edd1e5c6.
+//
+// Solidity: event TeeMachineReplicationConfirmed(address indexed oldTeeId, address indexed newTeeId)
+func (_TeeRegistry *TeeRegistryFilterer) WatchTeeMachineReplicationConfirmed(opts *bind.WatchOpts, sink chan<- *TeeRegistryTeeMachineReplicationConfirmed, oldTeeId []common.Address, newTeeId []common.Address) (event.Subscription, error) {
+
+	var oldTeeIdRule []interface{}
+	for _, oldTeeIdItem := range oldTeeId {
+		oldTeeIdRule = append(oldTeeIdRule, oldTeeIdItem)
+	}
+	var newTeeIdRule []interface{}
+	for _, newTeeIdItem := range newTeeId {
+		newTeeIdRule = append(newTeeIdRule, newTeeIdItem)
+	}
+
+	logs, sub, err := _TeeRegistry.contract.WatchLogs(opts, "TeeMachineReplicationConfirmed", oldTeeIdRule, newTeeIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeeRegistryTeeMachineReplicationConfirmed)
+				if err := _TeeRegistry.contract.UnpackLog(event, "TeeMachineReplicationConfirmed", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseTeeMachineReplicationConfirmed is a log parse operation binding the contract event 0xadc0656d4db250edd81c851803025dab7b77ed8409cb0dffa5c9a417edd1e5c6.
+//
+// Solidity: event TeeMachineReplicationConfirmed(address indexed oldTeeId, address indexed newTeeId)
+func (_TeeRegistry *TeeRegistryFilterer) ParseTeeMachineReplicationConfirmed(log types.Log) (*TeeRegistryTeeMachineReplicationConfirmed, error) {
+	event := new(TeeRegistryTeeMachineReplicationConfirmed)
+	if err := _TeeRegistry.contract.UnpackLog(event, "TeeMachineReplicationConfirmed", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// TeeRegistryTeeMachineReplicationTriggeredIterator is returned from FilterTeeMachineReplicationTriggered and is used to iterate over the raw logs and unpacked data for TeeMachineReplicationTriggered events raised by the TeeRegistry contract.
+type TeeRegistryTeeMachineReplicationTriggeredIterator struct {
+	Event *TeeRegistryTeeMachineReplicationTriggered // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeeRegistryTeeMachineReplicationTriggeredIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeeRegistryTeeMachineReplicationTriggered)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeeRegistryTeeMachineReplicationTriggered)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeeRegistryTeeMachineReplicationTriggeredIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeeRegistryTeeMachineReplicationTriggeredIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeeRegistryTeeMachineReplicationTriggered represents a TeeMachineReplicationTriggered event raised by the TeeRegistry contract.
+type TeeRegistryTeeMachineReplicationTriggered struct {
+	OldTeeId common.Address
+	NewTeeId common.Address
+	Raw      types.Log // Blockchain specific contextual infos
+}
+
+// FilterTeeMachineReplicationTriggered is a free log retrieval operation binding the contract event 0xd87e6bc8a5d285331406025e486d867409ad4d3764487606a89438c91382b26e.
+//
+// Solidity: event TeeMachineReplicationTriggered(address indexed oldTeeId, address indexed newTeeId)
+func (_TeeRegistry *TeeRegistryFilterer) FilterTeeMachineReplicationTriggered(opts *bind.FilterOpts, oldTeeId []common.Address, newTeeId []common.Address) (*TeeRegistryTeeMachineReplicationTriggeredIterator, error) {
+
+	var oldTeeIdRule []interface{}
+	for _, oldTeeIdItem := range oldTeeId {
+		oldTeeIdRule = append(oldTeeIdRule, oldTeeIdItem)
+	}
+	var newTeeIdRule []interface{}
+	for _, newTeeIdItem := range newTeeId {
+		newTeeIdRule = append(newTeeIdRule, newTeeIdItem)
+	}
+
+	logs, sub, err := _TeeRegistry.contract.FilterLogs(opts, "TeeMachineReplicationTriggered", oldTeeIdRule, newTeeIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return &TeeRegistryTeeMachineReplicationTriggeredIterator{contract: _TeeRegistry.contract, event: "TeeMachineReplicationTriggered", logs: logs, sub: sub}, nil
+}
+
+// WatchTeeMachineReplicationTriggered is a free log subscription operation binding the contract event 0xd87e6bc8a5d285331406025e486d867409ad4d3764487606a89438c91382b26e.
+//
+// Solidity: event TeeMachineReplicationTriggered(address indexed oldTeeId, address indexed newTeeId)
+func (_TeeRegistry *TeeRegistryFilterer) WatchTeeMachineReplicationTriggered(opts *bind.WatchOpts, sink chan<- *TeeRegistryTeeMachineReplicationTriggered, oldTeeId []common.Address, newTeeId []common.Address) (event.Subscription, error) {
+
+	var oldTeeIdRule []interface{}
+	for _, oldTeeIdItem := range oldTeeId {
+		oldTeeIdRule = append(oldTeeIdRule, oldTeeIdItem)
+	}
+	var newTeeIdRule []interface{}
+	for _, newTeeIdItem := range newTeeId {
+		newTeeIdRule = append(newTeeIdRule, newTeeIdItem)
+	}
+
+	logs, sub, err := _TeeRegistry.contract.WatchLogs(opts, "TeeMachineReplicationTriggered", oldTeeIdRule, newTeeIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeeRegistryTeeMachineReplicationTriggered)
+				if err := _TeeRegistry.contract.UnpackLog(event, "TeeMachineReplicationTriggered", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseTeeMachineReplicationTriggered is a log parse operation binding the contract event 0xd87e6bc8a5d285331406025e486d867409ad4d3764487606a89438c91382b26e.
+//
+// Solidity: event TeeMachineReplicationTriggered(address indexed oldTeeId, address indexed newTeeId)
+func (_TeeRegistry *TeeRegistryFilterer) ParseTeeMachineReplicationTriggered(log types.Log) (*TeeRegistryTeeMachineReplicationTriggered, error) {
+	event := new(TeeRegistryTeeMachineReplicationTriggered)
+	if err := _TeeRegistry.contract.UnpackLog(event, "TeeMachineReplicationTriggered", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

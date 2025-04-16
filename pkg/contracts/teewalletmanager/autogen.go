@@ -29,54 +29,15 @@ var (
 	_ = abi.ConvertType
 )
 
-// ITeeKeyExistenceProof is an auto generated low-level Go binding around an user-defined struct.
-type ITeeKeyExistenceProof struct {
-	RelayMessage  []byte
-	TeeSignatures []Signature
-	Data          ITeeKeyExistenceResponse
-}
-
-// ITeeKeyExistenceRequestBody is an auto generated low-level Go binding around an user-defined struct.
-type ITeeKeyExistenceRequestBody struct {
-	TeeId    common.Address
-	WalletId [32]byte
-	KeyId    *big.Int
-	OpType   [32]byte
-}
-
-// ITeeKeyExistenceResponse is an auto generated low-level Go binding around an user-defined struct.
-type ITeeKeyExistenceResponse struct {
-	AttestationType [32]byte
-	SourceId        [32]byte
-	ThresholdBIPS   uint16
-	Timestamp       uint64
-	RequestBody     ITeeKeyExistenceRequestBody
-	ResponseBody    ITeeKeyExistenceResponseBody
-}
-
-// ITeeKeyExistenceResponseBody is an auto generated low-level Go binding around an user-defined struct.
-type ITeeKeyExistenceResponseBody struct {
-	PublicKey  []byte
-	AddressStr string
-}
-
-// ITeeRegistryTeeMachine is an auto generated low-level Go binding around an user-defined struct.
-type ITeeRegistryTeeMachine struct {
-	TeeId common.Address
-	Owner common.Address
-	Url   string
-}
-
-// Signature is an auto generated low-level Go binding around an user-defined struct.
-type Signature struct {
-	V uint8
-	R [32]byte
-	S [32]byte
+// PublicKey is an auto generated low-level Go binding around an user-defined struct.
+type PublicKey struct {
+	X [32]byte
+	Y [32]byte
 }
 
 // TeeWalletManagerMetaData contains all meta data concerning the TeeWalletManager contract.
 var TeeWalletManagerMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"}],\"name\":\"WalletCreated\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"addKey\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"}],\"name\":\"cleanUpTeeIds\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"relayMessage\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"keyId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeKeyExistence.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes\",\"name\":\"publicKey\",\"type\":\"bytes\"},{\"internalType\":\"string\",\"name\":\"addressStr\",\"type\":\"string\"}],\"internalType\":\"structITeeKeyExistence.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structITeeKeyExistence.Response\",\"name\":\"data\",\"type\":\"tuple\"}],\"internalType\":\"structITeeKeyExistence.Proof\",\"name\":\"_proof\",\"type\":\"tuple\"}],\"name\":\"confirmKey\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"confirmOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"}],\"name\":\"deleteKey\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"enableWallet\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"getFeeFactor\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_feeFactor\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSupportedOpTypes\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_supportedOpTypes\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"getWalletBackupManager\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_backupManager\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"getWalletInfo\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_submitAddress\",\"type\":\"address\"},{\"internalType\":\"enumITeeWalletManager.WalletStatus\",\"name\":\"_status\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"_opType\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"}],\"name\":\"getWalletKeyAddress\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"_addressStr\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"}],\"name\":\"getWalletKeyPublicKey\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"_publicKey\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"}],\"name\":\"getWalletKeyTeeIds\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"_teeIds\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"getWalletKeysInfo\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"_multisigThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint256[]\",\"name\":\"_keyIds\",\"type\":\"uint256[]\"},{\"internalType\":\"uint64\",\"name\":\"_counter\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"getWalletOpType\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"_opType\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"getWalletOwner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_walletOwner\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"getWalletStatus\",\"outputs\":[{\"internalType\":\"enumITeeWalletManager.WalletStatus\",\"name\":\"_status\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_opType\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_multisigThreshold\",\"type\":\"uint64\"}],\"name\":\"initializeWallet\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"pauseWallet\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"_newOwner\",\"type\":\"address\"}],\"name\":\"proposeNewOwner\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"receivingTees\",\"outputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"}],\"internalType\":\"structITeeRegistry.TeeMachine[]\",\"name\":\"_receivingTees\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"}],\"name\":\"requestKeyExistenceAttestation\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"_submitAddress\",\"type\":\"address\"}],\"name\":\"setSubmitAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"_backupManager\",\"type\":\"address\"}],\"name\":\"setWalletBackupManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"admin\",\"type\":\"address\"}],\"name\":\"WalletAdminConfirmed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"x\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"y\",\"type\":\"bytes32\"}],\"indexed\":false,\"internalType\":\"structPublicKey[]\",\"name\":\"adminsPublicKeys\",\"type\":\"tuple[]\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"adminsThreshold\",\"type\":\"uint64\"}],\"name\":\"WalletAdminsSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"cosigner\",\"type\":\"address\"}],\"name\":\"WalletCosignerConfirmed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"}],\"name\":\"WalletCosignersSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"projectId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"}],\"name\":\"WalletCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"}],\"name\":\"WalletEnabled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"}],\"name\":\"WalletInitialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"}],\"name\":\"WalletPaused\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"closeWalletInitialization\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"confirmAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"confirmCosigner\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_projectId\",\"type\":\"bytes32\"}],\"name\":\"createWallet\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"enableWallet\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_projectId\",\"type\":\"bytes32\"}],\"name\":\"getProjectWalletIds\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_walletIds\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSupportedOpTypes\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_supportedOpTypes\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"getWalletAdminsAndThreshold\",\"outputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"x\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"y\",\"type\":\"bytes32\"}],\"internalType\":\"structPublicKey[]\",\"name\":\"_adminsPublicKeys\",\"type\":\"tuple[]\"},{\"internalType\":\"uint256\",\"name\":\"_adminsThreshold\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"getWalletCosignersAndThreshold\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"_cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint256\",\"name\":\"_cosignersThreshold\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"getWalletProjectId\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"_projectId\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"getWalletStatus\",\"outputs\":[{\"internalType\":\"enumITeeWalletManager.WalletStatus\",\"name\":\"_status\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_opType\",\"type\":\"bytes32\"}],\"name\":\"isOpTypeSupported\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"pauseWallet\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"x\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"y\",\"type\":\"bytes32\"}],\"internalType\":\"structPublicKey[]\",\"name\":\"_adminsPublicKeys\",\"type\":\"tuple[]\"},{\"internalType\":\"uint64\",\"name\":\"_adminsThreshold\",\"type\":\"uint64\"}],\"name\":\"setAdmins\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"address[]\",\"name\":\"_cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"_cosignersThreshold\",\"type\":\"uint64\"}],\"name\":\"setCosigners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // TeeWalletManagerABI is the input ABI used to generate the binding from.
@@ -225,35 +186,35 @@ func (_TeeWalletManager *TeeWalletManagerTransactorRaw) Transact(opts *bind.Tran
 	return _TeeWalletManager.Contract.contract.Transact(opts, method, params...)
 }
 
-// GetFeeFactor is a free data retrieval call binding the contract method 0x5220697c.
+// GetProjectWalletIds is a free data retrieval call binding the contract method 0x92911c30.
 //
-// Solidity: function getFeeFactor(bytes32 _walletId) view returns(uint256 _feeFactor)
-func (_TeeWalletManager *TeeWalletManagerCaller) GetFeeFactor(opts *bind.CallOpts, _walletId [32]byte) (*big.Int, error) {
+// Solidity: function getProjectWalletIds(bytes32 _projectId) view returns(bytes32[] _walletIds)
+func (_TeeWalletManager *TeeWalletManagerCaller) GetProjectWalletIds(opts *bind.CallOpts, _projectId [32]byte) ([][32]byte, error) {
 	var out []interface{}
-	err := _TeeWalletManager.contract.Call(opts, &out, "getFeeFactor", _walletId)
+	err := _TeeWalletManager.contract.Call(opts, &out, "getProjectWalletIds", _projectId)
 
 	if err != nil {
-		return *new(*big.Int), err
+		return *new([][32]byte), err
 	}
 
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+	out0 := *abi.ConvertType(out[0], new([][32]byte)).(*[][32]byte)
 
 	return out0, err
 
 }
 
-// GetFeeFactor is a free data retrieval call binding the contract method 0x5220697c.
+// GetProjectWalletIds is a free data retrieval call binding the contract method 0x92911c30.
 //
-// Solidity: function getFeeFactor(bytes32 _walletId) view returns(uint256 _feeFactor)
-func (_TeeWalletManager *TeeWalletManagerSession) GetFeeFactor(_walletId [32]byte) (*big.Int, error) {
-	return _TeeWalletManager.Contract.GetFeeFactor(&_TeeWalletManager.CallOpts, _walletId)
+// Solidity: function getProjectWalletIds(bytes32 _projectId) view returns(bytes32[] _walletIds)
+func (_TeeWalletManager *TeeWalletManagerSession) GetProjectWalletIds(_projectId [32]byte) ([][32]byte, error) {
+	return _TeeWalletManager.Contract.GetProjectWalletIds(&_TeeWalletManager.CallOpts, _projectId)
 }
 
-// GetFeeFactor is a free data retrieval call binding the contract method 0x5220697c.
+// GetProjectWalletIds is a free data retrieval call binding the contract method 0x92911c30.
 //
-// Solidity: function getFeeFactor(bytes32 _walletId) view returns(uint256 _feeFactor)
-func (_TeeWalletManager *TeeWalletManagerCallerSession) GetFeeFactor(_walletId [32]byte) (*big.Int, error) {
-	return _TeeWalletManager.Contract.GetFeeFactor(&_TeeWalletManager.CallOpts, _walletId)
+// Solidity: function getProjectWalletIds(bytes32 _projectId) view returns(bytes32[] _walletIds)
+func (_TeeWalletManager *TeeWalletManagerCallerSession) GetProjectWalletIds(_projectId [32]byte) ([][32]byte, error) {
+	return _TeeWalletManager.Contract.GetProjectWalletIds(&_TeeWalletManager.CallOpts, _projectId)
 }
 
 // GetSupportedOpTypes is a free data retrieval call binding the contract method 0x92b7ef79.
@@ -287,236 +248,102 @@ func (_TeeWalletManager *TeeWalletManagerCallerSession) GetSupportedOpTypes() ([
 	return _TeeWalletManager.Contract.GetSupportedOpTypes(&_TeeWalletManager.CallOpts)
 }
 
-// GetWalletBackupManager is a free data retrieval call binding the contract method 0x6e3484a7.
+// GetWalletAdminsAndThreshold is a free data retrieval call binding the contract method 0x3309abd0.
 //
-// Solidity: function getWalletBackupManager(bytes32 _walletId) view returns(address _backupManager)
-func (_TeeWalletManager *TeeWalletManagerCaller) GetWalletBackupManager(opts *bind.CallOpts, _walletId [32]byte) (common.Address, error) {
-	var out []interface{}
-	err := _TeeWalletManager.contract.Call(opts, &out, "getWalletBackupManager", _walletId)
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// GetWalletBackupManager is a free data retrieval call binding the contract method 0x6e3484a7.
-//
-// Solidity: function getWalletBackupManager(bytes32 _walletId) view returns(address _backupManager)
-func (_TeeWalletManager *TeeWalletManagerSession) GetWalletBackupManager(_walletId [32]byte) (common.Address, error) {
-	return _TeeWalletManager.Contract.GetWalletBackupManager(&_TeeWalletManager.CallOpts, _walletId)
-}
-
-// GetWalletBackupManager is a free data retrieval call binding the contract method 0x6e3484a7.
-//
-// Solidity: function getWalletBackupManager(bytes32 _walletId) view returns(address _backupManager)
-func (_TeeWalletManager *TeeWalletManagerCallerSession) GetWalletBackupManager(_walletId [32]byte) (common.Address, error) {
-	return _TeeWalletManager.Contract.GetWalletBackupManager(&_TeeWalletManager.CallOpts, _walletId)
-}
-
-// GetWalletInfo is a free data retrieval call binding the contract method 0x3bb50d7c.
-//
-// Solidity: function getWalletInfo(bytes32 _walletId) view returns(address _submitAddress, uint8 _status, bytes32 _opType)
-func (_TeeWalletManager *TeeWalletManagerCaller) GetWalletInfo(opts *bind.CallOpts, _walletId [32]byte) (struct {
-	SubmitAddress common.Address
-	Status        uint8
-	OpType        [32]byte
+// Solidity: function getWalletAdminsAndThreshold(bytes32 _walletId) view returns((bytes32,bytes32)[] _adminsPublicKeys, uint256 _adminsThreshold)
+func (_TeeWalletManager *TeeWalletManagerCaller) GetWalletAdminsAndThreshold(opts *bind.CallOpts, _walletId [32]byte) (struct {
+	AdminsPublicKeys []PublicKey
+	AdminsThreshold  *big.Int
 }, error) {
 	var out []interface{}
-	err := _TeeWalletManager.contract.Call(opts, &out, "getWalletInfo", _walletId)
+	err := _TeeWalletManager.contract.Call(opts, &out, "getWalletAdminsAndThreshold", _walletId)
 
 	outstruct := new(struct {
-		SubmitAddress common.Address
-		Status        uint8
-		OpType        [32]byte
+		AdminsPublicKeys []PublicKey
+		AdminsThreshold  *big.Int
 	})
 	if err != nil {
 		return *outstruct, err
 	}
 
-	outstruct.SubmitAddress = *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-	outstruct.Status = *abi.ConvertType(out[1], new(uint8)).(*uint8)
-	outstruct.OpType = *abi.ConvertType(out[2], new([32]byte)).(*[32]byte)
+	outstruct.AdminsPublicKeys = *abi.ConvertType(out[0], new([]PublicKey)).(*[]PublicKey)
+	outstruct.AdminsThreshold = *abi.ConvertType(out[1], new(*big.Int)).(**big.Int)
 
 	return *outstruct, err
 
 }
 
-// GetWalletInfo is a free data retrieval call binding the contract method 0x3bb50d7c.
+// GetWalletAdminsAndThreshold is a free data retrieval call binding the contract method 0x3309abd0.
 //
-// Solidity: function getWalletInfo(bytes32 _walletId) view returns(address _submitAddress, uint8 _status, bytes32 _opType)
-func (_TeeWalletManager *TeeWalletManagerSession) GetWalletInfo(_walletId [32]byte) (struct {
-	SubmitAddress common.Address
-	Status        uint8
-	OpType        [32]byte
+// Solidity: function getWalletAdminsAndThreshold(bytes32 _walletId) view returns((bytes32,bytes32)[] _adminsPublicKeys, uint256 _adminsThreshold)
+func (_TeeWalletManager *TeeWalletManagerSession) GetWalletAdminsAndThreshold(_walletId [32]byte) (struct {
+	AdminsPublicKeys []PublicKey
+	AdminsThreshold  *big.Int
 }, error) {
-	return _TeeWalletManager.Contract.GetWalletInfo(&_TeeWalletManager.CallOpts, _walletId)
+	return _TeeWalletManager.Contract.GetWalletAdminsAndThreshold(&_TeeWalletManager.CallOpts, _walletId)
 }
 
-// GetWalletInfo is a free data retrieval call binding the contract method 0x3bb50d7c.
+// GetWalletAdminsAndThreshold is a free data retrieval call binding the contract method 0x3309abd0.
 //
-// Solidity: function getWalletInfo(bytes32 _walletId) view returns(address _submitAddress, uint8 _status, bytes32 _opType)
-func (_TeeWalletManager *TeeWalletManagerCallerSession) GetWalletInfo(_walletId [32]byte) (struct {
-	SubmitAddress common.Address
-	Status        uint8
-	OpType        [32]byte
+// Solidity: function getWalletAdminsAndThreshold(bytes32 _walletId) view returns((bytes32,bytes32)[] _adminsPublicKeys, uint256 _adminsThreshold)
+func (_TeeWalletManager *TeeWalletManagerCallerSession) GetWalletAdminsAndThreshold(_walletId [32]byte) (struct {
+	AdminsPublicKeys []PublicKey
+	AdminsThreshold  *big.Int
 }, error) {
-	return _TeeWalletManager.Contract.GetWalletInfo(&_TeeWalletManager.CallOpts, _walletId)
+	return _TeeWalletManager.Contract.GetWalletAdminsAndThreshold(&_TeeWalletManager.CallOpts, _walletId)
 }
 
-// GetWalletKeyAddress is a free data retrieval call binding the contract method 0x80a4a3f1.
+// GetWalletCosignersAndThreshold is a free data retrieval call binding the contract method 0x881567e5.
 //
-// Solidity: function getWalletKeyAddress(bytes32 _walletId, uint64 _keyId) view returns(string _addressStr)
-func (_TeeWalletManager *TeeWalletManagerCaller) GetWalletKeyAddress(opts *bind.CallOpts, _walletId [32]byte, _keyId uint64) (string, error) {
-	var out []interface{}
-	err := _TeeWalletManager.contract.Call(opts, &out, "getWalletKeyAddress", _walletId, _keyId)
-
-	if err != nil {
-		return *new(string), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(string)).(*string)
-
-	return out0, err
-
-}
-
-// GetWalletKeyAddress is a free data retrieval call binding the contract method 0x80a4a3f1.
-//
-// Solidity: function getWalletKeyAddress(bytes32 _walletId, uint64 _keyId) view returns(string _addressStr)
-func (_TeeWalletManager *TeeWalletManagerSession) GetWalletKeyAddress(_walletId [32]byte, _keyId uint64) (string, error) {
-	return _TeeWalletManager.Contract.GetWalletKeyAddress(&_TeeWalletManager.CallOpts, _walletId, _keyId)
-}
-
-// GetWalletKeyAddress is a free data retrieval call binding the contract method 0x80a4a3f1.
-//
-// Solidity: function getWalletKeyAddress(bytes32 _walletId, uint64 _keyId) view returns(string _addressStr)
-func (_TeeWalletManager *TeeWalletManagerCallerSession) GetWalletKeyAddress(_walletId [32]byte, _keyId uint64) (string, error) {
-	return _TeeWalletManager.Contract.GetWalletKeyAddress(&_TeeWalletManager.CallOpts, _walletId, _keyId)
-}
-
-// GetWalletKeyPublicKey is a free data retrieval call binding the contract method 0xbb825ac3.
-//
-// Solidity: function getWalletKeyPublicKey(bytes32 _walletId, uint64 _keyId) view returns(bytes _publicKey)
-func (_TeeWalletManager *TeeWalletManagerCaller) GetWalletKeyPublicKey(opts *bind.CallOpts, _walletId [32]byte, _keyId uint64) ([]byte, error) {
-	var out []interface{}
-	err := _TeeWalletManager.contract.Call(opts, &out, "getWalletKeyPublicKey", _walletId, _keyId)
-
-	if err != nil {
-		return *new([]byte), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new([]byte)).(*[]byte)
-
-	return out0, err
-
-}
-
-// GetWalletKeyPublicKey is a free data retrieval call binding the contract method 0xbb825ac3.
-//
-// Solidity: function getWalletKeyPublicKey(bytes32 _walletId, uint64 _keyId) view returns(bytes _publicKey)
-func (_TeeWalletManager *TeeWalletManagerSession) GetWalletKeyPublicKey(_walletId [32]byte, _keyId uint64) ([]byte, error) {
-	return _TeeWalletManager.Contract.GetWalletKeyPublicKey(&_TeeWalletManager.CallOpts, _walletId, _keyId)
-}
-
-// GetWalletKeyPublicKey is a free data retrieval call binding the contract method 0xbb825ac3.
-//
-// Solidity: function getWalletKeyPublicKey(bytes32 _walletId, uint64 _keyId) view returns(bytes _publicKey)
-func (_TeeWalletManager *TeeWalletManagerCallerSession) GetWalletKeyPublicKey(_walletId [32]byte, _keyId uint64) ([]byte, error) {
-	return _TeeWalletManager.Contract.GetWalletKeyPublicKey(&_TeeWalletManager.CallOpts, _walletId, _keyId)
-}
-
-// GetWalletKeyTeeIds is a free data retrieval call binding the contract method 0x08480213.
-//
-// Solidity: function getWalletKeyTeeIds(bytes32 _walletId, uint64 _keyId) view returns(address[] _teeIds)
-func (_TeeWalletManager *TeeWalletManagerCaller) GetWalletKeyTeeIds(opts *bind.CallOpts, _walletId [32]byte, _keyId uint64) ([]common.Address, error) {
-	var out []interface{}
-	err := _TeeWalletManager.contract.Call(opts, &out, "getWalletKeyTeeIds", _walletId, _keyId)
-
-	if err != nil {
-		return *new([]common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new([]common.Address)).(*[]common.Address)
-
-	return out0, err
-
-}
-
-// GetWalletKeyTeeIds is a free data retrieval call binding the contract method 0x08480213.
-//
-// Solidity: function getWalletKeyTeeIds(bytes32 _walletId, uint64 _keyId) view returns(address[] _teeIds)
-func (_TeeWalletManager *TeeWalletManagerSession) GetWalletKeyTeeIds(_walletId [32]byte, _keyId uint64) ([]common.Address, error) {
-	return _TeeWalletManager.Contract.GetWalletKeyTeeIds(&_TeeWalletManager.CallOpts, _walletId, _keyId)
-}
-
-// GetWalletKeyTeeIds is a free data retrieval call binding the contract method 0x08480213.
-//
-// Solidity: function getWalletKeyTeeIds(bytes32 _walletId, uint64 _keyId) view returns(address[] _teeIds)
-func (_TeeWalletManager *TeeWalletManagerCallerSession) GetWalletKeyTeeIds(_walletId [32]byte, _keyId uint64) ([]common.Address, error) {
-	return _TeeWalletManager.Contract.GetWalletKeyTeeIds(&_TeeWalletManager.CallOpts, _walletId, _keyId)
-}
-
-// GetWalletKeysInfo is a free data retrieval call binding the contract method 0x8338292b.
-//
-// Solidity: function getWalletKeysInfo(bytes32 _walletId) view returns(uint64 _multisigThreshold, uint256[] _keyIds, uint64 _counter)
-func (_TeeWalletManager *TeeWalletManagerCaller) GetWalletKeysInfo(opts *bind.CallOpts, _walletId [32]byte) (struct {
-	MultisigThreshold uint64
-	KeyIds            []*big.Int
-	Counter           uint64
+// Solidity: function getWalletCosignersAndThreshold(bytes32 _walletId) view returns(address[] _cosigners, uint256 _cosignersThreshold)
+func (_TeeWalletManager *TeeWalletManagerCaller) GetWalletCosignersAndThreshold(opts *bind.CallOpts, _walletId [32]byte) (struct {
+	Cosigners          []common.Address
+	CosignersThreshold *big.Int
 }, error) {
 	var out []interface{}
-	err := _TeeWalletManager.contract.Call(opts, &out, "getWalletKeysInfo", _walletId)
+	err := _TeeWalletManager.contract.Call(opts, &out, "getWalletCosignersAndThreshold", _walletId)
 
 	outstruct := new(struct {
-		MultisigThreshold uint64
-		KeyIds            []*big.Int
-		Counter           uint64
+		Cosigners          []common.Address
+		CosignersThreshold *big.Int
 	})
 	if err != nil {
 		return *outstruct, err
 	}
 
-	outstruct.MultisigThreshold = *abi.ConvertType(out[0], new(uint64)).(*uint64)
-	outstruct.KeyIds = *abi.ConvertType(out[1], new([]*big.Int)).(*[]*big.Int)
-	outstruct.Counter = *abi.ConvertType(out[2], new(uint64)).(*uint64)
+	outstruct.Cosigners = *abi.ConvertType(out[0], new([]common.Address)).(*[]common.Address)
+	outstruct.CosignersThreshold = *abi.ConvertType(out[1], new(*big.Int)).(**big.Int)
 
 	return *outstruct, err
 
 }
 
-// GetWalletKeysInfo is a free data retrieval call binding the contract method 0x8338292b.
+// GetWalletCosignersAndThreshold is a free data retrieval call binding the contract method 0x881567e5.
 //
-// Solidity: function getWalletKeysInfo(bytes32 _walletId) view returns(uint64 _multisigThreshold, uint256[] _keyIds, uint64 _counter)
-func (_TeeWalletManager *TeeWalletManagerSession) GetWalletKeysInfo(_walletId [32]byte) (struct {
-	MultisigThreshold uint64
-	KeyIds            []*big.Int
-	Counter           uint64
+// Solidity: function getWalletCosignersAndThreshold(bytes32 _walletId) view returns(address[] _cosigners, uint256 _cosignersThreshold)
+func (_TeeWalletManager *TeeWalletManagerSession) GetWalletCosignersAndThreshold(_walletId [32]byte) (struct {
+	Cosigners          []common.Address
+	CosignersThreshold *big.Int
 }, error) {
-	return _TeeWalletManager.Contract.GetWalletKeysInfo(&_TeeWalletManager.CallOpts, _walletId)
+	return _TeeWalletManager.Contract.GetWalletCosignersAndThreshold(&_TeeWalletManager.CallOpts, _walletId)
 }
 
-// GetWalletKeysInfo is a free data retrieval call binding the contract method 0x8338292b.
+// GetWalletCosignersAndThreshold is a free data retrieval call binding the contract method 0x881567e5.
 //
-// Solidity: function getWalletKeysInfo(bytes32 _walletId) view returns(uint64 _multisigThreshold, uint256[] _keyIds, uint64 _counter)
-func (_TeeWalletManager *TeeWalletManagerCallerSession) GetWalletKeysInfo(_walletId [32]byte) (struct {
-	MultisigThreshold uint64
-	KeyIds            []*big.Int
-	Counter           uint64
+// Solidity: function getWalletCosignersAndThreshold(bytes32 _walletId) view returns(address[] _cosigners, uint256 _cosignersThreshold)
+func (_TeeWalletManager *TeeWalletManagerCallerSession) GetWalletCosignersAndThreshold(_walletId [32]byte) (struct {
+	Cosigners          []common.Address
+	CosignersThreshold *big.Int
 }, error) {
-	return _TeeWalletManager.Contract.GetWalletKeysInfo(&_TeeWalletManager.CallOpts, _walletId)
+	return _TeeWalletManager.Contract.GetWalletCosignersAndThreshold(&_TeeWalletManager.CallOpts, _walletId)
 }
 
-// GetWalletOpType is a free data retrieval call binding the contract method 0x0b09121f.
+// GetWalletProjectId is a free data retrieval call binding the contract method 0xf8d5d64f.
 //
-// Solidity: function getWalletOpType(bytes32 _walletId) view returns(bytes32 _opType)
-func (_TeeWalletManager *TeeWalletManagerCaller) GetWalletOpType(opts *bind.CallOpts, _walletId [32]byte) ([32]byte, error) {
+// Solidity: function getWalletProjectId(bytes32 _walletId) view returns(bytes32 _projectId)
+func (_TeeWalletManager *TeeWalletManagerCaller) GetWalletProjectId(opts *bind.CallOpts, _walletId [32]byte) ([32]byte, error) {
 	var out []interface{}
-	err := _TeeWalletManager.contract.Call(opts, &out, "getWalletOpType", _walletId)
+	err := _TeeWalletManager.contract.Call(opts, &out, "getWalletProjectId", _walletId)
 
 	if err != nil {
 		return *new([32]byte), err
@@ -528,49 +355,18 @@ func (_TeeWalletManager *TeeWalletManagerCaller) GetWalletOpType(opts *bind.Call
 
 }
 
-// GetWalletOpType is a free data retrieval call binding the contract method 0x0b09121f.
+// GetWalletProjectId is a free data retrieval call binding the contract method 0xf8d5d64f.
 //
-// Solidity: function getWalletOpType(bytes32 _walletId) view returns(bytes32 _opType)
-func (_TeeWalletManager *TeeWalletManagerSession) GetWalletOpType(_walletId [32]byte) ([32]byte, error) {
-	return _TeeWalletManager.Contract.GetWalletOpType(&_TeeWalletManager.CallOpts, _walletId)
+// Solidity: function getWalletProjectId(bytes32 _walletId) view returns(bytes32 _projectId)
+func (_TeeWalletManager *TeeWalletManagerSession) GetWalletProjectId(_walletId [32]byte) ([32]byte, error) {
+	return _TeeWalletManager.Contract.GetWalletProjectId(&_TeeWalletManager.CallOpts, _walletId)
 }
 
-// GetWalletOpType is a free data retrieval call binding the contract method 0x0b09121f.
+// GetWalletProjectId is a free data retrieval call binding the contract method 0xf8d5d64f.
 //
-// Solidity: function getWalletOpType(bytes32 _walletId) view returns(bytes32 _opType)
-func (_TeeWalletManager *TeeWalletManagerCallerSession) GetWalletOpType(_walletId [32]byte) ([32]byte, error) {
-	return _TeeWalletManager.Contract.GetWalletOpType(&_TeeWalletManager.CallOpts, _walletId)
-}
-
-// GetWalletOwner is a free data retrieval call binding the contract method 0xc8ebd47a.
-//
-// Solidity: function getWalletOwner(bytes32 _walletId) view returns(address _walletOwner)
-func (_TeeWalletManager *TeeWalletManagerCaller) GetWalletOwner(opts *bind.CallOpts, _walletId [32]byte) (common.Address, error) {
-	var out []interface{}
-	err := _TeeWalletManager.contract.Call(opts, &out, "getWalletOwner", _walletId)
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// GetWalletOwner is a free data retrieval call binding the contract method 0xc8ebd47a.
-//
-// Solidity: function getWalletOwner(bytes32 _walletId) view returns(address _walletOwner)
-func (_TeeWalletManager *TeeWalletManagerSession) GetWalletOwner(_walletId [32]byte) (common.Address, error) {
-	return _TeeWalletManager.Contract.GetWalletOwner(&_TeeWalletManager.CallOpts, _walletId)
-}
-
-// GetWalletOwner is a free data retrieval call binding the contract method 0xc8ebd47a.
-//
-// Solidity: function getWalletOwner(bytes32 _walletId) view returns(address _walletOwner)
-func (_TeeWalletManager *TeeWalletManagerCallerSession) GetWalletOwner(_walletId [32]byte) (common.Address, error) {
-	return _TeeWalletManager.Contract.GetWalletOwner(&_TeeWalletManager.CallOpts, _walletId)
+// Solidity: function getWalletProjectId(bytes32 _walletId) view returns(bytes32 _projectId)
+func (_TeeWalletManager *TeeWalletManagerCallerSession) GetWalletProjectId(_walletId [32]byte) ([32]byte, error) {
+	return _TeeWalletManager.Contract.GetWalletProjectId(&_TeeWalletManager.CallOpts, _walletId)
 }
 
 // GetWalletStatus is a free data retrieval call binding the contract method 0xbfb5dcf9.
@@ -604,140 +400,119 @@ func (_TeeWalletManager *TeeWalletManagerCallerSession) GetWalletStatus(_walletI
 	return _TeeWalletManager.Contract.GetWalletStatus(&_TeeWalletManager.CallOpts, _walletId)
 }
 
-// ReceivingTees is a free data retrieval call binding the contract method 0x0fb83e84.
+// IsOpTypeSupported is a free data retrieval call binding the contract method 0x7880532b.
 //
-// Solidity: function receivingTees(bytes32 _walletId) view returns((address,address,string)[] _receivingTees)
-func (_TeeWalletManager *TeeWalletManagerCaller) ReceivingTees(opts *bind.CallOpts, _walletId [32]byte) ([]ITeeRegistryTeeMachine, error) {
+// Solidity: function isOpTypeSupported(bytes32 _opType) view returns(bool)
+func (_TeeWalletManager *TeeWalletManagerCaller) IsOpTypeSupported(opts *bind.CallOpts, _opType [32]byte) (bool, error) {
 	var out []interface{}
-	err := _TeeWalletManager.contract.Call(opts, &out, "receivingTees", _walletId)
+	err := _TeeWalletManager.contract.Call(opts, &out, "isOpTypeSupported", _opType)
 
 	if err != nil {
-		return *new([]ITeeRegistryTeeMachine), err
+		return *new(bool), err
 	}
 
-	out0 := *abi.ConvertType(out[0], new([]ITeeRegistryTeeMachine)).(*[]ITeeRegistryTeeMachine)
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
 
 	return out0, err
 
 }
 
-// ReceivingTees is a free data retrieval call binding the contract method 0x0fb83e84.
+// IsOpTypeSupported is a free data retrieval call binding the contract method 0x7880532b.
 //
-// Solidity: function receivingTees(bytes32 _walletId) view returns((address,address,string)[] _receivingTees)
-func (_TeeWalletManager *TeeWalletManagerSession) ReceivingTees(_walletId [32]byte) ([]ITeeRegistryTeeMachine, error) {
-	return _TeeWalletManager.Contract.ReceivingTees(&_TeeWalletManager.CallOpts, _walletId)
+// Solidity: function isOpTypeSupported(bytes32 _opType) view returns(bool)
+func (_TeeWalletManager *TeeWalletManagerSession) IsOpTypeSupported(_opType [32]byte) (bool, error) {
+	return _TeeWalletManager.Contract.IsOpTypeSupported(&_TeeWalletManager.CallOpts, _opType)
 }
 
-// ReceivingTees is a free data retrieval call binding the contract method 0x0fb83e84.
+// IsOpTypeSupported is a free data retrieval call binding the contract method 0x7880532b.
 //
-// Solidity: function receivingTees(bytes32 _walletId) view returns((address,address,string)[] _receivingTees)
-func (_TeeWalletManager *TeeWalletManagerCallerSession) ReceivingTees(_walletId [32]byte) ([]ITeeRegistryTeeMachine, error) {
-	return _TeeWalletManager.Contract.ReceivingTees(&_TeeWalletManager.CallOpts, _walletId)
+// Solidity: function isOpTypeSupported(bytes32 _opType) view returns(bool)
+func (_TeeWalletManager *TeeWalletManagerCallerSession) IsOpTypeSupported(_opType [32]byte) (bool, error) {
+	return _TeeWalletManager.Contract.IsOpTypeSupported(&_TeeWalletManager.CallOpts, _opType)
 }
 
-// AddKey is a paid mutator transaction binding the contract method 0x7875fa5c.
+// CloseWalletInitialization is a paid mutator transaction binding the contract method 0xa3c6d865.
 //
-// Solidity: function addKey(address _teeId, bytes32 _walletId) payable returns(uint64 _keyId)
-func (_TeeWalletManager *TeeWalletManagerTransactor) AddKey(opts *bind.TransactOpts, _teeId common.Address, _walletId [32]byte) (*types.Transaction, error) {
-	return _TeeWalletManager.contract.Transact(opts, "addKey", _teeId, _walletId)
+// Solidity: function closeWalletInitialization(bytes32 _walletId) returns()
+func (_TeeWalletManager *TeeWalletManagerTransactor) CloseWalletInitialization(opts *bind.TransactOpts, _walletId [32]byte) (*types.Transaction, error) {
+	return _TeeWalletManager.contract.Transact(opts, "closeWalletInitialization", _walletId)
 }
 
-// AddKey is a paid mutator transaction binding the contract method 0x7875fa5c.
+// CloseWalletInitialization is a paid mutator transaction binding the contract method 0xa3c6d865.
 //
-// Solidity: function addKey(address _teeId, bytes32 _walletId) payable returns(uint64 _keyId)
-func (_TeeWalletManager *TeeWalletManagerSession) AddKey(_teeId common.Address, _walletId [32]byte) (*types.Transaction, error) {
-	return _TeeWalletManager.Contract.AddKey(&_TeeWalletManager.TransactOpts, _teeId, _walletId)
+// Solidity: function closeWalletInitialization(bytes32 _walletId) returns()
+func (_TeeWalletManager *TeeWalletManagerSession) CloseWalletInitialization(_walletId [32]byte) (*types.Transaction, error) {
+	return _TeeWalletManager.Contract.CloseWalletInitialization(&_TeeWalletManager.TransactOpts, _walletId)
 }
 
-// AddKey is a paid mutator transaction binding the contract method 0x7875fa5c.
+// CloseWalletInitialization is a paid mutator transaction binding the contract method 0xa3c6d865.
 //
-// Solidity: function addKey(address _teeId, bytes32 _walletId) payable returns(uint64 _keyId)
-func (_TeeWalletManager *TeeWalletManagerTransactorSession) AddKey(_teeId common.Address, _walletId [32]byte) (*types.Transaction, error) {
-	return _TeeWalletManager.Contract.AddKey(&_TeeWalletManager.TransactOpts, _teeId, _walletId)
+// Solidity: function closeWalletInitialization(bytes32 _walletId) returns()
+func (_TeeWalletManager *TeeWalletManagerTransactorSession) CloseWalletInitialization(_walletId [32]byte) (*types.Transaction, error) {
+	return _TeeWalletManager.Contract.CloseWalletInitialization(&_TeeWalletManager.TransactOpts, _walletId)
 }
 
-// CleanUpTeeIds is a paid mutator transaction binding the contract method 0xaec4c979.
+// ConfirmAdmin is a paid mutator transaction binding the contract method 0x9ab3b981.
 //
-// Solidity: function cleanUpTeeIds(bytes32 _walletId, uint64 _keyId) returns()
-func (_TeeWalletManager *TeeWalletManagerTransactor) CleanUpTeeIds(opts *bind.TransactOpts, _walletId [32]byte, _keyId uint64) (*types.Transaction, error) {
-	return _TeeWalletManager.contract.Transact(opts, "cleanUpTeeIds", _walletId, _keyId)
+// Solidity: function confirmAdmin(bytes32 _walletId) returns()
+func (_TeeWalletManager *TeeWalletManagerTransactor) ConfirmAdmin(opts *bind.TransactOpts, _walletId [32]byte) (*types.Transaction, error) {
+	return _TeeWalletManager.contract.Transact(opts, "confirmAdmin", _walletId)
 }
 
-// CleanUpTeeIds is a paid mutator transaction binding the contract method 0xaec4c979.
+// ConfirmAdmin is a paid mutator transaction binding the contract method 0x9ab3b981.
 //
-// Solidity: function cleanUpTeeIds(bytes32 _walletId, uint64 _keyId) returns()
-func (_TeeWalletManager *TeeWalletManagerSession) CleanUpTeeIds(_walletId [32]byte, _keyId uint64) (*types.Transaction, error) {
-	return _TeeWalletManager.Contract.CleanUpTeeIds(&_TeeWalletManager.TransactOpts, _walletId, _keyId)
+// Solidity: function confirmAdmin(bytes32 _walletId) returns()
+func (_TeeWalletManager *TeeWalletManagerSession) ConfirmAdmin(_walletId [32]byte) (*types.Transaction, error) {
+	return _TeeWalletManager.Contract.ConfirmAdmin(&_TeeWalletManager.TransactOpts, _walletId)
 }
 
-// CleanUpTeeIds is a paid mutator transaction binding the contract method 0xaec4c979.
+// ConfirmAdmin is a paid mutator transaction binding the contract method 0x9ab3b981.
 //
-// Solidity: function cleanUpTeeIds(bytes32 _walletId, uint64 _keyId) returns()
-func (_TeeWalletManager *TeeWalletManagerTransactorSession) CleanUpTeeIds(_walletId [32]byte, _keyId uint64) (*types.Transaction, error) {
-	return _TeeWalletManager.Contract.CleanUpTeeIds(&_TeeWalletManager.TransactOpts, _walletId, _keyId)
+// Solidity: function confirmAdmin(bytes32 _walletId) returns()
+func (_TeeWalletManager *TeeWalletManagerTransactorSession) ConfirmAdmin(_walletId [32]byte) (*types.Transaction, error) {
+	return _TeeWalletManager.Contract.ConfirmAdmin(&_TeeWalletManager.TransactOpts, _walletId)
 }
 
-// ConfirmKey is a paid mutator transaction binding the contract method 0xea7e86f6.
+// ConfirmCosigner is a paid mutator transaction binding the contract method 0x77f74c1a.
 //
-// Solidity: function confirmKey((bytes,(uint8,bytes32,bytes32)[],(bytes32,bytes32,uint16,uint64,(address,bytes32,uint256,bytes32),(bytes,string))) _proof) returns()
-func (_TeeWalletManager *TeeWalletManagerTransactor) ConfirmKey(opts *bind.TransactOpts, _proof ITeeKeyExistenceProof) (*types.Transaction, error) {
-	return _TeeWalletManager.contract.Transact(opts, "confirmKey", _proof)
+// Solidity: function confirmCosigner(bytes32 _walletId) returns()
+func (_TeeWalletManager *TeeWalletManagerTransactor) ConfirmCosigner(opts *bind.TransactOpts, _walletId [32]byte) (*types.Transaction, error) {
+	return _TeeWalletManager.contract.Transact(opts, "confirmCosigner", _walletId)
 }
 
-// ConfirmKey is a paid mutator transaction binding the contract method 0xea7e86f6.
+// ConfirmCosigner is a paid mutator transaction binding the contract method 0x77f74c1a.
 //
-// Solidity: function confirmKey((bytes,(uint8,bytes32,bytes32)[],(bytes32,bytes32,uint16,uint64,(address,bytes32,uint256,bytes32),(bytes,string))) _proof) returns()
-func (_TeeWalletManager *TeeWalletManagerSession) ConfirmKey(_proof ITeeKeyExistenceProof) (*types.Transaction, error) {
-	return _TeeWalletManager.Contract.ConfirmKey(&_TeeWalletManager.TransactOpts, _proof)
+// Solidity: function confirmCosigner(bytes32 _walletId) returns()
+func (_TeeWalletManager *TeeWalletManagerSession) ConfirmCosigner(_walletId [32]byte) (*types.Transaction, error) {
+	return _TeeWalletManager.Contract.ConfirmCosigner(&_TeeWalletManager.TransactOpts, _walletId)
 }
 
-// ConfirmKey is a paid mutator transaction binding the contract method 0xea7e86f6.
+// ConfirmCosigner is a paid mutator transaction binding the contract method 0x77f74c1a.
 //
-// Solidity: function confirmKey((bytes,(uint8,bytes32,bytes32)[],(bytes32,bytes32,uint16,uint64,(address,bytes32,uint256,bytes32),(bytes,string))) _proof) returns()
-func (_TeeWalletManager *TeeWalletManagerTransactorSession) ConfirmKey(_proof ITeeKeyExistenceProof) (*types.Transaction, error) {
-	return _TeeWalletManager.Contract.ConfirmKey(&_TeeWalletManager.TransactOpts, _proof)
+// Solidity: function confirmCosigner(bytes32 _walletId) returns()
+func (_TeeWalletManager *TeeWalletManagerTransactorSession) ConfirmCosigner(_walletId [32]byte) (*types.Transaction, error) {
+	return _TeeWalletManager.Contract.ConfirmCosigner(&_TeeWalletManager.TransactOpts, _walletId)
 }
 
-// ConfirmOwnership is a paid mutator transaction binding the contract method 0x7ff0e872.
+// CreateWallet is a paid mutator transaction binding the contract method 0x1d647605.
 //
-// Solidity: function confirmOwnership(bytes32 _walletId) returns()
-func (_TeeWalletManager *TeeWalletManagerTransactor) ConfirmOwnership(opts *bind.TransactOpts, _walletId [32]byte) (*types.Transaction, error) {
-	return _TeeWalletManager.contract.Transact(opts, "confirmOwnership", _walletId)
+// Solidity: function createWallet(bytes32 _projectId) returns(bytes32 _walletId)
+func (_TeeWalletManager *TeeWalletManagerTransactor) CreateWallet(opts *bind.TransactOpts, _projectId [32]byte) (*types.Transaction, error) {
+	return _TeeWalletManager.contract.Transact(opts, "createWallet", _projectId)
 }
 
-// ConfirmOwnership is a paid mutator transaction binding the contract method 0x7ff0e872.
+// CreateWallet is a paid mutator transaction binding the contract method 0x1d647605.
 //
-// Solidity: function confirmOwnership(bytes32 _walletId) returns()
-func (_TeeWalletManager *TeeWalletManagerSession) ConfirmOwnership(_walletId [32]byte) (*types.Transaction, error) {
-	return _TeeWalletManager.Contract.ConfirmOwnership(&_TeeWalletManager.TransactOpts, _walletId)
+// Solidity: function createWallet(bytes32 _projectId) returns(bytes32 _walletId)
+func (_TeeWalletManager *TeeWalletManagerSession) CreateWallet(_projectId [32]byte) (*types.Transaction, error) {
+	return _TeeWalletManager.Contract.CreateWallet(&_TeeWalletManager.TransactOpts, _projectId)
 }
 
-// ConfirmOwnership is a paid mutator transaction binding the contract method 0x7ff0e872.
+// CreateWallet is a paid mutator transaction binding the contract method 0x1d647605.
 //
-// Solidity: function confirmOwnership(bytes32 _walletId) returns()
-func (_TeeWalletManager *TeeWalletManagerTransactorSession) ConfirmOwnership(_walletId [32]byte) (*types.Transaction, error) {
-	return _TeeWalletManager.Contract.ConfirmOwnership(&_TeeWalletManager.TransactOpts, _walletId)
-}
-
-// DeleteKey is a paid mutator transaction binding the contract method 0x90e31e7e.
-//
-// Solidity: function deleteKey(address _teeId, bytes32 _walletId, uint64 _keyId) payable returns()
-func (_TeeWalletManager *TeeWalletManagerTransactor) DeleteKey(opts *bind.TransactOpts, _teeId common.Address, _walletId [32]byte, _keyId uint64) (*types.Transaction, error) {
-	return _TeeWalletManager.contract.Transact(opts, "deleteKey", _teeId, _walletId, _keyId)
-}
-
-// DeleteKey is a paid mutator transaction binding the contract method 0x90e31e7e.
-//
-// Solidity: function deleteKey(address _teeId, bytes32 _walletId, uint64 _keyId) payable returns()
-func (_TeeWalletManager *TeeWalletManagerSession) DeleteKey(_teeId common.Address, _walletId [32]byte, _keyId uint64) (*types.Transaction, error) {
-	return _TeeWalletManager.Contract.DeleteKey(&_TeeWalletManager.TransactOpts, _teeId, _walletId, _keyId)
-}
-
-// DeleteKey is a paid mutator transaction binding the contract method 0x90e31e7e.
-//
-// Solidity: function deleteKey(address _teeId, bytes32 _walletId, uint64 _keyId) payable returns()
-func (_TeeWalletManager *TeeWalletManagerTransactorSession) DeleteKey(_teeId common.Address, _walletId [32]byte, _keyId uint64) (*types.Transaction, error) {
-	return _TeeWalletManager.Contract.DeleteKey(&_TeeWalletManager.TransactOpts, _teeId, _walletId, _keyId)
+// Solidity: function createWallet(bytes32 _projectId) returns(bytes32 _walletId)
+func (_TeeWalletManager *TeeWalletManagerTransactorSession) CreateWallet(_projectId [32]byte) (*types.Transaction, error) {
+	return _TeeWalletManager.Contract.CreateWallet(&_TeeWalletManager.TransactOpts, _projectId)
 }
 
 // EnableWallet is a paid mutator transaction binding the contract method 0x676f358c.
@@ -761,27 +536,6 @@ func (_TeeWalletManager *TeeWalletManagerTransactorSession) EnableWallet(_wallet
 	return _TeeWalletManager.Contract.EnableWallet(&_TeeWalletManager.TransactOpts, _walletId)
 }
 
-// InitializeWallet is a paid mutator transaction binding the contract method 0xdeb39610.
-//
-// Solidity: function initializeWallet(bytes32 _opType, uint64 _multisigThreshold) payable returns(bytes32 _walletId)
-func (_TeeWalletManager *TeeWalletManagerTransactor) InitializeWallet(opts *bind.TransactOpts, _opType [32]byte, _multisigThreshold uint64) (*types.Transaction, error) {
-	return _TeeWalletManager.contract.Transact(opts, "initializeWallet", _opType, _multisigThreshold)
-}
-
-// InitializeWallet is a paid mutator transaction binding the contract method 0xdeb39610.
-//
-// Solidity: function initializeWallet(bytes32 _opType, uint64 _multisigThreshold) payable returns(bytes32 _walletId)
-func (_TeeWalletManager *TeeWalletManagerSession) InitializeWallet(_opType [32]byte, _multisigThreshold uint64) (*types.Transaction, error) {
-	return _TeeWalletManager.Contract.InitializeWallet(&_TeeWalletManager.TransactOpts, _opType, _multisigThreshold)
-}
-
-// InitializeWallet is a paid mutator transaction binding the contract method 0xdeb39610.
-//
-// Solidity: function initializeWallet(bytes32 _opType, uint64 _multisigThreshold) payable returns(bytes32 _walletId)
-func (_TeeWalletManager *TeeWalletManagerTransactorSession) InitializeWallet(_opType [32]byte, _multisigThreshold uint64) (*types.Transaction, error) {
-	return _TeeWalletManager.Contract.InitializeWallet(&_TeeWalletManager.TransactOpts, _opType, _multisigThreshold)
-}
-
 // PauseWallet is a paid mutator transaction binding the contract method 0x963a310d.
 //
 // Solidity: function pauseWallet(bytes32 _walletId) returns()
@@ -803,88 +557,644 @@ func (_TeeWalletManager *TeeWalletManagerTransactorSession) PauseWallet(_walletI
 	return _TeeWalletManager.Contract.PauseWallet(&_TeeWalletManager.TransactOpts, _walletId)
 }
 
-// ProposeNewOwner is a paid mutator transaction binding the contract method 0x3ad60dd6.
+// SetAdmins is a paid mutator transaction binding the contract method 0x42e1aa9a.
 //
-// Solidity: function proposeNewOwner(bytes32 _walletId, address _newOwner) returns()
-func (_TeeWalletManager *TeeWalletManagerTransactor) ProposeNewOwner(opts *bind.TransactOpts, _walletId [32]byte, _newOwner common.Address) (*types.Transaction, error) {
-	return _TeeWalletManager.contract.Transact(opts, "proposeNewOwner", _walletId, _newOwner)
+// Solidity: function setAdmins(bytes32 _walletId, (bytes32,bytes32)[] _adminsPublicKeys, uint64 _adminsThreshold) returns()
+func (_TeeWalletManager *TeeWalletManagerTransactor) SetAdmins(opts *bind.TransactOpts, _walletId [32]byte, _adminsPublicKeys []PublicKey, _adminsThreshold uint64) (*types.Transaction, error) {
+	return _TeeWalletManager.contract.Transact(opts, "setAdmins", _walletId, _adminsPublicKeys, _adminsThreshold)
 }
 
-// ProposeNewOwner is a paid mutator transaction binding the contract method 0x3ad60dd6.
+// SetAdmins is a paid mutator transaction binding the contract method 0x42e1aa9a.
 //
-// Solidity: function proposeNewOwner(bytes32 _walletId, address _newOwner) returns()
-func (_TeeWalletManager *TeeWalletManagerSession) ProposeNewOwner(_walletId [32]byte, _newOwner common.Address) (*types.Transaction, error) {
-	return _TeeWalletManager.Contract.ProposeNewOwner(&_TeeWalletManager.TransactOpts, _walletId, _newOwner)
+// Solidity: function setAdmins(bytes32 _walletId, (bytes32,bytes32)[] _adminsPublicKeys, uint64 _adminsThreshold) returns()
+func (_TeeWalletManager *TeeWalletManagerSession) SetAdmins(_walletId [32]byte, _adminsPublicKeys []PublicKey, _adminsThreshold uint64) (*types.Transaction, error) {
+	return _TeeWalletManager.Contract.SetAdmins(&_TeeWalletManager.TransactOpts, _walletId, _adminsPublicKeys, _adminsThreshold)
 }
 
-// ProposeNewOwner is a paid mutator transaction binding the contract method 0x3ad60dd6.
+// SetAdmins is a paid mutator transaction binding the contract method 0x42e1aa9a.
 //
-// Solidity: function proposeNewOwner(bytes32 _walletId, address _newOwner) returns()
-func (_TeeWalletManager *TeeWalletManagerTransactorSession) ProposeNewOwner(_walletId [32]byte, _newOwner common.Address) (*types.Transaction, error) {
-	return _TeeWalletManager.Contract.ProposeNewOwner(&_TeeWalletManager.TransactOpts, _walletId, _newOwner)
+// Solidity: function setAdmins(bytes32 _walletId, (bytes32,bytes32)[] _adminsPublicKeys, uint64 _adminsThreshold) returns()
+func (_TeeWalletManager *TeeWalletManagerTransactorSession) SetAdmins(_walletId [32]byte, _adminsPublicKeys []PublicKey, _adminsThreshold uint64) (*types.Transaction, error) {
+	return _TeeWalletManager.Contract.SetAdmins(&_TeeWalletManager.TransactOpts, _walletId, _adminsPublicKeys, _adminsThreshold)
 }
 
-// RequestKeyExistenceAttestation is a paid mutator transaction binding the contract method 0xfa42b651.
+// SetCosigners is a paid mutator transaction binding the contract method 0x3e00a2d4.
 //
-// Solidity: function requestKeyExistenceAttestation(address _teeId, bytes32 _walletId, uint64 _keyId) payable returns()
-func (_TeeWalletManager *TeeWalletManagerTransactor) RequestKeyExistenceAttestation(opts *bind.TransactOpts, _teeId common.Address, _walletId [32]byte, _keyId uint64) (*types.Transaction, error) {
-	return _TeeWalletManager.contract.Transact(opts, "requestKeyExistenceAttestation", _teeId, _walletId, _keyId)
+// Solidity: function setCosigners(bytes32 _walletId, address[] _cosigners, uint64 _cosignersThreshold) returns()
+func (_TeeWalletManager *TeeWalletManagerTransactor) SetCosigners(opts *bind.TransactOpts, _walletId [32]byte, _cosigners []common.Address, _cosignersThreshold uint64) (*types.Transaction, error) {
+	return _TeeWalletManager.contract.Transact(opts, "setCosigners", _walletId, _cosigners, _cosignersThreshold)
 }
 
-// RequestKeyExistenceAttestation is a paid mutator transaction binding the contract method 0xfa42b651.
+// SetCosigners is a paid mutator transaction binding the contract method 0x3e00a2d4.
 //
-// Solidity: function requestKeyExistenceAttestation(address _teeId, bytes32 _walletId, uint64 _keyId) payable returns()
-func (_TeeWalletManager *TeeWalletManagerSession) RequestKeyExistenceAttestation(_teeId common.Address, _walletId [32]byte, _keyId uint64) (*types.Transaction, error) {
-	return _TeeWalletManager.Contract.RequestKeyExistenceAttestation(&_TeeWalletManager.TransactOpts, _teeId, _walletId, _keyId)
+// Solidity: function setCosigners(bytes32 _walletId, address[] _cosigners, uint64 _cosignersThreshold) returns()
+func (_TeeWalletManager *TeeWalletManagerSession) SetCosigners(_walletId [32]byte, _cosigners []common.Address, _cosignersThreshold uint64) (*types.Transaction, error) {
+	return _TeeWalletManager.Contract.SetCosigners(&_TeeWalletManager.TransactOpts, _walletId, _cosigners, _cosignersThreshold)
 }
 
-// RequestKeyExistenceAttestation is a paid mutator transaction binding the contract method 0xfa42b651.
+// SetCosigners is a paid mutator transaction binding the contract method 0x3e00a2d4.
 //
-// Solidity: function requestKeyExistenceAttestation(address _teeId, bytes32 _walletId, uint64 _keyId) payable returns()
-func (_TeeWalletManager *TeeWalletManagerTransactorSession) RequestKeyExistenceAttestation(_teeId common.Address, _walletId [32]byte, _keyId uint64) (*types.Transaction, error) {
-	return _TeeWalletManager.Contract.RequestKeyExistenceAttestation(&_TeeWalletManager.TransactOpts, _teeId, _walletId, _keyId)
+// Solidity: function setCosigners(bytes32 _walletId, address[] _cosigners, uint64 _cosignersThreshold) returns()
+func (_TeeWalletManager *TeeWalletManagerTransactorSession) SetCosigners(_walletId [32]byte, _cosigners []common.Address, _cosignersThreshold uint64) (*types.Transaction, error) {
+	return _TeeWalletManager.Contract.SetCosigners(&_TeeWalletManager.TransactOpts, _walletId, _cosigners, _cosignersThreshold)
 }
 
-// SetSubmitAddress is a paid mutator transaction binding the contract method 0x9f73ece8.
-//
-// Solidity: function setSubmitAddress(bytes32 _walletId, address _submitAddress) returns()
-func (_TeeWalletManager *TeeWalletManagerTransactor) SetSubmitAddress(opts *bind.TransactOpts, _walletId [32]byte, _submitAddress common.Address) (*types.Transaction, error) {
-	return _TeeWalletManager.contract.Transact(opts, "setSubmitAddress", _walletId, _submitAddress)
+// TeeWalletManagerWalletAdminConfirmedIterator is returned from FilterWalletAdminConfirmed and is used to iterate over the raw logs and unpacked data for WalletAdminConfirmed events raised by the TeeWalletManager contract.
+type TeeWalletManagerWalletAdminConfirmedIterator struct {
+	Event *TeeWalletManagerWalletAdminConfirmed // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
 }
 
-// SetSubmitAddress is a paid mutator transaction binding the contract method 0x9f73ece8.
-//
-// Solidity: function setSubmitAddress(bytes32 _walletId, address _submitAddress) returns()
-func (_TeeWalletManager *TeeWalletManagerSession) SetSubmitAddress(_walletId [32]byte, _submitAddress common.Address) (*types.Transaction, error) {
-	return _TeeWalletManager.Contract.SetSubmitAddress(&_TeeWalletManager.TransactOpts, _walletId, _submitAddress)
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeeWalletManagerWalletAdminConfirmedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeeWalletManagerWalletAdminConfirmed)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeeWalletManagerWalletAdminConfirmed)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
 }
 
-// SetSubmitAddress is a paid mutator transaction binding the contract method 0x9f73ece8.
-//
-// Solidity: function setSubmitAddress(bytes32 _walletId, address _submitAddress) returns()
-func (_TeeWalletManager *TeeWalletManagerTransactorSession) SetSubmitAddress(_walletId [32]byte, _submitAddress common.Address) (*types.Transaction, error) {
-	return _TeeWalletManager.Contract.SetSubmitAddress(&_TeeWalletManager.TransactOpts, _walletId, _submitAddress)
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeeWalletManagerWalletAdminConfirmedIterator) Error() error {
+	return it.fail
 }
 
-// SetWalletBackupManager is a paid mutator transaction binding the contract method 0xb6bb79fc.
-//
-// Solidity: function setWalletBackupManager(bytes32 _walletId, address _backupManager) returns()
-func (_TeeWalletManager *TeeWalletManagerTransactor) SetWalletBackupManager(opts *bind.TransactOpts, _walletId [32]byte, _backupManager common.Address) (*types.Transaction, error) {
-	return _TeeWalletManager.contract.Transact(opts, "setWalletBackupManager", _walletId, _backupManager)
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeeWalletManagerWalletAdminConfirmedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
 }
 
-// SetWalletBackupManager is a paid mutator transaction binding the contract method 0xb6bb79fc.
-//
-// Solidity: function setWalletBackupManager(bytes32 _walletId, address _backupManager) returns()
-func (_TeeWalletManager *TeeWalletManagerSession) SetWalletBackupManager(_walletId [32]byte, _backupManager common.Address) (*types.Transaction, error) {
-	return _TeeWalletManager.Contract.SetWalletBackupManager(&_TeeWalletManager.TransactOpts, _walletId, _backupManager)
+// TeeWalletManagerWalletAdminConfirmed represents a WalletAdminConfirmed event raised by the TeeWalletManager contract.
+type TeeWalletManagerWalletAdminConfirmed struct {
+	WalletId [32]byte
+	Admin    common.Address
+	Raw      types.Log // Blockchain specific contextual infos
 }
 
-// SetWalletBackupManager is a paid mutator transaction binding the contract method 0xb6bb79fc.
+// FilterWalletAdminConfirmed is a free log retrieval operation binding the contract event 0xefdffb32952334eb7adb154fb07bfa263335e73f8ad33a54aba665efe346cb08.
 //
-// Solidity: function setWalletBackupManager(bytes32 _walletId, address _backupManager) returns()
-func (_TeeWalletManager *TeeWalletManagerTransactorSession) SetWalletBackupManager(_walletId [32]byte, _backupManager common.Address) (*types.Transaction, error) {
-	return _TeeWalletManager.Contract.SetWalletBackupManager(&_TeeWalletManager.TransactOpts, _walletId, _backupManager)
+// Solidity: event WalletAdminConfirmed(bytes32 indexed walletId, address indexed admin)
+func (_TeeWalletManager *TeeWalletManagerFilterer) FilterWalletAdminConfirmed(opts *bind.FilterOpts, walletId [][32]byte, admin []common.Address) (*TeeWalletManagerWalletAdminConfirmedIterator, error) {
+
+	var walletIdRule []interface{}
+	for _, walletIdItem := range walletId {
+		walletIdRule = append(walletIdRule, walletIdItem)
+	}
+	var adminRule []interface{}
+	for _, adminItem := range admin {
+		adminRule = append(adminRule, adminItem)
+	}
+
+	logs, sub, err := _TeeWalletManager.contract.FilterLogs(opts, "WalletAdminConfirmed", walletIdRule, adminRule)
+	if err != nil {
+		return nil, err
+	}
+	return &TeeWalletManagerWalletAdminConfirmedIterator{contract: _TeeWalletManager.contract, event: "WalletAdminConfirmed", logs: logs, sub: sub}, nil
+}
+
+// WatchWalletAdminConfirmed is a free log subscription operation binding the contract event 0xefdffb32952334eb7adb154fb07bfa263335e73f8ad33a54aba665efe346cb08.
+//
+// Solidity: event WalletAdminConfirmed(bytes32 indexed walletId, address indexed admin)
+func (_TeeWalletManager *TeeWalletManagerFilterer) WatchWalletAdminConfirmed(opts *bind.WatchOpts, sink chan<- *TeeWalletManagerWalletAdminConfirmed, walletId [][32]byte, admin []common.Address) (event.Subscription, error) {
+
+	var walletIdRule []interface{}
+	for _, walletIdItem := range walletId {
+		walletIdRule = append(walletIdRule, walletIdItem)
+	}
+	var adminRule []interface{}
+	for _, adminItem := range admin {
+		adminRule = append(adminRule, adminItem)
+	}
+
+	logs, sub, err := _TeeWalletManager.contract.WatchLogs(opts, "WalletAdminConfirmed", walletIdRule, adminRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeeWalletManagerWalletAdminConfirmed)
+				if err := _TeeWalletManager.contract.UnpackLog(event, "WalletAdminConfirmed", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseWalletAdminConfirmed is a log parse operation binding the contract event 0xefdffb32952334eb7adb154fb07bfa263335e73f8ad33a54aba665efe346cb08.
+//
+// Solidity: event WalletAdminConfirmed(bytes32 indexed walletId, address indexed admin)
+func (_TeeWalletManager *TeeWalletManagerFilterer) ParseWalletAdminConfirmed(log types.Log) (*TeeWalletManagerWalletAdminConfirmed, error) {
+	event := new(TeeWalletManagerWalletAdminConfirmed)
+	if err := _TeeWalletManager.contract.UnpackLog(event, "WalletAdminConfirmed", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// TeeWalletManagerWalletAdminsSetIterator is returned from FilterWalletAdminsSet and is used to iterate over the raw logs and unpacked data for WalletAdminsSet events raised by the TeeWalletManager contract.
+type TeeWalletManagerWalletAdminsSetIterator struct {
+	Event *TeeWalletManagerWalletAdminsSet // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeeWalletManagerWalletAdminsSetIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeeWalletManagerWalletAdminsSet)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeeWalletManagerWalletAdminsSet)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeeWalletManagerWalletAdminsSetIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeeWalletManagerWalletAdminsSetIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeeWalletManagerWalletAdminsSet represents a WalletAdminsSet event raised by the TeeWalletManager contract.
+type TeeWalletManagerWalletAdminsSet struct {
+	WalletId         [32]byte
+	AdminsPublicKeys []PublicKey
+	AdminsThreshold  uint64
+	Raw              types.Log // Blockchain specific contextual infos
+}
+
+// FilterWalletAdminsSet is a free log retrieval operation binding the contract event 0xfac536eb8a80dfc8ca75bf6543d4b1f435e119551bafd3733fcb28850d29d8aa.
+//
+// Solidity: event WalletAdminsSet(bytes32 indexed walletId, (bytes32,bytes32)[] adminsPublicKeys, uint64 adminsThreshold)
+func (_TeeWalletManager *TeeWalletManagerFilterer) FilterWalletAdminsSet(opts *bind.FilterOpts, walletId [][32]byte) (*TeeWalletManagerWalletAdminsSetIterator, error) {
+
+	var walletIdRule []interface{}
+	for _, walletIdItem := range walletId {
+		walletIdRule = append(walletIdRule, walletIdItem)
+	}
+
+	logs, sub, err := _TeeWalletManager.contract.FilterLogs(opts, "WalletAdminsSet", walletIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return &TeeWalletManagerWalletAdminsSetIterator{contract: _TeeWalletManager.contract, event: "WalletAdminsSet", logs: logs, sub: sub}, nil
+}
+
+// WatchWalletAdminsSet is a free log subscription operation binding the contract event 0xfac536eb8a80dfc8ca75bf6543d4b1f435e119551bafd3733fcb28850d29d8aa.
+//
+// Solidity: event WalletAdminsSet(bytes32 indexed walletId, (bytes32,bytes32)[] adminsPublicKeys, uint64 adminsThreshold)
+func (_TeeWalletManager *TeeWalletManagerFilterer) WatchWalletAdminsSet(opts *bind.WatchOpts, sink chan<- *TeeWalletManagerWalletAdminsSet, walletId [][32]byte) (event.Subscription, error) {
+
+	var walletIdRule []interface{}
+	for _, walletIdItem := range walletId {
+		walletIdRule = append(walletIdRule, walletIdItem)
+	}
+
+	logs, sub, err := _TeeWalletManager.contract.WatchLogs(opts, "WalletAdminsSet", walletIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeeWalletManagerWalletAdminsSet)
+				if err := _TeeWalletManager.contract.UnpackLog(event, "WalletAdminsSet", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseWalletAdminsSet is a log parse operation binding the contract event 0xfac536eb8a80dfc8ca75bf6543d4b1f435e119551bafd3733fcb28850d29d8aa.
+//
+// Solidity: event WalletAdminsSet(bytes32 indexed walletId, (bytes32,bytes32)[] adminsPublicKeys, uint64 adminsThreshold)
+func (_TeeWalletManager *TeeWalletManagerFilterer) ParseWalletAdminsSet(log types.Log) (*TeeWalletManagerWalletAdminsSet, error) {
+	event := new(TeeWalletManagerWalletAdminsSet)
+	if err := _TeeWalletManager.contract.UnpackLog(event, "WalletAdminsSet", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// TeeWalletManagerWalletCosignerConfirmedIterator is returned from FilterWalletCosignerConfirmed and is used to iterate over the raw logs and unpacked data for WalletCosignerConfirmed events raised by the TeeWalletManager contract.
+type TeeWalletManagerWalletCosignerConfirmedIterator struct {
+	Event *TeeWalletManagerWalletCosignerConfirmed // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeeWalletManagerWalletCosignerConfirmedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeeWalletManagerWalletCosignerConfirmed)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeeWalletManagerWalletCosignerConfirmed)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeeWalletManagerWalletCosignerConfirmedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeeWalletManagerWalletCosignerConfirmedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeeWalletManagerWalletCosignerConfirmed represents a WalletCosignerConfirmed event raised by the TeeWalletManager contract.
+type TeeWalletManagerWalletCosignerConfirmed struct {
+	WalletId [32]byte
+	Cosigner common.Address
+	Raw      types.Log // Blockchain specific contextual infos
+}
+
+// FilterWalletCosignerConfirmed is a free log retrieval operation binding the contract event 0x10ab8f96b70aef2c884291a57e690b6d9e4d97ca15e4c8b2514626b8d0cd023b.
+//
+// Solidity: event WalletCosignerConfirmed(bytes32 indexed walletId, address indexed cosigner)
+func (_TeeWalletManager *TeeWalletManagerFilterer) FilterWalletCosignerConfirmed(opts *bind.FilterOpts, walletId [][32]byte, cosigner []common.Address) (*TeeWalletManagerWalletCosignerConfirmedIterator, error) {
+
+	var walletIdRule []interface{}
+	for _, walletIdItem := range walletId {
+		walletIdRule = append(walletIdRule, walletIdItem)
+	}
+	var cosignerRule []interface{}
+	for _, cosignerItem := range cosigner {
+		cosignerRule = append(cosignerRule, cosignerItem)
+	}
+
+	logs, sub, err := _TeeWalletManager.contract.FilterLogs(opts, "WalletCosignerConfirmed", walletIdRule, cosignerRule)
+	if err != nil {
+		return nil, err
+	}
+	return &TeeWalletManagerWalletCosignerConfirmedIterator{contract: _TeeWalletManager.contract, event: "WalletCosignerConfirmed", logs: logs, sub: sub}, nil
+}
+
+// WatchWalletCosignerConfirmed is a free log subscription operation binding the contract event 0x10ab8f96b70aef2c884291a57e690b6d9e4d97ca15e4c8b2514626b8d0cd023b.
+//
+// Solidity: event WalletCosignerConfirmed(bytes32 indexed walletId, address indexed cosigner)
+func (_TeeWalletManager *TeeWalletManagerFilterer) WatchWalletCosignerConfirmed(opts *bind.WatchOpts, sink chan<- *TeeWalletManagerWalletCosignerConfirmed, walletId [][32]byte, cosigner []common.Address) (event.Subscription, error) {
+
+	var walletIdRule []interface{}
+	for _, walletIdItem := range walletId {
+		walletIdRule = append(walletIdRule, walletIdItem)
+	}
+	var cosignerRule []interface{}
+	for _, cosignerItem := range cosigner {
+		cosignerRule = append(cosignerRule, cosignerItem)
+	}
+
+	logs, sub, err := _TeeWalletManager.contract.WatchLogs(opts, "WalletCosignerConfirmed", walletIdRule, cosignerRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeeWalletManagerWalletCosignerConfirmed)
+				if err := _TeeWalletManager.contract.UnpackLog(event, "WalletCosignerConfirmed", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseWalletCosignerConfirmed is a log parse operation binding the contract event 0x10ab8f96b70aef2c884291a57e690b6d9e4d97ca15e4c8b2514626b8d0cd023b.
+//
+// Solidity: event WalletCosignerConfirmed(bytes32 indexed walletId, address indexed cosigner)
+func (_TeeWalletManager *TeeWalletManagerFilterer) ParseWalletCosignerConfirmed(log types.Log) (*TeeWalletManagerWalletCosignerConfirmed, error) {
+	event := new(TeeWalletManagerWalletCosignerConfirmed)
+	if err := _TeeWalletManager.contract.UnpackLog(event, "WalletCosignerConfirmed", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// TeeWalletManagerWalletCosignersSetIterator is returned from FilterWalletCosignersSet and is used to iterate over the raw logs and unpacked data for WalletCosignersSet events raised by the TeeWalletManager contract.
+type TeeWalletManagerWalletCosignersSetIterator struct {
+	Event *TeeWalletManagerWalletCosignersSet // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeeWalletManagerWalletCosignersSetIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeeWalletManagerWalletCosignersSet)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeeWalletManagerWalletCosignersSet)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeeWalletManagerWalletCosignersSetIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeeWalletManagerWalletCosignersSetIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeeWalletManagerWalletCosignersSet represents a WalletCosignersSet event raised by the TeeWalletManager contract.
+type TeeWalletManagerWalletCosignersSet struct {
+	WalletId           [32]byte
+	Cosigners          []common.Address
+	CosignersThreshold uint64
+	Raw                types.Log // Blockchain specific contextual infos
+}
+
+// FilterWalletCosignersSet is a free log retrieval operation binding the contract event 0x48419616e657a6824f128cbf23c09b8b4750e1c50999dc05dd869a97ac4a9c31.
+//
+// Solidity: event WalletCosignersSet(bytes32 indexed walletId, address[] cosigners, uint64 cosignersThreshold)
+func (_TeeWalletManager *TeeWalletManagerFilterer) FilterWalletCosignersSet(opts *bind.FilterOpts, walletId [][32]byte) (*TeeWalletManagerWalletCosignersSetIterator, error) {
+
+	var walletIdRule []interface{}
+	for _, walletIdItem := range walletId {
+		walletIdRule = append(walletIdRule, walletIdItem)
+	}
+
+	logs, sub, err := _TeeWalletManager.contract.FilterLogs(opts, "WalletCosignersSet", walletIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return &TeeWalletManagerWalletCosignersSetIterator{contract: _TeeWalletManager.contract, event: "WalletCosignersSet", logs: logs, sub: sub}, nil
+}
+
+// WatchWalletCosignersSet is a free log subscription operation binding the contract event 0x48419616e657a6824f128cbf23c09b8b4750e1c50999dc05dd869a97ac4a9c31.
+//
+// Solidity: event WalletCosignersSet(bytes32 indexed walletId, address[] cosigners, uint64 cosignersThreshold)
+func (_TeeWalletManager *TeeWalletManagerFilterer) WatchWalletCosignersSet(opts *bind.WatchOpts, sink chan<- *TeeWalletManagerWalletCosignersSet, walletId [][32]byte) (event.Subscription, error) {
+
+	var walletIdRule []interface{}
+	for _, walletIdItem := range walletId {
+		walletIdRule = append(walletIdRule, walletIdItem)
+	}
+
+	logs, sub, err := _TeeWalletManager.contract.WatchLogs(opts, "WalletCosignersSet", walletIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeeWalletManagerWalletCosignersSet)
+				if err := _TeeWalletManager.contract.UnpackLog(event, "WalletCosignersSet", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseWalletCosignersSet is a log parse operation binding the contract event 0x48419616e657a6824f128cbf23c09b8b4750e1c50999dc05dd869a97ac4a9c31.
+//
+// Solidity: event WalletCosignersSet(bytes32 indexed walletId, address[] cosigners, uint64 cosignersThreshold)
+func (_TeeWalletManager *TeeWalletManagerFilterer) ParseWalletCosignersSet(log types.Log) (*TeeWalletManagerWalletCosignersSet, error) {
+	event := new(TeeWalletManagerWalletCosignersSet)
+	if err := _TeeWalletManager.contract.UnpackLog(event, "WalletCosignersSet", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
 }
 
 // TeeWalletManagerWalletCreatedIterator is returned from FilterWalletCreated and is used to iterate over the raw logs and unpacked data for WalletCreated events raised by the TeeWalletManager contract.
@@ -956,48 +1266,47 @@ func (it *TeeWalletManagerWalletCreatedIterator) Close() error {
 
 // TeeWalletManagerWalletCreated represents a WalletCreated event raised by the TeeWalletManager contract.
 type TeeWalletManagerWalletCreated struct {
-	WalletId [32]byte
-	Owner    common.Address
-	OpType   [32]byte
-	Raw      types.Log // Blockchain specific contextual infos
+	ProjectId [32]byte
+	WalletId  [32]byte
+	Raw       types.Log // Blockchain specific contextual infos
 }
 
-// FilterWalletCreated is a free log retrieval operation binding the contract event 0xac5b1cdce61c84ea0a95f1a97d5107f0b5fd19743e6400bce9e8a822fb2bc4ba.
+// FilterWalletCreated is a free log retrieval operation binding the contract event 0xbe8f27cef1f3d94120c9c547c3614f5b992fdb0c0a497cc920fde06546291ab4.
 //
-// Solidity: event WalletCreated(bytes32 indexed walletId, address indexed owner, bytes32 opType)
-func (_TeeWalletManager *TeeWalletManagerFilterer) FilterWalletCreated(opts *bind.FilterOpts, walletId [][32]byte, owner []common.Address) (*TeeWalletManagerWalletCreatedIterator, error) {
+// Solidity: event WalletCreated(bytes32 indexed projectId, bytes32 indexed walletId)
+func (_TeeWalletManager *TeeWalletManagerFilterer) FilterWalletCreated(opts *bind.FilterOpts, projectId [][32]byte, walletId [][32]byte) (*TeeWalletManagerWalletCreatedIterator, error) {
 
+	var projectIdRule []interface{}
+	for _, projectIdItem := range projectId {
+		projectIdRule = append(projectIdRule, projectIdItem)
+	}
 	var walletIdRule []interface{}
 	for _, walletIdItem := range walletId {
 		walletIdRule = append(walletIdRule, walletIdItem)
 	}
-	var ownerRule []interface{}
-	for _, ownerItem := range owner {
-		ownerRule = append(ownerRule, ownerItem)
-	}
 
-	logs, sub, err := _TeeWalletManager.contract.FilterLogs(opts, "WalletCreated", walletIdRule, ownerRule)
+	logs, sub, err := _TeeWalletManager.contract.FilterLogs(opts, "WalletCreated", projectIdRule, walletIdRule)
 	if err != nil {
 		return nil, err
 	}
 	return &TeeWalletManagerWalletCreatedIterator{contract: _TeeWalletManager.contract, event: "WalletCreated", logs: logs, sub: sub}, nil
 }
 
-// WatchWalletCreated is a free log subscription operation binding the contract event 0xac5b1cdce61c84ea0a95f1a97d5107f0b5fd19743e6400bce9e8a822fb2bc4ba.
+// WatchWalletCreated is a free log subscription operation binding the contract event 0xbe8f27cef1f3d94120c9c547c3614f5b992fdb0c0a497cc920fde06546291ab4.
 //
-// Solidity: event WalletCreated(bytes32 indexed walletId, address indexed owner, bytes32 opType)
-func (_TeeWalletManager *TeeWalletManagerFilterer) WatchWalletCreated(opts *bind.WatchOpts, sink chan<- *TeeWalletManagerWalletCreated, walletId [][32]byte, owner []common.Address) (event.Subscription, error) {
+// Solidity: event WalletCreated(bytes32 indexed projectId, bytes32 indexed walletId)
+func (_TeeWalletManager *TeeWalletManagerFilterer) WatchWalletCreated(opts *bind.WatchOpts, sink chan<- *TeeWalletManagerWalletCreated, projectId [][32]byte, walletId [][32]byte) (event.Subscription, error) {
 
+	var projectIdRule []interface{}
+	for _, projectIdItem := range projectId {
+		projectIdRule = append(projectIdRule, projectIdItem)
+	}
 	var walletIdRule []interface{}
 	for _, walletIdItem := range walletId {
 		walletIdRule = append(walletIdRule, walletIdItem)
 	}
-	var ownerRule []interface{}
-	for _, ownerItem := range owner {
-		ownerRule = append(ownerRule, ownerItem)
-	}
 
-	logs, sub, err := _TeeWalletManager.contract.WatchLogs(opts, "WalletCreated", walletIdRule, ownerRule)
+	logs, sub, err := _TeeWalletManager.contract.WatchLogs(opts, "WalletCreated", projectIdRule, walletIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -1029,12 +1338,444 @@ func (_TeeWalletManager *TeeWalletManagerFilterer) WatchWalletCreated(opts *bind
 	}), nil
 }
 
-// ParseWalletCreated is a log parse operation binding the contract event 0xac5b1cdce61c84ea0a95f1a97d5107f0b5fd19743e6400bce9e8a822fb2bc4ba.
+// ParseWalletCreated is a log parse operation binding the contract event 0xbe8f27cef1f3d94120c9c547c3614f5b992fdb0c0a497cc920fde06546291ab4.
 //
-// Solidity: event WalletCreated(bytes32 indexed walletId, address indexed owner, bytes32 opType)
+// Solidity: event WalletCreated(bytes32 indexed projectId, bytes32 indexed walletId)
 func (_TeeWalletManager *TeeWalletManagerFilterer) ParseWalletCreated(log types.Log) (*TeeWalletManagerWalletCreated, error) {
 	event := new(TeeWalletManagerWalletCreated)
 	if err := _TeeWalletManager.contract.UnpackLog(event, "WalletCreated", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// TeeWalletManagerWalletEnabledIterator is returned from FilterWalletEnabled and is used to iterate over the raw logs and unpacked data for WalletEnabled events raised by the TeeWalletManager contract.
+type TeeWalletManagerWalletEnabledIterator struct {
+	Event *TeeWalletManagerWalletEnabled // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeeWalletManagerWalletEnabledIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeeWalletManagerWalletEnabled)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeeWalletManagerWalletEnabled)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeeWalletManagerWalletEnabledIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeeWalletManagerWalletEnabledIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeeWalletManagerWalletEnabled represents a WalletEnabled event raised by the TeeWalletManager contract.
+type TeeWalletManagerWalletEnabled struct {
+	WalletId [32]byte
+	Raw      types.Log // Blockchain specific contextual infos
+}
+
+// FilterWalletEnabled is a free log retrieval operation binding the contract event 0x9dd94a650e5c2e19300b404a2e83ff44d26999ca24996bbff99dcd70f81661bf.
+//
+// Solidity: event WalletEnabled(bytes32 indexed walletId)
+func (_TeeWalletManager *TeeWalletManagerFilterer) FilterWalletEnabled(opts *bind.FilterOpts, walletId [][32]byte) (*TeeWalletManagerWalletEnabledIterator, error) {
+
+	var walletIdRule []interface{}
+	for _, walletIdItem := range walletId {
+		walletIdRule = append(walletIdRule, walletIdItem)
+	}
+
+	logs, sub, err := _TeeWalletManager.contract.FilterLogs(opts, "WalletEnabled", walletIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return &TeeWalletManagerWalletEnabledIterator{contract: _TeeWalletManager.contract, event: "WalletEnabled", logs: logs, sub: sub}, nil
+}
+
+// WatchWalletEnabled is a free log subscription operation binding the contract event 0x9dd94a650e5c2e19300b404a2e83ff44d26999ca24996bbff99dcd70f81661bf.
+//
+// Solidity: event WalletEnabled(bytes32 indexed walletId)
+func (_TeeWalletManager *TeeWalletManagerFilterer) WatchWalletEnabled(opts *bind.WatchOpts, sink chan<- *TeeWalletManagerWalletEnabled, walletId [][32]byte) (event.Subscription, error) {
+
+	var walletIdRule []interface{}
+	for _, walletIdItem := range walletId {
+		walletIdRule = append(walletIdRule, walletIdItem)
+	}
+
+	logs, sub, err := _TeeWalletManager.contract.WatchLogs(opts, "WalletEnabled", walletIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeeWalletManagerWalletEnabled)
+				if err := _TeeWalletManager.contract.UnpackLog(event, "WalletEnabled", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseWalletEnabled is a log parse operation binding the contract event 0x9dd94a650e5c2e19300b404a2e83ff44d26999ca24996bbff99dcd70f81661bf.
+//
+// Solidity: event WalletEnabled(bytes32 indexed walletId)
+func (_TeeWalletManager *TeeWalletManagerFilterer) ParseWalletEnabled(log types.Log) (*TeeWalletManagerWalletEnabled, error) {
+	event := new(TeeWalletManagerWalletEnabled)
+	if err := _TeeWalletManager.contract.UnpackLog(event, "WalletEnabled", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// TeeWalletManagerWalletInitializedIterator is returned from FilterWalletInitialized and is used to iterate over the raw logs and unpacked data for WalletInitialized events raised by the TeeWalletManager contract.
+type TeeWalletManagerWalletInitializedIterator struct {
+	Event *TeeWalletManagerWalletInitialized // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeeWalletManagerWalletInitializedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeeWalletManagerWalletInitialized)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeeWalletManagerWalletInitialized)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeeWalletManagerWalletInitializedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeeWalletManagerWalletInitializedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeeWalletManagerWalletInitialized represents a WalletInitialized event raised by the TeeWalletManager contract.
+type TeeWalletManagerWalletInitialized struct {
+	WalletId [32]byte
+	Raw      types.Log // Blockchain specific contextual infos
+}
+
+// FilterWalletInitialized is a free log retrieval operation binding the contract event 0x09032cc96c5d9d0239f5528329abee7a1c72f41813ebdd51e4f51f8f962c7223.
+//
+// Solidity: event WalletInitialized(bytes32 indexed walletId)
+func (_TeeWalletManager *TeeWalletManagerFilterer) FilterWalletInitialized(opts *bind.FilterOpts, walletId [][32]byte) (*TeeWalletManagerWalletInitializedIterator, error) {
+
+	var walletIdRule []interface{}
+	for _, walletIdItem := range walletId {
+		walletIdRule = append(walletIdRule, walletIdItem)
+	}
+
+	logs, sub, err := _TeeWalletManager.contract.FilterLogs(opts, "WalletInitialized", walletIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return &TeeWalletManagerWalletInitializedIterator{contract: _TeeWalletManager.contract, event: "WalletInitialized", logs: logs, sub: sub}, nil
+}
+
+// WatchWalletInitialized is a free log subscription operation binding the contract event 0x09032cc96c5d9d0239f5528329abee7a1c72f41813ebdd51e4f51f8f962c7223.
+//
+// Solidity: event WalletInitialized(bytes32 indexed walletId)
+func (_TeeWalletManager *TeeWalletManagerFilterer) WatchWalletInitialized(opts *bind.WatchOpts, sink chan<- *TeeWalletManagerWalletInitialized, walletId [][32]byte) (event.Subscription, error) {
+
+	var walletIdRule []interface{}
+	for _, walletIdItem := range walletId {
+		walletIdRule = append(walletIdRule, walletIdItem)
+	}
+
+	logs, sub, err := _TeeWalletManager.contract.WatchLogs(opts, "WalletInitialized", walletIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeeWalletManagerWalletInitialized)
+				if err := _TeeWalletManager.contract.UnpackLog(event, "WalletInitialized", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseWalletInitialized is a log parse operation binding the contract event 0x09032cc96c5d9d0239f5528329abee7a1c72f41813ebdd51e4f51f8f962c7223.
+//
+// Solidity: event WalletInitialized(bytes32 indexed walletId)
+func (_TeeWalletManager *TeeWalletManagerFilterer) ParseWalletInitialized(log types.Log) (*TeeWalletManagerWalletInitialized, error) {
+	event := new(TeeWalletManagerWalletInitialized)
+	if err := _TeeWalletManager.contract.UnpackLog(event, "WalletInitialized", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// TeeWalletManagerWalletPausedIterator is returned from FilterWalletPaused and is used to iterate over the raw logs and unpacked data for WalletPaused events raised by the TeeWalletManager contract.
+type TeeWalletManagerWalletPausedIterator struct {
+	Event *TeeWalletManagerWalletPaused // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeeWalletManagerWalletPausedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeeWalletManagerWalletPaused)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeeWalletManagerWalletPaused)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeeWalletManagerWalletPausedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeeWalletManagerWalletPausedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeeWalletManagerWalletPaused represents a WalletPaused event raised by the TeeWalletManager contract.
+type TeeWalletManagerWalletPaused struct {
+	WalletId [32]byte
+	Raw      types.Log // Blockchain specific contextual infos
+}
+
+// FilterWalletPaused is a free log retrieval operation binding the contract event 0x5bc3bc472409bb4331cff333acd11b5d5b6d97052d783936292f19955b25eef3.
+//
+// Solidity: event WalletPaused(bytes32 indexed walletId)
+func (_TeeWalletManager *TeeWalletManagerFilterer) FilterWalletPaused(opts *bind.FilterOpts, walletId [][32]byte) (*TeeWalletManagerWalletPausedIterator, error) {
+
+	var walletIdRule []interface{}
+	for _, walletIdItem := range walletId {
+		walletIdRule = append(walletIdRule, walletIdItem)
+	}
+
+	logs, sub, err := _TeeWalletManager.contract.FilterLogs(opts, "WalletPaused", walletIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return &TeeWalletManagerWalletPausedIterator{contract: _TeeWalletManager.contract, event: "WalletPaused", logs: logs, sub: sub}, nil
+}
+
+// WatchWalletPaused is a free log subscription operation binding the contract event 0x5bc3bc472409bb4331cff333acd11b5d5b6d97052d783936292f19955b25eef3.
+//
+// Solidity: event WalletPaused(bytes32 indexed walletId)
+func (_TeeWalletManager *TeeWalletManagerFilterer) WatchWalletPaused(opts *bind.WatchOpts, sink chan<- *TeeWalletManagerWalletPaused, walletId [][32]byte) (event.Subscription, error) {
+
+	var walletIdRule []interface{}
+	for _, walletIdItem := range walletId {
+		walletIdRule = append(walletIdRule, walletIdItem)
+	}
+
+	logs, sub, err := _TeeWalletManager.contract.WatchLogs(opts, "WalletPaused", walletIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeeWalletManagerWalletPaused)
+				if err := _TeeWalletManager.contract.UnpackLog(event, "WalletPaused", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseWalletPaused is a log parse operation binding the contract event 0x5bc3bc472409bb4331cff333acd11b5d5b6d97052d783936292f19955b25eef3.
+//
+// Solidity: event WalletPaused(bytes32 indexed walletId)
+func (_TeeWalletManager *TeeWalletManagerFilterer) ParseWalletPaused(log types.Log) (*TeeWalletManagerWalletPaused, error) {
+	event := new(TeeWalletManagerWalletPaused)
+	if err := _TeeWalletManager.contract.UnpackLog(event, "WalletPaused", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
