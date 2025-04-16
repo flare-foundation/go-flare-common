@@ -19,7 +19,7 @@ func TestPaymentTransactionMultisig(t *testing.T) {
 
 	instruction := payment.ITeePaymentsPaymentInstructionMessage{
 		WalletId:           [32]byte{1},
-		TeeIdKeyIdPairs:    []payment.ITeeWalletManagerTeeIdKeyIdPair{},
+		TeeIdKeyIdPairs:    []payment.TeeIdKeyIdPair{},
 		SenderAddress:      "rGYYWKxT1XgNipUJouCq4cKiyAdq8xBoE9",
 		RecipientAddress:   "rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe",
 		Amount:             big.NewInt(10),

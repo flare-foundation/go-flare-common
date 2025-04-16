@@ -77,35 +77,48 @@ type ITeeWalletBackupManagerKeyMachineRestore struct {
 	BackupTeeMachines []ITeeRegistryTeeMachineWithAttestationData
 }
 
-// ITeeWalletManagerKeyDelete is an auto generated low-level Go binding around an user-defined struct.
-type ITeeWalletManagerKeyDelete struct {
+// ITeeWalletKeyManagerKeyDelete is an auto generated low-level Go binding around an user-defined struct.
+type ITeeWalletKeyManagerKeyDelete struct {
 	TeeId    common.Address
 	WalletId [32]byte
 	KeyId    *big.Int
 }
 
-// ITeeWalletManagerKeyGenerate is an auto generated low-level Go binding around an user-defined struct.
-type ITeeWalletManagerKeyGenerate struct {
+// ITeeWalletKeyManagerKeyGenerate is an auto generated low-level Go binding around an user-defined struct.
+type ITeeWalletKeyManagerKeyGenerate struct {
 	TeeId              common.Address
 	WalletId           [32]byte
 	KeyId              *big.Int
 	OpType             [32]byte
 	OpTypeConstants    []byte
-	AdminsPublicKeys   []ITeeWalletManagerPublicKey
+	AdminsPublicKeys   []PublicKey
 	AdminsThreshold    *big.Int
 	Cosigners          []common.Address
 	CosignersThreshold *big.Int
 }
 
-// ITeeWalletManagerPublicKey is an auto generated low-level Go binding around an user-defined struct.
-type ITeeWalletManagerPublicKey struct {
+// ITeeWalletOpTypeSettingsSetPausingAddresses is an auto generated low-level Go binding around an user-defined struct.
+type ITeeWalletOpTypeSettingsSetPausingAddresses struct {
+	WalletId         [32]byte
+	TeeIdKeyIdPairs  []TeeIdKeyIdPair
+	PausingAddresses []common.Address
+}
+
+// PublicKey is an auto generated low-level Go binding around an user-defined struct.
+type PublicKey struct {
 	X [32]byte
 	Y [32]byte
 }
 
+// TeeIdKeyIdPair is an auto generated low-level Go binding around an user-defined struct.
+type TeeIdKeyIdPair struct {
+	TeeId common.Address
+	KeyId *big.Int
+}
+
 // WalletMetaData contains all meta data concerning the Wallet contract.
 var WalletMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"keyId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"publicKey\",\"type\":\"bytes\"},{\"internalType\":\"uint24\",\"name\":\"rewardEpochId\",\"type\":\"uint24\"}],\"internalType\":\"structITeeWalletBackupManager.KeyDataProviderRestore\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"keyDataProviderRestoreStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"keyId\",\"type\":\"uint256\"}],\"internalType\":\"structITeeWalletManager.KeyDelete\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"keyDeleteStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"keyId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"opTypeConstants\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"x\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"y\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeWalletManager.PublicKey[]\",\"name\":\"adminsPublicKeys\",\"type\":\"tuple[]\"},{\"internalType\":\"uint256\",\"name\":\"adminsThreshold\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint256\",\"name\":\"cosignersThreshold\",\"type\":\"uint256\"}],\"internalType\":\"structITeeWalletManager.KeyGenerate\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"keyGenerateStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address[]\",\"name\":\"teeIds\",\"type\":\"address[]\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"keyId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"backupId\",\"type\":\"uint256\"}],\"internalType\":\"structITeeWalletBackupManager.KeyMachineBackupRemove\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"keyMachineBackupRemoveStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"teeMachine\",\"type\":\"tuple\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"keyId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"backupId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"shamirThreshold\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData[]\",\"name\":\"backupTeeMachines\",\"type\":\"tuple[]\"}],\"internalType\":\"structITeeWalletBackupManager.KeyMachineBackup\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"keyMachineBackupStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"teeMachine\",\"type\":\"tuple\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"keyId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"backupId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"publicKey\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData[]\",\"name\":\"backupTeeMachines\",\"type\":\"tuple[]\"}],\"internalType\":\"structITeeWalletBackupManager.KeyMachineRestore\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"keyMachineRestoreStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"keyId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"publicKey\",\"type\":\"bytes\"},{\"internalType\":\"uint24\",\"name\":\"rewardEpochId\",\"type\":\"uint24\"}],\"internalType\":\"structITeeWalletBackupManager.KeyDataProviderRestore\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"keyDataProviderRestoreStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"keyId\",\"type\":\"uint256\"}],\"internalType\":\"structITeeWalletKeyManager.KeyDelete\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"keyDeleteStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"keyId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"opTypeConstants\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"x\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"y\",\"type\":\"bytes32\"}],\"internalType\":\"structPublicKey[]\",\"name\":\"adminsPublicKeys\",\"type\":\"tuple[]\"},{\"internalType\":\"uint256\",\"name\":\"adminsThreshold\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint256\",\"name\":\"cosignersThreshold\",\"type\":\"uint256\"}],\"internalType\":\"structITeeWalletKeyManager.KeyGenerate\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"keyGenerateStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address[]\",\"name\":\"teeIds\",\"type\":\"address[]\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"keyId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"backupId\",\"type\":\"uint256\"}],\"internalType\":\"structITeeWalletBackupManager.KeyMachineBackupRemove\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"keyMachineBackupRemoveStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"teeMachine\",\"type\":\"tuple\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"keyId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"backupId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"shamirThreshold\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData[]\",\"name\":\"backupTeeMachines\",\"type\":\"tuple[]\"}],\"internalType\":\"structITeeWalletBackupManager.KeyMachineBackup\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"keyMachineBackupStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"teeMachine\",\"type\":\"tuple\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"keyId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"backupId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"publicKey\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData[]\",\"name\":\"backupTeeMachines\",\"type\":\"tuple[]\"}],\"internalType\":\"structITeeWalletBackupManager.KeyMachineRestore\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"keyMachineRestoreStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"keyId\",\"type\":\"uint256\"}],\"internalType\":\"structTeeIdKeyIdPair[]\",\"name\":\"teeIdKeyIdPairs\",\"type\":\"tuple[]\"},{\"internalType\":\"address[]\",\"name\":\"pausingAddresses\",\"type\":\"address[]\"}],\"internalType\":\"structITeeWalletOpTypeSettings.SetPausingAddresses\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"setPausingAddressesStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // WalletABI is the input ABI used to generate the binding from.
@@ -278,42 +291,42 @@ func (_Wallet *WalletTransactorSession) KeyDataProviderRestoreStruct(arg0 ITeeWa
 // KeyDeleteStruct is a paid mutator transaction binding the contract method 0xde402cf0.
 //
 // Solidity: function keyDeleteStruct((address,bytes32,uint256) ) returns()
-func (_Wallet *WalletTransactor) KeyDeleteStruct(opts *bind.TransactOpts, arg0 ITeeWalletManagerKeyDelete) (*types.Transaction, error) {
+func (_Wallet *WalletTransactor) KeyDeleteStruct(opts *bind.TransactOpts, arg0 ITeeWalletKeyManagerKeyDelete) (*types.Transaction, error) {
 	return _Wallet.contract.Transact(opts, "keyDeleteStruct", arg0)
 }
 
 // KeyDeleteStruct is a paid mutator transaction binding the contract method 0xde402cf0.
 //
 // Solidity: function keyDeleteStruct((address,bytes32,uint256) ) returns()
-func (_Wallet *WalletSession) KeyDeleteStruct(arg0 ITeeWalletManagerKeyDelete) (*types.Transaction, error) {
+func (_Wallet *WalletSession) KeyDeleteStruct(arg0 ITeeWalletKeyManagerKeyDelete) (*types.Transaction, error) {
 	return _Wallet.Contract.KeyDeleteStruct(&_Wallet.TransactOpts, arg0)
 }
 
 // KeyDeleteStruct is a paid mutator transaction binding the contract method 0xde402cf0.
 //
 // Solidity: function keyDeleteStruct((address,bytes32,uint256) ) returns()
-func (_Wallet *WalletTransactorSession) KeyDeleteStruct(arg0 ITeeWalletManagerKeyDelete) (*types.Transaction, error) {
+func (_Wallet *WalletTransactorSession) KeyDeleteStruct(arg0 ITeeWalletKeyManagerKeyDelete) (*types.Transaction, error) {
 	return _Wallet.Contract.KeyDeleteStruct(&_Wallet.TransactOpts, arg0)
 }
 
 // KeyGenerateStruct is a paid mutator transaction binding the contract method 0xb2500e8b.
 //
 // Solidity: function keyGenerateStruct((address,bytes32,uint256,bytes32,bytes,(bytes32,bytes32)[],uint256,address[],uint256) ) returns()
-func (_Wallet *WalletTransactor) KeyGenerateStruct(opts *bind.TransactOpts, arg0 ITeeWalletManagerKeyGenerate) (*types.Transaction, error) {
+func (_Wallet *WalletTransactor) KeyGenerateStruct(opts *bind.TransactOpts, arg0 ITeeWalletKeyManagerKeyGenerate) (*types.Transaction, error) {
 	return _Wallet.contract.Transact(opts, "keyGenerateStruct", arg0)
 }
 
 // KeyGenerateStruct is a paid mutator transaction binding the contract method 0xb2500e8b.
 //
 // Solidity: function keyGenerateStruct((address,bytes32,uint256,bytes32,bytes,(bytes32,bytes32)[],uint256,address[],uint256) ) returns()
-func (_Wallet *WalletSession) KeyGenerateStruct(arg0 ITeeWalletManagerKeyGenerate) (*types.Transaction, error) {
+func (_Wallet *WalletSession) KeyGenerateStruct(arg0 ITeeWalletKeyManagerKeyGenerate) (*types.Transaction, error) {
 	return _Wallet.Contract.KeyGenerateStruct(&_Wallet.TransactOpts, arg0)
 }
 
 // KeyGenerateStruct is a paid mutator transaction binding the contract method 0xb2500e8b.
 //
 // Solidity: function keyGenerateStruct((address,bytes32,uint256,bytes32,bytes,(bytes32,bytes32)[],uint256,address[],uint256) ) returns()
-func (_Wallet *WalletTransactorSession) KeyGenerateStruct(arg0 ITeeWalletManagerKeyGenerate) (*types.Transaction, error) {
+func (_Wallet *WalletTransactorSession) KeyGenerateStruct(arg0 ITeeWalletKeyManagerKeyGenerate) (*types.Transaction, error) {
 	return _Wallet.Contract.KeyGenerateStruct(&_Wallet.TransactOpts, arg0)
 }
 
@@ -378,4 +391,25 @@ func (_Wallet *WalletSession) KeyMachineRestoreStruct(arg0 ITeeWalletBackupManag
 // Solidity: function keyMachineRestoreStruct(((address,address,string,bytes32,bytes32),bytes32,uint256,uint256,bytes32,bytes,(address,address,string,bytes32,bytes32)[]) ) returns()
 func (_Wallet *WalletTransactorSession) KeyMachineRestoreStruct(arg0 ITeeWalletBackupManagerKeyMachineRestore) (*types.Transaction, error) {
 	return _Wallet.Contract.KeyMachineRestoreStruct(&_Wallet.TransactOpts, arg0)
+}
+
+// SetPausingAddressesStruct is a paid mutator transaction binding the contract method 0x2fc7ff30.
+//
+// Solidity: function setPausingAddressesStruct((bytes32,(address,uint256)[],address[]) ) returns()
+func (_Wallet *WalletTransactor) SetPausingAddressesStruct(opts *bind.TransactOpts, arg0 ITeeWalletOpTypeSettingsSetPausingAddresses) (*types.Transaction, error) {
+	return _Wallet.contract.Transact(opts, "setPausingAddressesStruct", arg0)
+}
+
+// SetPausingAddressesStruct is a paid mutator transaction binding the contract method 0x2fc7ff30.
+//
+// Solidity: function setPausingAddressesStruct((bytes32,(address,uint256)[],address[]) ) returns()
+func (_Wallet *WalletSession) SetPausingAddressesStruct(arg0 ITeeWalletOpTypeSettingsSetPausingAddresses) (*types.Transaction, error) {
+	return _Wallet.Contract.SetPausingAddressesStruct(&_Wallet.TransactOpts, arg0)
+}
+
+// SetPausingAddressesStruct is a paid mutator transaction binding the contract method 0x2fc7ff30.
+//
+// Solidity: function setPausingAddressesStruct((bytes32,(address,uint256)[],address[]) ) returns()
+func (_Wallet *WalletTransactorSession) SetPausingAddressesStruct(arg0 ITeeWalletOpTypeSettingsSetPausingAddresses) (*types.Transaction, error) {
+	return _Wallet.Contract.SetPausingAddressesStruct(&_Wallet.TransactOpts, arg0)
 }

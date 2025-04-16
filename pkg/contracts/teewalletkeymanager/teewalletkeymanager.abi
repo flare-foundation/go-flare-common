@@ -1,0 +1,545 @@
+[
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "walletId",
+          "type": "bytes32"
+        }
+      ],
+      "name": "WalletEnabled",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "teeId",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "walletId",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "keyId",
+          "type": "uint256"
+        }
+      ],
+      "name": "WalletKeyAdded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "teeId",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "walletId",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "keyId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes",
+          "name": "publicKey",
+          "type": "bytes"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "addressStr",
+          "type": "string"
+        }
+      ],
+      "name": "WalletKeyConfirmed",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "teeId",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "walletId",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "keyId",
+          "type": "uint256"
+        }
+      ],
+      "name": "WalletKeyDeleted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "walletId",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256[]",
+          "name": "keyIds",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "WalletKeysNotAvailable",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "walletId",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "multisigThreshold",
+          "type": "uint256"
+        }
+      ],
+      "name": "WalletMultisigThresholdSet",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "walletId",
+          "type": "bytes32"
+        }
+      ],
+      "name": "WalletPaused",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_teeId",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_walletId",
+          "type": "bytes32"
+        }
+      ],
+      "name": "addKey",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "_keyId",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_walletId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint64",
+          "name": "_keyId",
+          "type": "uint64"
+        }
+      ],
+      "name": "cleanUpTeeIds",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes",
+              "name": "relayMessage",
+              "type": "bytes"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint8",
+                  "name": "v",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "r",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "s",
+                  "type": "bytes32"
+                }
+              ],
+              "internalType": "struct Signature[]",
+              "name": "teeSignatures",
+              "type": "tuple[]"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "bytes32",
+                  "name": "attestationType",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "sourceId",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "thresholdBIPS",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "timestamp",
+                  "type": "uint64"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "address",
+                      "name": "teeId",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "walletId",
+                      "type": "bytes32"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "keyId",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "opType",
+                      "type": "bytes32"
+                    }
+                  ],
+                  "internalType": "struct ITeeKeyExistence.RequestBody",
+                  "name": "requestBody",
+                  "type": "tuple"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "bytes",
+                      "name": "publicKey",
+                      "type": "bytes"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "addressStr",
+                      "type": "string"
+                    }
+                  ],
+                  "internalType": "struct ITeeKeyExistence.ResponseBody",
+                  "name": "responseBody",
+                  "type": "tuple"
+                }
+              ],
+              "internalType": "struct ITeeKeyExistence.Response",
+              "name": "data",
+              "type": "tuple"
+            }
+          ],
+          "internalType": "struct ITeeKeyExistence.Proof",
+          "name": "_proof",
+          "type": "tuple"
+        }
+      ],
+      "name": "confirmKey",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_teeId",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_walletId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint64",
+          "name": "_keyId",
+          "type": "uint64"
+        }
+      ],
+      "name": "deleteKey",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_walletId",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getFeeFactor",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "_feeFactor",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_walletId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint64",
+          "name": "_keyId",
+          "type": "uint64"
+        }
+      ],
+      "name": "getWalletKeyAddress",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "_addressStr",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_walletId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint64",
+          "name": "_keyId",
+          "type": "uint64"
+        }
+      ],
+      "name": "getWalletKeyPublicKey",
+      "outputs": [
+        {
+          "internalType": "bytes",
+          "name": "_publicKey",
+          "type": "bytes"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_walletId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint64",
+          "name": "_keyId",
+          "type": "uint64"
+        }
+      ],
+      "name": "getWalletKeyTeeIds",
+      "outputs": [
+        {
+          "internalType": "address[]",
+          "name": "_teeIds",
+          "type": "address[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_walletId",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getWalletKeysInfo",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "_multisigThreshold",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "_keyIds",
+          "type": "uint256[]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_counter",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_walletId",
+          "type": "bytes32"
+        }
+      ],
+      "name": "receivingTeesAndKeys",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "teeId",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "url",
+              "type": "string"
+            }
+          ],
+          "internalType": "struct ITeeRegistry.TeeMachine[]",
+          "name": "_teeMachines",
+          "type": "tuple[]"
+        },
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "teeId",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "keyId",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct TeeIdKeyIdPair[]",
+          "name": "_teeIdKeyIdPairs",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_teeId",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_walletId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint64",
+          "name": "_keyId",
+          "type": "uint64"
+        }
+      ],
+      "name": "requestKeyExistenceAttestation",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_walletId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_multisigThreshold",
+          "type": "uint256"
+        }
+      ],
+      "name": "setMultisigThreshold",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ]

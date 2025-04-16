@@ -1,96 +1,152 @@
 [
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_teeId",
-        "type": "address"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_walletId",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint64",
-        "name": "_keyId",
-        "type": "uint64"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_shamirThreshold",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address[]",
-        "name": "_backupTeeIds",
-        "type": "address[]"
-      }
-    ],
-    "name": "machineBackup",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_walletId",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint64",
-        "name": "_keyId",
-        "type": "uint64"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_backupId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address[]",
-        "name": "_teeIds",
-        "type": "address[]"
-      }
-    ],
-    "name": "machineBackupRemove",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_teeId",
-        "type": "address"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_walletId",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint64",
-        "name": "_keyId",
-        "type": "uint64"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_backupId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address[]",
-        "name": "_backupTeeIds",
-        "type": "address[]"
-      }
-    ],
-    "name": "machineRestore",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  }
-]
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_teeId",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_walletId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint64",
+          "name": "_keyId",
+          "type": "uint64"
+        },
+        {
+          "internalType": "uint24",
+          "name": "_rewardEpochId",
+          "type": "uint24"
+        }
+      ],
+      "name": "backupRestore",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_teeId",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_walletId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint64",
+          "name": "_keyId",
+          "type": "uint64"
+        },
+        {
+          "internalType": "uint24",
+          "name": "_rewardEpochId",
+          "type": "uint24"
+        }
+      ],
+      "name": "backupRestoreInit",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_teeId",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_walletId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint64",
+          "name": "_keyId",
+          "type": "uint64"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_shamirThreshold",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address[]",
+          "name": "_backupTeeIds",
+          "type": "address[]"
+        }
+      ],
+      "name": "machineBackup",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_walletId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint64",
+          "name": "_keyId",
+          "type": "uint64"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_backupId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address[]",
+          "name": "_teeIds",
+          "type": "address[]"
+        }
+      ],
+      "name": "machineBackupRemove",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_teeId",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_walletId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint64",
+          "name": "_keyId",
+          "type": "uint64"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_backupId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address[]",
+          "name": "_backupTeeIds",
+          "type": "address[]"
+        }
+      ],
+      "name": "machineRestore",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    }
+  ]
