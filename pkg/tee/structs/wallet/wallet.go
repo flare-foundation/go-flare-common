@@ -11,13 +11,13 @@ const OPType = "WALLET"
 type OPCommand string
 
 const (
-	KeyGenerate            OPCommand = "KEY_GENERATE"
-	KeyDelete              OPCommand = "KEY_DELETE"
-	KeyMachineBackup       OPCommand = "KEY_MACHINE_BACKUP"
-	KeyMachineRestore      OPCommand = "KEY_MACHINE_RESTORE"
-	KeyMachineBackupRemove OPCommand = "KEY_MACHINE_BACKUP_REMOVE"
-	KeyCustodianBackup     OPCommand = "KEY_CUSTODIAN_BACKUP"
-	KeyCustodianRestore    OPCommand = "KEY_CUSTODIAN_RESTORE"
+	KeyGenerate                OPCommand = "KEY_GENERATE"
+	KeyDelete                  OPCommand = "KEY_DELETE"
+	KeyMachineBackup           OPCommand = "KEY_MACHINE_BACKUP"
+	KeyMachineRestore          OPCommand = "KEY_MACHINE_RESTORE"
+	KeyMachineBackupRemove     OPCommand = "KEY_MACHINE_BACKUP_REMOVE"
+	KeyDataProviderRestoreInit OPCommand = "KEY_DATA_PROVIDER_RESTORE_INIT"
+	KeyDataProviderRestore     OPCommand = "KEY_DATA_PROVIDER_RESTORE"
 )
 
 var opCommands = []OPCommand{
@@ -26,8 +26,6 @@ var opCommands = []OPCommand{
 	KeyMachineBackup,
 	KeyMachineRestore,
 	KeyMachineBackupRemove,
-	// KeyCustodianBackup,
-	// KeyCustodianRestore,
 }
 
 // i-th method correspond to a method in TeeWalletStruct interface whose
@@ -38,8 +36,8 @@ var methods = []string{
 	"keyMachineBackupStruct",
 	"keyMachineRestoreStruct",
 	"keyMachineBackupRemoveStruct",
-	// "keyCustodianBackupStruct",
-	// "keyCustodianRestoreStruct",
+	"keyDataProviderRestoreStruct",
+	"keyDataProviderRestoreStruct",
 }
 
 var MessageArguments map[OPCommand]abi.Argument

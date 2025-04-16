@@ -43,10 +43,18 @@ type ITeeAvailabilityCheckProof struct {
 	Data          ITeeAvailabilityCheckResponse
 }
 
+// ITeeAvailabilityCheckRequest is an auto generated low-level Go binding around an user-defined struct.
+type ITeeAvailabilityCheckRequest struct {
+	AttestationType [32]byte
+	SourceId        [32]byte
+	RequestBody     ITeeAvailabilityCheckRequestBody
+}
+
 // ITeeAvailabilityCheckRequestBody is an auto generated low-level Go binding around an user-defined struct.
 type ITeeAvailabilityCheckRequestBody struct {
-	TeeMachine    ITeeRegistryTeeMachineWithAttestationData
-	RewardEpochId *big.Int
+	TeeMachine        ITeeRegistryTeeMachineWithAttestationData
+	TeeGovernanceHash [32]byte
+	RewardEpochId     *big.Int
 }
 
 // ITeeAvailabilityCheckResponse is an auto generated low-level Go binding around an user-defined struct.
@@ -71,12 +79,18 @@ type ITeeKeyExistenceProof struct {
 	Data          ITeeKeyExistenceResponse
 }
 
+// ITeeKeyExistenceRequest is an auto generated low-level Go binding around an user-defined struct.
+type ITeeKeyExistenceRequest struct {
+	AttestationType [32]byte
+	SourceId        [32]byte
+	RequestBody     ITeeKeyExistenceRequestBody
+}
+
 // ITeeKeyExistenceRequestBody is an auto generated low-level Go binding around an user-defined struct.
 type ITeeKeyExistenceRequestBody struct {
 	TeeId    common.Address
 	WalletId [32]byte
 	KeyId    *big.Int
-	OpType   [32]byte
 }
 
 // ITeeKeyExistenceResponse is an auto generated low-level Go binding around an user-defined struct.
@@ -91,7 +105,9 @@ type ITeeKeyExistenceResponse struct {
 
 // ITeeKeyExistenceResponseBody is an auto generated low-level Go binding around an user-defined struct.
 type ITeeKeyExistenceResponseBody struct {
+	OpType     [32]byte
 	PublicKey  []byte
+	Restored   bool
 	AddressStr string
 }
 
@@ -113,7 +129,7 @@ type Signature struct {
 
 // ConnectorMetaData contains all meta data concerning the Connector contract.
 var ConnectorMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"relayMessage\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"teeMachine\",\"type\":\"tuple\"},{\"internalType\":\"uint24\",\"name\":\"rewardEpochId\",\"type\":\"uint24\"}],\"internalType\":\"structITeeAvailabilityCheck.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumITeeAvailabilityCheck.AvailabilityCheckStatus\",\"name\":\"status\",\"type\":\"uint8\"}],\"internalType\":\"structITeeAvailabilityCheck.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Response\",\"name\":\"data\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Proof\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"availabilityCheckProofStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData[]\",\"name\":\"teeMachines\",\"type\":\"tuple[]\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"bytes\",\"name\":\"attestationRequest\",\"type\":\"bytes\"}],\"internalType\":\"structIFtdcHub.FtdcProve\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"ftdcProveStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"relayMessage\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"keyId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeKeyExistence.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes\",\"name\":\"publicKey\",\"type\":\"bytes\"},{\"internalType\":\"string\",\"name\":\"addressStr\",\"type\":\"string\"}],\"internalType\":\"structITeeKeyExistence.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structITeeKeyExistence.Response\",\"name\":\"data\",\"type\":\"tuple\"}],\"internalType\":\"structITeeKeyExistence.Proof\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"keyExistenceProofStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"relayMessage\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"teeMachine\",\"type\":\"tuple\"},{\"internalType\":\"bytes32\",\"name\":\"teeGovernanceHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint24\",\"name\":\"rewardEpochId\",\"type\":\"uint24\"}],\"internalType\":\"structITeeAvailabilityCheck.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumITeeAvailabilityCheck.AvailabilityCheckStatus\",\"name\":\"status\",\"type\":\"uint8\"}],\"internalType\":\"structITeeAvailabilityCheck.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Response\",\"name\":\"data\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Proof\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"availabilityCheckProofStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"teeMachine\",\"type\":\"tuple\"},{\"internalType\":\"bytes32\",\"name\":\"teeGovernanceHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint24\",\"name\":\"rewardEpochId\",\"type\":\"uint24\"}],\"internalType\":\"structITeeAvailabilityCheck.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Request\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"availabilityCheckRequestStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"teeMachine\",\"type\":\"tuple\"},{\"internalType\":\"bytes32\",\"name\":\"teeGovernanceHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint24\",\"name\":\"rewardEpochId\",\"type\":\"uint24\"}],\"internalType\":\"structITeeAvailabilityCheck.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumITeeAvailabilityCheck.AvailabilityCheckStatus\",\"name\":\"status\",\"type\":\"uint8\"}],\"internalType\":\"structITeeAvailabilityCheck.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Response\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"availabilityCheckResponseStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData[]\",\"name\":\"teeMachines\",\"type\":\"tuple[]\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"bytes\",\"name\":\"attestationRequest\",\"type\":\"bytes\"}],\"internalType\":\"structIFtdcHub.FtdcProve\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"ftdcProveStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"relayMessage\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"keyId\",\"type\":\"uint256\"}],\"internalType\":\"structITeeKeyExistence.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"publicKey\",\"type\":\"bytes\"},{\"internalType\":\"bool\",\"name\":\"restored\",\"type\":\"bool\"},{\"internalType\":\"string\",\"name\":\"addressStr\",\"type\":\"string\"}],\"internalType\":\"structITeeKeyExistence.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structITeeKeyExistence.Response\",\"name\":\"data\",\"type\":\"tuple\"}],\"internalType\":\"structITeeKeyExistence.Proof\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"keyExistenceProofStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"keyId\",\"type\":\"uint256\"}],\"internalType\":\"structITeeKeyExistence.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"}],\"internalType\":\"structITeeKeyExistence.Request\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"keyExistenceRequestStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"keyId\",\"type\":\"uint256\"}],\"internalType\":\"structITeeKeyExistence.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"publicKey\",\"type\":\"bytes\"},{\"internalType\":\"bool\",\"name\":\"restored\",\"type\":\"bool\"},{\"internalType\":\"string\",\"name\":\"addressStr\",\"type\":\"string\"}],\"internalType\":\"structITeeKeyExistence.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structITeeKeyExistence.Response\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"keyExistenceResponseStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // ConnectorABI is the input ABI used to generate the binding from.
@@ -262,25 +278,67 @@ func (_Connector *ConnectorTransactorRaw) Transact(opts *bind.TransactOpts, meth
 	return _Connector.Contract.contract.Transact(opts, method, params...)
 }
 
-// AvailabilityCheckProofStruct is a paid mutator transaction binding the contract method 0x92e3c256.
+// AvailabilityCheckProofStruct is a paid mutator transaction binding the contract method 0x14511d9a.
 //
-// Solidity: function availabilityCheckProofStruct((bytes,(uint8,bytes32,bytes32)[],(bytes32,bytes32,uint16,uint64,((address,address,string,bytes32,bytes32),uint24),(uint8))) ) returns()
+// Solidity: function availabilityCheckProofStruct((bytes,(uint8,bytes32,bytes32)[],(bytes32,bytes32,uint16,uint64,((address,address,string,bytes32,bytes32),bytes32,uint24),(uint8))) ) returns()
 func (_Connector *ConnectorTransactor) AvailabilityCheckProofStruct(opts *bind.TransactOpts, arg0 ITeeAvailabilityCheckProof) (*types.Transaction, error) {
 	return _Connector.contract.Transact(opts, "availabilityCheckProofStruct", arg0)
 }
 
-// AvailabilityCheckProofStruct is a paid mutator transaction binding the contract method 0x92e3c256.
+// AvailabilityCheckProofStruct is a paid mutator transaction binding the contract method 0x14511d9a.
 //
-// Solidity: function availabilityCheckProofStruct((bytes,(uint8,bytes32,bytes32)[],(bytes32,bytes32,uint16,uint64,((address,address,string,bytes32,bytes32),uint24),(uint8))) ) returns()
+// Solidity: function availabilityCheckProofStruct((bytes,(uint8,bytes32,bytes32)[],(bytes32,bytes32,uint16,uint64,((address,address,string,bytes32,bytes32),bytes32,uint24),(uint8))) ) returns()
 func (_Connector *ConnectorSession) AvailabilityCheckProofStruct(arg0 ITeeAvailabilityCheckProof) (*types.Transaction, error) {
 	return _Connector.Contract.AvailabilityCheckProofStruct(&_Connector.TransactOpts, arg0)
 }
 
-// AvailabilityCheckProofStruct is a paid mutator transaction binding the contract method 0x92e3c256.
+// AvailabilityCheckProofStruct is a paid mutator transaction binding the contract method 0x14511d9a.
 //
-// Solidity: function availabilityCheckProofStruct((bytes,(uint8,bytes32,bytes32)[],(bytes32,bytes32,uint16,uint64,((address,address,string,bytes32,bytes32),uint24),(uint8))) ) returns()
+// Solidity: function availabilityCheckProofStruct((bytes,(uint8,bytes32,bytes32)[],(bytes32,bytes32,uint16,uint64,((address,address,string,bytes32,bytes32),bytes32,uint24),(uint8))) ) returns()
 func (_Connector *ConnectorTransactorSession) AvailabilityCheckProofStruct(arg0 ITeeAvailabilityCheckProof) (*types.Transaction, error) {
 	return _Connector.Contract.AvailabilityCheckProofStruct(&_Connector.TransactOpts, arg0)
+}
+
+// AvailabilityCheckRequestStruct is a paid mutator transaction binding the contract method 0x979e5b14.
+//
+// Solidity: function availabilityCheckRequestStruct((bytes32,bytes32,((address,address,string,bytes32,bytes32),bytes32,uint24)) ) returns()
+func (_Connector *ConnectorTransactor) AvailabilityCheckRequestStruct(opts *bind.TransactOpts, arg0 ITeeAvailabilityCheckRequest) (*types.Transaction, error) {
+	return _Connector.contract.Transact(opts, "availabilityCheckRequestStruct", arg0)
+}
+
+// AvailabilityCheckRequestStruct is a paid mutator transaction binding the contract method 0x979e5b14.
+//
+// Solidity: function availabilityCheckRequestStruct((bytes32,bytes32,((address,address,string,bytes32,bytes32),bytes32,uint24)) ) returns()
+func (_Connector *ConnectorSession) AvailabilityCheckRequestStruct(arg0 ITeeAvailabilityCheckRequest) (*types.Transaction, error) {
+	return _Connector.Contract.AvailabilityCheckRequestStruct(&_Connector.TransactOpts, arg0)
+}
+
+// AvailabilityCheckRequestStruct is a paid mutator transaction binding the contract method 0x979e5b14.
+//
+// Solidity: function availabilityCheckRequestStruct((bytes32,bytes32,((address,address,string,bytes32,bytes32),bytes32,uint24)) ) returns()
+func (_Connector *ConnectorTransactorSession) AvailabilityCheckRequestStruct(arg0 ITeeAvailabilityCheckRequest) (*types.Transaction, error) {
+	return _Connector.Contract.AvailabilityCheckRequestStruct(&_Connector.TransactOpts, arg0)
+}
+
+// AvailabilityCheckResponseStruct is a paid mutator transaction binding the contract method 0x2e242c62.
+//
+// Solidity: function availabilityCheckResponseStruct((bytes32,bytes32,uint16,uint64,((address,address,string,bytes32,bytes32),bytes32,uint24),(uint8)) ) returns()
+func (_Connector *ConnectorTransactor) AvailabilityCheckResponseStruct(opts *bind.TransactOpts, arg0 ITeeAvailabilityCheckResponse) (*types.Transaction, error) {
+	return _Connector.contract.Transact(opts, "availabilityCheckResponseStruct", arg0)
+}
+
+// AvailabilityCheckResponseStruct is a paid mutator transaction binding the contract method 0x2e242c62.
+//
+// Solidity: function availabilityCheckResponseStruct((bytes32,bytes32,uint16,uint64,((address,address,string,bytes32,bytes32),bytes32,uint24),(uint8)) ) returns()
+func (_Connector *ConnectorSession) AvailabilityCheckResponseStruct(arg0 ITeeAvailabilityCheckResponse) (*types.Transaction, error) {
+	return _Connector.Contract.AvailabilityCheckResponseStruct(&_Connector.TransactOpts, arg0)
+}
+
+// AvailabilityCheckResponseStruct is a paid mutator transaction binding the contract method 0x2e242c62.
+//
+// Solidity: function availabilityCheckResponseStruct((bytes32,bytes32,uint16,uint64,((address,address,string,bytes32,bytes32),bytes32,uint24),(uint8)) ) returns()
+func (_Connector *ConnectorTransactorSession) AvailabilityCheckResponseStruct(arg0 ITeeAvailabilityCheckResponse) (*types.Transaction, error) {
+	return _Connector.Contract.AvailabilityCheckResponseStruct(&_Connector.TransactOpts, arg0)
 }
 
 // FtdcProveStruct is a paid mutator transaction binding the contract method 0x65092ea2.
@@ -304,23 +362,65 @@ func (_Connector *ConnectorTransactorSession) FtdcProveStruct(arg0 IFtdcHubFtdcP
 	return _Connector.Contract.FtdcProveStruct(&_Connector.TransactOpts, arg0)
 }
 
-// KeyExistenceProofStruct is a paid mutator transaction binding the contract method 0xf304e0d2.
+// KeyExistenceProofStruct is a paid mutator transaction binding the contract method 0x6f797106.
 //
-// Solidity: function keyExistenceProofStruct((bytes,(uint8,bytes32,bytes32)[],(bytes32,bytes32,uint16,uint64,(address,bytes32,uint256,bytes32),(bytes,string))) ) returns()
+// Solidity: function keyExistenceProofStruct((bytes,(uint8,bytes32,bytes32)[],(bytes32,bytes32,uint16,uint64,(address,bytes32,uint256),(bytes32,bytes,bool,string))) ) returns()
 func (_Connector *ConnectorTransactor) KeyExistenceProofStruct(opts *bind.TransactOpts, arg0 ITeeKeyExistenceProof) (*types.Transaction, error) {
 	return _Connector.contract.Transact(opts, "keyExistenceProofStruct", arg0)
 }
 
-// KeyExistenceProofStruct is a paid mutator transaction binding the contract method 0xf304e0d2.
+// KeyExistenceProofStruct is a paid mutator transaction binding the contract method 0x6f797106.
 //
-// Solidity: function keyExistenceProofStruct((bytes,(uint8,bytes32,bytes32)[],(bytes32,bytes32,uint16,uint64,(address,bytes32,uint256,bytes32),(bytes,string))) ) returns()
+// Solidity: function keyExistenceProofStruct((bytes,(uint8,bytes32,bytes32)[],(bytes32,bytes32,uint16,uint64,(address,bytes32,uint256),(bytes32,bytes,bool,string))) ) returns()
 func (_Connector *ConnectorSession) KeyExistenceProofStruct(arg0 ITeeKeyExistenceProof) (*types.Transaction, error) {
 	return _Connector.Contract.KeyExistenceProofStruct(&_Connector.TransactOpts, arg0)
 }
 
-// KeyExistenceProofStruct is a paid mutator transaction binding the contract method 0xf304e0d2.
+// KeyExistenceProofStruct is a paid mutator transaction binding the contract method 0x6f797106.
 //
-// Solidity: function keyExistenceProofStruct((bytes,(uint8,bytes32,bytes32)[],(bytes32,bytes32,uint16,uint64,(address,bytes32,uint256,bytes32),(bytes,string))) ) returns()
+// Solidity: function keyExistenceProofStruct((bytes,(uint8,bytes32,bytes32)[],(bytes32,bytes32,uint16,uint64,(address,bytes32,uint256),(bytes32,bytes,bool,string))) ) returns()
 func (_Connector *ConnectorTransactorSession) KeyExistenceProofStruct(arg0 ITeeKeyExistenceProof) (*types.Transaction, error) {
 	return _Connector.Contract.KeyExistenceProofStruct(&_Connector.TransactOpts, arg0)
+}
+
+// KeyExistenceRequestStruct is a paid mutator transaction binding the contract method 0x65fd30dc.
+//
+// Solidity: function keyExistenceRequestStruct((bytes32,bytes32,(address,bytes32,uint256)) ) returns()
+func (_Connector *ConnectorTransactor) KeyExistenceRequestStruct(opts *bind.TransactOpts, arg0 ITeeKeyExistenceRequest) (*types.Transaction, error) {
+	return _Connector.contract.Transact(opts, "keyExistenceRequestStruct", arg0)
+}
+
+// KeyExistenceRequestStruct is a paid mutator transaction binding the contract method 0x65fd30dc.
+//
+// Solidity: function keyExistenceRequestStruct((bytes32,bytes32,(address,bytes32,uint256)) ) returns()
+func (_Connector *ConnectorSession) KeyExistenceRequestStruct(arg0 ITeeKeyExistenceRequest) (*types.Transaction, error) {
+	return _Connector.Contract.KeyExistenceRequestStruct(&_Connector.TransactOpts, arg0)
+}
+
+// KeyExistenceRequestStruct is a paid mutator transaction binding the contract method 0x65fd30dc.
+//
+// Solidity: function keyExistenceRequestStruct((bytes32,bytes32,(address,bytes32,uint256)) ) returns()
+func (_Connector *ConnectorTransactorSession) KeyExistenceRequestStruct(arg0 ITeeKeyExistenceRequest) (*types.Transaction, error) {
+	return _Connector.Contract.KeyExistenceRequestStruct(&_Connector.TransactOpts, arg0)
+}
+
+// KeyExistenceResponseStruct is a paid mutator transaction binding the contract method 0x69265249.
+//
+// Solidity: function keyExistenceResponseStruct((bytes32,bytes32,uint16,uint64,(address,bytes32,uint256),(bytes32,bytes,bool,string)) ) returns()
+func (_Connector *ConnectorTransactor) KeyExistenceResponseStruct(opts *bind.TransactOpts, arg0 ITeeKeyExistenceResponse) (*types.Transaction, error) {
+	return _Connector.contract.Transact(opts, "keyExistenceResponseStruct", arg0)
+}
+
+// KeyExistenceResponseStruct is a paid mutator transaction binding the contract method 0x69265249.
+//
+// Solidity: function keyExistenceResponseStruct((bytes32,bytes32,uint16,uint64,(address,bytes32,uint256),(bytes32,bytes,bool,string)) ) returns()
+func (_Connector *ConnectorSession) KeyExistenceResponseStruct(arg0 ITeeKeyExistenceResponse) (*types.Transaction, error) {
+	return _Connector.Contract.KeyExistenceResponseStruct(&_Connector.TransactOpts, arg0)
+}
+
+// KeyExistenceResponseStruct is a paid mutator transaction binding the contract method 0x69265249.
+//
+// Solidity: function keyExistenceResponseStruct((bytes32,bytes32,uint16,uint64,(address,bytes32,uint256),(bytes32,bytes,bool,string)) ) returns()
+func (_Connector *ConnectorTransactorSession) KeyExistenceResponseStruct(arg0 ITeeKeyExistenceResponse) (*types.Transaction, error) {
+	return _Connector.Contract.KeyExistenceResponseStruct(&_Connector.TransactOpts, arg0)
 }

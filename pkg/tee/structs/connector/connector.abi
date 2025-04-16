@@ -1,4 +1,4 @@
- [
+[
     {
       "inputs": [
         {
@@ -87,6 +87,11 @@
                       "type": "tuple"
                     },
                     {
+                      "internalType": "bytes32",
+                      "name": "teeGovernanceHash",
+                      "type": "bytes32"
+                    },
+                    {
                       "internalType": "uint24",
                       "name": "rewardEpochId",
                       "type": "uint24"
@@ -120,6 +125,176 @@
         }
       ],
       "name": "availabilityCheckProofStruct",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes32",
+              "name": "attestationType",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "sourceId",
+              "type": "bytes32"
+            },
+            {
+              "components": [
+                {
+                  "components": [
+                    {
+                      "internalType": "address",
+                      "name": "teeId",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "address",
+                      "name": "owner",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "url",
+                      "type": "string"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "codeHash",
+                      "type": "bytes32"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "platform",
+                      "type": "bytes32"
+                    }
+                  ],
+                  "internalType": "struct ITeeRegistry.TeeMachineWithAttestationData",
+                  "name": "teeMachine",
+                  "type": "tuple"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "teeGovernanceHash",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "uint24",
+                  "name": "rewardEpochId",
+                  "type": "uint24"
+                }
+              ],
+              "internalType": "struct ITeeAvailabilityCheck.RequestBody",
+              "name": "requestBody",
+              "type": "tuple"
+            }
+          ],
+          "internalType": "struct ITeeAvailabilityCheck.Request",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "name": "availabilityCheckRequestStruct",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes32",
+              "name": "attestationType",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "sourceId",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "uint16",
+              "name": "thresholdBIPS",
+              "type": "uint16"
+            },
+            {
+              "internalType": "uint64",
+              "name": "timestamp",
+              "type": "uint64"
+            },
+            {
+              "components": [
+                {
+                  "components": [
+                    {
+                      "internalType": "address",
+                      "name": "teeId",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "address",
+                      "name": "owner",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "url",
+                      "type": "string"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "codeHash",
+                      "type": "bytes32"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "platform",
+                      "type": "bytes32"
+                    }
+                  ],
+                  "internalType": "struct ITeeRegistry.TeeMachineWithAttestationData",
+                  "name": "teeMachine",
+                  "type": "tuple"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "teeGovernanceHash",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "uint24",
+                  "name": "rewardEpochId",
+                  "type": "uint24"
+                }
+              ],
+              "internalType": "struct ITeeAvailabilityCheck.RequestBody",
+              "name": "requestBody",
+              "type": "tuple"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "enum ITeeAvailabilityCheck.AvailabilityCheckStatus",
+                  "name": "status",
+                  "type": "uint8"
+                }
+              ],
+              "internalType": "struct ITeeAvailabilityCheck.ResponseBody",
+              "name": "responseBody",
+              "type": "tuple"
+            }
+          ],
+          "internalType": "struct ITeeAvailabilityCheck.Response",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "name": "availabilityCheckResponseStruct",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -250,11 +425,6 @@
                       "internalType": "uint256",
                       "name": "keyId",
                       "type": "uint256"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "opType",
-                      "type": "bytes32"
                     }
                   ],
                   "internalType": "struct ITeeKeyExistence.RequestBody",
@@ -264,9 +434,19 @@
                 {
                   "components": [
                     {
+                      "internalType": "bytes32",
+                      "name": "opType",
+                      "type": "bytes32"
+                    },
+                    {
                       "internalType": "bytes",
                       "name": "publicKey",
                       "type": "bytes"
+                    },
+                    {
+                      "internalType": "bool",
+                      "name": "restored",
+                      "type": "bool"
                     },
                     {
                       "internalType": "string",
@@ -290,6 +470,137 @@
         }
       ],
       "name": "keyExistenceProofStruct",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes32",
+              "name": "attestationType",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "sourceId",
+              "type": "bytes32"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "teeId",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "walletId",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "keyId",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct ITeeKeyExistence.RequestBody",
+              "name": "requestBody",
+              "type": "tuple"
+            }
+          ],
+          "internalType": "struct ITeeKeyExistence.Request",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "name": "keyExistenceRequestStruct",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes32",
+              "name": "attestationType",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "sourceId",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "uint16",
+              "name": "thresholdBIPS",
+              "type": "uint16"
+            },
+            {
+              "internalType": "uint64",
+              "name": "timestamp",
+              "type": "uint64"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "teeId",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "walletId",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "keyId",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct ITeeKeyExistence.RequestBody",
+              "name": "requestBody",
+              "type": "tuple"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "bytes32",
+                  "name": "opType",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "publicKey",
+                  "type": "bytes"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "restored",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "string",
+                  "name": "addressStr",
+                  "type": "string"
+                }
+              ],
+              "internalType": "struct ITeeKeyExistence.ResponseBody",
+              "name": "responseBody",
+              "type": "tuple"
+            }
+          ],
+          "internalType": "struct ITeeKeyExistence.Response",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "name": "keyExistenceResponseStruct",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

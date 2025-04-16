@@ -6,6 +6,14 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/logger"
 )
 
+const (
+	reqStruct   string = "RequestStruct"
+	resStruct   string = "ResponseStruct"
+	proofStruct string = "ProofStruct"
+)
+
+const OPType = "FTDC"
+
 type OPCommand string
 
 const (
@@ -17,15 +25,42 @@ var opCommands = []OPCommand{
 }
 
 // i-th method correspond to a method in TeeDataConnectorStruct interface whose
-// input is the type of message emitted with i-th opCommands
+// input is the type of message emitted with i-th element of opCommands.
 var methods = []string{
 	"ftdcProveStruct",
 }
 
 var MessageArguments map[OPCommand]abi.Argument
 
+type AttestationType string
+
+const (
+	AvailabilityCheck AttestationType = "AvailabilityCheck"
+	KeyExistence      AttestationType = "KeyExistence"
+)
+
+var attestationTypes = []AttestationType{
+	AvailabilityCheck,
+	KeyExistence,
+}
+
+// i-th method correspond to a method in TeeDataConnectorStruct interface whose
+// input is the proof type of i-th attestation type
+var attestationTypeMethods = []string{
+	"availabilityCheck",
+	"keyExistence",
+}
+
+type AttestationArguments struct {
+	Request  abi.Argument
+	Response abi.Argument
+	Proof    abi.Argument
+}
+
+var AttestationTypeArguments map[AttestationType]AttestationArguments
+
 func init() {
-	paymentAbi, err := ConnectorMetaData.GetAbi()
+	connectorAbi, err := ConnectorMetaData.GetAbi()
 	if err != nil {
 		logger.Panicf("error getting tee data connector abi: %v", err)
 	}
@@ -36,10 +71,41 @@ func init() {
 
 	MessageArguments = make(map[OPCommand]abi.Argument)
 	for j := range opCommands {
-		method, ok := paymentAbi.Methods[methods[j]]
+		method, ok := connectorAbi.Methods[methods[j]]
 		if !ok {
 			logger.Panicf("missing method %s", methods[j])
 		}
 		MessageArguments[opCommands[j]] = method.Inputs[0]
+	}
+
+	AttestationTypeArguments = make(map[AttestationType]AttestationArguments)
+
+	for j := range attestationTypes {
+		request := attestationTypeMethods[j] + reqStruct
+		method, ok := connectorAbi.Methods[request]
+		if !ok {
+			logger.Panicf("missing method %s", request)
+		}
+		requestAbi := method.Inputs[0]
+
+		response := attestationTypeMethods[j] + resStruct
+		method, ok = connectorAbi.Methods[response]
+		if !ok {
+			logger.Panicf("missing method %s", response)
+		}
+		responseAbi := method.Inputs[0]
+
+		proof := attestationTypeMethods[j] + proofStruct
+		method, ok = connectorAbi.Methods[proof]
+		if !ok {
+			logger.Panicf("missing method %s", proof)
+		}
+		proofAbi := method.Inputs[0]
+
+		AttestationTypeArguments[attestationTypes[j]] = AttestationArguments{
+			Request:  requestAbi,
+			Response: responseAbi,
+			Proof:    proofAbi,
+		}
 	}
 }
