@@ -1,4 +1,4 @@
- [
+[
     {
       "anonymous": false,
       "inputs": [
@@ -127,6 +127,12 @@
           "internalType": "address",
           "name": "newTeeId",
           "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "teeUpgradeId",
+          "type": "uint256"
         }
       ],
       "name": "TeeMachineReplicationTriggered",
@@ -242,6 +248,11 @@
                       "internalType": "struct ITeeRegistry.TeeMachineWithAttestationData",
                       "name": "teeMachine",
                       "type": "tuple"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "teeGovernanceHash",
+                      "type": "bytes32"
                     },
                     {
                       "internalType": "uint24",
@@ -385,6 +396,11 @@
                       "internalType": "struct ITeeRegistry.TeeMachineWithAttestationData",
                       "name": "teeMachine",
                       "type": "tuple"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "teeGovernanceHash",
+                      "type": "bytes32"
                     },
                     {
                       "internalType": "uint24",
@@ -658,6 +674,11 @@
                       "type": "tuple"
                     },
                     {
+                      "internalType": "bytes32",
+                      "name": "teeGovernanceHash",
+                      "type": "bytes32"
+                    },
+                    {
                       "internalType": "uint24",
                       "name": "rewardEpochId",
                       "type": "uint24"
@@ -834,6 +855,11 @@
                       "type": "tuple"
                     },
                     {
+                      "internalType": "bytes32",
+                      "name": "teeGovernanceHash",
+                      "type": "bytes32"
+                    },
+                    {
                       "internalType": "uint24",
                       "name": "rewardEpochId",
                       "type": "uint24"
@@ -993,6 +1019,11 @@
                       "internalType": "struct ITeeRegistry.TeeMachineWithAttestationData",
                       "name": "teeMachine",
                       "type": "tuple"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "teeGovernanceHash",
+                      "type": "bytes32"
                     },
                     {
                       "internalType": "uint24",

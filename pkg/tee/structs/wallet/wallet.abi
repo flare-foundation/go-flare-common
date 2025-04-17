@@ -1,4 +1,4 @@
-[
+ [
     {
       "inputs": [
         {
@@ -14,9 +14,9 @@
               "type": "bytes32"
             },
             {
-              "internalType": "uint256",
+              "internalType": "uint64",
               "name": "keyId",
-              "type": "uint256"
+              "type": "uint64"
             },
             {
               "internalType": "bytes32",
@@ -59,9 +59,9 @@
               "type": "bytes32"
             },
             {
-              "internalType": "uint256",
+              "internalType": "uint64",
               "name": "keyId",
-              "type": "uint256"
+              "type": "uint64"
             }
           ],
           "internalType": "struct ITeeWalletKeyManager.KeyDelete",
@@ -89,9 +89,9 @@
               "type": "bytes32"
             },
             {
-              "internalType": "uint256",
+              "internalType": "uint64",
               "name": "keyId",
-              "type": "uint256"
+              "type": "uint64"
             },
             {
               "internalType": "bytes32",
@@ -121,9 +121,9 @@
               "type": "tuple[]"
             },
             {
-              "internalType": "uint256",
+              "internalType": "uint64",
               "name": "adminsThreshold",
-              "type": "uint256"
+              "type": "uint64"
             },
             {
               "internalType": "address[]",
@@ -131,9 +131,9 @@
               "type": "address[]"
             },
             {
-              "internalType": "uint256",
+              "internalType": "uint64",
               "name": "cosignersThreshold",
-              "type": "uint256"
+              "type": "uint64"
             }
           ],
           "internalType": "struct ITeeWalletKeyManager.KeyGenerate",
@@ -161,14 +161,14 @@
               "type": "bytes32"
             },
             {
-              "internalType": "uint256",
+              "internalType": "uint64",
               "name": "keyId",
-              "type": "uint256"
+              "type": "uint64"
             },
             {
-              "internalType": "uint256",
+              "internalType": "uint64",
               "name": "backupId",
-              "type": "uint256"
+              "type": "uint64"
             }
           ],
           "internalType": "struct ITeeWalletBackupManager.KeyMachineBackupRemove",
@@ -223,19 +223,19 @@
               "type": "bytes32"
             },
             {
-              "internalType": "uint256",
+              "internalType": "uint64",
               "name": "keyId",
-              "type": "uint256"
+              "type": "uint64"
             },
             {
-              "internalType": "uint256",
+              "internalType": "uint64",
               "name": "backupId",
-              "type": "uint256"
+              "type": "uint64"
             },
             {
-              "internalType": "uint256",
+              "internalType": "uint64",
               "name": "shamirThreshold",
-              "type": "uint256"
+              "type": "uint64"
             },
             {
               "components": [
@@ -322,14 +322,14 @@
               "type": "bytes32"
             },
             {
-              "internalType": "uint256",
+              "internalType": "uint64",
               "name": "keyId",
-              "type": "uint256"
+              "type": "uint64"
             },
             {
-              "internalType": "uint256",
+              "internalType": "uint64",
               "name": "backupId",
-              "type": "uint256"
+              "type": "uint64"
             },
             {
               "internalType": "bytes32",
@@ -401,9 +401,9 @@
                   "type": "address"
                 },
                 {
-                  "internalType": "uint256",
+                  "internalType": "uint64",
                   "name": "keyId",
-                  "type": "uint256"
+                  "type": "uint64"
                 }
               ],
               "internalType": "struct TeeIdKeyIdPair[]",

@@ -1,4 +1,4 @@
- [
+[
     {
       "anonymous": false,
       "inputs": [
@@ -213,9 +213,14 @@
       "name": "pay",
       "outputs": [
         {
-          "internalType": "uint256",
+          "internalType": "uint64",
+          "name": "_nonce",
+          "type": "uint64"
+        },
+        {
+          "internalType": "uint64",
           "name": "_subNonce",
-          "type": "uint256"
+          "type": "uint64"
         }
       ],
       "stateMutability": "payable",
@@ -257,7 +262,7 @@
             }
           ],
           "internalType": "struct ITeePayments.PaymentInstruction[]",
-          "name": "_paymentInstruction",
+          "name": "_paymentInstructions",
           "type": "tuple[]"
         },
         {
@@ -266,9 +271,9 @@
           "type": "uint96"
         },
         {
-          "internalType": "bool",
+          "internalType": "bool[]",
           "name": "_nullify",
-          "type": "bool"
+          "type": "bool[]"
         }
       ],
       "name": "reissue",

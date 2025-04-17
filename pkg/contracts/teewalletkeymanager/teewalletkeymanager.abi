@@ -29,9 +29,9 @@
         },
         {
           "indexed": true,
-          "internalType": "uint256",
+          "internalType": "uint64",
           "name": "keyId",
-          "type": "uint256"
+          "type": "uint64"
         }
       ],
       "name": "WalletKeyAdded",
@@ -54,9 +54,9 @@
         },
         {
           "indexed": true,
-          "internalType": "uint256",
+          "internalType": "uint64",
           "name": "keyId",
-          "type": "uint256"
+          "type": "uint64"
         },
         {
           "indexed": false,
@@ -91,9 +91,9 @@
         },
         {
           "indexed": true,
-          "internalType": "uint256",
+          "internalType": "uint64",
           "name": "keyId",
-          "type": "uint256"
+          "type": "uint64"
         }
       ],
       "name": "WalletKeyDeleted",
@@ -110,9 +110,9 @@
         },
         {
           "indexed": false,
-          "internalType": "uint256[]",
+          "internalType": "uint64[]",
           "name": "keyIds",
-          "type": "uint256[]"
+          "type": "uint64[]"
         }
       ],
       "name": "WalletKeysNotAvailable",
@@ -129,9 +129,9 @@
         },
         {
           "indexed": false,
-          "internalType": "uint256",
+          "internalType": "uint64",
           "name": "multisigThreshold",
-          "type": "uint256"
+          "type": "uint64"
         }
       ],
       "name": "WalletMultisigThresholdSet",
@@ -166,9 +166,9 @@
       "name": "addKey",
       "outputs": [
         {
-          "internalType": "uint256",
+          "internalType": "uint64",
           "name": "_keyId",
-          "type": "uint256"
+          "type": "uint64"
         }
       ],
       "stateMutability": "payable",
@@ -182,9 +182,9 @@
           "type": "bytes32"
         },
         {
-          "internalType": "uint256",
+          "internalType": "uint64",
           "name": "_keyId",
-          "type": "uint256"
+          "type": "uint64"
         }
       ],
       "name": "cleanUpTeeIds",
@@ -258,9 +258,9 @@
                       "type": "bytes32"
                     },
                     {
-                      "internalType": "uint256",
+                      "internalType": "uint64",
                       "name": "keyId",
-                      "type": "uint256"
+                      "type": "uint64"
                     }
                   ],
                   "internalType": "struct ITeeKeyExistence.RequestBody",
@@ -323,9 +323,9 @@
           "type": "bytes32"
         },
         {
-          "internalType": "uint256",
+          "internalType": "uint64",
           "name": "_keyId",
-          "type": "uint256"
+          "type": "uint64"
         }
       ],
       "name": "deleteKey",
@@ -360,9 +360,9 @@
           "type": "bytes32"
         },
         {
-          "internalType": "uint256",
+          "internalType": "uint64",
           "name": "_keyId",
-          "type": "uint256"
+          "type": "uint64"
         }
       ],
       "name": "getWalletKeyAddress",
@@ -384,9 +384,9 @@
           "type": "bytes32"
         },
         {
-          "internalType": "uint256",
+          "internalType": "uint64",
           "name": "_keyId",
-          "type": "uint256"
+          "type": "uint64"
         }
       ],
       "name": "getWalletKeyPublicKey",
@@ -408,9 +408,9 @@
           "type": "bytes32"
         },
         {
-          "internalType": "uint256",
+          "internalType": "uint64",
           "name": "_keyId",
-          "type": "uint256"
+          "type": "uint64"
         }
       ],
       "name": "getWalletKeyTeeIds",
@@ -435,19 +435,19 @@
       "name": "getWalletKeysInfo",
       "outputs": [
         {
-          "internalType": "uint256",
+          "internalType": "uint64",
           "name": "_multisigThreshold",
-          "type": "uint256"
+          "type": "uint64"
         },
         {
-          "internalType": "uint256[]",
+          "internalType": "uint64[]",
           "name": "_keyIds",
-          "type": "uint256[]"
+          "type": "uint64[]"
         },
         {
-          "internalType": "uint256",
+          "internalType": "uint64",
           "name": "_counter",
-          "type": "uint256"
+          "type": "uint64"
         }
       ],
       "stateMutability": "view",
@@ -493,9 +493,9 @@
               "type": "address"
             },
             {
-              "internalType": "uint256",
+              "internalType": "uint64",
               "name": "keyId",
-              "type": "uint256"
+              "type": "uint64"
             }
           ],
           "internalType": "struct TeeIdKeyIdPair[]",
@@ -519,9 +519,9 @@
           "type": "bytes32"
         },
         {
-          "internalType": "uint256",
+          "internalType": "uint64",
           "name": "_keyId",
-          "type": "uint256"
+          "type": "uint64"
         }
       ],
       "name": "requestKeyExistenceAttestation",
@@ -537,9 +537,9 @@
           "type": "bytes32"
         },
         {
-          "internalType": "uint256",
+          "internalType": "uint64",
           "name": "_multisigThreshold",
-          "type": "uint256"
+          "type": "uint64"
         }
       ],
       "name": "setMultisigThreshold",

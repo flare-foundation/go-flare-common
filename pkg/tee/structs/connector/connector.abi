@@ -422,9 +422,9 @@
                       "type": "bytes32"
                     },
                     {
-                      "internalType": "uint256",
+                      "internalType": "uint64",
                       "name": "keyId",
-                      "type": "uint256"
+                      "type": "uint64"
                     }
                   ],
                   "internalType": "struct ITeeKeyExistence.RequestBody",
@@ -501,9 +501,9 @@
                   "type": "bytes32"
                 },
                 {
-                  "internalType": "uint256",
+                  "internalType": "uint64",
                   "name": "keyId",
-                  "type": "uint256"
+                  "type": "uint64"
                 }
               ],
               "internalType": "struct ITeeKeyExistence.RequestBody",
@@ -558,9 +558,9 @@
                   "type": "bytes32"
                 },
                 {
-                  "internalType": "uint256",
+                  "internalType": "uint64",
                   "name": "keyId",
-                  "type": "uint256"
+                  "type": "uint64"
                 }
               ],
               "internalType": "struct ITeeKeyExistence.RequestBody",
