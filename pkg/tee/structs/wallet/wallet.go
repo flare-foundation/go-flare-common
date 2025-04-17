@@ -26,6 +26,8 @@ var opCommands = []OPCommand{
 	KeyMachineBackup,
 	KeyMachineRestore,
 	KeyMachineBackupRemove,
+	KeyDataProviderRestoreInit,
+	KeyDataProviderRestore,
 }
 
 // i-th method correspond to a method in TeeWalletStruct interface whose
