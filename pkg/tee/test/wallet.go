@@ -111,36 +111,36 @@ func (c *Client) InitializeWallet(opType common.Hash, submitAddress common.Addre
 	return projectID, walletID, nil
 }
 
-func (c *Client) AddKey(teeID common.Address, walletID common.Hash) (string, error) {
+func (c *Client) AddKey(teeID common.Address, walletID common.Hash) (uint64, error) {
 	opts, err := bind.NewKeyedTransactorWithChainID(c.prv, c.chainID)
 	if err != nil {
-		return "", err
+		return 0, err
 	}
 
 	tx, err := c.teeWalletKeyManager.AddKey(opts, teeID, walletID)
 	if err != nil {
-		return "", err
+		return 0, err
 	}
 
 	ctx := context.Background()
 
 	receipt, err := bind.WaitMined(ctx, c.chainClient, tx)
 	if err != nil {
-		return "", err
+		return 0, err
 	}
 	if receipt.Status != types.ReceiptStatusSuccessful {
-		return "", fmt.Errorf("transaction AddKey %s not successful", tx.Hash())
+		return 0, fmt.Errorf("transaction AddKey %s not successful", tx.Hash())
 	}
 
 	log, err := c.teeWalletKeyManager.ParseWalletKeyAdded(*receipt.Logs[0])
 	if err != nil {
-		return "", err
+		return 0, err
 	}
 
-	return log.KeyId.String(), nil
+	return log.KeyId.Uint64(), nil
 }
 
-func (c *Client) InitializeAndAddKeys() ([]string, error) {
+func (c *Client) InitializeAndAddKeys() (common.Hash, []uint64, error) {
 	x := [32]byte{}
 	copy(x[:], "XRP")
 
@@ -148,23 +148,23 @@ func (c *Client) InitializeAndAddKeys() ([]string, error) {
 
 	_, walletID, err := c.InitializeWallet(x, submitAddress)
 	if err != nil {
-		return nil, err
+		return common.Hash{}, nil, err
 	}
 
 	ids, err := c.teeRegistry.GetActiveTeeIds(&bind.CallOpts{})
 	if err != nil {
-		return nil, err
+		return common.Hash{}, nil, err
 	}
 
-	keyIDs := make([]string, len(ids))
+	keyIDs := make([]uint64, len(ids))
 
 	for i := range ids {
 		keyID, err := c.AddKey(ids[i], walletID)
 		if err != nil {
-			return nil, err
+			return common.Hash{}, nil, err
 		}
 		keyIDs[i] = keyID
 	}
 
-	return keyIDs, nil
+	return walletID, keyIDs, nil
 }
