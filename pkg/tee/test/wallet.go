@@ -137,7 +137,7 @@ func (c *Client) AddKey(teeID common.Address, walletID common.Hash) (uint64, err
 		return 0, err
 	}
 
-	return log.KeyId.Uint64(), nil
+	return log.KeyId, nil
 }
 
 func (c *Client) InitializeAndAddKeys() (common.Hash, []uint64, error) {

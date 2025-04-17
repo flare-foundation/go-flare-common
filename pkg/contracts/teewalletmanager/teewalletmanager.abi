@@ -1,4 +1,4 @@
- [
+[
     {
       "anonymous": false,
       "inputs": [
@@ -288,9 +288,9 @@
           "type": "tuple[]"
         },
         {
-          "internalType": "uint256",
+          "internalType": "uint64",
           "name": "_adminsThreshold",
-          "type": "uint256"
+          "type": "uint64"
         }
       ],
       "stateMutability": "view",
@@ -312,9 +312,9 @@
           "type": "address[]"
         },
         {
-          "internalType": "uint256",
+          "internalType": "uint64",
           "name": "_cosignersThreshold",
-          "type": "uint256"
+          "type": "uint64"
         }
       ],
       "stateMutability": "view",

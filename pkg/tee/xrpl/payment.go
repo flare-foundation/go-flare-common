@@ -19,7 +19,7 @@ func PaymentTransactionMultisig(i payment.ITeePaymentsPaymentInstructionMessage)
 	tx["Destination"] = i.RecipientAddress
 	tx["Amount"] = i.Amount.String()
 	tx["SigningPubKey"] = ""
-	tx["Sequence"] = i.Nonce.Uint64() // it is uint32 on blockchain
+	tx["Sequence"] = i.Nonce // it is uint32 on blockchain
 
 	// [
 	//   {

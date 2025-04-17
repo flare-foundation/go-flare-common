@@ -24,11 +24,11 @@ func TestPaymentTransactionMultisig(t *testing.T) {
 		RecipientAddress:   "rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe",
 		Amount:             big.NewInt(10),
 		PaymentReference:   crypto.Keccak256Hash([]byte("test")),
-		Nonce:              big.NewInt(10),
-		SubNonce:           nil,
+		Nonce:              10,
+		SubNonce:           0,
 		MaxFee:             big.NewInt(10),
-		MaxFeeTolerancePPM: nil,
-		BatchEndTs:         nil,
+		MaxFeeTolerancePPM: 0,
+		BatchEndTs:         0,
 	}
 
 	tx := PaymentTransactionMultisig(instruction)

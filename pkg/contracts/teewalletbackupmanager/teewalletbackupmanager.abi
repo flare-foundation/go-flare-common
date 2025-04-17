@@ -12,9 +12,9 @@
           "type": "bytes32"
         },
         {
-          "internalType": "uint256",
+          "internalType": "uint64",
           "name": "_keyId",
-          "type": "uint256"
+          "type": "uint64"
         },
         {
           "internalType": "uint24",
@@ -40,9 +40,9 @@
           "type": "bytes32"
         },
         {
-          "internalType": "uint256",
+          "internalType": "uint64",
           "name": "_keyId",
-          "type": "uint256"
+          "type": "uint64"
         },
         {
           "internalType": "uint24",
@@ -68,14 +68,14 @@
           "type": "bytes32"
         },
         {
-          "internalType": "uint256",
+          "internalType": "uint64",
           "name": "_keyId",
-          "type": "uint256"
+          "type": "uint64"
         },
         {
-          "internalType": "uint256",
+          "internalType": "uint64",
           "name": "_shamirThreshold",
-          "type": "uint256"
+          "type": "uint64"
         },
         {
           "internalType": "address[]",
@@ -96,14 +96,14 @@
           "type": "bytes32"
         },
         {
-          "internalType": "uint256",
+          "internalType": "uint64",
           "name": "_keyId",
-          "type": "uint256"
+          "type": "uint64"
         },
         {
-          "internalType": "uint256",
+          "internalType": "uint64",
           "name": "_backupId",
-          "type": "uint256"
+          "type": "uint64"
         },
         {
           "internalType": "address[]",
@@ -129,14 +129,14 @@
           "type": "bytes32"
         },
         {
-          "internalType": "uint256",
+          "internalType": "uint64",
           "name": "_keyId",
-          "type": "uint256"
+          "type": "uint64"
         },
         {
-          "internalType": "uint256",
+          "internalType": "uint64",
           "name": "_backupId",
-          "type": "uint256"
+          "type": "uint64"
         },
         {
           "internalType": "address[]",

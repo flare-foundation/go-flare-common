@@ -36,9 +36,9 @@
                   "type": "address"
                 },
                 {
-                  "internalType": "uint256",
+                  "internalType": "uint64",
                   "name": "keyId",
-                  "type": "uint256"
+                  "type": "uint64"
                 }
               ],
               "internalType": "struct TeeIdKeyIdPair[]",
@@ -66,14 +66,14 @@
               "type": "bytes32"
             },
             {
-              "internalType": "uint256",
+              "internalType": "uint64",
               "name": "nonce",
-              "type": "uint256"
+              "type": "uint64"
             },
             {
-              "internalType": "uint256",
+              "internalType": "uint64",
               "name": "subNonce",
-              "type": "uint256"
+              "type": "uint64"
             },
             {
               "internalType": "uint256",
@@ -81,14 +81,14 @@
               "type": "uint256"
             },
             {
-              "internalType": "uint256",
+              "internalType": "uint32",
               "name": "maxFeeTolerancePPM",
-              "type": "uint256"
+              "type": "uint32"
             },
             {
-              "internalType": "uint256",
+              "internalType": "uint64",
               "name": "batchEndTs",
-              "type": "uint256"
+              "type": "uint64"
             }
           ],
           "internalType": "struct ITeePayments.PaymentInstructionMessage",
@@ -148,9 +148,9 @@
                   "type": "address"
                 },
                 {
-                  "internalType": "uint256",
+                  "internalType": "uint64",
                   "name": "keyId",
-                  "type": "uint256"
+                  "type": "uint64"
                 }
               ],
               "internalType": "struct TeeIdKeyIdPair[]",
