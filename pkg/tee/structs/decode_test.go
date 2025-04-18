@@ -40,7 +40,90 @@ func TestDecodeUint8(t *testing.T) {
 	require.Equal(t, eight, unpacked)
 	require.Equal(t, eight, unpacked2)
 	require.Equal(t, eight, unpacked3)
+}
 
+func TestDecodeFail(t *testing.T) {
+	stringType, err := abi.NewType("string", "string", nil)
+	require.NoError(t, err)
+
+	argStr := abi.Argument{
+		Name:    "string",
+		Type:    stringType,
+		Indexed: false,
+	}
+
+	uint8Type, err := abi.NewType("uint8", "", nil)
+	require.NoError(t, err)
+
+	argUint8 := abi.Argument{
+		Name:    "uint8",
+		Type:    uint8Type,
+		Indexed: false,
+	}
+
+	tests := []struct {
+		inputType  abi.Argument
+		input      any
+		outputType abi.Argument
+	}{
+		{
+			inputType:  argUint8,
+			input:      uint8(8),
+			outputType: argStr,
+		},
+		{
+			inputType:  argStr,
+			input:      "osem",
+			outputType: argUint8,
+		},
+	}
+
+	for j, test := range tests {
+		packed, err := abi.Arguments{test.inputType}.Pack(test.input)
+		require.NoError(t, err)
+
+		var unpacked0 any
+		var unpacked1 any
+
+		_, err = Decode[any](test.outputType, packed)
+		require.Error(t, err, j)
+
+		err = DecodeTo(test.outputType, packed, &unpacked0)
+		require.Error(t, err, j)
+
+		err = DecodeTo2(test.outputType, packed, &unpacked1)
+		require.Error(t, err, j)
+	}
+}
+
+func TestUint8(t *testing.T) {
+	uint8Type, err := abi.NewType("uint8", "", nil)
+	require.NoError(t, err)
+
+	argUint8 := abi.Argument{
+		Name:    "uint8",
+		Type:    uint8Type,
+		Indexed: false,
+	}
+
+	eight := uint8(8)
+
+	packed, err := abi.Arguments{argUint8}.Pack(eight)
+	require.NoError(t, err)
+
+	packed = append(packed, 2)
+
+	var unpacked0 uint8
+	var unpacked1 uint8
+
+	_, err = Decode[uint8](argUint8, packed)
+	require.Error(t, err)
+
+	err = DecodeTo(argUint8, packed, &unpacked0)
+	require.Error(t, err)
+
+	err = DecodeTo2(argUint8, packed, &unpacked1)
+	require.Error(t, err)
 }
 
 func TestDecodeStruct(t *testing.T) {

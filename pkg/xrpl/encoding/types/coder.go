@@ -42,7 +42,7 @@ func typeCoder(xt defs.XType) (Coder, error) {
 	case defs.Hash160:
 		return Hash160, nil
 	case defs.Hash192:
-		return nil, &UnsupportedError{xt}
+		return Hash192, nil
 	case defs.Transaction:
 		return nil, &UnsupportedError{xt}
 	case defs.UInt512:
@@ -52,7 +52,7 @@ func typeCoder(xt defs.XType) (Coder, error) {
 	case defs.XChainBridge:
 		return &XChainBridge{}, nil
 	case defs.Vector256:
-		return nil, &UnsupportedError{xt}
+		return Vector256, nil
 	case defs.AccountID:
 		return AccountID, nil
 	case defs.Currency:
