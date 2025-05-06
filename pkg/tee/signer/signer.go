@@ -1,4 +1,4 @@
-package signing
+package signer
 
 import (
 	"context"
@@ -84,9 +84,9 @@ func (ak *apiKeys) authorize(h *http.Header) bool {
 	return ak.keys[providedKey]
 }
 
-// New creates new signer from config and private key.
+// New creates new Signer from config and private key.
 //
-// Signer listens to POST requests on cfg.Addr/sign.
+// Signer listens to POST requests on $cfg.Addr/sign.
 // The body of the request should be json marshaled RequestBody, the header should include api key.
 func New(cfg Config, prv *ecdsa.PrivateKey) *Signer {
 	apiKey := newAPIKeys(cfg)
@@ -180,7 +180,7 @@ func SignEthMessage(hash common.Hash, prv *ecdsa.PrivateKey) (hexutil.Bytes, err
 	return crypto.Sign(toSign, prv)
 }
 
-// signHashes creates Eth Message sign of each hash and returns it in a slice.
+// signHashes creates Eth Message signature of each hash and returns it in a slice.
 func signHashes(hashes []common.Hash, prv *ecdsa.PrivateKey) ([]hexutil.Bytes, error) {
 	signatures := make([]hexutil.Bytes, len(hashes))
 

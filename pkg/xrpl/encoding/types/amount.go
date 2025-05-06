@@ -9,6 +9,8 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/address"
 )
 
 // TODO amounts without issuer/amount.... MPT support
@@ -93,7 +95,7 @@ func tokenToBytes(amount map[string]any) ([]byte, error) {
 		return nil, fmt.Errorf("extracting issuer: %v", err)
 	}
 
-	issuerBytes, err := ID(issuer)
+	issuerBytes, err := address.ID(issuer)
 	if err != nil {
 		return nil, fmt.Errorf("issuer address: %v", err)
 	}
@@ -398,7 +400,7 @@ func tokenToJson(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
 		return nil, fmt.Errorf("cannot read token issuer: %v", err)
 	}
 
-	iAddress, err := Address(i)
+	iAddress, err := address.Address(i)
 	if err != nil {
 		return nil, fmt.Errorf("deserializing issuer: %v", err)
 	}

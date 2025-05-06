@@ -1,8 +1,8 @@
-package encoding
+package signing
 
 import (
-	"crypto/ecdsa"
 	"crypto/ed25519"
+	"encoding/binary"
 	"encoding/hex"
 	"fmt"
 	"math/big"
@@ -12,9 +12,40 @@ import (
 	btcecdsa "github.com/btcsuite/btcd/btcec/v2/ecdsa"
 
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/base58"
-	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/hash"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/types"
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/hash"
 )
+
+const (
+	singlePrefix uint32 = 0x53545800
+	multiPrefix  uint32 = 0x534D5400
+)
+
+// MessageToSign creates a tx message for signing.
+// If multiSig is true, txBlob is prefixed with multi-signing prefix and postfixed with accountID. For multi-signing, accountID of the signer should be provided.
+// If multiSig is false, txBlob is prefixed with single-signing prefix.
+func MessageToSign(txBlob []byte, multiSig bool, accountID []byte) []byte {
+	length := len(txBlob) + 4
+	if multiSig {
+		length += 20
+	}
+
+	prefixed := make([]byte, 0, length)
+
+	if multiSig {
+		prefixed = binary.BigEndian.AppendUint32(prefixed, multiPrefix)
+	} else {
+		prefixed = binary.BigEndian.AppendUint32(prefixed, singlePrefix)
+	}
+
+	prefixed = append(prefixed, txBlob...)
+
+	if multiSig {
+		prefixed = append(prefixed, accountID...)
+	}
+
+	return prefixed
+}
 
 type Signer struct {
 	Account       string
@@ -50,127 +81,6 @@ func (s *Signer) Format() types.ArrayObject {
 			"SigningPubKey": s.SigningPubKey,
 		},
 	}
-}
-
-func SignTransactionEDSingle(tx map[string]any, sequence uint32, prv ed25519.PrivateKey) ([]byte, error) {
-	tx["Sequence"] = sequence
-
-	pub, err := Ed25519PrvToPub(prv)
-	if err != nil {
-		return nil, fmt.Errorf("invalid private key: %v", err)
-	}
-	tx["SigningPubKey"] = pub
-
-	addr, err := Ed25519PrvToAddress(prv)
-	if err != nil {
-		return nil, fmt.Errorf("invalid private key: %v", err)
-	}
-	tx["Account"] = addr
-
-	encoded, err := types.Encode(tx, true)
-	if err != nil {
-		return nil, fmt.Errorf("cannot encode tx: %v", err)
-	}
-
-	msg := MessageToSign(encoded, false, nil)
-
-	signature := ed25519.Sign(prv, msg)
-
-	return signature, nil
-}
-
-func SignTransactionEDMultisig(tx map[string]any, prv ed25519.PrivateKey) (*Signer, error) {
-	tx["SigningPubKey"] = ""
-
-	encoded, err := types.Encode(tx, true)
-	if err != nil {
-		return nil, fmt.Errorf("cannot encode tx: %v", err)
-	}
-
-	accID, err := Ed25519PrvToID(prv)
-	if err != nil {
-		return nil, fmt.Errorf("cannot get account id: %v", err)
-	}
-
-	msg := MessageToSign(encoded, true, accID)
-	signature := ed25519.Sign(prv, msg)
-
-	add, err := Ed25519PrvToAddress(prv)
-	if err != nil {
-		return nil, fmt.Errorf("cannot get address %v", err)
-	}
-
-	pub, err := Ed25519PrvToPub(prv)
-	if err != nil {
-		return nil, fmt.Errorf("cannot get address %v", err)
-	}
-
-	return &Signer{
-		Account:       add,
-		TxnSignature:  hex.EncodeToString(signature),
-		SigningPubKey: pub,
-	}, nil
-}
-
-// SignTransactionSecp256k1Single signs a tra
-func SignTransactionSecp256k1Single(tx map[string]any, prv *ecdsa.PrivateKey) ([]byte, error) {
-	pub := Secp256k1PrvToPub(prv)
-	tx["SigningPubKey"] = pub
-
-	addr := Secp256k1PrvToAddress(prv)
-	tx["Account"] = addr
-
-	encoded, err := types.Encode(tx, true)
-	if err != nil {
-		return nil, fmt.Errorf("cannot encode tx: %v", err)
-	}
-
-	id := Secp256k1PrvToID(prv)
-
-	msg := MessageToSign(encoded, false, id)
-	signature := Secp256k1Sign(msg, prv)
-
-	tx["TxnSignature"] = hex.EncodeToString(signature)
-
-	signed, err := types.Encode(tx, false)
-	if err != nil {
-		return nil, fmt.Errorf("cannot encode signed tx: %v", err)
-	}
-
-	return signed, nil
-}
-
-func SignTransactionSecp256k1Multisig(tx map[string]any, prv *ecdsa.PrivateKey) (*Signer, error) {
-	tx["SigningPubKey"] = ""
-
-	encoded, err := types.Encode(tx, true)
-	if err != nil {
-		return nil, fmt.Errorf("cannot encode tx: %v", err)
-	}
-
-	accID := Secp256k1PrvToID(prv)
-
-	msg := MessageToSign(encoded, true, accID)
-	signature := Secp256k1Sign(msg, prv)
-
-	pub := Secp256k1PrvToPub(prv)
-	addr := Secp256k1PrvToAddress(prv)
-
-	return &Signer{
-		Account:       addr,
-		TxnSignature:  hex.EncodeToString(signature),
-		SigningPubKey: pub,
-	}, nil
-}
-
-// Secp256k1Sign computes Secp256k1 signature of the message and returns in DER format.
-func Secp256k1Sign(message []byte, privKey *ecdsa.PrivateKey) []byte {
-	hash := hash.Sha512Half(message)
-	priv, _ := btcec.PrivKeyFromBytes(privKey.D.Bytes())
-
-	sig2 := btcecdsa.Sign(priv, hash)
-
-	return sig2.Serialize()
 }
 
 // JoinMultisig appends signers to transactions and serializes it.
