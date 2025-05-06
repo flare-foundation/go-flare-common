@@ -1,6 +1,7 @@
 package types
 
 import (
+	"bytes"
 	"encoding/hex"
 	"testing"
 
@@ -39,7 +40,6 @@ func TestHashError(t *testing.T) {
 			_, err := test.t.ToBytes(input, false)
 			require.Error(t, err, input)
 		}
-
 	}
 }
 
@@ -78,5 +78,42 @@ func TestHash(t *testing.T) {
 		outputBytes, err := hex.DecodeString(test.output)
 		require.NoError(t, err)
 		require.Equal(t, outputBytes, output)
+	}
+}
+
+func TestHashDecodeFail(t *testing.T) {
+	tests := []struct {
+		t      Coder
+		input  string
+		length int
+	}{
+		{
+			t:      Blob,
+			input:  "",
+			length: 3,
+		},
+		{
+			t:      Blob,
+			input:  "",
+			length: -1,
+		},
+		{
+			t:      Blob,
+			input:  "AA",
+			length: 2,
+		},
+		{
+			t:     Hash128,
+			input: "a00000000000000000000000000000",
+		},
+	}
+
+	for _, test := range tests {
+		by, err := hex.DecodeString(test.input)
+		require.NoError(t, err)
+
+		b := bytes.NewBuffer(by)
+		_, err = test.t.ToJson(b, test.length)
+		require.Error(t, err)
 	}
 }

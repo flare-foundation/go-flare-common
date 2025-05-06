@@ -43,5 +43,9 @@ func TestSECtoDER(t *testing.T) {
 		sig2E := SECToDER(sig2)
 
 		require.Equal(t, sig1, sig2E, j)
+
+		sigR := DERToSEC(sig2E)
+
+		require.Equal(t, sig2[:len(sig2)-1], sigR, j)
 	}
 }

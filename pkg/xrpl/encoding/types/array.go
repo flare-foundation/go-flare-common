@@ -65,6 +65,7 @@ func (a *stArray) ToBytes(value any, signing bool) ([]byte, error) {
 	return outBuff.Bytes(), nil
 }
 
+// ToJson decodes an encoded array.
 func (a *stArray) ToJson(b *bytes.Buffer, _ int) (any, error) {
 	out := make([]any, 0)
 
@@ -86,7 +87,7 @@ func (a *stArray) ToJson(b *bytes.Buffer, _ int) (any, error) {
 
 		name, value, err := decodeNext(b)
 		if err != nil {
-			return nil, fmt.Errorf("decoding next next: %v", err)
+			return nil, fmt.Errorf("decoding next: %v", err)
 		}
 
 		if nameCheck == "" {

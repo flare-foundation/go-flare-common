@@ -284,13 +284,17 @@ func readStep(b *bytes.Buffer) (byte, any, error) {
 }
 
 func readCurrency(b *bytes.Buffer) (string, error) {
-	c := make([]byte, 20)
-	_, err := b.Read(c)
+	const l = 20
+	c := make([]byte, l)
+	n, err := b.Read(c)
 	if err != nil {
 		return "", fmt.Errorf("reading bytes: %v", err)
 	}
+	if n != l {
+		return "nil", outOfBytes("currency", l, n)
+	}
 
-	if bytes.Equal(c, make([]byte, 20)) {
+	if bytes.Equal(c, make([]byte, l)) {
 		return "XRP", nil
 	}
 	currency, err := deserializeCurrency(c)

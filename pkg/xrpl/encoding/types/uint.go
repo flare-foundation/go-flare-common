@@ -90,12 +90,17 @@ func (u *UInt16) ToBytes(value any, _ bool) ([]byte, error) {
 	return out, nil
 }
 
+// ToJson reads 2 bytes and decodes them to uint16 value.
 func (a *UInt16) ToJson(b *bytes.Buffer, _ int) (any, error) {
-	v := make([]byte, 2)
+	const l = 2
+	v := make([]byte, l)
 
-	_, err := b.Read(v)
+	n, err := b.Read(v)
 	if err != nil {
 		return nil, fmt.Errorf("cannot read uint16 from buffer: %v", err)
+	}
+	if n != l {
+		return nil, outOfBytes("uint16", l, n)
 	}
 
 	u := binary.BigEndian.Uint16(v)
@@ -125,11 +130,15 @@ func (u *UInt32) ToBytes(value any, _ bool) ([]byte, error) {
 }
 
 func (a *UInt32) ToJson(b *bytes.Buffer, _ int) (any, error) {
-	v := make([]byte, 4)
+	const l = 4
+	v := make([]byte, l)
 
-	_, err := b.Read(v)
+	n, err := b.Read(v)
 	if err != nil {
 		return nil, fmt.Errorf("cannot read uint32 from buffer: %v", err)
+	}
+	if n != l {
+		return nil, outOfBytes("uint32", l, n)
 	}
 
 	u := binary.BigEndian.Uint32(v)
@@ -167,11 +176,15 @@ func (u *UInt64) ToBytes(value any, _ bool) ([]byte, error) {
 }
 
 func (a *UInt64) ToJson(b *bytes.Buffer, _ int) (any, error) {
-	v := make([]byte, 8)
+	const l = 8
+	v := make([]byte, l)
 
-	_, err := b.Read(v)
+	n, err := b.Read(v)
 	if err != nil {
-		return nil, fmt.Errorf("cannot read uint16 from buffer: %v", err)
+		return nil, fmt.Errorf("cannot read uint64 from buffer: %v", err)
+	}
+	if n != l {
+		return nil, outOfBytes("uint64", l, n)
 	}
 
 	return strings.ToUpper(hex.EncodeToString(v)), nil

@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestArrayFail(t *testing.T) {
+func TestArrayFailEncode(t *testing.T) {
 	tests := []string{
 		`[{"Memo": {
                     "MemoType": "584D4D2076616C7565",

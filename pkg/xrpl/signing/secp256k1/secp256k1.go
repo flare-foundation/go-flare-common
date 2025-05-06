@@ -22,7 +22,7 @@ const (
 	pubKeyOddPrefix  = 0x03
 )
 
-// SignTx signs a tra
+// SignTx signs and encodes a transaction with prv as a master key of the account.
 func SignTx(tx map[string]any, prv *ecdsa.PrivateKey) ([]byte, error) {
 	pub := PrvToPub(prv)
 	tx["SigningPubKey"] = pub
@@ -50,6 +50,7 @@ func SignTx(tx map[string]any, prv *ecdsa.PrivateKey) ([]byte, error) {
 	return signed, nil
 }
 
+// SignTxMultisig returns a signature of a transaction needed for multisig.
 func SignTxMultisig(tx map[string]any, prv *ecdsa.PrivateKey) (*signing.Signer, error) {
 	tx["SigningPubKey"] = ""
 
@@ -73,7 +74,7 @@ func SignTxMultisig(tx map[string]any, prv *ecdsa.PrivateKey) (*signing.Signer, 
 	}, nil
 }
 
-// Sign computes Secp256k1 signature of the message and returns in DER format.
+// Sign computes Secp256k1 signature of the message and returns it in DER format.
 func Sign(message []byte, privKey *ecdsa.PrivateKey) []byte {
 	hash := hash.Sha512Half(message)
 	priv, _ := btcec.PrivKeyFromBytes(privKey.D.Bytes())
@@ -116,11 +117,8 @@ func secp256k1PrvToPub(prv *ecdsa.PrivateKey) []byte {
 	return xrpPub
 }
 
+// SECToDER converts SEC (Standards for Efficient Cryptography) encoded signature r||s(||v) to DER (Distinguished Encoding Rules) encoded signature.
 func SECToDER(sig []byte) []byte {
-	if sig[len(sig)-1] != 0 && sig[len(sig)-1] != 1 {
-		fmt.Printf("sig[len(sig)-1]: %v\n", sig[len(sig)-1])
-	}
-
 	r := new(big.Int).SetBytes(sig[:32])
 	s := new(big.Int).SetBytes(sig[32:64])
 
@@ -157,4 +155,34 @@ func SECToDER(sig []byte) []byte {
 	o[1] = byte(out.Len() - 2)
 
 	return o
+}
+
+// DERToSEC converts DER (Distinguished Encoding Rules) encoded signature to  SEC (Standards for Efficient Cryptography) encoded signature r||s.
+func DERToSEC(sig []byte) []byte {
+	rLen := int(sig[3])
+
+	rStart := 4
+	rEnd := rStart + rLen
+
+	if sig[rStart] == 0 {
+		rStart++
+		rLen--
+	}
+
+	out := make([]byte, 64)
+
+	copy(out[32-rLen:32], sig[rStart:rEnd])
+
+	sLen := int(sig[rEnd+1])
+	sStart := rEnd + 2
+	sEnd := sStart + sLen
+
+	if sig[sStart] == 0 {
+		sStart++
+		sLen--
+	}
+
+	copy(out[64-sLen:64], sig[sStart:sEnd])
+
+	return out
 }
