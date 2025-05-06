@@ -322,6 +322,7 @@ func deserializeTokenAmount(a []byte) (string, error) {
 	return fl.Text(0x67, -1), nil
 }
 
+// ToJson decodes amount field.
 func (a *amount) ToJson(b *bytes.Buffer, _ int) (any, error) {
 	firstByte, err := b.ReadByte()
 	if err != nil {
@@ -341,12 +342,16 @@ func (a *amount) ToJson(b *bytes.Buffer, _ int) (any, error) {
 }
 
 func xrpToJson(firstByte byte, b *bytes.Buffer) (string, error) {
-	v := make([]byte, 8)
+	const l = 8
+	v := make([]byte, l)
 	v[0] = firstByte & valueBitMask // remove "not XRP bit" and sign
 
-	_, err := b.Read(v[1:])
+	n, err := b.Read(v[1:])
 	if err != nil {
 		return "", fmt.Errorf("cannot read xrp amount: %v", err)
+	}
+	if n != l-1 {
+		return "", outOfBytes("xrp amount", l, n+1)
 	}
 
 	var out string
@@ -355,7 +360,11 @@ func xrpToJson(firstByte byte, b *bytes.Buffer) (string, error) {
 	if sign == 0 {
 		out = "-"
 	}
+
 	value := binary.BigEndian.Uint64(v)
+	if value > maxXRPAmount {
+		return "", fmt.Errorf("xrp amount to large")
+	}
 
 	out += strconv.FormatUint(value, 10)
 
@@ -366,12 +375,17 @@ func tokenToJson(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
 	out := make(map[string]any)
 
 	// amount
-	a := make([]byte, 8)
+
+	l := 8
+	a := make([]byte, l)
 	a[0] = firstByte & signedValueBitMask // remove "not XRP bit"
 
-	_, err := b.Read(a[1:])
+	n, err := b.Read(a[1:])
 	if err != nil {
 		return nil, fmt.Errorf("cannot read token amount: %v", err)
+	}
+	if n != l-1 {
+		return nil, outOfBytes("token amount", l, n+1)
 	}
 
 	amount, err := deserializeTokenAmount(a)
@@ -381,10 +395,14 @@ func tokenToJson(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
 	out["value"] = amount
 
 	// currency
-	c := make([]byte, 20)
-	_, err = b.Read(c)
+	l = 20
+	c := make([]byte, l)
+	n, err = b.Read(c)
 	if err != nil {
 		return nil, fmt.Errorf("cannot read token currency: %v", err)
+	}
+	if n != l {
+		return nil, outOfBytes("token currency", l, n)
 	}
 
 	cCode, err := deserializeCurrency(c)
@@ -394,10 +412,14 @@ func tokenToJson(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
 	out["currency"] = cCode
 
 	// issuer
-	i := make([]byte, 20)
-	_, err = b.Read(i)
+	l = 20
+	i := make([]byte, l)
+	n, err = b.Read(i)
 	if err != nil {
 		return nil, fmt.Errorf("cannot read token issuer: %v", err)
+	}
+	if n != l {
+		return nil, outOfBytes("token issuer", l, n)
 	}
 
 	iAddress, err := address.Address(i)

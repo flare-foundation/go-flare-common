@@ -13,7 +13,7 @@ const (
 	accountPrefix = 0x00
 )
 
-// ID returns accountID of an address. If the address has an invalid checksum an error is returned.
+// ID returns accountID of an address. If the address has an invalid checksum, an error is returned.
 func ID(address string) ([]byte, error) {
 	addressBytes, err := base58.XRPLCoder.Decode(address)
 	if err != nil {

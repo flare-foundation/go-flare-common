@@ -10,7 +10,7 @@ type hashInternal struct {
 	length int
 }
 
-// ToBytes serializes byte strings.
+// ToBytes serializes hexadecimal strings.
 func (h *hashInternal) ToBytes(value any, _ bool) ([]byte, error) {
 	s, ok := value.(string)
 	if !ok {
@@ -27,6 +27,9 @@ func (h *hashInternal) ToBytes(value any, _ bool) ([]byte, error) {
 	return v, nil
 }
 
+// ToJson decodes hash to hexadecimal string.
+//
+// If length is fixed for type, the parameter is shadowed.
 func (a *hashInternal) ToJson(b *bytes.Buffer, length int) (any, error) {
 	l := a.length
 	if l == 0 {
@@ -39,9 +42,12 @@ func (a *hashInternal) ToJson(b *bytes.Buffer, length int) (any, error) {
 
 	value := make([]byte, l)
 
-	_, err := b.Read(value)
+	n, err := b.Read(value)
 	if err != nil {
 		return nil, fmt.Errorf("cannot read hash from buffer: %v", err)
+	}
+	if n != l {
+		return nil, outOfBytes("hash", l, n)
 	}
 
 	return hex.EncodeToString(value), nil

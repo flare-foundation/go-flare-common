@@ -28,13 +28,17 @@ func (a *accountID) ToBytes(value any, _ bool) ([]byte, error) {
 	return out, nil
 }
 
-// ToJson reads next 20 bytes and converts them to xrpl address.
+// ToJson reads next 20 bytes and converts them to a string xrpl address.
 func (a *accountID) ToJson(b *bytes.Buffer, _ int) (any, error) {
-	value := make([]byte, 20)
+	const l = 20
+	value := make([]byte, l)
 
-	_, err := b.Read(value)
+	n, err := b.Read(value)
 	if err != nil {
 		return nil, fmt.Errorf("cannot read account id from buffer: %v", err)
+	}
+	if n != l {
+		return nil, outOfBytes("account id", l, n)
 	}
 
 	addr, err := address.Address(value)

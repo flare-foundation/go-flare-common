@@ -65,10 +65,14 @@ func (i *issue) ToBytes(value any, _ bool) ([]byte, error) {
 func (i *issue) ToJson(b *bytes.Buffer, _ int) (any, error) {
 	out := make(map[string]any)
 
-	cCode := make([]byte, 20)
-	_, err := b.Read(cCode)
+	l := 20
+	cCode := make([]byte, l)
+	n, err := b.Read(cCode)
 	if err != nil {
 		return nil, fmt.Errorf("reading currency code: %v", err)
+	}
+	if n != l {
+		return nil, outOfBytes("currency code", l, n)
 	}
 
 	if bytes.Equal(cCode, make([]byte, 20)) {
@@ -84,10 +88,14 @@ func (i *issue) ToJson(b *bytes.Buffer, _ int) (any, error) {
 
 	out["currency"] = c
 
-	issuer := make([]byte, 20)
-	_, err = b.Read(issuer)
+	l = 20
+	issuer := make([]byte, l)
+	n, err = b.Read(issuer)
 	if err != nil {
 		return nil, fmt.Errorf("reading issuer: %v", err)
+	}
+	if n != l {
+		return nil, outOfBytes("issuer", l, n)
 	}
 
 	a, err := address.Address(issuer)
