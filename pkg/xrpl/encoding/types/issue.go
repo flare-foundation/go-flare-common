@@ -3,6 +3,8 @@ package types
 import (
 	"bytes"
 	"fmt"
+
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/address"
 )
 
 // add MPT issue
@@ -45,7 +47,7 @@ func (i *issue) ToBytes(value any, _ bool) ([]byte, error) {
 		return nil, fmt.Errorf("invalid issuer %v", issuer)
 	}
 
-	issuerBytes, err := ID(issuerStr)
+	issuerBytes, err := address.ID(issuerStr)
 	if err != nil {
 		return nil, fmt.Errorf("issuer address: %v", err)
 	}
@@ -88,7 +90,7 @@ func (i *issue) ToJson(b *bytes.Buffer, _ int) (any, error) {
 		return nil, fmt.Errorf("reading issuer: %v", err)
 	}
 
-	a, err := Address(issuer)
+	a, err := address.Address(issuer)
 	if err != nil {
 		return nil, fmt.Errorf("issuer to address: %v", err)
 	}

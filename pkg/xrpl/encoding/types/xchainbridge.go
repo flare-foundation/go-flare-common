@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"fmt"
 	"reflect"
+
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/address"
 )
 
 type XChainBridge struct{}
@@ -36,7 +38,7 @@ func (x *XChainBridge) ToBytes(value any, _ bool) ([]byte, error) {
 
 	out := bytes.NewBuffer(nil)
 
-	lockingChainDoorID, err := ID(lockingChainDoor)
+	lockingChainDoorID, err := address.ID(lockingChainDoor)
 	if err != nil {
 		return nil, fmt.Errorf("invalid LockingChainDoor, %v: %v", lockingChainDoor, err)
 	}
@@ -58,7 +60,7 @@ func (x *XChainBridge) ToBytes(value any, _ bool) ([]byte, error) {
 		return nil, fmt.Errorf("writing to buffer, %v: %v", lockingChain, err)
 	}
 
-	issuingChainDoorID, err := ID(issuingChainDoor)
+	issuingChainDoorID, err := address.ID(issuingChainDoor)
 	if err != nil {
 		return nil, fmt.Errorf("invalid IssuingChainDoor, %v: %v", issuingChainDoor, err)
 	}

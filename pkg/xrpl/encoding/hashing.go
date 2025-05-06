@@ -3,7 +3,7 @@ package encoding
 import (
 	"encoding/binary"
 
-	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/hash"
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/hash"
 )
 
 const (

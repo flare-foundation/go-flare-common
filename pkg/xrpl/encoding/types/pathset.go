@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/address"
 )
 
 const (
@@ -91,7 +93,7 @@ func stepToBytes(step map[string]any) ([]byte, error) {
 			return nil, fmt.Errorf("invalid account %v", account)
 		}
 
-		accountBytes, err := ID(accStr)
+		accountBytes, err := address.ID(accStr)
 		if err != nil {
 			return nil, fmt.Errorf("invalid account %v", step)
 		}
@@ -131,7 +133,7 @@ func stepToBytes(step map[string]any) ([]byte, error) {
 			return nil, fmt.Errorf("invalid issuer %v", issuer)
 		}
 
-		issuerBytes, err := ID(i)
+		issuerBytes, err := address.ID(i)
 		if err != nil {
 			return nil, fmt.Errorf("invalid issuer %v", step)
 		}
