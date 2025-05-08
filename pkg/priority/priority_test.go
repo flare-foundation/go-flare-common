@@ -3,7 +3,6 @@ package priority
 import (
 	"context"
 	"errors"
-	"fmt"
 	"sync"
 	"testing"
 	"time"
@@ -33,7 +32,7 @@ func TestFull(t *testing.T) {
 		return nil
 	}
 
-	for i := 0; i < 100; i++ {
+	for i := range 100 {
 		wg.Add(1)
 		pQueue.Add(i, wInt(i))
 	}
@@ -76,11 +75,11 @@ func TestDequeue(t *testing.T) {
 		return nil
 	}
 
-	for i := 0; i < 100; i++ {
+	for i := range 100 {
 		wg.Add(1)
 		pQueue.Add(i, wInt(i))
 	}
-	for i := 0; i < 20; i++ {
+	for i := range 20 {
 		wg.Add(1)
 		pQueue.AddFast(i, wInt(i))
 	}
@@ -102,6 +101,66 @@ func TestDequeue(t *testing.T) {
 
 	deviationMean := deviationTotal / time.Duration(len(times.list)-2)
 	require.Less(t, deviationMean, time.Second/time.Duration(perSecond*10))
+
+	cancel()
+}
+
+func TestDequeueDiscard(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+
+	perSecond := 1
+
+	params := Params{
+		MaxDequeuesPerSecond: perSecond,
+		MaxAttempts:          0,
+	}
+
+	pQueue := New[int, wInt](params, "test")
+	pQueue.InitiateAndRun(ctx)
+
+	var wg sync.WaitGroup
+	handled := make(map[int]bool)
+
+	handle := func(ctx context.Context, item int) error {
+		handled[item] = true
+		wg.Done()
+		return nil
+	}
+
+	for i := range 100 {
+		wg.Add(1)
+		pQueue.Add(i, wInt(i))
+	}
+	for i := range 20 {
+		wg.Add(1)
+		pQueue.AddFast(i, wInt(i))
+	}
+
+	discarded := make(map[int]bool)
+	discardFunc := func(ctx context.Context, i int) bool {
+		if i == 99 {
+			return false
+		}
+		discarded[i] = true
+		wg.Done()
+		return true
+	}
+
+	start := time.Now()
+	go func() {
+		for {
+			pQueue.Dequeue(ctx, handle, discardFunc)
+		}
+	}()
+
+	wg.Wait()
+	duration := time.Since(start)
+
+	require.Equal(t, 99, len(discarded))
+	require.Equal(t, 1, len(handled))
+
+	// no limits were imposed
+	require.Less(t, duration, time.Millisecond)
 
 	cancel()
 }
@@ -135,7 +194,7 @@ func TestMaxAttempts(t *testing.T) {
 		}
 	}()
 
-	for i := 0; i < 3; i++ {
+	for i := range 3 {
 		pQueue.Add(i, wInt(i))
 	}
 
@@ -177,7 +236,7 @@ func TestMaxWorkers(t *testing.T) {
 		}
 	}()
 
-	for i := 0; i < 3; i++ {
+	for i := range 3 {
 		pQueue.Add(i, wInt(3-i))
 	}
 
@@ -245,6 +304,5 @@ func TestDoubleWeights(t *testing.T) {
 	wg.Wait()
 	require.Len(t, handled.list, 100)
 
-	fmt.Printf("handled.list: %v\n", handled.list)
 	cancel()
 }
