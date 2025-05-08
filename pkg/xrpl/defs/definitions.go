@@ -23,6 +23,8 @@ type IDPair struct {
 // pair of (field code, type code) to field name
 var IDToName map[IDPair]string
 
+var ValueToTxType map[int32]string
+
 func init() {
 	IDToName = make(map[IDPair]string)
 
@@ -33,6 +35,12 @@ func init() {
 		key := IDPair{F: fCode, T: tCode}
 
 		IDToName[key] = name
+	}
+
+	ValueToTxType = make(map[int32]string)
+
+	for key, value := range TxTypeToValue {
+		ValueToTxType[value] = key
 	}
 }
 

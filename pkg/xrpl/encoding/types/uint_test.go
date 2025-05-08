@@ -37,7 +37,7 @@ func TestToInt64Error(t *testing.T) {
 	}
 }
 
-func TestUint(t *testing.T) {
+func TestUintEncode(t *testing.T) {
 	tests := []struct {
 		t      Coder
 		inputs []any
@@ -125,7 +125,6 @@ func TestUint(t *testing.T) {
 	}
 
 	for _, test := range tests {
-
 		var outputBytes []byte
 
 		if !test.err {
@@ -144,7 +143,40 @@ func TestUint(t *testing.T) {
 				require.Equal(t, outputBytes, output, reflect.TypeOf(input))
 			}
 		}
+	}
+}
 
+func TestUintFail(t *testing.T) {
+	tests := []struct {
+		t      Coder
+		inputs []string
+	}{
+		{
+			t:      &UInt8{},
+			inputs: []string{""},
+		},
+		{
+			t:      &UInt16{},
+			inputs: []string{"", "00"},
+		},
+		{
+			t:      &UInt32{},
+			inputs: []string{"", "00", "000000"},
+		},
+		{
+			t:      &UInt64{},
+			inputs: []string{"", "00", "000000", "00000000000000"},
+		},
+	}
+
+	for j, test := range tests {
+		for _, input := range test.inputs {
+			inputBytes, err := hex.DecodeString(input)
+			require.NoError(t, err, j, input)
+			b := bytes.NewBuffer(inputBytes)
+			_, err = test.t.ToJson(b, 0)
+			require.Error(t, err, j, input)
+		}
 	}
 }
 

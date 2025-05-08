@@ -312,6 +312,13 @@ func decodeNext(b *bytes.Buffer) (string, any, error) {
 		return "", nil, fmt.Errorf("decoding %v: %v", fName, err)
 	}
 
+	if fName == "TransactionType" {
+		value, err = Uint16ToTxType(value)
+		if err != nil {
+			return "", nil, fmt.Errorf("invalid tx type: %v", err)
+		}
+	}
+
 	return fName, value, nil
 }
 
