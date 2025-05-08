@@ -3,11 +3,9 @@ package types
 import (
 	"bytes"
 	"encoding/binary"
-	"encoding/hex"
 	"fmt"
 	"math"
 	"strconv"
-	"strings"
 
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/defs"
 )
@@ -187,7 +185,9 @@ func (a *UInt64) ToJson(b *bytes.Buffer, _ int) (any, error) {
 		return nil, outOfBytes("uint64", l, n)
 	}
 
-	return strings.ToUpper(hex.EncodeToString(v)), nil
+	value := binary.BigEndian.Uint64(v)
+
+	return strconv.FormatUint(value, 10), nil
 }
 
 // convertInt64 converts a value of a number type to int64.

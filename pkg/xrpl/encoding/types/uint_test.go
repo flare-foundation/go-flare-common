@@ -106,6 +106,12 @@ func TestUint(t *testing.T) {
 		},
 		{
 			t:      &UInt64{},
+			inputs: []any{uint(10), uint8(10), uint16(10), uint32(10), uint64(10), int(10), int8(10), int16(10), int32(10), int64(10), float32(10), float64(10), "10"},
+			output: "000000000000000a",
+			err:    false,
+		},
+		{
+			t:      &UInt64{},
 			inputs: []any{uint64(0xffffffffffffffff)},
 			output: "ffffffffffffffff",
 			err:    false,
@@ -157,5 +163,23 @@ func TestUint32(t *testing.T) {
 		require.True(t, ok, j)
 
 		require.Equal(t, input, deserializedU)
+	}
+}
+
+func TestUint64(t *testing.T) {
+	inputs := []string{"10", "0", "1234567890"}
+
+	for j, input := range inputs {
+		serialized, err := (&UInt64{}).ToBytes(input, false)
+		require.NoError(t, err, j)
+
+		b := bytes.NewBuffer(serialized)
+		deserialized, err := (&UInt64{}).ToJson(b, 0)
+		require.NoError(t, err, j)
+
+		deserializedStr, ok := deserialized.(string)
+		require.True(t, ok, j)
+
+		require.Equal(t, input, deserializedStr)
 	}
 }

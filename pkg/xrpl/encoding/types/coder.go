@@ -332,6 +332,7 @@ func Decode(blob []byte) (map[string]any, error) {
 	return out, nil
 }
 
+// outOfBytes formats error when buffer does not hold the expected number of bytes.
 func outOfBytes(value string, expected, got int) error {
 	return fmt.Errorf("cannot read %s from buffer: expected %d bytes got %d", value, expected, got)
 }
