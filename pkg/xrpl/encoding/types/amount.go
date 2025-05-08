@@ -163,7 +163,7 @@ func deserializeCurrency(c []byte) (string, error) {
 
 	if c[0] == 0 {
 		isIso := true
-		for j := 1; j < 13; j++ {
+		for j := 1; j < 12; j++ {
 			if c[j] != 0 {
 				isIso = false
 			}
@@ -176,7 +176,7 @@ func deserializeCurrency(c []byte) (string, error) {
 		}
 
 		if isIso {
-			out := string(c[13:16])
+			out := string(c[12:15])
 			if out == "XRP" {
 				return "", fmt.Errorf("invalid currency %v", out)
 			}
@@ -184,7 +184,7 @@ func deserializeCurrency(c []byte) (string, error) {
 		}
 	}
 
-	return hex.EncodeToString(c), nil
+	return strings.ToUpper(hex.EncodeToString(c)), nil
 }
 
 func serializeStandardCode(code string) ([]byte, error) {

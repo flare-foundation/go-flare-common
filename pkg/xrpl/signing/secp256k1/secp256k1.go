@@ -100,7 +100,7 @@ func PrvToPub(prv *ecdsa.PrivateKey) string {
 	return strings.ToUpper(hex.EncodeToString(secp256k1PrvToPub(prv)))
 }
 
-// Secp256k1PrivateToPub return public Key for ECDSA private key in byte slice.
+// secp256k1PrivateToPub return public Key for ECDSA private key in byte slice.
 func secp256k1PrvToPub(prv *ecdsa.PrivateKey) []byte {
 	xrpPub := make([]byte, 0, 33)
 

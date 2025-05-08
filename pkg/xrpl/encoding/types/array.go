@@ -25,8 +25,6 @@ func (a *stArray) ToBytes(value any, signing bool) ([]byte, error) {
 
 	outBuff := bytes.NewBuffer(nil)
 
-	var uniqueKeyCheck string
-
 	for i := range array {
 		arrayObj, ok := array[i].(map[string]any)
 		if !ok {
@@ -38,13 +36,6 @@ func (a *stArray) ToBytes(value any, signing bool) ([]byte, error) {
 		}
 
 		for key := range arrayObj {
-			// only one wrapper key is allowed
-			if uniqueKeyCheck != "" && key != uniqueKeyCheck {
-				return nil, fmt.Errorf("invalid array multiple wrapper keys")
-			} else if uniqueKeyCheck == "" {
-				uniqueKeyCheck = key
-			}
-
 			bytes, err := encodeInner(key, arrayObj[key], signing)
 			if err != nil {
 				return nil, fmt.Errorf("encoding %v: %v", array[i], err)
@@ -69,8 +60,6 @@ func (a *stArray) ToBytes(value any, signing bool) ([]byte, error) {
 func (a *stArray) ToJson(b *bytes.Buffer, _ int) (any, error) {
 	out := make([]any, 0)
 
-	nameCheck := "" // to check that all elements have the same wrapper
-
 	for {
 		nextByte, err := b.ReadByte()
 		if err != nil {
@@ -88,12 +77,6 @@ func (a *stArray) ToJson(b *bytes.Buffer, _ int) (any, error) {
 		name, value, err := decodeNext(b)
 		if err != nil {
 			return nil, fmt.Errorf("decoding next: %v", err)
-		}
-
-		if nameCheck == "" {
-			nameCheck = name
-		} else if nameCheck != name {
-			return nil, fmt.Errorf("different wrappers in same array, %s, %s", nameCheck, name)
 		}
 
 		wrapped := make(map[string]any)
