@@ -230,3 +230,32 @@ func TestLengthDecodeFail(t *testing.T) {
 		require.Error(t, err)
 	}
 }
+
+func TestCoderEncodeDecode(t *testing.T) {
+	txs := []map[string]any{
+		{
+			"Account":         "racoX2xhf32g1E1gcze468EmjasihVdpvm",
+			"Destination":     "rhbQ2PoSsmzh5XnmWnutCa6dmAC2qj1z1S",
+			"TransactionType": "Payment",
+			"Amount":          "19",
+			"Fee":             "120000",
+			"SigningPubKey":   "",
+			"Sequence":        uint32(10),
+		},
+	}
+
+	for _, tx := range txs {
+		encoded, err := Encode(tx, true)
+		require.NoError(t, err)
+
+		decoded, err := Decode(encoded)
+		require.NoError(t, err)
+
+		require.Equal(t, tx, decoded)
+
+		encoded2, err := Encode(decoded, true)
+		require.NoError(t, err)
+
+		require.Equal(t, encoded, encoded2)
+	}
+}

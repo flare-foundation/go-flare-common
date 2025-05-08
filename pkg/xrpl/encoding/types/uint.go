@@ -101,8 +101,7 @@ func (a *UInt16) ToJson(b *bytes.Buffer, _ int) (any, error) {
 		return nil, outOfBytes("uint16", l, n)
 	}
 
-	u := binary.BigEndian.Uint16(v)
-	return u, nil
+	return binary.BigEndian.Uint16(v), nil
 }
 
 type UInt32 struct {
@@ -139,8 +138,7 @@ func (a *UInt32) ToJson(b *bytes.Buffer, _ int) (any, error) {
 		return nil, outOfBytes("uint32", l, n)
 	}
 
-	u := binary.BigEndian.Uint32(v)
-	return u, nil
+	return binary.BigEndian.Uint32(v), nil
 }
 
 type UInt64 struct {
@@ -244,4 +242,19 @@ func convertInt64(value any, t string) (int64, error) {
 			v: value,
 		}
 	}
+}
+
+// Uint16ToTxType converts Uint16 value to a string describing transaction type.
+func Uint16ToTxType(uintValue any) (string, error) {
+	v, ok := uintValue.(uint16)
+	if !ok {
+		return "", fmt.Errorf("not uint16 %v", uintValue)
+	}
+
+	txType, ok := defs.ValueToTxType[int32(v)]
+	if !ok {
+		return "", fmt.Errorf("%v does not correspond to a tx type", v)
+
+	}
+	return txType, nil
 }
