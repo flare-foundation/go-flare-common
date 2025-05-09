@@ -2,10 +2,10 @@ package address
 
 import (
 	"bytes"
-	"crypto/sha256"
 	"fmt"
 
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/base58"
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/hash"
 )
 
 const (
@@ -17,7 +17,7 @@ const (
 func ID(address string) ([]byte, error) {
 	addressBytes, err := base58.XRPLCoder.Decode(address)
 	if err != nil {
-		return nil, fmt.Errorf("decoding address: %v", err)
+		return nil, fmt.Errorf("decoding: %v", err)
 	}
 
 	// length
@@ -69,7 +69,5 @@ func IDToAddress(id []byte) string {
 
 // Checksum returns a checksum fot the byte string (last 4 bytes of double sha256 hash).
 func Checksum(b []byte) []byte {
-	h1 := sha256.Sum256(b)
-	h2 := sha256.Sum256(h1[:])
-	return h2[:4]
+	return hash.DoubleSha256(b)[:4]
 }

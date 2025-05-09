@@ -179,7 +179,7 @@ func encodeInner(name string, value any, signing bool) ([]byte, error) {
 
 	valueBytes, err := encoder.ToBytes(value, signing)
 	if err != nil {
-		return nil, fmt.Errorf("invalid field %s: %v", name, err)
+		return nil, err
 	}
 
 	out := make([]byte, 0, len(valueBytes)+5)
@@ -257,7 +257,7 @@ func Encode(value any, signing bool) ([]byte, error) {
 	for _, name := range sortedNames {
 		bytes, err := encodeInner(name, valueObj[name], signing)
 		if err != nil {
-			return nil, fmt.Errorf("cannot encode %s: %v", name, err)
+			return nil, fmt.Errorf("%s: %v", name, err)
 		}
 		_, err = outBuff.Write(bytes)
 		if err != nil {

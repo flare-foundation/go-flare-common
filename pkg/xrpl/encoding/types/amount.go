@@ -62,7 +62,7 @@ func (a *amount) ToBytes(value any, _ bool) ([]byte, error) {
 func xrpToBytes(amount string) ([]byte, error) {
 	val, err := strconv.ParseUint(amount, 10, 62)
 	if err != nil {
-		return nil, fmt.Errorf("parsing xrp amount %v", err)
+		return nil, fmt.Errorf("xrp amount %v", err)
 	}
 	if val > maxXRPAmount {
 		return nil, fmt.Errorf("amount to large %v", val)
