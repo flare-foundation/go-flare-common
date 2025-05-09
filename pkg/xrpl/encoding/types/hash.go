@@ -34,7 +34,6 @@ func (a *hashInternal) ToJson(b *bytes.Buffer, length int) (any, error) {
 	l := a.length
 	if l == 0 {
 		l = length
-
 		if l < 0 {
 			return nil, fmt.Errorf("invalid length %d", l)
 		}
