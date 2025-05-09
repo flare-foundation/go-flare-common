@@ -8,27 +8,29 @@ Golang packages that are used across multiple Flare projects.
 
 Contains the following packages:
 
-- database: connecting to and reading from the c-chain indexer database
+- database: connecting to and reading from the Flare's c-chain indexer database
 - events: parsing event logs as stored in Flare's c-chain indexer database
 - heapt: generically typed heap implementation based on "container/heap"
 - logger: logging solution
-- merkle: Merkle tree implementation
+- merkle: Merkle tree implementation as used by Flare's protocols
 - payload: working with transaction inputs for Submission smart contract
 - policy: storing and parsing signing policies
 - priority: heap implementation of a priority queue with two lanes
 - queue: channel implementation of a priority queue with two lanes
 - restserver
+- retry: retried execution of a function
 - storage: an implementation of a cyclic storage
-- signer: signer server for remote eth messages signing
 - tee
   - instructions: working with tee instructions
+  - signer: signer server for remote eth messages signing
   - structs: decoding messages from tee instructions events
 - toml: reading toml files
 - voters: working with Flare entities
 - xrpl
-
-  - working with xrpl transactions
-  -
-  -
-
-- abigen binding for Flare contracts (generated using [abigen](https://geth.ethereum.org/docs/tools/abigen))
+  - base58: base58 encoding with custom alphabet
+  - encoding: encoding and decoding xrpl transactions
+  - hash: hashes used in xrpl
+  - signing: signing of xrpl transactions
+    - ed25519
+    - secp256k1
+- [abigen](https://geth.ethereum.org/docs/tools/abigen) bindings for Flare contracts
