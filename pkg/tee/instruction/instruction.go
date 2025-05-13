@@ -39,12 +39,11 @@ func (d DataFixed) HashFixed() (common.Hash, error) {
 
 // HashForSigning computes the hash of the Data d that is signed by the provider.
 func (d Data) HashForSigning() (common.Hash, error) {
-	m, err := json.Marshal(d)
+	fixed, err := d.HashFixed()
 	if err != nil {
 		return common.Hash{}, err
 	}
-
-	return crypto.Keccak256Hash(m), nil
+	return crypto.Keccak256Hash(fixed[:], d.AdditionalVariableMessage), nil
 }
 
 // SignInstructionHash signs the hash of the tee instruction
