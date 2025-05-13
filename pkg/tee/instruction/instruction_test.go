@@ -4,6 +4,7 @@ import (
 	"math/big"
 	"testing"
 
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/stretchr/testify/require"
 )
@@ -34,4 +35,30 @@ func TestHashForSigning(t *testing.T) {
 	require.NoError(t, err)
 
 	require.NotEqual(t, hashFixed, hash)
+}
+
+func TestHash(t *testing.T) {
+	var data Data
+
+	dataFixed := DataFixed{
+		InstructionID:          common.Hash{},
+		TeeID:                  common.Address{},
+		Timestamp:              0,
+		RewardEpochID:          &big.Int{},
+		OPType:                 common.Hash{},
+		OPCommand:              common.Hash{},
+		OriginalMessage:        hexutil.Bytes{1},
+		AdditionalFixedMessage: hexutil.Bytes{1},
+	}
+
+	data.DataFixed = dataFixed
+	data.AdditionalVariableMessage = []byte{1}
+
+	hFull, err := data.HashFixed()
+	require.NoError(t, err)
+
+	hFixed, err := dataFixed.HashFixed()
+	require.NoError(t, err)
+
+	require.Equal(t, hFixed, hFull)
 }
