@@ -112,11 +112,10 @@ func TestExecuteWithRetry(t *testing.T) {
 		},
 	}
 
-	for _, test := range tests {
+	for j, test := range tests {
 		ctx := context.Background()
 
 		outcome := Execute(ctx, test.f, test.params)
-
-		require.Equal(t, test.expected, outcome)
+		require.Equal(t, test.expected, outcome, j)
 	}
 }
