@@ -69,53 +69,16 @@ func Execute[T any](ctx context.Context, f func() (T, error), params Params) Exe
 	return result
 }
 
+func ingrainAttempt[T any](f func(int) (T, error)) func() (T, error) {
+	j := 0
+	return func() (T, error) {
+		defer func() { j++ }()
+		return f(j)
+	}
+}
+
 // ExecuteAttempt executes function f that takes the index of the attempt as a parameter and retries on error according to params.
 func ExecuteAttempt[T any](ctx context.Context, f func(j int) (T, error), params Params) ExecuteStatus[T] {
-	var cancel context.CancelFunc
-
-	if params.Timeout > 0 {
-		ctx, cancel = context.WithTimeout(ctx, params.Timeout)
-		defer cancel()
-	}
-
-	var ticker *time.Ticker
-
-	if params.Delay > 0 {
-		ticker = time.NewTicker(params.Delay)
-	}
-	var result ExecuteStatus[T]
-
-	var err error
-	var r T
-
-	cond := func(j, attempts int) bool {
-		return j < attempts
-	}
-	if params.MaxAttempts <= 0 {
-		cond = func(_, _ int) bool {
-			return true
-		}
-	}
-
-	for j := 0; cond(j, params.MaxAttempts); j++ {
-		if err = ctx.Err(); err != nil {
-			result.Err = fmt.Errorf("context error mid retry: %v", err)
-			return result
-		}
-
-		r, err = f(j)
-		if err == nil {
-			result.Success = true
-			result.Value = r
-			return result
-		}
-
-		if params.Delay > 0 {
-			<-ticker.C
-		}
-	}
-
-	result.Err = fmt.Errorf("max retries reached: %v", err)
-
-	return result
+	h := ingrainAttempt(f)
+	return Execute(ctx, h, params)
 }

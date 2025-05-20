@@ -278,7 +278,6 @@ func (p *PriorityQueue[T, W]) decrementWorkers() {
 	select {
 	case <-p.workers:
 		return
-
 	default:
 		logger.Panic("should never block")
 	}
