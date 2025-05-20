@@ -128,7 +128,6 @@ func TestStorage(t *testing.T) {
 	require.NoError(t, err)
 
 	policyFromStorage, ok := storage.ForVotingRound(663845)
-
 	require.True(t, !ok)
 	require.Equal(t, int64(2766), policyFromStorage.RewardEpochID)
 	require.Equal(t, uint16(65528), policyFromStorage.Voters.TotalWeight)

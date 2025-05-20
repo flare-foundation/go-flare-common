@@ -9,6 +9,8 @@ import (
 	"golang.org/x/time/rate"
 )
 
+type backOff func(int) time.Duration // custom function defining timeOut after attempt
+
 const bucketSize = 2
 
 type Params struct {
@@ -17,6 +19,8 @@ type Params struct {
 	MaxAttempts          int           `toml:"max_attempts"`            // If not positive or unset, it defaults to one attempt.
 	TimeOff              time.Duration `toml:"time_off"`                // TimeOff between attempts
 	ErrorChan            bool          `toml:"error_chan"`              // If true, errors on final attempts are pushed to the channel
+
+	bo backOff // backOff function
 }
 
 type Wrapped[T any] struct {
@@ -40,6 +44,7 @@ type PriorityQueue[T any, W weight[W]] struct {
 
 	maxAttempts int
 	timeOff     time.Duration
+	bo          backOff
 
 	limiter *rate.Limiter
 }
@@ -73,6 +78,7 @@ func New[T any, W weight[W]](params Params, name string) PriorityQueue[T, W] {
 
 		maxAttempts: params.MaxAttempts,
 		timeOff:     params.TimeOff,
+		bo:          params.bo,
 
 		limiter: limiter,
 	}
@@ -287,7 +293,8 @@ func (p *PriorityQueue[T, W]) handleRetry(item *Item[Wrapped[T], W], err error) 
 	}
 
 	go func() {
-		time.Sleep(p.timeOff)
+		to := p.backOff(p.maxAttempts - item.value.attemptsLeft)
+		time.Sleep(to)
 		p.regular.Lock()
 		heapt.Push(&p.regular.Queue, item)
 		select {
@@ -309,4 +316,12 @@ func (p *PriorityQueue[T, W]) addError(err error) {
 	case p.Errors <- err:
 	default:
 	}
+}
+
+// decrementWorkers indicates a worker is not taken anymore.
+func (p *PriorityQueue[T, W]) backOff(j int) time.Duration {
+	if p.bo != nil {
+		return p.bo(j)
+	}
+	return p.timeOff
 }
