@@ -179,7 +179,7 @@ func (p *PriorityQueue[T, W]) next() *Item[Wrapped[T], W] {
 		p.fast.Unlock()
 		return item
 	} else {
-		// vacate the channel wait for the signal
+		// vacate the channel wait for the signal (just to be safe)
 		select {
 		case <-p.fast.empty:
 		default:

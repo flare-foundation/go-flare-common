@@ -75,6 +75,14 @@ func TestDequeue(t *testing.T) {
 		return nil
 	}
 
+	go func() {
+		for {
+			pQueue.Dequeue(ctx, handle, nil)
+		}
+	}()
+
+	time.Sleep(10 * time.Microsecond)
+
 	for i := range 100 {
 		wg.Add(1)
 		pQueue.Add(i, wInt(i))
@@ -84,11 +92,60 @@ func TestDequeue(t *testing.T) {
 		pQueue.AddFast(i, wInt(i))
 	}
 
+	wg.Wait()
+
+	// require
+	var deviationTotal time.Duration = 0
+	for j := 1; j < len(times.list)-1; j++ {
+		difference := times.list[j+1].Sub(times.list[j]) - (time.Second / time.Duration(perSecond))
+		deviationTotal = +difference.Abs()
+	}
+
+	deviationMean := deviationTotal / time.Duration(len(times.list)-2)
+	require.Less(t, deviationMean, time.Second/time.Duration(perSecond*10))
+
+	cancel()
+}
+
+func TestDequeue2(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+
+	perSecond := 100
+
+	params := Params{
+		MaxDequeuesPerSecond: perSecond,
+		MaxAttempts:          0,
+	}
+
+	pQueue := New[int, wInt](params, "test")
+	pQueue.InitiateAndRun(ctx)
+
+	var wg sync.WaitGroup
+
+	times := struct {
+		list []time.Time
+		sync.Mutex
+	}{}
+	handle := func(ctx context.Context, item int) error {
+		times.Lock()
+		defer times.Unlock()
+		times.list = append(times.list, time.Now())
+		wg.Done()
+		return nil
+	}
+
 	go func() {
 		for {
 			pQueue.Dequeue(ctx, handle, nil)
 		}
 	}()
+
+	time.Sleep(10 * time.Microsecond)
+
+	for i := range 20 {
+		wg.Add(1)
+		pQueue.AddFast(i, wInt(i))
+	}
 
 	wg.Wait()
 

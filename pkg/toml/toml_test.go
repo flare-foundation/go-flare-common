@@ -57,4 +57,8 @@ func TestReadTomlFail(t *testing.T) {
 	path := "./testHappy.toml"
 	_, err := ReadToml[unknown](path, false)
 	require.Error(t, err)
+
+	path = "./nonExistant.toml"
+	_, err = ReadToml[unknown](path, false)
+	require.Error(t, err)
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/big"
 	"strings"
+	"unicode"
 	"unicode/utf8"
 
 	"github.com/flare-foundation/go-flare-common/pkg/logger"
@@ -34,7 +35,6 @@ var XRPLCoder *Coder
 func init() {
 	var err error
 	XRPLCoder, err = NewCoder(AlphabetXRPL)
-
 	if err != nil {
 		logger.Panicf("invalid xrpl alphabet: %v", err)
 	}
@@ -64,21 +64,28 @@ func NewCoder(alphabet string) (*Coder, error) {
 		return nil, fmt.Errorf("alphabet %s has nonstandard runes", alphabet)
 	}
 
-	if err := uniqueCharacters(alphabet); err != nil {
+	if err := checkCharacters(alphabet); err != nil {
 		return nil, fmt.Errorf("invalid alphabet %s: %v", alphabet, err)
 	}
 
 	return &Coder{alphabet: alphabet}, nil
 }
 
-// uniqueCharacters errors if there any of the runes in string s appears more than once.
-func uniqueCharacters(s string) error {
+// checkCharacters errors if there any of the runes in string s appears more than once or there is a whitespace
+func checkCharacters(s string) error {
 	check := make(map[rune]bool)
 	for _, c := range s {
 		_, exists := check[c]
 		if exists {
 			return fmt.Errorf("character %s appears multiple times", string(c))
 		}
+		if unicode.IsSpace(c) {
+			return fmt.Errorf("character %s is a whitespace", string(c))
+		}
+		if unicode.IsControl(c) {
+			return fmt.Errorf("character %s is a control character", string(c))
+		}
+
 		check[c] = true
 	}
 	return nil

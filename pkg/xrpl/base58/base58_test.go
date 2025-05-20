@@ -75,3 +75,19 @@ func TestDecodeEncode(t *testing.T) {
 		}
 	}
 }
+
+func TestNewCoderFail(t *testing.T) {
+	alphabets := []string{
+		"",
+		"rpshnaf39wBUDNEGHJKLM4PQRST7V XYZ2bcdeCg65jkm8oFqi1tuvAxyz",      // whitespace
+		"rpshnaf39wBUDNEGHJKLM4PQRST7V\u0000eXYZ2bcdeCg65jkm8oFqi1tuvAxy", // whitespace
+		"rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyr",      // duplicate
+		"rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyzl",     // too long
+		"rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxœ",       // non standard character
+	}
+
+	for _, alphabet := range alphabets {
+		_, err := NewCoder(alphabet)
+		require.Error(t, err)
+	}
+}
