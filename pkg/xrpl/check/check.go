@@ -88,7 +88,7 @@ func (jr JSONRPC) Info(address string) (AccountInfoResponse, error) {
 		}},
 	}
 
-	ctx := context.Background()
+	ctx := context.TODO()
 
 	res, err := call.Post[AccountInfoRequest, AccountInfoResponseWrapped](ctx, jr.URL, call.NoAPIKey, request, call.Params{
 		Timeout:         0,
