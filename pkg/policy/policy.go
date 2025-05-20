@@ -3,10 +3,13 @@ package policy
 import (
 	"bytes"
 	"encoding/binary"
-	"github.com/flare-foundation/go-flare-common/pkg/logger"
-	"github.com/pkg/errors"
 	"math"
 	"math/big"
+
+	"github.com/flare-foundation/go-flare-common/pkg/logger"
+	"github.com/pkg/errors"
+
+	"slices"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/flare-foundation/go-flare-common/pkg/contracts/relay"
@@ -61,31 +64,31 @@ func (sp *SigningPolicy) Equals(other *SigningPolicy) bool {
 // - 20 bytes address
 // - 2 bytes weight
 // Total 43 + size * (20 + 2) bytes
-func FromRawBytes(bytes []byte) (*SigningPolicy, int, error) {
+func FromRawBytes(b []byte) (*SigningPolicy, int, error) {
 	p := 0
-	size := int(decodeUint32(bytes[p : p+2]))
+	size := int(decodeUint32(b[p : p+2]))
 	p += 2
 	expectedLength := 43 + size*(common.AddressLength+2)
-	if len(bytes) < expectedLength {
-		return nil, p, errors.Errorf("message to short for decoding signing policy: expected >=%d, got %d", expectedLength, len(bytes))
+	if len(b) < expectedLength {
+		return nil, p, errors.Errorf("message to short for decoding signing policy: expected >=%d, got %d", expectedLength, len(b))
 	}
 
-	epoch := decodeUint32(bytes[p : p+3])
+	epoch := decodeUint32(b[p : p+3])
 	p += 3
-	startingRound := decodeUint32(bytes[p : p+4])
+	startingRound := decodeUint32(b[p : p+4])
 	p += 4
-	threshold := binary.BigEndian.Uint16(bytes[p : p+2])
+	threshold := binary.BigEndian.Uint16(b[p : p+2])
 	p += 2
-	seed := common.BytesToHash(bytes[p : p+common.HashLength])
+	seed := common.BytesToHash(b[p : p+common.HashLength])
 	p += common.HashLength
 
 	signers := make([]common.Address, size)
 	weights := make([]uint16, size)
 	totalWeight := 0
-	for i := 0; i < size; i++ {
-		address := common.BytesToAddress(bytes[p : p+common.AddressLength])
+	for i := range size {
+		address := common.BytesToAddress(b[p : p+common.AddressLength])
 		p += common.AddressLength
-		weight := binary.BigEndian.Uint16(bytes[p : p+2])
+		weight := binary.BigEndian.Uint16(b[p : p+2])
 		p += 2
 
 		signers[i] = address
@@ -102,19 +105,19 @@ func FromRawBytes(bytes []byte) (*SigningPolicy, int, error) {
 		StartVotingRoundID: startingRound,
 		Threshold:          threshold,
 		Seed:               new(big.Int).SetBytes(seed[:]),
-		rawBytes:           append([]byte(nil), bytes[:p]...),
+		rawBytes:           slices.Clone(b[:p]),
 		Voters:             voters.NewSet(signers, weights, nil),
 	}, p, nil
 }
 
 // decodeUint32 decodes a big-endian uint32 from a variable length byte slice of up to 4 bytes.
-func decodeUint32(bytes []byte) uint32 {
-	if len(bytes) > 4 {
-		logger.Fatal("invalid length for decoding uint32: %d", len(bytes))
+func decodeUint32(b []byte) uint32 {
+	if len(b) > 4 {
+		logger.Fatal("invalid length for decoding uint32: %d", len(b))
 	}
 	var tmpUint32 = make([]byte, 4)
-	padding := 4 - len(bytes)
-	copy(tmpUint32[padding:], bytes)
+	padding := 4 - len(b)
+	copy(tmpUint32[padding:], b)
 
 	return binary.BigEndian.Uint32(tmpUint32[:])
 }

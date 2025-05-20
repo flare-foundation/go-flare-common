@@ -17,7 +17,7 @@ func TestHashSigned(t *testing.T) {
 	expectedH, err := hex.DecodeString(expectedHash)
 	require.NoError(t, err)
 
-	computedH := HashSigned(txB)
+	computedH := Signed(txB)
 
 	require.Equal(t, expectedH, computedH)
 }
