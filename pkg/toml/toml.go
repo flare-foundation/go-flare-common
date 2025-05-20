@@ -12,23 +12,8 @@ import (
 func ReadToml[T any](filePath string, allowUnknownFields bool) (T, error) {
 	var dest T
 
-	file, err := os.Open(filePath)
-	if err != nil {
-		return dest, fmt.Errorf("failed reading file %s with: %s", filePath, err)
-	}
+	err := ReadTomlTo(filePath, &dest, allowUnknownFields)
 
-	dec := toml.NewDecoder(file)
-
-	if !allowUnknownFields {
-		dec = dec.DisallowUnknownFields()
-	}
-
-	err = dec.Decode(&dest)
-	if err != nil {
-		return dest, fmt.Errorf("failed unmarshaling file %s with: %s", filePath, err)
-	}
-
-	err = file.Close()
 	return dest, err
 }
 

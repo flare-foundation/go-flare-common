@@ -26,7 +26,13 @@ func TestReadTomlHappy(t *testing.T) {
 	require.True(t, ok)
 
 	path := "./testHappy.toml"
+
 	a, err := ReadToml[testStructHappy](path, true)
+	require.NoError(t, err)
+
+	dest := new(testStructHappy)
+
+	err = ReadTomlTo(path, dest, true)
 	require.NoError(t, err)
 
 	expected := testStructHappy{
@@ -41,6 +47,8 @@ func TestReadTomlHappy(t *testing.T) {
 	}
 
 	require.Equal(t, expected, a)
+	require.Equal(t, expected, *dest)
+
 }
 
 type unknown struct{ R int }
