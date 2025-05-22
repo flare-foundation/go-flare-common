@@ -1,0 +1,54 @@
+[
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "teeId",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "initialTeeId",
+                  "type": "address"
+                },
+                {
+                  "internalType": "string",
+                  "name": "url",
+                  "type": "string"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "codeHash",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "platform",
+                  "type": "bytes32"
+                }
+              ],
+              "internalType": "struct ITeeRegistry.TeeMachineWithAttestationData",
+              "name": "teeMachine",
+              "type": "tuple"
+            },
+            {
+              "internalType": "uint256",
+              "name": "challenge",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct ITeeVerification.TeeAttestation",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "name": "teeAttestationStruct",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ]
