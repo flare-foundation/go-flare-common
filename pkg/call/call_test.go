@@ -93,8 +93,8 @@ func TestPOST(t *testing.T) {
 
 	expected := res{10}
 
-	require.Equal(t, expected, *responseRaw)
-	require.Equal(t, expected, *response)
+	require.Equal(t, expected, *responseRaw.Message)
+	require.Equal(t, expected, *response.Message)
 
 	err = server.Shutdown(context.Background())
 	require.NoError(t, err)
