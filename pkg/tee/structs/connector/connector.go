@@ -36,19 +36,16 @@ type AttestationType string
 
 const (
 	AvailabilityCheck AttestationType = "AvailabilityCheck"
-	KeyExistence      AttestationType = "KeyExistence"
 )
 
 var attestationTypes = []AttestationType{
 	AvailabilityCheck,
-	KeyExistence,
 }
 
 // i-th method correspond to a method in TeeDataConnectorStruct interface whose
 // input is the proof type of i-th attestation type
 var attestationTypeMethods = []string{
 	"availabilityCheck",
-	"keyExistence",
 }
 
 type AttestationArguments struct {
