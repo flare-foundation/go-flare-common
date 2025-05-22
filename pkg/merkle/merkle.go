@@ -17,18 +17,6 @@ var (
 // Merkle Tree implementation with helper functions.
 type Tree []common.Hash
 
-// NewFromHex creates a new Merkle tree from the given hex values. It is
-// required that the values are sorted as strings.
-func NewFromHex(hexValues []string) Tree {
-	values := make(Tree, len(hexValues))
-
-	for i, hexValue := range hexValues {
-		values[i] = common.HexToHash(hexValue)
-	}
-
-	return values
-}
-
 // Given an array of leaf hashes, builds the Merkle tree.
 func Build(hashes []common.Hash, initialHash bool) Tree {
 	if initialHash {

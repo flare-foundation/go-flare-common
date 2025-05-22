@@ -39,6 +39,9 @@ func ExtractPayloads(tx *database.Transaction) (map[uint8]Message, error) {
 		return nil, fmt.Errorf("error decoding input of tx: %s, %v", tx.Hash, err)
 	}
 
+	if len(data) < 4 {
+		return nil, errors.New("no function selector")
+	}
 	data = data[4:] // trim function selector
 	for len(data) > 0 {
 		if len(data) < 7 { // 7 = 1 + 4 + 2

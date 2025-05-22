@@ -161,6 +161,38 @@ var txError5 = &database.Transaction{
 	Timestamp:        1717417740,
 }
 
+var txError6 = &database.Transaction{
+	Hash:             "8dd67e88aa6f863aeb5cd62874530efd7dafef2d4a8cdf7fbf71844dab1c7327",
+	FunctionSig:      "6c532fae",
+	Input:            "6c532fae64", // to short
+	BlockNumber:      16143116,
+	BlockHash:        "40888ee23c4d7da30c42f826ea187386eac4564b02ce801f0b0b91ef1e71da05",
+	TransactionIndex: 0,
+	FromAddress:      "6bba3b6fb0dc902845666fdad70b2a814a57b6f3",
+	ToAddress:        "2ca6571daa15ce734bbd0bf27d5c9d16787fc33f",
+	Status:           1,
+	Value:            "0",
+	GasPrice:         "37500000000",
+	Gas:              2500000,
+	Timestamp:        1717417740,
+}
+
+var txError7 = &database.Transaction{
+	Hash:             "8dd67e88aa6f863aeb5cd62874530efd7dafef2d4a8cdf7fbf71844dab1c7327",
+	FunctionSig:      "6c532fae",
+	Input:            "", // no input
+	BlockNumber:      16143116,
+	BlockHash:        "40888ee23c4d7da30c42f826ea187386eac4564b02ce801f0b0b91ef1e71da05",
+	TransactionIndex: 0,
+	FromAddress:      "6bba3b6fb0dc902845666fdad70b2a814a57b6f3",
+	ToAddress:        "2ca6571daa15ce734bbd0bf27d5c9d16787fc33f",
+	Status:           1,
+	Value:            "0",
+	GasPrice:         "37500000000",
+	Gas:              2500000,
+	Timestamp:        1717417740,
+}
+
 func TestExtractPayloadsError(t *testing.T) {
 	txs := []*database.Transaction{
 		txError1,
@@ -168,6 +200,8 @@ func TestExtractPayloadsError(t *testing.T) {
 		txError3,
 		txError4,
 		txError5,
+		txError6,
+		txError7,
 	}
 
 	for i, tx := range txs {
