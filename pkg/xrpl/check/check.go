@@ -98,7 +98,7 @@ func (jr JSONRPC) Info(address string) (AccountInfoResponse, error) {
 		return AccountInfoResponse{}, fmt.Errorf("calling %s: %v", jr.URL, err)
 	}
 
-	return res.Result, nil
+	return res.Message.Result, nil
 }
 
 // Check checks account info:
