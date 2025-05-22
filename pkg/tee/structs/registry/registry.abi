@@ -7,6 +7,11 @@
               "internalType": "address",
               "name": "teeId",
               "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "initialTeeId",
+              "type": "address"
             }
           ],
           "internalType": "struct ITeeRegistry.PauseForUpgrade",
@@ -32,7 +37,7 @@
                 },
                 {
                   "internalType": "address",
-                  "name": "owner",
+                  "name": "initialTeeId",
                   "type": "address"
                 },
                 {
@@ -64,7 +69,7 @@
                 },
                 {
                   "internalType": "address",
-                  "name": "owner",
+                  "name": "initialTeeId",
                   "type": "address"
                 },
                 {
@@ -109,7 +114,7 @@
             },
             {
               "internalType": "address",
-              "name": "owner",
+              "name": "teeProxyId",
               "type": "address"
             },
             {
@@ -139,7 +144,7 @@
             },
             {
               "internalType": "address",
-              "name": "owner",
+              "name": "initialTeeId",
               "type": "address"
             },
             {

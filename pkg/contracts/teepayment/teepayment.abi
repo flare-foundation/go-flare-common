@@ -35,43 +35,12 @@
         },
         {
           "indexed": false,
-          "internalType": "address",
-          "name": "controlAddress",
-          "type": "address"
+          "internalType": "uint128",
+          "name": "minFee",
+          "type": "uint128"
         }
       ],
-      "name": "ControlAddressSet",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "bytes32",
-          "name": "walletId",
-          "type": "bytes32"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint96",
-          "name": "maxFee",
-          "type": "uint96"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint32",
-          "name": "maxFeeTolerancePPM",
-          "type": "uint32"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint96",
-          "name": "maxControlFee",
-          "type": "uint96"
-        }
-      ],
-      "name": "FeesSet",
+      "name": "MinFeeSet",
       "type": "event"
     },
     {
@@ -107,12 +76,17 @@
           "type": "bytes32"
         }
       ],
-      "name": "getSenderAddress",
+      "name": "getBatchSettings",
       "outputs": [
         {
-          "internalType": "string",
-          "name": "_senderAddress",
-          "type": "string"
+          "internalType": "uint64",
+          "name": "_batchSize",
+          "type": "uint64"
+        },
+        {
+          "internalType": "uint64",
+          "name": "_batchDurationSeconds",
+          "type": "uint64"
         }
       ],
       "stateMutability": "view",
@@ -126,37 +100,12 @@
           "type": "bytes32"
         }
       ],
-      "name": "getWalletSettings",
+      "name": "getMinFee",
       "outputs": [
         {
-          "internalType": "uint64",
-          "name": "_batchSize",
-          "type": "uint64"
-        },
-        {
-          "internalType": "uint64",
-          "name": "_batchDurationSeconds",
-          "type": "uint64"
-        },
-        {
-          "internalType": "uint96",
-          "name": "_maxFee",
-          "type": "uint96"
-        },
-        {
-          "internalType": "uint32",
-          "name": "_maxFeeTolerancePPM",
-          "type": "uint32"
-        },
-        {
-          "internalType": "address",
-          "name": "_controlAddress",
-          "type": "address"
-        },
-        {
-          "internalType": "uint96",
-          "name": "_maxControlFee",
-          "type": "uint96"
+          "internalType": "uint128",
+          "name": "_minFee",
+          "type": "uint128"
         }
       ],
       "stateMutability": "view",
@@ -164,12 +113,31 @@
     },
     {
       "inputs": [],
-      "name": "opType",
+      "name": "getOpType",
       "outputs": [
         {
           "internalType": "bytes32",
           "name": "",
           "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_walletId",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getSenderAddress",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "_senderAddress",
+          "type": "string"
         }
       ],
       "stateMutability": "view",
@@ -197,6 +165,11 @@
             {
               "internalType": "uint256",
               "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "fee",
               "type": "uint256"
             },
             {
@@ -256,6 +229,11 @@
               "type": "uint256"
             },
             {
+              "internalType": "uint256",
+              "name": "fee",
+              "type": "uint256"
+            },
+            {
               "internalType": "bytes32",
               "name": "paymentReference",
               "type": "bytes32"
@@ -266,9 +244,9 @@
           "type": "tuple[]"
         },
         {
-          "internalType": "uint96",
-          "name": "_fee",
-          "type": "uint96"
+          "internalType": "uint256[]",
+          "name": "_fees",
+          "type": "uint256[]"
         },
         {
           "internalType": "bool[]",
@@ -312,60 +290,14 @@
           "type": "bytes32"
         },
         {
-          "internalType": "address",
-          "name": "_controlAddress",
-          "type": "address"
+          "internalType": "uint128",
+          "name": "_minFee",
+          "type": "uint128"
         }
       ],
-      "name": "setControlAddress",
+      "name": "setMinFee",
       "outputs": [],
       "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "_walletId",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "uint96",
-          "name": "_maxFee",
-          "type": "uint96"
-        },
-        {
-          "internalType": "uint32",
-          "name": "_maxFeeTolerancePPM",
-          "type": "uint32"
-        },
-        {
-          "internalType": "uint96",
-          "name": "_maxControlFee",
-          "type": "uint96"
-        }
-      ],
-      "name": "setFees",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "_walletId",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "address[]",
-          "name": "_pausingAddresses",
-          "type": "address[]"
-        }
-      ],
-      "name": "setPausingAddresses",
-      "outputs": [],
-      "stateMutability": "payable",
       "type": "function"
     },
     {

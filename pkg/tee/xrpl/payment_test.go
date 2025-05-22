@@ -18,17 +18,16 @@ func TestPaymentTransactionMultisig(t *testing.T) {
 	require.NoError(t, err)
 
 	instruction := payment.ITeePaymentsPaymentInstructionMessage{
-		WalletId:           [32]byte{1},
-		TeeIdKeyIdPairs:    []payment.TeeIdKeyIdPair{},
-		SenderAddress:      "rGYYWKxT1XgNipUJouCq4cKiyAdq8xBoE9",
-		RecipientAddress:   "rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe",
-		Amount:             big.NewInt(10),
-		PaymentReference:   crypto.Keccak256Hash([]byte("test")),
-		Nonce:              10,
-		SubNonce:           0,
-		MaxFee:             big.NewInt(10),
-		MaxFeeTolerancePPM: 0,
-		BatchEndTs:         0,
+		WalletId:         [32]byte{1},
+		TeeIdKeyIdPairs:  []payment.TeeIdKeyIdPair{},
+		SenderAddress:    "rGYYWKxT1XgNipUJouCq4cKiyAdq8xBoE9",
+		RecipientAddress: "rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe",
+		Amount:           big.NewInt(10),
+		PaymentReference: crypto.Keccak256Hash([]byte("test")),
+		Nonce:            10,
+		SubNonce:         0,
+		Fee:              big.NewInt(10),
+		BatchEndTs:       0,
 	}
 
 	tx := PaymentTransactionMultisig(instruction)

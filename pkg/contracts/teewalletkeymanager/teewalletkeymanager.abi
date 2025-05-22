@@ -197,111 +197,141 @@
         {
           "components": [
             {
+              "internalType": "address",
+              "name": "teeId",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "walletId",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "uint64",
+              "name": "keyId",
+              "type": "uint64"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "opType",
+              "type": "bytes32"
+            },
+            {
               "internalType": "bytes",
-              "name": "relayMessage",
+              "name": "publicKey",
               "type": "bytes"
             },
             {
-              "components": [
-                {
-                  "internalType": "uint8",
-                  "name": "v",
-                  "type": "uint8"
-                },
-                {
-                  "internalType": "bytes32",
-                  "name": "r",
-                  "type": "bytes32"
-                },
-                {
-                  "internalType": "bytes32",
-                  "name": "s",
-                  "type": "bytes32"
-                }
-              ],
-              "internalType": "struct Signature[]",
-              "name": "teeSignatures",
-              "type": "tuple[]"
+              "internalType": "uint256",
+              "name": "nonce",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "pauseNonce",
+              "type": "uint256"
+            },
+            {
+              "internalType": "enum ITeeWalletKeyManager.TeeKeyStatus",
+              "name": "status",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bool",
+              "name": "restored",
+              "type": "bool"
+            },
+            {
+              "internalType": "string",
+              "name": "addressStr",
+              "type": "string"
             },
             {
               "components": [
                 {
-                  "internalType": "bytes32",
-                  "name": "attestationType",
-                  "type": "bytes32"
-                },
-                {
-                  "internalType": "bytes32",
-                  "name": "sourceId",
-                  "type": "bytes32"
-                },
-                {
-                  "internalType": "uint16",
-                  "name": "thresholdBIPS",
-                  "type": "uint16"
+                  "components": [
+                    {
+                      "internalType": "bytes32",
+                      "name": "x",
+                      "type": "bytes32"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "y",
+                      "type": "bytes32"
+                    }
+                  ],
+                  "internalType": "struct PublicKey[]",
+                  "name": "adminsPublicKeys",
+                  "type": "tuple[]"
                 },
                 {
                   "internalType": "uint64",
-                  "name": "timestamp",
+                  "name": "adminsThreshold",
                   "type": "uint64"
                 },
                 {
-                  "components": [
-                    {
-                      "internalType": "address",
-                      "name": "teeId",
-                      "type": "address"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "walletId",
-                      "type": "bytes32"
-                    },
-                    {
-                      "internalType": "uint64",
-                      "name": "keyId",
-                      "type": "uint64"
-                    }
-                  ],
-                  "internalType": "struct ITeeKeyExistence.RequestBody",
-                  "name": "requestBody",
-                  "type": "tuple"
+                  "internalType": "address[]",
+                  "name": "cosigners",
+                  "type": "address[]"
                 },
                 {
-                  "components": [
-                    {
-                      "internalType": "bytes32",
-                      "name": "opType",
-                      "type": "bytes32"
-                    },
-                    {
-                      "internalType": "bytes",
-                      "name": "publicKey",
-                      "type": "bytes"
-                    },
-                    {
-                      "internalType": "bool",
-                      "name": "restored",
-                      "type": "bool"
-                    },
-                    {
-                      "internalType": "string",
-                      "name": "addressStr",
-                      "type": "string"
-                    }
-                  ],
-                  "internalType": "struct ITeeKeyExistence.ResponseBody",
-                  "name": "responseBody",
-                  "type": "tuple"
+                  "internalType": "uint64",
+                  "name": "cosignersThreshold",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "opTypeConstants",
+                  "type": "bytes"
                 }
               ],
-              "internalType": "struct ITeeKeyExistence.Response",
-              "name": "data",
+              "internalType": "struct ITeeWalletKeyManager.KeyConfigConstants",
+              "name": "configConstants",
+              "type": "tuple"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address[]",
+                  "name": "pausingAddresses",
+                  "type": "address[]"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "opTypeSettings",
+                  "type": "bytes"
+                }
+              ],
+              "internalType": "struct ITeeWalletKeyManager.KeyConfigSettings",
+              "name": "configSettings",
               "type": "tuple"
             }
           ],
-          "internalType": "struct ITeeKeyExistence.Proof",
+          "internalType": "struct ITeeWalletKeyManager.KeyExistence",
           "name": "_proof",
+          "type": "tuple"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint8",
+              "name": "v",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "r",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "s",
+              "type": "bytes32"
+            }
+          ],
+          "internalType": "struct Signature",
+          "name": "_teeSignature",
           "type": "tuple"
         }
       ],
@@ -472,7 +502,7 @@
             },
             {
               "internalType": "address",
-              "name": "owner",
+              "name": "teeProxyId",
               "type": "address"
             },
             {
@@ -504,29 +534,6 @@
         }
       ],
       "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_teeId",
-          "type": "address"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "_walletId",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "uint64",
-          "name": "_keyId",
-          "type": "uint64"
-        }
-      ],
-      "name": "requestKeyExistenceAttestation",
-      "outputs": [],
-      "stateMutability": "payable",
       "type": "function"
     },
     {

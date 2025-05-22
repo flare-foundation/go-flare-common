@@ -23,7 +23,7 @@
             },
             {
               "internalType": "address",
-              "name": "owner",
+              "name": "teeProxyId",
               "type": "address"
             },
             {
@@ -94,7 +94,7 @@
             },
             {
               "internalType": "address",
-              "name": "owner",
+              "name": "teeProxyId",
               "type": "address"
             },
             {
