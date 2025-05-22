@@ -1,0 +1,491 @@
+[
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "teeId",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "endTs",
+          "type": "uint256"
+        }
+      ],
+      "name": "AvailabilityCheckValidityExtended",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address[]",
+          "name": "cosigners",
+          "type": "address[]"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint64",
+          "name": "cosignersThreshold",
+          "type": "uint64"
+        }
+      ],
+      "name": "CosignersSet",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "availabilityCheckValidityDurationSeconds",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "challengeValidityDurationSeconds",
+          "type": "uint256"
+        }
+      ],
+      "name": "SettingsUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "teeId",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "challenge",
+          "type": "uint256"
+        }
+      ],
+      "name": "TeeAttestationRequested",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes",
+              "name": "relayMessage",
+              "type": "bytes"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint8",
+                  "name": "v",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "r",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "s",
+                  "type": "bytes32"
+                }
+              ],
+              "internalType": "struct Signature[]",
+              "name": "teeSignatures",
+              "type": "tuple[]"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint8",
+                  "name": "v",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "r",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "s",
+                  "type": "bytes32"
+                }
+              ],
+              "internalType": "struct Signature[]",
+              "name": "cosignerSignatures",
+              "type": "tuple[]"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "bytes32",
+                  "name": "attestationType",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "sourceId",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "thresholdBIPS",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "timestamp",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "address[]",
+                  "name": "cosigners",
+                  "type": "address[]"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "cosignersThreshold",
+                  "type": "uint64"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "address",
+                      "name": "teeId",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "address",
+                      "name": "initialTeeId",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "url",
+                      "type": "string"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "codeHash",
+                      "type": "bytes32"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "platform",
+                      "type": "bytes32"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "teeGovernanceHash",
+                      "type": "bytes32"
+                    },
+                    {
+                      "internalType": "uint24",
+                      "name": "rewardEpochId",
+                      "type": "uint24"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "challenge",
+                      "type": "uint256"
+                    }
+                  ],
+                  "internalType": "struct ITeeAvailabilityCheck.RequestBody",
+                  "name": "requestBody",
+                  "type": "tuple"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "enum ITeeAvailabilityCheck.AvailabilityCheckStatus",
+                      "name": "status",
+                      "type": "uint8"
+                    },
+                    {
+                      "internalType": "enum ITeeAvailabilityCheck.TeeMachineStatus",
+                      "name": "machineStatus",
+                      "type": "uint8"
+                    },
+                    {
+                      "internalType": "uint64",
+                      "name": "teeTimestamp",
+                      "type": "uint64"
+                    }
+                  ],
+                  "internalType": "struct ITeeAvailabilityCheck.ResponseBody",
+                  "name": "responseBody",
+                  "type": "tuple"
+                }
+              ],
+              "internalType": "struct ITeeAvailabilityCheck.Response",
+              "name": "data",
+              "type": "tuple"
+            }
+          ],
+          "internalType": "struct ITeeAvailabilityCheck.Proof",
+          "name": "_proof",
+          "type": "tuple"
+        }
+      ],
+      "name": "confirmAvailability",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getCosigners",
+      "outputs": [
+        {
+          "internalType": "address[]",
+          "name": "_cosigners",
+          "type": "address[]"
+        },
+        {
+          "internalType": "uint64",
+          "name": "_cosignersThreshold",
+          "type": "uint64"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getSettings",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "_availabilityCheckValidityDurationSeconds",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_challengeValidityDurationSeconds",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_teeId",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_testOnTeeId",
+          "type": "address"
+        }
+      ],
+      "name": "requestAvailabilityCheckAttestation",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_teeId",
+          "type": "address"
+        }
+      ],
+      "name": "requestTeeAttestation",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes",
+              "name": "relayMessage",
+              "type": "bytes"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint8",
+                  "name": "v",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "r",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "s",
+                  "type": "bytes32"
+                }
+              ],
+              "internalType": "struct Signature[]",
+              "name": "teeSignatures",
+              "type": "tuple[]"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint8",
+                  "name": "v",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "r",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "s",
+                  "type": "bytes32"
+                }
+              ],
+              "internalType": "struct Signature[]",
+              "name": "cosignerSignatures",
+              "type": "tuple[]"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "bytes32",
+                  "name": "attestationType",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "sourceId",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "thresholdBIPS",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "timestamp",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "address[]",
+                  "name": "cosigners",
+                  "type": "address[]"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "cosignersThreshold",
+                  "type": "uint64"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "address",
+                      "name": "teeId",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "address",
+                      "name": "initialTeeId",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "url",
+                      "type": "string"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "codeHash",
+                      "type": "bytes32"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "platform",
+                      "type": "bytes32"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "teeGovernanceHash",
+                      "type": "bytes32"
+                    },
+                    {
+                      "internalType": "uint24",
+                      "name": "rewardEpochId",
+                      "type": "uint24"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "challenge",
+                      "type": "uint256"
+                    }
+                  ],
+                  "internalType": "struct ITeeAvailabilityCheck.RequestBody",
+                  "name": "requestBody",
+                  "type": "tuple"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "enum ITeeAvailabilityCheck.AvailabilityCheckStatus",
+                      "name": "status",
+                      "type": "uint8"
+                    },
+                    {
+                      "internalType": "enum ITeeAvailabilityCheck.TeeMachineStatus",
+                      "name": "machineStatus",
+                      "type": "uint8"
+                    },
+                    {
+                      "internalType": "uint64",
+                      "name": "teeTimestamp",
+                      "type": "uint64"
+                    }
+                  ],
+                  "internalType": "struct ITeeAvailabilityCheck.ResponseBody",
+                  "name": "responseBody",
+                  "type": "tuple"
+                }
+              ],
+              "internalType": "struct ITeeAvailabilityCheck.Response",
+              "name": "data",
+              "type": "tuple"
+            }
+          ],
+          "internalType": "struct ITeeAvailabilityCheck.Proof",
+          "name": "_proof",
+          "type": "tuple"
+        }
+      ],
+      "name": "verifyAvailabilityCheckProof",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ]
