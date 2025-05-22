@@ -8,6 +8,8 @@ Golang packages that are used across multiple Flare projects.
 
 Contains the following packages:
 
+- call: rest api calls
+- contracts: [abigen](https://geth.ethereum.org/docs/tools/abigen) bindings for Flare contracts
 - database: connecting to and reading from the Flare's c-chain indexer database
 - events: parsing event logs as stored in Flare's c-chain indexer database
 - heapt: generically typed heap implementation based on "container/heap"
@@ -33,4 +35,3 @@ Contains the following packages:
   - signing: signing of xrpl transactions
     - ed25519
     - secp256k1
-- [abigen](https://geth.ethereum.org/docs/tools/abigen) bindings for Flare contracts
