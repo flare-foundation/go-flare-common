@@ -31,7 +31,8 @@ var (
 
 // ITeeRegistryPauseForUpgrade is an auto generated low-level Go binding around an user-defined struct.
 type ITeeRegistryPauseForUpgrade struct {
-	TeeId common.Address
+	TeeId        common.Address
+	InitialTeeId common.Address
 }
 
 // ITeeRegistryReplicateTeeMachine is an auto generated low-level Go binding around an user-defined struct.
@@ -42,23 +43,23 @@ type ITeeRegistryReplicateTeeMachine struct {
 
 // ITeeRegistryTeeMachine is an auto generated low-level Go binding around an user-defined struct.
 type ITeeRegistryTeeMachine struct {
-	TeeId common.Address
-	Owner common.Address
-	Url   string
+	TeeId      common.Address
+	TeeProxyId common.Address
+	Url        string
 }
 
 // ITeeRegistryTeeMachineWithAttestationData is an auto generated low-level Go binding around an user-defined struct.
 type ITeeRegistryTeeMachineWithAttestationData struct {
-	TeeId    common.Address
-	Owner    common.Address
-	Url      string
-	CodeHash [32]byte
-	Platform [32]byte
+	TeeId        common.Address
+	InitialTeeId common.Address
+	Url          string
+	CodeHash     [32]byte
+	Platform     [32]byte
 }
 
 // RegistryMetaData contains all meta data concerning the Registry contract.
 var RegistryMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"}],\"internalType\":\"structITeeRegistry.PauseForUpgrade\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"pauseForUpgradeStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"oldTeeMachine\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"newTeeMachine\",\"type\":\"tuple\"}],\"internalType\":\"structITeeRegistry.ReplicateTeeMachine\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"replicateTeeMachineStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"}],\"internalType\":\"structITeeRegistry.TeeMachine\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"teeMachineStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"teeMachineWithAttestationDataStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"initialTeeId\",\"type\":\"address\"}],\"internalType\":\"structITeeRegistry.PauseForUpgrade\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"pauseForUpgradeStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"initialTeeId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"oldTeeMachine\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"initialTeeId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"newTeeMachine\",\"type\":\"tuple\"}],\"internalType\":\"structITeeRegistry.ReplicateTeeMachine\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"replicateTeeMachineStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"teeProxyId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"}],\"internalType\":\"structITeeRegistry.TeeMachine\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"teeMachineStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"initialTeeId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeRegistry.TeeMachineWithAttestationData\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"teeMachineWithAttestationDataStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // RegistryABI is the input ABI used to generate the binding from.
@@ -207,23 +208,23 @@ func (_Registry *RegistryTransactorRaw) Transact(opts *bind.TransactOpts, method
 	return _Registry.Contract.contract.Transact(opts, method, params...)
 }
 
-// PauseForUpgradeStruct is a paid mutator transaction binding the contract method 0x880347fb.
+// PauseForUpgradeStruct is a paid mutator transaction binding the contract method 0xc1abcc81.
 //
-// Solidity: function pauseForUpgradeStruct((address) ) returns()
+// Solidity: function pauseForUpgradeStruct((address,address) ) returns()
 func (_Registry *RegistryTransactor) PauseForUpgradeStruct(opts *bind.TransactOpts, arg0 ITeeRegistryPauseForUpgrade) (*types.Transaction, error) {
 	return _Registry.contract.Transact(opts, "pauseForUpgradeStruct", arg0)
 }
 
-// PauseForUpgradeStruct is a paid mutator transaction binding the contract method 0x880347fb.
+// PauseForUpgradeStruct is a paid mutator transaction binding the contract method 0xc1abcc81.
 //
-// Solidity: function pauseForUpgradeStruct((address) ) returns()
+// Solidity: function pauseForUpgradeStruct((address,address) ) returns()
 func (_Registry *RegistrySession) PauseForUpgradeStruct(arg0 ITeeRegistryPauseForUpgrade) (*types.Transaction, error) {
 	return _Registry.Contract.PauseForUpgradeStruct(&_Registry.TransactOpts, arg0)
 }
 
-// PauseForUpgradeStruct is a paid mutator transaction binding the contract method 0x880347fb.
+// PauseForUpgradeStruct is a paid mutator transaction binding the contract method 0xc1abcc81.
 //
-// Solidity: function pauseForUpgradeStruct((address) ) returns()
+// Solidity: function pauseForUpgradeStruct((address,address) ) returns()
 func (_Registry *RegistryTransactorSession) PauseForUpgradeStruct(arg0 ITeeRegistryPauseForUpgrade) (*types.Transaction, error) {
 	return _Registry.Contract.PauseForUpgradeStruct(&_Registry.TransactOpts, arg0)
 }

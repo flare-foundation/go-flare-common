@@ -29,9 +29,19 @@ var (
 	_ = abi.ConvertType
 )
 
+// ITeeWalletBackupManagerBackupId is an auto generated low-level Go binding around an user-defined struct.
+type ITeeWalletBackupManagerBackupId struct {
+	TeeId         common.Address
+	WalletId      [32]byte
+	KeyId         uint64
+	OpType        [32]byte
+	PublicKey     []byte
+	RewardEpochId *big.Int
+}
+
 // TeeWalletBackupManagerMetaData contains all meta data concerning the TeeWalletBackupManager contract.
 var TeeWalletBackupManagerMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"},{\"internalType\":\"uint24\",\"name\":\"_rewardEpochId\",\"type\":\"uint24\"}],\"name\":\"backupRestore\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"},{\"internalType\":\"uint24\",\"name\":\"_rewardEpochId\",\"type\":\"uint24\"}],\"name\":\"backupRestoreInit\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"_shamirThreshold\",\"type\":\"uint64\"},{\"internalType\":\"address[]\",\"name\":\"_backupTeeIds\",\"type\":\"address[]\"}],\"name\":\"machineBackup\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"_backupId\",\"type\":\"uint64\"},{\"internalType\":\"address[]\",\"name\":\"_teeIds\",\"type\":\"address[]\"}],\"name\":\"machineBackupRemove\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"_backupId\",\"type\":\"uint64\"},{\"internalType\":\"address[]\",\"name\":\"_backupTeeIds\",\"type\":\"address[]\"}],\"name\":\"machineRestore\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"publicKey\",\"type\":\"bytes\"},{\"internalType\":\"uint24\",\"name\":\"rewardEpochId\",\"type\":\"uint24\"}],\"internalType\":\"structITeeWalletBackupManager.BackupId\",\"name\":\"_backupId\",\"type\":\"tuple\"},{\"internalType\":\"string\",\"name\":\"_backupUrl\",\"type\":\"string\"}],\"name\":\"backupRestore\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}]",
 }
 
 // TeeWalletBackupManagerABI is the input ABI used to generate the binding from.
@@ -180,107 +190,23 @@ func (_TeeWalletBackupManager *TeeWalletBackupManagerTransactorRaw) Transact(opt
 	return _TeeWalletBackupManager.Contract.contract.Transact(opts, method, params...)
 }
 
-// BackupRestore is a paid mutator transaction binding the contract method 0x6789a839.
+// BackupRestore is a paid mutator transaction binding the contract method 0xac097729.
 //
-// Solidity: function backupRestore(address _teeId, bytes32 _walletId, uint64 _keyId, uint24 _rewardEpochId) payable returns()
-func (_TeeWalletBackupManager *TeeWalletBackupManagerTransactor) BackupRestore(opts *bind.TransactOpts, _teeId common.Address, _walletId [32]byte, _keyId uint64, _rewardEpochId *big.Int) (*types.Transaction, error) {
-	return _TeeWalletBackupManager.contract.Transact(opts, "backupRestore", _teeId, _walletId, _keyId, _rewardEpochId)
+// Solidity: function backupRestore(address _teeId, (address,bytes32,uint64,bytes32,bytes,uint24) _backupId, string _backupUrl) payable returns()
+func (_TeeWalletBackupManager *TeeWalletBackupManagerTransactor) BackupRestore(opts *bind.TransactOpts, _teeId common.Address, _backupId ITeeWalletBackupManagerBackupId, _backupUrl string) (*types.Transaction, error) {
+	return _TeeWalletBackupManager.contract.Transact(opts, "backupRestore", _teeId, _backupId, _backupUrl)
 }
 
-// BackupRestore is a paid mutator transaction binding the contract method 0x6789a839.
+// BackupRestore is a paid mutator transaction binding the contract method 0xac097729.
 //
-// Solidity: function backupRestore(address _teeId, bytes32 _walletId, uint64 _keyId, uint24 _rewardEpochId) payable returns()
-func (_TeeWalletBackupManager *TeeWalletBackupManagerSession) BackupRestore(_teeId common.Address, _walletId [32]byte, _keyId uint64, _rewardEpochId *big.Int) (*types.Transaction, error) {
-	return _TeeWalletBackupManager.Contract.BackupRestore(&_TeeWalletBackupManager.TransactOpts, _teeId, _walletId, _keyId, _rewardEpochId)
+// Solidity: function backupRestore(address _teeId, (address,bytes32,uint64,bytes32,bytes,uint24) _backupId, string _backupUrl) payable returns()
+func (_TeeWalletBackupManager *TeeWalletBackupManagerSession) BackupRestore(_teeId common.Address, _backupId ITeeWalletBackupManagerBackupId, _backupUrl string) (*types.Transaction, error) {
+	return _TeeWalletBackupManager.Contract.BackupRestore(&_TeeWalletBackupManager.TransactOpts, _teeId, _backupId, _backupUrl)
 }
 
-// BackupRestore is a paid mutator transaction binding the contract method 0x6789a839.
+// BackupRestore is a paid mutator transaction binding the contract method 0xac097729.
 //
-// Solidity: function backupRestore(address _teeId, bytes32 _walletId, uint64 _keyId, uint24 _rewardEpochId) payable returns()
-func (_TeeWalletBackupManager *TeeWalletBackupManagerTransactorSession) BackupRestore(_teeId common.Address, _walletId [32]byte, _keyId uint64, _rewardEpochId *big.Int) (*types.Transaction, error) {
-	return _TeeWalletBackupManager.Contract.BackupRestore(&_TeeWalletBackupManager.TransactOpts, _teeId, _walletId, _keyId, _rewardEpochId)
-}
-
-// BackupRestoreInit is a paid mutator transaction binding the contract method 0xc27770f6.
-//
-// Solidity: function backupRestoreInit(address _teeId, bytes32 _walletId, uint64 _keyId, uint24 _rewardEpochId) payable returns()
-func (_TeeWalletBackupManager *TeeWalletBackupManagerTransactor) BackupRestoreInit(opts *bind.TransactOpts, _teeId common.Address, _walletId [32]byte, _keyId uint64, _rewardEpochId *big.Int) (*types.Transaction, error) {
-	return _TeeWalletBackupManager.contract.Transact(opts, "backupRestoreInit", _teeId, _walletId, _keyId, _rewardEpochId)
-}
-
-// BackupRestoreInit is a paid mutator transaction binding the contract method 0xc27770f6.
-//
-// Solidity: function backupRestoreInit(address _teeId, bytes32 _walletId, uint64 _keyId, uint24 _rewardEpochId) payable returns()
-func (_TeeWalletBackupManager *TeeWalletBackupManagerSession) BackupRestoreInit(_teeId common.Address, _walletId [32]byte, _keyId uint64, _rewardEpochId *big.Int) (*types.Transaction, error) {
-	return _TeeWalletBackupManager.Contract.BackupRestoreInit(&_TeeWalletBackupManager.TransactOpts, _teeId, _walletId, _keyId, _rewardEpochId)
-}
-
-// BackupRestoreInit is a paid mutator transaction binding the contract method 0xc27770f6.
-//
-// Solidity: function backupRestoreInit(address _teeId, bytes32 _walletId, uint64 _keyId, uint24 _rewardEpochId) payable returns()
-func (_TeeWalletBackupManager *TeeWalletBackupManagerTransactorSession) BackupRestoreInit(_teeId common.Address, _walletId [32]byte, _keyId uint64, _rewardEpochId *big.Int) (*types.Transaction, error) {
-	return _TeeWalletBackupManager.Contract.BackupRestoreInit(&_TeeWalletBackupManager.TransactOpts, _teeId, _walletId, _keyId, _rewardEpochId)
-}
-
-// MachineBackup is a paid mutator transaction binding the contract method 0x4e24ef45.
-//
-// Solidity: function machineBackup(address _teeId, bytes32 _walletId, uint64 _keyId, uint64 _shamirThreshold, address[] _backupTeeIds) payable returns()
-func (_TeeWalletBackupManager *TeeWalletBackupManagerTransactor) MachineBackup(opts *bind.TransactOpts, _teeId common.Address, _walletId [32]byte, _keyId uint64, _shamirThreshold uint64, _backupTeeIds []common.Address) (*types.Transaction, error) {
-	return _TeeWalletBackupManager.contract.Transact(opts, "machineBackup", _teeId, _walletId, _keyId, _shamirThreshold, _backupTeeIds)
-}
-
-// MachineBackup is a paid mutator transaction binding the contract method 0x4e24ef45.
-//
-// Solidity: function machineBackup(address _teeId, bytes32 _walletId, uint64 _keyId, uint64 _shamirThreshold, address[] _backupTeeIds) payable returns()
-func (_TeeWalletBackupManager *TeeWalletBackupManagerSession) MachineBackup(_teeId common.Address, _walletId [32]byte, _keyId uint64, _shamirThreshold uint64, _backupTeeIds []common.Address) (*types.Transaction, error) {
-	return _TeeWalletBackupManager.Contract.MachineBackup(&_TeeWalletBackupManager.TransactOpts, _teeId, _walletId, _keyId, _shamirThreshold, _backupTeeIds)
-}
-
-// MachineBackup is a paid mutator transaction binding the contract method 0x4e24ef45.
-//
-// Solidity: function machineBackup(address _teeId, bytes32 _walletId, uint64 _keyId, uint64 _shamirThreshold, address[] _backupTeeIds) payable returns()
-func (_TeeWalletBackupManager *TeeWalletBackupManagerTransactorSession) MachineBackup(_teeId common.Address, _walletId [32]byte, _keyId uint64, _shamirThreshold uint64, _backupTeeIds []common.Address) (*types.Transaction, error) {
-	return _TeeWalletBackupManager.Contract.MachineBackup(&_TeeWalletBackupManager.TransactOpts, _teeId, _walletId, _keyId, _shamirThreshold, _backupTeeIds)
-}
-
-// MachineBackupRemove is a paid mutator transaction binding the contract method 0x9dce6930.
-//
-// Solidity: function machineBackupRemove(bytes32 _walletId, uint64 _keyId, uint64 _backupId, address[] _teeIds) payable returns()
-func (_TeeWalletBackupManager *TeeWalletBackupManagerTransactor) MachineBackupRemove(opts *bind.TransactOpts, _walletId [32]byte, _keyId uint64, _backupId uint64, _teeIds []common.Address) (*types.Transaction, error) {
-	return _TeeWalletBackupManager.contract.Transact(opts, "machineBackupRemove", _walletId, _keyId, _backupId, _teeIds)
-}
-
-// MachineBackupRemove is a paid mutator transaction binding the contract method 0x9dce6930.
-//
-// Solidity: function machineBackupRemove(bytes32 _walletId, uint64 _keyId, uint64 _backupId, address[] _teeIds) payable returns()
-func (_TeeWalletBackupManager *TeeWalletBackupManagerSession) MachineBackupRemove(_walletId [32]byte, _keyId uint64, _backupId uint64, _teeIds []common.Address) (*types.Transaction, error) {
-	return _TeeWalletBackupManager.Contract.MachineBackupRemove(&_TeeWalletBackupManager.TransactOpts, _walletId, _keyId, _backupId, _teeIds)
-}
-
-// MachineBackupRemove is a paid mutator transaction binding the contract method 0x9dce6930.
-//
-// Solidity: function machineBackupRemove(bytes32 _walletId, uint64 _keyId, uint64 _backupId, address[] _teeIds) payable returns()
-func (_TeeWalletBackupManager *TeeWalletBackupManagerTransactorSession) MachineBackupRemove(_walletId [32]byte, _keyId uint64, _backupId uint64, _teeIds []common.Address) (*types.Transaction, error) {
-	return _TeeWalletBackupManager.Contract.MachineBackupRemove(&_TeeWalletBackupManager.TransactOpts, _walletId, _keyId, _backupId, _teeIds)
-}
-
-// MachineRestore is a paid mutator transaction binding the contract method 0xc551844b.
-//
-// Solidity: function machineRestore(address _teeId, bytes32 _walletId, uint64 _keyId, uint64 _backupId, address[] _backupTeeIds) payable returns()
-func (_TeeWalletBackupManager *TeeWalletBackupManagerTransactor) MachineRestore(opts *bind.TransactOpts, _teeId common.Address, _walletId [32]byte, _keyId uint64, _backupId uint64, _backupTeeIds []common.Address) (*types.Transaction, error) {
-	return _TeeWalletBackupManager.contract.Transact(opts, "machineRestore", _teeId, _walletId, _keyId, _backupId, _backupTeeIds)
-}
-
-// MachineRestore is a paid mutator transaction binding the contract method 0xc551844b.
-//
-// Solidity: function machineRestore(address _teeId, bytes32 _walletId, uint64 _keyId, uint64 _backupId, address[] _backupTeeIds) payable returns()
-func (_TeeWalletBackupManager *TeeWalletBackupManagerSession) MachineRestore(_teeId common.Address, _walletId [32]byte, _keyId uint64, _backupId uint64, _backupTeeIds []common.Address) (*types.Transaction, error) {
-	return _TeeWalletBackupManager.Contract.MachineRestore(&_TeeWalletBackupManager.TransactOpts, _teeId, _walletId, _keyId, _backupId, _backupTeeIds)
-}
-
-// MachineRestore is a paid mutator transaction binding the contract method 0xc551844b.
-//
-// Solidity: function machineRestore(address _teeId, bytes32 _walletId, uint64 _keyId, uint64 _backupId, address[] _backupTeeIds) payable returns()
-func (_TeeWalletBackupManager *TeeWalletBackupManagerTransactorSession) MachineRestore(_teeId common.Address, _walletId [32]byte, _keyId uint64, _backupId uint64, _backupTeeIds []common.Address) (*types.Transaction, error) {
-	return _TeeWalletBackupManager.Contract.MachineRestore(&_TeeWalletBackupManager.TransactOpts, _teeId, _walletId, _keyId, _backupId, _backupTeeIds)
+// Solidity: function backupRestore(address _teeId, (address,bytes32,uint64,bytes32,bytes,uint24) _backupId, string _backupUrl) payable returns()
+func (_TeeWalletBackupManager *TeeWalletBackupManagerTransactorSession) BackupRestore(_teeId common.Address, _backupId ITeeWalletBackupManagerBackupId, _backupUrl string) (*types.Transaction, error) {
+	return _TeeWalletBackupManager.Contract.BackupRestore(&_TeeWalletBackupManager.TransactOpts, _teeId, _backupId, _backupUrl)
 }

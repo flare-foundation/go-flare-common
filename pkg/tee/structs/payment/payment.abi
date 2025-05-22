@@ -61,6 +61,11 @@
               "type": "uint256"
             },
             {
+              "internalType": "uint256",
+              "name": "fee",
+              "type": "uint256"
+            },
+            {
               "internalType": "bytes32",
               "name": "paymentReference",
               "type": "bytes32"
@@ -74,16 +79,6 @@
               "internalType": "uint64",
               "name": "subNonce",
               "type": "uint64"
-            },
-            {
-              "internalType": "uint256",
-              "name": "maxFee",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint32",
-              "name": "maxFeeTolerancePPM",
-              "type": "uint32"
             },
             {
               "internalType": "uint64",
@@ -116,6 +111,11 @@
               "type": "uint256"
             },
             {
+              "internalType": "uint256",
+              "name": "fee",
+              "type": "uint256"
+            },
+            {
               "internalType": "bytes32",
               "name": "paymentReference",
               "type": "bytes32"
@@ -139,6 +139,11 @@
               "internalType": "bytes32",
               "name": "walletId",
               "type": "bytes32"
+            },
+            {
+              "internalType": "uint256",
+              "name": "nonce",
+              "type": "uint256"
             },
             {
               "components": [

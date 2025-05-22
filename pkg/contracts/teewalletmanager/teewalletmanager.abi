@@ -400,6 +400,41 @@
         {
           "components": [
             {
+              "internalType": "uint64",
+              "name": "keyId",
+              "type": "uint64"
+            },
+            {
+              "internalType": "address",
+              "name": "teeId",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "nonce",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct ITeeWalletManager.ResumeKeyData[]",
+          "name": "_keysData",
+          "type": "tuple[]"
+        }
+      ],
+      "name": "resume",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_walletId",
+          "type": "bytes32"
+        },
+        {
+          "components": [
+            {
               "internalType": "bytes32",
               "name": "x",
               "type": "bytes32"
@@ -446,6 +481,24 @@
       "name": "setCosigners",
       "outputs": [],
       "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_walletId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address[]",
+          "name": "_pausingAddresses",
+          "type": "address[]"
+        }
+      ],
+      "name": "setPausingAddresses",
+      "outputs": [],
+      "stateMutability": "payable",
       "type": "function"
     }
   ]
