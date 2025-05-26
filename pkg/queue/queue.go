@@ -13,8 +13,6 @@ const defaultMaxAttempts uint64 = 10
 
 const bucketSize = 10
 
-const NotRatedDequeue string = "!!NotRatedDequeue!!"
-
 // PriorityQueue is made up of two sub-queues - one regular and one with
 // higher priority. Items can be enqueued in either queue and when dequeueing
 // items from the priority queue are returned first.

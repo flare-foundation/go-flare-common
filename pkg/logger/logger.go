@@ -75,8 +75,8 @@ func createSugared(config Config) *zap.SugaredLogger {
 	return sugaredLogger
 }
 
-// SyncFileLogger synchronizes the file logger (but not the console logger). It is 
-// automatically called during fatal or panic log events. If you need to manually 
+// SyncFileLogger synchronizes the file logger (but not the console logger). It is
+// automatically called during fatal or panic log events. If you need to manually
 // synchronize the logger at other points in your application, you can invoke this function as needed.
 func SyncFileLogger() {
 	sugaredLogger.Infof("Syncing file logger.")

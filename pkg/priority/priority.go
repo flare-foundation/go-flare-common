@@ -19,8 +19,6 @@ type Params struct {
 	MaxAttempts          int           `toml:"max_attempts"`            // If not positive or unset, it defaults to one attempt.
 	TimeOff              time.Duration `toml:"time_off"`                // TimeOff between attempts
 	ErrorChan            bool          `toml:"error_chan"`              // If true, errors on final attempts are pushed to the channel
-
-	bo backOff // backOff function
 }
 
 type Wrapped[T any] struct {
@@ -78,13 +76,17 @@ func New[T any, W weight[W]](params Params, name string) PriorityQueue[T, W] {
 
 		maxAttempts: params.MaxAttempts,
 		timeOff:     params.TimeOff,
-		bo:          params.bo,
 
 		limiter: limiter,
 	}
 }
 
-// InitiateAndRun starts accepting new items to priority queue
+// SetBackOff sets backOff functions for the queue.
+func (p *PriorityQueue[T, W]) SetBackOff(bo backOff) {
+	p.bo = bo
+}
+
+// InitiateAndRun starts accepting new items to priority queue.
 func (p *PriorityQueue[T, W]) InitiateAndRun(ctx context.Context) {
 	in := make(chan *Item[Wrapped[T], W])
 	inFast := make(chan *Item[Wrapped[T], W])
