@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/flare-foundation/go-flare-common/pkg/storage"
+	"github.com/stretchr/testify/require"
 )
 
 func TestCyclicSimple(t *testing.T) {
@@ -152,4 +153,30 @@ func TestCyclicMap(t *testing.T) {
 	if !exists || getOne[2] != 3 {
 		t.Error("map not modified")
 	}
+}
+
+func TestCyclicNegative(t *testing.T) {
+	const size int = 4
+
+	stg := storage.New[int, uint64](size)
+	require.NotNil(t, stg)
+	require.Equal(t, size, stg.Size())
+
+	for i := -10; i < 10; i++ {
+		in := uint64(100 + i)
+
+		stg.Store(i, in)
+
+		out, ok := stg.Get(i)
+		require.True(t, ok)
+		require.Equal(t, in, out)
+	}
+}
+
+func TestNew(t *testing.T) {
+	stg := storage.New[int, uint64](0)
+	require.Nil(t, stg)
+
+	stg = storage.New[int, uint64](-10)
+	require.Nil(t, stg)
 }

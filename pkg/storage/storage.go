@@ -29,6 +29,11 @@ func (s Cyclic[K, T]) Size() K {
 func (s Cyclic[K, T]) Store(key K, value T) {
 	keyMod := key % s.Size()
 
+	// make sure  0 <= keyMod < Size
+	if keyMod < 0 {
+		keyMod += s.Size()
+	}
+
 	storedItem := &cyclicItem[K, T]{key: key, value: value}
 
 	s.mu.Lock()
@@ -40,6 +45,11 @@ func (s Cyclic[K, T]) Store(key K, value T) {
 func (s Cyclic[K, T]) Get(key K) (T, bool) {
 	var k T
 	keyMod := key % s.Size()
+
+	// make sure  0 <= keyMod < Size
+	if keyMod < 0 {
+		keyMod += s.Size()
+	}
 
 	s.mu.RLock()
 	defer s.mu.RUnlock()
@@ -60,7 +70,18 @@ func (s Cyclic[K, T]) Get(key K) (T, bool) {
 	return k, true
 }
 
-// NewCyclic initializes a Cyclic storage with size.
+// Deprecated: NewCyclic initializes a Cyclic storage with size.
+//
+// Use New instead.
 func NewCyclic[K constraints.Integer, T any](size int) Cyclic[K, T] {
 	return Cyclic[K, T]{values: make([]*cyclicItem[K, T], size), mu: new(sync.RWMutex)}
+}
+
+// New initializes a Cyclic storage with size.
+// If size is not positive, nil pointer is returned.
+func New[K constraints.Integer, T any](size int) *Cyclic[K, T] {
+	if size <= 0 {
+		return nil
+	}
+	return &Cyclic[K, T]{values: make([]*cyclicItem[K, T], size), mu: new(sync.RWMutex)}
 }
