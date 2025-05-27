@@ -1,6 +1,7 @@
 package structs
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
@@ -308,4 +309,65 @@ func TestDecodeInstructionMessage(t *testing.T) {
 	require.NoError(t, err)
 
 	require.Equal(t, pre, unpacked)
+}
+
+func TestMissMatchedStructs(t *testing.T) {
+	abiJSON0 := `{
+          "components": [
+            {
+              "internalType": "address",
+              "name": "A",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "B",
+              "type": "uint8"
+            },
+            {
+              "internalType": "address",
+              "name": "C",
+              "type": "string"
+            }
+          ],
+          "internalType": "struct IEntityManager.VoterAddresses",
+          "name": "Neki",
+          "type": "tuple"
+        }`
+
+	arg0 := abi.Argument{}
+	err := arg0.UnmarshalJSON([]byte(abiJSON0))
+	require.NoError(t, err)
+
+	type Neki struct {
+		A string
+		B uint8
+		C string
+	}
+
+	pre := Neki{"a", 2, "c"}
+
+	type Drugo struct {
+		A []byte
+	}
+
+	packed, err := abi.Arguments{arg0}.PackValues([]any{pre})
+	require.NoError(t, err)
+
+	var unpacked Drugo
+	var unpacked3 Drugo
+
+	err = DecodeTo(arg0, packed, &unpacked)
+	fmt.Printf("err: %v\n", err)
+	require.Error(t, err)
+
+	_, err = Decode[Drugo](arg0, packed)
+	fmt.Printf("err: %v\n", err)
+
+	require.Error(t, err)
+
+	err = DecodeTo2(arg0, packed, &unpacked3)
+	fmt.Printf("err: %v\n", err)
+
+	require.Error(t, err)
 }

@@ -11,9 +11,18 @@ import (
 // DecodeTo decodes abi encoded data and writes it to destination.
 //
 // dest has to be a pointer to a struct that is structured as arg describes.
-//
-// If type T and abi are not aligned, it will panic.
-func DecodeTo[T any](arg abi.Argument, data []byte, dest *T) error {
+func DecodeTo[T any](arg abi.Argument, data []byte, dest *T) (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			e, ok := r.(error)
+			if ok {
+				err = fmt.Errorf("recovered: %v", e)
+			} else {
+				err = fmt.Errorf("recovered non error: %v", e)
+			}
+		}
+	}()
+
 	rv := reflect.ValueOf(dest)
 	if rv.Kind() != reflect.Pointer || rv.IsNil() {
 		return fmt.Errorf("dest is not a non nil pointer")
@@ -44,7 +53,7 @@ func DecodeTo[T any](arg abi.Argument, data []byte, dest *T) error {
 		return err
 	}
 
-	return nil
+	return
 }
 
 // checkEncodeDecode encoded decodedSlice using args and compares it to data.
@@ -64,9 +73,18 @@ func checkEncodeDecode(args *abi.Arguments, data []byte, decodedSlice []any) err
 // DecodeTo2 decodes abi encoded data and writes it to destination.
 //
 // dest has to be a pointer to a struct that is structured as arg describes.
-//
-// If abi and struct T are not aligned, it will panic.
-func DecodeTo2[T any](arg abi.Argument, data []byte, dest *T) error {
+func DecodeTo2[T any](arg abi.Argument, data []byte, dest *T) (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			e, ok := r.(error)
+			if ok {
+				err = fmt.Errorf("recovered panic: %v", e)
+			} else {
+				err = fmt.Errorf("recovered panic non error: %v", e)
+			}
+		}
+	}()
+
 	rv := reflect.ValueOf(dest)
 	if rv.Kind() != reflect.Pointer || rv.IsNil() {
 		return fmt.Errorf("dest is not a non nil pointer")
@@ -89,10 +107,18 @@ func DecodeTo2[T any](arg abi.Argument, data []byte, dest *T) error {
 }
 
 // Decode decodes abi encoded data and converts it to a go struct of type T.
-//
-// If type T and abi are not aligned, it will panic.
-func Decode[T any](arg abi.Argument, data []byte) (T, error) {
-	var t T
+func Decode[T any](arg abi.Argument, data []byte) (t T, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			e, ok := r.(error)
+			if ok {
+				err = fmt.Errorf("recovered panic: %v", e)
+			} else {
+				err = fmt.Errorf("recovered panic non error: %v", e)
+			}
+		}
+	}()
+
 	args := abi.Arguments{arg}
 
 	decodedSlice, err := args.Unpack(data)
