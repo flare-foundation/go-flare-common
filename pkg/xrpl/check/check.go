@@ -102,10 +102,10 @@ func (jr JSONRPC) Info(address string) (AccountInfoResponse, error) {
 }
 
 // Check checks account info:
-// - illegal Flags
-// - required Flags
-// - signers list setting
-// - no regular key
+//   - illegal Flags
+//   - required Flags
+//   - signers list setting
+//   - no regular key
 func (ai AccountInfoResponse) Check(quorum uint64, signers []string) error {
 	if err := checkFlags(ai.AccountData.Flags); err != nil {
 		return fmt.Errorf("flags: %v", err)

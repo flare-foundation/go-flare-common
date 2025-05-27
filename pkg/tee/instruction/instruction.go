@@ -46,9 +46,9 @@ func (d Data) HashForSigning() (common.Hash, error) {
 	return crypto.Keccak256Hash(fixed[:], d.AdditionalVariableMessage), nil
 }
 
-// SignInstructionHash signs the hash of the tee instruction
+// SignInstructionHash signs the hash of the tee instruction.
 //
-// FOR REFERENCE
+// FOR REFERENCE!
 func SignInstructionHash(hash common.Hash, pk *ecdsa.PrivateKey) ([]byte, error) {
 	hashToSign := accounts.TextHash(hash[:])
 	return crypto.Sign(hashToSign, pk)
@@ -64,7 +64,7 @@ type Instruction struct {
 func (i Instruction) RecoverSignersPubKey() ([]byte, error) {
 	hash, err := i.Data.HashForSigning()
 	if err != nil {
-		return []byte{}, nil
+		return []byte{}, err
 	}
 	signedHash := accounts.TextHash(hash[:])
 

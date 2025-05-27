@@ -22,7 +22,7 @@ type ed25519key struct {
 const privateKey = "965E359115DD65D08FD9CF020969BBE0D2A5D263F4211C46AC4A21B77CE720AD"
 const privateKey2 = "111B4877EB4ACBD4943E7CCE0908DB89A26BDB77ED0F0DEB029235FEF54B7870"
 
-// Returns first 32 bytes of a SHA512 of the input bytes
+// Returns first 32 bytes of a SHA512 of the input bytes.
 func Sha512Half(b []byte) []byte {
 	hasher := sha512.New()
 	hasher.Write(b)

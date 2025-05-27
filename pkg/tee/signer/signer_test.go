@@ -64,7 +64,6 @@ func sendRequest(t *testing.T, r *http.Request) *http.Response {
 	resp, err := client.Do(r)
 	require.NoError(t, err)
 	return resp
-
 }
 
 func TestSigner(t *testing.T) {

@@ -71,13 +71,13 @@ func TestExtractPayloads(t *testing.T) {
 
 	for i, test := range tests {
 		payloads, err := payload.ExtractPayloads(test.tx)
-		require.NoError(t, err, fmt.Sprintf("error in test %d", i))
-		require.Equal(t, test.nuOfPayloads, len(payloads), fmt.Sprintf("wrong number of payloads in test %d", i))
+		require.NoErrorf(t, err, "error in test %d", i)
+		require.Len(t, payloads, test.nuOfPayloads, "wrong number of payloads in test %d", i)
 
 		payloadFTSO, ok := payloads[test.protocol]
-		require.True(t, ok, fmt.Sprintf("missing payload in test %d", i))
-		require.Equal(t, test.protocol, payloadFTSO.ProtocolID, fmt.Sprintf("wrong protocol ID in test %d", i))
-		require.Equal(t, test.votingRound, payloadFTSO.VotingRound, fmt.Sprintf("wrong voting round in test %d", i))
+		require.Truef(t, ok, "missing payload in test %d", i)
+		require.Equalf(t, test.protocol, payloadFTSO.ProtocolID, "wrong protocol ID in test %d", i)
+		require.Equalf(t, test.votingRound, payloadFTSO.VotingRound, "wrong voting round in test %d", i)
 	}
 }
 

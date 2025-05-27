@@ -200,7 +200,7 @@ func serializeStandardCode(code string) ([]byte, error) {
 	return codeBytes[:], nil
 }
 
-// todo consider disallowing 0x00 prefixed nonstandard codes
+// todo consider disallowing 0x00 prefixed nonstandard codes.
 func serializeNonstandardCode(code string) ([]byte, error) {
 	out, err := hex.DecodeString(code)
 
@@ -248,7 +248,7 @@ func serializeTokenValue(value string) ([]byte, error) {
 
 	normalizedExponent := exponent + exponentNormalization - precision
 	if normalizedExponent < minNormalizedExponent || normalizedExponent > maxNormalizedExponent {
-		return nil, fmt.Errorf("exponent %d out of range [%d,%d]", exponent, int64(minNormalizedExponent)-exponentNormalization, int64(maxNormalizedExponent)-exponentNormalization)
+		return nil, fmt.Errorf("exponent %d out of range [%d,%d]", exponent, minNormalizedExponent-exponentNormalization, maxNormalizedExponent-exponentNormalization)
 	}
 
 	if significant < minSignificant || significant > maxSignificant {

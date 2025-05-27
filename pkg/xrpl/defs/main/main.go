@@ -45,7 +45,6 @@ func parseField(r []any) (field, error) {
 		Nth:            int16(math.Round(values["nth"].(float64))),
 		Type:           values["type"].(string),
 	}, nil
-
 }
 
 func generateType(f field) string {
@@ -135,6 +134,5 @@ func main() {
 		return
 	}
 
-	defer auto.Close()
-
+	defer auto.Close() //nolint:errcheck
 }

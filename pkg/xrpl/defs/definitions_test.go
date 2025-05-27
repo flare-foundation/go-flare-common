@@ -9,7 +9,6 @@ import (
 
 func TestIDDecode(t *testing.T) {
 	for name := range NameToField {
-
 		field := NameToField[name]
 
 		if !field.IsSerialized {
@@ -33,7 +32,6 @@ func TestIDDecode(t *testing.T) {
 
 func TestIDtoName(t *testing.T) {
 	for key, name := range IDToName {
-
 		field := NameToField[name]
 		require.Equal(t, key.F, field.Nth)
 		require.Equal(t, key.T, field.Type)

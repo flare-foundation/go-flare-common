@@ -17,13 +17,13 @@ func TestEmptyTree(t *testing.T) {
 	assert.Equal(t, err, merkle.ErrEmptyTree)
 
 	treeSlice := tree
-	assert.Len(t, treeSlice, 0)
+	assert.Empty(t, treeSlice, 0)
 
 	numLeaves := tree.LeavesCount()
 	assert.Equal(t, numLeaves, 0)
 
 	sortedHashes := tree.Leaves()
-	assert.Len(t, sortedHashes, 0)
+	assert.Empty(t, sortedHashes)
 
 	_, err = tree.GetLeaf(0)
 	assert.Equal(t, err, merkle.ErrInvalidIndex)
@@ -84,14 +84,14 @@ func TestSingleLeafTree(t *testing.T) {
 
 	proof, err := tree.GetProof(0)
 	require.NoError(t, err)
-	require.Len(t, proof, 0)
+	require.Empty(t, proof)
 
 	verified := merkle.VerifyProof(val, proof, root)
 	assert.True(t, verified)
 
 	proof, err = tree.GetProofFromHash(val)
 	require.NoError(t, err)
-	require.Len(t, proof, 0)
+	require.Empty(t, proof)
 
 	verified = merkle.VerifyProof(val, proof, root)
 	assert.True(t, verified)

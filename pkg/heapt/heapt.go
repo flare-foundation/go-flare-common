@@ -102,6 +102,7 @@ func up[T any](h Interface[T], j int) {
 
 func down[T any](h Interface[T], i0, n int) bool {
 	i := i0
+
 	for {
 		j1 := 2*i + 1
 		if j1 >= n || j1 < 0 { // j1 < 0 after int overflow

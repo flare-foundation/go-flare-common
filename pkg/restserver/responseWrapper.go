@@ -11,8 +11,8 @@ import (
 	"gorm.io/gorm"
 )
 
-// writeResponse writes a value to the response writer as a JSON object
-// Returns an error if the value could not be written
+// writeResponse writes a value to the response writer as a JSON object.
+// Returns an error if the value could not be written.
 func writeResponse(w http.ResponseWriter, value any) {
 	w.Header().Set("Content-Type", "application/json")
 	err := json.NewEncoder(w).Encode(&value)
@@ -30,12 +30,12 @@ func writeResponseError(w http.ResponseWriter, code int, message string) {
 	}
 }
 
-// Equivalent to WriteAPIResponse with status APIResponseStatusOk
+// Equivalent to WriteAPIResponse with status APIResponseStatusOk.
 func WriteAPIResponseOk[T any](w http.ResponseWriter, value T) {
 	writeResponse(w, value)
 }
 
-// Use for error responses
+// Use for error responses.
 func WriteAPIResponseError(
 	w http.ResponseWriter,
 	code int,
@@ -46,7 +46,7 @@ func WriteAPIResponseError(
 
 // Decode body from the request into value.
 // Any error is written into the response and false is returned.
-// (It is enough to just return from the request handler on false value)
+// (It is enough to just return from the request handler on false value).
 func DecodeBody(w http.ResponseWriter, r *http.Request, value interface{}) bool {
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&value)

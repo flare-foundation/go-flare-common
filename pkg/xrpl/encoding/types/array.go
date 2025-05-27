@@ -6,7 +6,7 @@ import (
 	"reflect"
 )
 
-// ArrayObject is a wrapped element of form map[string]map[string]any{"nameOfTheObject: Object"}
+// ArrayObject is a wrapped element of form map[string]map[string]any{"nameOfTheObject: Object"}.
 type ArrayObject = map[string]any
 
 const arrayEnd byte = 0xf1

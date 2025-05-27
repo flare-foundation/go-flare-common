@@ -38,5 +38,4 @@ func TestPaymentTransactionMultisig(t *testing.T) {
 	blob, err := types.Encode(tx, true)
 	require.NoError(t, err)
 	require.Equal(t, expectedBlob, blob)
-
 }

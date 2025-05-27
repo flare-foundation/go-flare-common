@@ -140,7 +140,7 @@ func TestRemove1(t *testing.T) {
 	for i := 0; h.Len() > 0; i++ {
 		x := heapt.Remove(h, 0)
 		fmt.Printf("h: %v\n", h)
-		require.Equalf(t, i, x, "Remove(0) got %d; want %d", i, x, i)
+		require.Equalf(t, i, x, "Remove(0) got %d; want %d", i)
 		h.verify(t, 0)
 	}
 }
@@ -161,8 +161,8 @@ func TestRemove2(t *testing.T) {
 		h.verify(t, 0)
 	}
 
-	require.Equalf(t, N, len(m), "len(m) = %d; want %d", len(m), N)
-	for i := 0; i < len(m); i++ {
+	require.Lenf(t, m, N, "len(m) = %d; want %d", len(m), N)
+	for i := range len(m) {
 		require.Truef(t, m[i], "m[%d] doesn't exist", i)
 	}
 }

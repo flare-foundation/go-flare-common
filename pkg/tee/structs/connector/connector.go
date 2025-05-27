@@ -43,7 +43,7 @@ var attestationTypes = []AttestationType{
 }
 
 // i-th method correspond to a method in TeeDataConnectorStruct interface whose
-// input is the proof type of i-th attestation type
+// input is the proof type of i-th attestation type.
 var attestationTypeMethods = []string{
 	"availabilityCheck",
 }

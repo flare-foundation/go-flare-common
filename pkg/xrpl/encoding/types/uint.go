@@ -254,7 +254,6 @@ func Uint16ToTxType(uintValue any) (string, error) {
 	txType, ok := defs.ValueToTxType[int32(v)]
 	if !ok {
 		return "", fmt.Errorf("%v does not correspond to a tx type", v)
-
 	}
 	return txType, nil
 }

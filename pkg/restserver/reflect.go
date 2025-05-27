@@ -2,7 +2,7 @@ package restserver
 
 import "reflect"
 
-// Return list of all fields in a struct, recursively by embedded structs
+// Return list of all fields in a struct, recursively by embedded structs.
 func StructFields(s interface{}) []reflect.StructField {
 	var fields []reflect.StructField
 	structFieldsRec(s, &fields)
