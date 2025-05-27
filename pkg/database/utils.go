@@ -114,3 +114,19 @@ func DoInTransaction(db *gorm.DB, operations ...func(db *gorm.DB) error) error {
 	}
 	return tx.Commit().Error
 }
+
+// CheckDelay check whether db is delayed by more than tolerance.
+func CheckDelay(ctx context.Context, db *gorm.DB, tolerance time.Duration) error {
+	state, err := FetchState(ctx, db, nil)
+	if err != nil {
+		return fmt.Errorf("database error: %v", err)
+	}
+
+	dbTime := time.Unix(int64(state.BlockTimestamp), 0)
+
+	outOfSync := time.Since(dbTime)
+	if outOfSync < tolerance {
+		return fmt.Errorf("database out of sync for %v", outOfSync)
+	}
+	return nil
+}

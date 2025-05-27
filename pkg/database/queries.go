@@ -14,6 +14,8 @@ import (
 	"gorm.io/gorm"
 )
 
+const maxQueryDuration = 15 * time.Second
+
 type LatestLogsParams struct {
 	Address common.Address
 	Topic0  common.Hash
@@ -234,7 +236,7 @@ func RetryWrapper[F any, P any](query func(context.Context, *gorm.DB, P) (F, err
 				returnValue, err = query(ctx, db, params)
 				return err
 			},
-			backoff.WithContext(backoff.NewExponentialBackOff(backoff.WithMaxElapsedTime(15*time.Second)), ctx),
+			backoff.WithContext(backoff.NewExponentialBackOff(backoff.WithMaxElapsedTime(maxQueryDuration)), ctx),
 			func(err error, duration time.Duration) {
 				logger.Errorf("error %s: %v, retrying after %v", errorMsg, err, duration)
 			},
