@@ -55,15 +55,24 @@ func (sp *SigningPolicy) Equals(other *SigningPolicy) bool {
 // FromRawBytes decodes a SigningPolicy from a byte slice, returning the decoded SigningPolicy and the number of bytes read.
 //
 // Signing policy byte encoding structure:
-// 2 bytes - size
-// 3 bytes - rewardEpochId
-// 4 bytes - startingVotingRoundId
-// 2 bytes - threshold
-// 32 bytes - randomSeed
-// array of 'size':
-// - 20 bytes address
-// - 2 bytes weight
-// Total 43 + size * (20 + 2) bytes
+//
+//  1. 2 bytes - size
+//
+//  2. 3 bytes - rewardEpochId
+//
+//  3. 4 bytes - startingVotingRoundId
+//
+//  4. 2 bytes - threshold
+//
+//  5. 32 bytes - randomSeed
+//
+//  6. array of 'size':
+//
+//     - 20 bytes - address
+//
+//     - 2 bytes - weight
+//
+// Total 43 + size * (20 + 2) bytes.
 func FromRawBytes(b []byte) (*SigningPolicy, int, error) {
 	p := 0
 	size := int(decodeUint32(b[p : p+2]))

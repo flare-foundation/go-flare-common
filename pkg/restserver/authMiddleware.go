@@ -35,7 +35,7 @@ func (keyMiddleware *APIKeyAuthMiddleware) Init() {
 	}
 }
 
-// Middleware function, which will be called for each request
+// Middleware function, which will be called for each request.
 func (keyMiddleware *APIKeyAuthMiddleware) Middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Check if path and method combination are in exclude list

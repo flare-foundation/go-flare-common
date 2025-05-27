@@ -38,6 +38,7 @@ func GeneralRouteHandler[Q interface{}, B interface{}, R interface{}](
 		if !IsNil(bodyObject) && !DecodeBody(w, r, &body) {
 			return
 		}
+
 		var query Q
 		if !IsNil(queryObject) && !DecodeQueryParams(w, r, &query) {
 			return
@@ -78,7 +79,7 @@ func GeneralRouteHandler[Q interface{}, B interface{}, R interface{}](
 	}
 }
 
-// Create a security object for openAPI from a list of security names
+// Create a security object for openAPI from a list of security names.
 func createSecuritiesArray(security []string) swagger.SecurityRequirements {
 	if security == nil {
 		return nil
@@ -92,7 +93,7 @@ func createSecuritiesArray(security []string) swagger.SecurityRequirements {
 	return ret
 }
 
-// Create openAPI path parameters description from a map of parameter names and descriptions
+// Create openAPI path parameters description from a map of parameter names and descriptions.
 func createPathParamsDescription(paramDescriptions map[string]string) map[string]swagger.Parameter {
 	if len(paramDescriptions) == 0 {
 		return nil
@@ -108,7 +109,7 @@ func createPathParamsDescription(paramDescriptions map[string]string) map[string
 	return pathParams
 }
 
-// Create openAPI query parameters description from a struct
+// Create openAPI query parameters description from a struct.
 func createQueryDescription(queryObject interface{}) swagger.ParameterValue {
 	if queryObject == nil {
 		return nil
@@ -132,7 +133,7 @@ func createQueryDescription(queryObject interface{}) swagger.ParameterValue {
 	return queryString
 }
 
-// Create openAPI request body description from a struct
+// Create openAPI request body description from a struct.
 func createRequestBodyDescription(bodyObject interface{}) *swagger.ContentValue {
 	if bodyObject == nil {
 		return nil

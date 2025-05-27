@@ -98,13 +98,13 @@ func TestNewSiginigPolicyLogs(t *testing.T) {
 		require.NoError(t, err)
 
 		siginingPolicy := policy.NewSigningPolicy(event, nil)
-		require.Equal(t, test.totalWeight, siginingPolicy.Voters.TotalWeight, fmt.Sprintf("error total weight test %d", i))
-		require.Len(t, siginingPolicy.Voters.VoterDataMap, test.noOfVoters, fmt.Sprintf("error number of voters test %d", i))
+		require.Equalf(t, test.totalWeight, siginingPolicy.Voters.TotalWeight, "error total weight test %d", i)
+		require.Lenf(t, siginingPolicy.Voters.VoterDataMap, test.noOfVoters, "error number of voters test %d", i)
 
 		voterData, ok := siginingPolicy.Voters.VoterDataMap[common.HexToAddress(test.voter)]
-		require.True(t, ok, fmt.Sprintf("error missing voter in test %d", i))
-		require.Equal(t, test.voterWeight, voterData.Weight, fmt.Sprintf("error wrong weight test %d", i))
-		require.Equal(t, test.voterWeight, voterData.Weight, fmt.Sprintf("error wrong index test %d", i))
+		require.Truef(t, ok, "error missing voter in test %d", i)
+		require.Equalf(t, test.voterWeight, voterData.Weight, "error wrong weight test %d", i)
+		require.Equalf(t, test.voterWeight, voterData.Weight, "error wrong index test %d", i)
 	}
 }
 
@@ -128,12 +128,12 @@ func TestStorage(t *testing.T) {
 	require.NoError(t, err)
 
 	policyFromStorage, ok := storage.ForVotingRound(663845)
-	require.True(t, !ok)
+	require.False(t, ok)
 	require.Equal(t, int64(2766), policyFromStorage.RewardEpochID)
 	require.Equal(t, uint16(65528), policyFromStorage.Voters.TotalWeight)
 
 	policyFromStorage, ok = storage.ForVotingRound(663445)
-	require.True(t, !ok)
+	require.False(t, ok)
 	require.Nil(t, policyFromStorage)
 
 	policyFromStorage, ok = storage.ForVotingRound(673445)
@@ -142,7 +142,7 @@ func TestStorage(t *testing.T) {
 	require.Equal(t, uint16(65529), policyFromStorage.Voters.TotalWeight)
 
 	removeEmpty := storage.RemoveBefore(12)
-	require.Len(t, removeEmpty, 0)
+	require.Empty(t, removeEmpty)
 
 	removeOne := storage.RemoveBefore(667080)
 	require.Len(t, removeOne, 1)

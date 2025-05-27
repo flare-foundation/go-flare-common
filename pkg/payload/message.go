@@ -22,7 +22,7 @@ type SubprotocolResponse struct {
 }
 
 // BuildMessage builds a submit message string from protocolID, votingRoundID and payload.
-// The message string is in the format: 0x<protocolID(1 byte)><votingRoundID(4 byte)><payloadLength(2 byte)><payload>
+// The message string is in the format: 0x<protocolID(1 byte)><votingRoundID(4 byte)><payloadLength(2 byte)><payload>.
 func BuildMessage(protocolID uint8, votingRoundID uint32, payload []byte) string {
 	message := make([]byte, 7)
 	message[0] = protocolID
@@ -37,15 +37,15 @@ func BuildMessage(protocolID uint8, votingRoundID uint32, payload []byte) string
 
 // BuildMessageForSigning builds payload message for submitSignatures.
 //
-// protocolID (1 byte)
-// roundID (4 bytes)
-// randomQualityScore (1 byte)
-// merkleRoot (32 bytes)
+//   - protocolID (1 byte),
+//   - roundID (4 bytes),
+//   - randomQualityScore (1 byte),
+//   - merkleRoot (32 bytes).
 func BuildMessageForSigning(protocolID uint8, roundID uint32, isSecureRandom bool, merkleRoot common.Hash) string {
 	data := make([]byte, 38)
 
-	data[0] = uint8(protocolID)
-	binary.BigEndian.PutUint32(data[1:5], uint32(roundID))
+	data[0] = protocolID
+	binary.BigEndian.PutUint32(data[1:5], roundID)
 
 	if isSecureRandom {
 		data[5] = 1

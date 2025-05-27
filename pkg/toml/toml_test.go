@@ -48,7 +48,6 @@ func TestReadTomlHappy(t *testing.T) {
 
 	require.Equal(t, expected, a)
 	require.Equal(t, expected, *dest)
-
 }
 
 type unknown struct{ R int }

@@ -17,7 +17,7 @@ var opCommands = []OPCommand{
 }
 
 // i-th method correspond to a method in TeePaymentStruct interface whose
-// input is the type of message emitted with i-th opCommands
+// input is the type of message emitted with i-th opCommands.
 var methods = []string{
 	"teeAttestationStruct",
 }

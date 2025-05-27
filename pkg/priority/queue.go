@@ -18,7 +18,7 @@ type Item[T any, W weight[W]] struct {
 	index int // The index of the item in the heap.
 }
 
-// A Queue implements heapt.Interface
+// A Queue implements heapt.Interface.
 type Queue[T any, W weight[W]] []*Item[T, W]
 
 type QueueMutex[T any, W weight[W]] struct {
@@ -34,14 +34,14 @@ func (q Queue[T, W]) Less(i, j int) bool {
 	return q[j].weight.Less(q[i].weight.Self())
 }
 
-// Swap SHOULD NOT BE USED DIRECTLY
+// Swap SHOULD NOT BE USED DIRECTLY!
 func (q Queue[T, W]) Swap(i, j int) {
 	q[i], q[j] = q[j], q[i]
 	q[i].index = i
 	q[j].index = j
 }
 
-// Pop SHOULD NOT BE USED DIRECTLY use heapt.Pop(q) instead
+// Pop SHOULD NOT BE USED DIRECTLY! Use heapt.Pop(q) instead.
 func (q *Queue[T, W]) Pop() *Item[T, W] {
 	old := *q
 	n := len(old)
@@ -52,7 +52,7 @@ func (q *Queue[T, W]) Pop() *Item[T, W] {
 	return item
 }
 
-// Push SHOULD NOT BE USED DIRECTLY use heapt.Push(q, item) instead
+// Push SHOULD NOT BE USED DIRECTLY! Use heapt.Push(q, item) instead.
 func (q *Queue[T, W]) Push(item *Item[T, W]) {
 	n := len(*q)
 	item.index = n

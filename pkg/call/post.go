@@ -59,7 +59,7 @@ func PostRaw[T any](ctx context.Context, url string, apiKey APIKey, body io.Read
 	}
 
 	respLimited := &io.LimitedReader{R: resp.Body, N: p.MaxResponseSize}
-	defer resp.Body.Close()
+	defer resp.Body.Close() //nolint:errcheck
 
 	decoder := json.NewDecoder(respLimited)
 	// decoder.DisallowUnknownFields() // todo make this optional maybe
@@ -82,7 +82,6 @@ func PostRawWithRetry[T any](ctx context.Context, url string, apiKey APIKey, bod
 			return r, err
 		}
 		return r, nil
-
 	}
 
 	res := retry.Execute(ctx, fn, rp)

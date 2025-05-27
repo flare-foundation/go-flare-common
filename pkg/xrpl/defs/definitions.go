@@ -20,9 +20,8 @@ type IDPair struct {
 	T XType
 }
 
-// pair of (field code, type code) to field name
+// pair of (field code, type code) to field name.
 var IDToName map[IDPair]string
-
 var ValueToTxType map[int32]string
 
 func init() {

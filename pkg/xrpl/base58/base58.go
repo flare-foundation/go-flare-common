@@ -71,7 +71,7 @@ func NewCoder(alphabet string) (*Coder, error) {
 	return &Coder{alphabet: alphabet}, nil
 }
 
-// checkCharacters errors if there any of the runes in string s appears more than once or there is a whitespace
+// checkCharacters errors if there any of the runes in string s appears more than once or there is a whitespace.
 func checkCharacters(s string) error {
 	check := make(map[rune]bool)
 	for _, c := range s {
@@ -165,7 +165,6 @@ func encode(b []byte, alphabet string) string {
 		//
 		// Which will give us mod, which is 10 digit base58 number.
 		// We'll loop that 10 times to convert to the answer.
-
 		x.DivMod(x, bigRadix10, mod)
 		if x.Sign() == 0 {
 			// When x = 0, we need to ensure we don't add any extra zeros.

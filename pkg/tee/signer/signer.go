@@ -108,12 +108,12 @@ func New(cfg Config, prv *ecdsa.PrivateKey) *Signer {
 	return &Signer{&server}
 }
 
-// Request body format
+// Request body format.
 type RequestBody struct {
 	Hashes []common.Hash `json:"hashes"`
 }
 
-// Response body format
+// Response body format.
 type ResponseBody struct {
 	Signatures []hexutil.Bytes `json:"signatures"`
 }
@@ -136,7 +136,7 @@ func signHandler(prv *ecdsa.PrivateKey, ak apiKeys) http.HandlerFunc {
 
 		r.Body = http.MaxBytesReader(w, r.Body, maxReqBodySize)
 
-		defer r.Body.Close()
+		defer r.Body.Close() //nolint:errcheck
 
 		rb := RequestBody{}
 		decoder := json.NewDecoder(r.Body)

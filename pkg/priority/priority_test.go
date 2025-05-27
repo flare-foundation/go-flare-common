@@ -213,8 +213,8 @@ func TestDequeueDiscard(t *testing.T) {
 	wg.Wait()
 	duration := time.Since(start)
 
-	require.Equal(t, 99, len(discarded))
-	require.Equal(t, 1, len(handled))
+	require.Len(t, discarded, 99)
+	require.Len(t, handled, 1)
 
 	// no limits were imposed
 	require.Less(t, duration, time.Millisecond)

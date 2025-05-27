@@ -127,7 +127,6 @@ func TestCyclicArrayPointer(t *testing.T) {
 	}
 }
 
-// maps are pointers
 func TestCyclicMap(t *testing.T) {
 	const size int = 4
 

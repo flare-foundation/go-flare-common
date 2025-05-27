@@ -241,7 +241,6 @@ func (q *PriorityQueue[T]) handleError(ctx context.Context, item priorityQueueIt
 			err := q.enqueuePriority(ctx, item)
 			if err != nil {
 				logger.Errorf("error enqueing to %s priority item %v for retry: %v", q.Name(), item.value, err)
-
 			}
 		} else if err := q.enqueue(ctx, item); err != nil {
 			logger.Errorf("error enqueing to %s item %v for retry: %v", q.Name(), item.value, err)
@@ -323,12 +322,12 @@ func (q *PriorityQueue[T]) wait(ctx context.Context) error {
 	return q.limiter.Wait(ctx)
 }
 
-// Length return the number of item in the queue
+// Length return the number of item in the queue.
 func (q *PriorityQueue[T]) Length() int {
 	return len(q.priority) + len(q.regular)
 }
 
-// Name return the nam of the queue or "unnamed"
+// Name return the nam of the queue or "unnamed".
 func (q *PriorityQueue[T]) Name() string {
 	if len(q.name) > 0 {
 		return q.name

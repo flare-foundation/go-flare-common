@@ -127,7 +127,6 @@ func stepToBytes(step map[string]any) ([]byte, error) {
 
 	// issuer
 	if ie {
-
 		i, ok := issuer.(string)
 		if !ok {
 			return nil, fmt.Errorf("invalid issuer %v", issuer)

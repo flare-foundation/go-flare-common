@@ -21,7 +21,7 @@ type Router interface {
 //////// DEFAULT ROUTER IMPLEMENTATION /////////////////
 ////////////////////////////////////////////////////////
 
-// Default router implementation using gorilla/mux
+// Default router implementation using gorilla/mux.
 type defaultRouter struct {
 	router *mux.Router
 }
@@ -68,7 +68,7 @@ func (c *SwaggerRouterConfig) YAMLDocumentationPath() string {
 	return c.SwaggerBasePath + "-yaml"
 }
 
-// Router implementation with swagger support
+// Router implementation with swagger support.
 type swaggerRouter struct {
 	mRouter *mux.Router
 	router  *swagger.Router[gorilla.HandlerFunc, *mux.Route]
@@ -99,9 +99,9 @@ func NewSwaggerRouter(mRouter *mux.Router, config SwaggerRouterConfig) Router {
 	}
 }
 
-// Add a route to the router and generate openapi definitions from the handler
+// Add a route to the router and generate openapi definitions from the handler.
 // The first item in the description parameter is used to set the openapi summary field and
-// the second item is used to set the openapi description field
+// the second item is used to set the openapi description field.
 func (r *swaggerRouter) AddRoute(path string, handler RouteHandler, description ...string) {
 	swaggerDefinitions := handler.SwaggerDefinitions
 	swaggerDefinitions.Tags = []string{r.tag}
