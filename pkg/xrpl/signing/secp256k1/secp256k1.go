@@ -8,13 +8,12 @@ import (
 	"math/big"
 	"strings"
 
-	btcecdsa "github.com/btcsuite/btcd/btcec/v2/ecdsa"
+	"github.com/ethereum/go-ethereum/crypto"
 
-	"github.com/btcsuite/btcd/btcec/v2"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/address"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/types"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/hash"
-	"github.com/flare-foundation/go-flare-common/pkg/xrpl/signing"
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/signing/utils"
 )
 
 const (
@@ -22,36 +21,39 @@ const (
 	pubKeyOddPrefix  = 0x03
 )
 
-// SignTx signs and encodes a transaction with prv as a master key of the account.
-func SignTx(tx map[string]any, prv *ecdsa.PrivateKey) ([]byte, error) {
-	pub := PrvToPub(prv)
-	tx["SigningPubKey"] = pub
+// // SignTx signs and encodes a transaction with prv as a master key of the account.
+// func SignTx(tx map[string]any, prv *ecdsa.PrivateKey) ([]byte, error) {
+// 	pub := PrvToPub(prv)
+// 	tx["SigningPubKey"] = pub
 
-	addr := PrvToAddress(prv)
-	tx["Account"] = addr
+// 	addr := PrvToAddress(prv)
+// 	tx["Account"] = addr
 
-	encoded, err := types.Encode(tx, true)
-	if err != nil {
-		return nil, fmt.Errorf("cannot encode tx: %v", err)
-	}
+// 	encoded, err := types.Encode(tx, true)
+// 	if err != nil {
+// 		return nil, fmt.Errorf("cannot encode tx: %v", err)
+// 	}
 
-	id := PrvToID(prv)
+// 	id := PrvToID(prv)
 
-	msg := signing.MessageToSign(encoded, false, id)
-	signature := Sign(msg, prv)
+// 	msg := signing.MessageToSign(encoded, false, id)
+// 	signature, err := Sign(msg, prv)
+// 	if err != nil {
+// 		return nil, fmt.Errorf("signing %v,", err)
+// 	}
 
-	tx["TxnSignature"] = hex.EncodeToString(signature)
+// 	tx["TxnSignature"] = hex.EncodeToString(signature)
 
-	signed, err := types.Encode(tx, false)
-	if err != nil {
-		return nil, fmt.Errorf("cannot encode signed tx: %v", err)
-	}
+// 	signed, err := types.Encode(tx, false)
+// 	if err != nil {
+// 		return nil, fmt.Errorf("cannot encode signed tx: %v", err)
+// 	}
 
-	return signed, nil
-}
+// 	return signed, nil
+// }
 
 // SignTxMultisig returns a signature of a transaction needed for multisig.
-func SignTxMultisig(tx map[string]any, prv *ecdsa.PrivateKey) (*signing.Signer, error) {
+func SignTxMultisig(tx map[string]any, prv *ecdsa.PrivateKey) (*utils.Signer, error) {
 	tx["SigningPubKey"] = ""
 
 	encoded, err := types.Encode(tx, true)
@@ -61,13 +63,16 @@ func SignTxMultisig(tx map[string]any, prv *ecdsa.PrivateKey) (*signing.Signer, 
 
 	accID := PrvToID(prv)
 
-	msg := signing.MessageToSign(encoded, true, accID)
-	signature := Sign(msg, prv)
+	msg := utils.Prepare(encoded, true, accID)
+	signature, err := Sign(msg, prv)
+	if err != nil {
+		return nil, fmt.Errorf("signing %v,", err)
+	}
 
 	pub := PrvToPub(prv)
 	addr := PrvToAddress(prv)
 
-	return &signing.Signer{
+	return &utils.Signer{
 		Account:       addr,
 		TxnSignature:  hex.EncodeToString(signature),
 		SigningPubKey: pub,
@@ -75,13 +80,25 @@ func SignTxMultisig(tx map[string]any, prv *ecdsa.PrivateKey) (*signing.Signer, 
 }
 
 // Sign computes Secp256k1 signature of the message and returns it in DER format.
-func Sign(message []byte, privKey *ecdsa.PrivateKey) []byte {
-	hash := hash.Sha512Half(message)
-	priv, _ := btcec.PrivKeyFromBytes(privKey.D.Bytes())
+func Sign(message []byte, privKey *ecdsa.PrivateKey) ([]byte, error) {
+	h := hash.Sha512Half(message)
 
-	sig2 := btcecdsa.Sign(priv, hash)
+	sig, err := crypto.Sign(h, privKey)
+	if err != nil {
+		return nil, err
+	}
+	return secToDER(sig), nil
+}
 
-	return sig2.Serialize()
+// Sign computes Secp256k1 signature of the message and returns it in DER format.
+func sign(message []byte, privKey *ecdsa.PrivateKey) (*SignatureWithRecovery, error) {
+	h := hash.Sha512Half(message)
+
+	sig, err := crypto.Sign(h, privKey)
+	if err != nil {
+		return nil, err
+	}
+	return MarshalRecID(sig)
 }
 
 // PrvToAddress calculates XRPL address for ECDSA private key.
@@ -95,30 +112,18 @@ func PrvToID(prv *ecdsa.PrivateKey) []byte {
 	return hash.Sha256RipeMD160(secp256k1PrvToPub(prv))
 }
 
-// PrvToPub return public Key for ECDSA private key in hex string.
+// PrvToPub returns public Key for ECDSA private key in hex string.
 func PrvToPub(prv *ecdsa.PrivateKey) string {
 	return strings.ToUpper(hex.EncodeToString(secp256k1PrvToPub(prv)))
 }
 
-// secp256k1PrivateToPub return public Key for ECDSA private key in byte slice.
+// secp256k1PrivateToPub returns compressed public Key for ECDSA private key in byte slice.
 func secp256k1PrvToPub(prv *ecdsa.PrivateKey) []byte {
-	xrpPub := make([]byte, 0, 33)
-
-	pub := prv.PublicKey
-
-	if pub.Y.Bit(0) == 0 {
-		xrpPub = append(xrpPub, pubKeyEvenPrefix)
-	} else {
-		xrpPub = append(xrpPub, pubKeyOddPrefix)
-	}
-
-	xrpPub = append(xrpPub, pub.X.Bytes()...)
-
-	return xrpPub
+	return toBytesCompressed(&prv.PublicKey)
 }
 
-// SECToDER converts SEC (Standards for Efficient Cryptography) encoded signature r||s(||v) to DER (Distinguished Encoding Rules) encoded signature.
-func SECToDER(sig []byte) []byte {
+// secToDER converts SEC (Standards for Efficient Cryptography) encoded signature r||s(||v) to DER (Distinguished Encoding Rules) encoded signature.
+func secToDER(sig []byte) []byte {
 	r := new(big.Int).SetBytes(sig[:32])
 	s := new(big.Int).SetBytes(sig[32:64])
 
@@ -181,6 +186,8 @@ func DERToSEC(sig []byte) []byte {
 		sStart++
 		sLen--
 	}
+
+	// parity := sig[sEnd-1] % 2
 
 	copy(out[64-sLen:64], sig[sStart:sEnd])
 

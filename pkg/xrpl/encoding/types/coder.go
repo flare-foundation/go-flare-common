@@ -240,22 +240,17 @@ func sortFields(names []string) ([]string, error) {
 type Object = map[string]any
 
 // Encode serializes an object.
-func Encode(value any, signing bool) ([]byte, error) {
-	valueObj, ok := value.(Object)
-	if !ok {
-		return nil, fmt.Errorf("invalid object %v", value)
-	}
-
+func Encode(value Object, signing bool) ([]byte, error) {
 	outBuff := bytes.NewBuffer(nil)
 
-	names := keys(valueObj)
+	names := keys(value)
 	sortedNames, err := sortFields(names)
 	if err != nil {
 		return nil, fmt.Errorf("cannot sort: %v", err)
 	}
 
 	for _, name := range sortedNames {
-		bytes, err := encodeInner(name, valueObj[name], signing)
+		bytes, err := encodeInner(name, value[name], signing)
 		if err != nil {
 			return nil, fmt.Errorf("%s: %v", name, err)
 		}

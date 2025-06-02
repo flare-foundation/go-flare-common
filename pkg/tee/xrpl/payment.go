@@ -36,7 +36,7 @@ func PaymentTransactionMultisig(i payment.ITeePaymentsPaymentInstructionMessage)
 	}
 
 	tx["Memos"] = memos
-	tx["Fee"] = i.Fee.String() //TODO
+	tx["Fee"] = i.Fee.String()
 
 	return tx
 }
