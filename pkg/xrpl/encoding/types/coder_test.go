@@ -158,7 +158,7 @@ func TestEncodeNotSigning(t *testing.T) {
 		blob, err := hex.DecodeString(test.output)
 		require.NoError(t, err, test.name)
 
-		var parsedJSON any
+		var parsedJSON map[string]any
 
 		err = json.Unmarshal([]byte(test.json), &parsedJSON)
 		require.NoError(t, err, test.name)

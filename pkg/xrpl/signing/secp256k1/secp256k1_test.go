@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/btcsuite/btcd/btcec/v2"
+	btcecdsa "github.com/btcsuite/btcd/btcec/v2/ecdsa"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/hash"
 	"github.com/stretchr/testify/require"
@@ -19,33 +21,36 @@ func TestAddress(t *testing.T) {
 	require.Equal(t, "038940A036EE380369B9FCC5929A0D431ABE789C8A44E5F48F564E2F6EB608B543", PrvToPub(priv))
 }
 
-func ECDSASign(message []byte, privKey *ecdsa.PrivateKey) []byte {
-	msg := hash.Sha512Half(message)
+func SignT(message []byte, privKey *ecdsa.PrivateKey) []byte {
+	hash := hash.Sha512Half(message)
+	priv, _ := btcec.PrivKeyFromBytes(privKey.D.Bytes())
 
-	sign, _ := crypto.Sign(msg, privKey)
+	sig2 := btcecdsa.Sign(priv, hash)
 
-	return sign
+	return sig2.Serialize()
 }
 
-func Verify(pub *ecdsa.PublicKey, message, sig []byte) bool {
-	return ecdsa.VerifyASN1(pub, message, sig)
-}
-
-func TestSECtoDER(t *testing.T) {
-	prv, _ := crypto.GenerateKey()
-
+func TestMarshaling(t *testing.T) {
+	prv, err := crypto.GenerateKey()
+	require.NoError(t, err)
 	for j := range 10003 {
 		msg := fmt.Appendf(nil, "neki%d", j)
 
-		sig1 := Sign(msg, prv)
-		sig2 := ECDSASign(msg, prv)
+		sig, err := sign(msg, prv)
+		require.NoError(t, err, j)
 
-		sig2E := SECToDER(sig2)
+		isValid := sig.Verify(hash.Sha512Half(msg), &prv.PublicKey)
+		require.True(t, isValid, j)
 
-		require.Equal(t, sig1, sig2E, j)
+		sigDER := sig.DER()
 
-		sigR := DERToSEC(sig2E)
+		sig2DER := SignT(msg, prv)
+		require.Equal(t, sig2DER, sigDER, j)
 
-		require.Equal(t, sig2[:len(sig2)-1], sigR, j)
+		sigMar, err := MarshalDER(sigDER)
+		require.NoError(t, err, j)
+
+		require.Equal(t, sig.r, sigMar.r, j)
+		require.Equal(t, sig.s, sigMar.s, j)
 	}
 }
