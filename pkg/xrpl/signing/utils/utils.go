@@ -14,7 +14,8 @@ const (
 )
 
 // Prepare creates a tx message for signing.
-// If multiSig is true, txBlob is prefixed with multi-signing prefix and postfixed with accountID. For multi-signing, accountID of the signer should be provided.
+// If multiSig is true, txBlob is prefixed with multi-signing prefix and postfixed with accountID.
+// For multi-signing, accountID of the signer should be provided.
 // If multiSig is false, txBlob is prefixed with single-signing prefix.
 func Prepare(txBlob []byte, multiSig bool, accountID []byte) []byte {
 	length := len(txBlob) + 4

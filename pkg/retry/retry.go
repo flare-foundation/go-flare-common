@@ -69,10 +69,13 @@ func Execute[T any](ctx context.Context, f func() (T, error), params Params) Exe
 	return result
 }
 
+// ingrainAttempt takes a function f that takes an integer for the param and returns a function that on the j-th call returns f(j-1).
+//
+// The returned function should be used with caution in concurrent scenario.
 func ingrainAttempt[T any](f func(int) (T, error)) func() (T, error) {
-	j := 0
+	j := -1
 	return func() (T, error) {
-		defer func() { j++ }()
+		j++
 		return f(j)
 	}
 }

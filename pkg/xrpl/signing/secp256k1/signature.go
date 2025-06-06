@@ -17,11 +17,6 @@ type Signature struct {
 	s [32]byte
 }
 
-type SignatureWithRecovery struct {
-	Signature
-	v byte
-}
-
 var errInvalidLength = errors.New("invalid signature length")
 
 // MarshalDER marshals DER formatted signature.
@@ -88,16 +83,15 @@ func MarshalDER(sig []byte) (Signature, error) {
 	return sigOut, nil
 }
 
-func MarshalRecID(sig []byte) (*SignatureWithRecovery, error) {
-	sigOut := new(SignatureWithRecovery)
-	if len(sig) != 65 {
+// MarshalRS marshals 64 bytes long sig into Signature.
+func MarshalRS(sig []byte) (*Signature, error) {
+	sigOut := new(Signature)
+	if len(sig) != 64 {
 		return nil, errInvalidLength
 	}
 
 	copy(sigOut.r[:], sig[:32])
 	copy(sigOut.s[:], sig[32:64])
-
-	sigOut.v = sig[64]
 
 	return sigOut, nil
 }
@@ -142,6 +136,7 @@ func (sig *Signature) DER() []byte {
 	return o
 }
 
+// RS returns [r||s].
 func (sig *Signature) RS() []byte {
 	out := make([]byte, 64)
 
@@ -151,21 +146,11 @@ func (sig *Signature) RS() []byte {
 	return out
 }
 
-func (sig *SignatureWithRecovery) RSV() []byte {
-	out := make([]byte, 65)
-
-	copy(out[:32], sig.r[:])
-	copy(out[32:], sig.s[:])
-
-	out[64] = sig.v
-
-	return out
-}
-
 func (sig *Signature) Verify(hash []byte, pub *ecdsa.PublicKey) bool {
 	return crypto.VerifySignature(toBytesCompressed(pub), hash, sig.RS())
 }
 
+// Validate checks that sig (in DER format) of Sha512Half hash of msg corresponds to (compressed) public key.
 func Validate(msg, sig []byte, pub string) (bool, error) {
 	sigParse, err := MarshalDER(sig)
 	if err != nil {
@@ -184,6 +169,44 @@ func Validate(msg, sig []byte, pub string) (bool, error) {
 
 func (sig *Signature) VerifyHex(hash []byte, pub []byte) bool {
 	return crypto.VerifySignature(pub, hash, sig.RS())
+}
+
+// SignatureWithRecovery contains r,s,v.
+type SignatureWithRecovery struct {
+	Signature
+	v byte // recovery ID
+}
+
+// MarshalRecID marshals 65 bytes long sig into SignatureWithRecovery.
+func MarshalRecID(sig []byte) (*SignatureWithRecovery, error) {
+	sigOut := new(SignatureWithRecovery)
+	if len(sig) != 65 {
+		return nil, errInvalidLength
+	}
+
+	copy(sigOut.r[:], sig[:32])
+	copy(sigOut.s[:], sig[32:64])
+
+	sigOut.v = sig[64]
+
+	return sigOut, nil
+}
+
+// RSV returns [r||s||v].
+func (sig *SignatureWithRecovery) RSV() []byte {
+	out := make([]byte, 65)
+
+	copy(out[:32], sig.r[:])
+	copy(out[32:], sig.s[:])
+
+	out[64] = sig.v
+
+	return out
+}
+
+// Recover recovers signer's public key form signature and hash (has to be 32 bytes long).
+func (sig *SignatureWithRecovery) Recover(hash []byte) (*ecdsa.PublicKey, error) {
+	return crypto.SigToPub(hash, sig.RSV())
 }
 
 // toBytesCompressed returns compressed public Key for ECDSA public key in byte slice.

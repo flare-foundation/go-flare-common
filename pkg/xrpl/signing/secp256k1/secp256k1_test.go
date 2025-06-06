@@ -2,6 +2,7 @@ package secp256k1
 
 import (
 	"crypto/ecdsa"
+	"encoding/hex"
 
 	"fmt"
 	"testing"
@@ -30,13 +31,16 @@ func SignT(message []byte, privKey *ecdsa.PrivateKey) []byte {
 	return sig2.Serialize()
 }
 
-func TestMarshaling(t *testing.T) {
+func TestSignatureMarshaling(t *testing.T) {
 	prv, err := crypto.GenerateKey()
 	require.NoError(t, err)
 	for j := range 10003 {
 		msg := fmt.Appendf(nil, "neki%d", j)
 
-		sig, err := sign(msg, prv)
+		sig, err := sign(hash.Sha512Half(msg), prv)
+		require.NoError(t, err, j)
+
+		sigXRPL, err := SignXRPL(msg, prv)
 		require.NoError(t, err, j)
 
 		isValid := sig.Verify(hash.Sha512Half(msg), &prv.PublicKey)
@@ -52,5 +56,17 @@ func TestMarshaling(t *testing.T) {
 
 		require.Equal(t, sig.r, sigMar.r, j)
 		require.Equal(t, sig.s, sigMar.s, j)
+
+		require.Equal(t, sig2DER, sigXRPL, j)
+
+		ok, err := Validate(msg, sigDER, hex.EncodeToString(toBytesCompressed(&prv.PublicKey)))
+		require.NoError(t, err, j)
+
+		require.True(t, ok)
+
+		pub, err := sig.Recover(hash.Sha512Half(msg))
+		require.NoError(t, err, j)
+
+		require.Equal(t, pub, &prv.PublicKey)
 	}
 }
