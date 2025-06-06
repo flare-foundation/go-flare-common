@@ -9,7 +9,6 @@ import (
 )
 
 const (
-	ed25519Prefix = 0xed
 	accountPrefix = 0x00
 )
 
@@ -67,7 +66,7 @@ func IDToAddress(id []byte) string {
 	return base58.XRPLCoder.Encode(augmented)
 }
 
-// Checksum returns a checksum for the byte string (last 4 bytes of double sha256 hash).
+// Checksum returns a checksum for the byte string (first 4 bytes of double sha256 hash).
 func Checksum(b []byte) []byte {
 	return hash.DoubleSha256(b)[:4]
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"sync"
 	"testing"
 	"time"
 
@@ -132,6 +133,41 @@ func TestIngrainAttempt(t *testing.T) {
 		require.NoError(t, err)
 		require.Equal(t, j, x)
 	}
+}
+
+func TestIngrainAttemptConcurrent(t *testing.T) {
+	called := struct {
+		c map[int]bool
+
+		sync.Mutex
+	}{}
+
+	called.c = make(map[int]bool)
+
+	identity := func(i int) (int, error) {
+		time.Sleep(500 * time.Microsecond)
+		called.Lock()
+		defer called.Unlock()
+		called.c[i] = true
+		return i, nil
+	}
+
+	ingrained := ingrainAttempt(identity)
+
+	var wg sync.WaitGroup
+
+	wg.Add(10)
+	for range 10 {
+		go func() {
+			_, err := ingrained()
+			require.NoError(t, err)
+			wg.Done()
+		}()
+	}
+
+	wg.Wait()
+
+	require.Len(t, called.c, 10)
 }
 
 func TestExecuteAttempt(t *testing.T) {

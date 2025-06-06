@@ -30,6 +30,9 @@ var (
 	}
 )
 
+// XRPLCoder is base58 coder with XRPL alphabet.
+//
+// Alphabet: rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz.
 var XRPLCoder *Coder
 
 func init() {
