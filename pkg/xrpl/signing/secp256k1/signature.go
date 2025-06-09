@@ -154,12 +154,12 @@ func (sig *Signature) Verify(hash []byte, pub *ecdsa.PublicKey) bool {
 func Validate(msg, sig []byte, pub string) (bool, error) {
 	sigParse, err := MarshalDER(sig)
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("marshaling signature %v", err)
 	}
 
 	pubBytes, err := hex.DecodeString(pub)
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("decoding pub key%v", err)
 	}
 
 	ok := sigParse.VerifyHex(hash.Sha512Half(msg), pubBytes)

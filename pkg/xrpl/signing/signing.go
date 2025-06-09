@@ -52,9 +52,8 @@ func JoinMultisig(tx map[string]any, signers []*utils.Signer) ([]byte, error) {
 
 	for j, signer := range signers {
 		ok, err := ValidateMultiSig(tx, signer)
-
 		if err != nil {
-			return nil, fmt.Errorf("invalid signer %v", signer)
+			return nil, fmt.Errorf("invalid signer %v: %v", signer, err)
 		} else if !ok {
 			return nil, fmt.Errorf("invalid signature  %v", signer)
 		}
