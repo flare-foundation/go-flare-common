@@ -81,7 +81,7 @@ func (s *Signer) Format() types.ArrayObject {
 //   - 0 if s1 is equal to s2
 //   - 1 if s1 is greater than s2
 func Compare(s1, s2 *Signer) int {
-	if s1 != nil || s2 != nil {
+	if s1 == nil || s2 == nil {
 		return 0
 	}
 
