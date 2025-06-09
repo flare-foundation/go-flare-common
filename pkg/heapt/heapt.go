@@ -1,5 +1,4 @@
-// Generically typed heap implementation based on "container/heap"
-
+// Generically typed heap implementation based on "container/heap".
 package heapt
 
 import "sort"

@@ -3,7 +3,7 @@ package priority
 import (
 	"sync"
 
-	heapt "github.com/flare-foundation/go-flare-common/pkg/heapt"
+	"github.com/flare-foundation/go-flare-common/pkg/heapt"
 )
 
 type weight[T any] interface {

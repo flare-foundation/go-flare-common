@@ -82,5 +82,4 @@ func TestMarshaling(t *testing.T) {
 		_, err = MarshalDER(b)
 		require.NoError(t, err, j)
 	}
-
 }
