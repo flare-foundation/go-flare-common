@@ -11,7 +11,8 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/payment"
 )
 
-func PaymentTransactionMultisig(i payment.ITeePaymentsPaymentInstructionMessage) map[string]any {
+// PaymentTxFromInstruction prepares a transaction from the Payment Instruction Message.
+func PaymentTxFromInstruction(i payment.ITeePaymentsPaymentInstructionMessage) map[string]any {
 	tx := make(map[string]any)
 
 	tx["TransactionType"] = "Payment"
@@ -19,7 +20,7 @@ func PaymentTransactionMultisig(i payment.ITeePaymentsPaymentInstructionMessage)
 	tx["Destination"] = i.RecipientAddress
 	tx["Amount"] = i.Amount.String()
 	tx["SigningPubKey"] = ""
-	tx["Sequence"] = i.Nonce // it is uint32 on blockchain
+	tx["Sequence"] = i.Nonce
 
 	// [
 	//   {
@@ -34,8 +35,38 @@ func PaymentTransactionMultisig(i payment.ITeePaymentsPaymentInstructionMessage)
 				"MemoData": hex.EncodeToString(i.PaymentReference[:]),
 			}},
 	}
-
 	tx["Memos"] = memos
+
+	tx["Fee"] = i.Fee.String()
+
+	return tx
+}
+
+// Nullify prepares a transaction that nullifies the transaction prepared for the the Payment Instruction Message.
+// Cannot be used as a replacement as the fee is not raised.
+func Nullify(i payment.ITeePaymentsPaymentInstructionMessage) map[string]any {
+	tx := make(map[string]any)
+
+	tx["TransactionType"] = "AccountSet"
+	tx["Account"] = i.SenderAddress
+	tx["SigningPubKey"] = ""
+	tx["Sequence"] = i.Nonce
+
+	// [
+	//   {
+	//     "Memo": {
+	//       "MemoData": paymentReference
+	//     }
+	//   }
+	// ]
+	memos := []any{
+		map[string]any{
+			"Memo": map[string]any{
+				"MemoData": hex.EncodeToString(i.PaymentReference[:]),
+			}},
+	}
+	tx["Memos"] = memos
+
 	tx["Fee"] = i.Fee.String()
 
 	return tx
