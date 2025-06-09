@@ -30,7 +30,7 @@ func TestPaymentTransactionMultisig(t *testing.T) {
 		BatchEndTs:       0,
 	}
 
-	tx := PaymentTransactionMultisig(instruction)
+	tx := PaymentTxFromInstruction(instruction)
 
 	err = CheckNativePayment(tx)
 	require.NoError(t, err)
