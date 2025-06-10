@@ -1,7 +1,6 @@
 package signer
 
 import (
-	"errors"
 	"fmt"
 	"math/big"
 	"slices"
@@ -50,7 +49,7 @@ func Sort(signers []*Signer) ([]*Signer, []*Signer) {
 		}
 	}
 
-	slices.SortFunc(in, compare)
+	slices.SortFunc(in, Compare)
 
 	return in, out
 }
@@ -122,29 +121,29 @@ func Parse(arrayObject types.ArrayObject) (*Signer, error) {
 	return signer, nil
 }
 
+// // Compare compares values signers
+// //   - -1 if s1 is lesser than s2
+// //   - 0 if s1 is equal to s2
+// //   - 1 if s1 is greater than s2
+// func Compare(s1, s2 *Signer) (int, error) {
+// 	if s1 == nil || s2 == nil {
+// 		return 0, errors.New("nil signer")
+// 	}
+
+// 	val1, err := s1.Value()
+// 	if err != nil {
+// 		return 0, err
+// 	}
+
+// 	val2, err := s2.Value()
+// 	if err != nil {
+// 		return 0, err
+// 	}
+
+// 	return val1.Cmp(val2), nil
+// }
+
 // Compare compares values signers
-//   - -1 if s1 is lesser than s2
-//   - 0 if s1 is equal to s2
-//   - 1 if s1 is greater than s2
-func Compare(s1, s2 *Signer) (int, error) {
-	if s1 == nil || s2 == nil {
-		return 0, errors.New("nil signer")
-	}
-
-	val1, err := s1.Value()
-	if err != nil {
-		return 0, err
-	}
-
-	val2, err := s2.Value()
-	if err != nil {
-		return 0, err
-	}
-
-	return val1.Cmp(val2), nil
-}
-
-// compare compares values signers
 //   - -1 if s1 is lesser than s2
 //   - 0 if s1 is equal to s2
 //   - 1 if s1 is greater than s2
@@ -153,6 +152,6 @@ func Compare(s1, s2 *Signer) (int, error) {
 //
 //   - s1 and s2 are non nil.
 //   - values of s1 and s2 are defined.
-func compare(s1, s2 *Signer) int {
+func Compare(s1, s2 *Signer) int {
 	return s1.value.Cmp(s2.value)
 }
