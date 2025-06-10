@@ -3,6 +3,7 @@ package aggregator
 import (
 	"errors"
 	"fmt"
+	"slices"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -15,16 +16,17 @@ type Account struct {
 	Address    string
 	SignerList map[string]bool
 	Quorum     uint
-	txs        map[common.Hash]*TX
+	txs        map[common.Hash]*transaction
 }
 
-type TX struct {
+type transaction struct {
 	transaction   map[string]any
 	signers       map[string]*signer.Signer
 	quorumReached bool
+	id            common.Hash
 }
 
-func (a *Account) AddSignatures(blob []byte) (*TX, bool, error) {
+func (a *Account) AddSignatures(blob []byte) (*transaction, bool, error) {
 	txJSON, err := encoding.Decode(blob)
 	if err != nil {
 		return nil, false, fmt.Errorf("invalid tx bloc: %v", err)
@@ -38,7 +40,7 @@ func (a *Account) AddSignatures(blob []byte) (*TX, bool, error) {
 	identifier := crypto.Keccak256Hash(en)
 
 	var txExists bool
-	var tx *TX
+	var tx *transaction
 	tx, txExists = a.txs[identifier]
 	if !txExists {
 		add, exists := txJSON["Account"]
@@ -55,8 +57,9 @@ func (a *Account) AddSignatures(blob []byte) (*TX, bool, error) {
 			return nil, false, fmt.Errorf("expected address %s got %s", a.Address, addStr)
 		}
 
-		tx = new(TX)
+		tx = new(transaction)
 		tx.signers = make(map[string]*signer.Signer)
+		tx.id = identifier
 
 		decoded, err := encoding.Decode(en)
 		if err != nil {
@@ -120,4 +123,42 @@ func (a *Account) AddSignatures(blob []byte) (*TX, bool, error) {
 	}
 
 	return tx, qr && !tx.quorumReached, nil
+}
+
+func (a *Account) Finalize(id common.Hash) ([]byte, error) {
+	tx, ok := a.txs[id]
+	if !ok {
+		return nil, fmt.Errorf("no transaction with id %v to finalize", id)
+	}
+
+	s, err := sort(tx.signers, int(a.Quorum))
+	if err != nil {
+		return nil, err
+	}
+
+	blob, err := signing.JoinMultisig(tx.transaction, s)
+	if err != nil {
+		return nil, errors.New("joining signatures")
+	}
+
+	return blob, nil
+}
+
+func sort[T comparable](sig map[T]*signer.Signer, quorum int) ([]*signer.Signer, error) {
+	out := make([]*signer.Signer, quorum)
+	i := 0
+	for j := range sig {
+		out[i] = sig[j]
+		i++
+		if i == quorum {
+			break
+		}
+	}
+	if i != quorum {
+		return nil, errors.New("quorum not reached")
+	}
+
+	slices.SortFunc(out, signer.Compare)
+
+	return out, nil
 }

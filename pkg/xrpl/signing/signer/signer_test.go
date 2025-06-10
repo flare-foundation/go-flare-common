@@ -19,15 +19,18 @@ func TestFormat(t *testing.T) {
 		SigningPubKey: "028FFB276505F9AC3F57E8D5242B386A597EF6C40A7999F37F1948636FD484E25B",
 	}
 
-	c1, err := Compare(s1, s2)
+	_, err := s1.Value()
 	require.NoError(t, err)
+
+	_, err = s2.Value()
+	require.NoError(t, err)
+
+	c1 := Compare(s1, s2)
 	require.Equal(t, -1, c1)
 
-	c2, err := Compare(s2, s1)
-	require.NoError(t, err)
+	c2 := Compare(s2, s1)
 	require.Equal(t, 1, c2)
 
-	c3, err := Compare(s1, s1)
-	require.NoError(t, err)
+	c3 := Compare(s1, s1)
 	require.Equal(t, 0, c3)
 }
