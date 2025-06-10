@@ -3,16 +3,16 @@ package signing
 import (
 	"encoding/hex"
 	"fmt"
-	"slices"
 
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/types"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/signing/ed25519"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/signing/secp256k1"
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/signing/signer"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/signing/utils"
 )
 
 // ValidateMultiSig checks that signer is valid for the transaction tx.
-func ValidateMultiSig(tx map[string]any, s *utils.Signer) (bool, error) {
+func ValidateMultiSig(tx map[string]any, s *signer.Signer) (bool, error) {
 	id, err := types.AccountID.ToBytes(s.Account, false)
 	if err != nil {
 		return false, fmt.Errorf("cannot get accountID: %v", err)
@@ -44,19 +44,18 @@ func ValidateMultiSig(tx map[string]any, s *utils.Signer) (bool, error) {
 
 // JoinMultisig appends signers to transactions and serializes it.
 //
+// It is assumed that signer are sorted and valid.
 // If any of the signers is invalid, error is returned.
-func JoinMultisig(tx map[string]any, signers []*utils.Signer) ([]byte, error) {
-	slices.SortFunc(signers, utils.Compare)
-
+func JoinMultisig(tx map[string]any, signers []*signer.Signer) ([]byte, error) {
 	signersArray := make([]any, len(signers))
 
 	for j, signer := range signers {
-		ok, err := ValidateMultiSig(tx, signer)
-		if err != nil {
-			return nil, fmt.Errorf("invalid signer %v: %v", signer, err)
-		} else if !ok {
-			return nil, fmt.Errorf("invalid signature  %v", signer)
-		}
+		// ok, err := ValidateMultiSig(tx, signer)
+		// if err != nil {
+		// 	return nil, fmt.Errorf("invalid signer %v: %v", signer, err)
+		// } else if !ok {
+		// 	return nil, fmt.Errorf("invalid signature  %v", signer)
+		// }
 
 		signersArray[j] = signer.Format()
 	}
