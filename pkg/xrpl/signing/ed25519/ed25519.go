@@ -9,6 +9,7 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/address"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/types"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/hash"
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/signing/signer"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/signing/utils"
 )
 
@@ -43,7 +44,7 @@ const (
 // 	return signature, nil
 // }
 
-func SignTxMultisig(tx map[string]any, prv ed25519.PrivateKey) (*utils.Signer, error) {
+func SignTxMultisig(tx map[string]any, prv ed25519.PrivateKey) (*signer.Signer, error) {
 	tx["SigningPubKey"] = ""
 
 	encoded, err := types.Encode(tx, true)
@@ -69,7 +70,7 @@ func SignTxMultisig(tx map[string]any, prv ed25519.PrivateKey) (*utils.Signer, e
 		return nil, fmt.Errorf("cannot get address %v", err)
 	}
 
-	return &utils.Signer{
+	return &signer.Signer{
 		Account:       add,
 		TxnSignature:  hex.EncodeToString(signature),
 		SigningPubKey: pub,
