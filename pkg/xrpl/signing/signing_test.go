@@ -47,3 +47,29 @@ func TestJoinMultisig(t *testing.T) {
 
 	require.Equal(t, expectedBlobByte, blob)
 }
+func TestPubToAddress(t *testing.T) {
+	tests := []struct {
+		pub string
+		add string
+	}{
+		{
+			pub: "028FFB276505F9AC3F57E8D5242B386A597EF6C40A7999F37F1948636FD484E25B",
+			add: "rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v",
+		},
+		{
+			pub: "ED457192C53CC901123BB8C6E75C8636979BD88D46C32F6D915F89D66CE8862635",
+			add: "rMuZNV2kjCKs8v8rd8QFizAaPdvCDYTPc7",
+		},
+		{
+			pub: "032315B578DC026DD182F2FC89723E4E43AF812D7D3C86635B80D3608FBC76C224",
+			add: "rf27pmNLFaXFwQfZPbTKe2Z665e1V76oC5",
+		},
+	}
+
+	for _, test := range tests {
+		addFromPub, err := PubToAddress(test.pub)
+		require.NoError(t, err)
+
+		require.Equal(t, test.add, addFromPub)
+	}
+}
