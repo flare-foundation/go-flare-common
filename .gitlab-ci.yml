@@ -1,6 +1,6 @@
 variables:
   GOPATH: /go
-  GOLANG_VERSION: "1.23.8"
+  GOLANG_VERSION: "1.24.2"
   GOLINT_VERSION: "v2.0.2"
 
 .gocache:
