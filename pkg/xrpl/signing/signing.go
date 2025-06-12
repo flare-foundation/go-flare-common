@@ -3,8 +3,11 @@ package signing
 import (
 	"encoding/hex"
 	"fmt"
+	"slices"
 
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/address"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/types"
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/hash"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/signing/ed25519"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/signing/secp256k1"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/signing/signer"
@@ -63,4 +66,19 @@ func JoinMultisig(tx map[string]any, signers []*signer.Signer) ([]byte, error) {
 	tx["Signers"] = signersArray
 
 	return types.Encode(tx, false)
+}
+
+// PubToAddress converts private key in hex string to XRPL address.
+func PubToAddress(prv string) (string, error) {
+	prvBytes, err := hex.DecodeString(prv)
+	if err != nil {
+		return "", fmt.Errorf("decoding prv kye: %v", err)
+	}
+	if !slices.Contains([]byte{0x03, 0x02, 0xed}, prvBytes[0]) {
+		return "", fmt.Errorf("invalid first byte of prv key %X", prvBytes[0])
+	}
+
+	id := hash.Sha256RipeMD160(prvBytes)
+
+	return address.IDToAddress(id), nil
 }
