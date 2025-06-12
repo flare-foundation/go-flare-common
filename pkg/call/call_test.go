@@ -62,11 +62,16 @@ func TestPOST(t *testing.T) {
 	}
 
 	var wg sync.WaitGroup
-
 	wg.Add(1)
+
+	var wg2 sync.WaitGroup
+	wg2.Add(1)
+
 	go func() {
+		wg2.Done()
 		err := server.ListenAndServe()
 		require.Error(t, err)
+
 		wg.Done()
 	}()
 
@@ -79,6 +84,8 @@ func TestPOST(t *testing.T) {
 
 	url := fmt.Sprintf("http://localhost:%d/abs", port)
 
+	wg2.Wait()
+	time.Sleep(1 * time.Millisecond)
 	responseRaw, err := PostRaw[res](context.Background(), url, NoAPIKey, bytes.NewReader(reqMarshaled), Params{
 		Timeout:         3 * time.Second,
 		MaxResponseSize: 300,
