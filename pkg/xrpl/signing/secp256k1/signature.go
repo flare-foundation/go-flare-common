@@ -211,15 +211,17 @@ func (sig *SignatureWithRecovery) Recover(hash []byte) (*ecdsa.PublicKey, error)
 
 // toBytesCompressed returns compressed public Key for ECDSA public key in byte slice.
 func toBytesCompressed(pub *ecdsa.PublicKey) []byte {
-	xrpPub := make([]byte, 0, 33)
+	xrpPub := make([]byte, 33)
 
 	if pub.Y.Bit(0) == 0 {
-		xrpPub = append(xrpPub, pubKeyEvenPrefix)
+		xrpPub[0] = pubKeyEvenPrefix
 	} else {
-		xrpPub = append(xrpPub, pubKeyOddPrefix)
+		xrpPub[0] = pubKeyOddPrefix
 	}
 
-	xrpPub = append(xrpPub, pub.X.Bytes()...)
+	b := pub.X.Bytes()
+
+	copy(xrpPub[33-len(b):33], b)
 
 	return xrpPub
 }
