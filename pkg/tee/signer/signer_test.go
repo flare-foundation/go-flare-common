@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"sync"
 	"testing"
+	"time"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -74,7 +75,11 @@ func TestSigner(t *testing.T) {
 	var wg sync.WaitGroup
 	wg.Add(1)
 
+	var wg2 sync.WaitGroup
+	wg2.Add(1)
+
 	go func() {
+		wg2.Done()
 		err := signer.Run(ctx)
 		require.Error(t, err)
 		wg.Done()
@@ -89,6 +94,9 @@ func TestSigner(t *testing.T) {
 
 	request.Header.Set("Content-Type", "application/json")
 	request.Header.Set("X-API-KEY", apiKey)
+
+	wg2.Wait()
+	time.Sleep(1 * time.Millisecond)
 
 	resp := sendRequest(t, request)
 	require.Equal(t, http.StatusOK, resp.StatusCode)

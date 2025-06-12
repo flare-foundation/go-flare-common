@@ -126,5 +126,4 @@ func TestSigning(t *testing.T) {
 
 		require.Equal(t, pub, &prv.PublicKey)
 	}
-
 }
