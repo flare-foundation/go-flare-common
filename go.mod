@@ -1,6 +1,6 @@
 module github.com/flare-foundation/go-flare-common
 
-go 1.23.8
+go 1.24.2
 
 require (
 	github.com/bradleyjkemp/cupaloy v2.3.0+incompatible
