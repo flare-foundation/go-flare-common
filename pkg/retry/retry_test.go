@@ -137,18 +137,17 @@ func TestIngrainAttempt(t *testing.T) {
 
 func TestIngrainAttemptConcurrent(t *testing.T) {
 	called := struct {
-		c map[int]bool
+		c map[int]int
 
 		sync.Mutex
 	}{}
 
-	called.c = make(map[int]bool)
+	called.c = make(map[int]int)
 
 	identity := func(i int) (int, error) {
-		time.Sleep(500 * time.Microsecond)
 		called.Lock()
 		defer called.Unlock()
-		called.c[i] = true
+		called.c[i]++
 		return i, nil
 	}
 
@@ -156,8 +155,9 @@ func TestIngrainAttemptConcurrent(t *testing.T) {
 
 	var wg sync.WaitGroup
 
-	wg.Add(10)
-	for range 10 {
+	const n = 100
+	wg.Add(n)
+	for range n {
 		go func() {
 			_, err := ingrained()
 			require.NoError(t, err)
@@ -167,7 +167,11 @@ func TestIngrainAttemptConcurrent(t *testing.T) {
 
 	wg.Wait()
 
-	require.Len(t, called.c, 10)
+	require.Len(t, called.c, n)
+
+	for j := range n {
+		require.Equal(t, 1, called.c[j])
+	}
 }
 
 func TestExecuteAttempt(t *testing.T) {

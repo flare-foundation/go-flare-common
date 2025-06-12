@@ -3,6 +3,7 @@ package retry
 import (
 	"context"
 	"fmt"
+	"sync"
 	"time"
 )
 
@@ -73,9 +74,12 @@ func Execute[T any](ctx context.Context, f func() (T, error), params Params) Exe
 //
 // The returned function should be used with caution in a concurrent scenario.
 func ingrainAttempt[T any](f func(int) (T, error)) func() (T, error) {
+	x := &sync.Mutex{}
 	j := -1
 	return func() (T, error) {
+		x.Lock()
 		j++
+		x.Unlock()
 		return f(j)
 	}
 }
