@@ -29,9 +29,11 @@ Contains the following packages:
 - toml: reading toml files
 - voters: working with Flare entities
 - xrpl
+  - aggregator: working with XRPL multisig
+  - address: XRPL addresses, account ID, and public keys
   - base58: base58 encoding with custom alphabet
-  - encoding: encoding and decoding xrpl transactions
-  - hash: hashes used in xrpl
-  - signing: signing of xrpl transactions
+  - encoding: encoding and decoding XRPL transactions
+  - hash: hashes used in XRPL
+  - signing: signing of XRPL transactions
     - ed25519
     - secp256k1
