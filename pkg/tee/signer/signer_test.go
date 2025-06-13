@@ -96,7 +96,7 @@ func TestSigner(t *testing.T) {
 	request.Header.Set("X-API-KEY", apiKey)
 
 	wg2.Wait()
-	time.Sleep(1 * time.Millisecond)
+	time.Sleep(100 * time.Millisecond)
 
 	resp := sendRequest(t, request)
 	require.Equal(t, http.StatusOK, resp.StatusCode)
