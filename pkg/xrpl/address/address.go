@@ -2,7 +2,9 @@ package address
 
 import (
 	"bytes"
+	"encoding/hex"
 	"fmt"
+	"slices"
 
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/base58"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/hash"
@@ -69,4 +71,19 @@ func IDToAddress(id []byte) string {
 // Checksum returns a checksum for the byte string (first 4 bytes of double sha256 hash).
 func Checksum(b []byte) []byte {
 	return hash.DoubleSha256(b)[:4]
+}
+
+// PubToAddress converts public key in hex string to XRPL address.
+func PubToAddress(prv string) (string, error) {
+	prvBytes, err := hex.DecodeString(prv)
+	if err != nil {
+		return "", fmt.Errorf("decoding prv kye: %v", err)
+	}
+	if !slices.Contains([]byte{0x03, 0x02, 0xed}, prvBytes[0]) {
+		return "", fmt.Errorf("invalid first byte of prv key %X", prvBytes[0])
+	}
+
+	id := hash.Sha256RipeMD160(prvBytes)
+
+	return IDToAddress(id), nil
 }

@@ -7,6 +7,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/address"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/signing"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/signing/signer"
@@ -116,7 +117,7 @@ func (a *Account) AddSignatures(blob []byte) (*transaction, bool, error) {
 			continue
 		}
 
-		addrFromPub, err := signing.PubToAddress(s.SigningPubKey)
+		addrFromPub, err := address.PubToAddress(s.SigningPubKey)
 		if err != nil {
 			continue
 		}
