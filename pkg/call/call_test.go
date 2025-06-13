@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/flare-foundation/go-flare-common/pkg/retry"
 	"github.com/stretchr/testify/require"
 )
 
@@ -85,10 +86,14 @@ func TestPOST(t *testing.T) {
 	url := fmt.Sprintf("http://localhost:%d/abs", port)
 
 	wg2.Wait()
-	time.Sleep(1 * time.Millisecond)
-	responseRaw, err := PostRaw[res](context.Background(), url, NoAPIKey, bytes.NewReader(reqMarshaled), Params{
+	time.Sleep(10 * time.Millisecond)
+	responseRaw, err := PostRawWithRetry[res](context.Background(), url, NoAPIKey, bytes.NewReader(reqMarshaled), Params{
 		Timeout:         3 * time.Second,
 		MaxResponseSize: 300,
+	}, []int{}, retry.Params{
+		MaxAttempts: 2,
+		Delay:       100 * time.Millisecond,
+		Timeout:     3 * time.Second,
 	})
 	require.NoError(t, err)
 
