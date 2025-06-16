@@ -56,20 +56,6 @@ func DecodeTo[T any](arg abi.Argument, data []byte, dest *T) (err error) {
 	return
 }
 
-// checkEncodeDecode encoded decodedSlice using args and compares it to data.
-func checkEncodeDecode(args *abi.Arguments, data []byte, decodedSlice []any) error {
-	encoded, err := args.Pack(decodedSlice...)
-	if err != nil {
-		return err
-	}
-
-	if !bytes.Equal(data, encoded) {
-		return fmt.Errorf("initial data not equal to decoded and encoded data %v, %v", data, encoded)
-	}
-
-	return nil
-}
-
 // DecodeTo2 decodes abi encoded data and writes it to destination.
 //
 // dest has to be a pointer to a struct that is structured as arg describes.
@@ -134,4 +120,18 @@ func Decode[T any](arg abi.Argument, data []byte) (t T, err error) {
 	t = *abi.ConvertType(decodedSlice[0], new(T)).(*T)
 
 	return t, nil
+}
+
+// checkEncodeDecode encoded decodedSlice using args and compares it to data.
+func checkEncodeDecode(args *abi.Arguments, data []byte, decodedSlice []any) error {
+	encoded, err := args.Pack(decodedSlice...)
+	if err != nil {
+		return err
+	}
+
+	if !bytes.Equal(data, encoded) {
+		return fmt.Errorf("initial data not equal to decoded and encoded data %v, %v", data, encoded)
+	}
+
+	return nil
 }
