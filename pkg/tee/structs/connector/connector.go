@@ -46,6 +46,7 @@ var attestationTypes = []AttestationType{
 // input is the proof type of i-th attestation type.
 var attestationTypeMethods = []string{
 	"availabilityCheck",
+	"pmwPaymentStatus",
 }
 
 type AttestationArguments struct {
