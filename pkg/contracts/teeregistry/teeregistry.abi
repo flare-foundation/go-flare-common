@@ -331,34 +331,9 @@
                       "type": "address"
                     },
                     {
-                      "internalType": "address",
-                      "name": "initialTeeId",
-                      "type": "address"
-                    },
-                    {
                       "internalType": "string",
                       "name": "url",
                       "type": "string"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "codeHash",
-                      "type": "bytes32"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "platform",
-                      "type": "bytes32"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "teeGovernanceHash",
-                      "type": "bytes32"
-                    },
-                    {
-                      "internalType": "uint24",
-                      "name": "rewardEpochId",
-                      "type": "uint24"
                     },
                     {
                       "internalType": "uint256",
@@ -386,6 +361,31 @@
                       "internalType": "uint64",
                       "name": "teeTimestamp",
                       "type": "uint64"
+                    },
+                    {
+                      "internalType": "address",
+                      "name": "initialTeeId",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "codeHash",
+                      "type": "bytes32"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "platform",
+                      "type": "bytes32"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "teeGovernanceHash",
+                      "type": "bytes32"
+                    },
+                    {
+                      "internalType": "uint24",
+                      "name": "rewardEpochId",
+                      "type": "uint24"
                     }
                   ],
                   "internalType": "struct ITeeAvailabilityCheck.ResponseBody",
@@ -410,12 +410,17 @@
     },
     {
       "inputs": [],
-      "name": "getActiveTeeIds",
+      "name": "getActiveTees",
       "outputs": [
         {
           "internalType": "address[]",
-          "name": "",
+          "name": "_teeIds",
           "type": "address[]"
+        },
+        {
+          "internalType": "string[]",
+          "name": "_urls",
+          "type": "string[]"
         }
       ],
       "stateMutability": "view",
@@ -666,34 +671,9 @@
                       "type": "address"
                     },
                     {
-                      "internalType": "address",
-                      "name": "initialTeeId",
-                      "type": "address"
-                    },
-                    {
                       "internalType": "string",
                       "name": "url",
                       "type": "string"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "codeHash",
-                      "type": "bytes32"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "platform",
-                      "type": "bytes32"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "teeGovernanceHash",
-                      "type": "bytes32"
-                    },
-                    {
-                      "internalType": "uint24",
-                      "name": "rewardEpochId",
-                      "type": "uint24"
                     },
                     {
                       "internalType": "uint256",
@@ -721,6 +701,31 @@
                       "internalType": "uint64",
                       "name": "teeTimestamp",
                       "type": "uint64"
+                    },
+                    {
+                      "internalType": "address",
+                      "name": "initialTeeId",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "codeHash",
+                      "type": "bytes32"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "platform",
+                      "type": "bytes32"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "teeGovernanceHash",
+                      "type": "bytes32"
+                    },
+                    {
+                      "internalType": "uint24",
+                      "name": "rewardEpochId",
+                      "type": "uint24"
                     }
                   ],
                   "internalType": "struct ITeeAvailabilityCheck.ResponseBody",
@@ -892,34 +897,9 @@
                       "type": "address"
                     },
                     {
-                      "internalType": "address",
-                      "name": "initialTeeId",
-                      "type": "address"
-                    },
-                    {
                       "internalType": "string",
                       "name": "url",
                       "type": "string"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "codeHash",
-                      "type": "bytes32"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "platform",
-                      "type": "bytes32"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "teeGovernanceHash",
-                      "type": "bytes32"
-                    },
-                    {
-                      "internalType": "uint24",
-                      "name": "rewardEpochId",
-                      "type": "uint24"
                     },
                     {
                       "internalType": "uint256",
@@ -947,6 +927,31 @@
                       "internalType": "uint64",
                       "name": "teeTimestamp",
                       "type": "uint64"
+                    },
+                    {
+                      "internalType": "address",
+                      "name": "initialTeeId",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "codeHash",
+                      "type": "bytes32"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "platform",
+                      "type": "bytes32"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "teeGovernanceHash",
+                      "type": "bytes32"
+                    },
+                    {
+                      "internalType": "uint24",
+                      "name": "rewardEpochId",
+                      "type": "uint24"
                     }
                   ],
                   "internalType": "struct ITeeAvailabilityCheck.ResponseBody",
@@ -1098,34 +1103,9 @@
                       "type": "address"
                     },
                     {
-                      "internalType": "address",
-                      "name": "initialTeeId",
-                      "type": "address"
-                    },
-                    {
                       "internalType": "string",
                       "name": "url",
                       "type": "string"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "codeHash",
-                      "type": "bytes32"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "platform",
-                      "type": "bytes32"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "teeGovernanceHash",
-                      "type": "bytes32"
-                    },
-                    {
-                      "internalType": "uint24",
-                      "name": "rewardEpochId",
-                      "type": "uint24"
                     },
                     {
                       "internalType": "uint256",
@@ -1153,6 +1133,31 @@
                       "internalType": "uint64",
                       "name": "teeTimestamp",
                       "type": "uint64"
+                    },
+                    {
+                      "internalType": "address",
+                      "name": "initialTeeId",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "codeHash",
+                      "type": "bytes32"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "platform",
+                      "type": "bytes32"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "teeGovernanceHash",
+                      "type": "bytes32"
+                    },
+                    {
+                      "internalType": "uint24",
+                      "name": "rewardEpochId",
+                      "type": "uint24"
                     }
                   ],
                   "internalType": "struct ITeeAvailabilityCheck.ResponseBody",
