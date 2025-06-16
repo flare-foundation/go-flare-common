@@ -32,6 +32,11 @@
               "internalType": "uint24",
               "name": "rewardEpochId",
               "type": "uint24"
+            },
+            {
+              "internalType": "uint256",
+              "name": "randomNonce",
+              "type": "uint256"
             }
           ],
           "internalType": "struct ITeeWalletBackupManager.BackupId",
@@ -161,6 +166,11 @@
                   "internalType": "uint24",
                   "name": "rewardEpochId",
                   "type": "uint24"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "randomNonce",
+                  "type": "uint256"
                 }
               ],
               "internalType": "struct ITeeWalletBackupManager.BackupId",
@@ -522,4 +532,4 @@
       "stateMutability": "nonpayable",
       "type": "function"
     }
-  ]
+  ],
