@@ -55,7 +55,6 @@ func SignInstructionHash(hash common.Hash, pk *ecdsa.PrivateKey) ([]byte, error)
 }
 
 type Instruction struct {
-	Challenge common.Hash   `json:"challenge"`
 	Data      Data          `json:"data"`
 	Signature hexutil.Bytes `json:"signature"`
 }
