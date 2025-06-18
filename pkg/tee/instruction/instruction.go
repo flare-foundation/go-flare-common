@@ -2,6 +2,7 @@ package instruction
 
 import (
 	"crypto/ecdsa"
+	"encoding/binary"
 	"encoding/json"
 	"math/big"
 
@@ -35,6 +36,23 @@ func (d DataFixed) HashFixed() (common.Hash, error) {
 	}
 
 	return crypto.Keccak256Hash(m), nil
+}
+
+func (d *DataFixed) InitialVoteHash() (common.Hash, error) {
+	ih, err := d.HashFixed()
+	if err != nil {
+		return common.Hash{}, err
+	}
+
+	return crypto.Keccak256Hash(d.InstructionID.Bytes(), ih.Bytes(), d.RewardEpochID.Bytes()), nil
+}
+
+func NextVoteHash(hash common.Hash, signer common.Address, signature, additionalVariableMessage []byte, time uint64) (common.Hash, error) {
+	timestamp := make([]byte, 8)
+	binary.BigEndian.PutUint64(timestamp, time)
+
+	iteratedQueueHash := crypto.Keccak256Hash(hash.Bytes(), signer.Bytes(), signature, additionalVariableMessage, timestamp)
+	return iteratedQueueHash, nil
 }
 
 // HashForSigning computes the hash of the Data d that is signed by the provider.
