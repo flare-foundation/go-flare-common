@@ -61,4 +61,12 @@ func TestHash(t *testing.T) {
 	require.NoError(t, err)
 
 	require.Equal(t, hFixed, hFull)
+
+	vh, err := data.InitialVoteHash()
+	require.NoError(t, err)
+
+	vhFixed, err := data.InitialVoteHash()
+	require.NoError(t, err)
+
+	require.Equal(t, vhFixed, vh)
 }
