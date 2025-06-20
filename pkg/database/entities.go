@@ -37,7 +37,7 @@ type Transaction struct {
 // Should be synchronized with the the c-chain indexer.
 type Log struct {
 	BaseEntity
-	TransactionID   uint64       `gorm:"default:null"` // database ID of the transaction, should not be confused wit the hash of the transaction
+	TransactionID   uint64       `gorm:"default:null"` // database ID of the transaction, should not be confused with the hash of the transaction
 	Transaction     *Transaction `gorm:"foreignKey:TransactionID;references:ID;constraint:OnUpdate:CASCADE"`
 	Address         string       `gorm:"type:varchar(40);index"`
 	Data            string       `gorm:"type:string"`

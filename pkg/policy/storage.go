@@ -64,7 +64,7 @@ func (s *Storage) Add(sp *SigningPolicy) error {
 	return nil
 }
 
-// Return the signingPolicy for the voting round, or nil if not found.
+// ForVotingRound returns the signingPolicy for the voting round, or nil if not found.
 // Also returns true if the policy is the last one or false otherwise.
 func (s *Storage) ForVotingRound(votingRoundID uint32) (*SigningPolicy, bool) {
 	s.Lock()
