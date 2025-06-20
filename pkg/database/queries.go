@@ -16,6 +16,30 @@ import (
 
 const maxQueryDuration = 15 * time.Second
 
+// FetchLatestBlock returns the latest block in the database.
+func FetchLatestBlock(
+	ctx context.Context, db *gorm.DB, _ any,
+) (Block, error) {
+	return RetryWrapper(fetchLatestBlock, "fetching latest block")(ctx, db, nil)
+}
+
+func fetchLatestBlock(
+	ctx context.Context, db *gorm.DB, _ any,
+) (Block, error) {
+	var blocks []Block
+
+	err := db.WithContext(ctx).Order("timestamp DESC").Limit(1).Find(&blocks).Error
+	if err != nil {
+		return Block{}, err
+	}
+
+	if len(blocks) == 0 {
+		return Block{}, errors.New("no states in database")
+	}
+
+	return blocks[0], nil
+}
+
 type LatestLogsParams struct {
 	Address common.Address
 	Topic0  common.Hash
