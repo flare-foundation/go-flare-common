@@ -112,7 +112,7 @@ func (f *Field) Less(g *Field) int {
 	} else if f.Type == g.Type && f.Nth < g.Nth {
 		return -1
 	} else if f.Type == g.Type && f.Nth == g.Nth {
-		return -1
+		return 0
 	}
 	return 1
 }
