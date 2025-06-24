@@ -302,7 +302,12 @@ func TestNormalizeValue(t *testing.T) {
 	tests := []struct {
 		input  string
 		output string
-	}{}
+	}{
+		{
+			"0",
+			"8000000000000000",
+		},
+	}
 
 	for _, test := range tests {
 		normalized, err := serializeTokenValue(test.input)

@@ -47,3 +47,16 @@ func TestIDtoName(t *testing.T) {
 		require.Equal(t, name, nameFrom)
 	}
 }
+
+func TestLess(t *testing.T) {
+	feeField := NameToField["Fee"]
+
+	amountField := NameToField["Amount"]
+
+	require.Equal(t, 0, amountField.Less(&amountField))
+	require.Equal(t, 0, feeField.Less(&feeField))
+
+	require.Equal(t, -1, amountField.Less(&feeField))
+
+	require.Equal(t, 1, feeField.Less(&amountField))
+}
