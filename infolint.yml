@@ -1,0 +1,64 @@
+version: "2"
+run:
+  go: "1.24"
+  modules-download-mode: readonly
+linters:
+  default: standard
+  enable:
+    - godot
+    - whitespace
+    - unconvert
+    - containedctx
+    - decorder
+    - dupl
+    - prealloc
+    - copyloopvar
+    - nolintlint
+    - nilerr
+    - exhaustive
+    - goconst
+    - errchkjson
+    - errname
+    - exhaustruct
+    - funlen
+    - cyclop
+    - gocognit
+    - prealloc
+    - wsl
+    - goconst
+    - maintidx
+    - perfsprint
+    - gocritic
+  settings:
+    exhaustive:
+      default-signifies-exhaustive: false
+    maintidx:
+      # Show functions with maintainability index lower than N.
+      # A high index indicates better maintainability (it's kind of the opposite of complexity).
+      # Default: 20
+      under: 30
+    cyclop:
+      # The maximal code complexity to report.
+      # Default: 10
+      max-complexity: 10
+      # The maximal average package complexity.
+      # If it's higher than 0.0 (float) the check is enabled.
+      # Default: 0.0
+      package-average: 1.0
+exclusions:
+  generated: lax
+  paths:
+    - third_party$
+    - builtin$
+    - examples$
+formatters:
+  enable:
+    - gofmt
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+issues:
+  max-same-issues: 3

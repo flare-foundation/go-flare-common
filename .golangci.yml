@@ -8,18 +8,29 @@ linters:
     - godot
     - whitespace
     - unconvert
+    - containedctx
+    - decorder
+    - dupl
+    - copyloopvar
+    - nolintlint
+    - nilerr
+    - exhaustive
+    - goconst
+    - errchkjson
+    - errname
+    - bidichk
+  settings:
+    exhaustive:
+      default-signifies-exhaustive: true
 exclusions:
   generated: lax
-  presets:
-    - comments
-    - common-false-positives
-    - legacy
-    - std-error-handling
   paths:
     - third_party$
     - builtin$
     - examples$
 formatters:
+  enable:
+    - gofmt
   exclusions:
     generated: lax
     paths:

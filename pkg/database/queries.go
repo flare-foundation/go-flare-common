@@ -69,7 +69,7 @@ func fetchLatestLogsByAddressAndTopic0(
 type LogsParams struct {
 	Address  common.Address
 	Topic0   common.Hash
-	From, To int64 //blockNumber or timestamp depending on the function
+	From, To int64 // blockNumber or timestamp depending on the function
 }
 
 // FetchLogsByAddressAndTopic0Timestamp fetches all logs matching address and topic0 from timestamp range (from, to], order by timestamp.
@@ -139,7 +139,7 @@ func fetchLogsByAddressAndTopic0BlockNumber(ctx context.Context, db *gorm.DB, pa
 type TxParams struct {
 	ToAddress   common.Address
 	FunctionSel [4]byte
-	From, To    int64 //blockNumber or timestamp depending on the function
+	From, To    int64 // blockNumber or timestamp depending on the function
 }
 
 // FetchTransactionsByAddressAndSelectorTimestamp fetches all transactions matching ToAddress and FunctionSel from timestamp range (From, To], order by timestamp.

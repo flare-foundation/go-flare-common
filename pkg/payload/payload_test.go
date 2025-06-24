@@ -86,7 +86,7 @@ func TestExtractPayloads(t *testing.T) {
 var txError1 = &database.Transaction{
 	Hash:             "8dd67e88aa6f863aeb5cd62874530efd7dafef2d4a8cdf7fbf71844dab1c7327",
 	FunctionSig:      "6c532fae",
-	Input:            "6c532fae64000a003b002043a94d3c612d7f5cfd65e53a06d55bac77abbd2a6eb4dff766f51092db36ac660", //too long
+	Input:            "6c532fae64000a003b002043a94d3c612d7f5cfd65e53a06d55bac77abbd2a6eb4dff766f51092db36ac660", // too long
 	BlockNumber:      16143116,
 	BlockHash:        "40888ee23c4d7da30c42f826ea187386eac4564b02ce801f0b0b91ef1e71da05",
 	TransactionIndex: 0,
@@ -102,7 +102,7 @@ var txError1 = &database.Transaction{
 var txError2 = &database.Transaction{
 	Hash:             "8dd67e88aa6f863aeb5cd62874530efd7dafef2d4a8cdf7fbf71844dab1c7327",
 	FunctionSig:      "6c532fae",
-	Input:            "6c532fae64000a003b002043a94d3c612d7f5cfd65e53a06d55bac77abbd2a6eb4dff766f51092db36ac6", //too short
+	Input:            "6c532fae64000a003b002043a94d3c612d7f5cfd65e53a06d55bac77abbd2a6eb4dff766f51092db36ac6", // too short
 	BlockNumber:      16143116,
 	BlockHash:        "40888ee23c4d7da30c42f826ea187386eac4564b02ce801f0b0b91ef1e71da05",
 	TransactionIndex: 0,
@@ -118,7 +118,7 @@ var txError2 = &database.Transaction{
 var txError3 = &database.Transaction{
 	Hash:             "8dd67e88aa6f863aeb5cd62874530efd7dafef2d4a8cdf7fbf71844dab1c7327",
 	FunctionSig:      "6c532fae",
-	Input:            "6c532fae64000a003b002043a94d3c612d7f5cfd65e53a06d55bac77abbd2a6eb4dff766f51092db36ac664000a003b002043a94d3c612d7f5cfd65e53a06d55bac77abbd2a6eb4dff766f51092db36ac6", //too short
+	Input:            "6c532fae64000a003b002043a94d3c612d7f5cfd65e53a06d55bac77abbd2a6eb4dff766f51092db36ac664000a003b002043a94d3c612d7f5cfd65e53a06d55bac77abbd2a6eb4dff766f51092db36ac6", // too short
 	BlockNumber:      16143116,
 	BlockHash:        "40888ee23c4d7da30c42f826ea187386eac4564b02ce801f0b0b91ef1e71da05",
 	TransactionIndex: 0,
@@ -134,7 +134,7 @@ var txError3 = &database.Transaction{
 var txError4 = &database.Transaction{
 	Hash:             "8dd67e88aa6f863aeb5cd62874530efd7dafef2d4a8cdf7fbf71844dab1c7327",
 	FunctionSig:      "6c532fae",
-	Input:            "6c532fae64000a003b002043a94d3c612d7f5cfd65e53a06d55bac77abbd2a6eb4dff766f51092db36ac6z", //illegal character
+	Input:            "6c532fae64000a003b002043a94d3c612d7f5cfd65e53a06d55bac77abbd2a6eb4dff766f51092db36ac6z", // illegal character
 	BlockNumber:      16143116,
 	BlockHash:        "40888ee23c4d7da30c42f826ea187386eac4564b02ce801f0b0b91ef1e71da05",
 	TransactionIndex: 0,
@@ -150,7 +150,7 @@ var txError4 = &database.Transaction{
 var txError5 = &database.Transaction{
 	Hash:             "8dd67e88aa6f863aeb5cd62874530efd7dafef2d4a8cdf7fbf71844dab1c7327",
 	FunctionSig:      "6c532fae",
-	Input:            "6c532fae64000a003b001043a94d3c612d7f5cfd65e53a06d55bac77abbd2a6eb4dff766f51092db36ac66", //wrong length
+	Input:            "6c532fae64000a003b001043a94d3c612d7f5cfd65e53a06d55bac77abbd2a6eb4dff766f51092db36ac66", // wrong length
 	BlockNumber:      16143116,
 	BlockHash:        "40888ee23c4d7da30c42f826ea187386eac4564b02ce801f0b0b91ef1e71da05",
 	TransactionIndex: 0,

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"math/big"
 	"regexp"
@@ -16,6 +17,8 @@ import (
 // TODO amounts without issuer/amount.... MPT support
 
 const e = byte(69) // E in utf8 encoding
+
+const XRP = "XRP"
 
 const (
 	xrpValuePrefix uint64 = 0x4000000000000000
@@ -79,7 +82,7 @@ func xrpToBytes(amount string) ([]byte, error) {
 // tokenToBytes serializes an issued currency amount.
 func tokenToBytes(amount map[string]any) ([]byte, error) {
 	if len(amount) != 3 {
-		return nil, fmt.Errorf("wrong number of fields")
+		return nil, errors.New("wrong number of fields")
 	}
 
 	value, err := extractString(amount, "value")
@@ -131,7 +134,7 @@ func extractString(values map[string]any, key string) (string, error) {
 }
 
 var disallowedCodes = map[string]bool{
-	"XRP": true,
+	XRP: true,
 	"0000000000000000000000005852500000000000": true,
 	"0000000000000000000000000000000000000000": true,
 }
@@ -177,7 +180,7 @@ func deserializeCurrency(c []byte) (string, error) {
 
 		if isIso {
 			out := string(c[12:15])
-			if out == "XRP" {
+			if out == XRP {
 				return "", fmt.Errorf("invalid currency %v", out)
 			}
 			return out, nil
@@ -197,7 +200,7 @@ func serializeStandardCode(code string) ([]byte, error) {
 
 	codeBytes := make([]byte, 20)
 	copy(codeBytes[12:], []byte(code)) // 12 bytes zero | 3 bytes currency | 5 bytes bytes zero
-	return codeBytes[:], nil
+	return codeBytes, nil
 }
 
 // todo consider disallowing 0x00 prefixed nonstandard codes.
@@ -223,8 +226,8 @@ func serializeTokenValue(value string) ([]byte, error) {
 
 	switch fl.Cmp(big.NewFloat(0)) {
 	case 0:
-		//return  "0x80000000"
-		out[0] = 8 << 4
+		// return  "0x8000000000000000"
+		out[0] = 0x80
 		return out, nil
 	case -1:
 		// set sign byte to 0 and change fl to positive
@@ -363,7 +366,7 @@ func xrpToJson(firstByte byte, b *bytes.Buffer) (string, error) {
 
 	value := binary.BigEndian.Uint64(v)
 	if value > maxXRPAmount {
-		return "", fmt.Errorf("xrp amount to large")
+		return "", errors.New("xrp amount to large")
 	}
 
 	out += strconv.FormatUint(value, 10)

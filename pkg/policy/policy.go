@@ -128,5 +128,5 @@ func decodeUint32(b []byte) uint32 {
 	padding := 4 - len(b)
 	copy(tmpUint32[padding:], b)
 
-	return binary.BigEndian.Uint32(tmpUint32[:])
+	return binary.BigEndian.Uint32(tmpUint32)
 }

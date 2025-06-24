@@ -1,6 +1,7 @@
 package signer
 
 import (
+	"errors"
 	"fmt"
 	"math/big"
 	"slices"
@@ -91,7 +92,7 @@ func Parse(arrayObject types.ArrayObject) (*Signer, error) {
 	}
 
 	if len(sMap) != 3 {
-		return nil, fmt.Errorf("invalid signer")
+		return nil, errors.New("invalid signer")
 	}
 
 	acc, err := extractString(sMap, "Account")

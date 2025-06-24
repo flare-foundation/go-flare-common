@@ -29,7 +29,7 @@ func (i *issue) ToBytes(value any, _ bool) ([]byte, error) {
 	}
 
 	// XRP issue
-	if currencyStr == "XRP" {
+	if currencyStr == XRP {
 		if len(valueMap) != 1 {
 			return nil, fmt.Errorf("invalid issue %v", value)
 		}
@@ -57,9 +57,9 @@ func (i *issue) ToBytes(value any, _ bool) ([]byte, error) {
 		return nil, fmt.Errorf("invalid issuer %v: %v", issuerStr, err)
 	}
 
-	out := append(code, issuerBytes...)
+	code = append(code, issuerBytes...)
 
-	return out, nil
+	return code, nil
 }
 
 func (i *issue) ToJson(b *bytes.Buffer, _ int) (any, error) {
@@ -76,7 +76,7 @@ func (i *issue) ToJson(b *bytes.Buffer, _ int) (any, error) {
 	}
 
 	if bytes.Equal(cCode, make([]byte, 20)) {
-		out["currency"] = "XRP"
+		out["currency"] = XRP
 
 		return out, nil
 	}
