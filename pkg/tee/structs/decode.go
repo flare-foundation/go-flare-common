@@ -2,11 +2,14 @@ package structs
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"reflect"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
 )
+
+var errNonPointer = errors.New("dest is not a non nil pointer")
 
 // DecodeTo decodes abi encoded data and writes it to destination.
 //
@@ -25,7 +28,7 @@ func DecodeTo[T any](arg abi.Argument, data []byte, dest *T) (err error) {
 
 	rv := reflect.ValueOf(dest)
 	if rv.Kind() != reflect.Pointer || rv.IsNil() {
-		return fmt.Errorf("dest is not a non nil pointer")
+		return errNonPointer
 	}
 
 	var wDest any
@@ -73,7 +76,7 @@ func DecodeTo2[T any](arg abi.Argument, data []byte, dest *T) (err error) {
 
 	rv := reflect.ValueOf(dest)
 	if rv.Kind() != reflect.Pointer || rv.IsNil() {
-		return fmt.Errorf("dest is not a non nil pointer")
+		return errNonPointer
 	}
 
 	args := abi.Arguments{arg}

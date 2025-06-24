@@ -34,7 +34,7 @@ func TestCyclicSimple(t *testing.T) {
 		t.Error("returned with wrong key")
 	}
 
-	//overwrite
+	// overwrite
 	stg.Store(5, 5)
 
 	getOneWithFive, exists = stg.Get(5)

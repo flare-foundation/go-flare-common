@@ -15,17 +15,17 @@ import (
 type UInt8 struct {
 }
 
-type InvalidType struct {
+type InvalidTypeError struct {
 	t string
 	v any
 }
 
-func (i *InvalidType) Error() string {
+func (i *InvalidTypeError) Error() string {
 	return fmt.Sprintf("invalid %s: %v", i.t, i.v)
 }
 
-func InvalidUInt8(v any) *InvalidType {
-	return &InvalidType{t: "UInt8", v: v}
+func InvalidUInt8(v any) *InvalidTypeError {
+	return &InvalidTypeError{t: "UInt8", v: v}
 }
 
 // ToBytes serializes values of UInt8 fields.
@@ -59,7 +59,7 @@ func (u *UInt16) ToBytes(value any, _ bool) ([]byte, error) {
 	if ok {
 		txType, ok := defs.TxTypeToValue[valueStr]
 		if !ok || txType < 0 || txType >= 1<<16 {
-			return nil, &InvalidType{
+			return nil, &InvalidTypeError{
 				t: "TransactionType",
 				v: value,
 			}
@@ -73,7 +73,7 @@ func (u *UInt16) ToBytes(value any, _ bool) ([]byte, error) {
 
 		if tempInt64 >= 1<<16 || tempInt64 < 0 {
 			return nil,
-				&InvalidType{
+				&InvalidTypeError{
 					t: "UInt16",
 					v: value,
 				}
@@ -114,7 +114,7 @@ func (u *UInt32) ToBytes(value any, _ bool) ([]byte, error) {
 		return nil, err
 	}
 	if tempInt >= 1<<32 || tempInt < 0 {
-		return nil, &InvalidType{
+		return nil, &InvalidTypeError{
 			t: "UInt32",
 			v: value,
 		}
@@ -214,7 +214,7 @@ func convertInt64(value any, t string) (int64, error) {
 		return value, nil
 	case uint64:
 		if value > 1<<63 {
-			return 0, &InvalidType{
+			return 0, &InvalidTypeError{
 				t: t,
 				v: value,
 			}
@@ -222,7 +222,7 @@ func convertInt64(value any, t string) (int64, error) {
 		return int64(value), nil
 	case float32:
 		if float64(value) != math.Ceil(float64(value)) || value > 1<<63 || -value > 1<<63 {
-			return 0, &InvalidType{
+			return 0, &InvalidTypeError{
 				t: t,
 				v: value,
 			}
@@ -230,14 +230,14 @@ func convertInt64(value any, t string) (int64, error) {
 		return int64(value), nil
 	case float64:
 		if value != math.Ceil(value) || value > 1<<63 || -value > 1<<63 {
-			return 0, &InvalidType{
+			return 0, &InvalidTypeError{
 				t: t,
 				v: value,
 			}
 		}
 		return int64(value), nil
 	default:
-		return 0, &InvalidType{
+		return 0, &InvalidTypeError{
 			t: t,
 			v: value,
 		}

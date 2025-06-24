@@ -63,15 +63,15 @@ func stepToBytes(step map[string]any) ([]byte, error) {
 	issuer, ie := step["issuer"]
 
 	if ae {
-		flag = flag | accountFlag
+		flag |= accountFlag
 		fieldCount++
 	}
 	if ce {
-		flag = flag | currencyFlag
+		flag |= currencyFlag
 		fieldCount++
 	}
 	if ie {
-		flag = flag | issuerFlag
+		flag |= issuerFlag
 		fieldCount++
 	}
 
@@ -82,7 +82,7 @@ func stepToBytes(step map[string]any) ([]byte, error) {
 	out := make([]byte, 0, 41)
 	out = append(out, flag)
 
-	//account
+	// account
 	if ae {
 		if ce || ie {
 			return nil, fmt.Errorf("invalid path %v, account can only be by itself", step)
@@ -110,12 +110,16 @@ func stepToBytes(step map[string]any) ([]byte, error) {
 			return nil, fmt.Errorf("invalid currency %v", currency)
 		}
 
-		xrpCurrency := curr == "XRP" || strings.TrimPrefix(curr, "0x") == "0000000000000000000000000000000000000000"
-		if xrpCurrency && !ie {
+		xrpCurrency := curr == XRP || strings.TrimPrefix(curr, "0x") == "0000000000000000000000000000000000000000"
+
+		switch xrpCurrency {
+		case true:
+			if ie {
+				return nil, fmt.Errorf("invalid path %v, XRP has no issuer", step)
+			}
 			out = append(out, make([]byte, 20)...)
-		} else if xrpCurrency && ie {
-			return nil, fmt.Errorf("invalid path %v, XRP has no issuer", step)
-		} else {
+
+		case false:
 			currencyBytes, err := serializeCurrency(curr)
 			if err != nil {
 				return nil, fmt.Errorf("invalid path %v, invalid issuer %v", step, err)
@@ -294,7 +298,7 @@ func readCurrency(b *bytes.Buffer) (string, error) {
 	}
 
 	if bytes.Equal(c, make([]byte, l)) {
-		return "XRP", nil
+		return XRP, nil
 	}
 	currency, err := deserializeCurrency(c)
 	if err != nil {

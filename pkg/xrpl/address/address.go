@@ -3,6 +3,7 @@ package address
 import (
 	"bytes"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"slices"
 
@@ -36,7 +37,7 @@ func ID(address string) ([]byte, error) {
 
 	computed := Checksum(addressBytes[:21])
 	if !bytes.Equal(provided, computed) {
-		return nil, fmt.Errorf("invalid checksum")
+		return nil, errors.New("invalid checksum")
 	}
 
 	// trim leading byte and checksum

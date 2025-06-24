@@ -4,7 +4,7 @@ import (
 	"crypto/sha256"
 	"crypto/sha512"
 
-	"golang.org/x/crypto/ripemd160" //nolint
+	"golang.org/x/crypto/ripemd160" //nolint:staticcheck
 )
 
 // Sha512Half returns the first half of sha512 hash.

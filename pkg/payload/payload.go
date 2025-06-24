@@ -32,7 +32,7 @@ type Message struct {
 func ExtractPayloads(tx *database.Transaction) (map[uint8]Message, error) {
 	messages := make(map[uint8]Message)
 
-	dataStr := strings.TrimPrefix(tx.Input, "0x") //trim 0x if needed
+	dataStr := strings.TrimPrefix(tx.Input, "0x") // trim 0x if needed
 
 	data, err := hex.DecodeString(dataStr)
 	if err != nil {

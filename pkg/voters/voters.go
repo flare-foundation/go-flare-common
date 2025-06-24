@@ -16,12 +16,12 @@ type VoterData struct {
 }
 
 type Set struct {
-	voters      []common.Address //signingPolicyAddress
+	voters      []common.Address // signingPolicyAddress
 	weights     []uint16
 	TotalWeight uint16
 	thresholds  []uint16
 
-	VoterDataMap           map[common.Address]VoterData //signingPolicyAddressToWeight
+	VoterDataMap           map[common.Address]VoterData // signingPolicyAddressToWeight
 	SubmitToSigningAddress map[common.Address]common.Address
 }
 
@@ -29,7 +29,7 @@ type Set struct {
 // Optionally, a map from submitAddresses to signingAddress can be added.
 //
 // There has to be the same number of voters and weights.
-func NewSet(voters []common.Address, weights []uint16, SubmitToSigningAddress map[common.Address]common.Address) *Set {
+func NewSet(voters []common.Address, weights []uint16, submitToSigningAddress map[common.Address]common.Address) *Set {
 	if len(voters) != len(weights) {
 		logger.Errorf("New voter set: mismatched lengths: %d voters and  %d weights", len(voters), len(weights))
 		return nil
@@ -56,7 +56,7 @@ func NewSet(voters []common.Address, weights []uint16, SubmitToSigningAddress ma
 		}
 	}
 	vs.VoterDataMap = vMap
-	vs.SubmitToSigningAddress = SubmitToSigningAddress
+	vs.SubmitToSigningAddress = submitToSigningAddress
 
 	return &vs
 }
@@ -132,6 +132,7 @@ func (vs *Set) BinarySearch(value uint16) int {
 	}
 	for left < right {
 		mid = (left + right) / 2
+
 		if vs.thresholds[mid] < value {
 			left = mid + 1
 		} else if vs.thresholds[mid] > value {

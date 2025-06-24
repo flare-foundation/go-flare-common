@@ -8,6 +8,8 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/database"
 )
 
+const null = "NULL"
+
 // ConvertDatabaseLogToChainLog converts a database event log to a chain event log for use in the log decoder.
 // It only converts the fields used by the abigen log decoder (Topics and Data).
 func ConvertDatabaseLogToChainLog(dbLog database.Log) (*types.Log, error) {
@@ -18,16 +20,16 @@ func ConvertDatabaseLogToChainLog(dbLog database.Log) (*types.Log, error) {
 
 	var topics []common.Hash
 
-	if dbLog.Topic0 != "NULL" {
+	if dbLog.Topic0 != null {
 		topics = append(topics, common.HexToHash(dbLog.Topic0))
 	}
-	if dbLog.Topic1 != "NULL" {
+	if dbLog.Topic1 != null {
 		topics = append(topics, common.HexToHash(dbLog.Topic1))
 	}
-	if dbLog.Topic2 != "NULL" {
+	if dbLog.Topic2 != null {
 		topics = append(topics, common.HexToHash(dbLog.Topic2))
 	}
-	if dbLog.Topic3 != "NULL" {
+	if dbLog.Topic3 != null {
 		topics = append(topics, common.HexToHash(dbLog.Topic3))
 	}
 	return &types.Log{

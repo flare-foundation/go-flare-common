@@ -32,9 +32,10 @@ func SignT(message []byte, privKey *ecdsa.PrivateKey) []byte {
 }
 
 func TestSignatureMarshaling(t *testing.T) {
-	for range 1000 {
-		prv, err := crypto.GenerateKey()
-		require.NoError(t, err)
+	prv, err := crypto.HexToECDSA("8F1430C6570B7AB19F4FBB0F1F9A3071192EFB133F6216103F8B4D380B55DE75")
+	require.NoError(t, err)
+
+	for range 500 {
 		for j := range 5 {
 			msg := fmt.Appendf(nil, "neki%d", j)
 
@@ -70,6 +71,9 @@ func TestSignatureMarshaling(t *testing.T) {
 
 			require.Equal(t, pub, &prv.PublicKey)
 		}
+
+		prv, err = crypto.GenerateKey() // change prv for the next run
+		require.NoError(t, err)
 	}
 }
 
@@ -83,47 +87,5 @@ func TestMarshaling(t *testing.T) {
 
 		_, err = MarshalDER(b)
 		require.NoError(t, err, j)
-	}
-}
-
-func TestSigning(t *testing.T) {
-	// pub key of this prv key starts with 00
-	prv, err := crypto.HexToECDSA("8F1430C6570B7AB19F4FBB0F1F9A3071192EFB133F6216103F8B4D380B55DE75")
-	require.NoError(t, err)
-
-	for j := range 5 {
-		msg := fmt.Appendf(nil, "neki%d", j)
-
-		sig, err := sign(hash.Sha512Half(msg), prv)
-		require.NoError(t, err, j)
-
-		sigXRPL, err := SignXRPL(msg, prv)
-		require.NoError(t, err, j)
-
-		isValid := sig.Verify(hash.Sha512Half(msg), &prv.PublicKey)
-		require.Truef(t, isValid, "invalid signature %v for priv key %v", j, prv.D)
-
-		sigDER := sig.DER()
-
-		sig2DER := SignT(msg, prv)
-		require.Equal(t, sig2DER, sigDER, j)
-
-		sigMar, err := MarshalDER(sigDER)
-		require.NoError(t, err, j)
-
-		require.Equal(t, sig.r, sigMar.r, j)
-		require.Equal(t, sig.s, sigMar.s, j)
-
-		require.Equal(t, sig2DER, sigXRPL, j)
-
-		ok, err := Validate(msg, sigDER, hex.EncodeToString(toBytesCompressed(&prv.PublicKey)))
-		require.NoError(t, err, j)
-
-		require.True(t, ok)
-
-		pub, err := sig.Recover(hash.Sha512Half(msg))
-		require.NoError(t, err, j)
-
-		require.Equal(t, pub, &prv.PublicKey)
 	}
 }
