@@ -19,6 +19,7 @@ linters:
     - misspell
     - nolintlint
     - unconvert
+    - whitespace
 
   settings:
     exhaustive:

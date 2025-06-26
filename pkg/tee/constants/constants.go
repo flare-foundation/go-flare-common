@@ -69,15 +69,18 @@ var validPairs = map[OPType]map[OPCommand]bool{
 	},
 }
 
+// IsValid checks whether t is a valid OPType.
 func (t OPType) IsValid() bool {
 	_, ok := validPairs[t]
 	return ok
 }
 
+// ToHash returns utf8 encoding of t padded to 32 bytes.
 func (t OPType) ToHash() common.Hash {
 	return common.BytesToHash(common.RightPadBytes([]byte(t), 32))
 }
 
+// IsValid checks whether c is a valid OPCommand.
 func (c OPCommand) IsValid() bool {
 	for _, m := range validPairs {
 		_, ok := m[c]
@@ -89,22 +92,26 @@ func (c OPCommand) IsValid() bool {
 	return false
 }
 
+// ToHash returns utf8 encoding of c padded to 32 bytes.
 func (c OPCommand) ToHash() common.Hash {
 	return common.BytesToHash(common.RightPadBytes([]byte(c), 32))
 }
 
+// StringToOPType converts string to OPType and indicates whether it is a valid OPType.
 func StringToOPType(s string) (OPType, bool) {
 	t := OPType(s)
 
 	return t, t.IsValid()
 }
 
+// HashToOPType converts hash to OPType and indicates whether it is a valid OPType.
 func HashToOPType(h common.Hash) (OPType, bool) {
 	s := strings.TrimRight(string(h.Bytes()), "\x00")
 
 	return StringToOPType(s)
 }
 
+// StringToOPCommand converts string to OpCommand and indicates whether it is a valid OpCommand.
 func StringToOPCommand(s string) (OPCommand, bool) {
 	c := OPCommand(s)
 
@@ -118,12 +125,14 @@ func StringToOPCommand(s string) (OPCommand, bool) {
 	return c, false
 }
 
-func HashToOCommand(h common.Hash) (OPCommand, bool) {
+// HashToOPCommand converts hash to OpCommand and indicates whether it is a valid OpCommand.
+func HashToOPCommand(h common.Hash) (OPCommand, bool) {
 	s := strings.TrimRight(string(h.Bytes()), "\x00")
 
 	return StringToOPCommand(s)
 }
 
+// IsValidPair checks whether (t,c) is a valid pair of OPType and OPcommand.
 func IsValidPair(t OPType, c OPCommand) bool {
 	cs, ok := validPairs[t]
 	if !ok {
