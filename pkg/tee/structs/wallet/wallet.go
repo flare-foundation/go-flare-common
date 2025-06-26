@@ -4,39 +4,25 @@ package wallet
 import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/flare-foundation/go-flare-common/pkg/logger"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/constants"
 )
 
-const OPType = "WALLET"
-
-type OPCommand string
-
-const (
-	KeyGenerate            OPCommand = "KEY_GENERATE"
-	KeyDelete              OPCommand = "KEY_DELETE"
-	KeyDataProviderRestore OPCommand = "KEY_DATA_PROVIDER_RESTORE"
-	SetPausingAddress      OPCommand = "SET_PAUSING_ADDRESSES"
-	Resume                 OPCommand = "RESUME"
-)
-
-var opCommands = []OPCommand{
-	KeyGenerate,
-	KeyDelete,
-	KeyDataProviderRestore,
-	SetPausingAddress,
-	Resume,
+var opCommands = []constants.OPCommand{
+	constants.KeyDataProviderRestore,
+	//constants.KeyDataProviderRestoreTest, // TODO
+	constants.KeyDelete,
+	constants.KeyGenerate,
 }
 
 // i-th method correspond to a method in TeeWalletStruct interface whose
 // input is the type of message emitted with i-th opCommands.
 var methods = []string{
-	"keyGenerateStruct",
-	"keyDeleteStruct",
 	"keyDataProviderRestoreStruct",
-	"setPausingAddressesStruct",
-	"resumeStruct",
+	"keyDeleteStruct",
+	"keyGenerateStruct",
 }
 
-var MessageArguments map[OPCommand]abi.Argument
+var MessageArguments map[constants.OPCommand]abi.Argument
 
 var KeyExistenceStructArg abi.Argument
 
@@ -50,7 +36,7 @@ func init() {
 		logger.Panicf("methods, opCommands miss match")
 	}
 
-	MessageArguments = make(map[OPCommand]abi.Argument)
+	MessageArguments = make(map[constants.OPCommand]abi.Argument)
 	for j := range opCommands {
 		method, ok := walletmanagerAbi.Methods[methods[j]]
 		if !ok {

@@ -1,12 +1,13 @@
 package structs
 
 import (
-	"fmt"
+	"math/big"
 	"testing"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/registry"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/constants"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/verification"
 	"github.com/stretchr/testify/require"
 )
 
@@ -294,21 +295,42 @@ func TestDecodeArray(t *testing.T) {
 }
 
 func TestDecodeInstructionMessage(t *testing.T) {
-	arg := registry.MessageArguments[registry.ToPauseForUpgrade]
+	arg := verification.MessageArguments[constants.TEEAttestation]
 
 	id := common.HexToAddress("6e656b69")
+	h := common.HexToHash("6e656b69")
 
-	pre := registry.ITeeRegistryPauseForUpgrade{TeeId: id}
+	x := big.NewInt(10)
+
+	pre := verification.ITeeVerificationTeeAttestation{
+		TeeMachine: verification.ITeeRegistryTeeMachineWithAttestationData{
+			TeeId:        id,
+			InitialTeeId: id,
+			Url:          "moj.com",
+			CodeHash:     h,
+			Platform:     h,
+		},
+		Challenge: x,
+	}
 
 	encoded, err := abi.Arguments{arg}.Pack(pre)
 	require.NoError(t, err)
 
-	var unpacked registry.ITeeRegistryPauseForUpgrade
+	var unpacked1 verification.ITeeVerificationTeeAttestation
+	var unpacked2 verification.ITeeVerificationTeeAttestation
 
-	err = DecodeTo(arg, encoded, &unpacked)
+	err = DecodeTo(arg, encoded, &unpacked1)
+	require.NoError(t, err)
+	require.Equal(t, pre, unpacked1)
+
+	err = DecodeTo2(arg, encoded, &unpacked2)
+	require.NoError(t, err)
+	require.Equal(t, pre, unpacked2)
+
+	unpacked3, err := Decode[verification.ITeeVerificationTeeAttestation](arg, encoded)
 	require.NoError(t, err)
 
-	require.Equal(t, pre, unpacked)
+	require.Equal(t, pre, unpacked3)
 }
 
 func TestMissMatchedStructs(t *testing.T) {
@@ -358,16 +380,11 @@ func TestMissMatchedStructs(t *testing.T) {
 	var unpacked3 Drugo
 
 	err = DecodeTo(arg0, packed, &unpacked)
-	fmt.Printf("err: %v\n", err)
 	require.Error(t, err)
 
 	_, err = Decode[Drugo](arg0, packed)
-	fmt.Printf("err: %v\n", err)
-
 	require.Error(t, err)
 
 	err = DecodeTo2(arg0, packed, &unpacked3)
-	fmt.Printf("err: %v\n", err)
-
 	require.Error(t, err)
 }
