@@ -4,20 +4,14 @@ package payment
 import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/flare-foundation/go-flare-common/pkg/logger"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/constants"
 )
 
 type OPCommand string
 
-const (
-	Pay              OPCommand = "PAY"
-	Reissue          OPCommand = "REISSUE"
-	SetPaymentLimits OPCommand = "SET_PAYMENT_LIMITS"
-)
-
-var opCommands = []OPCommand{
-	Pay,
-	Reissue,
-	SetPaymentLimits,
+var opCommands = []constants.OPCommand{
+	constants.Pay,
+	constants.Reissue,
 }
 
 // i-th method correspond to a method in TeePaymentStruct interface whose
@@ -25,10 +19,9 @@ var opCommands = []OPCommand{
 var methods = []string{
 	"paymentInstructionMessageStruct",
 	"paymentInstructionMessageStruct",
-	"setPaymentLimitsStruct",
 }
 
-var MessageArguments map[OPCommand]abi.Argument
+var MessageArguments map[constants.OPCommand]abi.Argument
 
 func init() {
 	paymentAbi, err := PaymentMetaData.GetAbi()
@@ -40,7 +33,7 @@ func init() {
 		logger.Panicf("methods, opCommands miss match")
 	}
 
-	MessageArguments = make(map[OPCommand]abi.Argument)
+	MessageArguments = make(map[constants.OPCommand]abi.Argument)
 	for j := range opCommands {
 		method, ok := paymentAbi.Methods[methods[j]]
 		if !ok {

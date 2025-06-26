@@ -4,6 +4,7 @@ package connector
 import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/flare-foundation/go-flare-common/pkg/logger"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/constants"
 )
 
 const (
@@ -12,16 +13,8 @@ const (
 	proofStruct string = "ProofStruct"
 )
 
-const OPType = "FTDC"
-
-type OPCommand string
-
-const (
-	Prove OPCommand = "PROVE"
-)
-
-var opCommands = []OPCommand{
-	Prove,
+var opCommands = []constants.OPCommand{
+	constants.Prove,
 }
 
 // i-th method correspond to a method in TeeDataConnectorStruct interface whose
@@ -30,7 +23,7 @@ var methods = []string{
 	"ftdcProveStruct",
 }
 
-var MessageArguments map[OPCommand]abi.Argument
+var MessageArguments map[constants.OPCommand]abi.Argument
 
 type AttestationType string
 
@@ -67,7 +60,7 @@ func init() {
 		logger.Panicf("methods, opCommands miss match")
 	}
 
-	MessageArguments = make(map[OPCommand]abi.Argument)
+	MessageArguments = make(map[constants.OPCommand]abi.Argument)
 	for j := range opCommands {
 		method, ok := connectorAbi.Methods[methods[j]]
 		if !ok {
