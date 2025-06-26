@@ -3,40 +3,24 @@ run:
   go: "1.24"
   modules-download-mode: readonly
 linters:
-  default: standard
+  default: none
   enable:
-    - godot
-    - whitespace
-    - unconvert
-    - containedctx
-    - decorder
-    - dupl
-    - prealloc
-    - copyloopvar
-    - nolintlint
-    - nilerr
-    - exhaustive
-    - goconst
-    - errchkjson
-    - errname
-    - exhaustruct
-    - funlen
     - cyclop
+    - dupl
+    - errorlint
+    - exhaustive
+    - funlen
     - gocognit
-    - prealloc
-    - wsl
     - goconst
+    - godox
     - maintidx
-    - perfsprint
-    - gocritic
+    - mnd
+    - nestif
+    - prealloc
+    - predeclared
+    - wastedassign
+
   settings:
-    exhaustive:
-      default-signifies-exhaustive: false
-    maintidx:
-      # Show functions with maintainability index lower than N.
-      # A high index indicates better maintainability (it's kind of the opposite of complexity).
-      # Default: 20
-      under: 30
     cyclop:
       # The maximal code complexity to report.
       # Default: 10
@@ -45,6 +29,66 @@ linters:
       # If it's higher than 0.0 (float) the check is enabled.
       # Default: 0.0
       package-average: 1.0
+    exhaustive:
+      default-signifies-exhaustive: false
+    funlen:
+      # Checks the number of lines in a function.
+      # If lower than 0, disable the check.
+      # Default: 60
+      lines: 60
+      # Checks the number of statements in a function.
+      # If lower than 0, disable the check.
+      # Default: 40
+      statements: -40
+      # Ignore comments when counting lines.
+      # Default: true
+      ignore-comments: true
+    gocognit:
+      # Minimal code complexity to report.
+      # Default: 30 (but we recommend 10-20)
+      min-complexity: 30
+    goconst:
+      # Minimal length of string constant.
+      # Default: 3
+      min-len: 5
+      # Minimum occurrences of constant string count to trigger issue.
+      # Default: 3
+      min-occurrences: 3
+      # Look for existing constants matching the values.
+      # Default: true
+      match-constant: true
+      # Search also for duplicated numbers.
+      # Default: false
+      numbers: false
+      # Minimum value, only works with `goconst.numbers`.
+      # Default: 3
+      # min: 100
+      # Maximum value, only works with `goconst.numbers`.
+      # Default: 3
+      # max: 2
+      # Ignore when constant is not used as function argument.
+      # Default: true
+      ignore-calls: true
+      # Exclude strings matching the given regular expression.
+      # Default: ""
+      # ignore-string-values:
+      #   - 'foo.+'
+      # Detects constants with identical values.
+      # Default: false
+      find-duplicates: true
+      # Evaluates of constant expressions like Prefix + "suffix".
+      # Default: false
+      eval-const-expressions: false
+    maintidx:
+      # Show functions with maintainability index lower than N.
+      # A high index indicates better maintainability (it's kind of the opposite of complexity).
+      # Default: 20
+      under: 20
+    nestif:
+      # Minimal complexity of if statements to report.
+      # Default: 5
+      min-complexity: 5
+
 exclusions:
   generated: lax
   paths:

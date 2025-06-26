@@ -4,7 +4,7 @@ import (
 	"crypto/sha256"
 	"crypto/sha512"
 
-	"golang.org/x/crypto/ripemd160" //nolint:staticcheck
+	"golang.org/x/crypto/ripemd160" //nolint:staticcheck,gosec
 )
 
 // Sha512Half returns the first half of sha512 hash.
@@ -27,7 +27,7 @@ func DoubleSha256(b []byte) []byte {
 //
 // ONLY FOR LEGACY PURPOSES.
 func Sha256RipeMD160(b []byte) []byte {
-	ripe := ripemd160.New()
+	ripe := ripemd160.New() //nolint:gosec
 	sha := sha256.New()
 	sha.Write(b)
 	ripe.Write(sha.Sum(nil))

@@ -126,7 +126,7 @@ func (vs *Set) BinarySearch(value uint16) int {
 	}
 	left := 0
 	right := len(vs.thresholds) - 1
-	mid := 0
+	var mid int
 	if vs.thresholds[right] <= value {
 		return right
 	}

@@ -67,9 +67,9 @@ func DecodeTo2[T any](arg abi.Argument, data []byte, dest *T) (err error) {
 		if r := recover(); r != nil {
 			e, ok := r.(error)
 			if ok {
-				err = fmt.Errorf("recovered panic: %v", e)
+				err = fmt.Errorf("recovered panic: %w", e)
 			} else {
-				err = fmt.Errorf("recovered panic non error: %v", e)
+				err = fmt.Errorf("recovered panic non error: %w", e)
 			}
 		}
 	}()
@@ -91,7 +91,14 @@ func DecodeTo2[T any](arg abi.Argument, data []byte, dest *T) (err error) {
 		return err
 	}
 
-	*dest = *abi.ConvertType(decodedSlice[0], new(T)).(*T)
+	temp := abi.ConvertType(decodedSlice[0], new(T))
+	temp2, ok := temp.(*T)
+	if !ok {
+		return errors.New("invalid type assertion")
+	}
+
+	*dest = *temp2
+
 	return nil
 }
 
@@ -101,9 +108,9 @@ func Decode[T any](arg abi.Argument, data []byte) (t T, err error) {
 		if r := recover(); r != nil {
 			e, ok := r.(error)
 			if ok {
-				err = fmt.Errorf("recovered panic: %v", e)
+				err = fmt.Errorf("recovered panic: %w", e)
 			} else {
-				err = fmt.Errorf("recovered panic non error: %v", e)
+				err = fmt.Errorf("recovered panic non error: %w", e)
 			}
 		}
 	}()
@@ -120,7 +127,13 @@ func Decode[T any](arg abi.Argument, data []byte) (t T, err error) {
 		return t, err
 	}
 
-	t = *abi.ConvertType(decodedSlice[0], new(T)).(*T)
+	x := abi.ConvertType(decodedSlice[0], new(T))
+
+	tp, ok := x.(*T)
+	if !ok {
+		return t, errors.New("invalid type assertion")
+	}
+	t = *tp
 
 	return t, nil
 }

@@ -5,23 +5,26 @@ run:
 linters:
   default: standard
   enable:
-    - godot
-    - whitespace
-    - unconvert
+    - asciicheck
+    - bidichk
     - containedctx
-    - decorder
-    - dupl
     - copyloopvar
-    - nolintlint
-    - nilerr
-    - exhaustive
-    - goconst
+    - decorder
     - errchkjson
     - errname
-    - bidichk
+    - exhaustive
+    - exptostd
+    - forcetypeassert
+    - godot
+    - misspell
+    - nolintlint
+    - unconvert
+
   settings:
     exhaustive:
       default-signifies-exhaustive: true
+    nolintlint:
+      require-specific: true
 exclusions:
   generated: lax
   paths:
@@ -37,5 +40,6 @@ formatters:
       - third_party$
       - builtin$
       - examples$
+
 issues:
   max-same-issues: 3
