@@ -112,10 +112,10 @@ func lengthEncode(n int) ([]byte, error) {
 		prefix = []byte{uint8(n)}
 	case n <= 12480:
 		n -= 193
-		prefix = []byte{193 + uint8(n>>8), uint8(n)}
+		prefix = []byte{193 + uint8(n>>8), uint8(n)} //nolint:gosec // checked for overflow + expected cutoff
 	case n <= 918744:
 		n -= 12481
-		prefix = []byte{241 + uint8(n>>16), uint8(n >> 8), uint8(n)}
+		prefix = []byte{241 + uint8(n>>16), uint8(n >> 8), uint8(n)} //nolint:gosec // checked for overflow + expected cutoff
 	}
 
 	return prefix, nil

@@ -64,6 +64,10 @@ func (x *XChainBridge) ToBytes(value any, _ bool) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("invalid IssuingChainDoor, %v: %v", issuingChainDoor, err)
 	}
+	if len(issuingChainDoorID) >= 256 {
+		return nil, fmt.Errorf("issuingChainDoorID length overflow, %v: %v", issuingChainDoor, err)
+	}
+
 	err = out.WriteByte(uint8(len(issuingChainDoorID)))
 	if err != nil {
 		return nil, fmt.Errorf("writing length to buffer, %v: %v", issuingChainDoorID, err)

@@ -37,6 +37,7 @@ func parseField(r []any) (field, error) {
 		return field{}, fmt.Errorf("reading value %v", r[1])
 	}
 
+	//nolint:forcetypeassert
 	return field{
 		Name:           name,
 		IsSerialized:   values["isSerialized"].(bool),
