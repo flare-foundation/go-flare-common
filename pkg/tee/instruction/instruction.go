@@ -51,7 +51,7 @@ func NextVoteHash(hash common.Hash, signer common.Address, signature, additional
 	timestamp := make([]byte, 8)
 	binary.BigEndian.PutUint64(timestamp, time)
 
-	iteratedVoteHash := crypto.Keccak256Hash(hash.Bytes(), signer.Bytes(), signature, additionalVariableMessage, timestamp)
+	iteratedVoteHash := crypto.Keccak256Hash(hash.Bytes(), signer.Bytes(), signature, crypto.Keccak256(additionalVariableMessage), timestamp)
 	return iteratedVoteHash, nil
 }
 
