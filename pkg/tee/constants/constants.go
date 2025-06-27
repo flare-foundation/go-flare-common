@@ -75,8 +75,8 @@ func (t OPType) IsValid() bool {
 	return ok
 }
 
-// ToHash returns utf8 encoding of t padded to 32 bytes.
-func (t OPType) ToHash() common.Hash {
+// Hash returns utf8 encoding of t padded to 32 bytes.
+func (t OPType) Hash() common.Hash {
 	return common.BytesToHash(common.RightPadBytes([]byte(t), 32))
 }
 
@@ -92,8 +92,8 @@ func (c OPCommand) IsValid() bool {
 	return false
 }
 
-// ToHash returns utf8 encoding of c padded to 32 bytes.
-func (c OPCommand) ToHash() common.Hash {
+// Hash returns utf8 encoding of c padded to 32 bytes.
+func (c OPCommand) Hash() common.Hash {
 	return common.BytesToHash(common.RightPadBytes([]byte(c), 32))
 }
 

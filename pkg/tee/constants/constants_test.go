@@ -18,7 +18,7 @@ func TestOPTypes(t *testing.T) {
 		ok = ot.IsValid()
 		require.True(t, ok)
 
-		h := ot.ToHash()
+		h := ot.Hash()
 
 		ot2, ok := HashToOPType(h)
 		require.True(t, ok)
@@ -38,7 +38,7 @@ func TestOPTypes(t *testing.T) {
 		ok = ot.IsValid()
 		require.False(t, ok)
 
-		h := ot.ToHash()
+		h := ot.Hash()
 
 		ot2, ok := HashToOPType(h)
 		require.False(t, ok)
@@ -60,7 +60,7 @@ func TestOPTCommands(t *testing.T) {
 		ok = ot.IsValid()
 		require.True(t, ok)
 
-		h := ot.ToHash()
+		h := ot.Hash()
 
 		ot2, ok := HashToOPCommand(h)
 		require.True(t, ok)
@@ -80,7 +80,7 @@ func TestOPTCommands(t *testing.T) {
 		ok = ot.IsValid()
 		require.False(t, ok)
 
-		h := ot.ToHash()
+		h := ot.Hash()
 
 		ot2, ok := HashToOPCommand(h)
 		require.False(t, ok)
