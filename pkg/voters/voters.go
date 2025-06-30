@@ -169,3 +169,17 @@ func (vs *Set) VoterIndex(address common.Address) int {
 	}
 	return voterData.Index
 }
+
+// VoterWeightForAddress returns the weight for the signing policy address.
+func (vs *Set) VoterWeightForAddress(a common.Address) uint16 {
+	d, exists := vs.VoterDataMap[a]
+	if !exists {
+		return 0
+	}
+	return d.Weight
+}
+
+// Voters a slice of signing policy addresses of voters.
+func (vs *Set) Voters() []common.Address {
+	return vs.voters
+}
