@@ -47,12 +47,12 @@ func (d *DataFixed) InitialVoteHash() (common.Hash, error) {
 	return crypto.Keccak256Hash(d.InstructionID.Bytes(), ih.Bytes(), d.RewardEpochID.Bytes(), d.TeeID.Bytes()), nil
 }
 
-func NextVoteHash(hash common.Hash, signer common.Address, signature, additionalVariableMessage []byte, time uint64) (common.Hash, error) {
+func NextVoteHash(hash common.Hash, signer common.Address, signature, additionalVariableMessage []byte, time uint64) common.Hash {
 	timestamp := make([]byte, 8)
 	binary.BigEndian.PutUint64(timestamp, time)
 
 	iteratedVoteHash := crypto.Keccak256Hash(hash.Bytes(), signer.Bytes(), signature, crypto.Keccak256(additionalVariableMessage), timestamp)
-	return iteratedVoteHash, nil
+	return iteratedVoteHash
 }
 
 // HashForSigning computes the hash of the Data d that is signed by the provider.
