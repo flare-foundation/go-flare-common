@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/hex"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/cenkalti/backoff/v4"
@@ -90,6 +91,41 @@ func fetchLogsByAddressAndTopic0Timestamp(ctx context.Context, db *gorm.DB, para
 		return nil, err
 	}
 	return logs, nil
+}
+
+type FullLogsParams struct {
+	Address common.Address
+	Topics  [4]common.Hash
+	Number  int // -1 for unlimited
+}
+
+func FetchLogs(
+	ctx context.Context, db *gorm.DB, params FullLogsParams,
+) ([]Log, error) {
+	return RetryWrapper(fetchLogs, "fetching logs")(ctx, db, params)
+}
+
+func fetchLogs(
+	ctx context.Context, db *gorm.DB, params FullLogsParams,
+) ([]Log, error) {
+	var logs []Log
+
+	query := make(map[string]any)
+
+	nullAddress := common.Address{}
+	if params.Address != nullAddress {
+		query["address"] = hex.EncodeToString(params.Address[:])
+	}
+	nullHash := common.Hash{}
+	for j := range params.Topics {
+		if params.Topics[j] != nullHash {
+			t := fmt.Sprintf("topic%d", j)
+			query[t] = hex.EncodeToString(params.Topics[j][:])
+		}
+	}
+
+	err := db.WithContext(ctx).Where(query).Order("timestamp DESC").Limit(params.Number).Find(&logs).Error
+	return logs, err
 }
 
 // FetchLogsByAddressAndTopic0FromTimestampToBlockNumber fetches all logs matching Address and Topic0 From timestamp (included) To block number (included), order by timestamp.
