@@ -138,7 +138,7 @@ func Decode[T any](arg abi.Argument, data []byte) (t T, err error) {
 	return t, nil
 }
 
-// checkEncodeDecode encoded decodedSlice using args and compares it to data.
+// checkEncodeDecode encodes decodedSlice using args and compares it to data.
 func checkEncodeDecode(args *abi.Arguments, data []byte, decodedSlice []any) error {
 	encoded, err := args.Pack(decodedSlice...)
 	if err != nil {
