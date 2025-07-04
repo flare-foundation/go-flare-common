@@ -12,6 +12,7 @@ const (
 	Reg    OPType = "REG"
 	Wallet OPType = "WALLET"
 	Get    OPType = "GET"
+	Policy OPType = "POLICY"
 	XRP    OPType = "XRP"
 	BTC    OPType = "BTC"
 	FTDC   OPType = "FTDC"
@@ -35,6 +36,9 @@ const (
 	TEEBackup OPCommand = "TEE_BACKUP"
 	TEEInfo   OPCommand = "TEE_INFO"
 
+	InitializePolicy OPCommand = "INITIALIZE_POLICY"
+	UpdatePolicy     OPCommand = "UPDATE_POLICY"
+
 	Pay     OPCommand = "PAY"
 	Reissue OPCommand = "REISSUE"
 
@@ -55,6 +59,10 @@ var validPairs = map[OPType]map[OPCommand]bool{
 		KeyInfo:   true,
 		TEEBackup: true,
 		TEEInfo:   true,
+	},
+	Policy: {
+		InitializePolicy: true,
+		UpdatePolicy:     true,
 	},
 	XRP: {
 		Pay:     true,
