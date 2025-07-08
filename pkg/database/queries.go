@@ -47,7 +47,7 @@ type LatestLogsParams struct {
 	Number  int
 }
 
-// FetchLatestLogsByAddressAndTopic0 returns the last Number of logs with Topic0 emitted by Address.
+// FetchLatestLogsByAddressAndTopic0 returns the last <Number> logs with Topic0 emitted by Address.
 func FetchLatestLogsByAddressAndTopic0(
 	ctx context.Context, db *gorm.DB, params LatestLogsParams,
 ) ([]Log, error) {
@@ -63,6 +63,50 @@ func fetchLatestLogsByAddressAndTopic0(
 		hex.EncodeToString(params.Address[:]), // encodes without 0x prefix and without checksum
 		hex.EncodeToString(params.Topic0[:]),
 	).Order("timestamp DESC").Limit(params.Number).Find(&logs).Error
+
+	return logs, err
+}
+
+type LogsFullParams struct {
+	Address common.Address
+	Topics  [4]common.Hash
+	Number  int // -1 for unlimited
+
+}
+
+// FetchLogsFull returns the last <Number> logs with Topics emitted by Address.
+//
+// If a topic or address has zero value, it is not included in conditions.
+// If the Number is -1, it attempts to return all logs matching the conditions.
+func FetchLogsFull(
+	ctx context.Context, db *gorm.DB, params LogsFullParams,
+) ([]Log, error) {
+	return RetryWrapper(fetchLogsFull, "fetching logs")(ctx, db, params)
+}
+
+func fetchLogsFull(
+	ctx context.Context, db *gorm.DB, params LogsFullParams,
+) ([]Log, error) {
+	var logs []Log
+
+	pMap := make(map[string]any)
+
+	za := common.Address{}
+
+	if params.Address != za {
+		pMap["address"] = hex.EncodeToString(params.Address[:])
+	}
+
+	zh := common.Hash{}
+
+	for j := range params.Topics {
+		if params.Topics[j] != zh {
+			key := fmt.Sprintf("topic%d", j)
+			pMap[key] = hex.EncodeToString(params.Topics[j][:])
+		}
+	}
+
+	err := db.WithContext(ctx).Where(pMap).Order("timestamp DESC").Limit(params.Number).Find(&logs).Error
 
 	return logs, err
 }
@@ -91,41 +135,6 @@ func fetchLogsByAddressAndTopic0Timestamp(ctx context.Context, db *gorm.DB, para
 		return nil, err
 	}
 	return logs, nil
-}
-
-type FullLogsParams struct {
-	Address common.Address
-	Topics  [4]common.Hash
-	Number  int // -1 for unlimited
-}
-
-func FetchLogs(
-	ctx context.Context, db *gorm.DB, params FullLogsParams,
-) ([]Log, error) {
-	return RetryWrapper(fetchLogs, "fetching logs")(ctx, db, params)
-}
-
-func fetchLogs(
-	ctx context.Context, db *gorm.DB, params FullLogsParams,
-) ([]Log, error) {
-	var logs []Log
-
-	query := make(map[string]any)
-
-	nullAddress := common.Address{}
-	if params.Address != nullAddress {
-		query["address"] = hex.EncodeToString(params.Address[:])
-	}
-	nullHash := common.Hash{}
-	for j := range params.Topics {
-		if params.Topics[j] != nullHash {
-			t := fmt.Sprintf("topic%d", j)
-			query[t] = hex.EncodeToString(params.Topics[j][:])
-		}
-	}
-
-	err := db.WithContext(ctx).Where(query).Order("timestamp DESC").Limit(params.Number).Find(&logs).Error
-	return logs, err
 }
 
 // FetchLogsByAddressAndTopic0FromTimestampToBlockNumber fetches all logs matching Address and Topic0 From timestamp (included) To block number (included), order by timestamp.
