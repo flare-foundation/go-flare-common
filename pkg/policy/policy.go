@@ -12,6 +12,7 @@ import (
 	"slices"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/flare-foundation/go-flare-common/pkg/contracts/relay"
 	"github.com/flare-foundation/go-flare-common/pkg/voters"
 )
@@ -30,6 +31,11 @@ type SigningPolicy struct {
 
 func (sp *SigningPolicy) RawBytes() []byte {
 	return sp.rawBytes
+}
+
+// Hash returns hash of the signing policy.
+func (sp *SigningPolicy) Hash() []byte {
+	return Hash(sp.rawBytes)
 }
 
 func NewSigningPolicy(r *relay.RelaySigningPolicyInitialized, submitToSigning map[common.Address]common.Address) *SigningPolicy {
@@ -129,4 +135,16 @@ func decodeUint32(b []byte) uint32 {
 	copy(tmpUint32[padding:], b)
 
 	return binary.BigEndian.Uint32(tmpUint32)
+}
+
+// Hash computes hash of a signing policy from signingPolicyBytes.
+func Hash(b []byte) []byte {
+	if len(b)%32 != 0 {
+		b = append(b, make([]byte, 32-len(b)%32)...)
+	}
+	hash := crypto.Keccak256(b[:32], b[32:64])
+	for i := 2; i < len(b)/32; i++ {
+		hash = crypto.Keccak256(hash, b[i*32:(i+1)*32])
+	}
+	return hash
 }
