@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	reqStruct   string = "RequestStruct"
-	resStruct   string = "ResponseStruct"
+	reqStruct   string = "RequestBodyStruct"
+	resStruct   string = "ResponseBodyStruct"
 	proofStruct string = "ProofStruct"
 )
 
@@ -20,7 +20,7 @@ var opCommands = []constants.OPCommand{
 // i-th method correspond to a method in TeeDataConnectorStruct interface whose
 // input is the type of message emitted with i-th element of opCommands.
 var methods = []string{
-	"ftdcProveStruct",
+	"ftdcAttestationRequestStruct",
 }
 
 var MessageArguments map[constants.OPCommand]abi.Argument
@@ -28,11 +28,13 @@ var MessageArguments map[constants.OPCommand]abi.Argument
 type AttestationType string
 
 const (
-	AvailabilityCheck AttestationType = "AvailabilityCheck"
+	AvailabilityCheck AttestationType = "TeeAvailabilityCheck"
+	PMWPaymentStatus  AttestationType = "PMWPaymentStatus"
 )
 
 var attestationTypes = []AttestationType{
 	AvailabilityCheck,
+	PMWPaymentStatus,
 }
 
 // i-th method correspond to a method in TeeDataConnectorStruct interface whose
@@ -47,6 +49,10 @@ type AttestationArguments struct {
 	Response abi.Argument
 	Proof    abi.Argument
 }
+
+var RequestHeaderArg abi.Argument
+var ResponseHeaderArg abi.Argument
+var AttestationRequestArg abi.Argument
 
 var AttestationTypeArguments map[AttestationType]AttestationArguments
 
@@ -99,4 +105,22 @@ func init() {
 			Proof:    proofAbi,
 		}
 	}
+
+	method, ok := connectorAbi.Methods["ftdcRequestHeaderStruct"]
+	if !ok {
+		logger.Panic("missing method ftdcRequestHeaderStruct")
+	}
+	RequestHeaderArg = method.Inputs[0]
+
+	method, ok = connectorAbi.Methods["ftdcResponseHeaderStruct"]
+	if !ok {
+		logger.Panic("missing method ftdcResponseHeaderStruct")
+	}
+	ResponseHeaderArg = method.Inputs[0]
+
+	method, ok = connectorAbi.Methods["ftdcAttestationRequestStruct"]
+	if !ok {
+		logger.Panic("missing method ftdcAttestationRequestStruct")
+	}
+	AttestationRequestArg = method.Inputs[0]
 }
