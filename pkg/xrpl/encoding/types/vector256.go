@@ -9,7 +9,7 @@ type vector256 struct{}
 
 var Vector256 = &vector256{}
 
-func (v *vector256) ToBytes(value any, _ bool) ([]byte, error) {
+func (*vector256) ToBytes(value any, _ bool) ([]byte, error) {
 	array, ok := value.([]any)
 	if !ok {
 		return nil, fmt.Errorf("invalid vector256: %v", value)
@@ -28,7 +28,7 @@ func (v *vector256) ToBytes(value any, _ bool) ([]byte, error) {
 	return out, nil
 }
 
-func (v *vector256) ToJson(b *bytes.Buffer, l int) (any, error) {
+func (*vector256) ToJson(b *bytes.Buffer, l int) (any, error) {
 	if l%32 != 0 {
 		return nil, fmt.Errorf("invalid length of encoded vector256 %d", l)
 	}

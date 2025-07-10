@@ -10,7 +10,7 @@ import (
 
 type XChainBridge struct{}
 
-func (x *XChainBridge) ToBytes(value any, _ bool) ([]byte, error) {
+func (*XChainBridge) ToBytes(value any, _ bool) ([]byte, error) {
 	valueMap, ok := value.(map[string]any)
 	if !ok {
 		return nil, fmt.Errorf("invalid XChainBridge %v, %v", value, reflect.TypeOf(value))
@@ -89,7 +89,7 @@ func (x *XChainBridge) ToBytes(value any, _ bool) ([]byte, error) {
 	return out.Bytes(), nil
 }
 
-func (x *XChainBridge) ToJson(b *bytes.Buffer, _ int) (any, error) {
+func (*XChainBridge) ToJson(b *bytes.Buffer, _ int) (any, error) {
 	out := make(map[string]any)
 
 	l, err := b.ReadByte()

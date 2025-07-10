@@ -50,7 +50,7 @@ type amount struct{}
 var Amount = &amount{}
 
 // ToBytes serializes Amount field.
-func (a *amount) ToBytes(value any, _ bool) ([]byte, error) {
+func (*amount) ToBytes(value any, _ bool) ([]byte, error) {
 	switch value := value.(type) {
 	case string:
 		return xrpToBytes(value)
@@ -58,6 +58,25 @@ func (a *amount) ToBytes(value any, _ bool) ([]byte, error) {
 		return tokenToBytes(value)
 	default:
 		return nil, fmt.Errorf("invalid amount: %v", value)
+	}
+}
+
+// ToJson decodes amount field.
+func (a *amount) ToJson(b *bytes.Buffer, _ int) (any, error) {
+	firstByte, err := b.ReadByte()
+	if err != nil {
+		return nil, fmt.Errorf("cannot read first byte: %v", err)
+	}
+
+	first := firstByte & notXRPBitMask
+
+	switch first {
+	case 0:
+		return xrpToJson(firstByte, b)
+	case notXRPBitMask:
+		return tokenToJson(firstByte, b)
+	default:
+		return nil, fmt.Errorf("impossible, first bit neither 1 nor 0: %v", first)
 	}
 }
 
@@ -323,25 +342,6 @@ func deserializeTokenAmount(a []byte) (string, error) {
 	}
 
 	return fl.Text(0x67, -1), nil
-}
-
-// ToJson decodes amount field.
-func (a *amount) ToJson(b *bytes.Buffer, _ int) (any, error) {
-	firstByte, err := b.ReadByte()
-	if err != nil {
-		return nil, fmt.Errorf("cannot read first byte: %v", err)
-	}
-
-	first := firstByte & notXRPBitMask
-
-	switch first {
-	case 0:
-		return xrpToJson(firstByte, b)
-	case notXRPBitMask:
-		return tokenToJson(firstByte, b)
-	default:
-		return nil, fmt.Errorf("impossible, first bit neither 1 nor 0: %v", first)
-	}
 }
 
 func xrpToJson(firstByte byte, b *bytes.Buffer) (string, error) {

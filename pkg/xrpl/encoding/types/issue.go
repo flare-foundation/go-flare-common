@@ -13,7 +13,7 @@ var Issue = &issue{}
 
 type issue struct{}
 
-func (i *issue) ToBytes(value any, _ bool) ([]byte, error) {
+func (*issue) ToBytes(value any, _ bool) ([]byte, error) {
 	valueMap, ok := value.(map[string]any)
 	if !ok {
 		return nil, fmt.Errorf("invalid issue %v", value)
@@ -62,7 +62,7 @@ func (i *issue) ToBytes(value any, _ bool) ([]byte, error) {
 	return code, nil
 }
 
-func (i *issue) ToJson(b *bytes.Buffer, _ int) (any, error) {
+func (*issue) ToJson(b *bytes.Buffer, _ int) (any, error) {
 	out := make(map[string]any)
 
 	l := 20
