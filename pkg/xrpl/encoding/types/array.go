@@ -17,7 +17,7 @@ type stArray struct{}
 var STArray = &stArray{}
 
 // ToBytes serializes values of Array fields.
-func (a *stArray) ToBytes(value any, signing bool) ([]byte, error) {
+func (*stArray) ToBytes(value any, signing bool) ([]byte, error) {
 	array, ok := value.([]any)
 	if !ok {
 		return nil, fmt.Errorf("invalid array %v is of type %v ", value, reflect.TypeOf(value))
@@ -57,7 +57,7 @@ func (a *stArray) ToBytes(value any, signing bool) ([]byte, error) {
 }
 
 // ToJson decodes an encoded array.
-func (a *stArray) ToJson(b *bytes.Buffer, _ int) (any, error) {
+func (*stArray) ToJson(b *bytes.Buffer, _ int) (any, error) {
 	out := make([]any, 0)
 
 	for {

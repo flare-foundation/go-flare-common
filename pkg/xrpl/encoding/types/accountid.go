@@ -14,7 +14,7 @@ type accountID struct{}
 var AccountID = &accountID{}
 
 // ToBytes serializes value of an AccountID field.
-func (a *accountID) ToBytes(value any, _ bool) ([]byte, error) {
+func (*accountID) ToBytes(value any, _ bool) ([]byte, error) {
 	addr, ok := value.(string)
 	if !ok {
 		return nil, fmt.Errorf("value %v is not string", value)
@@ -29,7 +29,7 @@ func (a *accountID) ToBytes(value any, _ bool) ([]byte, error) {
 }
 
 // ToJson reads next 20 bytes and converts them to a string xrpl address.
-func (a *accountID) ToJson(b *bytes.Buffer, _ int) (any, error) {
+func (*accountID) ToJson(b *bytes.Buffer, _ int) (any, error) {
 	const l = 20
 	value := make([]byte, l)
 

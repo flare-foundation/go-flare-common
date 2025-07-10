@@ -11,7 +11,7 @@ const objectEnd byte = 0xe1
 type STObject struct{}
 
 // ToBytes serializes value of Object Fields.
-func (o *STObject) ToBytes(value any, signing bool) ([]byte, error) {
+func (*STObject) ToBytes(value any, signing bool) ([]byte, error) {
 	valuerObj, ok := value.(Object)
 	if !ok {
 		return nil, fmt.Errorf("value %v is not an object", value)
@@ -27,7 +27,7 @@ func (o *STObject) ToBytes(value any, signing bool) ([]byte, error) {
 	return bytes, nil
 }
 
-func (o *STObject) ToJson(b *bytes.Buffer, _ int) (any, error) {
+func (*STObject) ToJson(b *bytes.Buffer, _ int) (any, error) {
 	out := make(map[string]any)
 
 	for {

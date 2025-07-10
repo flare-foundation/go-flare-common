@@ -20,7 +20,7 @@ const (
 
 type PathSet struct{}
 
-func (p *PathSet) ToBytes(value any, _ bool) ([]byte, error) {
+func (*PathSet) ToBytes(value any, _ bool) ([]byte, error) {
 	paths, ok := value.([]any)
 	if !ok {
 		return nil, fmt.Errorf("invalid pathSet %v", value)
@@ -52,6 +52,35 @@ func (p *PathSet) ToBytes(value any, _ bool) ([]byte, error) {
 	}
 
 	return out, nil
+}
+
+func (*PathSet) ToJson(b *bytes.Buffer, _ int) (any, error) {
+	out := make([]any, 0)
+	l := 0
+
+	for {
+		flag, path, err := readPath(b)
+		if err != nil {
+			return nil, fmt.Errorf("reading next path: %v", err)
+		}
+		switch flag {
+		case endFlag:
+			out = append(out, path)
+			l++
+			if l > 6 {
+				return nil, errors.New("pathSet too large")
+			}
+			return out, nil
+		case anotherFlag:
+			out = append(out, path)
+			if l > 6 {
+				return nil, errors.New("pathSet too large")
+			}
+			l++
+		default:
+			return nil, fmt.Errorf("unknown end flag %v", flag)
+		}
+	}
 }
 
 func stepToBytes(step map[string]any) ([]byte, error) {
@@ -167,35 +196,6 @@ func pathToBytes(path []any) ([]byte, error) {
 	}
 
 	return out, nil
-}
-
-func (p *PathSet) ToJson(b *bytes.Buffer, _ int) (any, error) {
-	out := make([]any, 0)
-	l := 0
-
-	for {
-		flag, path, err := readPath(b)
-		if err != nil {
-			return nil, fmt.Errorf("reading next path: %v", err)
-		}
-		switch flag {
-		case endFlag:
-			out = append(out, path)
-			l++
-			if l > 6 {
-				return nil, errors.New("pathSet too large")
-			}
-			return out, nil
-		case anotherFlag:
-			out = append(out, path)
-			if l > 6 {
-				return nil, errors.New("pathSet too large")
-			}
-			l++
-		default:
-			return nil, fmt.Errorf("unknown end flag %v", flag)
-		}
-	}
 }
 
 func readPath(b *bytes.Buffer) (byte, any, error) {

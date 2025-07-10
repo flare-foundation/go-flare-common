@@ -32,6 +32,30 @@ func (e *IllegalError) Error() string {
 	return fmt.Sprintf("Illegal type %v", e.xt)
 }
 
+// Encode serializes an object.
+func Encode(value Object, signing bool) ([]byte, error) {
+	outBuff := bytes.NewBuffer(nil)
+
+	names := keys(value)
+	sortedNames, err := sortFields(names)
+	if err != nil {
+		return nil, fmt.Errorf("cannot sort: %v", err)
+	}
+
+	for _, name := range sortedNames {
+		bytes, err := encodeInner(name, value[name], signing)
+		if err != nil {
+			return nil, fmt.Errorf("%s: %v", name, err)
+		}
+		_, err = outBuff.Write(bytes)
+		if err != nil {
+			return nil, fmt.Errorf("cannot add %s to buffer: %v", name, err)
+		}
+	}
+
+	return outBuff.Bytes(), nil
+}
+
 type Coder interface {
 	ToBytes(value any, signing bool) ([]byte, error)
 	ToJson(b *bytes.Buffer, length int) (any, error)
@@ -238,30 +262,6 @@ func sortFields(names []string) ([]string, error) {
 }
 
 type Object = map[string]any
-
-// Encode serializes an object.
-func Encode(value Object, signing bool) ([]byte, error) {
-	outBuff := bytes.NewBuffer(nil)
-
-	names := keys(value)
-	sortedNames, err := sortFields(names)
-	if err != nil {
-		return nil, fmt.Errorf("cannot sort: %v", err)
-	}
-
-	for _, name := range sortedNames {
-		bytes, err := encodeInner(name, value[name], signing)
-		if err != nil {
-			return nil, fmt.Errorf("%s: %v", name, err)
-		}
-		_, err = outBuff.Write(bytes)
-		if err != nil {
-			return nil, fmt.Errorf("cannot add %s to buffer: %v", name, err)
-		}
-	}
-
-	return outBuff.Bytes(), nil
-}
 
 // keys extract keys from map and returns them into an array.
 // The order of keys is not deterministic.
