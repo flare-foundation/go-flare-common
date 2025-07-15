@@ -7,19 +7,19 @@ import (
 	"github.com/pelletier/go-toml/v2"
 )
 
-// ReadToml reads toml file from filePath and marshals it into struct of type T.
+// Read reads toml file from filePath and marshals it into struct of type T.
 // If allowUnknownFields is set to false, any unknown field in toml file will trigger error.
-func ReadToml[T any](filePath string, allowUnknownFields bool) (T, error) {
+func Read[T any](filePath string, allowUnknownFields bool) (T, error) {
 	var dest T
 
-	err := ReadTomlTo(filePath, &dest, allowUnknownFields)
+	err := ReadTo(filePath, &dest, allowUnknownFields)
 
 	return dest, err
 }
 
-// ReadTomlTo reads toml file from filePath and marshals it into dest.
+// ReadTo reads toml file from filePath and marshals it into dest.
 // If allowUnknownFields is set to false, any unknown field in toml file will trigger error.
-func ReadTomlTo[T any](filePath string, dest *T, allowUnknownFields bool) error {
+func ReadTo[T any](filePath string, dest *T, allowUnknownFields bool) error {
 	file, err := os.Open(filePath)
 	if err != nil {
 		return fmt.Errorf("failed reading file %s with: %s", filePath, err)

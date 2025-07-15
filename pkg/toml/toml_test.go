@@ -27,12 +27,12 @@ func TestReadTomlHappy(t *testing.T) {
 
 	path := "./testHappy.toml"
 
-	a, err := ReadToml[testStructHappy](path, true)
+	a, err := Read[testStructHappy](path, true)
 	require.NoError(t, err)
 
 	dest := new(testStructHappy)
 
-	err = ReadTomlTo(path, dest, true)
+	err = ReadTo(path, dest, true)
 	require.NoError(t, err)
 
 	expected := testStructHappy{
@@ -54,10 +54,10 @@ type unknown struct{ R int }
 
 func TestReadTomlFail(t *testing.T) {
 	path := "./testHappy.toml"
-	_, err := ReadToml[unknown](path, false)
+	_, err := Read[unknown](path, false)
 	require.Error(t, err)
 
 	path = "./nonExistant.toml"
-	_, err = ReadToml[unknown](path, false)
+	_, err = Read[unknown](path, false)
 	require.Error(t, err)
 }
