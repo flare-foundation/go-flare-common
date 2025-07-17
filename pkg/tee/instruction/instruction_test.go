@@ -1,7 +1,6 @@
 package instruction
 
 import (
-	"math/big"
 	"testing"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -25,7 +24,7 @@ func TestHashForSigning(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, hash0, hash)
 
-	data.RewardEpochID = new(big.Int)
+	data.RewardEpochID = 1
 
 	hash, err = data.HashForSigning()
 	require.NoError(t, err)
@@ -44,7 +43,7 @@ func TestHash(t *testing.T) {
 		InstructionID:          common.Hash{},
 		TeeID:                  common.Address{},
 		Timestamp:              0,
-		RewardEpochID:          &big.Int{},
+		RewardEpochID:          0,
 		OPType:                 common.Hash{},
 		OPCommand:              common.Hash{},
 		OriginalMessage:        hexutil.Bytes{1},

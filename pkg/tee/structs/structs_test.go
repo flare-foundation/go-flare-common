@@ -5,6 +5,7 @@ import (
 
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/connector"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/payment"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/tee"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/wallet"
 	"github.com/stretchr/testify/require"
 )
@@ -16,4 +17,5 @@ func TestInit(t *testing.T) {
 	require.NotNil(t, wallet.MessageArguments)
 	require.NotNil(t, connector.MessageArguments)
 	require.NotNil(t, connector.AttestationTypeArguments)
+	require.NotNil(t, tee.StructArg)
 }
