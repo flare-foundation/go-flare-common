@@ -2,14 +2,13 @@ package instruction
 
 import (
 	"crypto/ecdsa"
-	"encoding/binary"
-	"encoding/json"
-	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/structs"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/tee"
 )
 
 type Data struct {
@@ -21,21 +20,34 @@ type DataFixed struct {
 	InstructionID          common.Hash    `json:"instructionId"`
 	TeeID                  common.Address `json:"teeId"`
 	Timestamp              uint32         `json:"timestamp"`
-	RewardEpochID          *big.Int       `json:"rewardEpochId"`
+	RewardEpochID          uint32         `json:"rewardEpochId"`
 	OPType                 common.Hash    `json:"opType"`
 	OPCommand              common.Hash    `json:"opCommand"`
 	OriginalMessage        hexutil.Bytes  `json:"originalMessage"`
 	AdditionalFixedMessage hexutil.Bytes  `json:"additionalFixedMessage"`
 }
 
+func (d DataFixed) toSolidityStruct() *tee.TeeStructsTeeInstruction {
+	return &tee.TeeStructsTeeInstruction{
+		InstructionId:          d.InstructionID,
+		TeeId:                  d.TeeID,
+		Timestamp:              d.Timestamp,
+		RewardEpochId:          d.RewardEpochID,
+		OpType:                 d.OPType,
+		OpCommand:              d.OPCommand,
+		OriginalMessage:        d.OriginalMessage,
+		AdditionalFixedMessage: d.AdditionalFixedMessage,
+	}
+}
+
 // Hash computes the hash of the DataFixed d.
 func (d DataFixed) HashFixed() (common.Hash, error) {
-	m, err := json.Marshal(d)
+	e, err := structs.Encode(tee.StructArg[tee.Instruction], d.toSolidityStruct())
 	if err != nil {
 		return common.Hash{}, err
 	}
 
-	return crypto.Keccak256Hash(m), nil
+	return crypto.Keccak256Hash(e), nil
 }
 
 func (d *DataFixed) InitialVoteHash() (common.Hash, error) {
@@ -44,15 +56,38 @@ func (d *DataFixed) InitialVoteHash() (common.Hash, error) {
 		return common.Hash{}, err
 	}
 
-	return crypto.Keccak256Hash(d.InstructionID.Bytes(), ih.Bytes(), d.RewardEpochID.Bytes(), d.TeeID.Bytes()), nil
+	s := tee.TeeStructsVoteSequenceInit{
+		InstructionId:   d.InstructionID,
+		InstructionHash: ih,
+		RewardEpochId:   d.RewardEpochID,
+		TeeId:           d.TeeID,
+	}
+
+	e, err := structs.Encode(tee.StructArg[tee.VoteSequenceInit], s)
+	if err != nil {
+		return common.Hash{}, err
+	}
+
+	return crypto.Keccak256Hash(e), nil
 }
 
-func NextVoteHash(hash common.Hash, signer common.Address, signature, additionalVariableMessage []byte, time uint64) common.Hash {
-	timestamp := make([]byte, 8)
-	binary.BigEndian.PutUint64(timestamp, time)
+func NextVoteHash(hash common.Hash, sequence uint64, signature, additionalVariableMessage []byte, time uint64) (common.Hash, error) {
+	avmh := crypto.Keccak256Hash(additionalVariableMessage)
 
-	iteratedVoteHash := crypto.Keccak256Hash(hash.Bytes(), signer.Bytes(), signature, crypto.Keccak256(additionalVariableMessage), timestamp)
-	return iteratedVoteHash
+	s := tee.TeeStructsVoteSequenceNext{
+		VoteHash:                      hash,
+		Sequence:                      sequence,
+		Signature:                     signature,
+		AdditionalVariableMessageHash: avmh,
+		Timestamp:                     time,
+	}
+
+	e, err := structs.Encode(tee.StructArg[tee.VoteSequenceNext], s)
+	if err != nil {
+		return common.Hash{}, err
+	}
+
+	return crypto.Keccak256Hash(e), nil
 }
 
 // HashForSigning computes the hash of the Data d that is signed by the provider.
@@ -61,7 +96,7 @@ func (d Data) HashForSigning() (common.Hash, error) {
 	if err != nil {
 		return common.Hash{}, err
 	}
-	return crypto.Keccak256Hash(fixed[:], d.AdditionalVariableMessage), nil
+	return crypto.Keccak256Hash(fixed[:], crypto.Keccak256(d.AdditionalVariableMessage)), nil
 }
 
 // SignInstructionHash signs the hash of the tee instruction.

@@ -1,4 +1,4 @@
- [
+[
     {
       "inputs": [
         {
@@ -126,19 +126,9 @@
                   "type": "uint8"
                 },
                 {
-                  "internalType": "enum ITeeAvailabilityCheck.TeeMachineStatus",
-                  "name": "machineStatus",
-                  "type": "uint8"
-                },
-                {
                   "internalType": "uint64",
                   "name": "teeTimestamp",
                   "type": "uint64"
-                },
-                {
-                  "internalType": "address",
-                  "name": "initialTeeId",
-                  "type": "address"
                 },
                 {
                   "internalType": "bytes32",
@@ -151,19 +141,29 @@
                   "type": "bytes32"
                 },
                 {
-                  "internalType": "bytes32",
-                  "name": "teeGovernanceHash",
-                  "type": "bytes32"
+                  "internalType": "uint24",
+                  "name": "initialSigningPolicyId",
+                  "type": "uint24"
                 },
                 {
                   "internalType": "uint24",
-                  "name": "rewardEpochId",
+                  "name": "lastSigningPolicyId",
                   "type": "uint24"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "stateHash",
+                  "type": "bytes32"
                 }
               ],
               "internalType": "struct ITeeAvailabilityCheck.ResponseBody",
               "name": "responseBody",
               "type": "tuple"
+            },
+            {
+              "internalType": "bytes",
+              "name": "state",
+              "type": "bytes"
             }
           ],
           "internalType": "struct ITeeAvailabilityCheck.Proof",
@@ -216,19 +216,9 @@
               "type": "uint8"
             },
             {
-              "internalType": "enum ITeeAvailabilityCheck.TeeMachineStatus",
-              "name": "machineStatus",
-              "type": "uint8"
-            },
-            {
               "internalType": "uint64",
               "name": "teeTimestamp",
               "type": "uint64"
-            },
-            {
-              "internalType": "address",
-              "name": "initialTeeId",
-              "type": "address"
             },
             {
               "internalType": "bytes32",
@@ -241,14 +231,19 @@
               "type": "bytes32"
             },
             {
-              "internalType": "bytes32",
-              "name": "teeGovernanceHash",
-              "type": "bytes32"
+              "internalType": "uint24",
+              "name": "initialSigningPolicyId",
+              "type": "uint24"
             },
             {
               "internalType": "uint24",
-              "name": "rewardEpochId",
+              "name": "lastSigningPolicyId",
               "type": "uint24"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "stateHash",
+              "type": "bytes32"
             }
           ],
           "internalType": "struct ITeeAvailabilityCheck.ResponseBody",
