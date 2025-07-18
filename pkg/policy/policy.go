@@ -18,7 +18,7 @@ import (
 )
 
 type SigningPolicy struct {
-	RewardEpochID      int64
+	RewardEpochID      uint32
 	StartVotingRoundID uint32
 	Threshold          uint16
 	Seed               *big.Int
@@ -38,9 +38,12 @@ func (sp *SigningPolicy) Hash() []byte {
 	return Hash(sp.rawBytes)
 }
 
+// NewSigningPolicy crates SigningPolicy from an SigningPolicyInitialized event.
+//
+// Mapping from submitAddress to signingPolicyAddress can be added if needed.
 func NewSigningPolicy(r *relay.RelaySigningPolicyInitialized, submitToSigning map[common.Address]common.Address) *SigningPolicy {
 	return &SigningPolicy{
-		RewardEpochID:      r.RewardEpochId.Int64(),
+		RewardEpochID:      uint32(r.RewardEpochId.Uint64()), //nolint:gosec // r.RewardEpochId is uint24 in the event
 		StartVotingRoundID: r.StartVotingRoundId,
 		Threshold:          r.Threshold,
 		Seed:               r.Seed,
@@ -116,7 +119,7 @@ func FromRawBytes(b []byte) (*SigningPolicy, int, error) {
 	}
 
 	return &SigningPolicy{
-		RewardEpochID:      int64(epoch),
+		RewardEpochID:      epoch,
 		StartVotingRoundID: startingRound,
 		Threshold:          threshold,
 		Seed:               new(big.Int).SetBytes(seed[:]),

@@ -84,7 +84,7 @@ func (s *Storage) RemoveBefore(votingRoundID uint32) []uint32 {
 
 	var removedRewardEpochIDs []uint32
 	for len(s.spList) > 1 && s.spList[1].StartVotingRoundID < votingRoundID {
-		removedRewardEpochIDs = append(removedRewardEpochIDs, uint32(s.spList[0].RewardEpochID))
+		removedRewardEpochIDs = append(removedRewardEpochIDs, s.spList[0].RewardEpochID)
 		s.spList[0] = nil
 		s.spList = s.spList[1:]
 	}
