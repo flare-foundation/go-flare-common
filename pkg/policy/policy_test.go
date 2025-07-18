@@ -130,7 +130,7 @@ func TestStorage(t *testing.T) {
 
 	policyFromStorage, ok := storage.ForVotingRound(663845)
 	require.False(t, ok)
-	require.Equal(t, int64(2766), policyFromStorage.RewardEpochID)
+	require.Equal(t, uint32(2766), policyFromStorage.RewardEpochID)
 	require.Equal(t, uint16(65528), policyFromStorage.Voters.TotalWeight)
 
 	policyFromStorage, ok = storage.ForVotingRound(663445)
@@ -139,7 +139,7 @@ func TestStorage(t *testing.T) {
 
 	policyFromStorage, ok = storage.ForVotingRound(673445)
 	require.True(t, ok)
-	require.Equal(t, int64(2767), policyFromStorage.RewardEpochID)
+	require.Equal(t, uint32(2767), policyFromStorage.RewardEpochID)
 	require.Equal(t, uint16(65529), policyFromStorage.Voters.TotalWeight)
 
 	removeEmpty := storage.RemoveBefore(12)
