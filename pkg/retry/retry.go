@@ -79,8 +79,9 @@ func ingrainAttempt[T any](f func(int) (T, error)) func() (T, error) {
 	return func() (T, error) {
 		x.Lock()
 		j++
+		i := j
 		x.Unlock()
-		return f(j)
+		return f(i)
 	}
 }
 
