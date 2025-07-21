@@ -13,36 +13,14 @@ import (
 
 type Data struct {
 	DataFixed
-	AdditionalVariableMessage hexutil.Bytes `json:"additionalVariableMessage"`
+	AdditionalVariableMessage hexutil.Bytes `json:"AdditionalVariableMessage"`
 }
 
-type DataFixed struct {
-	InstructionID          common.Hash    `json:"instructionId"`
-	TeeID                  common.Address `json:"teeId"`
-	Timestamp              uint32         `json:"timestamp"`
-	RewardEpochID          uint32         `json:"rewardEpochId"`
-	OPType                 common.Hash    `json:"opType"`
-	OPCommand              common.Hash    `json:"opCommand"`
-	OriginalMessage        hexutil.Bytes  `json:"originalMessage"`
-	AdditionalFixedMessage hexutil.Bytes  `json:"additionalFixedMessage"`
-}
-
-func (d DataFixed) toSolidityStruct() *tee.TeeStructsTeeInstruction {
-	return &tee.TeeStructsTeeInstruction{
-		InstructionId:          d.InstructionID,
-		TeeId:                  d.TeeID,
-		Timestamp:              d.Timestamp,
-		RewardEpochId:          d.RewardEpochID,
-		OpType:                 d.OPType,
-		OpCommand:              d.OPCommand,
-		OriginalMessage:        d.OriginalMessage,
-		AdditionalFixedMessage: d.AdditionalFixedMessage,
-	}
-}
+type DataFixed tee.TeeStructsTeeInstruction
 
 // Hash computes the hash of the DataFixed d.
 func (d DataFixed) HashFixed() (common.Hash, error) {
-	e, err := structs.Encode(tee.StructArg[tee.Instruction], d.toSolidityStruct())
+	e, err := structs.Encode(tee.StructArg[tee.Instruction], d)
 	if err != nil {
 		return common.Hash{}, err
 	}
@@ -57,10 +35,10 @@ func (d *DataFixed) InitialVoteHash() (common.Hash, error) {
 	}
 
 	s := tee.TeeStructsVoteSequenceInit{
-		InstructionId:   d.InstructionID,
+		InstructionId:   d.InstructionId,
 		InstructionHash: ih,
-		RewardEpochId:   d.RewardEpochID,
-		TeeId:           d.TeeID,
+		RewardEpochId:   d.RewardEpochId,
+		TeeId:           d.TeeId,
 	}
 
 	e, err := structs.Encode(tee.StructArg[tee.VoteSequenceInit], s)
