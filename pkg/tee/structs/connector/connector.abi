@@ -109,9 +109,9 @@
                   "type": "string"
                 },
                 {
-                  "internalType": "uint256",
+                  "internalType": "bytes32",
                   "name": "challenge",
-                  "type": "uint256"
+                  "type": "bytes32"
                 }
               ],
               "internalType": "struct ITeeAvailabilityCheck.RequestBody",
@@ -141,14 +141,14 @@
                   "type": "bytes32"
                 },
                 {
-                  "internalType": "uint24",
+                  "internalType": "uint32",
                   "name": "initialSigningPolicyId",
-                  "type": "uint24"
+                  "type": "uint32"
                 },
                 {
-                  "internalType": "uint24",
+                  "internalType": "uint32",
                   "name": "lastSigningPolicyId",
-                  "type": "uint24"
+                  "type": "uint32"
                 },
                 {
                   "internalType": "bytes32",
@@ -191,9 +191,9 @@
               "type": "string"
             },
             {
-              "internalType": "uint256",
+              "internalType": "bytes32",
               "name": "challenge",
-              "type": "uint256"
+              "type": "bytes32"
             }
           ],
           "internalType": "struct ITeeAvailabilityCheck.RequestBody",
@@ -231,14 +231,14 @@
               "type": "bytes32"
             },
             {
-              "internalType": "uint24",
+              "internalType": "uint32",
               "name": "initialSigningPolicyId",
-              "type": "uint24"
+              "type": "uint32"
             },
             {
-              "internalType": "uint24",
+              "internalType": "uint32",
               "name": "lastSigningPolicyId",
-              "type": "uint24"
+              "type": "uint32"
             },
             {
               "internalType": "bytes32",

@@ -29,43 +29,48 @@ var (
 	_ = abi.ConvertType
 )
 
+// IFtdcHubFtdcResponseHeader is an auto generated low-level Go binding around an user-defined struct.
+type IFtdcHubFtdcResponseHeader struct {
+	AttestationType    [32]byte
+	SourceId           [32]byte
+	ThresholdBIPS      uint16
+	Cosigners          []common.Address
+	CosignersThreshold uint64
+	Timestamp          uint64
+}
+
+// IFtdcVerificationFtdcSignatures is an auto generated low-level Go binding around an user-defined struct.
+type IFtdcVerificationFtdcSignatures struct {
+	SigningPolicySignatures []byte
+	TeeSignatures           []Signature
+	CosignerSignatures      []Signature
+}
+
 // ITeeAvailabilityCheckProof is an auto generated low-level Go binding around an user-defined struct.
 type ITeeAvailabilityCheckProof struct {
-	RelayMessage       []byte
-	TeeSignatures      []Signature
-	CosignerSignatures []Signature
-	Data               ITeeAvailabilityCheckResponse
+	Signatures   IFtdcVerificationFtdcSignatures
+	Header       IFtdcHubFtdcResponseHeader
+	RequestBody  ITeeAvailabilityCheckRequestBody
+	ResponseBody ITeeAvailabilityCheckResponseBody
+	State        []byte
 }
 
 // ITeeAvailabilityCheckRequestBody is an auto generated low-level Go binding around an user-defined struct.
 type ITeeAvailabilityCheckRequestBody struct {
-	TeeId             common.Address
-	InitialTeeId      common.Address
-	Url               string
-	CodeHash          [32]byte
-	Platform          [32]byte
-	TeeGovernanceHash [32]byte
-	RewardEpochId     *big.Int
-	Challenge         *big.Int
-}
-
-// ITeeAvailabilityCheckResponse is an auto generated low-level Go binding around an user-defined struct.
-type ITeeAvailabilityCheckResponse struct {
-	AttestationType    [32]byte
-	SourceId           [32]byte
-	ThresholdBIPS      uint16
-	Timestamp          uint64
-	Cosigners          []common.Address
-	CosignersThreshold uint64
-	RequestBody        ITeeAvailabilityCheckRequestBody
-	ResponseBody       ITeeAvailabilityCheckResponseBody
+	TeeId     common.Address
+	Url       string
+	Challenge [32]byte
 }
 
 // ITeeAvailabilityCheckResponseBody is an auto generated low-level Go binding around an user-defined struct.
 type ITeeAvailabilityCheckResponseBody struct {
-	Status        uint8
-	MachineStatus uint8
-	TeeTimestamp  uint64
+	Status                 uint8
+	TeeTimestamp           uint64
+	CodeHash               [32]byte
+	Platform               [32]byte
+	InitialSigningPolicyId uint32
+	LastSigningPolicyId    uint32
+	StateHash              [32]byte
 }
 
 // Signature is an auto generated low-level Go binding around an user-defined struct.
@@ -77,7 +82,7 @@ type Signature struct {
 
 // TeeVerificationMetaData contains all meta data concerning the TeeVerification contract.
 var TeeVerificationMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"endTs\",\"type\":\"uint256\"}],\"name\":\"AvailabilityCheckValidityExtended\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"}],\"name\":\"CosignersSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"availabilityCheckValidityDurationSeconds\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"challengeValidityDurationSeconds\",\"type\":\"uint256\"}],\"name\":\"SettingsUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"challenge\",\"type\":\"uint256\"}],\"name\":\"TeeAttestationRequested\",\"type\":\"event\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"relayMessage\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"initialTeeId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"teeGovernanceHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint24\",\"name\":\"rewardEpochId\",\"type\":\"uint24\"},{\"internalType\":\"uint256\",\"name\":\"challenge\",\"type\":\"uint256\"}],\"internalType\":\"structITeeAvailabilityCheck.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumITeeAvailabilityCheck.AvailabilityCheckStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"enumITeeAvailabilityCheck.TeeMachineStatus\",\"name\":\"machineStatus\",\"type\":\"uint8\"},{\"internalType\":\"uint64\",\"name\":\"teeTimestamp\",\"type\":\"uint64\"}],\"internalType\":\"structITeeAvailabilityCheck.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Response\",\"name\":\"data\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Proof\",\"name\":\"_proof\",\"type\":\"tuple\"}],\"name\":\"confirmAvailability\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getCosigners\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"_cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"_cosignersThreshold\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSettings\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_availabilityCheckValidityDurationSeconds\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_challengeValidityDurationSeconds\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_testOnTeeId\",\"type\":\"address\"}],\"name\":\"requestAvailabilityCheckAttestation\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"}],\"name\":\"requestTeeAttestation\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"relayMessage\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"initialTeeId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"teeGovernanceHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint24\",\"name\":\"rewardEpochId\",\"type\":\"uint24\"},{\"internalType\":\"uint256\",\"name\":\"challenge\",\"type\":\"uint256\"}],\"internalType\":\"structITeeAvailabilityCheck.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumITeeAvailabilityCheck.AvailabilityCheckStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"enumITeeAvailabilityCheck.TeeMachineStatus\",\"name\":\"machineStatus\",\"type\":\"uint8\"},{\"internalType\":\"uint64\",\"name\":\"teeTimestamp\",\"type\":\"uint64\"}],\"internalType\":\"structITeeAvailabilityCheck.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Response\",\"name\":\"data\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Proof\",\"name\":\"_proof\",\"type\":\"tuple\"}],\"name\":\"verifyAvailabilityCheckProof\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"endTs\",\"type\":\"uint256\"}],\"name\":\"AvailabilityCheckValidityExtended\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"}],\"name\":\"CosignersSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"availabilityCheckValidityDurationSeconds\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint24\",\"name\":\"signingPolicyValidityDurationInRewardEpochs\",\"type\":\"uint24\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"challengeValidityDurationSeconds\",\"type\":\"uint64\"}],\"name\":\"SettingsUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"challenge\",\"type\":\"bytes32\"}],\"name\":\"TeeAttestationRequested\",\"type\":\"event\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"signingPolicySignatures\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"}],\"internalType\":\"structIFtdcVerification.FtdcSignatures\",\"name\":\"signatures\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFtdcHub.FtdcResponseHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"challenge\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeAvailabilityCheck.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumITeeAvailabilityCheck.AvailabilityCheckStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"uint64\",\"name\":\"teeTimestamp\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"initialSigningPolicyId\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"lastSigningPolicyId\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"stateHash\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeAvailabilityCheck.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"},{\"internalType\":\"bytes\",\"name\":\"state\",\"type\":\"bytes\"}],\"internalType\":\"structITeeAvailabilityCheck.Proof\",\"name\":\"_proof\",\"type\":\"tuple\"}],\"name\":\"confirmAvailability\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getCosigners\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"_cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"_cosignersThreshold\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSettings\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_availabilityCheckValidityDurationSeconds\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_challengeValidityDurationSeconds\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_testOnTeeId\",\"type\":\"address\"}],\"name\":\"requestAvailabilityCheckAttestation\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"}],\"name\":\"requestTeeAttestation\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"signingPolicySignatures\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"}],\"internalType\":\"structIFtdcVerification.FtdcSignatures\",\"name\":\"signatures\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFtdcHub.FtdcResponseHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"challenge\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeAvailabilityCheck.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumITeeAvailabilityCheck.AvailabilityCheckStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"uint64\",\"name\":\"teeTimestamp\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"initialSigningPolicyId\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"lastSigningPolicyId\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"stateHash\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeAvailabilityCheck.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"},{\"internalType\":\"bytes\",\"name\":\"state\",\"type\":\"bytes\"}],\"internalType\":\"structITeeAvailabilityCheck.Proof\",\"name\":\"_proof\",\"type\":\"tuple\"}],\"name\":\"verifyAvailabilityCheckProof\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_responseDataValid\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // TeeVerificationABI is the input ABI used to generate the binding from.
@@ -316,23 +321,23 @@ func (_TeeVerification *TeeVerificationCallerSession) GetSettings() (struct {
 	return _TeeVerification.Contract.GetSettings(&_TeeVerification.CallOpts)
 }
 
-// ConfirmAvailability is a paid mutator transaction binding the contract method 0x910c99ec.
+// ConfirmAvailability is a paid mutator transaction binding the contract method 0xedfcd591.
 //
-// Solidity: function confirmAvailability((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[],(bytes32,bytes32,uint16,uint64,address[],uint64,(address,address,string,bytes32,bytes32,bytes32,uint24,uint256),(uint8,uint8,uint64))) _proof) returns()
+// Solidity: function confirmAvailability(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address[],uint64,uint64),(address,string,bytes32),(uint8,uint64,bytes32,bytes32,uint32,uint32,bytes32),bytes) _proof) returns()
 func (_TeeVerification *TeeVerificationTransactor) ConfirmAvailability(opts *bind.TransactOpts, _proof ITeeAvailabilityCheckProof) (*types.Transaction, error) {
 	return _TeeVerification.contract.Transact(opts, "confirmAvailability", _proof)
 }
 
-// ConfirmAvailability is a paid mutator transaction binding the contract method 0x910c99ec.
+// ConfirmAvailability is a paid mutator transaction binding the contract method 0xedfcd591.
 //
-// Solidity: function confirmAvailability((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[],(bytes32,bytes32,uint16,uint64,address[],uint64,(address,address,string,bytes32,bytes32,bytes32,uint24,uint256),(uint8,uint8,uint64))) _proof) returns()
+// Solidity: function confirmAvailability(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address[],uint64,uint64),(address,string,bytes32),(uint8,uint64,bytes32,bytes32,uint32,uint32,bytes32),bytes) _proof) returns()
 func (_TeeVerification *TeeVerificationSession) ConfirmAvailability(_proof ITeeAvailabilityCheckProof) (*types.Transaction, error) {
 	return _TeeVerification.Contract.ConfirmAvailability(&_TeeVerification.TransactOpts, _proof)
 }
 
-// ConfirmAvailability is a paid mutator transaction binding the contract method 0x910c99ec.
+// ConfirmAvailability is a paid mutator transaction binding the contract method 0xedfcd591.
 //
-// Solidity: function confirmAvailability((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[],(bytes32,bytes32,uint16,uint64,address[],uint64,(address,address,string,bytes32,bytes32,bytes32,uint24,uint256),(uint8,uint8,uint64))) _proof) returns()
+// Solidity: function confirmAvailability(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address[],uint64,uint64),(address,string,bytes32),(uint8,uint64,bytes32,bytes32,uint32,uint32,bytes32),bytes) _proof) returns()
 func (_TeeVerification *TeeVerificationTransactorSession) ConfirmAvailability(_proof ITeeAvailabilityCheckProof) (*types.Transaction, error) {
 	return _TeeVerification.Contract.ConfirmAvailability(&_TeeVerification.TransactOpts, _proof)
 }
@@ -379,23 +384,23 @@ func (_TeeVerification *TeeVerificationTransactorSession) RequestTeeAttestation(
 	return _TeeVerification.Contract.RequestTeeAttestation(&_TeeVerification.TransactOpts, _teeId)
 }
 
-// VerifyAvailabilityCheckProof is a paid mutator transaction binding the contract method 0x7f1cbcdf.
+// VerifyAvailabilityCheckProof is a paid mutator transaction binding the contract method 0xc64155a5.
 //
-// Solidity: function verifyAvailabilityCheckProof((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[],(bytes32,bytes32,uint16,uint64,address[],uint64,(address,address,string,bytes32,bytes32,bytes32,uint24,uint256),(uint8,uint8,uint64))) _proof) returns()
+// Solidity: function verifyAvailabilityCheckProof(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address[],uint64,uint64),(address,string,bytes32),(uint8,uint64,bytes32,bytes32,uint32,uint32,bytes32),bytes) _proof) returns(bool _responseDataValid)
 func (_TeeVerification *TeeVerificationTransactor) VerifyAvailabilityCheckProof(opts *bind.TransactOpts, _proof ITeeAvailabilityCheckProof) (*types.Transaction, error) {
 	return _TeeVerification.contract.Transact(opts, "verifyAvailabilityCheckProof", _proof)
 }
 
-// VerifyAvailabilityCheckProof is a paid mutator transaction binding the contract method 0x7f1cbcdf.
+// VerifyAvailabilityCheckProof is a paid mutator transaction binding the contract method 0xc64155a5.
 //
-// Solidity: function verifyAvailabilityCheckProof((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[],(bytes32,bytes32,uint16,uint64,address[],uint64,(address,address,string,bytes32,bytes32,bytes32,uint24,uint256),(uint8,uint8,uint64))) _proof) returns()
+// Solidity: function verifyAvailabilityCheckProof(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address[],uint64,uint64),(address,string,bytes32),(uint8,uint64,bytes32,bytes32,uint32,uint32,bytes32),bytes) _proof) returns(bool _responseDataValid)
 func (_TeeVerification *TeeVerificationSession) VerifyAvailabilityCheckProof(_proof ITeeAvailabilityCheckProof) (*types.Transaction, error) {
 	return _TeeVerification.Contract.VerifyAvailabilityCheckProof(&_TeeVerification.TransactOpts, _proof)
 }
 
-// VerifyAvailabilityCheckProof is a paid mutator transaction binding the contract method 0x7f1cbcdf.
+// VerifyAvailabilityCheckProof is a paid mutator transaction binding the contract method 0xc64155a5.
 //
-// Solidity: function verifyAvailabilityCheckProof((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[],(bytes32,bytes32,uint16,uint64,address[],uint64,(address,address,string,bytes32,bytes32,bytes32,uint24,uint256),(uint8,uint8,uint64))) _proof) returns()
+// Solidity: function verifyAvailabilityCheckProof(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address[],uint64,uint64),(address,string,bytes32),(uint8,uint64,bytes32,bytes32,uint32,uint32,bytes32),bytes) _proof) returns(bool _responseDataValid)
 func (_TeeVerification *TeeVerificationTransactorSession) VerifyAvailabilityCheckProof(_proof ITeeAvailabilityCheckProof) (*types.Transaction, error) {
 	return _TeeVerification.Contract.VerifyAvailabilityCheckProof(&_TeeVerification.TransactOpts, _proof)
 }
@@ -758,14 +763,15 @@ func (it *TeeVerificationSettingsUpdatedIterator) Close() error {
 
 // TeeVerificationSettingsUpdated represents a SettingsUpdated event raised by the TeeVerification contract.
 type TeeVerificationSettingsUpdated struct {
-	AvailabilityCheckValidityDurationSeconds *big.Int
-	ChallengeValidityDurationSeconds         *big.Int
-	Raw                                      types.Log // Blockchain specific contextual infos
+	AvailabilityCheckValidityDurationSeconds    uint64
+	SigningPolicyValidityDurationInRewardEpochs *big.Int
+	ChallengeValidityDurationSeconds            uint64
+	Raw                                         types.Log // Blockchain specific contextual infos
 }
 
-// FilterSettingsUpdated is a free log retrieval operation binding the contract event 0x290c7608baac88950f6f2bf919aee31e5caf8c7bf387f0e489159253ad2e39d5.
+// FilterSettingsUpdated is a free log retrieval operation binding the contract event 0x27f607220ff59c6102bb2da2cfa5debe408ec0a6046f7039b77defb3f137a346.
 //
-// Solidity: event SettingsUpdated(uint256 availabilityCheckValidityDurationSeconds, uint256 challengeValidityDurationSeconds)
+// Solidity: event SettingsUpdated(uint64 availabilityCheckValidityDurationSeconds, uint24 signingPolicyValidityDurationInRewardEpochs, uint64 challengeValidityDurationSeconds)
 func (_TeeVerification *TeeVerificationFilterer) FilterSettingsUpdated(opts *bind.FilterOpts) (*TeeVerificationSettingsUpdatedIterator, error) {
 
 	logs, sub, err := _TeeVerification.contract.FilterLogs(opts, "SettingsUpdated")
@@ -775,9 +781,9 @@ func (_TeeVerification *TeeVerificationFilterer) FilterSettingsUpdated(opts *bin
 	return &TeeVerificationSettingsUpdatedIterator{contract: _TeeVerification.contract, event: "SettingsUpdated", logs: logs, sub: sub}, nil
 }
 
-// WatchSettingsUpdated is a free log subscription operation binding the contract event 0x290c7608baac88950f6f2bf919aee31e5caf8c7bf387f0e489159253ad2e39d5.
+// WatchSettingsUpdated is a free log subscription operation binding the contract event 0x27f607220ff59c6102bb2da2cfa5debe408ec0a6046f7039b77defb3f137a346.
 //
-// Solidity: event SettingsUpdated(uint256 availabilityCheckValidityDurationSeconds, uint256 challengeValidityDurationSeconds)
+// Solidity: event SettingsUpdated(uint64 availabilityCheckValidityDurationSeconds, uint24 signingPolicyValidityDurationInRewardEpochs, uint64 challengeValidityDurationSeconds)
 func (_TeeVerification *TeeVerificationFilterer) WatchSettingsUpdated(opts *bind.WatchOpts, sink chan<- *TeeVerificationSettingsUpdated) (event.Subscription, error) {
 
 	logs, sub, err := _TeeVerification.contract.WatchLogs(opts, "SettingsUpdated")
@@ -812,9 +818,9 @@ func (_TeeVerification *TeeVerificationFilterer) WatchSettingsUpdated(opts *bind
 	}), nil
 }
 
-// ParseSettingsUpdated is a log parse operation binding the contract event 0x290c7608baac88950f6f2bf919aee31e5caf8c7bf387f0e489159253ad2e39d5.
+// ParseSettingsUpdated is a log parse operation binding the contract event 0x27f607220ff59c6102bb2da2cfa5debe408ec0a6046f7039b77defb3f137a346.
 //
-// Solidity: event SettingsUpdated(uint256 availabilityCheckValidityDurationSeconds, uint256 challengeValidityDurationSeconds)
+// Solidity: event SettingsUpdated(uint64 availabilityCheckValidityDurationSeconds, uint24 signingPolicyValidityDurationInRewardEpochs, uint64 challengeValidityDurationSeconds)
 func (_TeeVerification *TeeVerificationFilterer) ParseSettingsUpdated(log types.Log) (*TeeVerificationSettingsUpdated, error) {
 	event := new(TeeVerificationSettingsUpdated)
 	if err := _TeeVerification.contract.UnpackLog(event, "SettingsUpdated", log); err != nil {
@@ -894,13 +900,13 @@ func (it *TeeVerificationTeeAttestationRequestedIterator) Close() error {
 // TeeVerificationTeeAttestationRequested represents a TeeAttestationRequested event raised by the TeeVerification contract.
 type TeeVerificationTeeAttestationRequested struct {
 	TeeId     common.Address
-	Challenge *big.Int
+	Challenge [32]byte
 	Raw       types.Log // Blockchain specific contextual infos
 }
 
-// FilterTeeAttestationRequested is a free log retrieval operation binding the contract event 0x1943691de6eb6b645aef3a008925b3da6a5b3d33ceebd3cd042c2b152cf2f5fb.
+// FilterTeeAttestationRequested is a free log retrieval operation binding the contract event 0x88097792b658dddf5ef685fd49ad9d66c9838d549030d9b4bf44c80dd2076db1.
 //
-// Solidity: event TeeAttestationRequested(address indexed teeId, uint256 challenge)
+// Solidity: event TeeAttestationRequested(address indexed teeId, bytes32 challenge)
 func (_TeeVerification *TeeVerificationFilterer) FilterTeeAttestationRequested(opts *bind.FilterOpts, teeId []common.Address) (*TeeVerificationTeeAttestationRequestedIterator, error) {
 
 	var teeIdRule []interface{}
@@ -915,9 +921,9 @@ func (_TeeVerification *TeeVerificationFilterer) FilterTeeAttestationRequested(o
 	return &TeeVerificationTeeAttestationRequestedIterator{contract: _TeeVerification.contract, event: "TeeAttestationRequested", logs: logs, sub: sub}, nil
 }
 
-// WatchTeeAttestationRequested is a free log subscription operation binding the contract event 0x1943691de6eb6b645aef3a008925b3da6a5b3d33ceebd3cd042c2b152cf2f5fb.
+// WatchTeeAttestationRequested is a free log subscription operation binding the contract event 0x88097792b658dddf5ef685fd49ad9d66c9838d549030d9b4bf44c80dd2076db1.
 //
-// Solidity: event TeeAttestationRequested(address indexed teeId, uint256 challenge)
+// Solidity: event TeeAttestationRequested(address indexed teeId, bytes32 challenge)
 func (_TeeVerification *TeeVerificationFilterer) WatchTeeAttestationRequested(opts *bind.WatchOpts, sink chan<- *TeeVerificationTeeAttestationRequested, teeId []common.Address) (event.Subscription, error) {
 
 	var teeIdRule []interface{}
@@ -957,9 +963,9 @@ func (_TeeVerification *TeeVerificationFilterer) WatchTeeAttestationRequested(op
 	}), nil
 }
 
-// ParseTeeAttestationRequested is a log parse operation binding the contract event 0x1943691de6eb6b645aef3a008925b3da6a5b3d33ceebd3cd042c2b152cf2f5fb.
+// ParseTeeAttestationRequested is a log parse operation binding the contract event 0x88097792b658dddf5ef685fd49ad9d66c9838d549030d9b4bf44c80dd2076db1.
 //
-// Solidity: event TeeAttestationRequested(address indexed teeId, uint256 challenge)
+// Solidity: event TeeAttestationRequested(address indexed teeId, bytes32 challenge)
 func (_TeeVerification *TeeVerificationFilterer) ParseTeeAttestationRequested(log types.Log) (*TeeVerificationTeeAttestationRequested, error) {
 	event := new(TeeVerificationTeeAttestationRequested)
 	if err := _TeeVerification.contract.UnpackLog(event, "TeeAttestationRequested", log); err != nil {
