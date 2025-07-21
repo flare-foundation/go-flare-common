@@ -16,7 +16,7 @@ type Data struct {
 	AdditionalVariableMessage hexutil.Bytes `json:"AdditionalVariableMessage"`
 }
 
-type DataFixed tee.TeeStructsTeeInstruction
+type DataFixed tee.TeeStructsInstruction
 
 // Hash computes the hash of the DataFixed d.
 func (d DataFixed) HashFixed() (common.Hash, error) {
