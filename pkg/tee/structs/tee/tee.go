@@ -9,7 +9,7 @@ import (
 type Struct string
 
 const (
-	Instruction      Struct = "teeInstruction"
+	Instruction      Struct = "instruction"
 	Attestation      Struct = "attestation"
 	PMWState         Struct = "pmwState"
 	VoteSequenceInit Struct = "voteSequenceInit"

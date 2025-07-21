@@ -21,7 +21,7 @@
                   "type": "bytes32"
                 }
               ],
-              "internalType": "struct TeeStructs.PublicKey",
+              "internalType": "struct PublicKey",
               "name": "publicKey",
               "type": "tuple"
             },
@@ -71,26 +71,6 @@
         {
           "components": [
             {
-              "internalType": "uint256",
-              "name": "status",
-              "type": "uint256"
-            }
-          ],
-          "internalType": "struct TeeStructs.PMWState",
-          "name": "",
-          "type": "tuple"
-        }
-      ],
-      "name": "pmwStateStruct",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "components": [
-            {
               "internalType": "bytes32",
               "name": "instructionId",
               "type": "bytes32"
@@ -101,9 +81,9 @@
               "type": "address"
             },
             {
-              "internalType": "uint32",
+              "internalType": "uint64",
               "name": "timestamp",
-              "type": "uint32"
+              "type": "uint64"
             },
             {
               "internalType": "uint32",
@@ -131,12 +111,32 @@
               "type": "bytes"
             }
           ],
-          "internalType": "struct TeeStructs.TeeInstruction",
+          "internalType": "struct TeeStructs.Instruction",
           "name": "",
           "type": "tuple"
         }
       ],
-      "name": "teeInstructionStruct",
+      "name": "instructionStruct",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "status",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct TeeStructs.PMWState",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "name": "pmwStateStruct",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

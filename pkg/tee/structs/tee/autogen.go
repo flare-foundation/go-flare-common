@@ -29,10 +29,16 @@ var (
 	_ = abi.ConvertType
 )
 
+// PublicKey is an auto generated low-level Go binding around an user-defined struct.
+type PublicKey struct {
+	X [32]byte
+	Y [32]byte
+}
+
 // TeeStructsAttestation is an auto generated low-level Go binding around an user-defined struct.
 type TeeStructsAttestation struct {
 	Challenge                [32]byte
-	PublicKey                TeeStructsPublicKey
+	PublicKey                PublicKey
 	InitialSigningPolicyId   uint32
 	InitialSigningPolicyHash [32]byte
 	LastSigningPolicyId      uint32
@@ -41,27 +47,21 @@ type TeeStructsAttestation struct {
 	TeeTimestamp             uint64
 }
 
-// TeeStructsPMWState is an auto generated low-level Go binding around an user-defined struct.
-type TeeStructsPMWState struct {
-	Status *big.Int
-}
-
-// TeeStructsPublicKey is an auto generated low-level Go binding around an user-defined struct.
-type TeeStructsPublicKey struct {
-	X [32]byte
-	Y [32]byte
-}
-
-// TeeStructsTeeInstruction is an auto generated low-level Go binding around an user-defined struct.
-type TeeStructsTeeInstruction struct {
+// TeeStructsInstruction is an auto generated low-level Go binding around an user-defined struct.
+type TeeStructsInstruction struct {
 	InstructionId          [32]byte
 	TeeId                  common.Address
-	Timestamp              uint32
+	Timestamp              uint64
 	RewardEpochId          uint32
 	OpType                 [32]byte
 	OpCommand              [32]byte
 	OriginalMessage        []byte
 	AdditionalFixedMessage []byte
+}
+
+// TeeStructsPMWState is an auto generated low-level Go binding around an user-defined struct.
+type TeeStructsPMWState struct {
+	Status *big.Int
 }
 
 // TeeStructsVoteReceipt is an auto generated low-level Go binding around an user-defined struct.
@@ -93,7 +93,7 @@ type TeeStructsVoteSequenceNext struct {
 
 // TeeMetaData contains all meta data concerning the Tee contract.
 var TeeMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"challenge\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"x\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"y\",\"type\":\"bytes32\"}],\"internalType\":\"structTeeStructs.PublicKey\",\"name\":\"publicKey\",\"type\":\"tuple\"},{\"internalType\":\"uint32\",\"name\":\"initialSigningPolicyId\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"initialSigningPolicyHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"lastSigningPolicyId\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"lastSigningPolicyHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"stateHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"teeTimestamp\",\"type\":\"uint64\"}],\"internalType\":\"structTeeStructs.Attestation\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"attestationStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"status\",\"type\":\"uint256\"}],\"internalType\":\"structTeeStructs.PMWState\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"pmwStateStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"timestamp\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"rewardEpochId\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"opCommand\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"originalMessage\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"additionalFixedMessage\",\"type\":\"bytes\"}],\"internalType\":\"structTeeStructs.TeeInstruction\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"teeInstructionStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"instructionHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"sequence\",\"type\":\"uint64\"},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"additionalVariableMessageHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"voteHash\",\"type\":\"bytes32\"}],\"internalType\":\"structTeeStructs.VoteReceipt\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"voteReceiptStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"instructionHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"rewardEpochId\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"}],\"internalType\":\"structTeeStructs.VoteSequenceInit\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"voteSequenceInitStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"voteHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"sequence\",\"type\":\"uint64\"},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"additionalVariableMessageHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structTeeStructs.VoteSequenceNext\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"voteSequenceNextStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"challenge\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"x\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"y\",\"type\":\"bytes32\"}],\"internalType\":\"structPublicKey\",\"name\":\"publicKey\",\"type\":\"tuple\"},{\"internalType\":\"uint32\",\"name\":\"initialSigningPolicyId\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"initialSigningPolicyHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"lastSigningPolicyId\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"lastSigningPolicyHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"stateHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"teeTimestamp\",\"type\":\"uint64\"}],\"internalType\":\"structTeeStructs.Attestation\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"attestationStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"internalType\":\"uint32\",\"name\":\"rewardEpochId\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"opCommand\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"originalMessage\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"additionalFixedMessage\",\"type\":\"bytes\"}],\"internalType\":\"structTeeStructs.Instruction\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"instructionStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"status\",\"type\":\"uint256\"}],\"internalType\":\"structTeeStructs.PMWState\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"pmwStateStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"instructionHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"sequence\",\"type\":\"uint64\"},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"additionalVariableMessageHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"voteHash\",\"type\":\"bytes32\"}],\"internalType\":\"structTeeStructs.VoteReceipt\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"voteReceiptStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"instructionHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"rewardEpochId\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"}],\"internalType\":\"structTeeStructs.VoteSequenceInit\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"voteSequenceInitStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"voteHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"sequence\",\"type\":\"uint64\"},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"additionalVariableMessageHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structTeeStructs.VoteSequenceNext\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"voteSequenceNextStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // TeeABI is the input ABI used to generate the binding from.
@@ -263,6 +263,27 @@ func (_Tee *TeeTransactorSession) AttestationStruct(arg0 TeeStructsAttestation) 
 	return _Tee.Contract.AttestationStruct(&_Tee.TransactOpts, arg0)
 }
 
+// InstructionStruct is a paid mutator transaction binding the contract method 0x02c349a1.
+//
+// Solidity: function instructionStruct((bytes32,address,uint64,uint32,bytes32,bytes32,bytes,bytes) ) returns()
+func (_Tee *TeeTransactor) InstructionStruct(opts *bind.TransactOpts, arg0 TeeStructsInstruction) (*types.Transaction, error) {
+	return _Tee.contract.Transact(opts, "instructionStruct", arg0)
+}
+
+// InstructionStruct is a paid mutator transaction binding the contract method 0x02c349a1.
+//
+// Solidity: function instructionStruct((bytes32,address,uint64,uint32,bytes32,bytes32,bytes,bytes) ) returns()
+func (_Tee *TeeSession) InstructionStruct(arg0 TeeStructsInstruction) (*types.Transaction, error) {
+	return _Tee.Contract.InstructionStruct(&_Tee.TransactOpts, arg0)
+}
+
+// InstructionStruct is a paid mutator transaction binding the contract method 0x02c349a1.
+//
+// Solidity: function instructionStruct((bytes32,address,uint64,uint32,bytes32,bytes32,bytes,bytes) ) returns()
+func (_Tee *TeeTransactorSession) InstructionStruct(arg0 TeeStructsInstruction) (*types.Transaction, error) {
+	return _Tee.Contract.InstructionStruct(&_Tee.TransactOpts, arg0)
+}
+
 // PmwStateStruct is a paid mutator transaction binding the contract method 0x2bbf19a4.
 //
 // Solidity: function pmwStateStruct((uint256) ) returns()
@@ -282,27 +303,6 @@ func (_Tee *TeeSession) PmwStateStruct(arg0 TeeStructsPMWState) (*types.Transact
 // Solidity: function pmwStateStruct((uint256) ) returns()
 func (_Tee *TeeTransactorSession) PmwStateStruct(arg0 TeeStructsPMWState) (*types.Transaction, error) {
 	return _Tee.Contract.PmwStateStruct(&_Tee.TransactOpts, arg0)
-}
-
-// TeeInstructionStruct is a paid mutator transaction binding the contract method 0xabcf4e86.
-//
-// Solidity: function teeInstructionStruct((bytes32,address,uint32,uint32,bytes32,bytes32,bytes,bytes) ) returns()
-func (_Tee *TeeTransactor) TeeInstructionStruct(opts *bind.TransactOpts, arg0 TeeStructsTeeInstruction) (*types.Transaction, error) {
-	return _Tee.contract.Transact(opts, "teeInstructionStruct", arg0)
-}
-
-// TeeInstructionStruct is a paid mutator transaction binding the contract method 0xabcf4e86.
-//
-// Solidity: function teeInstructionStruct((bytes32,address,uint32,uint32,bytes32,bytes32,bytes,bytes) ) returns()
-func (_Tee *TeeSession) TeeInstructionStruct(arg0 TeeStructsTeeInstruction) (*types.Transaction, error) {
-	return _Tee.Contract.TeeInstructionStruct(&_Tee.TransactOpts, arg0)
-}
-
-// TeeInstructionStruct is a paid mutator transaction binding the contract method 0xabcf4e86.
-//
-// Solidity: function teeInstructionStruct((bytes32,address,uint32,uint32,bytes32,bytes32,bytes,bytes) ) returns()
-func (_Tee *TeeTransactorSession) TeeInstructionStruct(arg0 TeeStructsTeeInstruction) (*types.Transaction, error) {
-	return _Tee.Contract.TeeInstructionStruct(&_Tee.TransactOpts, arg0)
 }
 
 // VoteReceiptStruct is a paid mutator transaction binding the contract method 0x2ac04628.
