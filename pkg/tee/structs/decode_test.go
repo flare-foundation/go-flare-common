@@ -1,7 +1,6 @@
 package structs
 
 import (
-	"math/big"
 	"testing"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
@@ -300,7 +299,7 @@ func TestDecodeInstructionMessage(t *testing.T) {
 	id := common.HexToAddress("6e656b69")
 	h := common.HexToHash("6e656b69")
 
-	x := big.NewInt(10)
+	x := common.HexToHash("0x1234")
 
 	pre := verification.ITeeVerificationTeeAttestation{
 		TeeMachine: verification.ITeeRegistryTeeMachineWithAttestationData{

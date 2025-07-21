@@ -37,11 +37,12 @@ type ITeeWalletBackupManagerBackupId struct {
 	OpType        [32]byte
 	PublicKey     []byte
 	RewardEpochId *big.Int
+	RandomNonce   *big.Int
 }
 
 // TeeWalletBackupManagerMetaData contains all meta data concerning the TeeWalletBackupManager contract.
 var TeeWalletBackupManagerMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"publicKey\",\"type\":\"bytes\"},{\"internalType\":\"uint24\",\"name\":\"rewardEpochId\",\"type\":\"uint24\"}],\"internalType\":\"structITeeWalletBackupManager.BackupId\",\"name\":\"_backupId\",\"type\":\"tuple\"},{\"internalType\":\"string\",\"name\":\"_backupUrl\",\"type\":\"string\"}],\"name\":\"backupRestore\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"publicKey\",\"type\":\"bytes\"},{\"internalType\":\"uint24\",\"name\":\"rewardEpochId\",\"type\":\"uint24\"},{\"internalType\":\"uint256\",\"name\":\"randomNonce\",\"type\":\"uint256\"}],\"internalType\":\"structITeeWalletBackupManager.BackupId\",\"name\":\"_backupId\",\"type\":\"tuple\"},{\"internalType\":\"string\",\"name\":\"_backupUrl\",\"type\":\"string\"},{\"internalType\":\"bool\",\"name\":\"_test\",\"type\":\"bool\"}],\"name\":\"backupRestore\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}]",
 }
 
 // TeeWalletBackupManagerABI is the input ABI used to generate the binding from.
@@ -190,23 +191,23 @@ func (_TeeWalletBackupManager *TeeWalletBackupManagerTransactorRaw) Transact(opt
 	return _TeeWalletBackupManager.Contract.contract.Transact(opts, method, params...)
 }
 
-// BackupRestore is a paid mutator transaction binding the contract method 0xac097729.
+// BackupRestore is a paid mutator transaction binding the contract method 0xed2bba87.
 //
-// Solidity: function backupRestore(address _teeId, (address,bytes32,uint64,bytes32,bytes,uint24) _backupId, string _backupUrl) payable returns()
-func (_TeeWalletBackupManager *TeeWalletBackupManagerTransactor) BackupRestore(opts *bind.TransactOpts, _teeId common.Address, _backupId ITeeWalletBackupManagerBackupId, _backupUrl string) (*types.Transaction, error) {
-	return _TeeWalletBackupManager.contract.Transact(opts, "backupRestore", _teeId, _backupId, _backupUrl)
+// Solidity: function backupRestore(address _teeId, (address,bytes32,uint64,bytes32,bytes,uint24,uint256) _backupId, string _backupUrl, bool _test) payable returns()
+func (_TeeWalletBackupManager *TeeWalletBackupManagerTransactor) BackupRestore(opts *bind.TransactOpts, _teeId common.Address, _backupId ITeeWalletBackupManagerBackupId, _backupUrl string, _test bool) (*types.Transaction, error) {
+	return _TeeWalletBackupManager.contract.Transact(opts, "backupRestore", _teeId, _backupId, _backupUrl, _test)
 }
 
-// BackupRestore is a paid mutator transaction binding the contract method 0xac097729.
+// BackupRestore is a paid mutator transaction binding the contract method 0xed2bba87.
 //
-// Solidity: function backupRestore(address _teeId, (address,bytes32,uint64,bytes32,bytes,uint24) _backupId, string _backupUrl) payable returns()
-func (_TeeWalletBackupManager *TeeWalletBackupManagerSession) BackupRestore(_teeId common.Address, _backupId ITeeWalletBackupManagerBackupId, _backupUrl string) (*types.Transaction, error) {
-	return _TeeWalletBackupManager.Contract.BackupRestore(&_TeeWalletBackupManager.TransactOpts, _teeId, _backupId, _backupUrl)
+// Solidity: function backupRestore(address _teeId, (address,bytes32,uint64,bytes32,bytes,uint24,uint256) _backupId, string _backupUrl, bool _test) payable returns()
+func (_TeeWalletBackupManager *TeeWalletBackupManagerSession) BackupRestore(_teeId common.Address, _backupId ITeeWalletBackupManagerBackupId, _backupUrl string, _test bool) (*types.Transaction, error) {
+	return _TeeWalletBackupManager.Contract.BackupRestore(&_TeeWalletBackupManager.TransactOpts, _teeId, _backupId, _backupUrl, _test)
 }
 
-// BackupRestore is a paid mutator transaction binding the contract method 0xac097729.
+// BackupRestore is a paid mutator transaction binding the contract method 0xed2bba87.
 //
-// Solidity: function backupRestore(address _teeId, (address,bytes32,uint64,bytes32,bytes,uint24) _backupId, string _backupUrl) payable returns()
-func (_TeeWalletBackupManager *TeeWalletBackupManagerTransactorSession) BackupRestore(_teeId common.Address, _backupId ITeeWalletBackupManagerBackupId, _backupUrl string) (*types.Transaction, error) {
-	return _TeeWalletBackupManager.Contract.BackupRestore(&_TeeWalletBackupManager.TransactOpts, _teeId, _backupId, _backupUrl)
+// Solidity: function backupRestore(address _teeId, (address,bytes32,uint64,bytes32,bytes,uint24,uint256) _backupId, string _backupUrl, bool _test) payable returns()
+func (_TeeWalletBackupManager *TeeWalletBackupManagerTransactorSession) BackupRestore(_teeId common.Address, _backupId ITeeWalletBackupManagerBackupId, _backupUrl string, _test bool) (*types.Transaction, error) {
+	return _TeeWalletBackupManager.Contract.BackupRestore(&_TeeWalletBackupManager.TransactOpts, _teeId, _backupId, _backupUrl, _test)
 }
