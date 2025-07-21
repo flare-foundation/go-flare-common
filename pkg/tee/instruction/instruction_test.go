@@ -24,7 +24,7 @@ func TestHashForSigning(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, hash0, hash)
 
-	data.RewardEpochID = 1
+	data.RewardEpochId = 1
 
 	hash, err = data.HashForSigning()
 	require.NoError(t, err)
@@ -40,12 +40,12 @@ func TestHash(t *testing.T) {
 	var data Data
 
 	dataFixed := DataFixed{
-		InstructionID:          common.Hash{},
-		TeeID:                  common.Address{},
+		InstructionId:          common.Hash{},
+		TeeId:                  common.Address{},
 		Timestamp:              0,
-		RewardEpochID:          0,
-		OPType:                 common.Hash{},
-		OPCommand:              common.Hash{},
+		RewardEpochId:          0,
+		OpType:                 common.Hash{},
+		OpCommand:              common.Hash{},
 		OriginalMessage:        hexutil.Bytes{1},
 		AdditionalFixedMessage: hexutil.Bytes{1},
 	}
