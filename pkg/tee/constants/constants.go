@@ -149,3 +149,11 @@ func IsValidPair(t OPType, c OPCommand) bool {
 	_, ok = cs[c]
 	return ok
 }
+
+// IsValid checks that hashes represent a valid pair of opType and opCommand.
+func IsValid(opType common.Hash, opCommand common.Hash) bool {
+	t := OPType(strings.TrimRight(string(opType.Bytes()), "\x00"))
+	c := OPCommand(strings.TrimRight(string(opCommand.Bytes()), "\x00"))
+
+	return IsValidPair(t, c)
+}
