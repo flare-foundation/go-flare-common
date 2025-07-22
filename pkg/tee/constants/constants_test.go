@@ -94,6 +94,12 @@ func TestValidPair(t *testing.T) {
 	ok := IsValidPair(XRP, Reissue)
 	require.True(t, ok)
 
+	ok = IsValid(XRP.Hash(), Reissue.Hash())
+	require.True(t, ok)
+
 	ok = IsValidPair(Reg, KeyGenerate)
+	require.False(t, ok)
+
+	ok = IsValid(Reg.Hash(), KeyGenerate.Hash())
 	require.False(t, ok)
 }
