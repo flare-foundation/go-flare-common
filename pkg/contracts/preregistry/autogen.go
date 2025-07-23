@@ -29,8 +29,8 @@ var (
 	_ = abi.ConvertType
 )
 
-// IVoterRegistrySignature is an auto generated low-level Go binding around an user-defined struct.
-type IVoterRegistrySignature struct {
+// Signature is an auto generated low-level Go binding around an user-defined struct.
+type Signature struct {
 	V uint8
 	R [32]byte
 	S [32]byte
@@ -38,7 +38,7 @@ type IVoterRegistrySignature struct {
 
 // PreregistryMetaData contains all meta data concerning the Preregistry contract.
 var PreregistryMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"ECDSAInvalidSignature\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"length\",\"type\":\"uint256\"}],\"name\":\"ECDSAInvalidSignatureLength\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"name\":\"ECDSAInvalidSignatureS\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"voter\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"rewardEpochId\",\"type\":\"uint256\"}],\"name\":\"VoterPreRegistered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"voter\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"rewardEpochId\",\"type\":\"uint256\"}],\"name\":\"VoterRegistrationFailed\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"entityManager\",\"outputs\":[{\"internalType\":\"contractIIEntityManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"flareSystemsManager\",\"outputs\":[{\"internalType\":\"contractIIFlareSystemsManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAddressUpdater\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint24\",\"name\":\"_rewardEpochId\",\"type\":\"uint24\"}],\"name\":\"getPreRegisteredVoters\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint24\",\"name\":\"_rewardEpochId\",\"type\":\"uint24\"},{\"internalType\":\"address\",\"name\":\"_voter\",\"type\":\"address\"}],\"name\":\"isVoterPreRegistered\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_voter\",\"type\":\"address\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structIVoterRegistry.Signature\",\"name\":\"_signature\",\"type\":\"tuple\"}],\"name\":\"preRegisterVoter\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint24\",\"name\":\"_rewardEpochId\",\"type\":\"uint24\"}],\"name\":\"triggerVoterRegistration\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_contractNameHashes\",\"type\":\"bytes32[]\"},{\"internalType\":\"address[]\",\"name\":\"_contractAddresses\",\"type\":\"address[]\"}],\"name\":\"updateContractAddresses\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"voterRegistry\",\"outputs\":[{\"internalType\":\"contractIIVoterRegistry\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"voter\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint32\",\"name\":\"rewardEpochId\",\"type\":\"uint32\"}],\"name\":\"VoterPreRegistered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"voter\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint32\",\"name\":\"rewardEpochId\",\"type\":\"uint32\"}],\"name\":\"VoterRegistrationFailed\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_rewardEpochId\",\"type\":\"uint256\"}],\"name\":\"getPreRegisteredVoters\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_rewardEpochId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_voter\",\"type\":\"address\"}],\"name\":\"getVoterSignature\",\"outputs\":[{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_rewardEpochId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_voter\",\"type\":\"address\"}],\"name\":\"isVoterPreRegistered\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_voter\",\"type\":\"address\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature\",\"name\":\"_signature\",\"type\":\"tuple\"}],\"name\":\"preRegisterVoter\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // PreregistryABI is the input ABI used to generate the binding from.
@@ -187,102 +187,9 @@ func (_Preregistry *PreregistryTransactorRaw) Transact(opts *bind.TransactOpts, 
 	return _Preregistry.Contract.contract.Transact(opts, method, params...)
 }
 
-// EntityManager is a free data retrieval call binding the contract method 0x50b1d61b.
+// GetPreRegisteredVoters is a free data retrieval call binding the contract method 0x010f079d.
 //
-// Solidity: function entityManager() view returns(address)
-func (_Preregistry *PreregistryCaller) EntityManager(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _Preregistry.contract.Call(opts, &out, "entityManager")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// EntityManager is a free data retrieval call binding the contract method 0x50b1d61b.
-//
-// Solidity: function entityManager() view returns(address)
-func (_Preregistry *PreregistrySession) EntityManager() (common.Address, error) {
-	return _Preregistry.Contract.EntityManager(&_Preregistry.CallOpts)
-}
-
-// EntityManager is a free data retrieval call binding the contract method 0x50b1d61b.
-//
-// Solidity: function entityManager() view returns(address)
-func (_Preregistry *PreregistryCallerSession) EntityManager() (common.Address, error) {
-	return _Preregistry.Contract.EntityManager(&_Preregistry.CallOpts)
-}
-
-// FlareSystemsManager is a free data retrieval call binding the contract method 0xfaae7fc9.
-//
-// Solidity: function flareSystemsManager() view returns(address)
-func (_Preregistry *PreregistryCaller) FlareSystemsManager(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _Preregistry.contract.Call(opts, &out, "flareSystemsManager")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// FlareSystemsManager is a free data retrieval call binding the contract method 0xfaae7fc9.
-//
-// Solidity: function flareSystemsManager() view returns(address)
-func (_Preregistry *PreregistrySession) FlareSystemsManager() (common.Address, error) {
-	return _Preregistry.Contract.FlareSystemsManager(&_Preregistry.CallOpts)
-}
-
-// FlareSystemsManager is a free data retrieval call binding the contract method 0xfaae7fc9.
-//
-// Solidity: function flareSystemsManager() view returns(address)
-func (_Preregistry *PreregistryCallerSession) FlareSystemsManager() (common.Address, error) {
-	return _Preregistry.Contract.FlareSystemsManager(&_Preregistry.CallOpts)
-}
-
-// GetAddressUpdater is a free data retrieval call binding the contract method 0x5267a15d.
-//
-// Solidity: function getAddressUpdater() view returns(address _addressUpdater)
-func (_Preregistry *PreregistryCaller) GetAddressUpdater(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _Preregistry.contract.Call(opts, &out, "getAddressUpdater")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// GetAddressUpdater is a free data retrieval call binding the contract method 0x5267a15d.
-//
-// Solidity: function getAddressUpdater() view returns(address _addressUpdater)
-func (_Preregistry *PreregistrySession) GetAddressUpdater() (common.Address, error) {
-	return _Preregistry.Contract.GetAddressUpdater(&_Preregistry.CallOpts)
-}
-
-// GetAddressUpdater is a free data retrieval call binding the contract method 0x5267a15d.
-//
-// Solidity: function getAddressUpdater() view returns(address _addressUpdater)
-func (_Preregistry *PreregistryCallerSession) GetAddressUpdater() (common.Address, error) {
-	return _Preregistry.Contract.GetAddressUpdater(&_Preregistry.CallOpts)
-}
-
-// GetPreRegisteredVoters is a free data retrieval call binding the contract method 0xf116d1dd.
-//
-// Solidity: function getPreRegisteredVoters(uint24 _rewardEpochId) view returns(address[])
+// Solidity: function getPreRegisteredVoters(uint256 _rewardEpochId) view returns(address[])
 func (_Preregistry *PreregistryCaller) GetPreRegisteredVoters(opts *bind.CallOpts, _rewardEpochId *big.Int) ([]common.Address, error) {
 	var out []interface{}
 	err := _Preregistry.contract.Call(opts, &out, "getPreRegisteredVoters", _rewardEpochId)
@@ -297,23 +204,54 @@ func (_Preregistry *PreregistryCaller) GetPreRegisteredVoters(opts *bind.CallOpt
 
 }
 
-// GetPreRegisteredVoters is a free data retrieval call binding the contract method 0xf116d1dd.
+// GetPreRegisteredVoters is a free data retrieval call binding the contract method 0x010f079d.
 //
-// Solidity: function getPreRegisteredVoters(uint24 _rewardEpochId) view returns(address[])
+// Solidity: function getPreRegisteredVoters(uint256 _rewardEpochId) view returns(address[])
 func (_Preregistry *PreregistrySession) GetPreRegisteredVoters(_rewardEpochId *big.Int) ([]common.Address, error) {
 	return _Preregistry.Contract.GetPreRegisteredVoters(&_Preregistry.CallOpts, _rewardEpochId)
 }
 
-// GetPreRegisteredVoters is a free data retrieval call binding the contract method 0xf116d1dd.
+// GetPreRegisteredVoters is a free data retrieval call binding the contract method 0x010f079d.
 //
-// Solidity: function getPreRegisteredVoters(uint24 _rewardEpochId) view returns(address[])
+// Solidity: function getPreRegisteredVoters(uint256 _rewardEpochId) view returns(address[])
 func (_Preregistry *PreregistryCallerSession) GetPreRegisteredVoters(_rewardEpochId *big.Int) ([]common.Address, error) {
 	return _Preregistry.Contract.GetPreRegisteredVoters(&_Preregistry.CallOpts, _rewardEpochId)
 }
 
-// IsVoterPreRegistered is a free data retrieval call binding the contract method 0x19549e92.
+// GetVoterSignature is a free data retrieval call binding the contract method 0x3beabf52.
 //
-// Solidity: function isVoterPreRegistered(uint24 _rewardEpochId, address _voter) view returns(bool)
+// Solidity: function getVoterSignature(uint256 _rewardEpochId, address _voter) view returns((uint8,bytes32,bytes32))
+func (_Preregistry *PreregistryCaller) GetVoterSignature(opts *bind.CallOpts, _rewardEpochId *big.Int, _voter common.Address) (Signature, error) {
+	var out []interface{}
+	err := _Preregistry.contract.Call(opts, &out, "getVoterSignature", _rewardEpochId, _voter)
+
+	if err != nil {
+		return *new(Signature), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(Signature)).(*Signature)
+
+	return out0, err
+
+}
+
+// GetVoterSignature is a free data retrieval call binding the contract method 0x3beabf52.
+//
+// Solidity: function getVoterSignature(uint256 _rewardEpochId, address _voter) view returns((uint8,bytes32,bytes32))
+func (_Preregistry *PreregistrySession) GetVoterSignature(_rewardEpochId *big.Int, _voter common.Address) (Signature, error) {
+	return _Preregistry.Contract.GetVoterSignature(&_Preregistry.CallOpts, _rewardEpochId, _voter)
+}
+
+// GetVoterSignature is a free data retrieval call binding the contract method 0x3beabf52.
+//
+// Solidity: function getVoterSignature(uint256 _rewardEpochId, address _voter) view returns((uint8,bytes32,bytes32))
+func (_Preregistry *PreregistryCallerSession) GetVoterSignature(_rewardEpochId *big.Int, _voter common.Address) (Signature, error) {
+	return _Preregistry.Contract.GetVoterSignature(&_Preregistry.CallOpts, _rewardEpochId, _voter)
+}
+
+// IsVoterPreRegistered is a free data retrieval call binding the contract method 0x98041046.
+//
+// Solidity: function isVoterPreRegistered(uint256 _rewardEpochId, address _voter) view returns(bool)
 func (_Preregistry *PreregistryCaller) IsVoterPreRegistered(opts *bind.CallOpts, _rewardEpochId *big.Int, _voter common.Address) (bool, error) {
 	var out []interface{}
 	err := _Preregistry.contract.Call(opts, &out, "isVoterPreRegistered", _rewardEpochId, _voter)
@@ -328,112 +266,39 @@ func (_Preregistry *PreregistryCaller) IsVoterPreRegistered(opts *bind.CallOpts,
 
 }
 
-// IsVoterPreRegistered is a free data retrieval call binding the contract method 0x19549e92.
+// IsVoterPreRegistered is a free data retrieval call binding the contract method 0x98041046.
 //
-// Solidity: function isVoterPreRegistered(uint24 _rewardEpochId, address _voter) view returns(bool)
+// Solidity: function isVoterPreRegistered(uint256 _rewardEpochId, address _voter) view returns(bool)
 func (_Preregistry *PreregistrySession) IsVoterPreRegistered(_rewardEpochId *big.Int, _voter common.Address) (bool, error) {
 	return _Preregistry.Contract.IsVoterPreRegistered(&_Preregistry.CallOpts, _rewardEpochId, _voter)
 }
 
-// IsVoterPreRegistered is a free data retrieval call binding the contract method 0x19549e92.
+// IsVoterPreRegistered is a free data retrieval call binding the contract method 0x98041046.
 //
-// Solidity: function isVoterPreRegistered(uint24 _rewardEpochId, address _voter) view returns(bool)
+// Solidity: function isVoterPreRegistered(uint256 _rewardEpochId, address _voter) view returns(bool)
 func (_Preregistry *PreregistryCallerSession) IsVoterPreRegistered(_rewardEpochId *big.Int, _voter common.Address) (bool, error) {
 	return _Preregistry.Contract.IsVoterPreRegistered(&_Preregistry.CallOpts, _rewardEpochId, _voter)
-}
-
-// VoterRegistry is a free data retrieval call binding the contract method 0xbe60040e.
-//
-// Solidity: function voterRegistry() view returns(address)
-func (_Preregistry *PreregistryCaller) VoterRegistry(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _Preregistry.contract.Call(opts, &out, "voterRegistry")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// VoterRegistry is a free data retrieval call binding the contract method 0xbe60040e.
-//
-// Solidity: function voterRegistry() view returns(address)
-func (_Preregistry *PreregistrySession) VoterRegistry() (common.Address, error) {
-	return _Preregistry.Contract.VoterRegistry(&_Preregistry.CallOpts)
-}
-
-// VoterRegistry is a free data retrieval call binding the contract method 0xbe60040e.
-//
-// Solidity: function voterRegistry() view returns(address)
-func (_Preregistry *PreregistryCallerSession) VoterRegistry() (common.Address, error) {
-	return _Preregistry.Contract.VoterRegistry(&_Preregistry.CallOpts)
 }
 
 // PreRegisterVoter is a paid mutator transaction binding the contract method 0xea8eb77d.
 //
 // Solidity: function preRegisterVoter(address _voter, (uint8,bytes32,bytes32) _signature) returns()
-func (_Preregistry *PreregistryTransactor) PreRegisterVoter(opts *bind.TransactOpts, _voter common.Address, _signature IVoterRegistrySignature) (*types.Transaction, error) {
+func (_Preregistry *PreregistryTransactor) PreRegisterVoter(opts *bind.TransactOpts, _voter common.Address, _signature Signature) (*types.Transaction, error) {
 	return _Preregistry.contract.Transact(opts, "preRegisterVoter", _voter, _signature)
 }
 
 // PreRegisterVoter is a paid mutator transaction binding the contract method 0xea8eb77d.
 //
 // Solidity: function preRegisterVoter(address _voter, (uint8,bytes32,bytes32) _signature) returns()
-func (_Preregistry *PreregistrySession) PreRegisterVoter(_voter common.Address, _signature IVoterRegistrySignature) (*types.Transaction, error) {
+func (_Preregistry *PreregistrySession) PreRegisterVoter(_voter common.Address, _signature Signature) (*types.Transaction, error) {
 	return _Preregistry.Contract.PreRegisterVoter(&_Preregistry.TransactOpts, _voter, _signature)
 }
 
 // PreRegisterVoter is a paid mutator transaction binding the contract method 0xea8eb77d.
 //
 // Solidity: function preRegisterVoter(address _voter, (uint8,bytes32,bytes32) _signature) returns()
-func (_Preregistry *PreregistryTransactorSession) PreRegisterVoter(_voter common.Address, _signature IVoterRegistrySignature) (*types.Transaction, error) {
+func (_Preregistry *PreregistryTransactorSession) PreRegisterVoter(_voter common.Address, _signature Signature) (*types.Transaction, error) {
 	return _Preregistry.Contract.PreRegisterVoter(&_Preregistry.TransactOpts, _voter, _signature)
-}
-
-// TriggerVoterRegistration is a paid mutator transaction binding the contract method 0xf707f612.
-//
-// Solidity: function triggerVoterRegistration(uint24 _rewardEpochId) returns()
-func (_Preregistry *PreregistryTransactor) TriggerVoterRegistration(opts *bind.TransactOpts, _rewardEpochId *big.Int) (*types.Transaction, error) {
-	return _Preregistry.contract.Transact(opts, "triggerVoterRegistration", _rewardEpochId)
-}
-
-// TriggerVoterRegistration is a paid mutator transaction binding the contract method 0xf707f612.
-//
-// Solidity: function triggerVoterRegistration(uint24 _rewardEpochId) returns()
-func (_Preregistry *PreregistrySession) TriggerVoterRegistration(_rewardEpochId *big.Int) (*types.Transaction, error) {
-	return _Preregistry.Contract.TriggerVoterRegistration(&_Preregistry.TransactOpts, _rewardEpochId)
-}
-
-// TriggerVoterRegistration is a paid mutator transaction binding the contract method 0xf707f612.
-//
-// Solidity: function triggerVoterRegistration(uint24 _rewardEpochId) returns()
-func (_Preregistry *PreregistryTransactorSession) TriggerVoterRegistration(_rewardEpochId *big.Int) (*types.Transaction, error) {
-	return _Preregistry.Contract.TriggerVoterRegistration(&_Preregistry.TransactOpts, _rewardEpochId)
-}
-
-// UpdateContractAddresses is a paid mutator transaction binding the contract method 0xb00c0b76.
-//
-// Solidity: function updateContractAddresses(bytes32[] _contractNameHashes, address[] _contractAddresses) returns()
-func (_Preregistry *PreregistryTransactor) UpdateContractAddresses(opts *bind.TransactOpts, _contractNameHashes [][32]byte, _contractAddresses []common.Address) (*types.Transaction, error) {
-	return _Preregistry.contract.Transact(opts, "updateContractAddresses", _contractNameHashes, _contractAddresses)
-}
-
-// UpdateContractAddresses is a paid mutator transaction binding the contract method 0xb00c0b76.
-//
-// Solidity: function updateContractAddresses(bytes32[] _contractNameHashes, address[] _contractAddresses) returns()
-func (_Preregistry *PreregistrySession) UpdateContractAddresses(_contractNameHashes [][32]byte, _contractAddresses []common.Address) (*types.Transaction, error) {
-	return _Preregistry.Contract.UpdateContractAddresses(&_Preregistry.TransactOpts, _contractNameHashes, _contractAddresses)
-}
-
-// UpdateContractAddresses is a paid mutator transaction binding the contract method 0xb00c0b76.
-//
-// Solidity: function updateContractAddresses(bytes32[] _contractNameHashes, address[] _contractAddresses) returns()
-func (_Preregistry *PreregistryTransactorSession) UpdateContractAddresses(_contractNameHashes [][32]byte, _contractAddresses []common.Address) (*types.Transaction, error) {
-	return _Preregistry.Contract.UpdateContractAddresses(&_Preregistry.TransactOpts, _contractNameHashes, _contractAddresses)
 }
 
 // PreregistryVoterPreRegisteredIterator is returned from FilterVoterPreRegistered and is used to iterate over the raw logs and unpacked data for VoterPreRegistered events raised by the Preregistry contract.
@@ -506,14 +371,14 @@ func (it *PreregistryVoterPreRegisteredIterator) Close() error {
 // PreregistryVoterPreRegistered represents a VoterPreRegistered event raised by the Preregistry contract.
 type PreregistryVoterPreRegistered struct {
 	Voter         common.Address
-	RewardEpochId *big.Int
+	RewardEpochId uint32
 	Raw           types.Log // Blockchain specific contextual infos
 }
 
-// FilterVoterPreRegistered is a free log retrieval operation binding the contract event 0x33dfb7ce87c082c21fdb6b5833ba631717f7fd8d8bf8311426fe740ecd2e71fd.
+// FilterVoterPreRegistered is a free log retrieval operation binding the contract event 0x9bcf7a79c8d48fb65a011b7592d7f121a7ef2a70eada07c2c1f2281fc817db2b.
 //
-// Solidity: event VoterPreRegistered(address indexed voter, uint256 indexed rewardEpochId)
-func (_Preregistry *PreregistryFilterer) FilterVoterPreRegistered(opts *bind.FilterOpts, voter []common.Address, rewardEpochId []*big.Int) (*PreregistryVoterPreRegisteredIterator, error) {
+// Solidity: event VoterPreRegistered(address indexed voter, uint32 indexed rewardEpochId)
+func (_Preregistry *PreregistryFilterer) FilterVoterPreRegistered(opts *bind.FilterOpts, voter []common.Address, rewardEpochId []uint32) (*PreregistryVoterPreRegisteredIterator, error) {
 
 	var voterRule []interface{}
 	for _, voterItem := range voter {
@@ -531,10 +396,10 @@ func (_Preregistry *PreregistryFilterer) FilterVoterPreRegistered(opts *bind.Fil
 	return &PreregistryVoterPreRegisteredIterator{contract: _Preregistry.contract, event: "VoterPreRegistered", logs: logs, sub: sub}, nil
 }
 
-// WatchVoterPreRegistered is a free log subscription operation binding the contract event 0x33dfb7ce87c082c21fdb6b5833ba631717f7fd8d8bf8311426fe740ecd2e71fd.
+// WatchVoterPreRegistered is a free log subscription operation binding the contract event 0x9bcf7a79c8d48fb65a011b7592d7f121a7ef2a70eada07c2c1f2281fc817db2b.
 //
-// Solidity: event VoterPreRegistered(address indexed voter, uint256 indexed rewardEpochId)
-func (_Preregistry *PreregistryFilterer) WatchVoterPreRegistered(opts *bind.WatchOpts, sink chan<- *PreregistryVoterPreRegistered, voter []common.Address, rewardEpochId []*big.Int) (event.Subscription, error) {
+// Solidity: event VoterPreRegistered(address indexed voter, uint32 indexed rewardEpochId)
+func (_Preregistry *PreregistryFilterer) WatchVoterPreRegistered(opts *bind.WatchOpts, sink chan<- *PreregistryVoterPreRegistered, voter []common.Address, rewardEpochId []uint32) (event.Subscription, error) {
 
 	var voterRule []interface{}
 	for _, voterItem := range voter {
@@ -577,9 +442,9 @@ func (_Preregistry *PreregistryFilterer) WatchVoterPreRegistered(opts *bind.Watc
 	}), nil
 }
 
-// ParseVoterPreRegistered is a log parse operation binding the contract event 0x33dfb7ce87c082c21fdb6b5833ba631717f7fd8d8bf8311426fe740ecd2e71fd.
+// ParseVoterPreRegistered is a log parse operation binding the contract event 0x9bcf7a79c8d48fb65a011b7592d7f121a7ef2a70eada07c2c1f2281fc817db2b.
 //
-// Solidity: event VoterPreRegistered(address indexed voter, uint256 indexed rewardEpochId)
+// Solidity: event VoterPreRegistered(address indexed voter, uint32 indexed rewardEpochId)
 func (_Preregistry *PreregistryFilterer) ParseVoterPreRegistered(log types.Log) (*PreregistryVoterPreRegistered, error) {
 	event := new(PreregistryVoterPreRegistered)
 	if err := _Preregistry.contract.UnpackLog(event, "VoterPreRegistered", log); err != nil {
@@ -659,14 +524,14 @@ func (it *PreregistryVoterRegistrationFailedIterator) Close() error {
 // PreregistryVoterRegistrationFailed represents a VoterRegistrationFailed event raised by the Preregistry contract.
 type PreregistryVoterRegistrationFailed struct {
 	Voter         common.Address
-	RewardEpochId *big.Int
+	RewardEpochId uint32
 	Raw           types.Log // Blockchain specific contextual infos
 }
 
-// FilterVoterRegistrationFailed is a free log retrieval operation binding the contract event 0x925794c2e759216f395d05fc6e6c1ff4632b87077831f9a8fe78d448203ccddc.
+// FilterVoterRegistrationFailed is a free log retrieval operation binding the contract event 0x037b39a9e9298fb9cb53d6407b7d261b08f0fb754074e9d2d2096618ee473f54.
 //
-// Solidity: event VoterRegistrationFailed(address indexed voter, uint256 indexed rewardEpochId)
-func (_Preregistry *PreregistryFilterer) FilterVoterRegistrationFailed(opts *bind.FilterOpts, voter []common.Address, rewardEpochId []*big.Int) (*PreregistryVoterRegistrationFailedIterator, error) {
+// Solidity: event VoterRegistrationFailed(address indexed voter, uint32 indexed rewardEpochId)
+func (_Preregistry *PreregistryFilterer) FilterVoterRegistrationFailed(opts *bind.FilterOpts, voter []common.Address, rewardEpochId []uint32) (*PreregistryVoterRegistrationFailedIterator, error) {
 
 	var voterRule []interface{}
 	for _, voterItem := range voter {
@@ -684,10 +549,10 @@ func (_Preregistry *PreregistryFilterer) FilterVoterRegistrationFailed(opts *bin
 	return &PreregistryVoterRegistrationFailedIterator{contract: _Preregistry.contract, event: "VoterRegistrationFailed", logs: logs, sub: sub}, nil
 }
 
-// WatchVoterRegistrationFailed is a free log subscription operation binding the contract event 0x925794c2e759216f395d05fc6e6c1ff4632b87077831f9a8fe78d448203ccddc.
+// WatchVoterRegistrationFailed is a free log subscription operation binding the contract event 0x037b39a9e9298fb9cb53d6407b7d261b08f0fb754074e9d2d2096618ee473f54.
 //
-// Solidity: event VoterRegistrationFailed(address indexed voter, uint256 indexed rewardEpochId)
-func (_Preregistry *PreregistryFilterer) WatchVoterRegistrationFailed(opts *bind.WatchOpts, sink chan<- *PreregistryVoterRegistrationFailed, voter []common.Address, rewardEpochId []*big.Int) (event.Subscription, error) {
+// Solidity: event VoterRegistrationFailed(address indexed voter, uint32 indexed rewardEpochId)
+func (_Preregistry *PreregistryFilterer) WatchVoterRegistrationFailed(opts *bind.WatchOpts, sink chan<- *PreregistryVoterRegistrationFailed, voter []common.Address, rewardEpochId []uint32) (event.Subscription, error) {
 
 	var voterRule []interface{}
 	for _, voterItem := range voter {
@@ -730,9 +595,9 @@ func (_Preregistry *PreregistryFilterer) WatchVoterRegistrationFailed(opts *bind
 	}), nil
 }
 
-// ParseVoterRegistrationFailed is a log parse operation binding the contract event 0x925794c2e759216f395d05fc6e6c1ff4632b87077831f9a8fe78d448203ccddc.
+// ParseVoterRegistrationFailed is a log parse operation binding the contract event 0x037b39a9e9298fb9cb53d6407b7d261b08f0fb754074e9d2d2096618ee473f54.
 //
-// Solidity: event VoterRegistrationFailed(address indexed voter, uint256 indexed rewardEpochId)
+// Solidity: event VoterRegistrationFailed(address indexed voter, uint32 indexed rewardEpochId)
 func (_Preregistry *PreregistryFilterer) ParseVoterRegistrationFailed(log types.Log) (*PreregistryVoterRegistrationFailed, error) {
 	event := new(PreregistryVoterRegistrationFailed)
 	if err := _Preregistry.contract.UnpackLog(event, "VoterRegistrationFailed", log); err != nil {
