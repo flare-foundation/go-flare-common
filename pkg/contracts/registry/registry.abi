@@ -10,9 +10,9 @@
         },
         {
           "indexed": false,
-          "internalType": "uint256",
+          "internalType": "uint32",
           "name": "untilRewardEpochId",
-          "type": "uint256"
+          "type": "uint32"
         }
       ],
       "name": "BeneficiaryChilled",
@@ -29,9 +29,9 @@
         },
         {
           "indexed": true,
-          "internalType": "uint24",
+          "internalType": "uint32",
           "name": "rewardEpochId",
-          "type": "uint24"
+          "type": "uint32"
         },
         {
           "indexed": true,
@@ -52,16 +52,22 @@
           "type": "address"
         },
         {
+          "components": [
+            {
+              "internalType": "bytes32",
+              "name": "x",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "y",
+              "type": "bytes32"
+            }
+          ],
           "indexed": false,
-          "internalType": "bytes32",
-          "name": "publicKeyPart1",
-          "type": "bytes32"
-        },
-        {
-          "indexed": false,
-          "internalType": "bytes32",
-          "name": "publicKeyPart2",
-          "type": "bytes32"
+          "internalType": "struct PublicKey",
+          "name": "publicKey",
+          "type": "tuple"
         },
         {
           "indexed": false,
@@ -107,9 +113,9 @@
         },
         {
           "indexed": true,
-          "internalType": "uint256",
+          "internalType": "uint32",
           "name": "rewardEpochId",
-          "type": "uint256"
+          "type": "uint32"
         }
       ],
       "name": "VoterRemoved",

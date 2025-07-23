@@ -29,6 +29,12 @@ var (
 	_ = abi.ConvertType
 )
 
+// PublicKey is an auto generated low-level Go binding around an user-defined struct.
+type PublicKey struct {
+	X [32]byte
+	Y [32]byte
+}
+
 // Signature is an auto generated low-level Go binding around an user-defined struct.
 type Signature struct {
 	V uint8
@@ -38,7 +44,7 @@ type Signature struct {
 
 // RegistryMetaData contains all meta data concerning the Registry contract.
 var RegistryMetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes20\",\"name\":\"beneficiary\",\"type\":\"bytes20\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"untilRewardEpochId\",\"type\":\"uint256\"}],\"name\":\"BeneficiaryChilled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"voter\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint24\",\"name\":\"rewardEpochId\",\"type\":\"uint24\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"signingPolicyAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"submitAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"submitSignaturesAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"publicKeyPart1\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"publicKeyPart2\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"registrationWeight\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"indexed\":false,\"internalType\":\"structSignature\",\"name\":\"signature\",\"type\":\"tuple\"}],\"name\":\"VoterRegistered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"voter\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"rewardEpochId\",\"type\":\"uint256\"}],\"name\":\"VoterRemoved\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"bytes20\",\"name\":\"_beneficiary\",\"type\":\"bytes20\"}],\"name\":\"chilledUntilRewardEpochId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_rewardEpochId\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_rewardEpochId\",\"type\":\"uint256\"}],\"name\":\"getNumberOfRegisteredVoters\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_rewardEpochId\",\"type\":\"uint256\"}],\"name\":\"getRegisteredVoters\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_voter\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_rewardEpochId\",\"type\":\"uint256\"}],\"name\":\"isVoterRegistered\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"maxVoters\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_rewardEpochId\",\"type\":\"uint256\"}],\"name\":\"newSigningPolicyInitializationStartBlockNumber\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"publicKeyRequired\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_voter\",\"type\":\"address\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature\",\"name\":\"_signature\",\"type\":\"tuple\"}],\"name\":\"registerVoter\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes20\",\"name\":\"beneficiary\",\"type\":\"bytes20\"},{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"untilRewardEpochId\",\"type\":\"uint32\"}],\"name\":\"BeneficiaryChilled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"voter\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint32\",\"name\":\"rewardEpochId\",\"type\":\"uint32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"signingPolicyAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"submitAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"submitSignaturesAddress\",\"type\":\"address\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"x\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"y\",\"type\":\"bytes32\"}],\"indexed\":false,\"internalType\":\"structPublicKey\",\"name\":\"publicKey\",\"type\":\"tuple\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"registrationWeight\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"indexed\":false,\"internalType\":\"structSignature\",\"name\":\"signature\",\"type\":\"tuple\"}],\"name\":\"VoterRegistered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"voter\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint32\",\"name\":\"rewardEpochId\",\"type\":\"uint32\"}],\"name\":\"VoterRemoved\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"bytes20\",\"name\":\"_beneficiary\",\"type\":\"bytes20\"}],\"name\":\"chilledUntilRewardEpochId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_rewardEpochId\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_rewardEpochId\",\"type\":\"uint256\"}],\"name\":\"getNumberOfRegisteredVoters\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_rewardEpochId\",\"type\":\"uint256\"}],\"name\":\"getRegisteredVoters\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_voter\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_rewardEpochId\",\"type\":\"uint256\"}],\"name\":\"isVoterRegistered\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"maxVoters\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_rewardEpochId\",\"type\":\"uint256\"}],\"name\":\"newSigningPolicyInitializationStartBlockNumber\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"publicKeyRequired\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_voter\",\"type\":\"address\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature\",\"name\":\"_signature\",\"type\":\"tuple\"}],\"name\":\"registerVoter\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // RegistryABI is the input ABI used to generate the binding from.
@@ -495,13 +501,13 @@ func (it *RegistryBeneficiaryChilledIterator) Close() error {
 // RegistryBeneficiaryChilled represents a BeneficiaryChilled event raised by the Registry contract.
 type RegistryBeneficiaryChilled struct {
 	Beneficiary        [20]byte
-	UntilRewardEpochId *big.Int
+	UntilRewardEpochId uint32
 	Raw                types.Log // Blockchain specific contextual infos
 }
 
-// FilterBeneficiaryChilled is a free log retrieval operation binding the contract event 0x0a5e087b026d8f1c57e75d9d0cb0394c2ad3535e7a15d97d553be80476274cd0.
+// FilterBeneficiaryChilled is a free log retrieval operation binding the contract event 0x23a1b7932916d24f6177b7f7282bb925e3733697d5699c07e0372cd149696345.
 //
-// Solidity: event BeneficiaryChilled(bytes20 indexed beneficiary, uint256 untilRewardEpochId)
+// Solidity: event BeneficiaryChilled(bytes20 indexed beneficiary, uint32 untilRewardEpochId)
 func (_Registry *RegistryFilterer) FilterBeneficiaryChilled(opts *bind.FilterOpts, beneficiary [][20]byte) (*RegistryBeneficiaryChilledIterator, error) {
 
 	var beneficiaryRule []interface{}
@@ -516,9 +522,9 @@ func (_Registry *RegistryFilterer) FilterBeneficiaryChilled(opts *bind.FilterOpt
 	return &RegistryBeneficiaryChilledIterator{contract: _Registry.contract, event: "BeneficiaryChilled", logs: logs, sub: sub}, nil
 }
 
-// WatchBeneficiaryChilled is a free log subscription operation binding the contract event 0x0a5e087b026d8f1c57e75d9d0cb0394c2ad3535e7a15d97d553be80476274cd0.
+// WatchBeneficiaryChilled is a free log subscription operation binding the contract event 0x23a1b7932916d24f6177b7f7282bb925e3733697d5699c07e0372cd149696345.
 //
-// Solidity: event BeneficiaryChilled(bytes20 indexed beneficiary, uint256 untilRewardEpochId)
+// Solidity: event BeneficiaryChilled(bytes20 indexed beneficiary, uint32 untilRewardEpochId)
 func (_Registry *RegistryFilterer) WatchBeneficiaryChilled(opts *bind.WatchOpts, sink chan<- *RegistryBeneficiaryChilled, beneficiary [][20]byte) (event.Subscription, error) {
 
 	var beneficiaryRule []interface{}
@@ -558,9 +564,9 @@ func (_Registry *RegistryFilterer) WatchBeneficiaryChilled(opts *bind.WatchOpts,
 	}), nil
 }
 
-// ParseBeneficiaryChilled is a log parse operation binding the contract event 0x0a5e087b026d8f1c57e75d9d0cb0394c2ad3535e7a15d97d553be80476274cd0.
+// ParseBeneficiaryChilled is a log parse operation binding the contract event 0x23a1b7932916d24f6177b7f7282bb925e3733697d5699c07e0372cd149696345.
 //
-// Solidity: event BeneficiaryChilled(bytes20 indexed beneficiary, uint256 untilRewardEpochId)
+// Solidity: event BeneficiaryChilled(bytes20 indexed beneficiary, uint32 untilRewardEpochId)
 func (_Registry *RegistryFilterer) ParseBeneficiaryChilled(log types.Log) (*RegistryBeneficiaryChilled, error) {
 	event := new(RegistryBeneficiaryChilled)
 	if err := _Registry.contract.UnpackLog(event, "BeneficiaryChilled", log); err != nil {
@@ -640,21 +646,20 @@ func (it *RegistryVoterRegisteredIterator) Close() error {
 // RegistryVoterRegistered represents a VoterRegistered event raised by the Registry contract.
 type RegistryVoterRegistered struct {
 	Voter                   common.Address
-	RewardEpochId           *big.Int
+	RewardEpochId           uint32
 	SigningPolicyAddress    common.Address
 	SubmitAddress           common.Address
 	SubmitSignaturesAddress common.Address
-	PublicKeyPart1          [32]byte
-	PublicKeyPart2          [32]byte
+	PublicKey               PublicKey
 	RegistrationWeight      *big.Int
 	Signature               Signature
 	Raw                     types.Log // Blockchain specific contextual infos
 }
 
-// FilterVoterRegistered is a free log retrieval operation binding the contract event 0x04d36ae355e1bcc71ba3adc0a154546045d3f18a22f645b7dc1019feaad96d58.
+// FilterVoterRegistered is a free log retrieval operation binding the contract event 0xbfb6cd90b6e2668916d9e034926c84f40bcf94094b0d625ec8eecfdeb2150ae1.
 //
-// Solidity: event VoterRegistered(address indexed voter, uint24 indexed rewardEpochId, address indexed signingPolicyAddress, address submitAddress, address submitSignaturesAddress, bytes32 publicKeyPart1, bytes32 publicKeyPart2, uint256 registrationWeight, (uint8,bytes32,bytes32) signature)
-func (_Registry *RegistryFilterer) FilterVoterRegistered(opts *bind.FilterOpts, voter []common.Address, rewardEpochId []*big.Int, signingPolicyAddress []common.Address) (*RegistryVoterRegisteredIterator, error) {
+// Solidity: event VoterRegistered(address indexed voter, uint32 indexed rewardEpochId, address indexed signingPolicyAddress, address submitAddress, address submitSignaturesAddress, (bytes32,bytes32) publicKey, uint256 registrationWeight, (uint8,bytes32,bytes32) signature)
+func (_Registry *RegistryFilterer) FilterVoterRegistered(opts *bind.FilterOpts, voter []common.Address, rewardEpochId []uint32, signingPolicyAddress []common.Address) (*RegistryVoterRegisteredIterator, error) {
 
 	var voterRule []interface{}
 	for _, voterItem := range voter {
@@ -676,10 +681,10 @@ func (_Registry *RegistryFilterer) FilterVoterRegistered(opts *bind.FilterOpts, 
 	return &RegistryVoterRegisteredIterator{contract: _Registry.contract, event: "VoterRegistered", logs: logs, sub: sub}, nil
 }
 
-// WatchVoterRegistered is a free log subscription operation binding the contract event 0x04d36ae355e1bcc71ba3adc0a154546045d3f18a22f645b7dc1019feaad96d58.
+// WatchVoterRegistered is a free log subscription operation binding the contract event 0xbfb6cd90b6e2668916d9e034926c84f40bcf94094b0d625ec8eecfdeb2150ae1.
 //
-// Solidity: event VoterRegistered(address indexed voter, uint24 indexed rewardEpochId, address indexed signingPolicyAddress, address submitAddress, address submitSignaturesAddress, bytes32 publicKeyPart1, bytes32 publicKeyPart2, uint256 registrationWeight, (uint8,bytes32,bytes32) signature)
-func (_Registry *RegistryFilterer) WatchVoterRegistered(opts *bind.WatchOpts, sink chan<- *RegistryVoterRegistered, voter []common.Address, rewardEpochId []*big.Int, signingPolicyAddress []common.Address) (event.Subscription, error) {
+// Solidity: event VoterRegistered(address indexed voter, uint32 indexed rewardEpochId, address indexed signingPolicyAddress, address submitAddress, address submitSignaturesAddress, (bytes32,bytes32) publicKey, uint256 registrationWeight, (uint8,bytes32,bytes32) signature)
+func (_Registry *RegistryFilterer) WatchVoterRegistered(opts *bind.WatchOpts, sink chan<- *RegistryVoterRegistered, voter []common.Address, rewardEpochId []uint32, signingPolicyAddress []common.Address) (event.Subscription, error) {
 
 	var voterRule []interface{}
 	for _, voterItem := range voter {
@@ -726,9 +731,9 @@ func (_Registry *RegistryFilterer) WatchVoterRegistered(opts *bind.WatchOpts, si
 	}), nil
 }
 
-// ParseVoterRegistered is a log parse operation binding the contract event 0x04d36ae355e1bcc71ba3adc0a154546045d3f18a22f645b7dc1019feaad96d58.
+// ParseVoterRegistered is a log parse operation binding the contract event 0xbfb6cd90b6e2668916d9e034926c84f40bcf94094b0d625ec8eecfdeb2150ae1.
 //
-// Solidity: event VoterRegistered(address indexed voter, uint24 indexed rewardEpochId, address indexed signingPolicyAddress, address submitAddress, address submitSignaturesAddress, bytes32 publicKeyPart1, bytes32 publicKeyPart2, uint256 registrationWeight, (uint8,bytes32,bytes32) signature)
+// Solidity: event VoterRegistered(address indexed voter, uint32 indexed rewardEpochId, address indexed signingPolicyAddress, address submitAddress, address submitSignaturesAddress, (bytes32,bytes32) publicKey, uint256 registrationWeight, (uint8,bytes32,bytes32) signature)
 func (_Registry *RegistryFilterer) ParseVoterRegistered(log types.Log) (*RegistryVoterRegistered, error) {
 	event := new(RegistryVoterRegistered)
 	if err := _Registry.contract.UnpackLog(event, "VoterRegistered", log); err != nil {
@@ -808,14 +813,14 @@ func (it *RegistryVoterRemovedIterator) Close() error {
 // RegistryVoterRemoved represents a VoterRemoved event raised by the Registry contract.
 type RegistryVoterRemoved struct {
 	Voter         common.Address
-	RewardEpochId *big.Int
+	RewardEpochId uint32
 	Raw           types.Log // Blockchain specific contextual infos
 }
 
-// FilterVoterRemoved is a free log retrieval operation binding the contract event 0x98a7f87f8e2aa2f23f43769eff67782bb12946384b142d1ce1e8e38e05d9a3e6.
+// FilterVoterRemoved is a free log retrieval operation binding the contract event 0xc68883244ac4be6ff6d4b0bf9c8f4cc0fa21af3cf2921443c1bd0af0683cfcf6.
 //
-// Solidity: event VoterRemoved(address indexed voter, uint256 indexed rewardEpochId)
-func (_Registry *RegistryFilterer) FilterVoterRemoved(opts *bind.FilterOpts, voter []common.Address, rewardEpochId []*big.Int) (*RegistryVoterRemovedIterator, error) {
+// Solidity: event VoterRemoved(address indexed voter, uint32 indexed rewardEpochId)
+func (_Registry *RegistryFilterer) FilterVoterRemoved(opts *bind.FilterOpts, voter []common.Address, rewardEpochId []uint32) (*RegistryVoterRemovedIterator, error) {
 
 	var voterRule []interface{}
 	for _, voterItem := range voter {
@@ -833,10 +838,10 @@ func (_Registry *RegistryFilterer) FilterVoterRemoved(opts *bind.FilterOpts, vot
 	return &RegistryVoterRemovedIterator{contract: _Registry.contract, event: "VoterRemoved", logs: logs, sub: sub}, nil
 }
 
-// WatchVoterRemoved is a free log subscription operation binding the contract event 0x98a7f87f8e2aa2f23f43769eff67782bb12946384b142d1ce1e8e38e05d9a3e6.
+// WatchVoterRemoved is a free log subscription operation binding the contract event 0xc68883244ac4be6ff6d4b0bf9c8f4cc0fa21af3cf2921443c1bd0af0683cfcf6.
 //
-// Solidity: event VoterRemoved(address indexed voter, uint256 indexed rewardEpochId)
-func (_Registry *RegistryFilterer) WatchVoterRemoved(opts *bind.WatchOpts, sink chan<- *RegistryVoterRemoved, voter []common.Address, rewardEpochId []*big.Int) (event.Subscription, error) {
+// Solidity: event VoterRemoved(address indexed voter, uint32 indexed rewardEpochId)
+func (_Registry *RegistryFilterer) WatchVoterRemoved(opts *bind.WatchOpts, sink chan<- *RegistryVoterRemoved, voter []common.Address, rewardEpochId []uint32) (event.Subscription, error) {
 
 	var voterRule []interface{}
 	for _, voterItem := range voter {
@@ -879,9 +884,9 @@ func (_Registry *RegistryFilterer) WatchVoterRemoved(opts *bind.WatchOpts, sink 
 	}), nil
 }
 
-// ParseVoterRemoved is a log parse operation binding the contract event 0x98a7f87f8e2aa2f23f43769eff67782bb12946384b142d1ce1e8e38e05d9a3e6.
+// ParseVoterRemoved is a log parse operation binding the contract event 0xc68883244ac4be6ff6d4b0bf9c8f4cc0fa21af3cf2921443c1bd0af0683cfcf6.
 //
-// Solidity: event VoterRemoved(address indexed voter, uint256 indexed rewardEpochId)
+// Solidity: event VoterRemoved(address indexed voter, uint32 indexed rewardEpochId)
 func (_Registry *RegistryFilterer) ParseVoterRemoved(log types.Log) (*RegistryVoterRemoved, error) {
 	event := new(RegistryVoterRemoved)
 	if err := _Registry.contract.UnpackLog(event, "VoterRemoved", log); err != nil {
