@@ -4,6 +4,7 @@ import (
 	"encoding/hex"
 	"fmt"
 
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/types"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/signing/ed25519"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/signing/secp256k1"
@@ -18,7 +19,7 @@ func ValidateMultiSig(tx map[string]any, s *signer.Signer) (bool, error) {
 		return false, fmt.Errorf("cannot get accountID: %v", err)
 	}
 
-	txBlob, err := types.Encode(tx, true)
+	txBlob, err := encoding.Encode(tx, true)
 	if err != nil {
 		return false, fmt.Errorf("cannot encode tx: %v", err)
 	}
@@ -62,5 +63,27 @@ func JoinMultisig(tx map[string]any, signers []*signer.Signer) ([]byte, error) {
 
 	tx["Signers"] = signersArray
 
-	return types.Encode(tx, false)
+	return encoding.Encode(tx, false)
+}
+
+// JoinMultisig appends signers to transactions and serializes it.
+//
+// It is assumed that signer are sorted and valid.
+// If any of the signers is invalid, error is returned.
+func JoinMultisigJson(tx map[string]any, signers []*signer.Signer) map[string]any {
+	signersArray := make([]any, len(signers))
+
+	for j, signer := range signers {
+		// ok, err := ValidateMultiSig(tx, signer)
+		// if err != nil {
+		// 	return nil, fmt.Errorf("invalid signer %v: %v", signer, err)
+		// } else if !ok {
+		// 	return nil, fmt.Errorf("invalid signature  %v", signer)
+		// }
+
+		signersArray[j] = signer.Format()
+	}
+
+	tx["Signers"] = signersArray
+	return tx
 }
