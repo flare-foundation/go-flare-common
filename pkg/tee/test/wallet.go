@@ -7,7 +7,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/flare-foundation/go-flare-common/pkg/contracts/teeregistry"
+	"github.com/flare-foundation/go-flare-common/pkg/contracts/teemachineregistry"
 	"github.com/flare-foundation/go-flare-common/pkg/contracts/teewalletkeymanager"
 	"github.com/flare-foundation/go-flare-common/pkg/contracts/teewalletmanager"
 	"github.com/flare-foundation/go-flare-common/pkg/contracts/teewalletprojectmanager"
@@ -15,7 +15,7 @@ import (
 
 type Client struct {
 	prv                     *ecdsa.PrivateKey
-	teeRegistry             *teeregistry.TeeRegistry
+	teeRegistry             *teemachineregistry.TeeMachineRegistry
 	teeWalletManager        *teewalletmanager.TeeWalletManager
 	teeWalletKeyManager     *teewalletkeymanager.TeeWalletKeyManager
 	teeWalletProjectManager *teewalletprojectmanager.TeeWalletProjectManager
@@ -23,8 +23,8 @@ type Client struct {
 	chainID                 *big.Int
 }
 
-func NewClient(prv *ecdsa.PrivateKey, chainClient *ethclient.Client, teeRegistryAddr, teeWalletManagerAddr, teeWalletKeyManagerAddr, teeWalletProjectManagerAddr common.Address) (*Client, error) {
-	teeRegistry, err := teeregistry.NewTeeRegistry(teeRegistryAddr, chainClient)
+func NewClient(prv *ecdsa.PrivateKey, chainClient *ethclient.Client, teeMachineRegistryAddr, teeWalletManagerAddr, teeWalletKeyManagerAddr, teeWalletProjectManagerAddr common.Address) (*Client, error) {
+	teeRegistry, err := teemachineregistry.NewTeeMachineRegistry(teeMachineRegistryAddr, chainClient)
 	if err != nil {
 		return nil, err
 	}

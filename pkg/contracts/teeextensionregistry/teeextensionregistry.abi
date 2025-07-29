@@ -1,0 +1,619 @@
+[
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "extensionId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "codeHash",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "platform",
+          "type": "bytes32"
+        }
+      ],
+      "name": "CodeHashPlatformDisabled",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "extensionId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "contract ITeeExtensionStateVerifier",
+          "name": "teeExtensionStateVerifier",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "teeExtensionInstructionsSender",
+          "type": "address"
+        }
+      ],
+      "name": "ExtensionContractsSet",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "extensionId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "ExtensionRegistered",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "extensionId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "NewOwnerConfirmed",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "extensionId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "oldOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "NewOwnerProposed",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "extensionId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "opType",
+          "type": "bytes32"
+        }
+      ],
+      "name": "OpTypeAdded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "extensionId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "opType",
+          "type": "bytes32"
+        }
+      ],
+      "name": "OpTypeRemoved",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "platform",
+          "type": "bytes32"
+        }
+      ],
+      "name": "PlatformAdded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "instructionId",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint32",
+          "name": "rewardEpochId",
+          "type": "uint32"
+        },
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "teeId",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "teeProxyId",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "url",
+              "type": "string"
+            }
+          ],
+          "indexed": false,
+          "internalType": "struct ITeeMachineRegistry.TeeMachine[]",
+          "name": "teeMachines",
+          "type": "tuple[]"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "opType",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "opCommand",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes",
+          "name": "message",
+          "type": "bytes"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "fee",
+          "type": "uint256"
+        }
+      ],
+      "name": "TeeInstructionsSent",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "extensionId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "codeHash",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "version",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32[]",
+          "name": "platforms",
+          "type": "bytes32[]"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "governanceHash",
+          "type": "bytes32"
+        }
+      ],
+      "name": "TeeVersionAdded",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_extensionId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_codeHash",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_platform",
+          "type": "bytes32"
+        }
+      ],
+      "name": "codeHashPlatformDisabled",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_extensionId",
+          "type": "uint256"
+        }
+      ],
+      "name": "confirmOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_extensionId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_codeHash",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getCodeHashInfo",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_governanceHash",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "string",
+          "name": "_version",
+          "type": "string"
+        },
+        {
+          "internalType": "bytes32[]",
+          "name": "_platforms",
+          "type": "bytes32[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_extensionId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getExtensionOwner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_extensionId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_opType",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getOpTypeConstantsProvider",
+      "outputs": [
+        {
+          "internalType": "contract ITeeWalletProjectOpTypeConstants",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_extensionId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getSupportedOpTypes",
+      "outputs": [
+        {
+          "internalType": "bytes32[]",
+          "name": "_supportedOpTypes",
+          "type": "bytes32[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_extensionId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getTeeExtensionInstructionsSender",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_extensionId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getTeeExtensionStateVerifier",
+      "outputs": [
+        {
+          "internalType": "contract ITeeExtensionStateVerifier",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_extensionId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_codeHash",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getTeeGovernanceHash",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_governanceHash",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_extensionId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_codeHash",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_platform",
+          "type": "bytes32"
+        }
+      ],
+      "name": "isCodeHashPlatformSupported",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_extensionId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_opType",
+          "type": "bytes32"
+        }
+      ],
+      "name": "isOpTypeSupported",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_extensionId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "_newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "proposeNewOwner",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract ITeeExtensionStateVerifier",
+          "name": "_teeExtensionStateVerifier",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_teeExtensionInstructionsSender",
+          "type": "address"
+        }
+      ],
+      "name": "register",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_instructionId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_extensionId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address[]",
+          "name": "_teeIds",
+          "type": "address[]"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_opType",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_opCommand",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes",
+          "name": "_message",
+          "type": "bytes"
+        }
+      ],
+      "name": "sendInstructions",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_extensionId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "contract ITeeExtensionStateVerifier",
+          "name": "_teeExtensionStateVerifier",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_teeExtensionInstructionsSender",
+          "type": "address"
+        }
+      ],
+      "name": "setExtensionContracts",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ]

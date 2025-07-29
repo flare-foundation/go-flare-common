@@ -8,7 +8,8 @@ import (
 
 func TestOPTypes(t *testing.T) {
 	opTypesOK := []string{
-		"REG",
+		"F_REG",
+		"F_GET",
 	}
 
 	for _, opType := range opTypesOK {
@@ -29,6 +30,7 @@ func TestOPTypes(t *testing.T) {
 
 	opTypesFail := []string{
 		"reg",
+		"GET",
 	}
 
 	for _, opType := range opTypesFail {

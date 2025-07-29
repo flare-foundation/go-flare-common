@@ -1,5 +1,5 @@
-//go:generate  abigen --abi=registry.abi --pkg=registry --type=Registry --out=autogen.go
-package registry
+//go:generate  abigen --abi=machineregistry.abi --pkg=machineregistry --type=MachineRegistry --out=autogen.go
+package machineregistry
 
 // import (
 // 	"github.com/ethereum/go-ethereum/accounts/abi"
