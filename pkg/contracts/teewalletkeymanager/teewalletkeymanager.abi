@@ -374,25 +374,6 @@
           "internalType": "bytes32",
           "name": "_walletId",
           "type": "bytes32"
-        }
-      ],
-      "name": "getFeeFactor",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "_feeFactor",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "_walletId",
-          "type": "bytes32"
         },
         {
           "internalType": "uint64",
@@ -498,28 +479,6 @@
       ],
       "name": "receivingTeesAndKeys",
       "outputs": [
-        {
-          "components": [
-            {
-              "internalType": "address",
-              "name": "teeId",
-              "type": "address"
-            },
-            {
-              "internalType": "address",
-              "name": "teeProxyId",
-              "type": "address"
-            },
-            {
-              "internalType": "string",
-              "name": "url",
-              "type": "string"
-            }
-          ],
-          "internalType": "struct ITeeRegistry.TeeMachine[]",
-          "name": "_teeMachines",
-          "type": "tuple[]"
-        },
         {
           "components": [
             {

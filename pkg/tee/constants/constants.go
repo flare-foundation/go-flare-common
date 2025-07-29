@@ -9,13 +9,13 @@ import (
 type OPType string
 
 const (
-	Reg    OPType = "REG"
-	Wallet OPType = "WALLET"
-	Get    OPType = "GET"
-	Policy OPType = "POLICY"
-	XRP    OPType = "XRP"
-	BTC    OPType = "BTC"
-	FTDC   OPType = "FTDC"
+	Reg    OPType = "F_REG"
+	Wallet OPType = "F_WALLET"
+	Get    OPType = "F_GET"
+	Policy OPType = "F_POLICY"
+	XRP    OPType = "F_XRP"
+	BTC    OPType = "F_BTC"
+	FTDC   OPType = "F_FTDC"
 )
 
 type OPCommand string

@@ -302,7 +302,7 @@ func TestDecodeInstructionMessage(t *testing.T) {
 	x := common.HexToHash("0x1234")
 
 	pre := verification.ITeeVerificationTeeAttestation{
-		TeeMachine: verification.ITeeRegistryTeeMachineWithAttestationData{
+		TeeMachine: verification.ITeeMachineRegistryTeeMachineWithAttestationData{
 			TeeId:        id,
 			InitialTeeId: id,
 			Url:          "moj.com",

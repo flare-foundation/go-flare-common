@@ -248,19 +248,6 @@
       "type": "function"
     },
     {
-      "inputs": [],
-      "name": "getSupportedOpTypes",
-      "outputs": [
-        {
-          "internalType": "bytes32[]",
-          "name": "_supportedOpTypes",
-          "type": "bytes32[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
       "inputs": [
         {
           "internalType": "bytes32",
@@ -353,25 +340,6 @@
           "internalType": "enum ITeeWalletManager.WalletStatus",
           "name": "_status",
           "type": "uint8"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "_opType",
-          "type": "bytes32"
-        }
-      ],
-      "name": "isOpTypeSupported",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
         }
       ],
       "stateMutability": "view",

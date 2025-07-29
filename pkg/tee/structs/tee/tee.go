@@ -11,7 +11,6 @@ type Struct string
 const (
 	Instruction      Struct = "instruction"
 	Attestation      Struct = "attestation"
-	PMWState         Struct = "pmwState"
 	VoteSequenceInit Struct = "voteSequenceInit"
 	VoteSequenceNext Struct = "voteSequenceNext"
 	VoteReceipt      Struct = "voteReceipt"
@@ -25,7 +24,6 @@ func init() {
 	s := []Struct{
 		Instruction,
 		Attestation,
-		PMWState,
 		VoteSequenceInit,
 		VoteSequenceNext,
 		VoteReceipt,

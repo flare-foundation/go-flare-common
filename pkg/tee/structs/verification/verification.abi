@@ -31,7 +31,7 @@
                   "type": "bytes32"
                 }
               ],
-              "internalType": "struct ITeeRegistry.TeeMachineWithAttestationData",
+              "internalType": "struct ITeeMachineRegistry.TeeMachineWithAttestationData",
               "name": "teeMachine",
               "type": "tuple"
             },
@@ -56,7 +56,7 @@
         {
           "components": [
             {
-              "internalType": "enum IITeeStateVerifier.TeeMachineStatus",
+              "internalType": "enum IITeeSystemStateVerifier.TeeMachineStatus",
               "name": "status",
               "type": "uint8"
             },
@@ -69,24 +69,14 @@
               "internalType": "bytes32",
               "name": "teeGovernanceHash",
               "type": "bytes32"
-            },
-            {
-              "internalType": "uint256",
-              "name": "nonce",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "pauseNonce",
-              "type": "uint256"
             }
           ],
-          "internalType": "struct IITeeStateVerifier.TeeMachineState",
+          "internalType": "struct IITeeSystemStateVerifier.TeeSystemState",
           "name": "",
           "type": "tuple"
         }
       ],
-      "name": "teeMachineStateStruct",
+      "name": "teeSystemStateStruct",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

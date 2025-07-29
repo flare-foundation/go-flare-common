@@ -14,7 +14,7 @@
               "type": "address"
             }
           ],
-          "internalType": "struct ITeeRegistry.PauseForUpgrade",
+          "internalType": "struct ITeeReplication.PauseForUpgrade",
           "name": "",
           "type": "tuple"
         }
@@ -56,7 +56,7 @@
                   "type": "bytes32"
                 }
               ],
-              "internalType": "struct ITeeRegistry.TeeMachineWithAttestationData",
+              "internalType": "struct ITeeMachineRegistry.TeeMachineWithAttestationData",
               "name": "oldTeeMachine",
               "type": "tuple"
             },
@@ -88,12 +88,12 @@
                   "type": "bytes32"
                 }
               ],
-              "internalType": "struct ITeeRegistry.TeeMachineWithAttestationData",
+              "internalType": "struct ITeeMachineRegistry.TeeMachineWithAttestationData",
               "name": "newTeeMachine",
               "type": "tuple"
             }
           ],
-          "internalType": "struct ITeeRegistry.ReplicateTeeMachine",
+          "internalType": "struct ITeeReplication.ReplicateTeeMachine",
           "name": "",
           "type": "tuple"
         }
@@ -123,7 +123,7 @@
               "type": "string"
             }
           ],
-          "internalType": "struct ITeeRegistry.TeeMachine",
+          "internalType": "struct ITeeMachineRegistry.TeeMachine",
           "name": "",
           "type": "tuple"
         }
@@ -163,7 +163,7 @@
               "type": "bytes32"
             }
           ],
-          "internalType": "struct ITeeRegistry.TeeMachineWithAttestationData",
+          "internalType": "struct ITeeMachineRegistry.TeeMachineWithAttestationData",
           "name": "",
           "type": "tuple"
         }
