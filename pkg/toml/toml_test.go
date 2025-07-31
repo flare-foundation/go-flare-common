@@ -3,6 +3,7 @@ package toml
 import (
 	"math/big"
 	"testing"
+	"time"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/require"
@@ -17,12 +18,16 @@ type testStructHappy struct {
 	BNS   *big.Int       `toml:"bns"`
 	BNH   *big.Int       `toml:"bnh"`
 	Z     *common.Hash   `toml:"z"`
+	T     time.Duration  `toml:"t"`
+	TS    time.Duration  `toml:"ts"`
 }
 
 func TestReadTomlHappy(t *testing.T) {
+	bn0, ok := new(big.Int).SetString("7FFFFFFFFFFFFFFF", 16)
+	require.True(t, ok)
+
 	addr := common.HexToAddress("0xE3D78e09f8464f82d1F248d74E2FdEb21010e3Ec")
 	bn, ok := new(big.Int).SetString("184467440737095516160", 10)
-
 	require.True(t, ok)
 
 	path := "./testHappy.toml"
@@ -40,10 +45,12 @@ func TestReadTomlHappy(t *testing.T) {
 		B:     10,
 		C:     11,
 		Addr1: addr,
-		BN:    bn,
+		BN:    bn0,
 		BNS:   bn,
 		BNH:   bn,
 		Z:     nil,
+		T:     time.Nanosecond,
+		TS:    3 * time.Second,
 	}
 
 	require.Equal(t, expected, a)
