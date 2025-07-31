@@ -42,7 +42,11 @@ func (*XChainBridge) ToBytes(value any, _ bool) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("invalid LockingChainDoor, %v: %v", lockingChainDoor, err)
 	}
-	err = out.WriteByte(uint8(len(lockingChainDoorID)))
+	if len(lockingChainDoorID) >= 256 {
+		return nil, fmt.Errorf("lockingChainDoorID length overflow, %v: %v", issuingChainDoor, err)
+	}
+
+	err = out.WriteByte(uint8(len(lockingChainDoorID))) //nolint:gosec // checked in the if above
 	if err != nil {
 		return nil, fmt.Errorf("writing length to buffer, %v: %v", lockingChainDoorID, err)
 	}
@@ -68,7 +72,7 @@ func (*XChainBridge) ToBytes(value any, _ bool) ([]byte, error) {
 		return nil, fmt.Errorf("issuingChainDoorID length overflow, %v: %v", issuingChainDoor, err)
 	}
 
-	err = out.WriteByte(uint8(len(issuingChainDoorID)))
+	err = out.WriteByte(uint8(len(issuingChainDoorID))) //nolint:gosec // checked in the if above
 	if err != nil {
 		return nil, fmt.Errorf("writing length to buffer, %v: %v", issuingChainDoorID, err)
 	}

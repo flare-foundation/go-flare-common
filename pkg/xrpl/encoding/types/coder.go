@@ -152,15 +152,17 @@ func lengthDecode(b *bytes.Buffer) (int, error) {
 		return -1, fmt.Errorf("cannot read first byte %v", err)
 	}
 
-	if byte1 < 193 {
+	switch {
+	case byte1 < 193:
 		return int(byte1), nil
-	} else if byte1 < 241 {
+	case byte1 < 241:
 		byte2, err := b.ReadByte()
 		if err != nil {
 			return -1, fmt.Errorf("cannot read second byte %v", err)
 		}
+
 		return 193 + ((int(byte1) - 193) * 256) + int(byte2), nil
-	} else if byte1 < 255 {
+	case byte1 < 255:
 		bytes := make([]byte, 2)
 		n, err := b.Read(bytes)
 		if n != 2 || err != nil {

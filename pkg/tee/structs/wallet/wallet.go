@@ -9,7 +9,7 @@ import (
 
 var opCommands = []constants.OPCommand{
 	constants.KeyDataProviderRestore,
-	//constants.KeyDataProviderRestoreTest, // TODO
+	// constants.KeyDataProviderRestoreTest, // TODO
 	constants.KeyDelete,
 	constants.KeyGenerate,
 }

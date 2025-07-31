@@ -107,12 +107,14 @@ func ReadID(b *bytes.Buffer) (IDPair, error) {
 //   - 0 if f is equal to g
 //   - 1 if f should be sorted after g
 func (f *Field) Less(g *Field) int {
-	if f.Type < g.Type {
+	switch {
+	case f.Type < g.Type:
 		return -1
-	} else if f.Type == g.Type && f.Nth < g.Nth {
+	case f.Type == g.Type && f.Nth < g.Nth:
 		return -1
-	} else if f.Type == g.Type && f.Nth == g.Nth {
+	case f.Type == g.Type && f.Nth == g.Nth:
 		return 0
+	default:
+		return 1
 	}
-	return 1
 }
