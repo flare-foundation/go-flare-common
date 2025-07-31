@@ -133,11 +133,12 @@ func (vs *Set) BinarySearch(value uint16) int {
 	for left < right {
 		mid = (left + right) / 2
 
-		if vs.thresholds[mid] < value {
+		switch {
+		case vs.thresholds[mid] < value:
 			left = mid + 1
-		} else if vs.thresholds[mid] > value {
+		case vs.thresholds[mid] > value:
 			right = mid
-		} else {
+		default:
 			return mid
 		}
 	}

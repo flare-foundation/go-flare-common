@@ -124,7 +124,7 @@ func decode(b, alphabet string) ([]byte, error) {
 			if tmp == -1 {
 				return nil, fmt.Errorf("bad Base58 string: %s", b)
 			}
-			total = total*58 + uint64(tmp)
+			total = total*58 + uint64(tmp) //nolint:gosec // tmp is always positive
 		}
 
 		answer.Mul(answer, bigRadix[n])
