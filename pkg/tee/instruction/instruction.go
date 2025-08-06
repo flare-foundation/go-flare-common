@@ -16,16 +16,38 @@ type Data struct {
 	AdditionalVariableMessage hexutil.Bytes `json:"AdditionalVariableMessage"`
 }
 
-type DataFixed tee.TeeStructsInstruction
+type DataFixed struct {
+	InstructionID          common.Hash    `json:"instructionId"`
+	TeeID                  common.Address `json:"teeId"`
+	Timestamp              uint64         `json:"timestamp"`
+	RewardEpochID          uint32         `json:"rewardEpochId"`
+	OPType                 common.Hash    `json:"opType"`
+	OPCommand              common.Hash    `json:"opCommand"`
+	OriginalMessage        hexutil.Bytes  `json:"originalMessage"`
+	AdditionalFixedMessage hexutil.Bytes  `json:"additionalFixedMessage"`
+}
 
 // Hash computes the hash of the DataFixed d.
 func (d DataFixed) HashFixed() (common.Hash, error) {
-	e, err := structs.Encode(tee.StructArg[tee.Instruction], d)
+	e, err := structs.Encode(tee.StructArg[tee.Instruction], d.prepareForEncoding())
 	if err != nil {
 		return common.Hash{}, err
 	}
 
 	return crypto.Keccak256Hash(e), nil
+}
+
+func (d *DataFixed) prepareForEncoding() tee.TeeStructsInstruction {
+	return tee.TeeStructsInstruction{
+		InstructionId:          d.InstructionID,
+		TeeId:                  d.TeeID,
+		Timestamp:              d.Timestamp,
+		RewardEpochId:          d.RewardEpochID,
+		OpType:                 d.OPType,
+		OpCommand:              d.OPCommand,
+		OriginalMessage:        d.OriginalMessage,
+		AdditionalFixedMessage: d.AdditionalFixedMessage,
+	}
 }
 
 func (d *DataFixed) InitialVoteHash() (common.Hash, error) {
@@ -35,10 +57,10 @@ func (d *DataFixed) InitialVoteHash() (common.Hash, error) {
 	}
 
 	s := tee.TeeStructsVoteSequenceInit{
-		InstructionId:   d.InstructionId,
+		InstructionId:   d.InstructionID,
 		InstructionHash: ih,
-		RewardEpochId:   d.RewardEpochId,
-		TeeId:           d.TeeId,
+		RewardEpochId:   d.RewardEpochID,
+		TeeId:           d.TeeID,
 	}
 
 	e, err := structs.Encode(tee.StructArg[tee.VoteSequenceInit], s)
@@ -91,12 +113,12 @@ type Instruction struct {
 }
 
 // RecoverSignersPubKey recovers the signers public key from Data and Signature.
-func (i Instruction) RecoverSignersPubKey() ([]byte, error) {
+func (i Instruction) RecoverSignersPubKey() (*ecdsa.PublicKey, error) {
 	hash, err := i.Data.HashForSigning()
 	if err != nil {
-		return []byte{}, err
+		return nil, err
 	}
 	signedHash := accounts.TextHash(hash[:])
 
-	return crypto.Ecrecover(signedHash, i.Signature)
+	return crypto.SigToPub(signedHash, i.Signature)
 }

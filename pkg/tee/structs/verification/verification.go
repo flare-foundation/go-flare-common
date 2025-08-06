@@ -7,8 +7,6 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/tee/constants"
 )
 
-type OPCommand string
-
 var opCommands = []constants.OPCommand{
 	constants.TEEAttestation,
 }
