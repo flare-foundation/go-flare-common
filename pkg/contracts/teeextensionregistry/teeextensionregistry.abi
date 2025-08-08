@@ -1,5 +1,153 @@
 [
     {
+      "inputs": [],
+      "name": "CodeHashZero",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ExtensionIdMismatch",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "FeeTooLow",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InstructionIdEmpty",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidCodeHash",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidGovernanceHash",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidInstructionsSender",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidPlatform",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "MessageEmpty",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NoPlatforms",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NoTeeMachinesSpecified",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "OnlyInstructionsSender",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "OnlyOwner",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "OnlyProposedOwner",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "OpTypeEmpty",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "OperationCommandEmpty",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "OperationTypeConstantsProviderNotSet",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "OperationTypeEmpty",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "platform",
+          "type": "bytes32"
+        }
+      ],
+      "name": "PlatformAlreadyExists",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "PlatformEmpty",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "opType",
+          "type": "bytes32"
+        }
+      ],
+      "name": "SystemOpTypeNotAllowed",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "SystemOwnedExtensionId",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "TeeMachineNotAvailable",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "platform",
+          "type": "bytes32"
+        }
+      ],
+      "name": "UnsupportedPlatform",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "VersionAlreadyExists",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "VersionEmpty",
+      "type": "error"
+    },
+    {
       "anonymous": false,
       "inputs": [
         {
@@ -22,50 +170,6 @@
         }
       ],
       "name": "CodeHashPlatformDisabled",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "uint256",
-          "name": "extensionId",
-          "type": "uint256"
-        },
-        {
-          "indexed": true,
-          "internalType": "contract ITeeExtensionStateVerifier",
-          "name": "teeExtensionStateVerifier",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "teeExtensionInstructionsSender",
-          "type": "address"
-        }
-      ],
-      "name": "ExtensionContractsSet",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "uint256",
-          "name": "extensionId",
-          "type": "uint256"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "owner",
-          "type": "address"
-        }
-      ],
-      "name": "ExtensionRegistered",
       "type": "event"
     },
     {
@@ -117,50 +221,94 @@
       "inputs": [
         {
           "indexed": true,
-          "internalType": "uint256",
-          "name": "extensionId",
-          "type": "uint256"
-        },
-        {
-          "indexed": true,
-          "internalType": "bytes32",
-          "name": "opType",
-          "type": "bytes32"
-        }
-      ],
-      "name": "OpTypeAdded",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "uint256",
-          "name": "extensionId",
-          "type": "uint256"
-        },
-        {
-          "indexed": true,
-          "internalType": "bytes32",
-          "name": "opType",
-          "type": "bytes32"
-        }
-      ],
-      "name": "OpTypeRemoved",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
           "internalType": "bytes32",
           "name": "platform",
           "type": "bytes32"
         }
       ],
-      "name": "PlatformAdded",
+      "name": "SupportedPlatformAdded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "extensionId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "opType",
+          "type": "bytes32"
+        }
+      ],
+      "name": "SupportedWalletProjectOpTypeAdded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "extensionId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "opType",
+          "type": "bytes32"
+        }
+      ],
+      "name": "SupportedWalletProjectOpTypeRemoved",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "extensionId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "contract ITeeExtensionStateVerifier",
+          "name": "teeExtensionStateVerifier",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "teeExtensionInstructionsSender",
+          "type": "address"
+        }
+      ],
+      "name": "TeeExtensionContractsSet",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "extensionId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "TeeExtensionRegistered",
       "type": "event"
     },
     {
@@ -274,6 +422,57 @@
           "type": "uint256"
         },
         {
+          "internalType": "contract ITeeWalletProjectOpTypeConstants[]",
+          "name": "_opTypeConstantsProviders",
+          "type": "address[]"
+        }
+      ],
+      "name": "addOrUpdateSupportedWalletProjectOpTypes",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_extensionId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "_version",
+          "type": "string"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_codeHash",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32[]",
+          "name": "_platforms",
+          "type": "bytes32[]"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_governanceHash",
+          "type": "bytes32"
+        }
+      ],
+      "name": "addTeeVersion",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_extensionId",
+          "type": "uint256"
+        },
+        {
           "internalType": "bytes32",
           "name": "_codeHash",
           "type": "bytes32"
@@ -306,6 +505,42 @@
       "name": "confirmOwnership",
       "outputs": [],
       "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_extensionId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_codeHash",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_platform",
+          "type": "bytes32"
+        }
+      ],
+      "name": "disableCodeHashPlatform",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "extensionsCounter",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -367,38 +602,27 @@
           "internalType": "uint256",
           "name": "_extensionId",
           "type": "uint256"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "_opType",
-          "type": "bytes32"
         }
       ],
-      "name": "getOpTypeConstantsProvider",
+      "name": "getSupportedWalletProjectOpTypes",
       "outputs": [
         {
-          "internalType": "contract ITeeWalletProjectOpTypeConstants",
-          "name": "",
-          "type": "address"
+          "internalType": "bytes32[]",
+          "name": "_supportedOpTypes",
+          "type": "bytes32[]"
         }
       ],
       "stateMutability": "view",
       "type": "function"
     },
     {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_extensionId",
-          "type": "uint256"
-        }
-      ],
-      "name": "getSupportedOpTypes",
+      "inputs": [],
+      "name": "getSystemInstructionInitiators",
       "outputs": [
         {
-          "internalType": "bytes32[]",
-          "name": "_supportedOpTypes",
-          "type": "bytes32[]"
+          "internalType": "address[]",
+          "name": "",
+          "type": "address[]"
         }
       ],
       "stateMutability": "view",
@@ -475,6 +699,30 @@
         },
         {
           "internalType": "bytes32",
+          "name": "_opType",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getWalletProjectOpTypeConstantsProvider",
+      "outputs": [
+        {
+          "internalType": "contract ITeeWalletProjectOpTypeConstants",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_extensionId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes32",
           "name": "_codeHash",
           "type": "bytes32"
         },
@@ -508,7 +756,7 @@
           "type": "bytes32"
         }
       ],
-      "name": "isOpTypeSupported",
+      "name": "isWalletProjectOpTypeSupported",
       "outputs": [
         {
           "internalType": "bool",
@@ -558,14 +806,27 @@
     {
       "inputs": [
         {
-          "internalType": "bytes32",
-          "name": "_instructionId",
-          "type": "bytes32"
-        },
-        {
           "internalType": "uint256",
           "name": "_extensionId",
           "type": "uint256"
+        },
+        {
+          "internalType": "bytes32[]",
+          "name": "_opTypes",
+          "type": "bytes32[]"
+        }
+      ],
+      "name": "removeSupportedWalletProjectOpTypes",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_instructionId",
+          "type": "bytes32"
         },
         {
           "internalType": "address[]",

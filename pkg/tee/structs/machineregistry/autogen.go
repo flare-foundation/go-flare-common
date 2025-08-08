@@ -45,21 +45,9 @@ type ITeeMachineRegistryTeeMachineWithAttestationData struct {
 	Platform     [32]byte
 }
 
-// ITeeReplicationPauseForUpgrade is an auto generated low-level Go binding around an user-defined struct.
-type ITeeReplicationPauseForUpgrade struct {
-	TeeId        common.Address
-	InitialTeeId common.Address
-}
-
-// ITeeReplicationReplicateTeeMachine is an auto generated low-level Go binding around an user-defined struct.
-type ITeeReplicationReplicateTeeMachine struct {
-	OldTeeMachine ITeeMachineRegistryTeeMachineWithAttestationData
-	NewTeeMachine ITeeMachineRegistryTeeMachineWithAttestationData
-}
-
 // MachineRegistryMetaData contains all meta data concerning the MachineRegistry contract.
 var MachineRegistryMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"initialTeeId\",\"type\":\"address\"}],\"internalType\":\"structITeeReplication.PauseForUpgrade\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"pauseForUpgradeStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"initialTeeId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeMachineRegistry.TeeMachineWithAttestationData\",\"name\":\"oldTeeMachine\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"initialTeeId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeMachineRegistry.TeeMachineWithAttestationData\",\"name\":\"newTeeMachine\",\"type\":\"tuple\"}],\"internalType\":\"structITeeReplication.ReplicateTeeMachine\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"replicateTeeMachineStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"teeProxyId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"}],\"internalType\":\"structITeeMachineRegistry.TeeMachine\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"teeMachineStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"initialTeeId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeMachineRegistry.TeeMachineWithAttestationData\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"teeMachineWithAttestationDataStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"teeProxyId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"}],\"internalType\":\"structITeeMachineRegistry.TeeMachine\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"teeMachineStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"initialTeeId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeMachineRegistry.TeeMachineWithAttestationData\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"teeMachineWithAttestationDataStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // MachineRegistryABI is the input ABI used to generate the binding from.
@@ -206,48 +194,6 @@ func (_MachineRegistry *MachineRegistryTransactorRaw) Transfer(opts *bind.Transa
 // Transact invokes the (paid) contract method with params as input values.
 func (_MachineRegistry *MachineRegistryTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
 	return _MachineRegistry.Contract.contract.Transact(opts, method, params...)
-}
-
-// PauseForUpgradeStruct is a paid mutator transaction binding the contract method 0xc1abcc81.
-//
-// Solidity: function pauseForUpgradeStruct((address,address) ) returns()
-func (_MachineRegistry *MachineRegistryTransactor) PauseForUpgradeStruct(opts *bind.TransactOpts, arg0 ITeeReplicationPauseForUpgrade) (*types.Transaction, error) {
-	return _MachineRegistry.contract.Transact(opts, "pauseForUpgradeStruct", arg0)
-}
-
-// PauseForUpgradeStruct is a paid mutator transaction binding the contract method 0xc1abcc81.
-//
-// Solidity: function pauseForUpgradeStruct((address,address) ) returns()
-func (_MachineRegistry *MachineRegistrySession) PauseForUpgradeStruct(arg0 ITeeReplicationPauseForUpgrade) (*types.Transaction, error) {
-	return _MachineRegistry.Contract.PauseForUpgradeStruct(&_MachineRegistry.TransactOpts, arg0)
-}
-
-// PauseForUpgradeStruct is a paid mutator transaction binding the contract method 0xc1abcc81.
-//
-// Solidity: function pauseForUpgradeStruct((address,address) ) returns()
-func (_MachineRegistry *MachineRegistryTransactorSession) PauseForUpgradeStruct(arg0 ITeeReplicationPauseForUpgrade) (*types.Transaction, error) {
-	return _MachineRegistry.Contract.PauseForUpgradeStruct(&_MachineRegistry.TransactOpts, arg0)
-}
-
-// ReplicateTeeMachineStruct is a paid mutator transaction binding the contract method 0xb6c61ed6.
-//
-// Solidity: function replicateTeeMachineStruct(((address,address,string,bytes32,bytes32),(address,address,string,bytes32,bytes32)) ) returns()
-func (_MachineRegistry *MachineRegistryTransactor) ReplicateTeeMachineStruct(opts *bind.TransactOpts, arg0 ITeeReplicationReplicateTeeMachine) (*types.Transaction, error) {
-	return _MachineRegistry.contract.Transact(opts, "replicateTeeMachineStruct", arg0)
-}
-
-// ReplicateTeeMachineStruct is a paid mutator transaction binding the contract method 0xb6c61ed6.
-//
-// Solidity: function replicateTeeMachineStruct(((address,address,string,bytes32,bytes32),(address,address,string,bytes32,bytes32)) ) returns()
-func (_MachineRegistry *MachineRegistrySession) ReplicateTeeMachineStruct(arg0 ITeeReplicationReplicateTeeMachine) (*types.Transaction, error) {
-	return _MachineRegistry.Contract.ReplicateTeeMachineStruct(&_MachineRegistry.TransactOpts, arg0)
-}
-
-// ReplicateTeeMachineStruct is a paid mutator transaction binding the contract method 0xb6c61ed6.
-//
-// Solidity: function replicateTeeMachineStruct(((address,address,string,bytes32,bytes32),(address,address,string,bytes32,bytes32)) ) returns()
-func (_MachineRegistry *MachineRegistryTransactorSession) ReplicateTeeMachineStruct(arg0 ITeeReplicationReplicateTeeMachine) (*types.Transaction, error) {
-	return _MachineRegistry.Contract.ReplicateTeeMachineStruct(&_MachineRegistry.TransactOpts, arg0)
 }
 
 // TeeMachineStruct is a paid mutator transaction binding the contract method 0xef60cfee.

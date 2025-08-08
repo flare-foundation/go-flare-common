@@ -1,5 +1,155 @@
 [
     {
+      "inputs": [],
+      "name": "AdminsNotSet",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "cosigner",
+          "type": "address"
+        }
+      ],
+      "name": "DuplicatedCosigner",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes32",
+              "name": "x",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "y",
+              "type": "bytes32"
+            }
+          ],
+          "internalType": "struct PublicKey",
+          "name": "publicKey",
+          "type": "tuple"
+        }
+      ],
+      "name": "DuplicatedPublicKey",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidAdmin",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidAdminsThreshold",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "cosigner",
+          "type": "address"
+        }
+      ],
+      "name": "InvalidCosigner",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidCosignersThreshold",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes32",
+              "name": "x",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "y",
+              "type": "bytes32"
+            }
+          ],
+          "internalType": "struct PublicKey",
+          "name": "publicKey",
+          "type": "tuple"
+        }
+      ],
+      "name": "InvalidPublicKey",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidWalletStatus",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "MultisigThresholdNotSet",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "admin",
+          "type": "address"
+        }
+      ],
+      "name": "NotAllAdminsConfirmed",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "cosigner",
+          "type": "address"
+        }
+      ],
+      "name": "NotAllCosignersConfirmed",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NotEnoughAdmins",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NotEnoughKeys",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "OnlyOwner",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "OnlyProductionOrPausedStatus",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "TeeMachineNotAvailable",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "WrongKeyId",
+      "type": "error"
+    },
+    {
       "anonymous": false,
       "inputs": [
         {
