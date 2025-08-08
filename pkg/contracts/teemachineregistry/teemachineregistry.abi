@@ -1,5 +1,110 @@
 [
     {
+      "inputs": [],
+      "name": "AcTimestampInvalid",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "AlreadyRegistered",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ExtensionIdMismatch",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidAvailabilityCheckStatus",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidDuration",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidNewStatus",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidResponseData",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidResponseDataOrAvailabilityCheckStatus",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidTeeId",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidTeeProxyId",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidTeeStatus",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidUrl",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "OnlyOwner",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "OnlyOwnerOrDisabledVersion",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "OnlyProposedOwner",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "OnlyTeeReplicationContract",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "OwnerMismatch",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "OwnerNotAllowed",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "TeeNotFound",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "TooMany",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "VersionNotSupported",
+      "type": "error"
+    },
+    {
       "anonymous": false,
       "inputs": [
         {
@@ -51,6 +156,12 @@
           "internalType": "address",
           "name": "teeId",
           "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "withProof",
+          "type": "bool"
         }
       ],
       "name": "TeeMachinePaused",
@@ -158,7 +269,25 @@
           "type": "uint256"
         }
       ],
-      "name": "getActiveTees",
+      "name": "getActiveTeeMachines",
+      "outputs": [
+        {
+          "internalType": "address[]",
+          "name": "_teeIds",
+          "type": "address[]"
+        },
+        {
+          "internalType": "string[]",
+          "name": "_urls",
+          "type": "string[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getAllActiveTeeMachines",
       "outputs": [
         {
           "internalType": "address[]",

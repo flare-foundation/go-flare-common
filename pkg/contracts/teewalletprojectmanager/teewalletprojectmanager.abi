@@ -1,5 +1,40 @@
 [
     {
+      "inputs": [],
+      "name": "OnlyOwner",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "OnlyProposedOwner",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "OpTypeNotSupported",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "OwnerNotAllowed",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "SubmitAddressZero",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "WalletNotPartOfProject",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "WalletNotProductionReady",
+      "type": "error"
+    },
+    {
       "anonymous": false,
       "inputs": [
         {
@@ -197,6 +232,25 @@
           "internalType": "address",
           "name": "_submitAddress",
           "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_projectId",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getExtensionId",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "_extensionId",
+          "type": "uint256"
         }
       ],
       "stateMutability": "view",

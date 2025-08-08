@@ -1,5 +1,55 @@
 [
     {
+      "inputs": [],
+      "name": "ExtensionIdMismatch",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidOpType",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidPublicKey",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidRewardEpochId",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidTeeMachine",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "KeyAlreadyAvailable",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "KeyNotConfirmed",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "OnlyOwnerOrBackupManager",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "TeeMachineNotAvailable",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "UnsupportedRewardEpochId",
+      "type": "error"
+    },
+    {
       "inputs": [
         {
           "internalType": "address",

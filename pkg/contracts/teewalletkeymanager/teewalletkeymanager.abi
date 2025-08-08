@@ -1,5 +1,100 @@
 [
     {
+      "inputs": [],
+      "name": "ExtensionIdMismatch",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidAddress",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidKeyId",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidNonce",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidOpType",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidOpTypeConstants",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidPublicKey",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidTeeSignature",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidThreshold",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidWalletStatus",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "KeyNotGeneratedOnTeeMachine",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "KeyNotRestoredOnTeeMachine",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "LengthsMismatch",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "OnlyBackupManager",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "OnlyOwner",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "OnlyOwnerOrBackupManager",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "TeeIdAlreadyAdded",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "TeeMachineNotAvailable",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ThresholdNotMet",
+      "type": "error"
+    },
+    {
       "anonymous": false,
       "inputs": [
         {
