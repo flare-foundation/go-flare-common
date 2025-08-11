@@ -28,13 +28,15 @@ var MessageArguments map[constants.OPCommand]abi.Argument
 type AttestationType string
 
 const (
-	AvailabilityCheck AttestationType = "TeeAvailabilityCheck"
-	PMWPaymentStatus  AttestationType = "PMWPaymentStatus"
+	AvailabilityCheck            AttestationType = "TeeAvailabilityCheck"
+	PMWPaymentStatus             AttestationType = "PMWPaymentStatus"
+	PMWMultisigAccountConfigured AttestationType = "PMWMultisigAccountConfigured"
 )
 
 var attestationTypes = []AttestationType{
 	AvailabilityCheck,
 	PMWPaymentStatus,
+	PMWMultisigAccountConfigured,
 }
 
 // i-th method correspond to a method in TeeDataConnectorStruct interface whose
@@ -42,6 +44,7 @@ var attestationTypes = []AttestationType{
 var attestationTypeMethods = []string{
 	"availabilityCheck",
 	"pmwPaymentStatus",
+	"pmwMultisigAccountConfigured",
 }
 
 type AttestationArguments struct {
