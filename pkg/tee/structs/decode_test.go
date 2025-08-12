@@ -5,7 +5,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/flare-foundation/go-flare-common/pkg/tee/constants"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/op"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/verification"
 	"github.com/stretchr/testify/require"
 )
@@ -294,7 +294,7 @@ func TestDecodeArray(t *testing.T) {
 }
 
 func TestDecodeInstructionMessage(t *testing.T) {
-	arg := verification.MessageArguments[constants.TEEAttestation]
+	arg := verification.MessageArguments[op.TEEAttestation]
 
 	id := common.HexToAddress("6e656b69")
 	h := common.HexToHash("6e656b69")
