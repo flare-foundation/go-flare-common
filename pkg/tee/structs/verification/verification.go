@@ -4,11 +4,11 @@ package verification
 import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/flare-foundation/go-flare-common/pkg/logger"
-	"github.com/flare-foundation/go-flare-common/pkg/tee/constants"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/op"
 )
 
-var opCommands = []constants.OPCommand{
-	constants.TEEAttestation,
+var opCommands = []op.Command{
+	op.TEEAttestation,
 }
 
 // i-th method correspond to a method in TeePaymentStruct interface whose
@@ -17,7 +17,7 @@ var methods = []string{
 	"teeAttestationStruct",
 }
 
-var MessageArguments map[constants.OPCommand]abi.Argument
+var MessageArguments map[op.Command]abi.Argument
 
 func init() {
 	verificationAbi, err := VerificationMetaData.GetAbi()
@@ -29,7 +29,7 @@ func init() {
 		logger.Panicf("methods, opCommands miss match")
 	}
 
-	MessageArguments = make(map[constants.OPCommand]abi.Argument)
+	MessageArguments = make(map[op.Command]abi.Argument)
 	for j := range opCommands {
 		method, ok := verificationAbi.Methods[methods[j]]
 		if !ok {
