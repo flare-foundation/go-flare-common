@@ -44,9 +44,8 @@ func EncodeSignatures(signatures []IndexedSignature) ([]byte, error) {
 	return buffer.Bytes(), nil
 }
 
-// Transform signature to be used by go-ethereum crypto.SigToPub:
-// transforms [V || R || S] to [R || S || V - 27]
-// No checks are performed, we assume that signature array has length 65
+// TransformSignatureVRStoRSV transforms [V || R || S] to [R || S || V - 27].
+// No checks are performed, we assume that signature array has length 65.
 func TransformSignatureVRStoRSV(vrs []byte) (rsv []byte) {
 	rsv = make([]byte, 65)
 
@@ -57,8 +56,8 @@ func TransformSignatureVRStoRSV(vrs []byte) (rsv []byte) {
 	return rsv
 }
 
-// Transform signature transforms [R || S || V - 27] to [V || R || S].
-// No checks are performed, we assume that signature array has length 65
+// TransformSignatureRSVtoVRS transforms [R || S || V - 27] to [V || R || S].
+// No checks are performed, we assume that signature array has length 65.
 func TransformSignatureRSVtoVRS(rsv []byte) (vrs []byte) {
 	vrs = make([]byte, 65)
 
