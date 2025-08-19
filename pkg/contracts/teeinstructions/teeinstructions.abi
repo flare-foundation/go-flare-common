@@ -43,6 +43,16 @@
           "internalType": "bytes",
           "name": "_message",
           "type": "bytes"
+        },
+        {
+          "internalType": "address[]",
+          "name": "_cosigners",
+          "type": "address[]"
+        },
+        {
+          "internalType": "uint64",
+          "name": "_cosignersThreshold",
+          "type": "uint64"
         }
       ],
       "name": "sendInstructions",

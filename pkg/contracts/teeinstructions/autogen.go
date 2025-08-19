@@ -31,7 +31,7 @@ var (
 
 // TeeInstructionsMetaData contains all meta data concerning the TeeInstructions contract.
 var TeeInstructionsMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"name\":\"OnlyInstructionInitiator\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"getInstructionInitiators\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_instructionId\",\"type\":\"bytes32\"},{\"internalType\":\"address[]\",\"name\":\"_teeIds\",\"type\":\"address[]\"},{\"internalType\":\"bytes32\",\"name\":\"_opType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_opCommand\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"_message\",\"type\":\"bytes\"}],\"name\":\"sendInstructions\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"name\":\"OnlyInstructionInitiator\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"getInstructionInitiators\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_instructionId\",\"type\":\"bytes32\"},{\"internalType\":\"address[]\",\"name\":\"_teeIds\",\"type\":\"address[]\"},{\"internalType\":\"bytes32\",\"name\":\"_opType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_opCommand\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"_message\",\"type\":\"bytes\"},{\"internalType\":\"address[]\",\"name\":\"_cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"_cosignersThreshold\",\"type\":\"uint64\"}],\"name\":\"sendInstructions\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}]",
 }
 
 // TeeInstructionsABI is the input ABI used to generate the binding from.
@@ -211,23 +211,23 @@ func (_TeeInstructions *TeeInstructionsCallerSession) GetInstructionInitiators()
 	return _TeeInstructions.Contract.GetInstructionInitiators(&_TeeInstructions.CallOpts)
 }
 
-// SendInstructions is a paid mutator transaction binding the contract method 0x86979aae.
+// SendInstructions is a paid mutator transaction binding the contract method 0x9b517780.
 //
-// Solidity: function sendInstructions(bytes32 _instructionId, address[] _teeIds, bytes32 _opType, bytes32 _opCommand, bytes _message) payable returns()
-func (_TeeInstructions *TeeInstructionsTransactor) SendInstructions(opts *bind.TransactOpts, _instructionId [32]byte, _teeIds []common.Address, _opType [32]byte, _opCommand [32]byte, _message []byte) (*types.Transaction, error) {
-	return _TeeInstructions.contract.Transact(opts, "sendInstructions", _instructionId, _teeIds, _opType, _opCommand, _message)
+// Solidity: function sendInstructions(bytes32 _instructionId, address[] _teeIds, bytes32 _opType, bytes32 _opCommand, bytes _message, address[] _cosigners, uint64 _cosignersThreshold) payable returns()
+func (_TeeInstructions *TeeInstructionsTransactor) SendInstructions(opts *bind.TransactOpts, _instructionId [32]byte, _teeIds []common.Address, _opType [32]byte, _opCommand [32]byte, _message []byte, _cosigners []common.Address, _cosignersThreshold uint64) (*types.Transaction, error) {
+	return _TeeInstructions.contract.Transact(opts, "sendInstructions", _instructionId, _teeIds, _opType, _opCommand, _message, _cosigners, _cosignersThreshold)
 }
 
-// SendInstructions is a paid mutator transaction binding the contract method 0x86979aae.
+// SendInstructions is a paid mutator transaction binding the contract method 0x9b517780.
 //
-// Solidity: function sendInstructions(bytes32 _instructionId, address[] _teeIds, bytes32 _opType, bytes32 _opCommand, bytes _message) payable returns()
-func (_TeeInstructions *TeeInstructionsSession) SendInstructions(_instructionId [32]byte, _teeIds []common.Address, _opType [32]byte, _opCommand [32]byte, _message []byte) (*types.Transaction, error) {
-	return _TeeInstructions.Contract.SendInstructions(&_TeeInstructions.TransactOpts, _instructionId, _teeIds, _opType, _opCommand, _message)
+// Solidity: function sendInstructions(bytes32 _instructionId, address[] _teeIds, bytes32 _opType, bytes32 _opCommand, bytes _message, address[] _cosigners, uint64 _cosignersThreshold) payable returns()
+func (_TeeInstructions *TeeInstructionsSession) SendInstructions(_instructionId [32]byte, _teeIds []common.Address, _opType [32]byte, _opCommand [32]byte, _message []byte, _cosigners []common.Address, _cosignersThreshold uint64) (*types.Transaction, error) {
+	return _TeeInstructions.Contract.SendInstructions(&_TeeInstructions.TransactOpts, _instructionId, _teeIds, _opType, _opCommand, _message, _cosigners, _cosignersThreshold)
 }
 
-// SendInstructions is a paid mutator transaction binding the contract method 0x86979aae.
+// SendInstructions is a paid mutator transaction binding the contract method 0x9b517780.
 //
-// Solidity: function sendInstructions(bytes32 _instructionId, address[] _teeIds, bytes32 _opType, bytes32 _opCommand, bytes _message) payable returns()
-func (_TeeInstructions *TeeInstructionsTransactorSession) SendInstructions(_instructionId [32]byte, _teeIds []common.Address, _opType [32]byte, _opCommand [32]byte, _message []byte) (*types.Transaction, error) {
-	return _TeeInstructions.Contract.SendInstructions(&_TeeInstructions.TransactOpts, _instructionId, _teeIds, _opType, _opCommand, _message)
+// Solidity: function sendInstructions(bytes32 _instructionId, address[] _teeIds, bytes32 _opType, bytes32 _opCommand, bytes _message, address[] _cosigners, uint64 _cosignersThreshold) payable returns()
+func (_TeeInstructions *TeeInstructionsTransactorSession) SendInstructions(_instructionId [32]byte, _teeIds []common.Address, _opType [32]byte, _opCommand [32]byte, _message []byte, _cosigners []common.Address, _cosignersThreshold uint64) (*types.Transaction, error) {
+	return _TeeInstructions.Contract.SendInstructions(&_TeeInstructions.TransactOpts, _instructionId, _teeIds, _opType, _opCommand, _message, _cosigners, _cosignersThreshold)
 }
