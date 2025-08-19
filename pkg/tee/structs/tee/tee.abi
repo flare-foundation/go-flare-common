@@ -123,6 +123,16 @@
               "type": "bytes32"
             },
             {
+              "internalType": "address[]",
+              "name": "cosigners",
+              "type": "address[]"
+            },
+            {
+              "internalType": "uint64",
+              "name": "cosignersThreshold",
+              "type": "uint64"
+            },
+            {
               "internalType": "bytes",
               "name": "originalMessage",
               "type": "bytes"

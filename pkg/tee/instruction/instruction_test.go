@@ -87,6 +87,8 @@ func TestSignAndRecover(t *testing.T) {
 		OPCommand:              common.Hash{},
 		OriginalMessage:        hexutil.Bytes{1},
 		AdditionalFixedMessage: hexutil.Bytes{1},
+		Cosigners:              []common.Address{},
+		CosignersThreshold:     0,
 	}
 
 	data.DataFixed = dataFixed
