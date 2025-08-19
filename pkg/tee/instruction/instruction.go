@@ -17,14 +17,16 @@ type Data struct {
 }
 
 type DataFixed struct {
-	InstructionID          common.Hash    `json:"instructionId"`
-	TeeID                  common.Address `json:"teeId"`
-	Timestamp              uint64         `json:"timestamp"`
-	RewardEpochID          uint32         `json:"rewardEpochId"`
-	OPType                 common.Hash    `json:"opType"`
-	OPCommand              common.Hash    `json:"opCommand"`
-	OriginalMessage        hexutil.Bytes  `json:"originalMessage"`
-	AdditionalFixedMessage hexutil.Bytes  `json:"additionalFixedMessage"`
+	InstructionID          common.Hash      `json:"instructionId"`
+	TeeID                  common.Address   `json:"teeId"`
+	Timestamp              uint64           `json:"timestamp"`
+	RewardEpochID          uint32           `json:"rewardEpochId"`
+	OPType                 common.Hash      `json:"opType"`
+	OPCommand              common.Hash      `json:"opCommand"`
+	Cosigners              []common.Address `json:"cosigners"`
+	CosignersThreshold     uint64           `json:"cosignersThreshold"`
+	OriginalMessage        hexutil.Bytes    `json:"originalMessage"`
+	AdditionalFixedMessage hexutil.Bytes    `json:"additionalFixedMessage"`
 }
 
 // Hash computes the hash of the DataFixed d.
@@ -45,6 +47,8 @@ func (d *DataFixed) prepareForEncoding() tee.TeeStructsInstruction {
 		RewardEpochId:          d.RewardEpochID,
 		OpType:                 d.OPType,
 		OpCommand:              d.OPCommand,
+		Cosigners:              d.Cosigners,
+		CosignersThreshold:     d.CosignersThreshold,
 		OriginalMessage:        d.OriginalMessage,
 		AdditionalFixedMessage: d.AdditionalFixedMessage,
 	}
