@@ -350,16 +350,6 @@
                   "internalType": "uint16",
                   "name": "thresholdBIPS",
                   "type": "uint16"
-                },
-                {
-                  "internalType": "address[]",
-                  "name": "cosigners",
-                  "type": "address[]"
-                },
-                {
-                  "internalType": "uint64",
-                  "name": "cosignersThreshold",
-                  "type": "uint64"
                 }
               ],
               "internalType": "struct IFtdcHub.FtdcRequestHeader",
@@ -400,16 +390,6 @@
               "internalType": "uint16",
               "name": "thresholdBIPS",
               "type": "uint16"
-            },
-            {
-              "internalType": "address[]",
-              "name": "cosigners",
-              "type": "address[]"
-            },
-            {
-              "internalType": "uint64",
-              "name": "cosignersThreshold",
-              "type": "uint64"
             }
           ],
           "internalType": "struct IFtdcHub.FtdcRequestHeader",
@@ -580,11 +560,6 @@
                   "internalType": "uint64",
                   "name": "threshold",
                   "type": "uint64"
-                },
-                {
-                  "internalType": "bytes32",
-                  "name": "opType",
-                  "type": "bytes32"
                 }
               ],
               "internalType": "struct IPMWMultisigAccountConfigured.RequestBody",
@@ -637,11 +612,6 @@
               "internalType": "uint64",
               "name": "threshold",
               "type": "uint64"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "opType",
-              "type": "bytes32"
             }
           ],
           "internalType": "struct IPMWMultisigAccountConfigured.RequestBody",
