@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"slices"
+	"strings"
 	"time"
 
 	"github.com/flare-foundation/go-flare-common/pkg/retry"
@@ -55,6 +56,16 @@ func PostRaw[T any](ctx context.Context, url string, apiKey APIKey, body io.Read
 	resOut.Status = resp.StatusCode
 
 	if resp.StatusCode != http.StatusOK {
+		if resp.Header.Get("Content-Type") == "text/plain; charset=utf-8" {
+			respLimited := &io.LimitedReader{R: resp.Body, N: p.MaxResponseSize}
+			buf := new(strings.Builder)
+			_, err := io.Copy(buf, respLimited)
+			// check errors
+			if err == nil {
+				return resOut, fmt.Errorf("request responded with code %d, reason: %s", resp.StatusCode, buf.String())
+			}
+		}
+
 		return resOut, fmt.Errorf("request responded with code %d", resp.StatusCode)
 	}
 
