@@ -29,14 +29,16 @@ var (
 	_ = abi.ConvertType
 )
 
-// ITeePaymentsEVMOpTypeConstantsEVM is an auto generated low-level Go binding around an user-defined struct.
-type ITeePaymentsEVMOpTypeConstantsEVM struct {
-	ChainId *big.Int
+// ITeePaymentsPMWMultisigAccount is an auto generated low-level Go binding around an user-defined struct.
+type ITeePaymentsPMWMultisigAccount struct {
+	SourceId       [32]byte
+	AccountAddress string
 }
 
 // ITeePaymentsPaymentInstruction is an auto generated low-level Go binding around an user-defined struct.
 type ITeePaymentsPaymentInstruction struct {
 	RecipientAddress string
+	TokenId          [32]byte
 	Amount           *big.Int
 	Fee              *big.Int
 	PaymentReference [32]byte
@@ -46,8 +48,10 @@ type ITeePaymentsPaymentInstruction struct {
 type ITeePaymentsPaymentInstructionMessage struct {
 	WalletId         [32]byte
 	TeeIdKeyIdPairs  []TeeIdKeyIdPair
+	SourceId         [32]byte
 	SenderAddress    string
 	RecipientAddress string
+	TokenId          [32]byte
 	Amount           *big.Int
 	Fee              *big.Int
 	PaymentReference [32]byte
@@ -59,6 +63,8 @@ type ITeePaymentsPaymentInstructionMessage struct {
 // ITeePaymentsSetPaymentLimits is an auto generated low-level Go binding around an user-defined struct.
 type ITeePaymentsSetPaymentLimits struct {
 	WalletId         [32]byte
+	SourceId         [32]byte
+	AccountAddress   string
 	Nonce            *big.Int
 	TeeIdKeyIdPairs  []TeeIdKeyIdPair
 	TransactionLimit *big.Int
@@ -73,7 +79,7 @@ type TeeIdKeyIdPair struct {
 
 // PaymentMetaData contains all meta data concerning the Payment contract.
 var PaymentMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"}],\"internalType\":\"structITeePaymentsEVM.OpTypeConstantsEVM\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"opTypeConstantsEVMStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"}],\"internalType\":\"structTeeIdKeyIdPair[]\",\"name\":\"teeIdKeyIdPairs\",\"type\":\"tuple[]\"},{\"internalType\":\"string\",\"name\":\"senderAddress\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"subNonce\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"batchEndTs\",\"type\":\"uint64\"}],\"internalType\":\"structITeePayments.PaymentInstructionMessage\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"paymentInstructionMessageStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"}],\"internalType\":\"structITeePayments.PaymentInstruction\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"paymentInstructionStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"}],\"internalType\":\"structTeeIdKeyIdPair[]\",\"name\":\"teeIdKeyIdPairs\",\"type\":\"tuple[]\"},{\"internalType\":\"uint256\",\"name\":\"transactionLimit\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"dailyLimit\",\"type\":\"uint256\"}],\"internalType\":\"structITeePayments.SetPaymentLimits\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"setPaymentLimitsStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"}],\"internalType\":\"structTeeIdKeyIdPair[]\",\"name\":\"teeIdKeyIdPairs\",\"type\":\"tuple[]\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"senderAddress\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"tokenId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"subNonce\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"batchEndTs\",\"type\":\"uint64\"}],\"internalType\":\"structITeePayments.PaymentInstructionMessage\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"paymentInstructionMessageStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"tokenId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"}],\"internalType\":\"structITeePayments.PaymentInstruction\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"paymentInstructionStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePayments.PMWMultisigAccount\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"pmwMultisigAccountStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"}],\"internalType\":\"structTeeIdKeyIdPair[]\",\"name\":\"teeIdKeyIdPairs\",\"type\":\"tuple[]\"},{\"internalType\":\"uint256\",\"name\":\"transactionLimit\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"dailyLimit\",\"type\":\"uint256\"}],\"internalType\":\"structITeePayments.SetPaymentLimits\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"setPaymentLimitsStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // PaymentABI is the input ABI used to generate the binding from.
@@ -222,86 +228,86 @@ func (_Payment *PaymentTransactorRaw) Transact(opts *bind.TransactOpts, method s
 	return _Payment.Contract.contract.Transact(opts, method, params...)
 }
 
-// OpTypeConstantsEVMStruct is a paid mutator transaction binding the contract method 0x82a4aa6c.
+// PaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0x95cd666c.
 //
-// Solidity: function opTypeConstantsEVMStruct((uint256) ) returns()
-func (_Payment *PaymentTransactor) OpTypeConstantsEVMStruct(opts *bind.TransactOpts, arg0 ITeePaymentsEVMOpTypeConstantsEVM) (*types.Transaction, error) {
-	return _Payment.contract.Transact(opts, "opTypeConstantsEVMStruct", arg0)
-}
-
-// OpTypeConstantsEVMStruct is a paid mutator transaction binding the contract method 0x82a4aa6c.
-//
-// Solidity: function opTypeConstantsEVMStruct((uint256) ) returns()
-func (_Payment *PaymentSession) OpTypeConstantsEVMStruct(arg0 ITeePaymentsEVMOpTypeConstantsEVM) (*types.Transaction, error) {
-	return _Payment.Contract.OpTypeConstantsEVMStruct(&_Payment.TransactOpts, arg0)
-}
-
-// OpTypeConstantsEVMStruct is a paid mutator transaction binding the contract method 0x82a4aa6c.
-//
-// Solidity: function opTypeConstantsEVMStruct((uint256) ) returns()
-func (_Payment *PaymentTransactorSession) OpTypeConstantsEVMStruct(arg0 ITeePaymentsEVMOpTypeConstantsEVM) (*types.Transaction, error) {
-	return _Payment.Contract.OpTypeConstantsEVMStruct(&_Payment.TransactOpts, arg0)
-}
-
-// PaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0x1b45fa0b.
-//
-// Solidity: function paymentInstructionMessageStruct((bytes32,(address,uint64)[],string,string,uint256,uint256,bytes32,uint64,uint64,uint64) ) returns()
+// Solidity: function paymentInstructionMessageStruct((bytes32,(address,uint64)[],bytes32,string,string,bytes32,uint256,uint256,bytes32,uint64,uint64,uint64) ) returns()
 func (_Payment *PaymentTransactor) PaymentInstructionMessageStruct(opts *bind.TransactOpts, arg0 ITeePaymentsPaymentInstructionMessage) (*types.Transaction, error) {
 	return _Payment.contract.Transact(opts, "paymentInstructionMessageStruct", arg0)
 }
 
-// PaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0x1b45fa0b.
+// PaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0x95cd666c.
 //
-// Solidity: function paymentInstructionMessageStruct((bytes32,(address,uint64)[],string,string,uint256,uint256,bytes32,uint64,uint64,uint64) ) returns()
+// Solidity: function paymentInstructionMessageStruct((bytes32,(address,uint64)[],bytes32,string,string,bytes32,uint256,uint256,bytes32,uint64,uint64,uint64) ) returns()
 func (_Payment *PaymentSession) PaymentInstructionMessageStruct(arg0 ITeePaymentsPaymentInstructionMessage) (*types.Transaction, error) {
 	return _Payment.Contract.PaymentInstructionMessageStruct(&_Payment.TransactOpts, arg0)
 }
 
-// PaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0x1b45fa0b.
+// PaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0x95cd666c.
 //
-// Solidity: function paymentInstructionMessageStruct((bytes32,(address,uint64)[],string,string,uint256,uint256,bytes32,uint64,uint64,uint64) ) returns()
+// Solidity: function paymentInstructionMessageStruct((bytes32,(address,uint64)[],bytes32,string,string,bytes32,uint256,uint256,bytes32,uint64,uint64,uint64) ) returns()
 func (_Payment *PaymentTransactorSession) PaymentInstructionMessageStruct(arg0 ITeePaymentsPaymentInstructionMessage) (*types.Transaction, error) {
 	return _Payment.Contract.PaymentInstructionMessageStruct(&_Payment.TransactOpts, arg0)
 }
 
-// PaymentInstructionStruct is a paid mutator transaction binding the contract method 0x65d6c132.
+// PaymentInstructionStruct is a paid mutator transaction binding the contract method 0x47298cd1.
 //
-// Solidity: function paymentInstructionStruct((string,uint256,uint256,bytes32) ) returns()
+// Solidity: function paymentInstructionStruct((string,bytes32,uint256,uint256,bytes32) ) returns()
 func (_Payment *PaymentTransactor) PaymentInstructionStruct(opts *bind.TransactOpts, arg0 ITeePaymentsPaymentInstruction) (*types.Transaction, error) {
 	return _Payment.contract.Transact(opts, "paymentInstructionStruct", arg0)
 }
 
-// PaymentInstructionStruct is a paid mutator transaction binding the contract method 0x65d6c132.
+// PaymentInstructionStruct is a paid mutator transaction binding the contract method 0x47298cd1.
 //
-// Solidity: function paymentInstructionStruct((string,uint256,uint256,bytes32) ) returns()
+// Solidity: function paymentInstructionStruct((string,bytes32,uint256,uint256,bytes32) ) returns()
 func (_Payment *PaymentSession) PaymentInstructionStruct(arg0 ITeePaymentsPaymentInstruction) (*types.Transaction, error) {
 	return _Payment.Contract.PaymentInstructionStruct(&_Payment.TransactOpts, arg0)
 }
 
-// PaymentInstructionStruct is a paid mutator transaction binding the contract method 0x65d6c132.
+// PaymentInstructionStruct is a paid mutator transaction binding the contract method 0x47298cd1.
 //
-// Solidity: function paymentInstructionStruct((string,uint256,uint256,bytes32) ) returns()
+// Solidity: function paymentInstructionStruct((string,bytes32,uint256,uint256,bytes32) ) returns()
 func (_Payment *PaymentTransactorSession) PaymentInstructionStruct(arg0 ITeePaymentsPaymentInstruction) (*types.Transaction, error) {
 	return _Payment.Contract.PaymentInstructionStruct(&_Payment.TransactOpts, arg0)
 }
 
-// SetPaymentLimitsStruct is a paid mutator transaction binding the contract method 0x37b141b2.
+// PmwMultisigAccountStruct is a paid mutator transaction binding the contract method 0x8d06b168.
 //
-// Solidity: function setPaymentLimitsStruct((bytes32,uint256,(address,uint64)[],uint256,uint256) ) returns()
+// Solidity: function pmwMultisigAccountStruct((bytes32,string) ) returns()
+func (_Payment *PaymentTransactor) PmwMultisigAccountStruct(opts *bind.TransactOpts, arg0 ITeePaymentsPMWMultisigAccount) (*types.Transaction, error) {
+	return _Payment.contract.Transact(opts, "pmwMultisigAccountStruct", arg0)
+}
+
+// PmwMultisigAccountStruct is a paid mutator transaction binding the contract method 0x8d06b168.
+//
+// Solidity: function pmwMultisigAccountStruct((bytes32,string) ) returns()
+func (_Payment *PaymentSession) PmwMultisigAccountStruct(arg0 ITeePaymentsPMWMultisigAccount) (*types.Transaction, error) {
+	return _Payment.Contract.PmwMultisigAccountStruct(&_Payment.TransactOpts, arg0)
+}
+
+// PmwMultisigAccountStruct is a paid mutator transaction binding the contract method 0x8d06b168.
+//
+// Solidity: function pmwMultisigAccountStruct((bytes32,string) ) returns()
+func (_Payment *PaymentTransactorSession) PmwMultisigAccountStruct(arg0 ITeePaymentsPMWMultisigAccount) (*types.Transaction, error) {
+	return _Payment.Contract.PmwMultisigAccountStruct(&_Payment.TransactOpts, arg0)
+}
+
+// SetPaymentLimitsStruct is a paid mutator transaction binding the contract method 0xfdfc8892.
+//
+// Solidity: function setPaymentLimitsStruct((bytes32,bytes32,string,uint256,(address,uint64)[],uint256,uint256) ) returns()
 func (_Payment *PaymentTransactor) SetPaymentLimitsStruct(opts *bind.TransactOpts, arg0 ITeePaymentsSetPaymentLimits) (*types.Transaction, error) {
 	return _Payment.contract.Transact(opts, "setPaymentLimitsStruct", arg0)
 }
 
-// SetPaymentLimitsStruct is a paid mutator transaction binding the contract method 0x37b141b2.
+// SetPaymentLimitsStruct is a paid mutator transaction binding the contract method 0xfdfc8892.
 //
-// Solidity: function setPaymentLimitsStruct((bytes32,uint256,(address,uint64)[],uint256,uint256) ) returns()
+// Solidity: function setPaymentLimitsStruct((bytes32,bytes32,string,uint256,(address,uint64)[],uint256,uint256) ) returns()
 func (_Payment *PaymentSession) SetPaymentLimitsStruct(arg0 ITeePaymentsSetPaymentLimits) (*types.Transaction, error) {
 	return _Payment.Contract.SetPaymentLimitsStruct(&_Payment.TransactOpts, arg0)
 }
 
-// SetPaymentLimitsStruct is a paid mutator transaction binding the contract method 0x37b141b2.
+// SetPaymentLimitsStruct is a paid mutator transaction binding the contract method 0xfdfc8892.
 //
-// Solidity: function setPaymentLimitsStruct((bytes32,uint256,(address,uint64)[],uint256,uint256) ) returns()
+// Solidity: function setPaymentLimitsStruct((bytes32,bytes32,string,uint256,(address,uint64)[],uint256,uint256) ) returns()
 func (_Payment *PaymentTransactorSession) SetPaymentLimitsStruct(arg0 ITeePaymentsSetPaymentLimits) (*types.Transaction, error) {
 	return _Payment.Contract.SetPaymentLimitsStruct(&_Payment.TransactOpts, arg0)
 }

@@ -4,26 +4,6 @@
         {
           "components": [
             {
-              "internalType": "uint256",
-              "name": "chainId",
-              "type": "uint256"
-            }
-          ],
-          "internalType": "struct ITeePaymentsEVM.OpTypeConstantsEVM",
-          "name": "",
-          "type": "tuple"
-        }
-      ],
-      "name": "opTypeConstantsEVMStruct",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "components": [
-            {
               "internalType": "bytes32",
               "name": "walletId",
               "type": "bytes32"
@@ -46,6 +26,11 @@
               "type": "tuple[]"
             },
             {
+              "internalType": "bytes32",
+              "name": "sourceId",
+              "type": "bytes32"
+            },
+            {
               "internalType": "string",
               "name": "senderAddress",
               "type": "string"
@@ -54,6 +39,11 @@
               "internalType": "string",
               "name": "recipientAddress",
               "type": "string"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "tokenId",
+              "type": "bytes32"
             },
             {
               "internalType": "uint256",
@@ -106,6 +96,11 @@
               "type": "string"
             },
             {
+              "internalType": "bytes32",
+              "name": "tokenId",
+              "type": "bytes32"
+            },
+            {
               "internalType": "uint256",
               "name": "amount",
               "type": "uint256"
@@ -137,8 +132,43 @@
           "components": [
             {
               "internalType": "bytes32",
+              "name": "sourceId",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "string",
+              "name": "accountAddress",
+              "type": "string"
+            }
+          ],
+          "internalType": "struct ITeePayments.PMWMultisigAccount",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "name": "pmwMultisigAccountStruct",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes32",
               "name": "walletId",
               "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "sourceId",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "string",
+              "name": "accountAddress",
+              "type": "string"
             },
             {
               "internalType": "uint256",
