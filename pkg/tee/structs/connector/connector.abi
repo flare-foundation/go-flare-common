@@ -548,7 +548,7 @@
               "components": [
                 {
                   "internalType": "string",
-                  "name": "walletAddress",
+                  "name": "accountAddress",
                   "type": "string"
                 },
                 {
@@ -600,7 +600,7 @@
           "components": [
             {
               "internalType": "string",
-              "name": "walletAddress",
+              "name": "accountAddress",
               "type": "string"
             },
             {
@@ -750,8 +750,13 @@
               "components": [
                 {
                   "internalType": "bytes32",
-                  "name": "walletId",
+                  "name": "opType",
                   "type": "bytes32"
+                },
+                {
+                  "internalType": "string",
+                  "name": "senderAddress",
+                  "type": "string"
                 },
                 {
                   "internalType": "uint64",
@@ -772,13 +777,13 @@
               "components": [
                 {
                   "internalType": "string",
-                  "name": "senderAddress",
+                  "name": "recipientAddress",
                   "type": "string"
                 },
                 {
-                  "internalType": "string",
-                  "name": "recipientAddress",
-                  "type": "string"
+                  "internalType": "bytes32",
+                  "name": "tokenId",
+                  "type": "bytes32"
                 },
                 {
                   "internalType": "uint256",
@@ -852,8 +857,13 @@
           "components": [
             {
               "internalType": "bytes32",
-              "name": "walletId",
+              "name": "opType",
               "type": "bytes32"
+            },
+            {
+              "internalType": "string",
+              "name": "senderAddress",
+              "type": "string"
             },
             {
               "internalType": "uint64",
@@ -882,13 +892,13 @@
           "components": [
             {
               "internalType": "string",
-              "name": "senderAddress",
+              "name": "recipientAddress",
               "type": "string"
             },
             {
-              "internalType": "string",
-              "name": "recipientAddress",
-              "type": "string"
+              "internalType": "bytes32",
+              "name": "tokenId",
+              "type": "bytes32"
             },
             {
               "internalType": "uint256",
