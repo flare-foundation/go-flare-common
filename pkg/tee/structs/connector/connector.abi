@@ -1,964 +1,974 @@
 [
-    {
-      "inputs": [
-        {
-          "components": [
-            {
-              "components": [
-                {
-                  "internalType": "bytes",
-                  "name": "signingPolicySignatures",
-                  "type": "bytes"
-                },
-                {
-                  "components": [
-                    {
-                      "internalType": "uint8",
-                      "name": "v",
-                      "type": "uint8"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "r",
-                      "type": "bytes32"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "s",
-                      "type": "bytes32"
-                    }
-                  ],
-                  "internalType": "struct Signature[]",
-                  "name": "teeSignatures",
-                  "type": "tuple[]"
-                },
-                {
-                  "components": [
-                    {
-                      "internalType": "uint8",
-                      "name": "v",
-                      "type": "uint8"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "r",
-                      "type": "bytes32"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "s",
-                      "type": "bytes32"
-                    }
-                  ],
-                  "internalType": "struct Signature[]",
-                  "name": "cosignerSignatures",
-                  "type": "tuple[]"
-                }
-              ],
-              "internalType": "struct IFtdcVerification.FtdcSignatures",
-              "name": "signatures",
-              "type": "tuple"
-            },
-            {
-              "components": [
-                {
-                  "internalType": "bytes32",
-                  "name": "attestationType",
-                  "type": "bytes32"
-                },
-                {
-                  "internalType": "bytes32",
-                  "name": "sourceId",
-                  "type": "bytes32"
-                },
-                {
-                  "internalType": "uint16",
-                  "name": "thresholdBIPS",
-                  "type": "uint16"
-                },
-                {
-                  "internalType": "address[]",
-                  "name": "cosigners",
-                  "type": "address[]"
-                },
-                {
-                  "internalType": "uint64",
-                  "name": "cosignersThreshold",
-                  "type": "uint64"
-                },
-                {
-                  "internalType": "uint64",
-                  "name": "timestamp",
-                  "type": "uint64"
-                }
-              ],
-              "internalType": "struct IFtdcHub.FtdcResponseHeader",
-              "name": "header",
-              "type": "tuple"
-            },
-            {
-              "components": [
-                {
-                  "internalType": "address",
-                  "name": "teeId",
-                  "type": "address"
-                },
-                {
-                  "internalType": "string",
-                  "name": "url",
-                  "type": "string"
-                },
-                {
-                  "internalType": "bytes32",
-                  "name": "challenge",
-                  "type": "bytes32"
-                }
-              ],
-              "internalType": "struct ITeeAvailabilityCheck.RequestBody",
-              "name": "requestBody",
-              "type": "tuple"
-            },
-            {
-              "components": [
-                {
-                  "internalType": "enum ITeeAvailabilityCheck.AvailabilityCheckStatus",
-                  "name": "status",
-                  "type": "uint8"
-                },
-                {
-                  "internalType": "uint64",
-                  "name": "teeTimestamp",
-                  "type": "uint64"
-                },
-                {
-                  "internalType": "bytes32",
-                  "name": "codeHash",
-                  "type": "bytes32"
-                },
-                {
-                  "internalType": "bytes32",
-                  "name": "platform",
-                  "type": "bytes32"
-                },
-                {
-                  "internalType": "uint32",
-                  "name": "initialSigningPolicyId",
-                  "type": "uint32"
-                },
-                {
-                  "internalType": "uint32",
-                  "name": "lastSigningPolicyId",
-                  "type": "uint32"
-                },
-                {
-                  "components": [
-                    {
-                      "internalType": "bytes",
-                      "name": "systemState",
-                      "type": "bytes"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "systemStateVersion",
-                      "type": "bytes32"
-                    },
-                    {
-                      "internalType": "bytes",
-                      "name": "state",
-                      "type": "bytes"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "stateVersion",
-                      "type": "bytes32"
-                    }
-                  ],
-                  "internalType": "struct ITeeAvailabilityCheck.TeeState",
-                  "name": "state",
-                  "type": "tuple"
-                }
-              ],
-              "internalType": "struct ITeeAvailabilityCheck.ResponseBody",
-              "name": "responseBody",
-              "type": "tuple"
-            }
-          ],
-          "internalType": "struct ITeeAvailabilityCheck.Proof",
-          "name": "",
-          "type": "tuple"
-        }
-      ],
-      "name": "availabilityCheckProofStruct",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "components": [
-            {
-              "internalType": "address",
-              "name": "teeId",
-              "type": "address"
-            },
-            {
-              "internalType": "string",
-              "name": "url",
-              "type": "string"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "challenge",
-              "type": "bytes32"
-            }
-          ],
-          "internalType": "struct ITeeAvailabilityCheck.RequestBody",
-          "name": "",
-          "type": "tuple"
-        }
-      ],
-      "name": "availabilityCheckRequestBodyStruct",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "components": [
-            {
-              "internalType": "enum ITeeAvailabilityCheck.AvailabilityCheckStatus",
-              "name": "status",
-              "type": "uint8"
-            },
-            {
-              "internalType": "uint64",
-              "name": "teeTimestamp",
-              "type": "uint64"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "codeHash",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "platform",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "uint32",
-              "name": "initialSigningPolicyId",
-              "type": "uint32"
-            },
-            {
-              "internalType": "uint32",
-              "name": "lastSigningPolicyId",
-              "type": "uint32"
-            },
-            {
-              "components": [
-                {
-                  "internalType": "bytes",
-                  "name": "systemState",
-                  "type": "bytes"
-                },
-                {
-                  "internalType": "bytes32",
-                  "name": "systemStateVersion",
-                  "type": "bytes32"
-                },
-                {
-                  "internalType": "bytes",
-                  "name": "state",
-                  "type": "bytes"
-                },
-                {
-                  "internalType": "bytes32",
-                  "name": "stateVersion",
-                  "type": "bytes32"
-                }
-              ],
-              "internalType": "struct ITeeAvailabilityCheck.TeeState",
-              "name": "state",
-              "type": "tuple"
-            }
-          ],
-          "internalType": "struct ITeeAvailabilityCheck.ResponseBody",
-          "name": "",
-          "type": "tuple"
-        }
-      ],
-      "name": "availabilityCheckResponseBodyStruct",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "components": [
-            {
-              "internalType": "bytes",
-              "name": "systemState",
-              "type": "bytes"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "systemStateVersion",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "bytes",
-              "name": "state",
-              "type": "bytes"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "stateVersion",
-              "type": "bytes32"
-            }
-          ],
-          "internalType": "struct ITeeAvailabilityCheck.TeeState",
-          "name": "",
-          "type": "tuple"
-        }
-      ],
-      "name": "availabilityCheckTeeStateStruct",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "components": [
-            {
-              "components": [
-                {
-                  "internalType": "bytes32",
-                  "name": "attestationType",
-                  "type": "bytes32"
-                },
-                {
-                  "internalType": "bytes32",
-                  "name": "sourceId",
-                  "type": "bytes32"
-                },
-                {
-                  "internalType": "uint16",
-                  "name": "thresholdBIPS",
-                  "type": "uint16"
-                }
-              ],
-              "internalType": "struct IFtdcHub.FtdcRequestHeader",
-              "name": "header",
-              "type": "tuple"
-            },
-            {
-              "internalType": "bytes",
-              "name": "requestBody",
-              "type": "bytes"
-            }
-          ],
-          "internalType": "struct IFtdcHub.FtdcAttestationRequest",
-          "name": "",
-          "type": "tuple"
-        }
-      ],
-      "name": "ftdcAttestationRequestStruct",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "components": [
-            {
-              "internalType": "bytes32",
-              "name": "attestationType",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "sourceId",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "uint16",
-              "name": "thresholdBIPS",
-              "type": "uint16"
-            }
-          ],
-          "internalType": "struct IFtdcHub.FtdcRequestHeader",
-          "name": "",
-          "type": "tuple"
-        }
-      ],
-      "name": "ftdcRequestHeaderStruct",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "components": [
-            {
-              "internalType": "bytes32",
-              "name": "attestationType",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "sourceId",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "uint16",
-              "name": "thresholdBIPS",
-              "type": "uint16"
-            },
-            {
-              "internalType": "address[]",
-              "name": "cosigners",
-              "type": "address[]"
-            },
-            {
-              "internalType": "uint64",
-              "name": "cosignersThreshold",
-              "type": "uint64"
-            },
-            {
-              "internalType": "uint64",
-              "name": "timestamp",
-              "type": "uint64"
-            }
-          ],
-          "internalType": "struct IFtdcHub.FtdcResponseHeader",
-          "name": "",
-          "type": "tuple"
-        }
-      ],
-      "name": "ftdcResponseHeaderStruct",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "components": [
-            {
-              "components": [
-                {
-                  "internalType": "bytes",
-                  "name": "signingPolicySignatures",
-                  "type": "bytes"
-                },
-                {
-                  "components": [
-                    {
-                      "internalType": "uint8",
-                      "name": "v",
-                      "type": "uint8"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "r",
-                      "type": "bytes32"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "s",
-                      "type": "bytes32"
-                    }
-                  ],
-                  "internalType": "struct Signature[]",
-                  "name": "teeSignatures",
-                  "type": "tuple[]"
-                },
-                {
-                  "components": [
-                    {
-                      "internalType": "uint8",
-                      "name": "v",
-                      "type": "uint8"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "r",
-                      "type": "bytes32"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "s",
-                      "type": "bytes32"
-                    }
-                  ],
-                  "internalType": "struct Signature[]",
-                  "name": "cosignerSignatures",
-                  "type": "tuple[]"
-                }
-              ],
-              "internalType": "struct IFtdcVerification.FtdcSignatures",
-              "name": "signatures",
-              "type": "tuple"
-            },
-            {
-              "components": [
-                {
-                  "internalType": "bytes32",
-                  "name": "attestationType",
-                  "type": "bytes32"
-                },
-                {
-                  "internalType": "bytes32",
-                  "name": "sourceId",
-                  "type": "bytes32"
-                },
-                {
-                  "internalType": "uint16",
-                  "name": "thresholdBIPS",
-                  "type": "uint16"
-                },
-                {
-                  "internalType": "address[]",
-                  "name": "cosigners",
-                  "type": "address[]"
-                },
-                {
-                  "internalType": "uint64",
-                  "name": "cosignersThreshold",
-                  "type": "uint64"
-                },
-                {
-                  "internalType": "uint64",
-                  "name": "timestamp",
-                  "type": "uint64"
-                }
-              ],
-              "internalType": "struct IFtdcHub.FtdcResponseHeader",
-              "name": "header",
-              "type": "tuple"
-            },
-            {
-              "components": [
-                {
-                  "internalType": "string",
-                  "name": "accountAddress",
-                  "type": "string"
-                },
-                {
-                  "internalType": "bytes[]",
-                  "name": "publicKeys",
-                  "type": "bytes[]"
-                },
-                {
-                  "internalType": "uint64",
-                  "name": "threshold",
-                  "type": "uint64"
-                }
-              ],
-              "internalType": "struct IPMWMultisigAccountConfigured.RequestBody",
-              "name": "requestBody",
-              "type": "tuple"
-            },
-            {
-              "components": [
-                {
-                  "internalType": "enum IPMWMultisigAccountConfigured.PMWMultisigAccountStatus",
-                  "name": "status",
-                  "type": "uint8"
-                },
-                {
-                  "internalType": "uint64",
-                  "name": "sequence",
-                  "type": "uint64"
-                }
-              ],
-              "internalType": "struct IPMWMultisigAccountConfigured.ResponseBody",
-              "name": "responseBody",
-              "type": "tuple"
-            }
-          ],
-          "internalType": "struct IPMWMultisigAccountConfigured.Proof",
-          "name": "",
-          "type": "tuple"
-        }
-      ],
-      "name": "pmwMultisigAccountConfiguredProofStruct",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "components": [
-            {
-              "internalType": "string",
-              "name": "accountAddress",
-              "type": "string"
-            },
-            {
-              "internalType": "bytes[]",
-              "name": "publicKeys",
-              "type": "bytes[]"
-            },
-            {
-              "internalType": "uint64",
-              "name": "threshold",
-              "type": "uint64"
-            }
-          ],
-          "internalType": "struct IPMWMultisigAccountConfigured.RequestBody",
-          "name": "",
-          "type": "tuple"
-        }
-      ],
-      "name": "pmwMultisigAccountConfiguredRequestBodyStruct",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "components": [
-            {
-              "internalType": "enum IPMWMultisigAccountConfigured.PMWMultisigAccountStatus",
-              "name": "status",
-              "type": "uint8"
-            },
-            {
-              "internalType": "uint64",
-              "name": "sequence",
-              "type": "uint64"
-            }
-          ],
-          "internalType": "struct IPMWMultisigAccountConfigured.ResponseBody",
-          "name": "",
-          "type": "tuple"
-        }
-      ],
-      "name": "pmwMultisigAccountConfiguredResponseBodyStruct",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "components": [
-            {
-              "components": [
-                {
-                  "internalType": "bytes",
-                  "name": "signingPolicySignatures",
-                  "type": "bytes"
-                },
-                {
-                  "components": [
-                    {
-                      "internalType": "uint8",
-                      "name": "v",
-                      "type": "uint8"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "r",
-                      "type": "bytes32"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "s",
-                      "type": "bytes32"
-                    }
-                  ],
-                  "internalType": "struct Signature[]",
-                  "name": "teeSignatures",
-                  "type": "tuple[]"
-                },
-                {
-                  "components": [
-                    {
-                      "internalType": "uint8",
-                      "name": "v",
-                      "type": "uint8"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "r",
-                      "type": "bytes32"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "s",
-                      "type": "bytes32"
-                    }
-                  ],
-                  "internalType": "struct Signature[]",
-                  "name": "cosignerSignatures",
-                  "type": "tuple[]"
-                }
-              ],
-              "internalType": "struct IFtdcVerification.FtdcSignatures",
-              "name": "signatures",
-              "type": "tuple"
-            },
-            {
-              "components": [
-                {
-                  "internalType": "bytes32",
-                  "name": "attestationType",
-                  "type": "bytes32"
-                },
-                {
-                  "internalType": "bytes32",
-                  "name": "sourceId",
-                  "type": "bytes32"
-                },
-                {
-                  "internalType": "uint16",
-                  "name": "thresholdBIPS",
-                  "type": "uint16"
-                },
-                {
-                  "internalType": "address[]",
-                  "name": "cosigners",
-                  "type": "address[]"
-                },
-                {
-                  "internalType": "uint64",
-                  "name": "cosignersThreshold",
-                  "type": "uint64"
-                },
-                {
-                  "internalType": "uint64",
-                  "name": "timestamp",
-                  "type": "uint64"
-                }
-              ],
-              "internalType": "struct IFtdcHub.FtdcResponseHeader",
-              "name": "header",
-              "type": "tuple"
-            },
-            {
-              "components": [
-                {
-                  "internalType": "bytes32",
-                  "name": "opType",
-                  "type": "bytes32"
-                },
-                {
-                  "internalType": "string",
-                  "name": "senderAddress",
-                  "type": "string"
-                },
-                {
-                  "internalType": "uint64",
-                  "name": "nonce",
-                  "type": "uint64"
-                },
-                {
-                  "internalType": "uint64",
-                  "name": "subNonce",
-                  "type": "uint64"
-                }
-              ],
-              "internalType": "struct IPMWPaymentStatus.RequestBody",
-              "name": "requestBody",
-              "type": "tuple"
-            },
-            {
-              "components": [
-                {
-                  "internalType": "string",
-                  "name": "recipientAddress",
-                  "type": "string"
-                },
-                {
-                  "internalType": "bytes32",
-                  "name": "tokenId",
-                  "type": "bytes32"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "amount",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "fee",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "bytes32",
-                  "name": "paymentReference",
-                  "type": "bytes32"
-                },
-                {
-                  "internalType": "uint8",
-                  "name": "transactionStatus",
-                  "type": "uint8"
-                },
-                {
-                  "internalType": "string",
-                  "name": "revertReason",
-                  "type": "string"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "receivedAmount",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "transactionFee",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "bytes32",
-                  "name": "transactionId",
-                  "type": "bytes32"
-                },
-                {
-                  "internalType": "uint64",
-                  "name": "blockNumber",
-                  "type": "uint64"
-                },
-                {
-                  "internalType": "uint64",
-                  "name": "blockTimestamp",
-                  "type": "uint64"
-                }
-              ],
-              "internalType": "struct IPMWPaymentStatus.ResponseBody",
-              "name": "responseBody",
-              "type": "tuple"
-            }
-          ],
-          "internalType": "struct IPMWPaymentStatus.Proof",
-          "name": "",
-          "type": "tuple"
-        }
-      ],
-      "name": "pmwPaymentStatusProofStruct",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "components": [
-            {
-              "internalType": "bytes32",
-              "name": "opType",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "string",
-              "name": "senderAddress",
-              "type": "string"
-            },
-            {
-              "internalType": "uint64",
-              "name": "nonce",
-              "type": "uint64"
-            },
-            {
-              "internalType": "uint64",
-              "name": "subNonce",
-              "type": "uint64"
-            }
-          ],
-          "internalType": "struct IPMWPaymentStatus.RequestBody",
-          "name": "",
-          "type": "tuple"
-        }
-      ],
-      "name": "pmwPaymentStatusRequestBodyStruct",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "components": [
-            {
-              "internalType": "string",
-              "name": "recipientAddress",
-              "type": "string"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "tokenId",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "fee",
-              "type": "uint256"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "paymentReference",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "uint8",
-              "name": "transactionStatus",
-              "type": "uint8"
-            },
-            {
-              "internalType": "string",
-              "name": "revertReason",
-              "type": "string"
-            },
-            {
-              "internalType": "uint256",
-              "name": "receivedAmount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "transactionFee",
-              "type": "uint256"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "transactionId",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "uint64",
-              "name": "blockNumber",
-              "type": "uint64"
-            },
-            {
-              "internalType": "uint64",
-              "name": "blockTimestamp",
-              "type": "uint64"
-            }
-          ],
-          "internalType": "struct IPMWPaymentStatus.ResponseBody",
-          "name": "",
-          "type": "tuple"
-        }
-      ],
-      "name": "pmwPaymentStatusResponseBodyStruct",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    }
-  ]
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "signingPolicySignatures",
+                "type": "bytes"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint8",
+                    "name": "v",
+                    "type": "uint8"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "r",
+                    "type": "bytes32"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "s",
+                    "type": "bytes32"
+                  }
+                ],
+                "internalType": "struct Signature[]",
+                "name": "teeSignatures",
+                "type": "tuple[]"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint8",
+                    "name": "v",
+                    "type": "uint8"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "r",
+                    "type": "bytes32"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "s",
+                    "type": "bytes32"
+                  }
+                ],
+                "internalType": "struct Signature[]",
+                "name": "cosignerSignatures",
+                "type": "tuple[]"
+              }
+            ],
+            "internalType": "struct IFtdcVerification.FtdcSignatures",
+            "name": "signatures",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "attestationType",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "sourceId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint16",
+                "name": "thresholdBIPS",
+                "type": "uint16"
+              },
+              {
+                "internalType": "address[]",
+                "name": "cosigners",
+                "type": "address[]"
+              },
+              {
+                "internalType": "uint64",
+                "name": "cosignersThreshold",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "timestamp",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct IFtdcHub.FtdcResponseHeader",
+            "name": "header",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "teeId",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "teeProxyId",
+                "type": "address"
+              },
+              {
+                "internalType": "string",
+                "name": "url",
+                "type": "string"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "challenge",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct ITeeAvailabilityCheck.RequestBody",
+            "name": "requestBody",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "enum ITeeAvailabilityCheck.AvailabilityCheckStatus",
+                "name": "status",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint64",
+                "name": "teeTimestamp",
+                "type": "uint64"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "codeHash",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "platform",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint32",
+                "name": "initialSigningPolicyId",
+                "type": "uint32"
+              },
+              {
+                "internalType": "uint32",
+                "name": "lastSigningPolicyId",
+                "type": "uint32"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "bytes",
+                    "name": "systemState",
+                    "type": "bytes"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "systemStateVersion",
+                    "type": "bytes32"
+                  },
+                  {
+                    "internalType": "bytes",
+                    "name": "state",
+                    "type": "bytes"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "stateVersion",
+                    "type": "bytes32"
+                  }
+                ],
+                "internalType": "struct ITeeAvailabilityCheck.TeeState",
+                "name": "state",
+                "type": "tuple"
+              }
+            ],
+            "internalType": "struct ITeeAvailabilityCheck.ResponseBody",
+            "name": "responseBody",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct ITeeAvailabilityCheck.Proof",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "availabilityCheckProofStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "teeId",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "teeProxyId",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "challenge",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct ITeeAvailabilityCheck.RequestBody",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "availabilityCheckRequestBodyStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "enum ITeeAvailabilityCheck.AvailabilityCheckStatus",
+            "name": "status",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint64",
+            "name": "teeTimestamp",
+            "type": "uint64"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "codeHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "platform",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "initialSigningPolicyId",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "lastSigningPolicyId",
+            "type": "uint32"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "systemState",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "systemStateVersion",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes",
+                "name": "state",
+                "type": "bytes"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "stateVersion",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct ITeeAvailabilityCheck.TeeState",
+            "name": "state",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct ITeeAvailabilityCheck.ResponseBody",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "availabilityCheckResponseBodyStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes",
+            "name": "systemState",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "systemStateVersion",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "state",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "stateVersion",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct ITeeAvailabilityCheck.TeeState",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "availabilityCheckTeeStateStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "attestationType",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "sourceId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint16",
+                "name": "thresholdBIPS",
+                "type": "uint16"
+              }
+            ],
+            "internalType": "struct IFtdcHub.FtdcRequestHeader",
+            "name": "header",
+            "type": "tuple"
+          },
+          {
+            "internalType": "bytes",
+            "name": "requestBody",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct IFtdcHub.FtdcAttestationRequest",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "ftdcAttestationRequestStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "attestationType",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint16",
+            "name": "thresholdBIPS",
+            "type": "uint16"
+          }
+        ],
+        "internalType": "struct IFtdcHub.FtdcRequestHeader",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "ftdcRequestHeaderStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "attestationType",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint16",
+            "name": "thresholdBIPS",
+            "type": "uint16"
+          },
+          {
+            "internalType": "address[]",
+            "name": "cosigners",
+            "type": "address[]"
+          },
+          {
+            "internalType": "uint64",
+            "name": "cosignersThreshold",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "timestamp",
+            "type": "uint64"
+          }
+        ],
+        "internalType": "struct IFtdcHub.FtdcResponseHeader",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "ftdcResponseHeaderStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "signingPolicySignatures",
+                "type": "bytes"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint8",
+                    "name": "v",
+                    "type": "uint8"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "r",
+                    "type": "bytes32"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "s",
+                    "type": "bytes32"
+                  }
+                ],
+                "internalType": "struct Signature[]",
+                "name": "teeSignatures",
+                "type": "tuple[]"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint8",
+                    "name": "v",
+                    "type": "uint8"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "r",
+                    "type": "bytes32"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "s",
+                    "type": "bytes32"
+                  }
+                ],
+                "internalType": "struct Signature[]",
+                "name": "cosignerSignatures",
+                "type": "tuple[]"
+              }
+            ],
+            "internalType": "struct IFtdcVerification.FtdcSignatures",
+            "name": "signatures",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "attestationType",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "sourceId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint16",
+                "name": "thresholdBIPS",
+                "type": "uint16"
+              },
+              {
+                "internalType": "address[]",
+                "name": "cosigners",
+                "type": "address[]"
+              },
+              {
+                "internalType": "uint64",
+                "name": "cosignersThreshold",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "timestamp",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct IFtdcHub.FtdcResponseHeader",
+            "name": "header",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "accountAddress",
+                "type": "string"
+              },
+              {
+                "internalType": "bytes[]",
+                "name": "publicKeys",
+                "type": "bytes[]"
+              },
+              {
+                "internalType": "uint64",
+                "name": "threshold",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct IPMWMultisigAccountConfigured.RequestBody",
+            "name": "requestBody",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "enum IPMWMultisigAccountConfigured.PMWMultisigAccountStatus",
+                "name": "status",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint64",
+                "name": "sequence",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct IPMWMultisigAccountConfigured.ResponseBody",
+            "name": "responseBody",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct IPMWMultisigAccountConfigured.Proof",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "pmwMultisigAccountConfiguredProofStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          },
+          {
+            "internalType": "bytes[]",
+            "name": "publicKeys",
+            "type": "bytes[]"
+          },
+          {
+            "internalType": "uint64",
+            "name": "threshold",
+            "type": "uint64"
+          }
+        ],
+        "internalType": "struct IPMWMultisigAccountConfigured.RequestBody",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "pmwMultisigAccountConfiguredRequestBodyStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "enum IPMWMultisigAccountConfigured.PMWMultisigAccountStatus",
+            "name": "status",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint64",
+            "name": "sequence",
+            "type": "uint64"
+          }
+        ],
+        "internalType": "struct IPMWMultisigAccountConfigured.ResponseBody",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "pmwMultisigAccountConfiguredResponseBodyStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "signingPolicySignatures",
+                "type": "bytes"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint8",
+                    "name": "v",
+                    "type": "uint8"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "r",
+                    "type": "bytes32"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "s",
+                    "type": "bytes32"
+                  }
+                ],
+                "internalType": "struct Signature[]",
+                "name": "teeSignatures",
+                "type": "tuple[]"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint8",
+                    "name": "v",
+                    "type": "uint8"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "r",
+                    "type": "bytes32"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "s",
+                    "type": "bytes32"
+                  }
+                ],
+                "internalType": "struct Signature[]",
+                "name": "cosignerSignatures",
+                "type": "tuple[]"
+              }
+            ],
+            "internalType": "struct IFtdcVerification.FtdcSignatures",
+            "name": "signatures",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "attestationType",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "sourceId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint16",
+                "name": "thresholdBIPS",
+                "type": "uint16"
+              },
+              {
+                "internalType": "address[]",
+                "name": "cosigners",
+                "type": "address[]"
+              },
+              {
+                "internalType": "uint64",
+                "name": "cosignersThreshold",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "timestamp",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct IFtdcHub.FtdcResponseHeader",
+            "name": "header",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "opType",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "string",
+                "name": "senderAddress",
+                "type": "string"
+              },
+              {
+                "internalType": "uint64",
+                "name": "nonce",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "subNonce",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct IPMWPaymentStatus.RequestBody",
+            "name": "requestBody",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "recipientAddress",
+                "type": "string"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "tokenId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "fee",
+                "type": "uint256"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "paymentReference",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint8",
+                "name": "transactionStatus",
+                "type": "uint8"
+              },
+              {
+                "internalType": "string",
+                "name": "revertReason",
+                "type": "string"
+              },
+              {
+                "internalType": "uint256",
+                "name": "receivedAmount",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "transactionFee",
+                "type": "uint256"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "transactionId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint64",
+                "name": "blockNumber",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "blockTimestamp",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct IPMWPaymentStatus.ResponseBody",
+            "name": "responseBody",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct IPMWPaymentStatus.Proof",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "pmwPaymentStatusProofStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "opType",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "senderAddress",
+            "type": "string"
+          },
+          {
+            "internalType": "uint64",
+            "name": "nonce",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "subNonce",
+            "type": "uint64"
+          }
+        ],
+        "internalType": "struct IPMWPaymentStatus.RequestBody",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "pmwPaymentStatusRequestBodyStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "recipientAddress",
+            "type": "string"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "tokenId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "fee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "paymentReference",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint8",
+            "name": "transactionStatus",
+            "type": "uint8"
+          },
+          {
+            "internalType": "string",
+            "name": "revertReason",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "receivedAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "transactionFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "transactionId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint64",
+            "name": "blockNumber",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "blockTimestamp",
+            "type": "uint64"
+          }
+        ],
+        "internalType": "struct IPMWPaymentStatus.ResponseBody",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "pmwPaymentStatusResponseBodyStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
