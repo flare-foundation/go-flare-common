@@ -1,1454 +1,1532 @@
 [
-    {
-      "inputs": [],
-      "stateMutability": "nonpayable",
-      "type": "constructor"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "target",
-          "type": "address"
-        }
-      ],
-      "name": "AddressEmptyCode",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "CodeHashZero",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "CosignersThresholdTooHigh",
-      "type": "error"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "implementation",
-          "type": "address"
-        }
-      ],
-      "name": "ERC1967InvalidImplementation",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "ERC1967NonPayable",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "ExtensionIdMismatch",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "FailedInnerCall",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "FeeTooLow",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "InstructionIdEmpty",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "InvalidCodeHash",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "InvalidGovernanceHash",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "InvalidInstructionsSender",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "InvalidPlatform",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "MessageEmpty",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "NoPlatforms",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "NoTeeMachinesSpecified",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "OnlyInstructionsSender",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "OnlyOwner",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "OnlyProposedOwner",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "OpTypeEmpty",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "OperationCommandEmpty",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "OperationTypeConstantsProviderNotSet",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "OperationTypeEmpty",
-      "type": "error"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "platform",
-          "type": "bytes32"
-        }
-      ],
-      "name": "PlatformAlreadyExists",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "PlatformEmpty",
-      "type": "error"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "opType",
-          "type": "bytes32"
-        }
-      ],
-      "name": "SystemOpTypeNotAllowed",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "SystemOwnedExtensionId",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "TeeMachineNotAvailable",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "UUPSUnauthorizedCallContext",
-      "type": "error"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "slot",
-          "type": "bytes32"
-        }
-      ],
-      "name": "UUPSUnsupportedProxiableUUID",
-      "type": "error"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "platform",
-          "type": "bytes32"
-        }
-      ],
-      "name": "UnsupportedPlatform",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "VersionAlreadyExists",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "VersionEmpty",
-      "type": "error"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "uint256",
-          "name": "extensionId",
-          "type": "uint256"
-        },
-        {
-          "indexed": true,
-          "internalType": "bytes32",
-          "name": "codeHash",
-          "type": "bytes32"
-        },
-        {
-          "indexed": true,
-          "internalType": "bytes32",
-          "name": "platform",
-          "type": "bytes32"
-        }
-      ],
-      "name": "CodeHashPlatformDisabled",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "bytes4",
-          "name": "selector",
-          "type": "bytes4"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "allowedAfterTimestamp",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "bytes",
-          "name": "encodedCall",
-          "type": "bytes"
-        }
-      ],
-      "name": "GovernanceCallTimelocked",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "initialGovernance",
-          "type": "address"
-        }
-      ],
-      "name": "GovernanceInitialised",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "governanceSettings",
-          "type": "address"
-        }
-      ],
-      "name": "GovernedProductionModeEntered",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "uint256",
-          "name": "extensionId",
-          "type": "uint256"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "newOwner",
-          "type": "address"
-        }
-      ],
-      "name": "NewOwnerConfirmed",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "uint256",
-          "name": "extensionId",
-          "type": "uint256"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "oldOwner",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "newOwner",
-          "type": "address"
-        }
-      ],
-      "name": "NewOwnerProposed",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "bytes32",
-          "name": "platform",
-          "type": "bytes32"
-        }
-      ],
-      "name": "SupportedPlatformAdded",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "uint256",
-          "name": "extensionId",
-          "type": "uint256"
-        },
-        {
-          "indexed": true,
-          "internalType": "bytes32",
-          "name": "opType",
-          "type": "bytes32"
-        }
-      ],
-      "name": "SupportedWalletProjectOpTypeAdded",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "uint256",
-          "name": "extensionId",
-          "type": "uint256"
-        },
-        {
-          "indexed": true,
-          "internalType": "bytes32",
-          "name": "opType",
-          "type": "bytes32"
-        }
-      ],
-      "name": "SupportedWalletProjectOpTypeRemoved",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "uint256",
-          "name": "extensionId",
-          "type": "uint256"
-        },
-        {
-          "indexed": true,
-          "internalType": "contract ITeeExtensionStateVerifier",
-          "name": "teeExtensionStateVerifier",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "teeExtensionInstructionsSender",
-          "type": "address"
-        }
-      ],
-      "name": "TeeExtensionContractsSet",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "uint256",
-          "name": "extensionId",
-          "type": "uint256"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "owner",
-          "type": "address"
-        }
-      ],
-      "name": "TeeExtensionRegistered",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "uint256",
-          "name": "extensionId",
-          "type": "uint256"
-        },
-        {
-          "indexed": true,
-          "internalType": "bytes32",
-          "name": "instructionId",
-          "type": "bytes32"
-        },
-        {
-          "indexed": true,
-          "internalType": "uint32",
-          "name": "rewardEpochId",
-          "type": "uint32"
-        },
-        {
-          "components": [
-            {
-              "internalType": "address",
-              "name": "teeId",
-              "type": "address"
-            },
-            {
-              "internalType": "address",
-              "name": "teeProxyId",
-              "type": "address"
-            },
-            {
-              "internalType": "string",
-              "name": "url",
-              "type": "string"
-            }
-          ],
-          "indexed": false,
-          "internalType": "struct ITeeMachineRegistry.TeeMachine[]",
-          "name": "teeMachines",
-          "type": "tuple[]"
-        },
-        {
-          "indexed": false,
-          "internalType": "bytes32",
-          "name": "opType",
-          "type": "bytes32"
-        },
-        {
-          "indexed": false,
-          "internalType": "bytes32",
-          "name": "opCommand",
-          "type": "bytes32"
-        },
-        {
-          "indexed": false,
-          "internalType": "bytes",
-          "name": "message",
-          "type": "bytes"
-        },
-        {
-          "indexed": false,
-          "internalType": "address[]",
-          "name": "cosigners",
-          "type": "address[]"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint64",
-          "name": "cosignersThreshold",
-          "type": "uint64"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "fee",
-          "type": "uint256"
-        }
-      ],
-      "name": "TeeInstructionsSent",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "uint256",
-          "name": "extensionId",
-          "type": "uint256"
-        },
-        {
-          "indexed": true,
-          "internalType": "bytes32",
-          "name": "codeHash",
-          "type": "bytes32"
-        },
-        {
-          "indexed": false,
-          "internalType": "string",
-          "name": "version",
-          "type": "string"
-        },
-        {
-          "indexed": false,
-          "internalType": "bytes32[]",
-          "name": "platforms",
-          "type": "bytes32[]"
-        },
-        {
-          "indexed": false,
-          "internalType": "bytes32",
-          "name": "governanceHash",
-          "type": "bytes32"
-        }
-      ],
-      "name": "TeeVersionAdded",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "bytes4",
-          "name": "selector",
-          "type": "bytes4"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "timestamp",
-          "type": "uint256"
-        }
-      ],
-      "name": "TimelockedGovernanceCallCanceled",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "bytes4",
-          "name": "selector",
-          "type": "bytes4"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "timestamp",
-          "type": "uint256"
-        }
-      ],
-      "name": "TimelockedGovernanceCallExecuted",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "implementation",
-          "type": "address"
-        }
-      ],
-      "name": "Upgraded",
-      "type": "event"
-    },
-    {
-      "inputs": [],
-      "name": "SYSTEM_OP_TYPE_PREFIX",
-      "outputs": [
-        {
-          "internalType": "bytes2",
-          "name": "",
-          "type": "bytes2"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "UPGRADE_INTERFACE_VERSION",
-      "outputs": [
-        {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_extensionId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "contract ITeeWalletProjectOpTypeConstants[]",
-          "name": "_opTypeConstantsProviders",
-          "type": "address[]"
-        }
-      ],
-      "name": "addOrUpdateSupportedWalletProjectOpTypes",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32[]",
-          "name": "_platforms",
-          "type": "bytes32[]"
-        }
-      ],
-      "name": "addSupportedPlatforms",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_extensionId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "string",
-          "name": "_version",
-          "type": "string"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "_codeHash",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "bytes32[]",
-          "name": "_platforms",
-          "type": "bytes32[]"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "_governanceHash",
-          "type": "bytes32"
-        }
-      ],
-      "name": "addTeeVersion",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes4",
-          "name": "_selector",
-          "type": "bytes4"
-        }
-      ],
-      "name": "cancelGovernanceCall",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_extensionId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "_codeHash",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "_platform",
-          "type": "bytes32"
-        }
-      ],
-      "name": "codeHashPlatformDisabled",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_extensionId",
-          "type": "uint256"
-        }
-      ],
-      "name": "confirmOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_extensionId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "_codeHash",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "_platform",
-          "type": "bytes32"
-        }
-      ],
-      "name": "disableCodeHashPlatform",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes4",
-          "name": "_selector",
-          "type": "bytes4"
-        }
-      ],
-      "name": "executeGovernanceCall",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "extensionsCounter",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "flareSystemsManager",
-      "outputs": [
-        {
-          "internalType": "contract IFlareSystemsManager",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "getAddressUpdater",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "_addressUpdater",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_extensionId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "_codeHash",
-          "type": "bytes32"
-        }
-      ],
-      "name": "getCodeHashInfo",
-      "outputs": [
-        {
-          "internalType": "bytes32",
-          "name": "_governanceHash",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "string",
-          "name": "_version",
-          "type": "string"
-        },
-        {
-          "internalType": "bytes32[]",
-          "name": "_platforms",
-          "type": "bytes32[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_extensionId",
-          "type": "uint256"
-        }
-      ],
-      "name": "getExtensionOwner",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_extensionId",
-          "type": "uint256"
-        }
-      ],
-      "name": "getSupportedWalletProjectOpTypes",
-      "outputs": [
-        {
-          "internalType": "bytes32[]",
-          "name": "_supportedOpTypes",
-          "type": "bytes32[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "getSystemInstructionInitiators",
-      "outputs": [
-        {
-          "internalType": "address[]",
-          "name": "",
-          "type": "address[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_extensionId",
-          "type": "uint256"
-        }
-      ],
-      "name": "getTeeExtensionInstructionsSender",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_extensionId",
-          "type": "uint256"
-        }
-      ],
-      "name": "getTeeExtensionStateVerifier",
-      "outputs": [
-        {
-          "internalType": "contract ITeeExtensionStateVerifier",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_extensionId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "_codeHash",
-          "type": "bytes32"
-        }
-      ],
-      "name": "getTeeGovernanceHash",
-      "outputs": [
-        {
-          "internalType": "bytes32",
-          "name": "",
-          "type": "bytes32"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_extensionId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "_opType",
-          "type": "bytes32"
-        }
-      ],
-      "name": "getWalletProjectOpTypeConstantsProvider",
-      "outputs": [
-        {
-          "internalType": "contract ITeeWalletProjectOpTypeConstants",
-          "name": "_opTypeConstantsProvider",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "governance",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "governanceSettings",
-      "outputs": [
-        {
-          "internalType": "contract IGovernanceSettings",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "implementation",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract IGovernanceSettings",
-          "name": "_governanceSettings",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_initialGovernance",
-          "type": "address"
-        }
-      ],
-      "name": "initialise",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract IGovernanceSettings",
-          "name": "_governanceSettings",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_initialGovernance",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_addressUpdater",
-          "type": "address"
-        }
-      ],
-      "name": "initialize",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_extensionId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "_codeHash",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "_platform",
-          "type": "bytes32"
-        }
-      ],
-      "name": "isCodeHashPlatformSupported",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_address",
-          "type": "address"
-        }
-      ],
-      "name": "isExecutor",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_extensionId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "_opType",
-          "type": "bytes32"
-        }
-      ],
-      "name": "isWalletProjectOpTypeSupported",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "productionMode",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_extensionId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "_newOwner",
-          "type": "address"
-        }
-      ],
-      "name": "proposeNewOwner",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "extensionId",
-          "type": "uint256"
-        }
-      ],
-      "name": "proposedExtensionOwner",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "proxiableUUID",
-      "outputs": [
-        {
-          "internalType": "bytes32",
-          "name": "",
-          "type": "bytes32"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract ITeeExtensionStateVerifier",
-          "name": "_teeExtensionStateVerifier",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_teeExtensionInstructionsSender",
-          "type": "address"
-        }
-      ],
-      "name": "register",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "_extensionId",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address[]",
-          "name": "_instructionInitiators",
-          "type": "address[]"
-        }
-      ],
-      "name": "registerSystemInstructionInitiators",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_extensionId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes32[]",
-          "name": "_opTypes",
-          "type": "bytes32[]"
-        }
-      ],
-      "name": "removeSupportedWalletProjectOpTypes",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "rewardManager",
-      "outputs": [
-        {
-          "internalType": "contract IIRewardManager",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "_instructionId",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "address[]",
-          "name": "_teeIds",
-          "type": "address[]"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "_opType",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "_opCommand",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "bytes",
-          "name": "_message",
-          "type": "bytes"
-        },
-        {
-          "internalType": "address[]",
-          "name": "_cosigners",
-          "type": "address[]"
-        },
-        {
-          "internalType": "uint64",
-          "name": "_cosignersThreshold",
-          "type": "uint64"
-        }
-      ],
-      "name": "sendInstructions",
-      "outputs": [],
-      "stateMutability": "payable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_extensionId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "contract ITeeExtensionStateVerifier",
-          "name": "_teeExtensionStateVerifier",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_teeExtensionInstructionsSender",
-          "type": "address"
-        }
-      ],
-      "name": "setExtensionContracts",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "switchToProductionMode",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "teeFeeCalculator",
-      "outputs": [
-        {
-          "internalType": "contract ITeeFeeCalculator",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "teeGovernance",
-      "outputs": [
-        {
-          "internalType": "contract ITeeGovernance",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "teeMachineRegistry",
-      "outputs": [
-        {
-          "internalType": "contract ITeeMachineRegistry",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes4",
-          "name": "selector",
-          "type": "bytes4"
-        }
-      ],
-      "name": "timelockedCalls",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "allowedAfterTimestamp",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes",
-          "name": "encodedCall",
-          "type": "bytes"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address[]",
-          "name": "_instructionInitiators",
-          "type": "address[]"
-        }
-      ],
-      "name": "unregisterSystemInstructionInitiators",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32[]",
-          "name": "_contractNameHashes",
-          "type": "bytes32[]"
-        },
-        {
-          "internalType": "address[]",
-          "name": "_contractAddresses",
-          "type": "address[]"
-        }
-      ],
-      "name": "updateContractAddresses",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_newImplementation",
-          "type": "address"
-        },
-        {
-          "internalType": "bytes",
-          "name": "_data",
-          "type": "bytes"
-        }
-      ],
-      "name": "upgradeToAndCall",
-      "outputs": [],
-      "stateMutability": "payable",
-      "type": "function"
-    }
-  ]
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "target",
+        "type": "address"
+      }
+    ],
+    "name": "AddressEmptyCode",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "CodeHashZero",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "CosignersThresholdTooHigh",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "implementation",
+        "type": "address"
+      }
+    ],
+    "name": "ERC1967InvalidImplementation",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ERC1967NonPayable",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ExtensionIdMismatch",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "FailedInnerCall",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "FeeTooLow",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InstructionIdEmpty",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidCodeHash",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidGovernanceHash",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidInstructionsSender",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidPlatform",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "MessageEmpty",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NoPlatforms",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NoTeeMachinesSpecified",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OnlyInstructionsSender",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OnlyOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OnlyProposedOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OnlySystemInstructionInitiator",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OpTypeEmpty",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OperationCommandEmpty",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OperationTypeConstantsProviderNotSet",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OperationTypeEmpty",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "platform",
+        "type": "bytes32"
+      }
+    ],
+    "name": "PlatformAlreadyExists",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "PlatformEmpty",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "opType",
+        "type": "bytes32"
+      }
+    ],
+    "name": "SystemOpTypeNotAllowed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "SystemOwnedExtensionId",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TeeMachineNotAvailable",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "UUPSUnauthorizedCallContext",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "slot",
+        "type": "bytes32"
+      }
+    ],
+    "name": "UUPSUnsupportedProxiableUUID",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "platform",
+        "type": "bytes32"
+      }
+    ],
+    "name": "UnsupportedPlatform",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "VersionAlreadyExists",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "VersionEmpty",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "extensionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "codeHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "platform",
+        "type": "bytes32"
+      }
+    ],
+    "name": "CodeHashPlatformDisabled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes4",
+        "name": "selector",
+        "type": "bytes4"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "allowedAfterTimestamp",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "encodedCall",
+        "type": "bytes"
+      }
+    ],
+    "name": "GovernanceCallTimelocked",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "initialGovernance",
+        "type": "address"
+      }
+    ],
+    "name": "GovernanceInitialised",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "governanceSettings",
+        "type": "address"
+      }
+    ],
+    "name": "GovernedProductionModeEntered",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "extensionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "NewOwnerConfirmed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "extensionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "oldOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "NewOwnerProposed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "platform",
+        "type": "bytes32"
+      }
+    ],
+    "name": "SupportedPlatformAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "extensionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "opType",
+        "type": "bytes32"
+      }
+    ],
+    "name": "SupportedWalletProjectOpTypeAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "extensionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "opType",
+        "type": "bytes32"
+      }
+    ],
+    "name": "SupportedWalletProjectOpTypeRemoved",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "extensionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "contract ITeeExtensionStateVerifier",
+        "name": "teeExtensionStateVerifier",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "teeExtensionInstructionsSender",
+        "type": "address"
+      }
+    ],
+    "name": "TeeExtensionContractsSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "extensionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      }
+    ],
+    "name": "TeeExtensionRegistered",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "extensionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "instructionId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint32",
+        "name": "rewardEpochId",
+        "type": "uint32"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "teeId",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "teeProxyId",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "url",
+            "type": "string"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct ITeeMachineRegistry.TeeMachine[]",
+        "name": "teeMachines",
+        "type": "tuple[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "opType",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "opCommand",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "message",
+        "type": "bytes"
+      },
+      {
+        "indexed": false,
+        "internalType": "address[]",
+        "name": "cosigners",
+        "type": "address[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "cosignersThreshold",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "fee",
+        "type": "uint256"
+      }
+    ],
+    "name": "TeeInstructionsSent",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "extensionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "version",
+        "type": "string"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "codeHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32[]",
+        "name": "platforms",
+        "type": "bytes32[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "governanceHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "TeeVersionAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes4",
+        "name": "selector",
+        "type": "bytes4"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "TimelockedGovernanceCallCanceled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes4",
+        "name": "selector",
+        "type": "bytes4"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "TimelockedGovernanceCallExecuted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "implementation",
+        "type": "address"
+      }
+    ],
+    "name": "Upgraded",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "SYSTEM_OP_TYPE_PREFIX",
+    "outputs": [
+      {
+        "internalType": "bytes2",
+        "name": "",
+        "type": "bytes2"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "UPGRADE_INTERFACE_VERSION",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extensionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "contract ITeeWalletProjectOpTypeConstants[]",
+        "name": "_opTypeConstantsProviders",
+        "type": "address[]"
+      }
+    ],
+    "name": "addOrUpdateSupportedWalletProjectOpTypes",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32[]",
+        "name": "_platforms",
+        "type": "bytes32[]"
+      }
+    ],
+    "name": "addSupportedPlatforms",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extensionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "_version",
+        "type": "string"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_codeHash",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32[]",
+        "name": "_platforms",
+        "type": "bytes32[]"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_governanceHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "addTeeVersion",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes4",
+        "name": "_selector",
+        "type": "bytes4"
+      }
+    ],
+    "name": "cancelGovernanceCall",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extensionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_codeHash",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_platform",
+        "type": "bytes32"
+      }
+    ],
+    "name": "codeHashPlatformDisabled",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extensionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "confirmOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extensionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_codeHash",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_platform",
+        "type": "bytes32"
+      }
+    ],
+    "name": "disableCodeHashPlatform",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes4",
+        "name": "_selector",
+        "type": "bytes4"
+      }
+    ],
+    "name": "executeGovernanceCall",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "extensionsCounter",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "flareSystemsManager",
+    "outputs": [
+      {
+        "internalType": "contract IFlareSystemsManager",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getAddressUpdater",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "_addressUpdater",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extensionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_codeHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getCodeHashInfo",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_governanceHash",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "string",
+        "name": "_version",
+        "type": "string"
+      },
+      {
+        "internalType": "bytes32[]",
+        "name": "_platforms",
+        "type": "bytes32[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extensionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getExtensionOwner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getSupportedPlatforms",
+    "outputs": [
+      {
+        "internalType": "bytes32[]",
+        "name": "",
+        "type": "bytes32[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extensionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getSupportedWalletProjectOpTypes",
+    "outputs": [
+      {
+        "internalType": "bytes32[]",
+        "name": "_supportedOpTypes",
+        "type": "bytes32[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getSystemInstructionInitiators",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extensionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getTeeExtensionInstructionsSender",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extensionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getTeeExtensionStateVerifier",
+    "outputs": [
+      {
+        "internalType": "contract ITeeExtensionStateVerifier",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extensionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_codeHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getTeeGovernanceHash",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extensionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_opType",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getWalletProjectOpTypeConstantsProvider",
+    "outputs": [
+      {
+        "internalType": "contract ITeeWalletProjectOpTypeConstants",
+        "name": "_opTypeConstantsProvider",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "governance",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "governanceSettings",
+    "outputs": [
+      {
+        "internalType": "contract IGovernanceSettings",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "implementation",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract IGovernanceSettings",
+        "name": "_governanceSettings",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_initialGovernance",
+        "type": "address"
+      }
+    ],
+    "name": "initialise",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract IGovernanceSettings",
+        "name": "_governanceSettings",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_initialGovernance",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_addressUpdater",
+        "type": "address"
+      }
+    ],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extensionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_codeHash",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_platform",
+        "type": "bytes32"
+      }
+    ],
+    "name": "isCodeHashPlatformSupported",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "isExecutor",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extensionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_opType",
+        "type": "bytes32"
+      }
+    ],
+    "name": "isWalletProjectOpTypeSupported",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "productionMode",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extensionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "proposeNewOwner",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "extensionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "proposedExtensionOwner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "proxiableUUID",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract ITeeExtensionStateVerifier",
+        "name": "_teeExtensionStateVerifier",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_teeExtensionInstructionsSender",
+        "type": "address"
+      }
+    ],
+    "name": "register",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extensionId",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "_instructionInitiators",
+        "type": "address[]"
+      }
+    ],
+    "name": "registerSystemInstructionInitiators",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extensionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes32[]",
+        "name": "_opTypes",
+        "type": "bytes32[]"
+      }
+    ],
+    "name": "removeSupportedWalletProjectOpTypes",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "rewardManager",
+    "outputs": [
+      {
+        "internalType": "contract IIRewardManager",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_instructionId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_teeIds",
+        "type": "address[]"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_opType",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_opCommand",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_message",
+        "type": "bytes"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_cosigners",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_cosignersThreshold",
+        "type": "uint64"
+      }
+    ],
+    "name": "sendInstructions",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_instructionId",
+        "type": "bytes32"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "teeId",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "teeProxyId",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "url",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct ITeeMachineRegistry.TeeMachine[]",
+        "name": "_teeMachines",
+        "type": "tuple[]"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_opType",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_opCommand",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_message",
+        "type": "bytes"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_cosigners",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_cosignersThreshold",
+        "type": "uint64"
+      }
+    ],
+    "name": "sendSystemInstructions",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extensionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "contract ITeeExtensionStateVerifier",
+        "name": "_teeExtensionStateVerifier",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_teeExtensionInstructionsSender",
+        "type": "address"
+      }
+    ],
+    "name": "setExtensionContracts",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "switchToProductionMode",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "teeFeeCalculator",
+    "outputs": [
+      {
+        "internalType": "contract ITeeFeeCalculator",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "teeGovernance",
+    "outputs": [
+      {
+        "internalType": "contract ITeeGovernance",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "teeMachineRegistry",
+    "outputs": [
+      {
+        "internalType": "contract ITeeMachineRegistry",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes4",
+        "name": "selector",
+        "type": "bytes4"
+      }
+    ],
+    "name": "timelockedCalls",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "allowedAfterTimestamp",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "encodedCall",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "_instructionInitiators",
+        "type": "address[]"
+      }
+    ],
+    "name": "unregisterSystemInstructionInitiators",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32[]",
+        "name": "_contractNameHashes",
+        "type": "bytes32[]"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_contractAddresses",
+        "type": "address[]"
+      }
+    ],
+    "name": "updateContractAddresses",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_newImplementation",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_data",
+        "type": "bytes"
+      }
+    ],
+    "name": "upgradeToAndCall",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  }
+]

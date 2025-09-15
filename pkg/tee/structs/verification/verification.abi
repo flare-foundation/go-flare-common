@@ -1,84 +1,84 @@
 [
-    {
-      "inputs": [
-        {
-          "components": [
-            {
-              "components": [
-                {
-                  "internalType": "address",
-                  "name": "teeId",
-                  "type": "address"
-                },
-                {
-                  "internalType": "address",
-                  "name": "initialTeeId",
-                  "type": "address"
-                },
-                {
-                  "internalType": "string",
-                  "name": "url",
-                  "type": "string"
-                },
-                {
-                  "internalType": "bytes32",
-                  "name": "codeHash",
-                  "type": "bytes32"
-                },
-                {
-                  "internalType": "bytes32",
-                  "name": "platform",
-                  "type": "bytes32"
-                }
-              ],
-              "internalType": "struct ITeeMachineRegistry.TeeMachineWithAttestationData",
-              "name": "teeMachine",
-              "type": "tuple"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "challenge",
-              "type": "bytes32"
-            }
-          ],
-          "internalType": "struct ITeeVerification.TeeAttestation",
-          "name": "",
-          "type": "tuple"
-        }
-      ],
-      "name": "teeAttestationStruct",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "components": [
-            {
-              "internalType": "enum IITeeSystemStateVerifier.TeeMachineStatus",
-              "name": "status",
-              "type": "uint8"
-            },
-            {
-              "internalType": "address",
-              "name": "initialTeeId",
-              "type": "address"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "teeGovernanceHash",
-              "type": "bytes32"
-            }
-          ],
-          "internalType": "struct IITeeSystemStateVerifier.TeeSystemState",
-          "name": "",
-          "type": "tuple"
-        }
-      ],
-      "name": "teeSystemStateStruct",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    }
-  ]
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "teeId",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "initialTeeId",
+                "type": "address"
+              },
+              {
+                "internalType": "string",
+                "name": "url",
+                "type": "string"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "codeHash",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "platform",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct ITeeMachineRegistry.TeeMachineWithAttestationData",
+            "name": "teeMachine",
+            "type": "tuple"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "challenge",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct ITeeVerification.TeeAttestation",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "teeAttestationStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "enum IITeeSystemStateVerifier.TeeMachineStatus",
+            "name": "status",
+            "type": "uint8"
+          },
+          {
+            "internalType": "address",
+            "name": "initialTeeId",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "teeGovernanceHash",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct IITeeSystemStateVerifier.TeeSystemState",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "teeSystemStateStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

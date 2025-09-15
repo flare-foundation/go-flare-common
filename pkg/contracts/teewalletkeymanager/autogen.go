@@ -82,7 +82,7 @@ type TeeIdKeyIdPair struct {
 
 // TeeWalletKeyManagerMetaData contains all meta data concerning the TeeWalletKeyManager contract.
 var TeeWalletKeyManagerMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"name\":\"ExtensionIdMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAddress\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidKeyId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidNonce\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidOpType\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidOpTypeConstants\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPublicKey\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidTeeSignature\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidThreshold\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidWalletStatus\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"KeyNotGeneratedOnTeeMachine\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"KeyNotRestoredOnTeeMachine\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LengthsMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyBackupManager\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwnerOrBackupManager\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TeeIdAlreadyAdded\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TeeMachineNotAvailable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ThresholdNotMet\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"}],\"name\":\"WalletEnabled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"}],\"name\":\"WalletKeyAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"publicKey\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"addressStr\",\"type\":\"string\"}],\"name\":\"WalletKeyConfirmed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"}],\"name\":\"WalletKeyDeleted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint64[]\",\"name\":\"keyIds\",\"type\":\"uint64[]\"}],\"name\":\"WalletKeysNotAvailable\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"multisigThreshold\",\"type\":\"uint64\"}],\"name\":\"WalletMultisigThresholdSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"}],\"name\":\"WalletPaused\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"addKey\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"}],\"name\":\"cleanUpTeeIds\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"publicKey\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"proofOfPossession\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"pauseNonce\",\"type\":\"uint256\"},{\"internalType\":\"enumITeeWalletKeyManager.TeeKeyStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"bool\",\"name\":\"restored\",\"type\":\"bool\"},{\"internalType\":\"string\",\"name\":\"addressStr\",\"type\":\"string\"},{\"components\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"x\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"y\",\"type\":\"bytes32\"}],\"internalType\":\"structPublicKey[]\",\"name\":\"adminsPublicKeys\",\"type\":\"tuple[]\"},{\"internalType\":\"uint64\",\"name\":\"adminsThreshold\",\"type\":\"uint64\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"bytes\",\"name\":\"opTypeConstants\",\"type\":\"bytes\"}],\"internalType\":\"structITeeWalletKeyManager.KeyConfigConstants\",\"name\":\"configConstants\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"address[]\",\"name\":\"pausingAddresses\",\"type\":\"address[]\"},{\"internalType\":\"bytes\",\"name\":\"opTypeSettings\",\"type\":\"bytes\"}],\"internalType\":\"structITeeWalletKeyManager.KeyConfigSettings\",\"name\":\"configSettings\",\"type\":\"tuple\"}],\"internalType\":\"structITeeWalletKeyManager.KeyExistence\",\"name\":\"_proof\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature\",\"name\":\"_teeSignature\",\"type\":\"tuple\"}],\"name\":\"confirmKey\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"}],\"name\":\"deleteKey\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"}],\"name\":\"getWalletKeyAddress\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"_addressStr\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"}],\"name\":\"getWalletKeyPublicKey\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"_publicKey\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"}],\"name\":\"getWalletKeyTeeIds\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"_teeIds\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"getWalletKeysInfo\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"_multisigThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64[]\",\"name\":\"_keyIds\",\"type\":\"uint64[]\"},{\"internalType\":\"uint64\",\"name\":\"_counter\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"receivingTeesAndKeys\",\"outputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"}],\"internalType\":\"structTeeIdKeyIdPair[]\",\"name\":\"_teeIdKeyIdPairs\",\"type\":\"tuple[]\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_multisigThreshold\",\"type\":\"uint64\"}],\"name\":\"setMultisigThreshold\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"}],\"name\":\"AddressEmptyCode\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ECDSAInvalidSignature\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"length\",\"type\":\"uint256\"}],\"name\":\"ECDSAInvalidSignatureLength\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"name\":\"ECDSAInvalidSignatureS\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"ERC1967InvalidImplementation\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC1967NonPayable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ExtensionIdMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FailedInnerCall\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAddress\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidKeyId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidNonce\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidOpType\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidOpTypeConstants\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPublicKey\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidTeeSignature\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidThreshold\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidWalletStatus\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"KeyNotGeneratedOnTeeMachine\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"KeyNotRestoredOnTeeMachine\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LengthsMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyBackupManager\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwnerOrBackupManager\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TeeIdAlreadyAdded\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TeeMachineNotAvailable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ThresholdNotMet\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UUPSUnauthorizedCallContext\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"slot\",\"type\":\"bytes32\"}],\"name\":\"UUPSUnsupportedProxiableUUID\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"name\":\"GovernanceCallTimelocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"initialGovernance\",\"type\":\"address\"}],\"name\":\"GovernanceInitialised\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"governanceSettings\",\"type\":\"address\"}],\"name\":\"GovernedProductionModeEntered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallCanceled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallExecuted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"Upgraded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"}],\"name\":\"WalletEnabled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"}],\"name\":\"WalletKeyAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"publicKey\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"addressStr\",\"type\":\"string\"}],\"name\":\"WalletKeyConfirmed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"}],\"name\":\"WalletKeyDeleted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint64[]\",\"name\":\"keyIds\",\"type\":\"uint64[]\"}],\"name\":\"WalletKeysNotAvailable\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"multisigThreshold\",\"type\":\"uint64\"}],\"name\":\"WalletMultisigThresholdSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"}],\"name\":\"WalletPaused\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"KEY_DELETE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"KEY_GENERATE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"UPGRADE_INTERFACE_VERSION\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"WALLET_OP_TYPE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"addKey\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"cancelGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"}],\"name\":\"cleanUpTeeIds\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"publicKey\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"proofOfPossession\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"pauseNonce\",\"type\":\"uint256\"},{\"internalType\":\"enumITeeWalletKeyManager.TeeKeyStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"bool\",\"name\":\"restored\",\"type\":\"bool\"},{\"internalType\":\"string\",\"name\":\"addressStr\",\"type\":\"string\"},{\"components\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"x\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"y\",\"type\":\"bytes32\"}],\"internalType\":\"structPublicKey[]\",\"name\":\"adminsPublicKeys\",\"type\":\"tuple[]\"},{\"internalType\":\"uint64\",\"name\":\"adminsThreshold\",\"type\":\"uint64\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"bytes\",\"name\":\"opTypeConstants\",\"type\":\"bytes\"}],\"internalType\":\"structITeeWalletKeyManager.KeyConfigConstants\",\"name\":\"configConstants\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"address[]\",\"name\":\"pausingAddresses\",\"type\":\"address[]\"},{\"internalType\":\"bytes\",\"name\":\"opTypeSettings\",\"type\":\"bytes\"}],\"internalType\":\"structITeeWalletKeyManager.KeyConfigSettings\",\"name\":\"configSettings\",\"type\":\"tuple\"}],\"internalType\":\"structITeeWalletKeyManager.KeyExistence\",\"name\":\"_proof\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature\",\"name\":\"_teeSignature\",\"type\":\"tuple\"}],\"name\":\"confirmKey\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"}],\"name\":\"deleteKey\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"executeGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"flareSystemsManager\",\"outputs\":[{\"internalType\":\"contractIFlareSystemsManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAddressUpdater\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"}],\"name\":\"getWalletKeyAddress\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"_addressStr\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"}],\"name\":\"getWalletKeyPublicKey\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"_publicKey\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"}],\"name\":\"getWalletKeyTeeIds\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"_teeIds\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"getWalletKeysInfo\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"_multisigThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64[]\",\"name\":\"_keyIds\",\"type\":\"uint64[]\"},{\"internalType\":\"uint64\",\"name\":\"_counter\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governance\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governanceSettings\",\"outputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"implementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"}],\"name\":\"increaseKeyNonce\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"}],\"name\":\"initialise\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"isExecutor\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"productionMode\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"proxiableUUID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"receivingTeesAndKeys\",\"outputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"}],\"internalType\":\"structTeeIdKeyIdPair[]\",\"name\":\"_teeIdKeyIdPairs\",\"type\":\"tuple[]\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_multisigThreshold\",\"type\":\"uint64\"}],\"name\":\"setMultisigThreshold\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"switchToProductionMode\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeExtensionRegistry\",\"outputs\":[{\"internalType\":\"contractITeeExtensionRegistry\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeMachineRegistry\",\"outputs\":[{\"internalType\":\"contractITeeMachineRegistry\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeWalletBackupManager\",\"outputs\":[{\"internalType\":\"contractITeeWalletBackupManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeWalletManager\",\"outputs\":[{\"internalType\":\"contractITeeWalletManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeWalletProjectManager\",\"outputs\":[{\"internalType\":\"contractITeeWalletProjectManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"}],\"name\":\"timelockedCalls\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_contractNameHashes\",\"type\":\"bytes32[]\"},{\"internalType\":\"address[]\",\"name\":\"_contractAddresses\",\"type\":\"address[]\"}],\"name\":\"updateContractAddresses\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newImplementation\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"upgradeToAndCall\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}]",
 }
 
 // TeeWalletKeyManagerABI is the input ABI used to generate the binding from.
@@ -231,6 +231,192 @@ func (_TeeWalletKeyManager *TeeWalletKeyManagerTransactorRaw) Transact(opts *bin
 	return _TeeWalletKeyManager.Contract.contract.Transact(opts, method, params...)
 }
 
+// KEYDELETE is a free data retrieval call binding the contract method 0x84b17286.
+//
+// Solidity: function KEY_DELETE() view returns(bytes32)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCaller) KEYDELETE(opts *bind.CallOpts) ([32]byte, error) {
+	var out []interface{}
+	err := _TeeWalletKeyManager.contract.Call(opts, &out, "KEY_DELETE")
+
+	if err != nil {
+		return *new([32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
+
+	return out0, err
+
+}
+
+// KEYDELETE is a free data retrieval call binding the contract method 0x84b17286.
+//
+// Solidity: function KEY_DELETE() view returns(bytes32)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) KEYDELETE() ([32]byte, error) {
+	return _TeeWalletKeyManager.Contract.KEYDELETE(&_TeeWalletKeyManager.CallOpts)
+}
+
+// KEYDELETE is a free data retrieval call binding the contract method 0x84b17286.
+//
+// Solidity: function KEY_DELETE() view returns(bytes32)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCallerSession) KEYDELETE() ([32]byte, error) {
+	return _TeeWalletKeyManager.Contract.KEYDELETE(&_TeeWalletKeyManager.CallOpts)
+}
+
+// KEYGENERATE is a free data retrieval call binding the contract method 0xe33529bd.
+//
+// Solidity: function KEY_GENERATE() view returns(bytes32)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCaller) KEYGENERATE(opts *bind.CallOpts) ([32]byte, error) {
+	var out []interface{}
+	err := _TeeWalletKeyManager.contract.Call(opts, &out, "KEY_GENERATE")
+
+	if err != nil {
+		return *new([32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
+
+	return out0, err
+
+}
+
+// KEYGENERATE is a free data retrieval call binding the contract method 0xe33529bd.
+//
+// Solidity: function KEY_GENERATE() view returns(bytes32)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) KEYGENERATE() ([32]byte, error) {
+	return _TeeWalletKeyManager.Contract.KEYGENERATE(&_TeeWalletKeyManager.CallOpts)
+}
+
+// KEYGENERATE is a free data retrieval call binding the contract method 0xe33529bd.
+//
+// Solidity: function KEY_GENERATE() view returns(bytes32)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCallerSession) KEYGENERATE() ([32]byte, error) {
+	return _TeeWalletKeyManager.Contract.KEYGENERATE(&_TeeWalletKeyManager.CallOpts)
+}
+
+// UPGRADEINTERFACEVERSION is a free data retrieval call binding the contract method 0xad3cb1cc.
+//
+// Solidity: function UPGRADE_INTERFACE_VERSION() view returns(string)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCaller) UPGRADEINTERFACEVERSION(opts *bind.CallOpts) (string, error) {
+	var out []interface{}
+	err := _TeeWalletKeyManager.contract.Call(opts, &out, "UPGRADE_INTERFACE_VERSION")
+
+	if err != nil {
+		return *new(string), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(string)).(*string)
+
+	return out0, err
+
+}
+
+// UPGRADEINTERFACEVERSION is a free data retrieval call binding the contract method 0xad3cb1cc.
+//
+// Solidity: function UPGRADE_INTERFACE_VERSION() view returns(string)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) UPGRADEINTERFACEVERSION() (string, error) {
+	return _TeeWalletKeyManager.Contract.UPGRADEINTERFACEVERSION(&_TeeWalletKeyManager.CallOpts)
+}
+
+// UPGRADEINTERFACEVERSION is a free data retrieval call binding the contract method 0xad3cb1cc.
+//
+// Solidity: function UPGRADE_INTERFACE_VERSION() view returns(string)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCallerSession) UPGRADEINTERFACEVERSION() (string, error) {
+	return _TeeWalletKeyManager.Contract.UPGRADEINTERFACEVERSION(&_TeeWalletKeyManager.CallOpts)
+}
+
+// WALLETOPTYPE is a free data retrieval call binding the contract method 0xc3500300.
+//
+// Solidity: function WALLET_OP_TYPE() view returns(bytes32)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCaller) WALLETOPTYPE(opts *bind.CallOpts) ([32]byte, error) {
+	var out []interface{}
+	err := _TeeWalletKeyManager.contract.Call(opts, &out, "WALLET_OP_TYPE")
+
+	if err != nil {
+		return *new([32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
+
+	return out0, err
+
+}
+
+// WALLETOPTYPE is a free data retrieval call binding the contract method 0xc3500300.
+//
+// Solidity: function WALLET_OP_TYPE() view returns(bytes32)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) WALLETOPTYPE() ([32]byte, error) {
+	return _TeeWalletKeyManager.Contract.WALLETOPTYPE(&_TeeWalletKeyManager.CallOpts)
+}
+
+// WALLETOPTYPE is a free data retrieval call binding the contract method 0xc3500300.
+//
+// Solidity: function WALLET_OP_TYPE() view returns(bytes32)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCallerSession) WALLETOPTYPE() ([32]byte, error) {
+	return _TeeWalletKeyManager.Contract.WALLETOPTYPE(&_TeeWalletKeyManager.CallOpts)
+}
+
+// FlareSystemsManager is a free data retrieval call binding the contract method 0xfaae7fc9.
+//
+// Solidity: function flareSystemsManager() view returns(address)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCaller) FlareSystemsManager(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _TeeWalletKeyManager.contract.Call(opts, &out, "flareSystemsManager")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// FlareSystemsManager is a free data retrieval call binding the contract method 0xfaae7fc9.
+//
+// Solidity: function flareSystemsManager() view returns(address)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) FlareSystemsManager() (common.Address, error) {
+	return _TeeWalletKeyManager.Contract.FlareSystemsManager(&_TeeWalletKeyManager.CallOpts)
+}
+
+// FlareSystemsManager is a free data retrieval call binding the contract method 0xfaae7fc9.
+//
+// Solidity: function flareSystemsManager() view returns(address)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCallerSession) FlareSystemsManager() (common.Address, error) {
+	return _TeeWalletKeyManager.Contract.FlareSystemsManager(&_TeeWalletKeyManager.CallOpts)
+}
+
+// GetAddressUpdater is a free data retrieval call binding the contract method 0x5267a15d.
+//
+// Solidity: function getAddressUpdater() view returns(address _addressUpdater)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCaller) GetAddressUpdater(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _TeeWalletKeyManager.contract.Call(opts, &out, "getAddressUpdater")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// GetAddressUpdater is a free data retrieval call binding the contract method 0x5267a15d.
+//
+// Solidity: function getAddressUpdater() view returns(address _addressUpdater)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) GetAddressUpdater() (common.Address, error) {
+	return _TeeWalletKeyManager.Contract.GetAddressUpdater(&_TeeWalletKeyManager.CallOpts)
+}
+
+// GetAddressUpdater is a free data retrieval call binding the contract method 0x5267a15d.
+//
+// Solidity: function getAddressUpdater() view returns(address _addressUpdater)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCallerSession) GetAddressUpdater() (common.Address, error) {
+	return _TeeWalletKeyManager.Contract.GetAddressUpdater(&_TeeWalletKeyManager.CallOpts)
+}
+
 // GetWalletKeyAddress is a free data retrieval call binding the contract method 0x80a4a3f1.
 //
 // Solidity: function getWalletKeyAddress(bytes32 _walletId, uint64 _keyId) view returns(string _addressStr)
@@ -374,6 +560,392 @@ func (_TeeWalletKeyManager *TeeWalletKeyManagerCallerSession) GetWalletKeysInfo(
 	return _TeeWalletKeyManager.Contract.GetWalletKeysInfo(&_TeeWalletKeyManager.CallOpts, _walletId)
 }
 
+// Governance is a free data retrieval call binding the contract method 0x5aa6e675.
+//
+// Solidity: function governance() view returns(address)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCaller) Governance(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _TeeWalletKeyManager.contract.Call(opts, &out, "governance")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// Governance is a free data retrieval call binding the contract method 0x5aa6e675.
+//
+// Solidity: function governance() view returns(address)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) Governance() (common.Address, error) {
+	return _TeeWalletKeyManager.Contract.Governance(&_TeeWalletKeyManager.CallOpts)
+}
+
+// Governance is a free data retrieval call binding the contract method 0x5aa6e675.
+//
+// Solidity: function governance() view returns(address)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCallerSession) Governance() (common.Address, error) {
+	return _TeeWalletKeyManager.Contract.Governance(&_TeeWalletKeyManager.CallOpts)
+}
+
+// GovernanceSettings is a free data retrieval call binding the contract method 0x62354e03.
+//
+// Solidity: function governanceSettings() view returns(address)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCaller) GovernanceSettings(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _TeeWalletKeyManager.contract.Call(opts, &out, "governanceSettings")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// GovernanceSettings is a free data retrieval call binding the contract method 0x62354e03.
+//
+// Solidity: function governanceSettings() view returns(address)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) GovernanceSettings() (common.Address, error) {
+	return _TeeWalletKeyManager.Contract.GovernanceSettings(&_TeeWalletKeyManager.CallOpts)
+}
+
+// GovernanceSettings is a free data retrieval call binding the contract method 0x62354e03.
+//
+// Solidity: function governanceSettings() view returns(address)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCallerSession) GovernanceSettings() (common.Address, error) {
+	return _TeeWalletKeyManager.Contract.GovernanceSettings(&_TeeWalletKeyManager.CallOpts)
+}
+
+// Implementation is a free data retrieval call binding the contract method 0x5c60da1b.
+//
+// Solidity: function implementation() view returns(address)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCaller) Implementation(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _TeeWalletKeyManager.contract.Call(opts, &out, "implementation")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// Implementation is a free data retrieval call binding the contract method 0x5c60da1b.
+//
+// Solidity: function implementation() view returns(address)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) Implementation() (common.Address, error) {
+	return _TeeWalletKeyManager.Contract.Implementation(&_TeeWalletKeyManager.CallOpts)
+}
+
+// Implementation is a free data retrieval call binding the contract method 0x5c60da1b.
+//
+// Solidity: function implementation() view returns(address)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCallerSession) Implementation() (common.Address, error) {
+	return _TeeWalletKeyManager.Contract.Implementation(&_TeeWalletKeyManager.CallOpts)
+}
+
+// IsExecutor is a free data retrieval call binding the contract method 0xdebfda30.
+//
+// Solidity: function isExecutor(address _address) view returns(bool)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCaller) IsExecutor(opts *bind.CallOpts, _address common.Address) (bool, error) {
+	var out []interface{}
+	err := _TeeWalletKeyManager.contract.Call(opts, &out, "isExecutor", _address)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// IsExecutor is a free data retrieval call binding the contract method 0xdebfda30.
+//
+// Solidity: function isExecutor(address _address) view returns(bool)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) IsExecutor(_address common.Address) (bool, error) {
+	return _TeeWalletKeyManager.Contract.IsExecutor(&_TeeWalletKeyManager.CallOpts, _address)
+}
+
+// IsExecutor is a free data retrieval call binding the contract method 0xdebfda30.
+//
+// Solidity: function isExecutor(address _address) view returns(bool)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCallerSession) IsExecutor(_address common.Address) (bool, error) {
+	return _TeeWalletKeyManager.Contract.IsExecutor(&_TeeWalletKeyManager.CallOpts, _address)
+}
+
+// ProductionMode is a free data retrieval call binding the contract method 0xe17f212e.
+//
+// Solidity: function productionMode() view returns(bool)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCaller) ProductionMode(opts *bind.CallOpts) (bool, error) {
+	var out []interface{}
+	err := _TeeWalletKeyManager.contract.Call(opts, &out, "productionMode")
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// ProductionMode is a free data retrieval call binding the contract method 0xe17f212e.
+//
+// Solidity: function productionMode() view returns(bool)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) ProductionMode() (bool, error) {
+	return _TeeWalletKeyManager.Contract.ProductionMode(&_TeeWalletKeyManager.CallOpts)
+}
+
+// ProductionMode is a free data retrieval call binding the contract method 0xe17f212e.
+//
+// Solidity: function productionMode() view returns(bool)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCallerSession) ProductionMode() (bool, error) {
+	return _TeeWalletKeyManager.Contract.ProductionMode(&_TeeWalletKeyManager.CallOpts)
+}
+
+// ProxiableUUID is a free data retrieval call binding the contract method 0x52d1902d.
+//
+// Solidity: function proxiableUUID() view returns(bytes32)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCaller) ProxiableUUID(opts *bind.CallOpts) ([32]byte, error) {
+	var out []interface{}
+	err := _TeeWalletKeyManager.contract.Call(opts, &out, "proxiableUUID")
+
+	if err != nil {
+		return *new([32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
+
+	return out0, err
+
+}
+
+// ProxiableUUID is a free data retrieval call binding the contract method 0x52d1902d.
+//
+// Solidity: function proxiableUUID() view returns(bytes32)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) ProxiableUUID() ([32]byte, error) {
+	return _TeeWalletKeyManager.Contract.ProxiableUUID(&_TeeWalletKeyManager.CallOpts)
+}
+
+// ProxiableUUID is a free data retrieval call binding the contract method 0x52d1902d.
+//
+// Solidity: function proxiableUUID() view returns(bytes32)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCallerSession) ProxiableUUID() ([32]byte, error) {
+	return _TeeWalletKeyManager.Contract.ProxiableUUID(&_TeeWalletKeyManager.CallOpts)
+}
+
+// TeeExtensionRegistry is a free data retrieval call binding the contract method 0xa435d58a.
+//
+// Solidity: function teeExtensionRegistry() view returns(address)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCaller) TeeExtensionRegistry(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _TeeWalletKeyManager.contract.Call(opts, &out, "teeExtensionRegistry")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// TeeExtensionRegistry is a free data retrieval call binding the contract method 0xa435d58a.
+//
+// Solidity: function teeExtensionRegistry() view returns(address)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) TeeExtensionRegistry() (common.Address, error) {
+	return _TeeWalletKeyManager.Contract.TeeExtensionRegistry(&_TeeWalletKeyManager.CallOpts)
+}
+
+// TeeExtensionRegistry is a free data retrieval call binding the contract method 0xa435d58a.
+//
+// Solidity: function teeExtensionRegistry() view returns(address)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCallerSession) TeeExtensionRegistry() (common.Address, error) {
+	return _TeeWalletKeyManager.Contract.TeeExtensionRegistry(&_TeeWalletKeyManager.CallOpts)
+}
+
+// TeeMachineRegistry is a free data retrieval call binding the contract method 0x524967d7.
+//
+// Solidity: function teeMachineRegistry() view returns(address)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCaller) TeeMachineRegistry(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _TeeWalletKeyManager.contract.Call(opts, &out, "teeMachineRegistry")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// TeeMachineRegistry is a free data retrieval call binding the contract method 0x524967d7.
+//
+// Solidity: function teeMachineRegistry() view returns(address)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) TeeMachineRegistry() (common.Address, error) {
+	return _TeeWalletKeyManager.Contract.TeeMachineRegistry(&_TeeWalletKeyManager.CallOpts)
+}
+
+// TeeMachineRegistry is a free data retrieval call binding the contract method 0x524967d7.
+//
+// Solidity: function teeMachineRegistry() view returns(address)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCallerSession) TeeMachineRegistry() (common.Address, error) {
+	return _TeeWalletKeyManager.Contract.TeeMachineRegistry(&_TeeWalletKeyManager.CallOpts)
+}
+
+// TeeWalletBackupManager is a free data retrieval call binding the contract method 0xf1362c31.
+//
+// Solidity: function teeWalletBackupManager() view returns(address)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCaller) TeeWalletBackupManager(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _TeeWalletKeyManager.contract.Call(opts, &out, "teeWalletBackupManager")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// TeeWalletBackupManager is a free data retrieval call binding the contract method 0xf1362c31.
+//
+// Solidity: function teeWalletBackupManager() view returns(address)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) TeeWalletBackupManager() (common.Address, error) {
+	return _TeeWalletKeyManager.Contract.TeeWalletBackupManager(&_TeeWalletKeyManager.CallOpts)
+}
+
+// TeeWalletBackupManager is a free data retrieval call binding the contract method 0xf1362c31.
+//
+// Solidity: function teeWalletBackupManager() view returns(address)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCallerSession) TeeWalletBackupManager() (common.Address, error) {
+	return _TeeWalletKeyManager.Contract.TeeWalletBackupManager(&_TeeWalletKeyManager.CallOpts)
+}
+
+// TeeWalletManager is a free data retrieval call binding the contract method 0x9ce03893.
+//
+// Solidity: function teeWalletManager() view returns(address)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCaller) TeeWalletManager(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _TeeWalletKeyManager.contract.Call(opts, &out, "teeWalletManager")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// TeeWalletManager is a free data retrieval call binding the contract method 0x9ce03893.
+//
+// Solidity: function teeWalletManager() view returns(address)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) TeeWalletManager() (common.Address, error) {
+	return _TeeWalletKeyManager.Contract.TeeWalletManager(&_TeeWalletKeyManager.CallOpts)
+}
+
+// TeeWalletManager is a free data retrieval call binding the contract method 0x9ce03893.
+//
+// Solidity: function teeWalletManager() view returns(address)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCallerSession) TeeWalletManager() (common.Address, error) {
+	return _TeeWalletKeyManager.Contract.TeeWalletManager(&_TeeWalletKeyManager.CallOpts)
+}
+
+// TeeWalletProjectManager is a free data retrieval call binding the contract method 0x1e915a85.
+//
+// Solidity: function teeWalletProjectManager() view returns(address)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCaller) TeeWalletProjectManager(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _TeeWalletKeyManager.contract.Call(opts, &out, "teeWalletProjectManager")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// TeeWalletProjectManager is a free data retrieval call binding the contract method 0x1e915a85.
+//
+// Solidity: function teeWalletProjectManager() view returns(address)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) TeeWalletProjectManager() (common.Address, error) {
+	return _TeeWalletKeyManager.Contract.TeeWalletProjectManager(&_TeeWalletKeyManager.CallOpts)
+}
+
+// TeeWalletProjectManager is a free data retrieval call binding the contract method 0x1e915a85.
+//
+// Solidity: function teeWalletProjectManager() view returns(address)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCallerSession) TeeWalletProjectManager() (common.Address, error) {
+	return _TeeWalletKeyManager.Contract.TeeWalletProjectManager(&_TeeWalletKeyManager.CallOpts)
+}
+
+// TimelockedCalls is a free data retrieval call binding the contract method 0x74e6310e.
+//
+// Solidity: function timelockedCalls(bytes4 selector) view returns(uint256 allowedAfterTimestamp, bytes encodedCall)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCaller) TimelockedCalls(opts *bind.CallOpts, selector [4]byte) (struct {
+	AllowedAfterTimestamp *big.Int
+	EncodedCall           []byte
+}, error) {
+	var out []interface{}
+	err := _TeeWalletKeyManager.contract.Call(opts, &out, "timelockedCalls", selector)
+
+	outstruct := new(struct {
+		AllowedAfterTimestamp *big.Int
+		EncodedCall           []byte
+	})
+	if err != nil {
+		return *outstruct, err
+	}
+
+	outstruct.AllowedAfterTimestamp = *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+	outstruct.EncodedCall = *abi.ConvertType(out[1], new([]byte)).(*[]byte)
+
+	return *outstruct, err
+
+}
+
+// TimelockedCalls is a free data retrieval call binding the contract method 0x74e6310e.
+//
+// Solidity: function timelockedCalls(bytes4 selector) view returns(uint256 allowedAfterTimestamp, bytes encodedCall)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) TimelockedCalls(selector [4]byte) (struct {
+	AllowedAfterTimestamp *big.Int
+	EncodedCall           []byte
+}, error) {
+	return _TeeWalletKeyManager.Contract.TimelockedCalls(&_TeeWalletKeyManager.CallOpts, selector)
+}
+
+// TimelockedCalls is a free data retrieval call binding the contract method 0x74e6310e.
+//
+// Solidity: function timelockedCalls(bytes4 selector) view returns(uint256 allowedAfterTimestamp, bytes encodedCall)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerCallerSession) TimelockedCalls(selector [4]byte) (struct {
+	AllowedAfterTimestamp *big.Int
+	EncodedCall           []byte
+}, error) {
+	return _TeeWalletKeyManager.Contract.TimelockedCalls(&_TeeWalletKeyManager.CallOpts, selector)
+}
+
 // AddKey is a paid mutator transaction binding the contract method 0x7875fa5c.
 //
 // Solidity: function addKey(address _teeId, bytes32 _walletId) payable returns(uint64 _keyId)
@@ -393,6 +965,27 @@ func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) AddKey(_teeId common.Add
 // Solidity: function addKey(address _teeId, bytes32 _walletId) payable returns(uint64 _keyId)
 func (_TeeWalletKeyManager *TeeWalletKeyManagerTransactorSession) AddKey(_teeId common.Address, _walletId [32]byte) (*types.Transaction, error) {
 	return _TeeWalletKeyManager.Contract.AddKey(&_TeeWalletKeyManager.TransactOpts, _teeId, _walletId)
+}
+
+// CancelGovernanceCall is a paid mutator transaction binding the contract method 0x67fc4029.
+//
+// Solidity: function cancelGovernanceCall(bytes4 _selector) returns()
+func (_TeeWalletKeyManager *TeeWalletKeyManagerTransactor) CancelGovernanceCall(opts *bind.TransactOpts, _selector [4]byte) (*types.Transaction, error) {
+	return _TeeWalletKeyManager.contract.Transact(opts, "cancelGovernanceCall", _selector)
+}
+
+// CancelGovernanceCall is a paid mutator transaction binding the contract method 0x67fc4029.
+//
+// Solidity: function cancelGovernanceCall(bytes4 _selector) returns()
+func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) CancelGovernanceCall(_selector [4]byte) (*types.Transaction, error) {
+	return _TeeWalletKeyManager.Contract.CancelGovernanceCall(&_TeeWalletKeyManager.TransactOpts, _selector)
+}
+
+// CancelGovernanceCall is a paid mutator transaction binding the contract method 0x67fc4029.
+//
+// Solidity: function cancelGovernanceCall(bytes4 _selector) returns()
+func (_TeeWalletKeyManager *TeeWalletKeyManagerTransactorSession) CancelGovernanceCall(_selector [4]byte) (*types.Transaction, error) {
+	return _TeeWalletKeyManager.Contract.CancelGovernanceCall(&_TeeWalletKeyManager.TransactOpts, _selector)
 }
 
 // CleanUpTeeIds is a paid mutator transaction binding the contract method 0xaec4c979.
@@ -458,6 +1051,90 @@ func (_TeeWalletKeyManager *TeeWalletKeyManagerTransactorSession) DeleteKey(_tee
 	return _TeeWalletKeyManager.Contract.DeleteKey(&_TeeWalletKeyManager.TransactOpts, _teeId, _walletId, _keyId)
 }
 
+// ExecuteGovernanceCall is a paid mutator transaction binding the contract method 0x5ff27079.
+//
+// Solidity: function executeGovernanceCall(bytes4 _selector) returns()
+func (_TeeWalletKeyManager *TeeWalletKeyManagerTransactor) ExecuteGovernanceCall(opts *bind.TransactOpts, _selector [4]byte) (*types.Transaction, error) {
+	return _TeeWalletKeyManager.contract.Transact(opts, "executeGovernanceCall", _selector)
+}
+
+// ExecuteGovernanceCall is a paid mutator transaction binding the contract method 0x5ff27079.
+//
+// Solidity: function executeGovernanceCall(bytes4 _selector) returns()
+func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) ExecuteGovernanceCall(_selector [4]byte) (*types.Transaction, error) {
+	return _TeeWalletKeyManager.Contract.ExecuteGovernanceCall(&_TeeWalletKeyManager.TransactOpts, _selector)
+}
+
+// ExecuteGovernanceCall is a paid mutator transaction binding the contract method 0x5ff27079.
+//
+// Solidity: function executeGovernanceCall(bytes4 _selector) returns()
+func (_TeeWalletKeyManager *TeeWalletKeyManagerTransactorSession) ExecuteGovernanceCall(_selector [4]byte) (*types.Transaction, error) {
+	return _TeeWalletKeyManager.Contract.ExecuteGovernanceCall(&_TeeWalletKeyManager.TransactOpts, _selector)
+}
+
+// IncreaseKeyNonce is a paid mutator transaction binding the contract method 0xf3d3161c.
+//
+// Solidity: function increaseKeyNonce(address _teeId, bytes32 _walletId, uint64 _keyId) returns(uint256 _nonce)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerTransactor) IncreaseKeyNonce(opts *bind.TransactOpts, _teeId common.Address, _walletId [32]byte, _keyId uint64) (*types.Transaction, error) {
+	return _TeeWalletKeyManager.contract.Transact(opts, "increaseKeyNonce", _teeId, _walletId, _keyId)
+}
+
+// IncreaseKeyNonce is a paid mutator transaction binding the contract method 0xf3d3161c.
+//
+// Solidity: function increaseKeyNonce(address _teeId, bytes32 _walletId, uint64 _keyId) returns(uint256 _nonce)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) IncreaseKeyNonce(_teeId common.Address, _walletId [32]byte, _keyId uint64) (*types.Transaction, error) {
+	return _TeeWalletKeyManager.Contract.IncreaseKeyNonce(&_TeeWalletKeyManager.TransactOpts, _teeId, _walletId, _keyId)
+}
+
+// IncreaseKeyNonce is a paid mutator transaction binding the contract method 0xf3d3161c.
+//
+// Solidity: function increaseKeyNonce(address _teeId, bytes32 _walletId, uint64 _keyId) returns(uint256 _nonce)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerTransactorSession) IncreaseKeyNonce(_teeId common.Address, _walletId [32]byte, _keyId uint64) (*types.Transaction, error) {
+	return _TeeWalletKeyManager.Contract.IncreaseKeyNonce(&_TeeWalletKeyManager.TransactOpts, _teeId, _walletId, _keyId)
+}
+
+// Initialise is a paid mutator transaction binding the contract method 0xef88bf13.
+//
+// Solidity: function initialise(address _governanceSettings, address _initialGovernance) returns()
+func (_TeeWalletKeyManager *TeeWalletKeyManagerTransactor) Initialise(opts *bind.TransactOpts, _governanceSettings common.Address, _initialGovernance common.Address) (*types.Transaction, error) {
+	return _TeeWalletKeyManager.contract.Transact(opts, "initialise", _governanceSettings, _initialGovernance)
+}
+
+// Initialise is a paid mutator transaction binding the contract method 0xef88bf13.
+//
+// Solidity: function initialise(address _governanceSettings, address _initialGovernance) returns()
+func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) Initialise(_governanceSettings common.Address, _initialGovernance common.Address) (*types.Transaction, error) {
+	return _TeeWalletKeyManager.Contract.Initialise(&_TeeWalletKeyManager.TransactOpts, _governanceSettings, _initialGovernance)
+}
+
+// Initialise is a paid mutator transaction binding the contract method 0xef88bf13.
+//
+// Solidity: function initialise(address _governanceSettings, address _initialGovernance) returns()
+func (_TeeWalletKeyManager *TeeWalletKeyManagerTransactorSession) Initialise(_governanceSettings common.Address, _initialGovernance common.Address) (*types.Transaction, error) {
+	return _TeeWalletKeyManager.Contract.Initialise(&_TeeWalletKeyManager.TransactOpts, _governanceSettings, _initialGovernance)
+}
+
+// Initialize is a paid mutator transaction binding the contract method 0xc0c53b8b.
+//
+// Solidity: function initialize(address _governanceSettings, address _initialGovernance, address _addressUpdater) returns()
+func (_TeeWalletKeyManager *TeeWalletKeyManagerTransactor) Initialize(opts *bind.TransactOpts, _governanceSettings common.Address, _initialGovernance common.Address, _addressUpdater common.Address) (*types.Transaction, error) {
+	return _TeeWalletKeyManager.contract.Transact(opts, "initialize", _governanceSettings, _initialGovernance, _addressUpdater)
+}
+
+// Initialize is a paid mutator transaction binding the contract method 0xc0c53b8b.
+//
+// Solidity: function initialize(address _governanceSettings, address _initialGovernance, address _addressUpdater) returns()
+func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) Initialize(_governanceSettings common.Address, _initialGovernance common.Address, _addressUpdater common.Address) (*types.Transaction, error) {
+	return _TeeWalletKeyManager.Contract.Initialize(&_TeeWalletKeyManager.TransactOpts, _governanceSettings, _initialGovernance, _addressUpdater)
+}
+
+// Initialize is a paid mutator transaction binding the contract method 0xc0c53b8b.
+//
+// Solidity: function initialize(address _governanceSettings, address _initialGovernance, address _addressUpdater) returns()
+func (_TeeWalletKeyManager *TeeWalletKeyManagerTransactorSession) Initialize(_governanceSettings common.Address, _initialGovernance common.Address, _addressUpdater common.Address) (*types.Transaction, error) {
+	return _TeeWalletKeyManager.Contract.Initialize(&_TeeWalletKeyManager.TransactOpts, _governanceSettings, _initialGovernance, _addressUpdater)
+}
+
 // ReceivingTeesAndKeys is a paid mutator transaction binding the contract method 0xfaddcc06.
 //
 // Solidity: function receivingTeesAndKeys(bytes32 _walletId) returns((address,uint64)[] _teeIdKeyIdPairs)
@@ -498,6 +1175,887 @@ func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) SetMultisigThreshold(_wa
 // Solidity: function setMultisigThreshold(bytes32 _walletId, uint64 _multisigThreshold) returns()
 func (_TeeWalletKeyManager *TeeWalletKeyManagerTransactorSession) SetMultisigThreshold(_walletId [32]byte, _multisigThreshold uint64) (*types.Transaction, error) {
 	return _TeeWalletKeyManager.Contract.SetMultisigThreshold(&_TeeWalletKeyManager.TransactOpts, _walletId, _multisigThreshold)
+}
+
+// SwitchToProductionMode is a paid mutator transaction binding the contract method 0xf5a98383.
+//
+// Solidity: function switchToProductionMode() returns()
+func (_TeeWalletKeyManager *TeeWalletKeyManagerTransactor) SwitchToProductionMode(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _TeeWalletKeyManager.contract.Transact(opts, "switchToProductionMode")
+}
+
+// SwitchToProductionMode is a paid mutator transaction binding the contract method 0xf5a98383.
+//
+// Solidity: function switchToProductionMode() returns()
+func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) SwitchToProductionMode() (*types.Transaction, error) {
+	return _TeeWalletKeyManager.Contract.SwitchToProductionMode(&_TeeWalletKeyManager.TransactOpts)
+}
+
+// SwitchToProductionMode is a paid mutator transaction binding the contract method 0xf5a98383.
+//
+// Solidity: function switchToProductionMode() returns()
+func (_TeeWalletKeyManager *TeeWalletKeyManagerTransactorSession) SwitchToProductionMode() (*types.Transaction, error) {
+	return _TeeWalletKeyManager.Contract.SwitchToProductionMode(&_TeeWalletKeyManager.TransactOpts)
+}
+
+// UpdateContractAddresses is a paid mutator transaction binding the contract method 0xb00c0b76.
+//
+// Solidity: function updateContractAddresses(bytes32[] _contractNameHashes, address[] _contractAddresses) returns()
+func (_TeeWalletKeyManager *TeeWalletKeyManagerTransactor) UpdateContractAddresses(opts *bind.TransactOpts, _contractNameHashes [][32]byte, _contractAddresses []common.Address) (*types.Transaction, error) {
+	return _TeeWalletKeyManager.contract.Transact(opts, "updateContractAddresses", _contractNameHashes, _contractAddresses)
+}
+
+// UpdateContractAddresses is a paid mutator transaction binding the contract method 0xb00c0b76.
+//
+// Solidity: function updateContractAddresses(bytes32[] _contractNameHashes, address[] _contractAddresses) returns()
+func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) UpdateContractAddresses(_contractNameHashes [][32]byte, _contractAddresses []common.Address) (*types.Transaction, error) {
+	return _TeeWalletKeyManager.Contract.UpdateContractAddresses(&_TeeWalletKeyManager.TransactOpts, _contractNameHashes, _contractAddresses)
+}
+
+// UpdateContractAddresses is a paid mutator transaction binding the contract method 0xb00c0b76.
+//
+// Solidity: function updateContractAddresses(bytes32[] _contractNameHashes, address[] _contractAddresses) returns()
+func (_TeeWalletKeyManager *TeeWalletKeyManagerTransactorSession) UpdateContractAddresses(_contractNameHashes [][32]byte, _contractAddresses []common.Address) (*types.Transaction, error) {
+	return _TeeWalletKeyManager.Contract.UpdateContractAddresses(&_TeeWalletKeyManager.TransactOpts, _contractNameHashes, _contractAddresses)
+}
+
+// UpgradeToAndCall is a paid mutator transaction binding the contract method 0x4f1ef286.
+//
+// Solidity: function upgradeToAndCall(address _newImplementation, bytes _data) payable returns()
+func (_TeeWalletKeyManager *TeeWalletKeyManagerTransactor) UpgradeToAndCall(opts *bind.TransactOpts, _newImplementation common.Address, _data []byte) (*types.Transaction, error) {
+	return _TeeWalletKeyManager.contract.Transact(opts, "upgradeToAndCall", _newImplementation, _data)
+}
+
+// UpgradeToAndCall is a paid mutator transaction binding the contract method 0x4f1ef286.
+//
+// Solidity: function upgradeToAndCall(address _newImplementation, bytes _data) payable returns()
+func (_TeeWalletKeyManager *TeeWalletKeyManagerSession) UpgradeToAndCall(_newImplementation common.Address, _data []byte) (*types.Transaction, error) {
+	return _TeeWalletKeyManager.Contract.UpgradeToAndCall(&_TeeWalletKeyManager.TransactOpts, _newImplementation, _data)
+}
+
+// UpgradeToAndCall is a paid mutator transaction binding the contract method 0x4f1ef286.
+//
+// Solidity: function upgradeToAndCall(address _newImplementation, bytes _data) payable returns()
+func (_TeeWalletKeyManager *TeeWalletKeyManagerTransactorSession) UpgradeToAndCall(_newImplementation common.Address, _data []byte) (*types.Transaction, error) {
+	return _TeeWalletKeyManager.Contract.UpgradeToAndCall(&_TeeWalletKeyManager.TransactOpts, _newImplementation, _data)
+}
+
+// TeeWalletKeyManagerGovernanceCallTimelockedIterator is returned from FilterGovernanceCallTimelocked and is used to iterate over the raw logs and unpacked data for GovernanceCallTimelocked events raised by the TeeWalletKeyManager contract.
+type TeeWalletKeyManagerGovernanceCallTimelockedIterator struct {
+	Event *TeeWalletKeyManagerGovernanceCallTimelocked // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeeWalletKeyManagerGovernanceCallTimelockedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeeWalletKeyManagerGovernanceCallTimelocked)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeeWalletKeyManagerGovernanceCallTimelocked)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeeWalletKeyManagerGovernanceCallTimelockedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeeWalletKeyManagerGovernanceCallTimelockedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeeWalletKeyManagerGovernanceCallTimelocked represents a GovernanceCallTimelocked event raised by the TeeWalletKeyManager contract.
+type TeeWalletKeyManagerGovernanceCallTimelocked struct {
+	Selector              [4]byte
+	AllowedAfterTimestamp *big.Int
+	EncodedCall           []byte
+	Raw                   types.Log // Blockchain specific contextual infos
+}
+
+// FilterGovernanceCallTimelocked is a free log retrieval operation binding the contract event 0xed948300a3694aa01d4a6b258bfd664350193d770c0b51f8387277f6d83ea3b6.
+//
+// Solidity: event GovernanceCallTimelocked(bytes4 selector, uint256 allowedAfterTimestamp, bytes encodedCall)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerFilterer) FilterGovernanceCallTimelocked(opts *bind.FilterOpts) (*TeeWalletKeyManagerGovernanceCallTimelockedIterator, error) {
+
+	logs, sub, err := _TeeWalletKeyManager.contract.FilterLogs(opts, "GovernanceCallTimelocked")
+	if err != nil {
+		return nil, err
+	}
+	return &TeeWalletKeyManagerGovernanceCallTimelockedIterator{contract: _TeeWalletKeyManager.contract, event: "GovernanceCallTimelocked", logs: logs, sub: sub}, nil
+}
+
+// WatchGovernanceCallTimelocked is a free log subscription operation binding the contract event 0xed948300a3694aa01d4a6b258bfd664350193d770c0b51f8387277f6d83ea3b6.
+//
+// Solidity: event GovernanceCallTimelocked(bytes4 selector, uint256 allowedAfterTimestamp, bytes encodedCall)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerFilterer) WatchGovernanceCallTimelocked(opts *bind.WatchOpts, sink chan<- *TeeWalletKeyManagerGovernanceCallTimelocked) (event.Subscription, error) {
+
+	logs, sub, err := _TeeWalletKeyManager.contract.WatchLogs(opts, "GovernanceCallTimelocked")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeeWalletKeyManagerGovernanceCallTimelocked)
+				if err := _TeeWalletKeyManager.contract.UnpackLog(event, "GovernanceCallTimelocked", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseGovernanceCallTimelocked is a log parse operation binding the contract event 0xed948300a3694aa01d4a6b258bfd664350193d770c0b51f8387277f6d83ea3b6.
+//
+// Solidity: event GovernanceCallTimelocked(bytes4 selector, uint256 allowedAfterTimestamp, bytes encodedCall)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerFilterer) ParseGovernanceCallTimelocked(log types.Log) (*TeeWalletKeyManagerGovernanceCallTimelocked, error) {
+	event := new(TeeWalletKeyManagerGovernanceCallTimelocked)
+	if err := _TeeWalletKeyManager.contract.UnpackLog(event, "GovernanceCallTimelocked", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// TeeWalletKeyManagerGovernanceInitialisedIterator is returned from FilterGovernanceInitialised and is used to iterate over the raw logs and unpacked data for GovernanceInitialised events raised by the TeeWalletKeyManager contract.
+type TeeWalletKeyManagerGovernanceInitialisedIterator struct {
+	Event *TeeWalletKeyManagerGovernanceInitialised // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeeWalletKeyManagerGovernanceInitialisedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeeWalletKeyManagerGovernanceInitialised)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeeWalletKeyManagerGovernanceInitialised)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeeWalletKeyManagerGovernanceInitialisedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeeWalletKeyManagerGovernanceInitialisedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeeWalletKeyManagerGovernanceInitialised represents a GovernanceInitialised event raised by the TeeWalletKeyManager contract.
+type TeeWalletKeyManagerGovernanceInitialised struct {
+	InitialGovernance common.Address
+	Raw               types.Log // Blockchain specific contextual infos
+}
+
+// FilterGovernanceInitialised is a free log retrieval operation binding the contract event 0x9789733827840833afc031fb2ef9ab6894271f77bad2085687cf4ae5c7bee4db.
+//
+// Solidity: event GovernanceInitialised(address initialGovernance)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerFilterer) FilterGovernanceInitialised(opts *bind.FilterOpts) (*TeeWalletKeyManagerGovernanceInitialisedIterator, error) {
+
+	logs, sub, err := _TeeWalletKeyManager.contract.FilterLogs(opts, "GovernanceInitialised")
+	if err != nil {
+		return nil, err
+	}
+	return &TeeWalletKeyManagerGovernanceInitialisedIterator{contract: _TeeWalletKeyManager.contract, event: "GovernanceInitialised", logs: logs, sub: sub}, nil
+}
+
+// WatchGovernanceInitialised is a free log subscription operation binding the contract event 0x9789733827840833afc031fb2ef9ab6894271f77bad2085687cf4ae5c7bee4db.
+//
+// Solidity: event GovernanceInitialised(address initialGovernance)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerFilterer) WatchGovernanceInitialised(opts *bind.WatchOpts, sink chan<- *TeeWalletKeyManagerGovernanceInitialised) (event.Subscription, error) {
+
+	logs, sub, err := _TeeWalletKeyManager.contract.WatchLogs(opts, "GovernanceInitialised")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeeWalletKeyManagerGovernanceInitialised)
+				if err := _TeeWalletKeyManager.contract.UnpackLog(event, "GovernanceInitialised", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseGovernanceInitialised is a log parse operation binding the contract event 0x9789733827840833afc031fb2ef9ab6894271f77bad2085687cf4ae5c7bee4db.
+//
+// Solidity: event GovernanceInitialised(address initialGovernance)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerFilterer) ParseGovernanceInitialised(log types.Log) (*TeeWalletKeyManagerGovernanceInitialised, error) {
+	event := new(TeeWalletKeyManagerGovernanceInitialised)
+	if err := _TeeWalletKeyManager.contract.UnpackLog(event, "GovernanceInitialised", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// TeeWalletKeyManagerGovernedProductionModeEnteredIterator is returned from FilterGovernedProductionModeEntered and is used to iterate over the raw logs and unpacked data for GovernedProductionModeEntered events raised by the TeeWalletKeyManager contract.
+type TeeWalletKeyManagerGovernedProductionModeEnteredIterator struct {
+	Event *TeeWalletKeyManagerGovernedProductionModeEntered // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeeWalletKeyManagerGovernedProductionModeEnteredIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeeWalletKeyManagerGovernedProductionModeEntered)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeeWalletKeyManagerGovernedProductionModeEntered)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeeWalletKeyManagerGovernedProductionModeEnteredIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeeWalletKeyManagerGovernedProductionModeEnteredIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeeWalletKeyManagerGovernedProductionModeEntered represents a GovernedProductionModeEntered event raised by the TeeWalletKeyManager contract.
+type TeeWalletKeyManagerGovernedProductionModeEntered struct {
+	GovernanceSettings common.Address
+	Raw                types.Log // Blockchain specific contextual infos
+}
+
+// FilterGovernedProductionModeEntered is a free log retrieval operation binding the contract event 0x83af113638b5422f9e977cebc0aaf0eaf2188eb9a8baae7f9d46c42b33a1560c.
+//
+// Solidity: event GovernedProductionModeEntered(address governanceSettings)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerFilterer) FilterGovernedProductionModeEntered(opts *bind.FilterOpts) (*TeeWalletKeyManagerGovernedProductionModeEnteredIterator, error) {
+
+	logs, sub, err := _TeeWalletKeyManager.contract.FilterLogs(opts, "GovernedProductionModeEntered")
+	if err != nil {
+		return nil, err
+	}
+	return &TeeWalletKeyManagerGovernedProductionModeEnteredIterator{contract: _TeeWalletKeyManager.contract, event: "GovernedProductionModeEntered", logs: logs, sub: sub}, nil
+}
+
+// WatchGovernedProductionModeEntered is a free log subscription operation binding the contract event 0x83af113638b5422f9e977cebc0aaf0eaf2188eb9a8baae7f9d46c42b33a1560c.
+//
+// Solidity: event GovernedProductionModeEntered(address governanceSettings)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerFilterer) WatchGovernedProductionModeEntered(opts *bind.WatchOpts, sink chan<- *TeeWalletKeyManagerGovernedProductionModeEntered) (event.Subscription, error) {
+
+	logs, sub, err := _TeeWalletKeyManager.contract.WatchLogs(opts, "GovernedProductionModeEntered")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeeWalletKeyManagerGovernedProductionModeEntered)
+				if err := _TeeWalletKeyManager.contract.UnpackLog(event, "GovernedProductionModeEntered", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseGovernedProductionModeEntered is a log parse operation binding the contract event 0x83af113638b5422f9e977cebc0aaf0eaf2188eb9a8baae7f9d46c42b33a1560c.
+//
+// Solidity: event GovernedProductionModeEntered(address governanceSettings)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerFilterer) ParseGovernedProductionModeEntered(log types.Log) (*TeeWalletKeyManagerGovernedProductionModeEntered, error) {
+	event := new(TeeWalletKeyManagerGovernedProductionModeEntered)
+	if err := _TeeWalletKeyManager.contract.UnpackLog(event, "GovernedProductionModeEntered", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// TeeWalletKeyManagerTimelockedGovernanceCallCanceledIterator is returned from FilterTimelockedGovernanceCallCanceled and is used to iterate over the raw logs and unpacked data for TimelockedGovernanceCallCanceled events raised by the TeeWalletKeyManager contract.
+type TeeWalletKeyManagerTimelockedGovernanceCallCanceledIterator struct {
+	Event *TeeWalletKeyManagerTimelockedGovernanceCallCanceled // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeeWalletKeyManagerTimelockedGovernanceCallCanceledIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeeWalletKeyManagerTimelockedGovernanceCallCanceled)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeeWalletKeyManagerTimelockedGovernanceCallCanceled)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeeWalletKeyManagerTimelockedGovernanceCallCanceledIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeeWalletKeyManagerTimelockedGovernanceCallCanceledIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeeWalletKeyManagerTimelockedGovernanceCallCanceled represents a TimelockedGovernanceCallCanceled event raised by the TeeWalletKeyManager contract.
+type TeeWalletKeyManagerTimelockedGovernanceCallCanceled struct {
+	Selector  [4]byte
+	Timestamp *big.Int
+	Raw       types.Log // Blockchain specific contextual infos
+}
+
+// FilterTimelockedGovernanceCallCanceled is a free log retrieval operation binding the contract event 0x7735b2391c38a81419c513e30ca578db7158eadd7101511b23e221c654d19cf8.
+//
+// Solidity: event TimelockedGovernanceCallCanceled(bytes4 selector, uint256 timestamp)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerFilterer) FilterTimelockedGovernanceCallCanceled(opts *bind.FilterOpts) (*TeeWalletKeyManagerTimelockedGovernanceCallCanceledIterator, error) {
+
+	logs, sub, err := _TeeWalletKeyManager.contract.FilterLogs(opts, "TimelockedGovernanceCallCanceled")
+	if err != nil {
+		return nil, err
+	}
+	return &TeeWalletKeyManagerTimelockedGovernanceCallCanceledIterator{contract: _TeeWalletKeyManager.contract, event: "TimelockedGovernanceCallCanceled", logs: logs, sub: sub}, nil
+}
+
+// WatchTimelockedGovernanceCallCanceled is a free log subscription operation binding the contract event 0x7735b2391c38a81419c513e30ca578db7158eadd7101511b23e221c654d19cf8.
+//
+// Solidity: event TimelockedGovernanceCallCanceled(bytes4 selector, uint256 timestamp)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerFilterer) WatchTimelockedGovernanceCallCanceled(opts *bind.WatchOpts, sink chan<- *TeeWalletKeyManagerTimelockedGovernanceCallCanceled) (event.Subscription, error) {
+
+	logs, sub, err := _TeeWalletKeyManager.contract.WatchLogs(opts, "TimelockedGovernanceCallCanceled")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeeWalletKeyManagerTimelockedGovernanceCallCanceled)
+				if err := _TeeWalletKeyManager.contract.UnpackLog(event, "TimelockedGovernanceCallCanceled", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseTimelockedGovernanceCallCanceled is a log parse operation binding the contract event 0x7735b2391c38a81419c513e30ca578db7158eadd7101511b23e221c654d19cf8.
+//
+// Solidity: event TimelockedGovernanceCallCanceled(bytes4 selector, uint256 timestamp)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerFilterer) ParseTimelockedGovernanceCallCanceled(log types.Log) (*TeeWalletKeyManagerTimelockedGovernanceCallCanceled, error) {
+	event := new(TeeWalletKeyManagerTimelockedGovernanceCallCanceled)
+	if err := _TeeWalletKeyManager.contract.UnpackLog(event, "TimelockedGovernanceCallCanceled", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// TeeWalletKeyManagerTimelockedGovernanceCallExecutedIterator is returned from FilterTimelockedGovernanceCallExecuted and is used to iterate over the raw logs and unpacked data for TimelockedGovernanceCallExecuted events raised by the TeeWalletKeyManager contract.
+type TeeWalletKeyManagerTimelockedGovernanceCallExecutedIterator struct {
+	Event *TeeWalletKeyManagerTimelockedGovernanceCallExecuted // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeeWalletKeyManagerTimelockedGovernanceCallExecutedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeeWalletKeyManagerTimelockedGovernanceCallExecuted)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeeWalletKeyManagerTimelockedGovernanceCallExecuted)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeeWalletKeyManagerTimelockedGovernanceCallExecutedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeeWalletKeyManagerTimelockedGovernanceCallExecutedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeeWalletKeyManagerTimelockedGovernanceCallExecuted represents a TimelockedGovernanceCallExecuted event raised by the TeeWalletKeyManager contract.
+type TeeWalletKeyManagerTimelockedGovernanceCallExecuted struct {
+	Selector  [4]byte
+	Timestamp *big.Int
+	Raw       types.Log // Blockchain specific contextual infos
+}
+
+// FilterTimelockedGovernanceCallExecuted is a free log retrieval operation binding the contract event 0xa7326b57fc9cfe267aaea5e7f0b01757154d265620a0585819416ee9ddd2c438.
+//
+// Solidity: event TimelockedGovernanceCallExecuted(bytes4 selector, uint256 timestamp)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerFilterer) FilterTimelockedGovernanceCallExecuted(opts *bind.FilterOpts) (*TeeWalletKeyManagerTimelockedGovernanceCallExecutedIterator, error) {
+
+	logs, sub, err := _TeeWalletKeyManager.contract.FilterLogs(opts, "TimelockedGovernanceCallExecuted")
+	if err != nil {
+		return nil, err
+	}
+	return &TeeWalletKeyManagerTimelockedGovernanceCallExecutedIterator{contract: _TeeWalletKeyManager.contract, event: "TimelockedGovernanceCallExecuted", logs: logs, sub: sub}, nil
+}
+
+// WatchTimelockedGovernanceCallExecuted is a free log subscription operation binding the contract event 0xa7326b57fc9cfe267aaea5e7f0b01757154d265620a0585819416ee9ddd2c438.
+//
+// Solidity: event TimelockedGovernanceCallExecuted(bytes4 selector, uint256 timestamp)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerFilterer) WatchTimelockedGovernanceCallExecuted(opts *bind.WatchOpts, sink chan<- *TeeWalletKeyManagerTimelockedGovernanceCallExecuted) (event.Subscription, error) {
+
+	logs, sub, err := _TeeWalletKeyManager.contract.WatchLogs(opts, "TimelockedGovernanceCallExecuted")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeeWalletKeyManagerTimelockedGovernanceCallExecuted)
+				if err := _TeeWalletKeyManager.contract.UnpackLog(event, "TimelockedGovernanceCallExecuted", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseTimelockedGovernanceCallExecuted is a log parse operation binding the contract event 0xa7326b57fc9cfe267aaea5e7f0b01757154d265620a0585819416ee9ddd2c438.
+//
+// Solidity: event TimelockedGovernanceCallExecuted(bytes4 selector, uint256 timestamp)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerFilterer) ParseTimelockedGovernanceCallExecuted(log types.Log) (*TeeWalletKeyManagerTimelockedGovernanceCallExecuted, error) {
+	event := new(TeeWalletKeyManagerTimelockedGovernanceCallExecuted)
+	if err := _TeeWalletKeyManager.contract.UnpackLog(event, "TimelockedGovernanceCallExecuted", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// TeeWalletKeyManagerUpgradedIterator is returned from FilterUpgraded and is used to iterate over the raw logs and unpacked data for Upgraded events raised by the TeeWalletKeyManager contract.
+type TeeWalletKeyManagerUpgradedIterator struct {
+	Event *TeeWalletKeyManagerUpgraded // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeeWalletKeyManagerUpgradedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeeWalletKeyManagerUpgraded)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeeWalletKeyManagerUpgraded)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeeWalletKeyManagerUpgradedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeeWalletKeyManagerUpgradedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeeWalletKeyManagerUpgraded represents a Upgraded event raised by the TeeWalletKeyManager contract.
+type TeeWalletKeyManagerUpgraded struct {
+	Implementation common.Address
+	Raw            types.Log // Blockchain specific contextual infos
+}
+
+// FilterUpgraded is a free log retrieval operation binding the contract event 0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b.
+//
+// Solidity: event Upgraded(address indexed implementation)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerFilterer) FilterUpgraded(opts *bind.FilterOpts, implementation []common.Address) (*TeeWalletKeyManagerUpgradedIterator, error) {
+
+	var implementationRule []interface{}
+	for _, implementationItem := range implementation {
+		implementationRule = append(implementationRule, implementationItem)
+	}
+
+	logs, sub, err := _TeeWalletKeyManager.contract.FilterLogs(opts, "Upgraded", implementationRule)
+	if err != nil {
+		return nil, err
+	}
+	return &TeeWalletKeyManagerUpgradedIterator{contract: _TeeWalletKeyManager.contract, event: "Upgraded", logs: logs, sub: sub}, nil
+}
+
+// WatchUpgraded is a free log subscription operation binding the contract event 0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b.
+//
+// Solidity: event Upgraded(address indexed implementation)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerFilterer) WatchUpgraded(opts *bind.WatchOpts, sink chan<- *TeeWalletKeyManagerUpgraded, implementation []common.Address) (event.Subscription, error) {
+
+	var implementationRule []interface{}
+	for _, implementationItem := range implementation {
+		implementationRule = append(implementationRule, implementationItem)
+	}
+
+	logs, sub, err := _TeeWalletKeyManager.contract.WatchLogs(opts, "Upgraded", implementationRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeeWalletKeyManagerUpgraded)
+				if err := _TeeWalletKeyManager.contract.UnpackLog(event, "Upgraded", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseUpgraded is a log parse operation binding the contract event 0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b.
+//
+// Solidity: event Upgraded(address indexed implementation)
+func (_TeeWalletKeyManager *TeeWalletKeyManagerFilterer) ParseUpgraded(log types.Log) (*TeeWalletKeyManagerUpgraded, error) {
+	event := new(TeeWalletKeyManagerUpgraded)
+	if err := _TeeWalletKeyManager.contract.UnpackLog(event, "Upgraded", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
 }
 
 // TeeWalletKeyManagerWalletEnabledIterator is returned from FilterWalletEnabled and is used to iterate over the raw logs and unpacked data for WalletEnabled events raised by the TeeWalletKeyManager contract.

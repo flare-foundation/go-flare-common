@@ -1,72 +1,72 @@
 [
-    {
-      "inputs": [
-        {
-          "components": [
-            {
-              "internalType": "address",
-              "name": "teeId",
-              "type": "address"
-            },
-            {
-              "internalType": "address",
-              "name": "teeProxyId",
-              "type": "address"
-            },
-            {
-              "internalType": "string",
-              "name": "url",
-              "type": "string"
-            }
-          ],
-          "internalType": "struct ITeeMachineRegistry.TeeMachine",
-          "name": "",
-          "type": "tuple"
-        }
-      ],
-      "name": "teeMachineStruct",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "components": [
-            {
-              "internalType": "address",
-              "name": "teeId",
-              "type": "address"
-            },
-            {
-              "internalType": "address",
-              "name": "initialTeeId",
-              "type": "address"
-            },
-            {
-              "internalType": "string",
-              "name": "url",
-              "type": "string"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "codeHash",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "platform",
-              "type": "bytes32"
-            }
-          ],
-          "internalType": "struct ITeeMachineRegistry.TeeMachineWithAttestationData",
-          "name": "",
-          "type": "tuple"
-        }
-      ],
-      "name": "teeMachineWithAttestationDataStruct",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    }
-  ]
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "teeId",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "teeProxyId",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "url",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct ITeeMachineRegistry.TeeMachine",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "teeMachineStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "teeId",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "initialTeeId",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "codeHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "platform",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct ITeeMachineRegistry.TeeMachineWithAttestationData",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "teeMachineWithAttestationDataStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
