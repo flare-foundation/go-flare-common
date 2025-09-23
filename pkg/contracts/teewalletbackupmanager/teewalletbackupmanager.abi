@@ -224,19 +224,6 @@
   },
   {
     "inputs": [],
-    "name": "KEY_DATA_PROVIDER_RESTORE_TEST",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "UPGRADE_INTERFACE_VERSION",
     "outputs": [
       {
@@ -319,11 +306,6 @@
         "internalType": "string",
         "name": "_backupUrl",
         "type": "string"
-      },
-      {
-        "internalType": "bool",
-        "name": "_test",
-        "type": "bool"
       }
     ],
     "name": "backupRestore",
