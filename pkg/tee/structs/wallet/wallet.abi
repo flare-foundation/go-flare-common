@@ -106,9 +106,21 @@
       {
         "components": [
           {
-            "internalType": "address",
-            "name": "teeId",
-            "type": "address"
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "x",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "y",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct PublicKey",
+            "name": "teePublicKey",
+            "type": "tuple"
           },
           {
             "components": [
