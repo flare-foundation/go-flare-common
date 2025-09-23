@@ -12,6 +12,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/ethereum/go-ethereum/crypto/ecies"
 	"github.com/flare-foundation/go-flare-common/pkg/logger"
 )
 
@@ -86,12 +87,19 @@ func (ak *apiKeys) authorize(h *http.Header) bool {
 
 // New creates new Signer from config and private key.
 //
-// Signer listens to POST requests on $cfg.Addr/sign.
-// The body of the request should be json marshaled RequestBody, the header should include api key.
+// Signer listens to POST requests on /id, /sign, and /decrypt endpoints.
+// API key validation is done for each request.
 func New(cfg Config, prv *ecdsa.PrivateKey) *Signer {
-	apiKey := newAPIKeys(cfg)
+	apiKeys := newAPIKeys(cfg)
 
-	handler := http.NewServeMux()
+	mux := http.NewServeMux()
+
+	mux.Handle("POST /sign", signHandler(prv))
+	mux.Handle("POST /decrypt", decryptHandler(prv))
+
+	mux.Handle("GET /id", idHandler(&prv.PublicKey))
+
+	handler := prepare(mux, apiKeys)
 
 	server := http.Server{
 		Addr:                         cfg.Addr,
@@ -103,42 +111,32 @@ func New(cfg Config, prv *ecdsa.PrivateKey) *Signer {
 		MaxHeaderBytes:               maxHeaderBytes,
 	}
 
-	handler.Handle("POST /sign", signHandler(prv, apiKey))
-
 	return &Signer{&server}
 }
 
-// Request body format.
-type RequestBody struct {
+// SignBody is request body format for /sign.
+type SignBody struct {
 	Hashes []common.Hash `json:"hashes"`
 }
 
-// Response body format.
-type ResponseBody struct {
+// SignedBody is response body for /sign.
+type SignedBody struct {
 	Signatures []hexutil.Bytes `json:"signatures"`
 }
 
-// signHandler returns a HandlerFunction that authorizes requests with encoded RequestBody and responses with the signatures of the provided hashes.
-func signHandler(prv *ecdsa.PrivateKey, ak apiKeys) http.HandlerFunc {
+// signHandler returns a handler function that signs hashes in the request SignBody.
+func signHandler(prv *ecdsa.PrivateKey) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if !ak.authorize(&r.Header) {
-			errorString := "Unauthorized, provide valid " + ak.name + " api key"
-			http.Error(w, errorString, http.StatusUnauthorized)
-			return
-		}
-
 		if r.Header.Get("Content-Type") != "application/json" {
 			http.Error(w, "Content-Type must be application/json", http.StatusNotAcceptable)
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json")
-
 		r.Body = http.MaxBytesReader(w, r.Body, maxReqBodySize)
 
 		defer r.Body.Close() //nolint:errcheck
 
-		rb := RequestBody{}
+		rb := SignBody{}
 		decoder := json.NewDecoder(r.Body)
 		decoder.DisallowUnknownFields()
 
@@ -157,12 +155,11 @@ func signHandler(prv *ecdsa.PrivateKey, ak apiKeys) http.HandlerFunc {
 		}
 
 		signatures, err := signHashes(rb.Hashes, prv)
-
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		response := ResponseBody{Signatures: signatures}
+		response := SignedBody{Signatures: signatures}
 
 		encoder := json.NewEncoder(w)
 
@@ -194,4 +191,120 @@ func signHashes(hashes []common.Hash, prv *ecdsa.PrivateKey) ([]hexutil.Bytes, e
 	}
 
 	return signatures, nil
+}
+
+// idHandler returns a handler function that responds with coordinates of the signer's public key.
+func idHandler(pubKey *ecdsa.PublicKey) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		pk := pubKeyToStruct(pubKey)
+		encoder := json.NewEncoder(w)
+
+		err := encoder.Encode(pk)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
+}
+
+// prepare adds api key check and sets Content-Type to "application/json".
+func prepare(h http.Handler, ak apiKeys) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if !ak.authorize(&r.Header) {
+			msg := fmt.Sprintf("unauthorized: unrecognized %s", ak.name)
+			http.Error(w, msg, http.StatusUnauthorized)
+			return
+		}
+
+		w.Header().Add("Content-Type", "application/json")
+		h.ServeHTTP(w, r)
+	})
+}
+
+type PublicKey struct {
+	X common.Hash `json:"x"`
+	Y common.Hash `json:"y"`
+}
+
+func pubKeyToStruct(key *ecdsa.PublicKey) PublicKey {
+	var newKey PublicKey
+	xBytes := key.X.Bytes()
+	yBytes := key.Y.Bytes()
+
+	if len(xBytes) < 32 {
+		xBytes = append(make([]byte, 32-len(xBytes)), xBytes...)
+	}
+	if len(yBytes) < 32 {
+		yBytes = append(make([]byte, 32-len(yBytes)), yBytes...)
+	}
+
+	copy(newKey.X[:], xBytes)
+	copy(newKey.Y[:], yBytes)
+
+	return newKey
+}
+
+// EncryptedBody is request body format for /decrypt.
+type EncryptedBody struct {
+	Cipher hexutil.Bytes `json:"cipher"`
+}
+
+// DecryptedBody is response body for /decrypt.
+type DecryptedBody struct {
+	Plain hexutil.Bytes `json:"plain"`
+}
+
+// decryptHandler returns a handler function that decrypts cipher from EncryptedBody.
+func decryptHandler(prv *ecdsa.PrivateKey) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		r.Body = http.MaxBytesReader(w, r.Body, maxReqBodySize)
+
+		defer r.Body.Close() //nolint:errcheck
+
+		eb := EncryptedBody{}
+		decoder := json.NewDecoder(r.Body)
+		decoder.DisallowUnknownFields()
+
+		err := decoder.Decode(&eb)
+		if err != nil {
+			if err.Error() == "http: request body too large" {
+				msg := "request to large"
+				http.Error(w, msg, http.StatusRequestEntityTooLarge)
+				return
+			}
+
+			msg := "unparsable request body"
+
+			http.Error(w, msg, http.StatusBadRequest)
+			return
+		}
+
+		plain, err := decrypt(eb.Cipher, prv)
+		if err != nil {
+			msg := "cannot decrypt"
+			http.Error(w, msg, http.StatusBadRequest)
+		}
+
+		response := DecryptedBody{
+			Plain: plain,
+		}
+
+		encoder := json.NewEncoder(w)
+
+		err = encoder.Encode(response)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
+}
+
+func decrypt(cipher []byte, privKeyECDSA *ecdsa.PrivateKey) (hexutil.Bytes, error) {
+	privKeyDecryption := ecies.ImportECDSA(privKeyECDSA)
+	plainText, err := privKeyDecryption.Decrypt(cipher, nil, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return plainText, nil
 }
