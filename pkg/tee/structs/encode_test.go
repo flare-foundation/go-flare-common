@@ -139,28 +139,22 @@ func TestEncodeString(t *testing.T) {
 
 func TestKeyExistenceStruct(t *testing.T) {
 	s := wallet.ITeeWalletKeyManagerKeyExistence{
-		TeeId:             common.HexToAddress("dead"),
-		WalletId:          crypto.Keccak256Hash([]byte("dead")),
-		KeyId:             0,
-		OpType:            [32]byte{},
-		PublicKey:         []byte{},
-		ProofOfPossession: []byte{},
-		Nonce:             big.NewInt(10),
-		PauseNonce:        big.NewInt(1),
-		Status:            0,
-		Restored:          false,
-		AddressStr:        "rUUY8WcNZ9knu3SCVtAxAZD9vt6q1Ndriq",
+		TeeId:       common.HexToAddress("dead"),
+		WalletId:    crypto.Keccak256Hash([]byte("dead")),
+		KeyId:       0,
+		KeyType:     [32]byte{},
+		SigningAlgo: [32]byte{},
+		PublicKey:   []byte{},
+		Nonce:       big.NewInt(10),
+		Restored:    false,
 		ConfigConstants: wallet.ITeeWalletKeyManagerKeyConfigConstants{
 			AdminsPublicKeys:   []wallet.PublicKey{},
 			AdminsThreshold:    1,
 			Cosigners:          []common.Address{},
 			CosignersThreshold: 0,
-			OpTypeConstants:    []byte{},
 		},
-		ConfigSettings: wallet.ITeeWalletKeyManagerKeyConfigSettings{
-			PausingAddresses: []common.Address{},
-			OpTypeSettings:   []byte{},
-		},
+		SettingsVersion: [32]byte{},
+		Settings:        []byte{},
 	}
 
 	encoded, err := Encode(wallet.KeyExistenceStructArg, s)

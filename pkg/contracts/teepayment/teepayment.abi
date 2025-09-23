@@ -78,6 +78,11 @@
   },
   {
     "inputs": [],
+    "name": "KeyTypeZero",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "LengthsMismatch",
     "type": "error"
   },
@@ -98,12 +103,12 @@
   },
   {
     "inputs": [],
-    "name": "OnlyProductionOrPausedStatus",
+    "name": "OnlyAuthorizationAddress",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "OnlySubmitAddress",
+    "name": "OnlyProductionOrPausedStatus",
     "type": "error"
   },
   {
@@ -181,7 +186,7 @@
   },
   {
     "inputs": [],
-    "name": "WrongOpType",
+    "name": "WrongKeyType",
     "type": "error"
   },
   {
@@ -680,7 +685,7 @@
   },
   {
     "inputs": [],
-    "name": "getOpType",
+    "name": "getKeyType",
     "outputs": [
       {
         "internalType": "bytes32",
@@ -692,19 +697,13 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_projectId",
-        "type": "bytes32"
-      }
-    ],
-    "name": "getOpTypeConstants",
+    "inputs": [],
+    "name": "getOpType",
     "outputs": [
       {
-        "internalType": "bytes",
+        "internalType": "bytes32",
         "name": "",
-        "type": "bytes"
+        "type": "bytes32"
       }
     ],
     "stateMutability": "view",
@@ -872,6 +871,11 @@
       {
         "internalType": "bytes32",
         "name": "_opType",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_keyType",
         "type": "bytes32"
       },
       {

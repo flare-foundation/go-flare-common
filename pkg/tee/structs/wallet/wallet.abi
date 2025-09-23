@@ -20,7 +20,12 @@
           },
           {
             "internalType": "bytes32",
-            "name": "opType",
+            "name": "keyType",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "signingAlgo",
             "type": "bytes32"
           },
           {
@@ -84,11 +89,6 @@
             "internalType": "uint64",
             "name": "cosignersThreshold",
             "type": "uint64"
-          },
-          {
-            "internalType": "bytes",
-            "name": "opTypeConstants",
-            "type": "bytes"
           }
         ],
         "internalType": "struct ITeeWalletKeyManager.KeyConfigConstants",
@@ -97,31 +97,6 @@
       }
     ],
     "name": "keyConfigConstantsStruct",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "address[]",
-            "name": "pausingAddresses",
-            "type": "address[]"
-          },
-          {
-            "internalType": "bytes",
-            "name": "opTypeSettings",
-            "type": "bytes"
-          }
-        ],
-        "internalType": "struct ITeeWalletKeyManager.KeyConfigSettings",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "name": "keyConfigSettingsStruct",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -154,7 +129,12 @@
               },
               {
                 "internalType": "bytes32",
-                "name": "opType",
+                "name": "keyType",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "signingAlgo",
                 "type": "bytes32"
               },
               {
@@ -254,7 +234,12 @@
           },
           {
             "internalType": "bytes32",
-            "name": "opType",
+            "name": "keyType",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "signingAlgo",
             "type": "bytes32"
           },
           {
@@ -263,34 +248,14 @@
             "type": "bytes"
           },
           {
-            "internalType": "bytes",
-            "name": "proofOfPossession",
-            "type": "bytes"
-          },
-          {
             "internalType": "uint256",
             "name": "nonce",
             "type": "uint256"
           },
           {
-            "internalType": "uint256",
-            "name": "pauseNonce",
-            "type": "uint256"
-          },
-          {
-            "internalType": "enum ITeeWalletKeyManager.TeeKeyStatus",
-            "name": "status",
-            "type": "uint8"
-          },
-          {
             "internalType": "bool",
             "name": "restored",
             "type": "bool"
-          },
-          {
-            "internalType": "string",
-            "name": "addressStr",
-            "type": "string"
           },
           {
             "components": [
@@ -325,11 +290,6 @@
                 "internalType": "uint64",
                 "name": "cosignersThreshold",
                 "type": "uint64"
-              },
-              {
-                "internalType": "bytes",
-                "name": "opTypeConstants",
-                "type": "bytes"
               }
             ],
             "internalType": "struct ITeeWalletKeyManager.KeyConfigConstants",
@@ -337,21 +297,14 @@
             "type": "tuple"
           },
           {
-            "components": [
-              {
-                "internalType": "address[]",
-                "name": "pausingAddresses",
-                "type": "address[]"
-              },
-              {
-                "internalType": "bytes",
-                "name": "opTypeSettings",
-                "type": "bytes"
-              }
-            ],
-            "internalType": "struct ITeeWalletKeyManager.KeyConfigSettings",
-            "name": "configSettings",
-            "type": "tuple"
+            "internalType": "bytes32",
+            "name": "settingsVersion",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "settings",
+            "type": "bytes"
           }
         ],
         "internalType": "struct ITeeWalletKeyManager.KeyExistence",
@@ -385,7 +338,12 @@
           },
           {
             "internalType": "bytes32",
-            "name": "opType",
+            "name": "keyType",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "signingAlgo",
             "type": "bytes32"
           },
           {
@@ -421,11 +379,6 @@
                 "internalType": "uint64",
                 "name": "cosignersThreshold",
                 "type": "uint64"
-              },
-              {
-                "internalType": "bytes",
-                "name": "opTypeConstants",
-                "type": "bytes"
               }
             ],
             "internalType": "struct ITeeWalletKeyManager.KeyConfigConstants",

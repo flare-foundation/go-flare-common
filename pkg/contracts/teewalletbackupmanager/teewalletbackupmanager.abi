@@ -43,7 +43,7 @@
   },
   {
     "inputs": [],
-    "name": "InvalidOpType",
+    "name": "InvalidKeyType",
     "type": "error"
   },
   {
@@ -54,6 +54,11 @@
   {
     "inputs": [],
     "name": "InvalidRewardEpochId",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidSigningAlgo",
     "type": "error"
   },
   {
@@ -282,7 +287,12 @@
           },
           {
             "internalType": "bytes32",
-            "name": "opType",
+            "name": "keyType",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "signingAlgo",
             "type": "bytes32"
           },
           {

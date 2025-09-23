@@ -82,6 +82,32 @@
     "type": "error"
   },
   {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "keyType",
+        "type": "bytes32"
+      }
+    ],
+    "name": "KeyTypeAlreadyExists",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "KeyTypeEmpty",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "KeyTypeNotSupported",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "LengthsMismatch",
+    "type": "error"
+  },
+  {
     "inputs": [],
     "name": "MessageEmpty",
     "type": "error"
@@ -89,6 +115,17 @@
   {
     "inputs": [],
     "name": "NoPlatforms",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "keyType",
+        "type": "bytes32"
+      }
+    ],
+    "name": "NoSigningAlgos",
     "type": "error"
   },
   {
@@ -113,22 +150,12 @@
   },
   {
     "inputs": [],
-    "name": "OnlySystemInstructionInitiator",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "OpTypeEmpty",
+    "name": "OnlySystemInstructionsSender",
     "type": "error"
   },
   {
     "inputs": [],
     "name": "OperationCommandEmpty",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "OperationTypeConstantsProviderNotSet",
     "type": "error"
   },
   {
@@ -150,6 +177,27 @@
   {
     "inputs": [],
     "name": "PlatformEmpty",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "keyType",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "signingAlgo",
+        "type": "bytes32"
+      }
+    ],
+    "name": "SigningAlgoAlreadyExists",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "SigningAlgoEmpty",
     "type": "error"
   },
   {
@@ -335,50 +383,69 @@
     "inputs": [
       {
         "indexed": true,
+        "internalType": "uint256",
+        "name": "extensionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "keyType",
+        "type": "bytes32"
+      }
+    ],
+    "name": "SupportedKeyTypeAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "extensionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "keyType",
+        "type": "bytes32"
+      }
+    ],
+    "name": "SupportedKeyTypeRemoved",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "keyType",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "signingAlgo",
+        "type": "bytes32"
+      }
+    ],
+    "name": "SystemSupportedKeyTypeAndSigningAlgoAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
         "internalType": "bytes32",
         "name": "platform",
         "type": "bytes32"
       }
     ],
-    "name": "SupportedPlatformAdded",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "extensionId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "opType",
-        "type": "bytes32"
-      }
-    ],
-    "name": "SupportedWalletProjectOpTypeAdded",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "extensionId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "opType",
-        "type": "bytes32"
-      }
-    ],
-    "name": "SupportedWalletProjectOpTypeRemoved",
+    "name": "SystemSupportedPlatformAdded",
     "type": "event"
   },
   {
@@ -631,12 +698,30 @@
         "type": "uint256"
       },
       {
-        "internalType": "contract ITeeWalletProjectOpTypeConstants[]",
-        "name": "_opTypeConstantsProviders",
-        "type": "address[]"
+        "internalType": "bytes32[]",
+        "name": "_keyTypes",
+        "type": "bytes32[]"
       }
     ],
-    "name": "addOrUpdateSupportedWalletProjectOpTypes",
+    "name": "addSupportedKeyTypes",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32[]",
+        "name": "_keyTypes",
+        "type": "bytes32[]"
+      },
+      {
+        "internalType": "bytes32[][]",
+        "name": "_signingAlgosByKeyType",
+        "type": "bytes32[][]"
+      }
+    ],
+    "name": "addSystemSupportedKeyTypesAndSigningAlgos",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -649,7 +734,7 @@
         "type": "bytes32[]"
       }
     ],
-    "name": "addSupportedPlatforms",
+    "name": "addSystemSupportedPlatforms",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -698,35 +783,6 @@
     "name": "cancelGovernanceCall",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_extensionId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_codeHash",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_platform",
-        "type": "bytes32"
-      }
-    ],
-    "name": "codeHashPlatformDisabled",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -871,8 +927,53 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extensionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getSupportedKeyTypes",
+    "outputs": [
+      {
+        "internalType": "bytes32[]",
+        "name": "_supportedKeyTypes",
+        "type": "bytes32[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
-    "name": "getSupportedPlatforms",
+    "name": "getSystemInstructionsSenders",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getSystemSupportedKeyTypes",
+    "outputs": [
+      {
+        "internalType": "bytes32[]",
+        "name": "",
+        "type": "bytes32[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getSystemSupportedPlatforms",
     "outputs": [
       {
         "internalType": "bytes32[]",
@@ -886,30 +987,17 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_extensionId",
-        "type": "uint256"
+        "internalType": "bytes32",
+        "name": "_keyType",
+        "type": "bytes32"
       }
     ],
-    "name": "getSupportedWalletProjectOpTypes",
+    "name": "getSystemSupportedSigningAlgos",
     "outputs": [
       {
         "internalType": "bytes32[]",
-        "name": "_supportedOpTypes",
-        "type": "bytes32[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getSystemInstructionInitiators",
-    "outputs": [
-      {
-        "internalType": "address[]",
         "name": "",
-        "type": "address[]"
+        "type": "bytes32[]"
       }
     ],
     "stateMutability": "view",
@@ -972,30 +1060,6 @@
         "internalType": "bytes32",
         "name": "",
         "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_extensionId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_opType",
-        "type": "bytes32"
-      }
-    ],
-    "name": "getWalletProjectOpTypeConstantsProvider",
-    "outputs": [
-      {
-        "internalType": "contract ITeeWalletProjectOpTypeConstants",
-        "name": "_opTypeConstantsProvider",
-        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -1099,6 +1163,35 @@
         "type": "bytes32"
       }
     ],
+    "name": "isCodeHashPlatformDisabled",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extensionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_codeHash",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_platform",
+        "type": "bytes32"
+      }
+    ],
     "name": "isCodeHashPlatformSupported",
     "outputs": [
       {
@@ -1138,11 +1231,35 @@
       },
       {
         "internalType": "bytes32",
-        "name": "_opType",
+        "name": "_keyType",
         "type": "bytes32"
       }
     ],
-    "name": "isWalletProjectOpTypeSupported",
+    "name": "isKeyTypeSupported",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_keyType",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_signingAlgo",
+        "type": "bytes32"
+      }
+    ],
+    "name": "isSigningAlgoSupported",
     "outputs": [
       {
         "internalType": "bool",
@@ -1244,11 +1361,11 @@
     "inputs": [
       {
         "internalType": "address[]",
-        "name": "_instructionInitiators",
+        "name": "_instructionsSenders",
         "type": "address[]"
       }
     ],
-    "name": "registerSystemInstructionInitiators",
+    "name": "registerSystemInstructionsSenders",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1262,11 +1379,11 @@
       },
       {
         "internalType": "bytes32[]",
-        "name": "_opTypes",
+        "name": "_keyTypes",
         "type": "bytes32[]"
       }
     ],
-    "name": "removeSupportedWalletProjectOpTypes",
+    "name": "removeSupportedKeyTypes",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1484,11 +1601,11 @@
     "inputs": [
       {
         "internalType": "address[]",
-        "name": "_instructionInitiators",
+        "name": "_instructionsSenders",
         "type": "address[]"
       }
     ],
-    "name": "unregisterSystemInstructionInitiators",
+    "name": "unregisterSystemInstructionsSenders",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
