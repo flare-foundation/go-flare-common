@@ -38,7 +38,7 @@ type ITeeMachineRegistryTeeMachine struct {
 
 // TeeExtensionRegistryMetaData contains all meta data concerning the TeeExtensionRegistry contract.
 var TeeExtensionRegistryMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"}],\"name\":\"AddressEmptyCode\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CodeHashZero\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CosignersThresholdTooHigh\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"ERC1967InvalidImplementation\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC1967NonPayable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ExtensionIdMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FailedInnerCall\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FeeTooLow\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InstructionIdEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidCodeHash\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidGovernanceHash\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidInstructionsSender\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPlatform\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"MessageEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoPlatforms\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoTeeMachinesSpecified\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyInstructionsSender\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProposedOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlySystemInstructionInitiator\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OpTypeEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OperationCommandEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OperationTypeConstantsProviderNotSet\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OperationTypeEmpty\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"name\":\"PlatformAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"PlatformEmpty\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"}],\"name\":\"SystemOpTypeNotAllowed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SystemOwnedExtensionId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TeeMachineNotAvailable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UUPSUnauthorizedCallContext\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"slot\",\"type\":\"bytes32\"}],\"name\":\"UUPSUnsupportedProxiableUUID\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"name\":\"UnsupportedPlatform\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"VersionAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"VersionEmpty\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"name\":\"CodeHashPlatformDisabled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"name\":\"GovernanceCallTimelocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"initialGovernance\",\"type\":\"address\"}],\"name\":\"GovernanceInitialised\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"governanceSettings\",\"type\":\"address\"}],\"name\":\"GovernedProductionModeEntered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"NewOwnerConfirmed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"oldOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"NewOwnerProposed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"name\":\"SupportedPlatformAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"}],\"name\":\"SupportedWalletProjectOpTypeAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"}],\"name\":\"SupportedWalletProjectOpTypeRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"contractITeeExtensionStateVerifier\",\"name\":\"teeExtensionStateVerifier\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"teeExtensionInstructionsSender\",\"type\":\"address\"}],\"name\":\"TeeExtensionContractsSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"TeeExtensionRegistered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"uint32\",\"name\":\"rewardEpochId\",\"type\":\"uint32\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"teeProxyId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"}],\"indexed\":false,\"internalType\":\"structITeeMachineRegistry.TeeMachine[]\",\"name\":\"teeMachines\",\"type\":\"tuple[]\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"opCommand\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"message\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"}],\"name\":\"TeeInstructionsSent\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"version\",\"type\":\"string\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"platforms\",\"type\":\"bytes32[]\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"governanceHash\",\"type\":\"bytes32\"}],\"name\":\"TeeVersionAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallCanceled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallExecuted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"Upgraded\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"SYSTEM_OP_TYPE_PREFIX\",\"outputs\":[{\"internalType\":\"bytes2\",\"name\":\"\",\"type\":\"bytes2\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"UPGRADE_INTERFACE_VERSION\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"contractITeeWalletProjectOpTypeConstants[]\",\"name\":\"_opTypeConstantsProviders\",\"type\":\"address[]\"}],\"name\":\"addOrUpdateSupportedWalletProjectOpTypes\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_platforms\",\"type\":\"bytes32[]\"}],\"name\":\"addSupportedPlatforms\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_version\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32[]\",\"name\":\"_platforms\",\"type\":\"bytes32[]\"},{\"internalType\":\"bytes32\",\"name\":\"_governanceHash\",\"type\":\"bytes32\"}],\"name\":\"addTeeVersion\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"cancelGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_platform\",\"type\":\"bytes32\"}],\"name\":\"codeHashPlatformDisabled\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"confirmOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_platform\",\"type\":\"bytes32\"}],\"name\":\"disableCodeHashPlatform\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"executeGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"extensionsCounter\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"flareSystemsManager\",\"outputs\":[{\"internalType\":\"contractIFlareSystemsManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAddressUpdater\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"}],\"name\":\"getCodeHashInfo\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"_governanceHash\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"_version\",\"type\":\"string\"},{\"internalType\":\"bytes32[]\",\"name\":\"_platforms\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getExtensionOwner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSupportedPlatforms\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getSupportedWalletProjectOpTypes\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_supportedOpTypes\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSystemInstructionInitiators\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getTeeExtensionInstructionsSender\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getTeeExtensionStateVerifier\",\"outputs\":[{\"internalType\":\"contractITeeExtensionStateVerifier\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"}],\"name\":\"getTeeGovernanceHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_opType\",\"type\":\"bytes32\"}],\"name\":\"getWalletProjectOpTypeConstantsProvider\",\"outputs\":[{\"internalType\":\"contractITeeWalletProjectOpTypeConstants\",\"name\":\"_opTypeConstantsProvider\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governance\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governanceSettings\",\"outputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"implementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"}],\"name\":\"initialise\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_platform\",\"type\":\"bytes32\"}],\"name\":\"isCodeHashPlatformSupported\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"isExecutor\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_opType\",\"type\":\"bytes32\"}],\"name\":\"isWalletProjectOpTypeSupported\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"productionMode\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_newOwner\",\"type\":\"address\"}],\"name\":\"proposeNewOwner\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"proposedExtensionOwner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"proxiableUUID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractITeeExtensionStateVerifier\",\"name\":\"_teeExtensionStateVerifier\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_teeExtensionInstructionsSender\",\"type\":\"address\"}],\"name\":\"register\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_instructionInitiators\",\"type\":\"address[]\"}],\"name\":\"registerSystemInstructionInitiators\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32[]\",\"name\":\"_opTypes\",\"type\":\"bytes32[]\"}],\"name\":\"removeSupportedWalletProjectOpTypes\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"rewardManager\",\"outputs\":[{\"internalType\":\"contractIIRewardManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_instructionId\",\"type\":\"bytes32\"},{\"internalType\":\"address[]\",\"name\":\"_teeIds\",\"type\":\"address[]\"},{\"internalType\":\"bytes32\",\"name\":\"_opType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_opCommand\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"_message\",\"type\":\"bytes\"},{\"internalType\":\"address[]\",\"name\":\"_cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"_cosignersThreshold\",\"type\":\"uint64\"}],\"name\":\"sendInstructions\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_instructionId\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"teeProxyId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"}],\"internalType\":\"structITeeMachineRegistry.TeeMachine[]\",\"name\":\"_teeMachines\",\"type\":\"tuple[]\"},{\"internalType\":\"bytes32\",\"name\":\"_opType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_opCommand\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"_message\",\"type\":\"bytes\"},{\"internalType\":\"address[]\",\"name\":\"_cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"_cosignersThreshold\",\"type\":\"uint64\"}],\"name\":\"sendSystemInstructions\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"contractITeeExtensionStateVerifier\",\"name\":\"_teeExtensionStateVerifier\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_teeExtensionInstructionsSender\",\"type\":\"address\"}],\"name\":\"setExtensionContracts\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"switchToProductionMode\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeFeeCalculator\",\"outputs\":[{\"internalType\":\"contractITeeFeeCalculator\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeGovernance\",\"outputs\":[{\"internalType\":\"contractITeeGovernance\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeMachineRegistry\",\"outputs\":[{\"internalType\":\"contractITeeMachineRegistry\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"}],\"name\":\"timelockedCalls\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_instructionInitiators\",\"type\":\"address[]\"}],\"name\":\"unregisterSystemInstructionInitiators\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_contractNameHashes\",\"type\":\"bytes32[]\"},{\"internalType\":\"address[]\",\"name\":\"_contractAddresses\",\"type\":\"address[]\"}],\"name\":\"updateContractAddresses\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newImplementation\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"upgradeToAndCall\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"}],\"name\":\"AddressEmptyCode\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CodeHashZero\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CosignersThresholdTooHigh\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"ERC1967InvalidImplementation\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC1967NonPayable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ExtensionIdMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FailedInnerCall\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FeeTooLow\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InstructionIdEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidCodeHash\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidGovernanceHash\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidInstructionsSender\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPlatform\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"}],\"name\":\"KeyTypeAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"KeyTypeEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"KeyTypeNotSupported\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LengthsMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"MessageEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoPlatforms\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"}],\"name\":\"NoSigningAlgos\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoTeeMachinesSpecified\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyInstructionsSender\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProposedOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlySystemInstructionsSender\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OperationCommandEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OperationTypeEmpty\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"name\":\"PlatformAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"PlatformEmpty\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"signingAlgo\",\"type\":\"bytes32\"}],\"name\":\"SigningAlgoAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SigningAlgoEmpty\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"}],\"name\":\"SystemOpTypeNotAllowed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SystemOwnedExtensionId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TeeMachineNotAvailable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UUPSUnauthorizedCallContext\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"slot\",\"type\":\"bytes32\"}],\"name\":\"UUPSUnsupportedProxiableUUID\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"name\":\"UnsupportedPlatform\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"VersionAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"VersionEmpty\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"name\":\"CodeHashPlatformDisabled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"name\":\"GovernanceCallTimelocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"initialGovernance\",\"type\":\"address\"}],\"name\":\"GovernanceInitialised\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"governanceSettings\",\"type\":\"address\"}],\"name\":\"GovernedProductionModeEntered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"NewOwnerConfirmed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"oldOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"NewOwnerProposed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"}],\"name\":\"SupportedKeyTypeAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"}],\"name\":\"SupportedKeyTypeRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"signingAlgo\",\"type\":\"bytes32\"}],\"name\":\"SystemSupportedKeyTypeAndSigningAlgoAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"name\":\"SystemSupportedPlatformAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"contractITeeExtensionStateVerifier\",\"name\":\"teeExtensionStateVerifier\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"teeExtensionInstructionsSender\",\"type\":\"address\"}],\"name\":\"TeeExtensionContractsSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"TeeExtensionRegistered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"uint32\",\"name\":\"rewardEpochId\",\"type\":\"uint32\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"teeProxyId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"}],\"indexed\":false,\"internalType\":\"structITeeMachineRegistry.TeeMachine[]\",\"name\":\"teeMachines\",\"type\":\"tuple[]\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"opCommand\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"message\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"}],\"name\":\"TeeInstructionsSent\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"version\",\"type\":\"string\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"platforms\",\"type\":\"bytes32[]\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"governanceHash\",\"type\":\"bytes32\"}],\"name\":\"TeeVersionAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallCanceled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallExecuted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"Upgraded\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"SYSTEM_OP_TYPE_PREFIX\",\"outputs\":[{\"internalType\":\"bytes2\",\"name\":\"\",\"type\":\"bytes2\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"UPGRADE_INTERFACE_VERSION\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32[]\",\"name\":\"_keyTypes\",\"type\":\"bytes32[]\"}],\"name\":\"addSupportedKeyTypes\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_keyTypes\",\"type\":\"bytes32[]\"},{\"internalType\":\"bytes32[][]\",\"name\":\"_signingAlgosByKeyType\",\"type\":\"bytes32[][]\"}],\"name\":\"addSystemSupportedKeyTypesAndSigningAlgos\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_platforms\",\"type\":\"bytes32[]\"}],\"name\":\"addSystemSupportedPlatforms\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_version\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32[]\",\"name\":\"_platforms\",\"type\":\"bytes32[]\"},{\"internalType\":\"bytes32\",\"name\":\"_governanceHash\",\"type\":\"bytes32\"}],\"name\":\"addTeeVersion\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"cancelGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"confirmOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_platform\",\"type\":\"bytes32\"}],\"name\":\"disableCodeHashPlatform\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"executeGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"extensionsCounter\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"flareSystemsManager\",\"outputs\":[{\"internalType\":\"contractIFlareSystemsManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAddressUpdater\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"}],\"name\":\"getCodeHashInfo\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"_governanceHash\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"_version\",\"type\":\"string\"},{\"internalType\":\"bytes32[]\",\"name\":\"_platforms\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getExtensionOwner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getSupportedKeyTypes\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_supportedKeyTypes\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSystemInstructionsSenders\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSystemSupportedKeyTypes\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSystemSupportedPlatforms\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_keyType\",\"type\":\"bytes32\"}],\"name\":\"getSystemSupportedSigningAlgos\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getTeeExtensionInstructionsSender\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getTeeExtensionStateVerifier\",\"outputs\":[{\"internalType\":\"contractITeeExtensionStateVerifier\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"}],\"name\":\"getTeeGovernanceHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governance\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governanceSettings\",\"outputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"implementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"}],\"name\":\"initialise\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_platform\",\"type\":\"bytes32\"}],\"name\":\"isCodeHashPlatformDisabled\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_platform\",\"type\":\"bytes32\"}],\"name\":\"isCodeHashPlatformSupported\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"isExecutor\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_keyType\",\"type\":\"bytes32\"}],\"name\":\"isKeyTypeSupported\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_keyType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_signingAlgo\",\"type\":\"bytes32\"}],\"name\":\"isSigningAlgoSupported\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"productionMode\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_newOwner\",\"type\":\"address\"}],\"name\":\"proposeNewOwner\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"proposedExtensionOwner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"proxiableUUID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractITeeExtensionStateVerifier\",\"name\":\"_teeExtensionStateVerifier\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_teeExtensionInstructionsSender\",\"type\":\"address\"}],\"name\":\"register\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_instructionsSenders\",\"type\":\"address[]\"}],\"name\":\"registerSystemInstructionsSenders\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32[]\",\"name\":\"_keyTypes\",\"type\":\"bytes32[]\"}],\"name\":\"removeSupportedKeyTypes\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"rewardManager\",\"outputs\":[{\"internalType\":\"contractIIRewardManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_instructionId\",\"type\":\"bytes32\"},{\"internalType\":\"address[]\",\"name\":\"_teeIds\",\"type\":\"address[]\"},{\"internalType\":\"bytes32\",\"name\":\"_opType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_opCommand\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"_message\",\"type\":\"bytes\"},{\"internalType\":\"address[]\",\"name\":\"_cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"_cosignersThreshold\",\"type\":\"uint64\"}],\"name\":\"sendInstructions\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_instructionId\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"teeProxyId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"}],\"internalType\":\"structITeeMachineRegistry.TeeMachine[]\",\"name\":\"_teeMachines\",\"type\":\"tuple[]\"},{\"internalType\":\"bytes32\",\"name\":\"_opType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_opCommand\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"_message\",\"type\":\"bytes\"},{\"internalType\":\"address[]\",\"name\":\"_cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"_cosignersThreshold\",\"type\":\"uint64\"}],\"name\":\"sendSystemInstructions\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"contractITeeExtensionStateVerifier\",\"name\":\"_teeExtensionStateVerifier\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_teeExtensionInstructionsSender\",\"type\":\"address\"}],\"name\":\"setExtensionContracts\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"switchToProductionMode\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeFeeCalculator\",\"outputs\":[{\"internalType\":\"contractITeeFeeCalculator\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeGovernance\",\"outputs\":[{\"internalType\":\"contractITeeGovernance\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeMachineRegistry\",\"outputs\":[{\"internalType\":\"contractITeeMachineRegistry\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"}],\"name\":\"timelockedCalls\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_instructionsSenders\",\"type\":\"address[]\"}],\"name\":\"unregisterSystemInstructionsSenders\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_contractNameHashes\",\"type\":\"bytes32[]\"},{\"internalType\":\"address[]\",\"name\":\"_contractAddresses\",\"type\":\"address[]\"}],\"name\":\"updateContractAddresses\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newImplementation\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"upgradeToAndCall\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}]",
 }
 
 // TeeExtensionRegistryABI is the input ABI used to generate the binding from.
@@ -249,37 +249,6 @@ func (_TeeExtensionRegistry *TeeExtensionRegistryCallerSession) UPGRADEINTERFACE
 	return _TeeExtensionRegistry.Contract.UPGRADEINTERFACEVERSION(&_TeeExtensionRegistry.CallOpts)
 }
 
-// CodeHashPlatformDisabled is a free data retrieval call binding the contract method 0x010f6a8b.
-//
-// Solidity: function codeHashPlatformDisabled(uint256 _extensionId, bytes32 _codeHash, bytes32 _platform) view returns(bool)
-func (_TeeExtensionRegistry *TeeExtensionRegistryCaller) CodeHashPlatformDisabled(opts *bind.CallOpts, _extensionId *big.Int, _codeHash [32]byte, _platform [32]byte) (bool, error) {
-	var out []interface{}
-	err := _TeeExtensionRegistry.contract.Call(opts, &out, "codeHashPlatformDisabled", _extensionId, _codeHash, _platform)
-
-	if err != nil {
-		return *new(bool), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
-
-	return out0, err
-
-}
-
-// CodeHashPlatformDisabled is a free data retrieval call binding the contract method 0x010f6a8b.
-//
-// Solidity: function codeHashPlatformDisabled(uint256 _extensionId, bytes32 _codeHash, bytes32 _platform) view returns(bool)
-func (_TeeExtensionRegistry *TeeExtensionRegistrySession) CodeHashPlatformDisabled(_extensionId *big.Int, _codeHash [32]byte, _platform [32]byte) (bool, error) {
-	return _TeeExtensionRegistry.Contract.CodeHashPlatformDisabled(&_TeeExtensionRegistry.CallOpts, _extensionId, _codeHash, _platform)
-}
-
-// CodeHashPlatformDisabled is a free data retrieval call binding the contract method 0x010f6a8b.
-//
-// Solidity: function codeHashPlatformDisabled(uint256 _extensionId, bytes32 _codeHash, bytes32 _platform) view returns(bool)
-func (_TeeExtensionRegistry *TeeExtensionRegistryCallerSession) CodeHashPlatformDisabled(_extensionId *big.Int, _codeHash [32]byte, _platform [32]byte) (bool, error) {
-	return _TeeExtensionRegistry.Contract.CodeHashPlatformDisabled(&_TeeExtensionRegistry.CallOpts, _extensionId, _codeHash, _platform)
-}
-
 // ExtensionsCounter is a free data retrieval call binding the contract method 0xfad5902b.
 //
 // Solidity: function extensionsCounter() view returns(uint256)
@@ -454,12 +423,12 @@ func (_TeeExtensionRegistry *TeeExtensionRegistryCallerSession) GetExtensionOwne
 	return _TeeExtensionRegistry.Contract.GetExtensionOwner(&_TeeExtensionRegistry.CallOpts, _extensionId)
 }
 
-// GetSupportedPlatforms is a free data retrieval call binding the contract method 0xed30d987.
+// GetSupportedKeyTypes is a free data retrieval call binding the contract method 0x8bab3177.
 //
-// Solidity: function getSupportedPlatforms() view returns(bytes32[])
-func (_TeeExtensionRegistry *TeeExtensionRegistryCaller) GetSupportedPlatforms(opts *bind.CallOpts) ([][32]byte, error) {
+// Solidity: function getSupportedKeyTypes(uint256 _extensionId) view returns(bytes32[] _supportedKeyTypes)
+func (_TeeExtensionRegistry *TeeExtensionRegistryCaller) GetSupportedKeyTypes(opts *bind.CallOpts, _extensionId *big.Int) ([][32]byte, error) {
 	var out []interface{}
-	err := _TeeExtensionRegistry.contract.Call(opts, &out, "getSupportedPlatforms")
+	err := _TeeExtensionRegistry.contract.Call(opts, &out, "getSupportedKeyTypes", _extensionId)
 
 	if err != nil {
 		return *new([][32]byte), err
@@ -471,57 +440,26 @@ func (_TeeExtensionRegistry *TeeExtensionRegistryCaller) GetSupportedPlatforms(o
 
 }
 
-// GetSupportedPlatforms is a free data retrieval call binding the contract method 0xed30d987.
+// GetSupportedKeyTypes is a free data retrieval call binding the contract method 0x8bab3177.
 //
-// Solidity: function getSupportedPlatforms() view returns(bytes32[])
-func (_TeeExtensionRegistry *TeeExtensionRegistrySession) GetSupportedPlatforms() ([][32]byte, error) {
-	return _TeeExtensionRegistry.Contract.GetSupportedPlatforms(&_TeeExtensionRegistry.CallOpts)
+// Solidity: function getSupportedKeyTypes(uint256 _extensionId) view returns(bytes32[] _supportedKeyTypes)
+func (_TeeExtensionRegistry *TeeExtensionRegistrySession) GetSupportedKeyTypes(_extensionId *big.Int) ([][32]byte, error) {
+	return _TeeExtensionRegistry.Contract.GetSupportedKeyTypes(&_TeeExtensionRegistry.CallOpts, _extensionId)
 }
 
-// GetSupportedPlatforms is a free data retrieval call binding the contract method 0xed30d987.
+// GetSupportedKeyTypes is a free data retrieval call binding the contract method 0x8bab3177.
 //
-// Solidity: function getSupportedPlatforms() view returns(bytes32[])
-func (_TeeExtensionRegistry *TeeExtensionRegistryCallerSession) GetSupportedPlatforms() ([][32]byte, error) {
-	return _TeeExtensionRegistry.Contract.GetSupportedPlatforms(&_TeeExtensionRegistry.CallOpts)
+// Solidity: function getSupportedKeyTypes(uint256 _extensionId) view returns(bytes32[] _supportedKeyTypes)
+func (_TeeExtensionRegistry *TeeExtensionRegistryCallerSession) GetSupportedKeyTypes(_extensionId *big.Int) ([][32]byte, error) {
+	return _TeeExtensionRegistry.Contract.GetSupportedKeyTypes(&_TeeExtensionRegistry.CallOpts, _extensionId)
 }
 
-// GetSupportedWalletProjectOpTypes is a free data retrieval call binding the contract method 0xd3543fb2.
+// GetSystemInstructionsSenders is a free data retrieval call binding the contract method 0xa37768e5.
 //
-// Solidity: function getSupportedWalletProjectOpTypes(uint256 _extensionId) view returns(bytes32[] _supportedOpTypes)
-func (_TeeExtensionRegistry *TeeExtensionRegistryCaller) GetSupportedWalletProjectOpTypes(opts *bind.CallOpts, _extensionId *big.Int) ([][32]byte, error) {
+// Solidity: function getSystemInstructionsSenders() view returns(address[])
+func (_TeeExtensionRegistry *TeeExtensionRegistryCaller) GetSystemInstructionsSenders(opts *bind.CallOpts) ([]common.Address, error) {
 	var out []interface{}
-	err := _TeeExtensionRegistry.contract.Call(opts, &out, "getSupportedWalletProjectOpTypes", _extensionId)
-
-	if err != nil {
-		return *new([][32]byte), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new([][32]byte)).(*[][32]byte)
-
-	return out0, err
-
-}
-
-// GetSupportedWalletProjectOpTypes is a free data retrieval call binding the contract method 0xd3543fb2.
-//
-// Solidity: function getSupportedWalletProjectOpTypes(uint256 _extensionId) view returns(bytes32[] _supportedOpTypes)
-func (_TeeExtensionRegistry *TeeExtensionRegistrySession) GetSupportedWalletProjectOpTypes(_extensionId *big.Int) ([][32]byte, error) {
-	return _TeeExtensionRegistry.Contract.GetSupportedWalletProjectOpTypes(&_TeeExtensionRegistry.CallOpts, _extensionId)
-}
-
-// GetSupportedWalletProjectOpTypes is a free data retrieval call binding the contract method 0xd3543fb2.
-//
-// Solidity: function getSupportedWalletProjectOpTypes(uint256 _extensionId) view returns(bytes32[] _supportedOpTypes)
-func (_TeeExtensionRegistry *TeeExtensionRegistryCallerSession) GetSupportedWalletProjectOpTypes(_extensionId *big.Int) ([][32]byte, error) {
-	return _TeeExtensionRegistry.Contract.GetSupportedWalletProjectOpTypes(&_TeeExtensionRegistry.CallOpts, _extensionId)
-}
-
-// GetSystemInstructionInitiators is a free data retrieval call binding the contract method 0x4a4cbd8d.
-//
-// Solidity: function getSystemInstructionInitiators() view returns(address[])
-func (_TeeExtensionRegistry *TeeExtensionRegistryCaller) GetSystemInstructionInitiators(opts *bind.CallOpts) ([]common.Address, error) {
-	var out []interface{}
-	err := _TeeExtensionRegistry.contract.Call(opts, &out, "getSystemInstructionInitiators")
+	err := _TeeExtensionRegistry.contract.Call(opts, &out, "getSystemInstructionsSenders")
 
 	if err != nil {
 		return *new([]common.Address), err
@@ -533,18 +471,111 @@ func (_TeeExtensionRegistry *TeeExtensionRegistryCaller) GetSystemInstructionIni
 
 }
 
-// GetSystemInstructionInitiators is a free data retrieval call binding the contract method 0x4a4cbd8d.
+// GetSystemInstructionsSenders is a free data retrieval call binding the contract method 0xa37768e5.
 //
-// Solidity: function getSystemInstructionInitiators() view returns(address[])
-func (_TeeExtensionRegistry *TeeExtensionRegistrySession) GetSystemInstructionInitiators() ([]common.Address, error) {
-	return _TeeExtensionRegistry.Contract.GetSystemInstructionInitiators(&_TeeExtensionRegistry.CallOpts)
+// Solidity: function getSystemInstructionsSenders() view returns(address[])
+func (_TeeExtensionRegistry *TeeExtensionRegistrySession) GetSystemInstructionsSenders() ([]common.Address, error) {
+	return _TeeExtensionRegistry.Contract.GetSystemInstructionsSenders(&_TeeExtensionRegistry.CallOpts)
 }
 
-// GetSystemInstructionInitiators is a free data retrieval call binding the contract method 0x4a4cbd8d.
+// GetSystemInstructionsSenders is a free data retrieval call binding the contract method 0xa37768e5.
 //
-// Solidity: function getSystemInstructionInitiators() view returns(address[])
-func (_TeeExtensionRegistry *TeeExtensionRegistryCallerSession) GetSystemInstructionInitiators() ([]common.Address, error) {
-	return _TeeExtensionRegistry.Contract.GetSystemInstructionInitiators(&_TeeExtensionRegistry.CallOpts)
+// Solidity: function getSystemInstructionsSenders() view returns(address[])
+func (_TeeExtensionRegistry *TeeExtensionRegistryCallerSession) GetSystemInstructionsSenders() ([]common.Address, error) {
+	return _TeeExtensionRegistry.Contract.GetSystemInstructionsSenders(&_TeeExtensionRegistry.CallOpts)
+}
+
+// GetSystemSupportedKeyTypes is a free data retrieval call binding the contract method 0x50a15fcc.
+//
+// Solidity: function getSystemSupportedKeyTypes() view returns(bytes32[])
+func (_TeeExtensionRegistry *TeeExtensionRegistryCaller) GetSystemSupportedKeyTypes(opts *bind.CallOpts) ([][32]byte, error) {
+	var out []interface{}
+	err := _TeeExtensionRegistry.contract.Call(opts, &out, "getSystemSupportedKeyTypes")
+
+	if err != nil {
+		return *new([][32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([][32]byte)).(*[][32]byte)
+
+	return out0, err
+
+}
+
+// GetSystemSupportedKeyTypes is a free data retrieval call binding the contract method 0x50a15fcc.
+//
+// Solidity: function getSystemSupportedKeyTypes() view returns(bytes32[])
+func (_TeeExtensionRegistry *TeeExtensionRegistrySession) GetSystemSupportedKeyTypes() ([][32]byte, error) {
+	return _TeeExtensionRegistry.Contract.GetSystemSupportedKeyTypes(&_TeeExtensionRegistry.CallOpts)
+}
+
+// GetSystemSupportedKeyTypes is a free data retrieval call binding the contract method 0x50a15fcc.
+//
+// Solidity: function getSystemSupportedKeyTypes() view returns(bytes32[])
+func (_TeeExtensionRegistry *TeeExtensionRegistryCallerSession) GetSystemSupportedKeyTypes() ([][32]byte, error) {
+	return _TeeExtensionRegistry.Contract.GetSystemSupportedKeyTypes(&_TeeExtensionRegistry.CallOpts)
+}
+
+// GetSystemSupportedPlatforms is a free data retrieval call binding the contract method 0xe38c8964.
+//
+// Solidity: function getSystemSupportedPlatforms() view returns(bytes32[])
+func (_TeeExtensionRegistry *TeeExtensionRegistryCaller) GetSystemSupportedPlatforms(opts *bind.CallOpts) ([][32]byte, error) {
+	var out []interface{}
+	err := _TeeExtensionRegistry.contract.Call(opts, &out, "getSystemSupportedPlatforms")
+
+	if err != nil {
+		return *new([][32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([][32]byte)).(*[][32]byte)
+
+	return out0, err
+
+}
+
+// GetSystemSupportedPlatforms is a free data retrieval call binding the contract method 0xe38c8964.
+//
+// Solidity: function getSystemSupportedPlatforms() view returns(bytes32[])
+func (_TeeExtensionRegistry *TeeExtensionRegistrySession) GetSystemSupportedPlatforms() ([][32]byte, error) {
+	return _TeeExtensionRegistry.Contract.GetSystemSupportedPlatforms(&_TeeExtensionRegistry.CallOpts)
+}
+
+// GetSystemSupportedPlatforms is a free data retrieval call binding the contract method 0xe38c8964.
+//
+// Solidity: function getSystemSupportedPlatforms() view returns(bytes32[])
+func (_TeeExtensionRegistry *TeeExtensionRegistryCallerSession) GetSystemSupportedPlatforms() ([][32]byte, error) {
+	return _TeeExtensionRegistry.Contract.GetSystemSupportedPlatforms(&_TeeExtensionRegistry.CallOpts)
+}
+
+// GetSystemSupportedSigningAlgos is a free data retrieval call binding the contract method 0xc6cba800.
+//
+// Solidity: function getSystemSupportedSigningAlgos(bytes32 _keyType) view returns(bytes32[])
+func (_TeeExtensionRegistry *TeeExtensionRegistryCaller) GetSystemSupportedSigningAlgos(opts *bind.CallOpts, _keyType [32]byte) ([][32]byte, error) {
+	var out []interface{}
+	err := _TeeExtensionRegistry.contract.Call(opts, &out, "getSystemSupportedSigningAlgos", _keyType)
+
+	if err != nil {
+		return *new([][32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([][32]byte)).(*[][32]byte)
+
+	return out0, err
+
+}
+
+// GetSystemSupportedSigningAlgos is a free data retrieval call binding the contract method 0xc6cba800.
+//
+// Solidity: function getSystemSupportedSigningAlgos(bytes32 _keyType) view returns(bytes32[])
+func (_TeeExtensionRegistry *TeeExtensionRegistrySession) GetSystemSupportedSigningAlgos(_keyType [32]byte) ([][32]byte, error) {
+	return _TeeExtensionRegistry.Contract.GetSystemSupportedSigningAlgos(&_TeeExtensionRegistry.CallOpts, _keyType)
+}
+
+// GetSystemSupportedSigningAlgos is a free data retrieval call binding the contract method 0xc6cba800.
+//
+// Solidity: function getSystemSupportedSigningAlgos(bytes32 _keyType) view returns(bytes32[])
+func (_TeeExtensionRegistry *TeeExtensionRegistryCallerSession) GetSystemSupportedSigningAlgos(_keyType [32]byte) ([][32]byte, error) {
+	return _TeeExtensionRegistry.Contract.GetSystemSupportedSigningAlgos(&_TeeExtensionRegistry.CallOpts, _keyType)
 }
 
 // GetTeeExtensionInstructionsSender is a free data retrieval call binding the contract method 0x2c177358.
@@ -640,37 +671,6 @@ func (_TeeExtensionRegistry *TeeExtensionRegistryCallerSession) GetTeeGovernance
 	return _TeeExtensionRegistry.Contract.GetTeeGovernanceHash(&_TeeExtensionRegistry.CallOpts, _extensionId, _codeHash)
 }
 
-// GetWalletProjectOpTypeConstantsProvider is a free data retrieval call binding the contract method 0xca1c9601.
-//
-// Solidity: function getWalletProjectOpTypeConstantsProvider(uint256 _extensionId, bytes32 _opType) view returns(address _opTypeConstantsProvider)
-func (_TeeExtensionRegistry *TeeExtensionRegistryCaller) GetWalletProjectOpTypeConstantsProvider(opts *bind.CallOpts, _extensionId *big.Int, _opType [32]byte) (common.Address, error) {
-	var out []interface{}
-	err := _TeeExtensionRegistry.contract.Call(opts, &out, "getWalletProjectOpTypeConstantsProvider", _extensionId, _opType)
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// GetWalletProjectOpTypeConstantsProvider is a free data retrieval call binding the contract method 0xca1c9601.
-//
-// Solidity: function getWalletProjectOpTypeConstantsProvider(uint256 _extensionId, bytes32 _opType) view returns(address _opTypeConstantsProvider)
-func (_TeeExtensionRegistry *TeeExtensionRegistrySession) GetWalletProjectOpTypeConstantsProvider(_extensionId *big.Int, _opType [32]byte) (common.Address, error) {
-	return _TeeExtensionRegistry.Contract.GetWalletProjectOpTypeConstantsProvider(&_TeeExtensionRegistry.CallOpts, _extensionId, _opType)
-}
-
-// GetWalletProjectOpTypeConstantsProvider is a free data retrieval call binding the contract method 0xca1c9601.
-//
-// Solidity: function getWalletProjectOpTypeConstantsProvider(uint256 _extensionId, bytes32 _opType) view returns(address _opTypeConstantsProvider)
-func (_TeeExtensionRegistry *TeeExtensionRegistryCallerSession) GetWalletProjectOpTypeConstantsProvider(_extensionId *big.Int, _opType [32]byte) (common.Address, error) {
-	return _TeeExtensionRegistry.Contract.GetWalletProjectOpTypeConstantsProvider(&_TeeExtensionRegistry.CallOpts, _extensionId, _opType)
-}
-
 // Governance is a free data retrieval call binding the contract method 0x5aa6e675.
 //
 // Solidity: function governance() view returns(address)
@@ -764,6 +764,37 @@ func (_TeeExtensionRegistry *TeeExtensionRegistryCallerSession) Implementation()
 	return _TeeExtensionRegistry.Contract.Implementation(&_TeeExtensionRegistry.CallOpts)
 }
 
+// IsCodeHashPlatformDisabled is a free data retrieval call binding the contract method 0x2a19c98e.
+//
+// Solidity: function isCodeHashPlatformDisabled(uint256 _extensionId, bytes32 _codeHash, bytes32 _platform) view returns(bool)
+func (_TeeExtensionRegistry *TeeExtensionRegistryCaller) IsCodeHashPlatformDisabled(opts *bind.CallOpts, _extensionId *big.Int, _codeHash [32]byte, _platform [32]byte) (bool, error) {
+	var out []interface{}
+	err := _TeeExtensionRegistry.contract.Call(opts, &out, "isCodeHashPlatformDisabled", _extensionId, _codeHash, _platform)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// IsCodeHashPlatformDisabled is a free data retrieval call binding the contract method 0x2a19c98e.
+//
+// Solidity: function isCodeHashPlatformDisabled(uint256 _extensionId, bytes32 _codeHash, bytes32 _platform) view returns(bool)
+func (_TeeExtensionRegistry *TeeExtensionRegistrySession) IsCodeHashPlatformDisabled(_extensionId *big.Int, _codeHash [32]byte, _platform [32]byte) (bool, error) {
+	return _TeeExtensionRegistry.Contract.IsCodeHashPlatformDisabled(&_TeeExtensionRegistry.CallOpts, _extensionId, _codeHash, _platform)
+}
+
+// IsCodeHashPlatformDisabled is a free data retrieval call binding the contract method 0x2a19c98e.
+//
+// Solidity: function isCodeHashPlatformDisabled(uint256 _extensionId, bytes32 _codeHash, bytes32 _platform) view returns(bool)
+func (_TeeExtensionRegistry *TeeExtensionRegistryCallerSession) IsCodeHashPlatformDisabled(_extensionId *big.Int, _codeHash [32]byte, _platform [32]byte) (bool, error) {
+	return _TeeExtensionRegistry.Contract.IsCodeHashPlatformDisabled(&_TeeExtensionRegistry.CallOpts, _extensionId, _codeHash, _platform)
+}
+
 // IsCodeHashPlatformSupported is a free data retrieval call binding the contract method 0xa1d925c6.
 //
 // Solidity: function isCodeHashPlatformSupported(uint256 _extensionId, bytes32 _codeHash, bytes32 _platform) view returns(bool)
@@ -826,12 +857,12 @@ func (_TeeExtensionRegistry *TeeExtensionRegistryCallerSession) IsExecutor(_addr
 	return _TeeExtensionRegistry.Contract.IsExecutor(&_TeeExtensionRegistry.CallOpts, _address)
 }
 
-// IsWalletProjectOpTypeSupported is a free data retrieval call binding the contract method 0xf2c33275.
+// IsKeyTypeSupported is a free data retrieval call binding the contract method 0xf4ac4279.
 //
-// Solidity: function isWalletProjectOpTypeSupported(uint256 _extensionId, bytes32 _opType) view returns(bool)
-func (_TeeExtensionRegistry *TeeExtensionRegistryCaller) IsWalletProjectOpTypeSupported(opts *bind.CallOpts, _extensionId *big.Int, _opType [32]byte) (bool, error) {
+// Solidity: function isKeyTypeSupported(uint256 _extensionId, bytes32 _keyType) view returns(bool)
+func (_TeeExtensionRegistry *TeeExtensionRegistryCaller) IsKeyTypeSupported(opts *bind.CallOpts, _extensionId *big.Int, _keyType [32]byte) (bool, error) {
 	var out []interface{}
-	err := _TeeExtensionRegistry.contract.Call(opts, &out, "isWalletProjectOpTypeSupported", _extensionId, _opType)
+	err := _TeeExtensionRegistry.contract.Call(opts, &out, "isKeyTypeSupported", _extensionId, _keyType)
 
 	if err != nil {
 		return *new(bool), err
@@ -843,18 +874,49 @@ func (_TeeExtensionRegistry *TeeExtensionRegistryCaller) IsWalletProjectOpTypeSu
 
 }
 
-// IsWalletProjectOpTypeSupported is a free data retrieval call binding the contract method 0xf2c33275.
+// IsKeyTypeSupported is a free data retrieval call binding the contract method 0xf4ac4279.
 //
-// Solidity: function isWalletProjectOpTypeSupported(uint256 _extensionId, bytes32 _opType) view returns(bool)
-func (_TeeExtensionRegistry *TeeExtensionRegistrySession) IsWalletProjectOpTypeSupported(_extensionId *big.Int, _opType [32]byte) (bool, error) {
-	return _TeeExtensionRegistry.Contract.IsWalletProjectOpTypeSupported(&_TeeExtensionRegistry.CallOpts, _extensionId, _opType)
+// Solidity: function isKeyTypeSupported(uint256 _extensionId, bytes32 _keyType) view returns(bool)
+func (_TeeExtensionRegistry *TeeExtensionRegistrySession) IsKeyTypeSupported(_extensionId *big.Int, _keyType [32]byte) (bool, error) {
+	return _TeeExtensionRegistry.Contract.IsKeyTypeSupported(&_TeeExtensionRegistry.CallOpts, _extensionId, _keyType)
 }
 
-// IsWalletProjectOpTypeSupported is a free data retrieval call binding the contract method 0xf2c33275.
+// IsKeyTypeSupported is a free data retrieval call binding the contract method 0xf4ac4279.
 //
-// Solidity: function isWalletProjectOpTypeSupported(uint256 _extensionId, bytes32 _opType) view returns(bool)
-func (_TeeExtensionRegistry *TeeExtensionRegistryCallerSession) IsWalletProjectOpTypeSupported(_extensionId *big.Int, _opType [32]byte) (bool, error) {
-	return _TeeExtensionRegistry.Contract.IsWalletProjectOpTypeSupported(&_TeeExtensionRegistry.CallOpts, _extensionId, _opType)
+// Solidity: function isKeyTypeSupported(uint256 _extensionId, bytes32 _keyType) view returns(bool)
+func (_TeeExtensionRegistry *TeeExtensionRegistryCallerSession) IsKeyTypeSupported(_extensionId *big.Int, _keyType [32]byte) (bool, error) {
+	return _TeeExtensionRegistry.Contract.IsKeyTypeSupported(&_TeeExtensionRegistry.CallOpts, _extensionId, _keyType)
+}
+
+// IsSigningAlgoSupported is a free data retrieval call binding the contract method 0x62487d98.
+//
+// Solidity: function isSigningAlgoSupported(bytes32 _keyType, bytes32 _signingAlgo) view returns(bool)
+func (_TeeExtensionRegistry *TeeExtensionRegistryCaller) IsSigningAlgoSupported(opts *bind.CallOpts, _keyType [32]byte, _signingAlgo [32]byte) (bool, error) {
+	var out []interface{}
+	err := _TeeExtensionRegistry.contract.Call(opts, &out, "isSigningAlgoSupported", _keyType, _signingAlgo)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// IsSigningAlgoSupported is a free data retrieval call binding the contract method 0x62487d98.
+//
+// Solidity: function isSigningAlgoSupported(bytes32 _keyType, bytes32 _signingAlgo) view returns(bool)
+func (_TeeExtensionRegistry *TeeExtensionRegistrySession) IsSigningAlgoSupported(_keyType [32]byte, _signingAlgo [32]byte) (bool, error) {
+	return _TeeExtensionRegistry.Contract.IsSigningAlgoSupported(&_TeeExtensionRegistry.CallOpts, _keyType, _signingAlgo)
+}
+
+// IsSigningAlgoSupported is a free data retrieval call binding the contract method 0x62487d98.
+//
+// Solidity: function isSigningAlgoSupported(bytes32 _keyType, bytes32 _signingAlgo) view returns(bool)
+func (_TeeExtensionRegistry *TeeExtensionRegistryCallerSession) IsSigningAlgoSupported(_keyType [32]byte, _signingAlgo [32]byte) (bool, error) {
+	return _TeeExtensionRegistry.Contract.IsSigningAlgoSupported(&_TeeExtensionRegistry.CallOpts, _keyType, _signingAlgo)
 }
 
 // ProductionMode is a free data retrieval call binding the contract method 0xe17f212e.
@@ -1119,46 +1181,67 @@ func (_TeeExtensionRegistry *TeeExtensionRegistryCallerSession) TimelockedCalls(
 	return _TeeExtensionRegistry.Contract.TimelockedCalls(&_TeeExtensionRegistry.CallOpts, selector)
 }
 
-// AddOrUpdateSupportedWalletProjectOpTypes is a paid mutator transaction binding the contract method 0xffc7e814.
+// AddSupportedKeyTypes is a paid mutator transaction binding the contract method 0x174c5e26.
 //
-// Solidity: function addOrUpdateSupportedWalletProjectOpTypes(uint256 _extensionId, address[] _opTypeConstantsProviders) returns()
-func (_TeeExtensionRegistry *TeeExtensionRegistryTransactor) AddOrUpdateSupportedWalletProjectOpTypes(opts *bind.TransactOpts, _extensionId *big.Int, _opTypeConstantsProviders []common.Address) (*types.Transaction, error) {
-	return _TeeExtensionRegistry.contract.Transact(opts, "addOrUpdateSupportedWalletProjectOpTypes", _extensionId, _opTypeConstantsProviders)
+// Solidity: function addSupportedKeyTypes(uint256 _extensionId, bytes32[] _keyTypes) returns()
+func (_TeeExtensionRegistry *TeeExtensionRegistryTransactor) AddSupportedKeyTypes(opts *bind.TransactOpts, _extensionId *big.Int, _keyTypes [][32]byte) (*types.Transaction, error) {
+	return _TeeExtensionRegistry.contract.Transact(opts, "addSupportedKeyTypes", _extensionId, _keyTypes)
 }
 
-// AddOrUpdateSupportedWalletProjectOpTypes is a paid mutator transaction binding the contract method 0xffc7e814.
+// AddSupportedKeyTypes is a paid mutator transaction binding the contract method 0x174c5e26.
 //
-// Solidity: function addOrUpdateSupportedWalletProjectOpTypes(uint256 _extensionId, address[] _opTypeConstantsProviders) returns()
-func (_TeeExtensionRegistry *TeeExtensionRegistrySession) AddOrUpdateSupportedWalletProjectOpTypes(_extensionId *big.Int, _opTypeConstantsProviders []common.Address) (*types.Transaction, error) {
-	return _TeeExtensionRegistry.Contract.AddOrUpdateSupportedWalletProjectOpTypes(&_TeeExtensionRegistry.TransactOpts, _extensionId, _opTypeConstantsProviders)
+// Solidity: function addSupportedKeyTypes(uint256 _extensionId, bytes32[] _keyTypes) returns()
+func (_TeeExtensionRegistry *TeeExtensionRegistrySession) AddSupportedKeyTypes(_extensionId *big.Int, _keyTypes [][32]byte) (*types.Transaction, error) {
+	return _TeeExtensionRegistry.Contract.AddSupportedKeyTypes(&_TeeExtensionRegistry.TransactOpts, _extensionId, _keyTypes)
 }
 
-// AddOrUpdateSupportedWalletProjectOpTypes is a paid mutator transaction binding the contract method 0xffc7e814.
+// AddSupportedKeyTypes is a paid mutator transaction binding the contract method 0x174c5e26.
 //
-// Solidity: function addOrUpdateSupportedWalletProjectOpTypes(uint256 _extensionId, address[] _opTypeConstantsProviders) returns()
-func (_TeeExtensionRegistry *TeeExtensionRegistryTransactorSession) AddOrUpdateSupportedWalletProjectOpTypes(_extensionId *big.Int, _opTypeConstantsProviders []common.Address) (*types.Transaction, error) {
-	return _TeeExtensionRegistry.Contract.AddOrUpdateSupportedWalletProjectOpTypes(&_TeeExtensionRegistry.TransactOpts, _extensionId, _opTypeConstantsProviders)
+// Solidity: function addSupportedKeyTypes(uint256 _extensionId, bytes32[] _keyTypes) returns()
+func (_TeeExtensionRegistry *TeeExtensionRegistryTransactorSession) AddSupportedKeyTypes(_extensionId *big.Int, _keyTypes [][32]byte) (*types.Transaction, error) {
+	return _TeeExtensionRegistry.Contract.AddSupportedKeyTypes(&_TeeExtensionRegistry.TransactOpts, _extensionId, _keyTypes)
 }
 
-// AddSupportedPlatforms is a paid mutator transaction binding the contract method 0xf08d008b.
+// AddSystemSupportedKeyTypesAndSigningAlgos is a paid mutator transaction binding the contract method 0x38c77e46.
 //
-// Solidity: function addSupportedPlatforms(bytes32[] _platforms) returns()
-func (_TeeExtensionRegistry *TeeExtensionRegistryTransactor) AddSupportedPlatforms(opts *bind.TransactOpts, _platforms [][32]byte) (*types.Transaction, error) {
-	return _TeeExtensionRegistry.contract.Transact(opts, "addSupportedPlatforms", _platforms)
+// Solidity: function addSystemSupportedKeyTypesAndSigningAlgos(bytes32[] _keyTypes, bytes32[][] _signingAlgosByKeyType) returns()
+func (_TeeExtensionRegistry *TeeExtensionRegistryTransactor) AddSystemSupportedKeyTypesAndSigningAlgos(opts *bind.TransactOpts, _keyTypes [][32]byte, _signingAlgosByKeyType [][][32]byte) (*types.Transaction, error) {
+	return _TeeExtensionRegistry.contract.Transact(opts, "addSystemSupportedKeyTypesAndSigningAlgos", _keyTypes, _signingAlgosByKeyType)
 }
 
-// AddSupportedPlatforms is a paid mutator transaction binding the contract method 0xf08d008b.
+// AddSystemSupportedKeyTypesAndSigningAlgos is a paid mutator transaction binding the contract method 0x38c77e46.
 //
-// Solidity: function addSupportedPlatforms(bytes32[] _platforms) returns()
-func (_TeeExtensionRegistry *TeeExtensionRegistrySession) AddSupportedPlatforms(_platforms [][32]byte) (*types.Transaction, error) {
-	return _TeeExtensionRegistry.Contract.AddSupportedPlatforms(&_TeeExtensionRegistry.TransactOpts, _platforms)
+// Solidity: function addSystemSupportedKeyTypesAndSigningAlgos(bytes32[] _keyTypes, bytes32[][] _signingAlgosByKeyType) returns()
+func (_TeeExtensionRegistry *TeeExtensionRegistrySession) AddSystemSupportedKeyTypesAndSigningAlgos(_keyTypes [][32]byte, _signingAlgosByKeyType [][][32]byte) (*types.Transaction, error) {
+	return _TeeExtensionRegistry.Contract.AddSystemSupportedKeyTypesAndSigningAlgos(&_TeeExtensionRegistry.TransactOpts, _keyTypes, _signingAlgosByKeyType)
 }
 
-// AddSupportedPlatforms is a paid mutator transaction binding the contract method 0xf08d008b.
+// AddSystemSupportedKeyTypesAndSigningAlgos is a paid mutator transaction binding the contract method 0x38c77e46.
 //
-// Solidity: function addSupportedPlatforms(bytes32[] _platforms) returns()
-func (_TeeExtensionRegistry *TeeExtensionRegistryTransactorSession) AddSupportedPlatforms(_platforms [][32]byte) (*types.Transaction, error) {
-	return _TeeExtensionRegistry.Contract.AddSupportedPlatforms(&_TeeExtensionRegistry.TransactOpts, _platforms)
+// Solidity: function addSystemSupportedKeyTypesAndSigningAlgos(bytes32[] _keyTypes, bytes32[][] _signingAlgosByKeyType) returns()
+func (_TeeExtensionRegistry *TeeExtensionRegistryTransactorSession) AddSystemSupportedKeyTypesAndSigningAlgos(_keyTypes [][32]byte, _signingAlgosByKeyType [][][32]byte) (*types.Transaction, error) {
+	return _TeeExtensionRegistry.Contract.AddSystemSupportedKeyTypesAndSigningAlgos(&_TeeExtensionRegistry.TransactOpts, _keyTypes, _signingAlgosByKeyType)
+}
+
+// AddSystemSupportedPlatforms is a paid mutator transaction binding the contract method 0x0c14a66b.
+//
+// Solidity: function addSystemSupportedPlatforms(bytes32[] _platforms) returns()
+func (_TeeExtensionRegistry *TeeExtensionRegistryTransactor) AddSystemSupportedPlatforms(opts *bind.TransactOpts, _platforms [][32]byte) (*types.Transaction, error) {
+	return _TeeExtensionRegistry.contract.Transact(opts, "addSystemSupportedPlatforms", _platforms)
+}
+
+// AddSystemSupportedPlatforms is a paid mutator transaction binding the contract method 0x0c14a66b.
+//
+// Solidity: function addSystemSupportedPlatforms(bytes32[] _platforms) returns()
+func (_TeeExtensionRegistry *TeeExtensionRegistrySession) AddSystemSupportedPlatforms(_platforms [][32]byte) (*types.Transaction, error) {
+	return _TeeExtensionRegistry.Contract.AddSystemSupportedPlatforms(&_TeeExtensionRegistry.TransactOpts, _platforms)
+}
+
+// AddSystemSupportedPlatforms is a paid mutator transaction binding the contract method 0x0c14a66b.
+//
+// Solidity: function addSystemSupportedPlatforms(bytes32[] _platforms) returns()
+func (_TeeExtensionRegistry *TeeExtensionRegistryTransactorSession) AddSystemSupportedPlatforms(_platforms [][32]byte) (*types.Transaction, error) {
+	return _TeeExtensionRegistry.Contract.AddSystemSupportedPlatforms(&_TeeExtensionRegistry.TransactOpts, _platforms)
 }
 
 // AddTeeVersion is a paid mutator transaction binding the contract method 0x65b771f7.
@@ -1350,46 +1433,46 @@ func (_TeeExtensionRegistry *TeeExtensionRegistryTransactorSession) Register(_te
 	return _TeeExtensionRegistry.Contract.Register(&_TeeExtensionRegistry.TransactOpts, _teeExtensionStateVerifier, _teeExtensionInstructionsSender)
 }
 
-// RegisterSystemInstructionInitiators is a paid mutator transaction binding the contract method 0x079568b6.
+// RegisterSystemInstructionsSenders is a paid mutator transaction binding the contract method 0x4d9003cf.
 //
-// Solidity: function registerSystemInstructionInitiators(address[] _instructionInitiators) returns()
-func (_TeeExtensionRegistry *TeeExtensionRegistryTransactor) RegisterSystemInstructionInitiators(opts *bind.TransactOpts, _instructionInitiators []common.Address) (*types.Transaction, error) {
-	return _TeeExtensionRegistry.contract.Transact(opts, "registerSystemInstructionInitiators", _instructionInitiators)
+// Solidity: function registerSystemInstructionsSenders(address[] _instructionsSenders) returns()
+func (_TeeExtensionRegistry *TeeExtensionRegistryTransactor) RegisterSystemInstructionsSenders(opts *bind.TransactOpts, _instructionsSenders []common.Address) (*types.Transaction, error) {
+	return _TeeExtensionRegistry.contract.Transact(opts, "registerSystemInstructionsSenders", _instructionsSenders)
 }
 
-// RegisterSystemInstructionInitiators is a paid mutator transaction binding the contract method 0x079568b6.
+// RegisterSystemInstructionsSenders is a paid mutator transaction binding the contract method 0x4d9003cf.
 //
-// Solidity: function registerSystemInstructionInitiators(address[] _instructionInitiators) returns()
-func (_TeeExtensionRegistry *TeeExtensionRegistrySession) RegisterSystemInstructionInitiators(_instructionInitiators []common.Address) (*types.Transaction, error) {
-	return _TeeExtensionRegistry.Contract.RegisterSystemInstructionInitiators(&_TeeExtensionRegistry.TransactOpts, _instructionInitiators)
+// Solidity: function registerSystemInstructionsSenders(address[] _instructionsSenders) returns()
+func (_TeeExtensionRegistry *TeeExtensionRegistrySession) RegisterSystemInstructionsSenders(_instructionsSenders []common.Address) (*types.Transaction, error) {
+	return _TeeExtensionRegistry.Contract.RegisterSystemInstructionsSenders(&_TeeExtensionRegistry.TransactOpts, _instructionsSenders)
 }
 
-// RegisterSystemInstructionInitiators is a paid mutator transaction binding the contract method 0x079568b6.
+// RegisterSystemInstructionsSenders is a paid mutator transaction binding the contract method 0x4d9003cf.
 //
-// Solidity: function registerSystemInstructionInitiators(address[] _instructionInitiators) returns()
-func (_TeeExtensionRegistry *TeeExtensionRegistryTransactorSession) RegisterSystemInstructionInitiators(_instructionInitiators []common.Address) (*types.Transaction, error) {
-	return _TeeExtensionRegistry.Contract.RegisterSystemInstructionInitiators(&_TeeExtensionRegistry.TransactOpts, _instructionInitiators)
+// Solidity: function registerSystemInstructionsSenders(address[] _instructionsSenders) returns()
+func (_TeeExtensionRegistry *TeeExtensionRegistryTransactorSession) RegisterSystemInstructionsSenders(_instructionsSenders []common.Address) (*types.Transaction, error) {
+	return _TeeExtensionRegistry.Contract.RegisterSystemInstructionsSenders(&_TeeExtensionRegistry.TransactOpts, _instructionsSenders)
 }
 
-// RemoveSupportedWalletProjectOpTypes is a paid mutator transaction binding the contract method 0x03a0f960.
+// RemoveSupportedKeyTypes is a paid mutator transaction binding the contract method 0xecb0233f.
 //
-// Solidity: function removeSupportedWalletProjectOpTypes(uint256 _extensionId, bytes32[] _opTypes) returns()
-func (_TeeExtensionRegistry *TeeExtensionRegistryTransactor) RemoveSupportedWalletProjectOpTypes(opts *bind.TransactOpts, _extensionId *big.Int, _opTypes [][32]byte) (*types.Transaction, error) {
-	return _TeeExtensionRegistry.contract.Transact(opts, "removeSupportedWalletProjectOpTypes", _extensionId, _opTypes)
+// Solidity: function removeSupportedKeyTypes(uint256 _extensionId, bytes32[] _keyTypes) returns()
+func (_TeeExtensionRegistry *TeeExtensionRegistryTransactor) RemoveSupportedKeyTypes(opts *bind.TransactOpts, _extensionId *big.Int, _keyTypes [][32]byte) (*types.Transaction, error) {
+	return _TeeExtensionRegistry.contract.Transact(opts, "removeSupportedKeyTypes", _extensionId, _keyTypes)
 }
 
-// RemoveSupportedWalletProjectOpTypes is a paid mutator transaction binding the contract method 0x03a0f960.
+// RemoveSupportedKeyTypes is a paid mutator transaction binding the contract method 0xecb0233f.
 //
-// Solidity: function removeSupportedWalletProjectOpTypes(uint256 _extensionId, bytes32[] _opTypes) returns()
-func (_TeeExtensionRegistry *TeeExtensionRegistrySession) RemoveSupportedWalletProjectOpTypes(_extensionId *big.Int, _opTypes [][32]byte) (*types.Transaction, error) {
-	return _TeeExtensionRegistry.Contract.RemoveSupportedWalletProjectOpTypes(&_TeeExtensionRegistry.TransactOpts, _extensionId, _opTypes)
+// Solidity: function removeSupportedKeyTypes(uint256 _extensionId, bytes32[] _keyTypes) returns()
+func (_TeeExtensionRegistry *TeeExtensionRegistrySession) RemoveSupportedKeyTypes(_extensionId *big.Int, _keyTypes [][32]byte) (*types.Transaction, error) {
+	return _TeeExtensionRegistry.Contract.RemoveSupportedKeyTypes(&_TeeExtensionRegistry.TransactOpts, _extensionId, _keyTypes)
 }
 
-// RemoveSupportedWalletProjectOpTypes is a paid mutator transaction binding the contract method 0x03a0f960.
+// RemoveSupportedKeyTypes is a paid mutator transaction binding the contract method 0xecb0233f.
 //
-// Solidity: function removeSupportedWalletProjectOpTypes(uint256 _extensionId, bytes32[] _opTypes) returns()
-func (_TeeExtensionRegistry *TeeExtensionRegistryTransactorSession) RemoveSupportedWalletProjectOpTypes(_extensionId *big.Int, _opTypes [][32]byte) (*types.Transaction, error) {
-	return _TeeExtensionRegistry.Contract.RemoveSupportedWalletProjectOpTypes(&_TeeExtensionRegistry.TransactOpts, _extensionId, _opTypes)
+// Solidity: function removeSupportedKeyTypes(uint256 _extensionId, bytes32[] _keyTypes) returns()
+func (_TeeExtensionRegistry *TeeExtensionRegistryTransactorSession) RemoveSupportedKeyTypes(_extensionId *big.Int, _keyTypes [][32]byte) (*types.Transaction, error) {
+	return _TeeExtensionRegistry.Contract.RemoveSupportedKeyTypes(&_TeeExtensionRegistry.TransactOpts, _extensionId, _keyTypes)
 }
 
 // SendInstructions is a paid mutator transaction binding the contract method 0x9b517780.
@@ -1476,25 +1559,25 @@ func (_TeeExtensionRegistry *TeeExtensionRegistryTransactorSession) SwitchToProd
 	return _TeeExtensionRegistry.Contract.SwitchToProductionMode(&_TeeExtensionRegistry.TransactOpts)
 }
 
-// UnregisterSystemInstructionInitiators is a paid mutator transaction binding the contract method 0xdf57ea21.
+// UnregisterSystemInstructionsSenders is a paid mutator transaction binding the contract method 0xf123abf3.
 //
-// Solidity: function unregisterSystemInstructionInitiators(address[] _instructionInitiators) returns()
-func (_TeeExtensionRegistry *TeeExtensionRegistryTransactor) UnregisterSystemInstructionInitiators(opts *bind.TransactOpts, _instructionInitiators []common.Address) (*types.Transaction, error) {
-	return _TeeExtensionRegistry.contract.Transact(opts, "unregisterSystemInstructionInitiators", _instructionInitiators)
+// Solidity: function unregisterSystemInstructionsSenders(address[] _instructionsSenders) returns()
+func (_TeeExtensionRegistry *TeeExtensionRegistryTransactor) UnregisterSystemInstructionsSenders(opts *bind.TransactOpts, _instructionsSenders []common.Address) (*types.Transaction, error) {
+	return _TeeExtensionRegistry.contract.Transact(opts, "unregisterSystemInstructionsSenders", _instructionsSenders)
 }
 
-// UnregisterSystemInstructionInitiators is a paid mutator transaction binding the contract method 0xdf57ea21.
+// UnregisterSystemInstructionsSenders is a paid mutator transaction binding the contract method 0xf123abf3.
 //
-// Solidity: function unregisterSystemInstructionInitiators(address[] _instructionInitiators) returns()
-func (_TeeExtensionRegistry *TeeExtensionRegistrySession) UnregisterSystemInstructionInitiators(_instructionInitiators []common.Address) (*types.Transaction, error) {
-	return _TeeExtensionRegistry.Contract.UnregisterSystemInstructionInitiators(&_TeeExtensionRegistry.TransactOpts, _instructionInitiators)
+// Solidity: function unregisterSystemInstructionsSenders(address[] _instructionsSenders) returns()
+func (_TeeExtensionRegistry *TeeExtensionRegistrySession) UnregisterSystemInstructionsSenders(_instructionsSenders []common.Address) (*types.Transaction, error) {
+	return _TeeExtensionRegistry.Contract.UnregisterSystemInstructionsSenders(&_TeeExtensionRegistry.TransactOpts, _instructionsSenders)
 }
 
-// UnregisterSystemInstructionInitiators is a paid mutator transaction binding the contract method 0xdf57ea21.
+// UnregisterSystemInstructionsSenders is a paid mutator transaction binding the contract method 0xf123abf3.
 //
-// Solidity: function unregisterSystemInstructionInitiators(address[] _instructionInitiators) returns()
-func (_TeeExtensionRegistry *TeeExtensionRegistryTransactorSession) UnregisterSystemInstructionInitiators(_instructionInitiators []common.Address) (*types.Transaction, error) {
-	return _TeeExtensionRegistry.Contract.UnregisterSystemInstructionInitiators(&_TeeExtensionRegistry.TransactOpts, _instructionInitiators)
+// Solidity: function unregisterSystemInstructionsSenders(address[] _instructionsSenders) returns()
+func (_TeeExtensionRegistry *TeeExtensionRegistryTransactorSession) UnregisterSystemInstructionsSenders(_instructionsSenders []common.Address) (*types.Transaction, error) {
+	return _TeeExtensionRegistry.Contract.UnregisterSystemInstructionsSenders(&_TeeExtensionRegistry.TransactOpts, _instructionsSenders)
 }
 
 // UpdateContractAddresses is a paid mutator transaction binding the contract method 0xb00c0b76.
@@ -2420,9 +2503,9 @@ func (_TeeExtensionRegistry *TeeExtensionRegistryFilterer) ParseNewOwnerProposed
 	return event, nil
 }
 
-// TeeExtensionRegistrySupportedPlatformAddedIterator is returned from FilterSupportedPlatformAdded and is used to iterate over the raw logs and unpacked data for SupportedPlatformAdded events raised by the TeeExtensionRegistry contract.
-type TeeExtensionRegistrySupportedPlatformAddedIterator struct {
-	Event *TeeExtensionRegistrySupportedPlatformAdded // Event containing the contract specifics and raw log
+// TeeExtensionRegistrySupportedKeyTypeAddedIterator is returned from FilterSupportedKeyTypeAdded and is used to iterate over the raw logs and unpacked data for SupportedKeyTypeAdded events raised by the TeeExtensionRegistry contract.
+type TeeExtensionRegistrySupportedKeyTypeAddedIterator struct {
+	Event *TeeExtensionRegistrySupportedKeyTypeAdded // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -2436,7 +2519,7 @@ type TeeExtensionRegistrySupportedPlatformAddedIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *TeeExtensionRegistrySupportedPlatformAddedIterator) Next() bool {
+func (it *TeeExtensionRegistrySupportedKeyTypeAddedIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -2445,7 +2528,7 @@ func (it *TeeExtensionRegistrySupportedPlatformAddedIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(TeeExtensionRegistrySupportedPlatformAdded)
+			it.Event = new(TeeExtensionRegistrySupportedKeyTypeAdded)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -2460,7 +2543,7 @@ func (it *TeeExtensionRegistrySupportedPlatformAddedIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(TeeExtensionRegistrySupportedPlatformAdded)
+		it.Event = new(TeeExtensionRegistrySupportedKeyTypeAdded)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -2476,51 +2559,510 @@ func (it *TeeExtensionRegistrySupportedPlatformAddedIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *TeeExtensionRegistrySupportedPlatformAddedIterator) Error() error {
+func (it *TeeExtensionRegistrySupportedKeyTypeAddedIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *TeeExtensionRegistrySupportedPlatformAddedIterator) Close() error {
+func (it *TeeExtensionRegistrySupportedKeyTypeAddedIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// TeeExtensionRegistrySupportedPlatformAdded represents a SupportedPlatformAdded event raised by the TeeExtensionRegistry contract.
-type TeeExtensionRegistrySupportedPlatformAdded struct {
+// TeeExtensionRegistrySupportedKeyTypeAdded represents a SupportedKeyTypeAdded event raised by the TeeExtensionRegistry contract.
+type TeeExtensionRegistrySupportedKeyTypeAdded struct {
+	ExtensionId *big.Int
+	KeyType     [32]byte
+	Raw         types.Log // Blockchain specific contextual infos
+}
+
+// FilterSupportedKeyTypeAdded is a free log retrieval operation binding the contract event 0x94d91311138a0bb53989dc0767cad0ce8eb71c531e8f423938ea1de276f1af67.
+//
+// Solidity: event SupportedKeyTypeAdded(uint256 indexed extensionId, bytes32 indexed keyType)
+func (_TeeExtensionRegistry *TeeExtensionRegistryFilterer) FilterSupportedKeyTypeAdded(opts *bind.FilterOpts, extensionId []*big.Int, keyType [][32]byte) (*TeeExtensionRegistrySupportedKeyTypeAddedIterator, error) {
+
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+	var keyTypeRule []interface{}
+	for _, keyTypeItem := range keyType {
+		keyTypeRule = append(keyTypeRule, keyTypeItem)
+	}
+
+	logs, sub, err := _TeeExtensionRegistry.contract.FilterLogs(opts, "SupportedKeyTypeAdded", extensionIdRule, keyTypeRule)
+	if err != nil {
+		return nil, err
+	}
+	return &TeeExtensionRegistrySupportedKeyTypeAddedIterator{contract: _TeeExtensionRegistry.contract, event: "SupportedKeyTypeAdded", logs: logs, sub: sub}, nil
+}
+
+// WatchSupportedKeyTypeAdded is a free log subscription operation binding the contract event 0x94d91311138a0bb53989dc0767cad0ce8eb71c531e8f423938ea1de276f1af67.
+//
+// Solidity: event SupportedKeyTypeAdded(uint256 indexed extensionId, bytes32 indexed keyType)
+func (_TeeExtensionRegistry *TeeExtensionRegistryFilterer) WatchSupportedKeyTypeAdded(opts *bind.WatchOpts, sink chan<- *TeeExtensionRegistrySupportedKeyTypeAdded, extensionId []*big.Int, keyType [][32]byte) (event.Subscription, error) {
+
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+	var keyTypeRule []interface{}
+	for _, keyTypeItem := range keyType {
+		keyTypeRule = append(keyTypeRule, keyTypeItem)
+	}
+
+	logs, sub, err := _TeeExtensionRegistry.contract.WatchLogs(opts, "SupportedKeyTypeAdded", extensionIdRule, keyTypeRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeeExtensionRegistrySupportedKeyTypeAdded)
+				if err := _TeeExtensionRegistry.contract.UnpackLog(event, "SupportedKeyTypeAdded", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseSupportedKeyTypeAdded is a log parse operation binding the contract event 0x94d91311138a0bb53989dc0767cad0ce8eb71c531e8f423938ea1de276f1af67.
+//
+// Solidity: event SupportedKeyTypeAdded(uint256 indexed extensionId, bytes32 indexed keyType)
+func (_TeeExtensionRegistry *TeeExtensionRegistryFilterer) ParseSupportedKeyTypeAdded(log types.Log) (*TeeExtensionRegistrySupportedKeyTypeAdded, error) {
+	event := new(TeeExtensionRegistrySupportedKeyTypeAdded)
+	if err := _TeeExtensionRegistry.contract.UnpackLog(event, "SupportedKeyTypeAdded", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// TeeExtensionRegistrySupportedKeyTypeRemovedIterator is returned from FilterSupportedKeyTypeRemoved and is used to iterate over the raw logs and unpacked data for SupportedKeyTypeRemoved events raised by the TeeExtensionRegistry contract.
+type TeeExtensionRegistrySupportedKeyTypeRemovedIterator struct {
+	Event *TeeExtensionRegistrySupportedKeyTypeRemoved // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeeExtensionRegistrySupportedKeyTypeRemovedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeeExtensionRegistrySupportedKeyTypeRemoved)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeeExtensionRegistrySupportedKeyTypeRemoved)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeeExtensionRegistrySupportedKeyTypeRemovedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeeExtensionRegistrySupportedKeyTypeRemovedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeeExtensionRegistrySupportedKeyTypeRemoved represents a SupportedKeyTypeRemoved event raised by the TeeExtensionRegistry contract.
+type TeeExtensionRegistrySupportedKeyTypeRemoved struct {
+	ExtensionId *big.Int
+	KeyType     [32]byte
+	Raw         types.Log // Blockchain specific contextual infos
+}
+
+// FilterSupportedKeyTypeRemoved is a free log retrieval operation binding the contract event 0x1180313c55ad5605ff1a04ae26a3dfcd8dbba28e3f9aaa66067a2702e37defc2.
+//
+// Solidity: event SupportedKeyTypeRemoved(uint256 indexed extensionId, bytes32 indexed keyType)
+func (_TeeExtensionRegistry *TeeExtensionRegistryFilterer) FilterSupportedKeyTypeRemoved(opts *bind.FilterOpts, extensionId []*big.Int, keyType [][32]byte) (*TeeExtensionRegistrySupportedKeyTypeRemovedIterator, error) {
+
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+	var keyTypeRule []interface{}
+	for _, keyTypeItem := range keyType {
+		keyTypeRule = append(keyTypeRule, keyTypeItem)
+	}
+
+	logs, sub, err := _TeeExtensionRegistry.contract.FilterLogs(opts, "SupportedKeyTypeRemoved", extensionIdRule, keyTypeRule)
+	if err != nil {
+		return nil, err
+	}
+	return &TeeExtensionRegistrySupportedKeyTypeRemovedIterator{contract: _TeeExtensionRegistry.contract, event: "SupportedKeyTypeRemoved", logs: logs, sub: sub}, nil
+}
+
+// WatchSupportedKeyTypeRemoved is a free log subscription operation binding the contract event 0x1180313c55ad5605ff1a04ae26a3dfcd8dbba28e3f9aaa66067a2702e37defc2.
+//
+// Solidity: event SupportedKeyTypeRemoved(uint256 indexed extensionId, bytes32 indexed keyType)
+func (_TeeExtensionRegistry *TeeExtensionRegistryFilterer) WatchSupportedKeyTypeRemoved(opts *bind.WatchOpts, sink chan<- *TeeExtensionRegistrySupportedKeyTypeRemoved, extensionId []*big.Int, keyType [][32]byte) (event.Subscription, error) {
+
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+	var keyTypeRule []interface{}
+	for _, keyTypeItem := range keyType {
+		keyTypeRule = append(keyTypeRule, keyTypeItem)
+	}
+
+	logs, sub, err := _TeeExtensionRegistry.contract.WatchLogs(opts, "SupportedKeyTypeRemoved", extensionIdRule, keyTypeRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeeExtensionRegistrySupportedKeyTypeRemoved)
+				if err := _TeeExtensionRegistry.contract.UnpackLog(event, "SupportedKeyTypeRemoved", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseSupportedKeyTypeRemoved is a log parse operation binding the contract event 0x1180313c55ad5605ff1a04ae26a3dfcd8dbba28e3f9aaa66067a2702e37defc2.
+//
+// Solidity: event SupportedKeyTypeRemoved(uint256 indexed extensionId, bytes32 indexed keyType)
+func (_TeeExtensionRegistry *TeeExtensionRegistryFilterer) ParseSupportedKeyTypeRemoved(log types.Log) (*TeeExtensionRegistrySupportedKeyTypeRemoved, error) {
+	event := new(TeeExtensionRegistrySupportedKeyTypeRemoved)
+	if err := _TeeExtensionRegistry.contract.UnpackLog(event, "SupportedKeyTypeRemoved", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// TeeExtensionRegistrySystemSupportedKeyTypeAndSigningAlgoAddedIterator is returned from FilterSystemSupportedKeyTypeAndSigningAlgoAdded and is used to iterate over the raw logs and unpacked data for SystemSupportedKeyTypeAndSigningAlgoAdded events raised by the TeeExtensionRegistry contract.
+type TeeExtensionRegistrySystemSupportedKeyTypeAndSigningAlgoAddedIterator struct {
+	Event *TeeExtensionRegistrySystemSupportedKeyTypeAndSigningAlgoAdded // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeeExtensionRegistrySystemSupportedKeyTypeAndSigningAlgoAddedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeeExtensionRegistrySystemSupportedKeyTypeAndSigningAlgoAdded)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeeExtensionRegistrySystemSupportedKeyTypeAndSigningAlgoAdded)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeeExtensionRegistrySystemSupportedKeyTypeAndSigningAlgoAddedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeeExtensionRegistrySystemSupportedKeyTypeAndSigningAlgoAddedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeeExtensionRegistrySystemSupportedKeyTypeAndSigningAlgoAdded represents a SystemSupportedKeyTypeAndSigningAlgoAdded event raised by the TeeExtensionRegistry contract.
+type TeeExtensionRegistrySystemSupportedKeyTypeAndSigningAlgoAdded struct {
+	KeyType     [32]byte
+	SigningAlgo [32]byte
+	Raw         types.Log // Blockchain specific contextual infos
+}
+
+// FilterSystemSupportedKeyTypeAndSigningAlgoAdded is a free log retrieval operation binding the contract event 0x7fa15cbdf255496de51379721679b101711bd3ef8f482bf29ff42d4d5eb927cf.
+//
+// Solidity: event SystemSupportedKeyTypeAndSigningAlgoAdded(bytes32 indexed keyType, bytes32 indexed signingAlgo)
+func (_TeeExtensionRegistry *TeeExtensionRegistryFilterer) FilterSystemSupportedKeyTypeAndSigningAlgoAdded(opts *bind.FilterOpts, keyType [][32]byte, signingAlgo [][32]byte) (*TeeExtensionRegistrySystemSupportedKeyTypeAndSigningAlgoAddedIterator, error) {
+
+	var keyTypeRule []interface{}
+	for _, keyTypeItem := range keyType {
+		keyTypeRule = append(keyTypeRule, keyTypeItem)
+	}
+	var signingAlgoRule []interface{}
+	for _, signingAlgoItem := range signingAlgo {
+		signingAlgoRule = append(signingAlgoRule, signingAlgoItem)
+	}
+
+	logs, sub, err := _TeeExtensionRegistry.contract.FilterLogs(opts, "SystemSupportedKeyTypeAndSigningAlgoAdded", keyTypeRule, signingAlgoRule)
+	if err != nil {
+		return nil, err
+	}
+	return &TeeExtensionRegistrySystemSupportedKeyTypeAndSigningAlgoAddedIterator{contract: _TeeExtensionRegistry.contract, event: "SystemSupportedKeyTypeAndSigningAlgoAdded", logs: logs, sub: sub}, nil
+}
+
+// WatchSystemSupportedKeyTypeAndSigningAlgoAdded is a free log subscription operation binding the contract event 0x7fa15cbdf255496de51379721679b101711bd3ef8f482bf29ff42d4d5eb927cf.
+//
+// Solidity: event SystemSupportedKeyTypeAndSigningAlgoAdded(bytes32 indexed keyType, bytes32 indexed signingAlgo)
+func (_TeeExtensionRegistry *TeeExtensionRegistryFilterer) WatchSystemSupportedKeyTypeAndSigningAlgoAdded(opts *bind.WatchOpts, sink chan<- *TeeExtensionRegistrySystemSupportedKeyTypeAndSigningAlgoAdded, keyType [][32]byte, signingAlgo [][32]byte) (event.Subscription, error) {
+
+	var keyTypeRule []interface{}
+	for _, keyTypeItem := range keyType {
+		keyTypeRule = append(keyTypeRule, keyTypeItem)
+	}
+	var signingAlgoRule []interface{}
+	for _, signingAlgoItem := range signingAlgo {
+		signingAlgoRule = append(signingAlgoRule, signingAlgoItem)
+	}
+
+	logs, sub, err := _TeeExtensionRegistry.contract.WatchLogs(opts, "SystemSupportedKeyTypeAndSigningAlgoAdded", keyTypeRule, signingAlgoRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeeExtensionRegistrySystemSupportedKeyTypeAndSigningAlgoAdded)
+				if err := _TeeExtensionRegistry.contract.UnpackLog(event, "SystemSupportedKeyTypeAndSigningAlgoAdded", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseSystemSupportedKeyTypeAndSigningAlgoAdded is a log parse operation binding the contract event 0x7fa15cbdf255496de51379721679b101711bd3ef8f482bf29ff42d4d5eb927cf.
+//
+// Solidity: event SystemSupportedKeyTypeAndSigningAlgoAdded(bytes32 indexed keyType, bytes32 indexed signingAlgo)
+func (_TeeExtensionRegistry *TeeExtensionRegistryFilterer) ParseSystemSupportedKeyTypeAndSigningAlgoAdded(log types.Log) (*TeeExtensionRegistrySystemSupportedKeyTypeAndSigningAlgoAdded, error) {
+	event := new(TeeExtensionRegistrySystemSupportedKeyTypeAndSigningAlgoAdded)
+	if err := _TeeExtensionRegistry.contract.UnpackLog(event, "SystemSupportedKeyTypeAndSigningAlgoAdded", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// TeeExtensionRegistrySystemSupportedPlatformAddedIterator is returned from FilterSystemSupportedPlatformAdded and is used to iterate over the raw logs and unpacked data for SystemSupportedPlatformAdded events raised by the TeeExtensionRegistry contract.
+type TeeExtensionRegistrySystemSupportedPlatformAddedIterator struct {
+	Event *TeeExtensionRegistrySystemSupportedPlatformAdded // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeeExtensionRegistrySystemSupportedPlatformAddedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeeExtensionRegistrySystemSupportedPlatformAdded)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeeExtensionRegistrySystemSupportedPlatformAdded)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeeExtensionRegistrySystemSupportedPlatformAddedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeeExtensionRegistrySystemSupportedPlatformAddedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeeExtensionRegistrySystemSupportedPlatformAdded represents a SystemSupportedPlatformAdded event raised by the TeeExtensionRegistry contract.
+type TeeExtensionRegistrySystemSupportedPlatformAdded struct {
 	Platform [32]byte
 	Raw      types.Log // Blockchain specific contextual infos
 }
 
-// FilterSupportedPlatformAdded is a free log retrieval operation binding the contract event 0xf28352c70129dc8c465c9fd7d85bec07b1454dc6870af70a4ab37a0b7ab7f369.
+// FilterSystemSupportedPlatformAdded is a free log retrieval operation binding the contract event 0x6c242db52059d6cc5ef9b73933f4b9e969ddd55017019fcd531b3db99747003e.
 //
-// Solidity: event SupportedPlatformAdded(bytes32 indexed platform)
-func (_TeeExtensionRegistry *TeeExtensionRegistryFilterer) FilterSupportedPlatformAdded(opts *bind.FilterOpts, platform [][32]byte) (*TeeExtensionRegistrySupportedPlatformAddedIterator, error) {
+// Solidity: event SystemSupportedPlatformAdded(bytes32 indexed platform)
+func (_TeeExtensionRegistry *TeeExtensionRegistryFilterer) FilterSystemSupportedPlatformAdded(opts *bind.FilterOpts, platform [][32]byte) (*TeeExtensionRegistrySystemSupportedPlatformAddedIterator, error) {
 
 	var platformRule []interface{}
 	for _, platformItem := range platform {
 		platformRule = append(platformRule, platformItem)
 	}
 
-	logs, sub, err := _TeeExtensionRegistry.contract.FilterLogs(opts, "SupportedPlatformAdded", platformRule)
+	logs, sub, err := _TeeExtensionRegistry.contract.FilterLogs(opts, "SystemSupportedPlatformAdded", platformRule)
 	if err != nil {
 		return nil, err
 	}
-	return &TeeExtensionRegistrySupportedPlatformAddedIterator{contract: _TeeExtensionRegistry.contract, event: "SupportedPlatformAdded", logs: logs, sub: sub}, nil
+	return &TeeExtensionRegistrySystemSupportedPlatformAddedIterator{contract: _TeeExtensionRegistry.contract, event: "SystemSupportedPlatformAdded", logs: logs, sub: sub}, nil
 }
 
-// WatchSupportedPlatformAdded is a free log subscription operation binding the contract event 0xf28352c70129dc8c465c9fd7d85bec07b1454dc6870af70a4ab37a0b7ab7f369.
+// WatchSystemSupportedPlatformAdded is a free log subscription operation binding the contract event 0x6c242db52059d6cc5ef9b73933f4b9e969ddd55017019fcd531b3db99747003e.
 //
-// Solidity: event SupportedPlatformAdded(bytes32 indexed platform)
-func (_TeeExtensionRegistry *TeeExtensionRegistryFilterer) WatchSupportedPlatformAdded(opts *bind.WatchOpts, sink chan<- *TeeExtensionRegistrySupportedPlatformAdded, platform [][32]byte) (event.Subscription, error) {
+// Solidity: event SystemSupportedPlatformAdded(bytes32 indexed platform)
+func (_TeeExtensionRegistry *TeeExtensionRegistryFilterer) WatchSystemSupportedPlatformAdded(opts *bind.WatchOpts, sink chan<- *TeeExtensionRegistrySystemSupportedPlatformAdded, platform [][32]byte) (event.Subscription, error) {
 
 	var platformRule []interface{}
 	for _, platformItem := range platform {
 		platformRule = append(platformRule, platformItem)
 	}
 
-	logs, sub, err := _TeeExtensionRegistry.contract.WatchLogs(opts, "SupportedPlatformAdded", platformRule)
+	logs, sub, err := _TeeExtensionRegistry.contract.WatchLogs(opts, "SystemSupportedPlatformAdded", platformRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2530,8 +3072,8 @@ func (_TeeExtensionRegistry *TeeExtensionRegistryFilterer) WatchSupportedPlatfor
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(TeeExtensionRegistrySupportedPlatformAdded)
-				if err := _TeeExtensionRegistry.contract.UnpackLog(event, "SupportedPlatformAdded", log); err != nil {
+				event := new(TeeExtensionRegistrySystemSupportedPlatformAdded)
+				if err := _TeeExtensionRegistry.contract.UnpackLog(event, "SystemSupportedPlatformAdded", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -2552,318 +3094,12 @@ func (_TeeExtensionRegistry *TeeExtensionRegistryFilterer) WatchSupportedPlatfor
 	}), nil
 }
 
-// ParseSupportedPlatformAdded is a log parse operation binding the contract event 0xf28352c70129dc8c465c9fd7d85bec07b1454dc6870af70a4ab37a0b7ab7f369.
+// ParseSystemSupportedPlatformAdded is a log parse operation binding the contract event 0x6c242db52059d6cc5ef9b73933f4b9e969ddd55017019fcd531b3db99747003e.
 //
-// Solidity: event SupportedPlatformAdded(bytes32 indexed platform)
-func (_TeeExtensionRegistry *TeeExtensionRegistryFilterer) ParseSupportedPlatformAdded(log types.Log) (*TeeExtensionRegistrySupportedPlatformAdded, error) {
-	event := new(TeeExtensionRegistrySupportedPlatformAdded)
-	if err := _TeeExtensionRegistry.contract.UnpackLog(event, "SupportedPlatformAdded", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
-// TeeExtensionRegistrySupportedWalletProjectOpTypeAddedIterator is returned from FilterSupportedWalletProjectOpTypeAdded and is used to iterate over the raw logs and unpacked data for SupportedWalletProjectOpTypeAdded events raised by the TeeExtensionRegistry contract.
-type TeeExtensionRegistrySupportedWalletProjectOpTypeAddedIterator struct {
-	Event *TeeExtensionRegistrySupportedWalletProjectOpTypeAdded // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *TeeExtensionRegistrySupportedWalletProjectOpTypeAddedIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(TeeExtensionRegistrySupportedWalletProjectOpTypeAdded)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(TeeExtensionRegistrySupportedWalletProjectOpTypeAdded)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *TeeExtensionRegistrySupportedWalletProjectOpTypeAddedIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *TeeExtensionRegistrySupportedWalletProjectOpTypeAddedIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// TeeExtensionRegistrySupportedWalletProjectOpTypeAdded represents a SupportedWalletProjectOpTypeAdded event raised by the TeeExtensionRegistry contract.
-type TeeExtensionRegistrySupportedWalletProjectOpTypeAdded struct {
-	ExtensionId *big.Int
-	OpType      [32]byte
-	Raw         types.Log // Blockchain specific contextual infos
-}
-
-// FilterSupportedWalletProjectOpTypeAdded is a free log retrieval operation binding the contract event 0x14f7cd286eb660340c3f76200081ca65cd27b0a2065c549e801c510c18a3db46.
-//
-// Solidity: event SupportedWalletProjectOpTypeAdded(uint256 indexed extensionId, bytes32 indexed opType)
-func (_TeeExtensionRegistry *TeeExtensionRegistryFilterer) FilterSupportedWalletProjectOpTypeAdded(opts *bind.FilterOpts, extensionId []*big.Int, opType [][32]byte) (*TeeExtensionRegistrySupportedWalletProjectOpTypeAddedIterator, error) {
-
-	var extensionIdRule []interface{}
-	for _, extensionIdItem := range extensionId {
-		extensionIdRule = append(extensionIdRule, extensionIdItem)
-	}
-	var opTypeRule []interface{}
-	for _, opTypeItem := range opType {
-		opTypeRule = append(opTypeRule, opTypeItem)
-	}
-
-	logs, sub, err := _TeeExtensionRegistry.contract.FilterLogs(opts, "SupportedWalletProjectOpTypeAdded", extensionIdRule, opTypeRule)
-	if err != nil {
-		return nil, err
-	}
-	return &TeeExtensionRegistrySupportedWalletProjectOpTypeAddedIterator{contract: _TeeExtensionRegistry.contract, event: "SupportedWalletProjectOpTypeAdded", logs: logs, sub: sub}, nil
-}
-
-// WatchSupportedWalletProjectOpTypeAdded is a free log subscription operation binding the contract event 0x14f7cd286eb660340c3f76200081ca65cd27b0a2065c549e801c510c18a3db46.
-//
-// Solidity: event SupportedWalletProjectOpTypeAdded(uint256 indexed extensionId, bytes32 indexed opType)
-func (_TeeExtensionRegistry *TeeExtensionRegistryFilterer) WatchSupportedWalletProjectOpTypeAdded(opts *bind.WatchOpts, sink chan<- *TeeExtensionRegistrySupportedWalletProjectOpTypeAdded, extensionId []*big.Int, opType [][32]byte) (event.Subscription, error) {
-
-	var extensionIdRule []interface{}
-	for _, extensionIdItem := range extensionId {
-		extensionIdRule = append(extensionIdRule, extensionIdItem)
-	}
-	var opTypeRule []interface{}
-	for _, opTypeItem := range opType {
-		opTypeRule = append(opTypeRule, opTypeItem)
-	}
-
-	logs, sub, err := _TeeExtensionRegistry.contract.WatchLogs(opts, "SupportedWalletProjectOpTypeAdded", extensionIdRule, opTypeRule)
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(TeeExtensionRegistrySupportedWalletProjectOpTypeAdded)
-				if err := _TeeExtensionRegistry.contract.UnpackLog(event, "SupportedWalletProjectOpTypeAdded", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseSupportedWalletProjectOpTypeAdded is a log parse operation binding the contract event 0x14f7cd286eb660340c3f76200081ca65cd27b0a2065c549e801c510c18a3db46.
-//
-// Solidity: event SupportedWalletProjectOpTypeAdded(uint256 indexed extensionId, bytes32 indexed opType)
-func (_TeeExtensionRegistry *TeeExtensionRegistryFilterer) ParseSupportedWalletProjectOpTypeAdded(log types.Log) (*TeeExtensionRegistrySupportedWalletProjectOpTypeAdded, error) {
-	event := new(TeeExtensionRegistrySupportedWalletProjectOpTypeAdded)
-	if err := _TeeExtensionRegistry.contract.UnpackLog(event, "SupportedWalletProjectOpTypeAdded", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
-// TeeExtensionRegistrySupportedWalletProjectOpTypeRemovedIterator is returned from FilterSupportedWalletProjectOpTypeRemoved and is used to iterate over the raw logs and unpacked data for SupportedWalletProjectOpTypeRemoved events raised by the TeeExtensionRegistry contract.
-type TeeExtensionRegistrySupportedWalletProjectOpTypeRemovedIterator struct {
-	Event *TeeExtensionRegistrySupportedWalletProjectOpTypeRemoved // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *TeeExtensionRegistrySupportedWalletProjectOpTypeRemovedIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(TeeExtensionRegistrySupportedWalletProjectOpTypeRemoved)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(TeeExtensionRegistrySupportedWalletProjectOpTypeRemoved)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *TeeExtensionRegistrySupportedWalletProjectOpTypeRemovedIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *TeeExtensionRegistrySupportedWalletProjectOpTypeRemovedIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// TeeExtensionRegistrySupportedWalletProjectOpTypeRemoved represents a SupportedWalletProjectOpTypeRemoved event raised by the TeeExtensionRegistry contract.
-type TeeExtensionRegistrySupportedWalletProjectOpTypeRemoved struct {
-	ExtensionId *big.Int
-	OpType      [32]byte
-	Raw         types.Log // Blockchain specific contextual infos
-}
-
-// FilterSupportedWalletProjectOpTypeRemoved is a free log retrieval operation binding the contract event 0x728dce34af3917dbaebf0c52bafb1fbab2e6a982d4880c7fe6b8c87af50971c4.
-//
-// Solidity: event SupportedWalletProjectOpTypeRemoved(uint256 indexed extensionId, bytes32 indexed opType)
-func (_TeeExtensionRegistry *TeeExtensionRegistryFilterer) FilterSupportedWalletProjectOpTypeRemoved(opts *bind.FilterOpts, extensionId []*big.Int, opType [][32]byte) (*TeeExtensionRegistrySupportedWalletProjectOpTypeRemovedIterator, error) {
-
-	var extensionIdRule []interface{}
-	for _, extensionIdItem := range extensionId {
-		extensionIdRule = append(extensionIdRule, extensionIdItem)
-	}
-	var opTypeRule []interface{}
-	for _, opTypeItem := range opType {
-		opTypeRule = append(opTypeRule, opTypeItem)
-	}
-
-	logs, sub, err := _TeeExtensionRegistry.contract.FilterLogs(opts, "SupportedWalletProjectOpTypeRemoved", extensionIdRule, opTypeRule)
-	if err != nil {
-		return nil, err
-	}
-	return &TeeExtensionRegistrySupportedWalletProjectOpTypeRemovedIterator{contract: _TeeExtensionRegistry.contract, event: "SupportedWalletProjectOpTypeRemoved", logs: logs, sub: sub}, nil
-}
-
-// WatchSupportedWalletProjectOpTypeRemoved is a free log subscription operation binding the contract event 0x728dce34af3917dbaebf0c52bafb1fbab2e6a982d4880c7fe6b8c87af50971c4.
-//
-// Solidity: event SupportedWalletProjectOpTypeRemoved(uint256 indexed extensionId, bytes32 indexed opType)
-func (_TeeExtensionRegistry *TeeExtensionRegistryFilterer) WatchSupportedWalletProjectOpTypeRemoved(opts *bind.WatchOpts, sink chan<- *TeeExtensionRegistrySupportedWalletProjectOpTypeRemoved, extensionId []*big.Int, opType [][32]byte) (event.Subscription, error) {
-
-	var extensionIdRule []interface{}
-	for _, extensionIdItem := range extensionId {
-		extensionIdRule = append(extensionIdRule, extensionIdItem)
-	}
-	var opTypeRule []interface{}
-	for _, opTypeItem := range opType {
-		opTypeRule = append(opTypeRule, opTypeItem)
-	}
-
-	logs, sub, err := _TeeExtensionRegistry.contract.WatchLogs(opts, "SupportedWalletProjectOpTypeRemoved", extensionIdRule, opTypeRule)
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(TeeExtensionRegistrySupportedWalletProjectOpTypeRemoved)
-				if err := _TeeExtensionRegistry.contract.UnpackLog(event, "SupportedWalletProjectOpTypeRemoved", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseSupportedWalletProjectOpTypeRemoved is a log parse operation binding the contract event 0x728dce34af3917dbaebf0c52bafb1fbab2e6a982d4880c7fe6b8c87af50971c4.
-//
-// Solidity: event SupportedWalletProjectOpTypeRemoved(uint256 indexed extensionId, bytes32 indexed opType)
-func (_TeeExtensionRegistry *TeeExtensionRegistryFilterer) ParseSupportedWalletProjectOpTypeRemoved(log types.Log) (*TeeExtensionRegistrySupportedWalletProjectOpTypeRemoved, error) {
-	event := new(TeeExtensionRegistrySupportedWalletProjectOpTypeRemoved)
-	if err := _TeeExtensionRegistry.contract.UnpackLog(event, "SupportedWalletProjectOpTypeRemoved", log); err != nil {
+// Solidity: event SystemSupportedPlatformAdded(bytes32 indexed platform)
+func (_TeeExtensionRegistry *TeeExtensionRegistryFilterer) ParseSystemSupportedPlatformAdded(log types.Log) (*TeeExtensionRegistrySystemSupportedPlatformAdded, error) {
+	event := new(TeeExtensionRegistrySystemSupportedPlatformAdded)
+	if err := _TeeExtensionRegistry.contract.UnpackLog(event, "SystemSupportedPlatformAdded", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

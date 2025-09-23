@@ -80,22 +80,27 @@
   },
   {
     "inputs": [],
+    "name": "InvalidKeyType",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "InvalidNonce",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "InvalidOpType",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "InvalidOpTypeConstants",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "InvalidPublicKey",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidSettings",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidSigningAlgo",
     "type": "error"
   },
   {
@@ -340,12 +345,6 @@
         "internalType": "bytes",
         "name": "publicKey",
         "type": "bytes"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "addressStr",
-        "type": "string"
       }
     ],
     "name": "WalletKeyConfirmed",
@@ -555,7 +554,12 @@
           },
           {
             "internalType": "bytes32",
-            "name": "opType",
+            "name": "keyType",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "signingAlgo",
             "type": "bytes32"
           },
           {
@@ -564,34 +568,14 @@
             "type": "bytes"
           },
           {
-            "internalType": "bytes",
-            "name": "proofOfPossession",
-            "type": "bytes"
-          },
-          {
             "internalType": "uint256",
             "name": "nonce",
             "type": "uint256"
           },
           {
-            "internalType": "uint256",
-            "name": "pauseNonce",
-            "type": "uint256"
-          },
-          {
-            "internalType": "enum ITeeWalletKeyManager.TeeKeyStatus",
-            "name": "status",
-            "type": "uint8"
-          },
-          {
             "internalType": "bool",
             "name": "restored",
             "type": "bool"
-          },
-          {
-            "internalType": "string",
-            "name": "addressStr",
-            "type": "string"
           },
           {
             "components": [
@@ -626,11 +610,6 @@
                 "internalType": "uint64",
                 "name": "cosignersThreshold",
                 "type": "uint64"
-              },
-              {
-                "internalType": "bytes",
-                "name": "opTypeConstants",
-                "type": "bytes"
               }
             ],
             "internalType": "struct ITeeWalletKeyManager.KeyConfigConstants",
@@ -638,21 +617,14 @@
             "type": "tuple"
           },
           {
-            "components": [
-              {
-                "internalType": "address[]",
-                "name": "pausingAddresses",
-                "type": "address[]"
-              },
-              {
-                "internalType": "bytes",
-                "name": "opTypeSettings",
-                "type": "bytes"
-              }
-            ],
-            "internalType": "struct ITeeWalletKeyManager.KeyConfigSettings",
-            "name": "configSettings",
-            "type": "tuple"
+            "internalType": "bytes32",
+            "name": "settingsVersion",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "settings",
+            "type": "bytes"
           }
         ],
         "internalType": "struct ITeeWalletKeyManager.KeyExistence",
@@ -744,30 +716,6 @@
         "internalType": "address",
         "name": "_addressUpdater",
         "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_walletId",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint64",
-        "name": "_keyId",
-        "type": "uint64"
-      }
-    ],
-    "name": "getWalletKeyAddress",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "_addressStr",
-        "type": "string"
       }
     ],
     "stateMutability": "view",

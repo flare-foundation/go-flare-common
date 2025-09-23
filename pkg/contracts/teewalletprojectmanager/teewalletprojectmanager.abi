@@ -16,6 +16,11 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "AuthorizationAddressZero",
+    "type": "error"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -38,6 +43,11 @@
   },
   {
     "inputs": [],
+    "name": "KeyTypeNotSupported",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "OnlyOwner",
     "type": "error"
   },
@@ -48,17 +58,12 @@
   },
   {
     "inputs": [],
-    "name": "OpTypeNotSupported",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "OwnerNotAllowed",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "SubmitAddressZero",
+    "name": "SigningAlgoNotSupported",
     "type": "error"
   },
   {
@@ -219,13 +224,19 @@
       {
         "indexed": false,
         "internalType": "bytes32",
-        "name": "opType",
+        "name": "keyType",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "signingAlgo",
         "type": "bytes32"
       },
       {
         "indexed": false,
         "internalType": "address",
-        "name": "submitAddress",
+        "name": "authorizationAddress",
         "type": "address"
       }
     ],
@@ -331,12 +342,17 @@
       },
       {
         "internalType": "bytes32",
-        "name": "_opType",
+        "name": "_keyType",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_signingAlgo",
         "type": "bytes32"
       },
       {
         "internalType": "address",
-        "name": "_submitAddress",
+        "name": "_authorizationAddress",
         "type": "address"
       }
     ],
@@ -371,6 +387,25 @@
       {
         "internalType": "address",
         "name": "_addressUpdater",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_projectId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getAuthorizationAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "_authorizationAddress",
         "type": "address"
       }
     ],
@@ -423,31 +458,12 @@
         "type": "bytes32"
       }
     ],
-    "name": "getOpType",
+    "name": "getKeyType",
     "outputs": [
       {
         "internalType": "bytes32",
-        "name": "_opType",
+        "name": "_keyType",
         "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_projectId",
-        "type": "bytes32"
-      }
-    ],
-    "name": "getOpTypeConstants",
-    "outputs": [
-      {
-        "internalType": "bytes",
-        "name": "",
-        "type": "bytes"
       }
     ],
     "stateMutability": "view",
@@ -480,12 +496,12 @@
         "type": "bytes32"
       }
     ],
-    "name": "getSubmitAddress",
+    "name": "getSigningAlgo",
     "outputs": [
       {
-        "internalType": "address",
-        "name": "_submitAddress",
-        "type": "address"
+        "internalType": "bytes32",
+        "name": "_signingAlgo",
+        "type": "bytes32"
       }
     ],
     "stateMutability": "view",

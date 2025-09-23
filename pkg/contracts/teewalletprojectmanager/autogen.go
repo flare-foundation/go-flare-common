@@ -31,7 +31,7 @@ var (
 
 // TeeWalletProjectManagerMetaData contains all meta data concerning the TeeWalletProjectManager contract.
 var TeeWalletProjectManagerMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"}],\"name\":\"AddressEmptyCode\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"ERC1967InvalidImplementation\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC1967NonPayable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FailedInnerCall\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProposedOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OpTypeNotSupported\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OwnerNotAllowed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SubmitAddressZero\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UUPSUnauthorizedCallContext\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"slot\",\"type\":\"bytes32\"}],\"name\":\"UUPSUnsupportedProxiableUUID\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"WalletNotPartOfProject\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"WalletNotProductionReady\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"projectId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"backupManager\",\"type\":\"address\"}],\"name\":\"BackupManagerSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"name\":\"GovernanceCallTimelocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"initialGovernance\",\"type\":\"address\"}],\"name\":\"GovernanceInitialised\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"governanceSettings\",\"type\":\"address\"}],\"name\":\"GovernedProductionModeEntered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"projectId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"NewOwnerProposed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"projectId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipConfirmed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"projectId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"submitAddress\",\"type\":\"address\"}],\"name\":\"ProjectCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallCanceled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallExecuted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"Upgraded\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"UPGRADE_INTERFACE_VERSION\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"cancelGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_projectId\",\"type\":\"bytes32\"}],\"name\":\"confirmOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_opType\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"_submitAddress\",\"type\":\"address\"}],\"name\":\"createProject\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"_projectId\",\"type\":\"bytes32\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"executeGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAddressUpdater\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_projectId\",\"type\":\"bytes32\"}],\"name\":\"getBackupManager\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_backupManager\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_projectId\",\"type\":\"bytes32\"}],\"name\":\"getExtensionId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_projectId\",\"type\":\"bytes32\"}],\"name\":\"getOpType\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"_opType\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_projectId\",\"type\":\"bytes32\"}],\"name\":\"getOpTypeConstants\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_projectId\",\"type\":\"bytes32\"}],\"name\":\"getOwner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_projectOwner\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_projectId\",\"type\":\"bytes32\"}],\"name\":\"getSubmitAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_submitAddress\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governance\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governanceSettings\",\"outputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"implementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"}],\"name\":\"initialise\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"isExecutor\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"productionMode\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"projectCounter\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_projectId\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"_newOwner\",\"type\":\"address\"}],\"name\":\"proposeNewOwner\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"projectId\",\"type\":\"bytes32\"}],\"name\":\"proposedProjectOwner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"proxiableUUID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_projectId\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"_backupManager\",\"type\":\"address\"}],\"name\":\"setBackupManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"switchToProductionMode\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeExtensionRegistry\",\"outputs\":[{\"internalType\":\"contractITeeExtensionRegistry\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeOwnerAllowlist\",\"outputs\":[{\"internalType\":\"contractITeeOwnerAllowlist\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeWalletManager\",\"outputs\":[{\"internalType\":\"contractITeeWalletManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"}],\"name\":\"timelockedCalls\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_contractNameHashes\",\"type\":\"bytes32[]\"},{\"internalType\":\"address[]\",\"name\":\"_contractAddresses\",\"type\":\"address[]\"}],\"name\":\"updateContractAddresses\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newImplementation\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"upgradeToAndCall\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"}],\"name\":\"AddressEmptyCode\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AuthorizationAddressZero\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"ERC1967InvalidImplementation\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC1967NonPayable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FailedInnerCall\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"KeyTypeNotSupported\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProposedOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OwnerNotAllowed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SigningAlgoNotSupported\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UUPSUnauthorizedCallContext\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"slot\",\"type\":\"bytes32\"}],\"name\":\"UUPSUnsupportedProxiableUUID\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"WalletNotPartOfProject\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"WalletNotProductionReady\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"projectId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"backupManager\",\"type\":\"address\"}],\"name\":\"BackupManagerSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"name\":\"GovernanceCallTimelocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"initialGovernance\",\"type\":\"address\"}],\"name\":\"GovernanceInitialised\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"governanceSettings\",\"type\":\"address\"}],\"name\":\"GovernedProductionModeEntered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"projectId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"NewOwnerProposed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"projectId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipConfirmed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"projectId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"signingAlgo\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"authorizationAddress\",\"type\":\"address\"}],\"name\":\"ProjectCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallCanceled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallExecuted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"Upgraded\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"UPGRADE_INTERFACE_VERSION\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"cancelGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_projectId\",\"type\":\"bytes32\"}],\"name\":\"confirmOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_keyType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_signingAlgo\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"_authorizationAddress\",\"type\":\"address\"}],\"name\":\"createProject\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"_projectId\",\"type\":\"bytes32\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"executeGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAddressUpdater\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_projectId\",\"type\":\"bytes32\"}],\"name\":\"getAuthorizationAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_authorizationAddress\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_projectId\",\"type\":\"bytes32\"}],\"name\":\"getBackupManager\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_backupManager\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_projectId\",\"type\":\"bytes32\"}],\"name\":\"getExtensionId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_projectId\",\"type\":\"bytes32\"}],\"name\":\"getKeyType\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"_keyType\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_projectId\",\"type\":\"bytes32\"}],\"name\":\"getOwner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_projectOwner\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_projectId\",\"type\":\"bytes32\"}],\"name\":\"getSigningAlgo\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"_signingAlgo\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governance\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governanceSettings\",\"outputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"implementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"}],\"name\":\"initialise\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"isExecutor\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"productionMode\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"projectCounter\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_projectId\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"_newOwner\",\"type\":\"address\"}],\"name\":\"proposeNewOwner\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"projectId\",\"type\":\"bytes32\"}],\"name\":\"proposedProjectOwner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"proxiableUUID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_projectId\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"_backupManager\",\"type\":\"address\"}],\"name\":\"setBackupManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"switchToProductionMode\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeExtensionRegistry\",\"outputs\":[{\"internalType\":\"contractITeeExtensionRegistry\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeOwnerAllowlist\",\"outputs\":[{\"internalType\":\"contractITeeOwnerAllowlist\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeWalletManager\",\"outputs\":[{\"internalType\":\"contractITeeWalletManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"}],\"name\":\"timelockedCalls\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_contractNameHashes\",\"type\":\"bytes32[]\"},{\"internalType\":\"address[]\",\"name\":\"_contractAddresses\",\"type\":\"address[]\"}],\"name\":\"updateContractAddresses\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newImplementation\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"upgradeToAndCall\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}]",
 }
 
 // TeeWalletProjectManagerABI is the input ABI used to generate the binding from.
@@ -242,6 +242,37 @@ func (_TeeWalletProjectManager *TeeWalletProjectManagerCallerSession) GetAddress
 	return _TeeWalletProjectManager.Contract.GetAddressUpdater(&_TeeWalletProjectManager.CallOpts)
 }
 
+// GetAuthorizationAddress is a free data retrieval call binding the contract method 0x33fa0007.
+//
+// Solidity: function getAuthorizationAddress(bytes32 _projectId) view returns(address _authorizationAddress)
+func (_TeeWalletProjectManager *TeeWalletProjectManagerCaller) GetAuthorizationAddress(opts *bind.CallOpts, _projectId [32]byte) (common.Address, error) {
+	var out []interface{}
+	err := _TeeWalletProjectManager.contract.Call(opts, &out, "getAuthorizationAddress", _projectId)
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// GetAuthorizationAddress is a free data retrieval call binding the contract method 0x33fa0007.
+//
+// Solidity: function getAuthorizationAddress(bytes32 _projectId) view returns(address _authorizationAddress)
+func (_TeeWalletProjectManager *TeeWalletProjectManagerSession) GetAuthorizationAddress(_projectId [32]byte) (common.Address, error) {
+	return _TeeWalletProjectManager.Contract.GetAuthorizationAddress(&_TeeWalletProjectManager.CallOpts, _projectId)
+}
+
+// GetAuthorizationAddress is a free data retrieval call binding the contract method 0x33fa0007.
+//
+// Solidity: function getAuthorizationAddress(bytes32 _projectId) view returns(address _authorizationAddress)
+func (_TeeWalletProjectManager *TeeWalletProjectManagerCallerSession) GetAuthorizationAddress(_projectId [32]byte) (common.Address, error) {
+	return _TeeWalletProjectManager.Contract.GetAuthorizationAddress(&_TeeWalletProjectManager.CallOpts, _projectId)
+}
+
 // GetBackupManager is a free data retrieval call binding the contract method 0x7bb77989.
 //
 // Solidity: function getBackupManager(bytes32 _projectId) view returns(address _backupManager)
@@ -304,12 +335,12 @@ func (_TeeWalletProjectManager *TeeWalletProjectManagerCallerSession) GetExtensi
 	return _TeeWalletProjectManager.Contract.GetExtensionId(&_TeeWalletProjectManager.CallOpts, _projectId)
 }
 
-// GetOpType is a free data retrieval call binding the contract method 0x1409b249.
+// GetKeyType is a free data retrieval call binding the contract method 0x779d385a.
 //
-// Solidity: function getOpType(bytes32 _projectId) view returns(bytes32 _opType)
-func (_TeeWalletProjectManager *TeeWalletProjectManagerCaller) GetOpType(opts *bind.CallOpts, _projectId [32]byte) ([32]byte, error) {
+// Solidity: function getKeyType(bytes32 _projectId) view returns(bytes32 _keyType)
+func (_TeeWalletProjectManager *TeeWalletProjectManagerCaller) GetKeyType(opts *bind.CallOpts, _projectId [32]byte) ([32]byte, error) {
 	var out []interface{}
-	err := _TeeWalletProjectManager.contract.Call(opts, &out, "getOpType", _projectId)
+	err := _TeeWalletProjectManager.contract.Call(opts, &out, "getKeyType", _projectId)
 
 	if err != nil {
 		return *new([32]byte), err
@@ -321,49 +352,18 @@ func (_TeeWalletProjectManager *TeeWalletProjectManagerCaller) GetOpType(opts *b
 
 }
 
-// GetOpType is a free data retrieval call binding the contract method 0x1409b249.
+// GetKeyType is a free data retrieval call binding the contract method 0x779d385a.
 //
-// Solidity: function getOpType(bytes32 _projectId) view returns(bytes32 _opType)
-func (_TeeWalletProjectManager *TeeWalletProjectManagerSession) GetOpType(_projectId [32]byte) ([32]byte, error) {
-	return _TeeWalletProjectManager.Contract.GetOpType(&_TeeWalletProjectManager.CallOpts, _projectId)
+// Solidity: function getKeyType(bytes32 _projectId) view returns(bytes32 _keyType)
+func (_TeeWalletProjectManager *TeeWalletProjectManagerSession) GetKeyType(_projectId [32]byte) ([32]byte, error) {
+	return _TeeWalletProjectManager.Contract.GetKeyType(&_TeeWalletProjectManager.CallOpts, _projectId)
 }
 
-// GetOpType is a free data retrieval call binding the contract method 0x1409b249.
+// GetKeyType is a free data retrieval call binding the contract method 0x779d385a.
 //
-// Solidity: function getOpType(bytes32 _projectId) view returns(bytes32 _opType)
-func (_TeeWalletProjectManager *TeeWalletProjectManagerCallerSession) GetOpType(_projectId [32]byte) ([32]byte, error) {
-	return _TeeWalletProjectManager.Contract.GetOpType(&_TeeWalletProjectManager.CallOpts, _projectId)
-}
-
-// GetOpTypeConstants is a free data retrieval call binding the contract method 0x727b7d21.
-//
-// Solidity: function getOpTypeConstants(bytes32 _projectId) view returns(bytes)
-func (_TeeWalletProjectManager *TeeWalletProjectManagerCaller) GetOpTypeConstants(opts *bind.CallOpts, _projectId [32]byte) ([]byte, error) {
-	var out []interface{}
-	err := _TeeWalletProjectManager.contract.Call(opts, &out, "getOpTypeConstants", _projectId)
-
-	if err != nil {
-		return *new([]byte), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new([]byte)).(*[]byte)
-
-	return out0, err
-
-}
-
-// GetOpTypeConstants is a free data retrieval call binding the contract method 0x727b7d21.
-//
-// Solidity: function getOpTypeConstants(bytes32 _projectId) view returns(bytes)
-func (_TeeWalletProjectManager *TeeWalletProjectManagerSession) GetOpTypeConstants(_projectId [32]byte) ([]byte, error) {
-	return _TeeWalletProjectManager.Contract.GetOpTypeConstants(&_TeeWalletProjectManager.CallOpts, _projectId)
-}
-
-// GetOpTypeConstants is a free data retrieval call binding the contract method 0x727b7d21.
-//
-// Solidity: function getOpTypeConstants(bytes32 _projectId) view returns(bytes)
-func (_TeeWalletProjectManager *TeeWalletProjectManagerCallerSession) GetOpTypeConstants(_projectId [32]byte) ([]byte, error) {
-	return _TeeWalletProjectManager.Contract.GetOpTypeConstants(&_TeeWalletProjectManager.CallOpts, _projectId)
+// Solidity: function getKeyType(bytes32 _projectId) view returns(bytes32 _keyType)
+func (_TeeWalletProjectManager *TeeWalletProjectManagerCallerSession) GetKeyType(_projectId [32]byte) ([32]byte, error) {
+	return _TeeWalletProjectManager.Contract.GetKeyType(&_TeeWalletProjectManager.CallOpts, _projectId)
 }
 
 // GetOwner is a free data retrieval call binding the contract method 0xdeb931a2.
@@ -397,35 +397,35 @@ func (_TeeWalletProjectManager *TeeWalletProjectManagerCallerSession) GetOwner(_
 	return _TeeWalletProjectManager.Contract.GetOwner(&_TeeWalletProjectManager.CallOpts, _projectId)
 }
 
-// GetSubmitAddress is a free data retrieval call binding the contract method 0x14edb8d7.
+// GetSigningAlgo is a free data retrieval call binding the contract method 0x17566896.
 //
-// Solidity: function getSubmitAddress(bytes32 _projectId) view returns(address _submitAddress)
-func (_TeeWalletProjectManager *TeeWalletProjectManagerCaller) GetSubmitAddress(opts *bind.CallOpts, _projectId [32]byte) (common.Address, error) {
+// Solidity: function getSigningAlgo(bytes32 _projectId) view returns(bytes32 _signingAlgo)
+func (_TeeWalletProjectManager *TeeWalletProjectManagerCaller) GetSigningAlgo(opts *bind.CallOpts, _projectId [32]byte) ([32]byte, error) {
 	var out []interface{}
-	err := _TeeWalletProjectManager.contract.Call(opts, &out, "getSubmitAddress", _projectId)
+	err := _TeeWalletProjectManager.contract.Call(opts, &out, "getSigningAlgo", _projectId)
 
 	if err != nil {
-		return *new(common.Address), err
+		return *new([32]byte), err
 	}
 
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
 
 	return out0, err
 
 }
 
-// GetSubmitAddress is a free data retrieval call binding the contract method 0x14edb8d7.
+// GetSigningAlgo is a free data retrieval call binding the contract method 0x17566896.
 //
-// Solidity: function getSubmitAddress(bytes32 _projectId) view returns(address _submitAddress)
-func (_TeeWalletProjectManager *TeeWalletProjectManagerSession) GetSubmitAddress(_projectId [32]byte) (common.Address, error) {
-	return _TeeWalletProjectManager.Contract.GetSubmitAddress(&_TeeWalletProjectManager.CallOpts, _projectId)
+// Solidity: function getSigningAlgo(bytes32 _projectId) view returns(bytes32 _signingAlgo)
+func (_TeeWalletProjectManager *TeeWalletProjectManagerSession) GetSigningAlgo(_projectId [32]byte) ([32]byte, error) {
+	return _TeeWalletProjectManager.Contract.GetSigningAlgo(&_TeeWalletProjectManager.CallOpts, _projectId)
 }
 
-// GetSubmitAddress is a free data retrieval call binding the contract method 0x14edb8d7.
+// GetSigningAlgo is a free data retrieval call binding the contract method 0x17566896.
 //
-// Solidity: function getSubmitAddress(bytes32 _projectId) view returns(address _submitAddress)
-func (_TeeWalletProjectManager *TeeWalletProjectManagerCallerSession) GetSubmitAddress(_projectId [32]byte) (common.Address, error) {
-	return _TeeWalletProjectManager.Contract.GetSubmitAddress(&_TeeWalletProjectManager.CallOpts, _projectId)
+// Solidity: function getSigningAlgo(bytes32 _projectId) view returns(bytes32 _signingAlgo)
+func (_TeeWalletProjectManager *TeeWalletProjectManagerCallerSession) GetSigningAlgo(_projectId [32]byte) ([32]byte, error) {
+	return _TeeWalletProjectManager.Contract.GetSigningAlgo(&_TeeWalletProjectManager.CallOpts, _projectId)
 }
 
 // Governance is a free data retrieval call binding the contract method 0x5aa6e675.
@@ -856,25 +856,25 @@ func (_TeeWalletProjectManager *TeeWalletProjectManagerTransactorSession) Confir
 	return _TeeWalletProjectManager.Contract.ConfirmOwnership(&_TeeWalletProjectManager.TransactOpts, _projectId)
 }
 
-// CreateProject is a paid mutator transaction binding the contract method 0xef565a1c.
+// CreateProject is a paid mutator transaction binding the contract method 0xa632bcb6.
 //
-// Solidity: function createProject(uint256 _extensionId, bytes32 _opType, address _submitAddress) returns(bytes32 _projectId)
-func (_TeeWalletProjectManager *TeeWalletProjectManagerTransactor) CreateProject(opts *bind.TransactOpts, _extensionId *big.Int, _opType [32]byte, _submitAddress common.Address) (*types.Transaction, error) {
-	return _TeeWalletProjectManager.contract.Transact(opts, "createProject", _extensionId, _opType, _submitAddress)
+// Solidity: function createProject(uint256 _extensionId, bytes32 _keyType, bytes32 _signingAlgo, address _authorizationAddress) returns(bytes32 _projectId)
+func (_TeeWalletProjectManager *TeeWalletProjectManagerTransactor) CreateProject(opts *bind.TransactOpts, _extensionId *big.Int, _keyType [32]byte, _signingAlgo [32]byte, _authorizationAddress common.Address) (*types.Transaction, error) {
+	return _TeeWalletProjectManager.contract.Transact(opts, "createProject", _extensionId, _keyType, _signingAlgo, _authorizationAddress)
 }
 
-// CreateProject is a paid mutator transaction binding the contract method 0xef565a1c.
+// CreateProject is a paid mutator transaction binding the contract method 0xa632bcb6.
 //
-// Solidity: function createProject(uint256 _extensionId, bytes32 _opType, address _submitAddress) returns(bytes32 _projectId)
-func (_TeeWalletProjectManager *TeeWalletProjectManagerSession) CreateProject(_extensionId *big.Int, _opType [32]byte, _submitAddress common.Address) (*types.Transaction, error) {
-	return _TeeWalletProjectManager.Contract.CreateProject(&_TeeWalletProjectManager.TransactOpts, _extensionId, _opType, _submitAddress)
+// Solidity: function createProject(uint256 _extensionId, bytes32 _keyType, bytes32 _signingAlgo, address _authorizationAddress) returns(bytes32 _projectId)
+func (_TeeWalletProjectManager *TeeWalletProjectManagerSession) CreateProject(_extensionId *big.Int, _keyType [32]byte, _signingAlgo [32]byte, _authorizationAddress common.Address) (*types.Transaction, error) {
+	return _TeeWalletProjectManager.Contract.CreateProject(&_TeeWalletProjectManager.TransactOpts, _extensionId, _keyType, _signingAlgo, _authorizationAddress)
 }
 
-// CreateProject is a paid mutator transaction binding the contract method 0xef565a1c.
+// CreateProject is a paid mutator transaction binding the contract method 0xa632bcb6.
 //
-// Solidity: function createProject(uint256 _extensionId, bytes32 _opType, address _submitAddress) returns(bytes32 _projectId)
-func (_TeeWalletProjectManager *TeeWalletProjectManagerTransactorSession) CreateProject(_extensionId *big.Int, _opType [32]byte, _submitAddress common.Address) (*types.Transaction, error) {
-	return _TeeWalletProjectManager.Contract.CreateProject(&_TeeWalletProjectManager.TransactOpts, _extensionId, _opType, _submitAddress)
+// Solidity: function createProject(uint256 _extensionId, bytes32 _keyType, bytes32 _signingAlgo, address _authorizationAddress) returns(bytes32 _projectId)
+func (_TeeWalletProjectManager *TeeWalletProjectManagerTransactorSession) CreateProject(_extensionId *big.Int, _keyType [32]byte, _signingAlgo [32]byte, _authorizationAddress common.Address) (*types.Transaction, error) {
+	return _TeeWalletProjectManager.Contract.CreateProject(&_TeeWalletProjectManager.TransactOpts, _extensionId, _keyType, _signingAlgo, _authorizationAddress)
 }
 
 // ExecuteGovernanceCall is a paid mutator transaction binding the contract method 0x5ff27079.
@@ -1977,17 +1977,18 @@ func (it *TeeWalletProjectManagerProjectCreatedIterator) Close() error {
 
 // TeeWalletProjectManagerProjectCreated represents a ProjectCreated event raised by the TeeWalletProjectManager contract.
 type TeeWalletProjectManagerProjectCreated struct {
-	ProjectId     [32]byte
-	Owner         common.Address
-	ExtensionId   *big.Int
-	OpType        [32]byte
-	SubmitAddress common.Address
-	Raw           types.Log // Blockchain specific contextual infos
+	ProjectId            [32]byte
+	Owner                common.Address
+	ExtensionId          *big.Int
+	KeyType              [32]byte
+	SigningAlgo          [32]byte
+	AuthorizationAddress common.Address
+	Raw                  types.Log // Blockchain specific contextual infos
 }
 
-// FilterProjectCreated is a free log retrieval operation binding the contract event 0x298a5f56e1c0f474f194b7963de86b48f28c9b42b450babfa242ff1072c3766d.
+// FilterProjectCreated is a free log retrieval operation binding the contract event 0xcc296665527b84fb4e1da4690e3104d656f4cb08a150dc6a856b1af5aa671514.
 //
-// Solidity: event ProjectCreated(bytes32 indexed projectId, address indexed owner, uint256 extensionId, bytes32 opType, address submitAddress)
+// Solidity: event ProjectCreated(bytes32 indexed projectId, address indexed owner, uint256 extensionId, bytes32 keyType, bytes32 signingAlgo, address authorizationAddress)
 func (_TeeWalletProjectManager *TeeWalletProjectManagerFilterer) FilterProjectCreated(opts *bind.FilterOpts, projectId [][32]byte, owner []common.Address) (*TeeWalletProjectManagerProjectCreatedIterator, error) {
 
 	var projectIdRule []interface{}
@@ -2006,9 +2007,9 @@ func (_TeeWalletProjectManager *TeeWalletProjectManagerFilterer) FilterProjectCr
 	return &TeeWalletProjectManagerProjectCreatedIterator{contract: _TeeWalletProjectManager.contract, event: "ProjectCreated", logs: logs, sub: sub}, nil
 }
 
-// WatchProjectCreated is a free log subscription operation binding the contract event 0x298a5f56e1c0f474f194b7963de86b48f28c9b42b450babfa242ff1072c3766d.
+// WatchProjectCreated is a free log subscription operation binding the contract event 0xcc296665527b84fb4e1da4690e3104d656f4cb08a150dc6a856b1af5aa671514.
 //
-// Solidity: event ProjectCreated(bytes32 indexed projectId, address indexed owner, uint256 extensionId, bytes32 opType, address submitAddress)
+// Solidity: event ProjectCreated(bytes32 indexed projectId, address indexed owner, uint256 extensionId, bytes32 keyType, bytes32 signingAlgo, address authorizationAddress)
 func (_TeeWalletProjectManager *TeeWalletProjectManagerFilterer) WatchProjectCreated(opts *bind.WatchOpts, sink chan<- *TeeWalletProjectManagerProjectCreated, projectId [][32]byte, owner []common.Address) (event.Subscription, error) {
 
 	var projectIdRule []interface{}
@@ -2052,9 +2053,9 @@ func (_TeeWalletProjectManager *TeeWalletProjectManagerFilterer) WatchProjectCre
 	}), nil
 }
 
-// ParseProjectCreated is a log parse operation binding the contract event 0x298a5f56e1c0f474f194b7963de86b48f28c9b42b450babfa242ff1072c3766d.
+// ParseProjectCreated is a log parse operation binding the contract event 0xcc296665527b84fb4e1da4690e3104d656f4cb08a150dc6a856b1af5aa671514.
 //
-// Solidity: event ProjectCreated(bytes32 indexed projectId, address indexed owner, uint256 extensionId, bytes32 opType, address submitAddress)
+// Solidity: event ProjectCreated(bytes32 indexed projectId, address indexed owner, uint256 extensionId, bytes32 keyType, bytes32 signingAlgo, address authorizationAddress)
 func (_TeeWalletProjectManager *TeeWalletProjectManagerFilterer) ParseProjectCreated(log types.Log) (*TeeWalletProjectManagerProjectCreated, error) {
 	event := new(TeeWalletProjectManagerProjectCreated)
 	if err := _TeeWalletProjectManager.contract.UnpackLog(event, "ProjectCreated", log); err != nil {
