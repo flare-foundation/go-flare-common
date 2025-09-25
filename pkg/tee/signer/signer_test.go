@@ -277,6 +277,20 @@ func TestSigner(t *testing.T) {
 		require.Equal(t, http.StatusBadRequest, respUnknown.StatusCode)
 	})
 
+	t.Run("invalid endpoint", func(t *testing.T) {
+		t.Parallel()
+
+		req, err := http.NewRequest(http.MethodGet, url+identityEP+signEP, nil)
+		require.NoError(t, err)
+
+		req.Header.Set("X-API-KEY", apiKey)
+		req.Header.Set("Content-Type", "application/json")
+
+		resp := sendRequest(t, req)
+
+		require.Equal(t, http.StatusNotFound, resp.StatusCode)
+	})
+
 	t.Cleanup(func() {
 		err := signer.Shutdown(ctx)
 		require.NoError(t, err)
