@@ -25,6 +25,7 @@ var methods = []string{
 var MessageArguments map[op.Command]abi.Argument
 
 var KeyExistenceStructArg abi.Argument
+var BackupIdStructArg abi.Argument
 
 func init() {
 	walletmanagerAbi, err := WalletMetaData.GetAbi()
@@ -51,4 +52,11 @@ func init() {
 	}
 
 	KeyExistenceStructArg = method.Inputs[0]
+
+	method, ok = walletmanagerAbi.Methods["backupIdStruct"]
+	if !ok {
+		logger.Panicf("missing method %s", "backupIdStruct")
+	}
+
+	BackupIdStructArg = method.Inputs[0]
 }

@@ -288,14 +288,14 @@
             "type": "bytes"
           },
           {
-            "internalType": "uint24",
+            "internalType": "uint32",
             "name": "rewardEpochId",
-            "type": "uint24"
+            "type": "uint32"
           },
           {
-            "internalType": "uint256",
+            "internalType": "bytes32",
             "name": "randomNonce",
-            "type": "uint256"
+            "type": "bytes32"
           }
         ],
         "internalType": "struct ITeeWalletBackupManager.BackupId",
