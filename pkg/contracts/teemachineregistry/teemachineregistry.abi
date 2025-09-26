@@ -5,11 +5,6 @@
     "type": "constructor"
   },
   {
-    "inputs": [],
-    "name": "AcTimestampInvalid",
-    "type": "error"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -23,6 +18,11 @@
   {
     "inputs": [],
     "name": "AlreadyRegistered",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "AvailabilityCheckTimestampInvalid",
     "type": "error"
   },
   {
