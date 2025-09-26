@@ -98,7 +98,13 @@
     "type": "error"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "keyType",
+        "type": "bytes32"
+      }
+    ],
     "name": "KeyTypeNotSupported",
     "type": "error"
   },

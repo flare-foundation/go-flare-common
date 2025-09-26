@@ -34,17 +34,6 @@
   {
     "inputs": [
       {
-        "internalType": "uint32",
-        "name": "lastSigningPolicyId",
-        "type": "uint32"
-      }
-    ],
-    "name": "AvailabilityCheckValidityExpired",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "uint256",
         "name": "challengeTs",
         "type": "uint256"
@@ -114,11 +103,6 @@
   {
     "inputs": [],
     "name": "InvalidDuration",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "InvalidInitialSigningPolicy",
     "type": "error"
   },
   {
