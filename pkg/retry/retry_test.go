@@ -107,7 +107,7 @@ func TestExecuteWithRetry(t *testing.T) {
 			},
 			expected: ExecuteStatus[int]{
 				Success: false,
-				Err:     fmt.Errorf("context error mid retry: %v", context.DeadlineExceeded),
+				Err:     fmt.Errorf("context error mid retry: %v: last error: %w", context.DeadlineExceeded, errRetry),
 				Value:   0,
 			},
 		},
