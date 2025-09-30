@@ -19,8 +19,9 @@ import (
 )
 
 const (
-	maxReqBodySize = 10 * (1 << 10) // 10 kB for maximal request body size (enough for roughly 145 signatures)
-	maxHeaderBytes = (1 << 10)      // 1 kB for maximal request header (only expect )
+	maxReqBodySize        = 10 * (1 << 10) // 10 KiB for maximal request body size (enough for roughly 145 signatures)
+	maxHeaderBytes        = (1 << 10)      // 1 KiB for maximal request header (only expect)
+	maxReqBodySizeDecrypt = (10 << 20)     // 10 MiB for maximal request body size (enough for roughly 145 signatures)
 
 	writeTimeout      = 3 * time.Second
 	readTimeout       = 3 * time.Second
@@ -264,7 +265,7 @@ type DecryptedBody struct {
 // decryptHandler returns an HTTP handler that decrypts the cipher from the request body using the provided ECDSA private key.
 func decryptHandler(prv *ecdsa.PrivateKey) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		r.Body = http.MaxBytesReader(w, r.Body, maxReqBodySize)
+		r.Body = http.MaxBytesReader(w, r.Body, maxReqBodySizeDecrypt)
 
 		defer r.Body.Close() //nolint:errcheck
 
