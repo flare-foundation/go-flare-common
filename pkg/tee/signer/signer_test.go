@@ -299,3 +299,132 @@ func TestSigner(t *testing.T) {
 		wg.Wait()
 	})
 }
+
+func TestConfigs(t *testing.T) {
+	lts := Limits{
+		maxReqBodySize:        200,
+		maxReqBodySizeDecrypt: 500,
+		maxHeaderBytes:        1 << 10,
+		writeTimeout:          1 * time.Second,
+		readTimeout:           1 * time.Second,
+		readHeaderTimeout:     1 * time.Second,
+	}
+
+	t.Run("limits", func(t *testing.T) {
+		// nothing changed
+		lts.setDefaults()
+		require.Equal(t, int64(200), lts.maxReqBodySize)
+		require.Equal(t, int64(500), lts.maxReqBodySizeDecrypt)
+		require.Equal(t, 1<<10, lts.maxHeaderBytes)
+		require.Equal(t, 1*time.Second, lts.writeTimeout)
+		require.Equal(t, 1*time.Second, lts.readTimeout)
+		require.Equal(t, 1*time.Second, lts.readHeaderTimeout)
+
+		ltsDef := Limits{}
+		ltsDef.setDefaults()
+		require.Equal(t, defaultMaxReqBodySize, ltsDef.maxReqBodySize)
+		require.Equal(t, defaultMaxReqBodySizeDecrypt, ltsDef.maxReqBodySizeDecrypt)
+		require.Equal(t, defaultMaxHeaderBytes, ltsDef.maxHeaderBytes)
+		require.Equal(t, defaultWriteTimeout, ltsDef.writeTimeout)
+		require.Equal(t, defaultReadTimeout, ltsDef.readTimeout)
+		require.Equal(t, defaultReadHeaderTimeout, ltsDef.readHeaderTimeout)
+	})
+
+	cfg := Config{
+		Addr:       fmt.Sprintf(":%d", port),
+		APIKeyName: "X-API-KEY",
+		APIKeys:    []string{apiKey},
+		Limits:     lts,
+	}
+
+	ctx, cancel := context.WithCancel(context.Background())
+
+	prv, err := crypto.GenerateKey()
+	require.NoError(t, err)
+
+	s := New(cfg, prv)
+
+	var wg sync.WaitGroup
+
+	wg.Go(func() {
+		err := s.Run(ctx)
+		require.Error(t, err)
+	})
+
+	time.Sleep(1 * time.Second)
+
+	t.Run("sign with custom limit", func(t *testing.T) {
+		const nuOfHashesFail uint64 = 3
+
+		body := prepareSignBody(nuOfHashesFail)
+		request := preparePOSTRequest(t, body, signEP)
+
+		request.Header.Set("Content-Type", "application/json")
+		request.Header.Set("X-API-KEY", apiKey)
+
+		resp := sendRequest(t, request)
+		require.Equal(t, http.StatusRequestEntityTooLarge, resp.StatusCode)
+
+		const nuOfHashesSuccess uint64 = 1
+
+		body = prepareSignBody(nuOfHashesSuccess)
+		request = preparePOSTRequest(t, body, signEP)
+
+		request.Header.Set("Content-Type", "application/json")
+		request.Header.Set("X-API-KEY", apiKey)
+
+		resp = sendRequest(t, request)
+		require.Equal(t, http.StatusOK, resp.StatusCode)
+	})
+
+	t.Run("decrypt with custom limit ok", func(t *testing.T) {
+		textLength := 10
+		plaintext := bytes.Repeat([]byte("a"), textLength)
+
+		pke := ecies.ImportECDSAPublic(&prv.PublicKey)
+
+		cipher, err := ecies.Encrypt(rand.Reader, pke, plaintext, nil, nil)
+		require.NoError(t, err)
+
+		eb := EncryptedBody{
+			Cipher: cipher,
+		}
+
+		req := preparePOSTRequest(t, eb, decryptEP)
+
+		req.Header.Set("X-API-KEY", apiKey)
+
+		resp := sendRequest(t, req)
+
+		require.Equal(t, http.StatusOK, resp.StatusCode)
+	})
+
+	t.Run("decrypt with custom limit fail", func(t *testing.T) {
+		textLengthOk := 150
+		plaintext := bytes.Repeat([]byte("a"), textLengthOk)
+
+		pke := ecies.ImportECDSAPublic(&prv.PublicKey)
+
+		cipher, err := ecies.Encrypt(rand.Reader, pke, plaintext, nil, nil)
+		require.NoError(t, err)
+
+		eb := EncryptedBody{
+			Cipher: cipher,
+		}
+
+		req := preparePOSTRequest(t, eb, decryptEP)
+
+		req.Header.Set("X-API-KEY", apiKey)
+
+		resp := sendRequest(t, req)
+
+		require.Equal(t, http.StatusRequestEntityTooLarge, resp.StatusCode)
+	})
+
+	t.Cleanup(func() {
+		err := s.Shutdown(ctx)
+		require.NoError(t, err)
+		cancel()
+		wg.Wait()
+	})
+}
