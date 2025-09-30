@@ -6,6 +6,7 @@ import (
 	"context"
 	"crypto/ecdsa"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"time"
@@ -15,29 +16,98 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/crypto/ecies"
-	"github.com/flare-foundation/go-flare-common/pkg/logger"
 )
 
 const (
-	maxReqBodySize        = 10 * (1 << 10) // 10 KiB for maximal request body size (enough for roughly 145 signatures)
-	maxHeaderBytes        = (1 << 10)      // 1 KiB for maximal request header (only expect)
-	maxReqBodySizeDecrypt = (10 << 20)     // 10 MiB for maximal request body size (enough for roughly 145 signatures)
+	defaultMaxReqBodySize        = int64(10 << 10)  // 10 KiB for maximal request body size (enough for roughly 145 signatures)
+	defaultMaxReqBodySizeDecrypt = int64(500 << 10) // 500 KiB for maximal request body for decrypt
+	defaultMaxHeaderBytes        = 1 << 10          // 1 KiB for maximal request header (only expect)
 
-	writeTimeout      = 3 * time.Second
-	readTimeout       = 3 * time.Second
-	readHeaderTimeout = 1 * time.Second
+	defaultWriteTimeout      = 3 * time.Second
+	defaultReadTimeout       = 3 * time.Second
+	defaultReadHeaderTimeout = 1 * time.Second
 )
+
+// Config holds configuration for the Signer server.
+type Config struct {
+	Addr       string   `toml:"addr"`
+	APIKeyName string   `toml:"api_key_name"`
+	APIKeys    []string `toml:"api_keys"`
+	Limits     Limits   `toml:"limits"`
+}
+
+type Limits struct {
+	maxReqBodySize        int64 `toml:"max_req_body_size"`
+	maxReqBodySizeDecrypt int64 `toml:"max_req_body_size_decrypt"`
+	maxHeaderBytes        int   `toml:"max_header_bytes"`
+
+	writeTimeout      time.Duration `toml:"write_timeout"`
+	readTimeout       time.Duration `toml:"read_timeout"`
+	readHeaderTimeout time.Duration `toml:"read_header_timeout"`
+}
+
+// setDefaults sets default values for any zero-valued fields in Limits.
+func (l *Limits) setDefaults() {
+	if l.maxReqBodySize == 0 {
+		l.maxReqBodySize = defaultMaxReqBodySize
+	}
+	if l.maxReqBodySizeDecrypt == 0 {
+		l.maxReqBodySizeDecrypt = defaultMaxReqBodySizeDecrypt
+	}
+	if l.maxHeaderBytes == 0 {
+		l.maxHeaderBytes = defaultMaxHeaderBytes
+	}
+	if l.writeTimeout == 0 {
+		l.writeTimeout = defaultWriteTimeout
+	}
+	if l.readTimeout == 0 {
+		l.readTimeout = defaultReadTimeout
+	}
+	if l.readHeaderTimeout == 0 {
+		l.readHeaderTimeout = defaultReadHeaderTimeout
+	}
+}
 
 // Signer wraps an HTTP server that provides signing and decryption endpoints.
 type Signer struct {
 	*http.Server
 }
 
+// New creates a new Signer from the given config and ECDSA private key.
+//
+// The Signer listens to POST requests on /sign and /decrypt, and GET requests on /id.
+// API key validation is performed for each request.
+func New(cfg Config, prv *ecdsa.PrivateKey) *Signer {
+	apiKeys := newAPIKeys(cfg)
+
+	cfg.Limits.setDefaults()
+
+	mux := http.NewServeMux()
+
+	mux.Handle("POST /sign", signHandler(prv, cfg.Limits.maxReqBodySize))
+	mux.Handle("POST /decrypt", decryptHandler(prv, cfg.Limits.maxReqBodySizeDecrypt))
+
+	mux.Handle("GET /id", idHandler(&prv.PublicKey))
+
+	handler := prepare(mux, apiKeys)
+
+	server := http.Server{
+		Addr:                         cfg.Addr,
+		Handler:                      handler,
+		DisableGeneralOptionsHandler: false,
+		ReadTimeout:                  cfg.Limits.readTimeout,
+		ReadHeaderTimeout:            cfg.Limits.readHeaderTimeout,
+		WriteTimeout:                 cfg.Limits.writeTimeout,
+		MaxHeaderBytes:               cfg.Limits.maxHeaderBytes,
+	}
+
+	return &Signer{Server: &server}
+}
+
 // Run starts the HTTP server and listens for requests until the context is cancelled.
 func (s *Signer) Run(ctx context.Context) error {
 	if s == nil {
-		logger.Debug("no signer")
-		return nil
+		return errors.New("no signer")
 	}
 
 	c := make(chan error)
@@ -57,13 +127,6 @@ func (s *Signer) Run(ctx context.Context) error {
 	}
 
 	return err
-}
-
-// Config holds configuration for the Signer server.
-type Config struct {
-	Addr       string   `toml:"addr"`
-	APIKeyName string   `toml:"api_key_name"`
-	APIKeys    []string `toml:"api_keys"`
 }
 
 // apiKeys hold API keys for authorization of incoming requests.
@@ -91,35 +154,6 @@ func (ak *apiKeys) authorize(h *http.Header) bool {
 	return ak.keys[providedKey]
 }
 
-// New creates a new Signer from the given config and ECDSA private key.
-//
-// The Signer listens to POST requests on /sign and /decrypt, and GET requests on /id.
-// API key validation is performed for each request.
-func New(cfg Config, prv *ecdsa.PrivateKey) *Signer {
-	apiKeys := newAPIKeys(cfg)
-
-	mux := http.NewServeMux()
-
-	mux.Handle("POST /sign", signHandler(prv))
-	mux.Handle("POST /decrypt", decryptHandler(prv))
-
-	mux.Handle("GET /id", idHandler(&prv.PublicKey))
-
-	handler := prepare(mux, apiKeys)
-
-	server := http.Server{
-		Addr:                         cfg.Addr,
-		Handler:                      handler,
-		DisableGeneralOptionsHandler: false,
-		ReadTimeout:                  readTimeout,
-		ReadHeaderTimeout:            readHeaderTimeout,
-		WriteTimeout:                 writeTimeout,
-		MaxHeaderBytes:               maxHeaderBytes,
-	}
-
-	return &Signer{&server}
-}
-
 // SignBody is the request body format for the /sign endpoint.
 type SignBody struct {
 	Hashes []common.Hash `json:"hashes"`
@@ -131,7 +165,7 @@ type SignedBody struct {
 }
 
 // signHandler returns an HTTP handler that signs hashes provided in the request body.
-func signHandler(prv *ecdsa.PrivateKey) http.HandlerFunc {
+func signHandler(prv *ecdsa.PrivateKey, maxReqBodySize int64) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Header.Get("Content-Type") != "application/json" {
 			http.Error(w, "Content-Type must be application/json", http.StatusNotAcceptable)
@@ -263,9 +297,9 @@ type DecryptedBody struct {
 }
 
 // decryptHandler returns an HTTP handler that decrypts the cipher from the request body using the provided ECDSA private key.
-func decryptHandler(prv *ecdsa.PrivateKey) http.HandlerFunc {
+func decryptHandler(prv *ecdsa.PrivateKey, maxReqBodySize int64) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		r.Body = http.MaxBytesReader(w, r.Body, maxReqBodySizeDecrypt)
+		r.Body = http.MaxBytesReader(w, r.Body, maxReqBodySize)
 
 		defer r.Body.Close() //nolint:errcheck
 

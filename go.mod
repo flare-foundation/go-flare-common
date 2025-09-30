@@ -1,6 +1,6 @@
 module github.com/flare-foundation/go-flare-common
 
-go 1.24.4
+go 1.25.1
 
 require (
 	github.com/BurntSushi/toml v1.5.0
