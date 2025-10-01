@@ -30,7 +30,7 @@ func (h *hash) ToBytes(value any, _ bool) ([]byte, error) {
 // ToJson decodes hash to hexadecimal string.
 //
 // If length is fixed for type, the parameter is shadowed.
-func (h *hash) ToJson(b *bytes.Buffer, length int) (any, error) {
+func (h *hash) ToJSON(b *bytes.Buffer, length int) (any, error) {
 	l := h.length
 	if l == 0 {
 		l = length

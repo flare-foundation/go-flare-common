@@ -58,7 +58,7 @@ func Encode(value Object, signing bool) ([]byte, error) {
 
 type Coder interface {
 	ToBytes(value any, signing bool) ([]byte, error)
-	ToJson(b *bytes.Buffer, length int) (any, error)
+	ToJSON(b *bytes.Buffer, length int) (any, error)
 }
 
 func typeCoder(xt defs.XType) (Coder, error) {
@@ -304,7 +304,7 @@ func decodeNext(b *bytes.Buffer) (string, any, error) {
 		}
 	}
 
-	value, err := coder.ToJson(b, length)
+	value, err := coder.ToJSON(b, length)
 	if err != nil {
 		return "", nil, fmt.Errorf("decoding %v: %v", fName, err)
 	}

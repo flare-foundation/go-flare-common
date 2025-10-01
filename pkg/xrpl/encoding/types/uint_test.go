@@ -174,7 +174,7 @@ func TestUintFail(t *testing.T) {
 			inputBytes, err := hex.DecodeString(input)
 			require.NoError(t, err, j, input)
 			b := bytes.NewBuffer(inputBytes)
-			_, err = test.t.ToJson(b, 0)
+			_, err = test.t.ToJSON(b, 0)
 			require.Error(t, err, j, input)
 		}
 	}
@@ -188,7 +188,7 @@ func TestUint32(t *testing.T) {
 		require.NoError(t, err, j)
 
 		b := bytes.NewBuffer(serialized)
-		deserialized, err := (&UInt32{}).ToJson(b, 0)
+		deserialized, err := (&UInt32{}).ToJSON(b, 0)
 		require.NoError(t, err, j)
 
 		deserializedU, ok := deserialized.(uint32)
@@ -206,12 +206,46 @@ func TestUint64(t *testing.T) {
 		require.NoError(t, err, j)
 
 		b := bytes.NewBuffer(serialized)
-		deserialized, err := (&UInt64{}).ToJson(b, 0)
+		deserialized, err := (&UInt64{}).ToJSON(b, 0)
 		require.NoError(t, err, j)
 
 		deserializedStr, ok := deserialized.(string)
 		require.True(t, ok, j)
 
 		require.Equal(t, input, deserializedStr)
+	}
+}
+
+func TestUint16ToTxType(t *testing.T) {
+	tests := []struct {
+		output string
+		input  uint16
+	}{
+		{"XChainModifyBridge", 47},
+		{"AMMVote", 38},
+		{"AMMCreate", 35},
+		{"Batch", 71},
+		{"LedgerStateFix", 53},
+		{"NFTokenCreateOffer", 27},
+		{"SetFee", 101},
+		{"VaultDeposit", 68},
+		{"XChainAccountCreateCommit", 44},
+	}
+
+	for _, test := range tests {
+		output, err := Uint16ToTxType(test.input)
+		require.NoError(t, err)
+		require.Equal(t, test.output, output)
+	}
+
+	fails := []any{
+		uint32(45),
+		uint16(10000),
+		"12",
+	}
+
+	for _, fail := range fails {
+		_, err := Uint16ToTxType(fail)
+		require.Error(t, err)
 	}
 }

@@ -113,7 +113,7 @@ func TestHashDecodeFail(t *testing.T) {
 		require.NoError(t, err)
 
 		b := bytes.NewBuffer(by)
-		_, err = test.t.ToJson(b, test.length)
+		_, err = test.t.ToJSON(b, test.length)
 		require.Error(t, err)
 	}
 }

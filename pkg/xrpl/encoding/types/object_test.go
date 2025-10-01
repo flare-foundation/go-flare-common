@@ -59,7 +59,7 @@ func TestObjectEncodeDecode(t *testing.T) {
 
 		b := bytes.NewBuffer(serialized)
 
-		deserialized, err := (&STObject{}).ToJson(b, 0)
+		deserialized, err := (&STObject{}).ToJSON(b, 0)
 		require.NoError(t, err, j)
 
 		mapOut, ok := deserialized.(map[string]any)
@@ -86,7 +86,7 @@ func TestObjectDecodeEncode(t *testing.T) {
 
 		b := bytes.NewBuffer(input)
 
-		decoded, err := Obj.ToJson(b, 0)
+		decoded, err := Obj.ToJSON(b, 0)
 		require.NoError(t, err)
 		require.Equal(t, 0, b.Len())
 

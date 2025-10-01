@@ -54,7 +54,7 @@ func (*PathSet) ToBytes(value any, _ bool) ([]byte, error) {
 	return out, nil
 }
 
-func (*PathSet) ToJson(b *bytes.Buffer, _ int) (any, error) {
+func (*PathSet) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	out := make([]any, 0)
 	l := 0
 
@@ -238,7 +238,7 @@ func readStep(b *bytes.Buffer) (byte, any, error) {
 
 	switch flag {
 	case 0x01:
-		account, err := AccountID.ToJson(b, 0)
+		account, err := AccountID.ToJSON(b, 0)
 		if err != nil {
 			return flag, nil, fmt.Errorf("reading account: %v", err)
 		}
@@ -256,7 +256,7 @@ func readStep(b *bytes.Buffer) (byte, any, error) {
 		return flag, out, nil
 
 	case 0x20:
-		issuer, err := AccountID.ToJson(b, 0)
+		issuer, err := AccountID.ToJSON(b, 0)
 		if err != nil {
 			return flag, nil, fmt.Errorf("issuer: %v", err)
 		}
@@ -272,7 +272,7 @@ func readStep(b *bytes.Buffer) (byte, any, error) {
 
 		out["currency"] = currency
 
-		issuer, err := AccountID.ToJson(b, 0)
+		issuer, err := AccountID.ToJSON(b, 0)
 		if err != nil {
 			return flag, nil, fmt.Errorf("issuer after currency: %v", err)
 		}

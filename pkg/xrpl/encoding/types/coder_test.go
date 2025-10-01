@@ -222,7 +222,7 @@ func TestLengthDecodeEncode(t *testing.T) {
 }
 
 func TestLengthDecodeFail(t *testing.T) {
-	inputs := [][]byte{{255}, {193}, {241, 0}, {254, 212, 24}}
+	inputs := [][]byte{{255}, {193}, {241, 0}, {254, 212, 24}, {}}
 
 	for _, input := range inputs {
 		b := bytes.NewBuffer(input)

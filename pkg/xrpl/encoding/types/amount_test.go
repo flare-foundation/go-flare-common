@@ -198,7 +198,7 @@ func TestAmountDeserializeSerialize(t *testing.T) {
 		require.NoError(t, err, j)
 		b := bytes.NewBuffer(blob)
 
-		deserialized, err := Amount.ToJson(b, 0)
+		deserialized, err := Amount.ToJSON(b, 0)
 		require.NoError(t, err, j)
 
 		fmt.Printf("deserialized: %v\n", deserialized)
@@ -213,7 +213,7 @@ func TestAmountEncodeDecode(t *testing.T) {
 
 	b := bytes.NewBuffer(value)
 
-	decoded, err := Amount.ToJson(b, 0)
+	decoded, err := Amount.ToJSON(b, 0)
 	require.NoError(t, err)
 
 	require.Equal(t, amount, decoded)
@@ -249,6 +249,25 @@ func TestAmountFail(t *testing.T) {
                 "value": 10,
                 "issuer": "rrrrrrrrrrrrrrrrrrrrBZbvji"
             }`,
+		` {
+                "currency": "USD",
+                "value": "10",
+                "issuer": "rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAee"
+            }`,
+		` {
+                "currency": 1,
+                "value": "10",
+                "issuer": "rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAee"
+            }`,
+		` {
+                "currency": "USD",
+                "value": "10"
+			}`,
+		` {
+                "currency": "USD",
+                "value": "10",
+				"invalidField": 10
+			}`,
 	}
 
 	for j := range tests {
@@ -350,7 +369,7 @@ func TestAmountDecodeEncode(t *testing.T) {
 	for _, input := range inputs {
 		b := bytes.NewBuffer(input)
 
-		decoded, err := Amount.ToJson(b, 0)
+		decoded, err := Amount.ToJSON(b, 0)
 		require.NoError(t, err)
 		require.Equal(t, 0, b.Len())
 
@@ -380,7 +399,7 @@ func TestAmountDecodeFail(t *testing.T) {
 	for j, input := range inputs {
 		b := bytes.NewBuffer(input)
 
-		_, err := Amount.ToJson(b, 0)
+		_, err := Amount.ToJSON(b, 0)
 		require.Error(t, err, j)
 	}
 }

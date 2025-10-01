@@ -93,7 +93,7 @@ func (*XChainBridge) ToBytes(value any, _ bool) ([]byte, error) {
 	return out.Bytes(), nil
 }
 
-func (*XChainBridge) ToJson(b *bytes.Buffer, _ int) (any, error) {
+func (*XChainBridge) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	out := make(map[string]any)
 
 	l, err := b.ReadByte()
@@ -104,25 +104,25 @@ func (*XChainBridge) ToJson(b *bytes.Buffer, _ int) (any, error) {
 		return nil, fmt.Errorf("invalid length byte expected %x is %x", 20, l)
 	}
 
-	lockingChainDoor, err := AccountID.ToJson(b, 0)
+	lockingChainDoor, err := AccountID.ToJSON(b, 0)
 	if err != nil {
 		return nil, fmt.Errorf("reading LockingChainDoor: %v", err)
 	}
 	out["LockingChainDoor"] = lockingChainDoor
 
-	lockingChainIssue, err := Issue.ToJson(b, 0)
+	lockingChainIssue, err := Issue.ToJSON(b, 0)
 	if err != nil {
 		return nil, fmt.Errorf("reading LockingChainIssue: %v", err)
 	}
 	out["LockingChainIssue"] = lockingChainIssue
 
-	issuingChainDoor, err := AccountID.ToJson(b, 0)
+	issuingChainDoor, err := AccountID.ToJSON(b, 0)
 	if err != nil {
 		return nil, fmt.Errorf("reading IssuingChainDoor: %v", err)
 	}
 	out["IssuingChainDoor"] = issuingChainDoor
 
-	issuingChainIssue, err := Issue.ToJson(b, 0)
+	issuingChainIssue, err := Issue.ToJSON(b, 0)
 	if err != nil {
 		return nil, fmt.Errorf("reading IssuingChainIssue: %v", err)
 	}
