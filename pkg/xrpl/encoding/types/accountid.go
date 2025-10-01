@@ -29,7 +29,7 @@ func (*accountID) ToBytes(value any, _ bool) ([]byte, error) {
 }
 
 // ToJson reads next 20 bytes and converts them to a string xrpl address.
-func (*accountID) ToJson(b *bytes.Buffer, _ int) (any, error) {
+func (*accountID) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	const l = 20
 	value := make([]byte, l)
 
@@ -43,7 +43,7 @@ func (*accountID) ToJson(b *bytes.Buffer, _ int) (any, error) {
 
 	addr, err := address.Address(value)
 	if err != nil {
-		return nil, fmt.Errorf("deserializing accountID %v: %v", hex.EncodeToString(value), err)
+		return nil, fmt.Errorf("deserializing accountID %v: %v", hex.EncodeToString(value), err) // note: currently unreachable. It only errors if len(value) is not 20, which is checked above.
 	}
 
 	return addr, nil

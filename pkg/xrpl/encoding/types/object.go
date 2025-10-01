@@ -27,7 +27,7 @@ func (*STObject) ToBytes(value any, signing bool) ([]byte, error) {
 	return bytes, nil
 }
 
-func (*STObject) ToJson(b *bytes.Buffer, _ int) (any, error) {
+func (*STObject) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	out := make(map[string]any)
 
 	for {

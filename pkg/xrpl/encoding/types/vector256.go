@@ -28,7 +28,7 @@ func (*vector256) ToBytes(value any, _ bool) ([]byte, error) {
 	return out, nil
 }
 
-func (*vector256) ToJson(b *bytes.Buffer, l int) (any, error) {
+func (*vector256) ToJSON(b *bytes.Buffer, l int) (any, error) {
 	if l%32 != 0 {
 		return nil, fmt.Errorf("invalid length of encoded vector256 %d", l)
 	}
@@ -38,7 +38,7 @@ func (*vector256) ToJson(b *bytes.Buffer, l int) (any, error) {
 	out := make([]any, arrayLen)
 
 	for j := range arrayLen {
-		hash, err := Hash256.ToJson(b, 0)
+		hash, err := Hash256.ToJSON(b, 0)
 		if err != nil {
 			return nil, fmt.Errorf("reading entry %d of %d long vector256: %v", j, l, err)
 		}

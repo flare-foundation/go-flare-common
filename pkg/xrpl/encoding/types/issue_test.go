@@ -25,7 +25,7 @@ func TestIssueEncodeDecode(t *testing.T) {
 		require.NoError(t, err)
 
 		b := bytes.NewBuffer(encoded)
-		decoded, err := Issue.ToJson(b, 0)
+		decoded, err := Issue.ToJSON(b, 0)
 
 		require.NoError(t, err)
 		require.Equal(t, 0, b.Len())

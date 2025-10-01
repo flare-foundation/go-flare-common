@@ -40,7 +40,7 @@ func (*UInt8) ToBytes(value any, _ bool) ([]byte, error) {
 	return []byte{byte(tempInt)}, nil
 }
 
-func (*UInt8) ToJson(b *bytes.Buffer, _ int) (any, error) {
+func (*UInt8) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	u, err := b.ReadByte()
 	if err != nil {
 		return nil, fmt.Errorf("cannot read uint8 from buffer: %v", err)
@@ -89,7 +89,7 @@ func (*UInt16) ToBytes(value any, _ bool) ([]byte, error) {
 }
 
 // ToJson reads 2 bytes and decodes them to uint16 value.
-func (*UInt16) ToJson(b *bytes.Buffer, _ int) (any, error) {
+func (*UInt16) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	const l = 2
 	v := make([]byte, l)
 
@@ -126,7 +126,7 @@ func (*UInt32) ToBytes(value any, _ bool) ([]byte, error) {
 	return out, nil
 }
 
-func (*UInt32) ToJson(b *bytes.Buffer, _ int) (any, error) {
+func (*UInt32) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	const l = 4
 	v := make([]byte, l)
 
@@ -171,7 +171,7 @@ func (*UInt64) ToBytes(value any, _ bool) ([]byte, error) {
 	return out, nil
 }
 
-func (*UInt64) ToJson(b *bytes.Buffer, _ int) (any, error) {
+func (*UInt64) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	const l = 8
 	v := make([]byte, l)
 

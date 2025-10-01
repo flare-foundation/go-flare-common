@@ -83,3 +83,19 @@ func TestPubToAddress(t *testing.T) {
 		require.Equal(t, test.add, addFromPub)
 	}
 }
+
+func TestPubToAddressFail(t *testing.T) {
+	tests := []string{
+		"",        // empty string
+		"invalid", // not hex
+		"028FFB276505F9AC3F57E8D5242B386A597EF6C40A7999F37F1948636FD484E25",    // too short
+		"028FFB276505F9AC3F57E8D5242B386A597EF6C40A7999F37F1948636FD484E25BAA", // too long
+		"FF8FFB276505F9AC3F57E8D5242B386A597EF6C40A7999F37F1948636FD484E25B",   // invalid first byte
+		"048FFB276505F9AC3F57E8D5242B386A597EF6C40A7999F37F1948636FD484E25B",   // invalid first byte
+	}
+
+	for _, test := range tests {
+		_, err := PubToAddress(test)
+		require.Error(t, err)
+	}
+}

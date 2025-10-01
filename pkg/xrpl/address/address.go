@@ -75,6 +75,11 @@ func PubToAddress(prv string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("decoding prv kye: %v", err)
 	}
+
+	if len(prvBytes) != 33 {
+		return "", errors.New("wrong private key length. Should be 33 bytes long")
+	}
+
 	if !slices.Contains([]byte{0x03, 0x02, 0xed}, prvBytes[0]) {
 		return "", fmt.Errorf("invalid first byte of prv key %X", prvBytes[0])
 	}

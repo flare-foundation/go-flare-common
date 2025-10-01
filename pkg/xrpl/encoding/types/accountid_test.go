@@ -16,7 +16,7 @@ func TestAccountIDFailToByte(t *testing.T) {
 	}
 }
 
-func TestAccountIDFailToJson(t *testing.T) {
+func TestAccountIDFailToJSON(t *testing.T) {
 	inputs := [][]byte{
 		{},
 		{1},
@@ -24,7 +24,7 @@ func TestAccountIDFailToJson(t *testing.T) {
 
 	for _, input := range inputs {
 		b := bytes.NewBuffer(input)
-		_, err := AccountID.ToJson(b, 0)
+		_, err := AccountID.ToJSON(b, 0)
 		require.Error(t, err)
 	}
 }
@@ -37,7 +37,7 @@ func TestAccountID(t *testing.T) {
 		require.NoError(t, err)
 
 		b := bytes.NewBuffer(enc)
-		dec, err := AccountID.ToJson(b, 0)
+		dec, err := AccountID.ToJSON(b, 0)
 		require.NoError(t, err)
 
 		require.Equal(t, add, dec)

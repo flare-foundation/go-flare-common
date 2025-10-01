@@ -62,7 +62,7 @@ func (*issue) ToBytes(value any, _ bool) ([]byte, error) {
 	return code, nil
 }
 
-func (*issue) ToJson(b *bytes.Buffer, _ int) (any, error) {
+func (*issue) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	out := make(map[string]any)
 
 	l := 20

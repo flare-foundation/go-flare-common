@@ -62,7 +62,7 @@ func (*amount) ToBytes(value any, _ bool) ([]byte, error) {
 }
 
 // ToJson decodes amount field.
-func (a *amount) ToJson(b *bytes.Buffer, _ int) (any, error) {
+func (a *amount) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	firstByte, err := b.ReadByte()
 	if err != nil {
 		return nil, fmt.Errorf("cannot read first byte: %v", err)
@@ -72,11 +72,11 @@ func (a *amount) ToJson(b *bytes.Buffer, _ int) (any, error) {
 
 	switch first {
 	case 0:
-		return xrpToJson(firstByte, b)
+		return xrpToJSON(firstByte, b)
 	case notXRPBitMask:
-		return tokenToJson(firstByte, b)
+		return tokenToJSON(firstByte, b)
 	default:
-		return nil, fmt.Errorf("impossible, first bit neither 1 nor 0: %v", first)
+		return nil, fmt.Errorf("impossible, first bit neither 1 nor 0: %v", first) // unreachable
 	}
 }
 
@@ -225,7 +225,6 @@ func serializeStandardCode(code string) ([]byte, error) {
 // todo consider disallowing 0x00 prefixed nonstandard codes.
 func serializeNonstandardCode(code string) ([]byte, error) {
 	out, err := hex.DecodeString(code)
-
 	if err != nil {
 		return nil, fmt.Errorf("invalid nonstandard currency code: %v", err)
 	}
@@ -329,7 +328,6 @@ func deserializeTokenAmount(a []byte) (string, error) {
 	val := number & significantMask
 
 	sign := ""
-
 	if firstByte&signBitMask == 0 && val != 0 {
 		sign = "-"
 	}
@@ -344,7 +342,7 @@ func deserializeTokenAmount(a []byte) (string, error) {
 	return fl.Text(0x67, -1), nil
 }
 
-func xrpToJson(firstByte byte, b *bytes.Buffer) (string, error) {
+func xrpToJSON(firstByte byte, b *bytes.Buffer) (string, error) {
 	const l = 8
 	v := make([]byte, l)
 	v[0] = firstByte & valueBitMask // remove "not XRP bit" and sign
@@ -374,7 +372,7 @@ func xrpToJson(firstByte byte, b *bytes.Buffer) (string, error) {
 	return out, nil
 }
 
-func tokenToJson(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
+func tokenToJSON(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
 	out := make(map[string]any)
 
 	// amount

@@ -35,7 +35,7 @@ func ValidateMultiSig(tx map[string]any, s *signer.Signer) (bool, error) {
 
 	switch pubPrefix {
 	case "ED", "ed":
-		return ed25519.Validate(msg, sigBytes, s.SigningPubKey[2:])
+		return ed25519.Validate(msg, sigBytes, s.SigningPubKey)
 	case "02", "03":
 		return secp256k1.Validate(msg, sigBytes, s.SigningPubKey)
 	default:
@@ -46,7 +46,6 @@ func ValidateMultiSig(tx map[string]any, s *signer.Signer) (bool, error) {
 // JoinMultisig appends signers to transactions and serializes it.
 //
 // It is assumed that signer are sorted and valid.
-// If any of the signers is invalid, error is returned.
 func JoinMultisig(tx map[string]any, signers []*signer.Signer) ([]byte, error) {
 	signersArray := make([]any, len(signers))
 
@@ -66,11 +65,10 @@ func JoinMultisig(tx map[string]any, signers []*signer.Signer) ([]byte, error) {
 	return encoding.Encode(tx, false)
 }
 
-// JoinMultisig appends signers to transactions and serializes it.
+// JoinMultisig appends signers to transactions.
 //
-// It is assumed that signer are sorted and valid.
-// If any of the signers is invalid, error is returned.
-func JoinMultisigJson(tx map[string]any, signers []*signer.Signer) map[string]any {
+// It is assumed that signer are valid.
+func JoinMultisigJSON(tx map[string]any, signers []*signer.Signer) map[string]any {
 	signersArray := make([]any, len(signers))
 
 	for j, signer := range signers {
