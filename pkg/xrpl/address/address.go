@@ -35,7 +35,7 @@ func ID(address string) ([]byte, error) {
 	// checksum
 	provided := addressBytes[21:]
 
-	computed := Checksum(addressBytes[:21])
+	computed := hash.Checksum(addressBytes[:21])
 	if !bytes.Equal(provided, computed) {
 		return nil, errors.New("invalid checksum")
 	}
@@ -62,16 +62,11 @@ func IDToAddress(id []byte) string {
 	augmented = append(augmented, accountPrefix) // account prefix
 	augmented = append(augmented, id...)
 
-	cs := Checksum(augmented) // checksum
+	cs := hash.Checksum(augmented) // checksum
 
 	augmented = append(augmented, cs...)
 
 	return base58.XRPLCoder.Encode(augmented)
-}
-
-// Checksum returns a checksum for the byte string (first 4 bytes of double sha256 hash).
-func Checksum(b []byte) []byte {
-	return hash.DoubleSha256(b)[:4]
 }
 
 // PubToAddress converts public key in hex string to XRPL address.
