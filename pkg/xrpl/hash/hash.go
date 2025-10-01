@@ -33,3 +33,8 @@ func Sha256RipeMD160(b []byte) []byte {
 	ripe.Write(sha.Sum(nil))
 	return ripe.Sum(nil)
 }
+
+// Checksum returns a checksum for the byte string (first 4 bytes of double sha256 hash).
+func Checksum(b []byte) []byte {
+	return DoubleSha256(b)[:4]
+}

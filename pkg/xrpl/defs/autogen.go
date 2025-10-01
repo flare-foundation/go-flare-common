@@ -3,97 +3,105 @@
 package defs
 
 const (
-	PathSet      XType = 18
-	Transaction  XType = 10001
-	Hash160      XType = 17
-	LedgerEntry  XType = 10002
-	NotPresent   XType = 0
-	UInt512      XType = 23
-	UInt64       XType = 3
-	UInt8        XType = 16
-	Currency     XType = 26
-	STObject     XType = 14
-	Hash192      XType = 21
-	Metadata     XType = 10004
-	UInt384      XType = 22
-	AccountID    XType = 8
-	Amount       XType = 6
-	Blob         XType = 7
-	Done         XType = -1
-	Validation   XType = 10003
-	Vector256    XType = 19
-	Hash128      XType = 4
-	UInt96       XType = 20
-	STArray      XType = 15
-	UInt32       XType = 2
-	Unknown      XType = -2
-	Issue        XType = 24
-	Number       XType = 9
-	XChainBridge XType = 25
 	Hash256      XType = 5
 	UInt16       XType = 1
+	UInt32       XType = 2
+	Vector256    XType = 19
+	XChainBridge XType = 25
+	Hash192      XType = 21
+	NotPresent   XType = 0
+	Unknown      XType = -2
+	Validation   XType = 10003
+	Amount       XType = 6
+	Issue        XType = 24
+	Transaction  XType = 10001
+	Blob         XType = 7
+	Currency     XType = 26
+	Done         XType = -1
+	Hash160      XType = 17
+	Number       XType = 9
+	UInt8        XType = 16
+	AccountID    XType = 8
+	LedgerEntry  XType = 10002
+	STObject     XType = 14
+	UInt64       XType = 3
+	Hash128      XType = 4
+	PathSet      XType = 18
+	STArray      XType = 15
+	UInt384      XType = 22
+	UInt512      XType = 23
+	Metadata     XType = 10004
+	UInt96       XType = 20
 )
 
 var TxTypeToValue = map[string]int32{
-	"OracleDelete":                      52,
-	"PaymentChannelCreate":              13,
-	"AMMCreate":                         35,
-	"Clawback":                          30,
-	"NFTokenCreateOffer":                27,
-	"NFTokenModify":                     61,
-	"PaymentChannelClaim":               15,
-	"AccountDelete":                     21,
-	"CheckCreate":                       16,
-	"EscrowCreate":                      1,
-	"XChainModifyBridge":                47,
-	"AMMClawback":                       31,
-	"MPTokenIssuanceSet":                56,
-	"SetRegularKey":                     5,
-	"CredentialDelete":                  60,
-	"LedgerStateFix":                    53,
-	"XChainCommit":                      42,
-	"SetFee":                            101,
-	"CredentialAccept":                  59,
-	"DepositPreauth":                    19,
-	"Payment":                           0,
-	"PermissionedDomainDelete":          63,
-	"XChainAddAccountCreateAttestation": 46,
-	"AccountSet":                        3,
-	"Invalid":                           -1,
-	"OfferCreate":                       7,
-	"AMMBid":                            39,
-	"OfferCancel":                       8,
-	"NFTokenAcceptOffer":                29,
-	"AMMVote":                           38,
-	"AMMWithdraw":                       37,
-	"EnableAmendment":                   100,
-	"NFTokenCancelOffer":                28,
-	"XChainCreateBridge":                48,
-	"PaymentChannelFund":                14,
-	"TrustSet":                          20,
-	"XChainAccountCreateCommit":         44,
-	"AMMDeposit":                        36,
 	"NFTokenBurn":                       26,
-	"OracleSet":                         51,
-	"PermissionedDomainSet":             62,
-	"TicketCreate":                      10,
-	"XChainClaim":                       43,
+	"OfferCancel":                       8,
+	"PermissionedDomainDelete":          63,
+	"XChainCommit":                      42,
+	"CheckCash":                         17,
+	"OracleDelete":                      52,
 	"XChainCreateClaimID":               41,
-	"CredentialCreate":                  58,
-	"DIDDelete":                         50,
-	"DIDSet":                            49,
-	"EscrowCancel":                      4,
-	"EscrowFinish":                      2,
-	"MPTokenAuthorize":                  57,
-	"MPTokenIssuanceDestroy":            55,
-	"UNLModify":                         102,
-	"XChainAddClaimAttestation":         45,
+	"XChainModifyBridge":                47,
+	"AMMVote":                           38,
+	"AMMCreate":                         35,
+	"Batch":                             71,
+	"LedgerStateFix":                    53,
+	"NFTokenCreateOffer":                27,
+	"SetFee":                            101,
+	"VaultDeposit":                      68,
+	"XChainAccountCreateCommit":         44,
+	"XChainAddAccountCreateAttestation": 46,
 	"CheckCancel":                       18,
 	"MPTokenIssuanceCreate":             54,
+	"MPTokenIssuanceSet":                56,
+	"VaultWithdraw":                     69,
+	"AMMDeposit":                        36,
+	"MPTokenAuthorize":                  57,
+	"PaymentChannelClaim":               15,
+	"PermissionedDomainSet":             62,
+	"SetRegularKey":                     5,
+	"UNLModify":                         102,
+	"VaultCreate":                       65,
+	"NFTokenModify":                     61,
+	"Payment":                           0,
+	"PaymentChannelFund":                14,
+	"AMMClawback":                       31,
+	"CredentialDelete":                  60,
+	"DIDSet":                            49,
+	"MPTokenIssuanceDestroy":            55,
+	"VaultClawback":                     70,
+	"XChainAddClaimAttestation":         45,
+	"CredentialCreate":                  58,
 	"SignerListSet":                     12,
-	"AMMDelete":                         40,
-	"CheckCash":                         17,
+	"AMMBid":                            39,
+	"EscrowFinish":                      2,
+	"TrustSet":                          20,
+	"AMMWithdraw":                       37,
+	"AccountSet":                        3,
+	"Clawback":                          30,
+	"EscrowCreate":                      1,
 	"NFTokenMint":                       25,
+	"XChainCreateBridge":                48,
+	"DIDDelete":                         50,
+	"DepositPreauth":                    19,
+	"Invalid":                           -1,
+	"OfferCreate":                       7,
+	"PaymentChannelCreate":              13,
+	"AccountDelete":                     21,
+	"CheckCreate":                       16,
+	"EnableAmendment":                   100,
+	"NFTokenCancelOffer":                28,
+	"TicketCreate":                      10,
+	"OracleSet":                         51,
+	"VaultDelete":                       67,
+	"XChainClaim":                       43,
+	"CredentialAccept":                  59,
+	"DelegateSet":                       64,
+	"NFTokenAcceptOffer":                29,
+	"VaultSet":                          66,
+	"AMMDelete":                         40,
+	"EscrowCancel":                      4,
 }
 
 var NameToField = map[string]Field{
@@ -566,6 +574,13 @@ var NameToField = map[string]Field{
 		Nth:            51,
 		Type:           UInt32,
 	},
+	"PermissionValue": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            52,
+		Type:           UInt32,
+	},
 	"IndexNext": {
 		IsSerialized:   true,
 		IsSigningField: true,
@@ -746,6 +761,13 @@ var NameToField = map[string]Field{
 		IsSigningField: true,
 		IsVLEncoded:    false,
 		Nth:            28,
+		Type:           UInt64,
+	},
+	"LockedAmount": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            29,
 		Type:           UInt64,
 	},
 	"EmailHash": {
@@ -977,6 +999,20 @@ var NameToField = map[string]Field{
 		IsSigningField: true,
 		IsVLEncoded:    false,
 		Nth:            34,
+		Type:           Hash256,
+	},
+	"VaultID": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            35,
+		Type:           Hash256,
+	},
+	"ParentBatchID": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            36,
 		Type:           Hash256,
 	},
 	"hash": {
@@ -1462,6 +1498,13 @@ var NameToField = map[string]Field{
 		Nth:            11,
 		Type:           AccountID,
 	},
+	"Delegate": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    true,
+		Nth:            12,
+		Type:           AccountID,
+	},
 	"HookAccount": {
 		IsSerialized:   true,
 		IsSigningField: true,
@@ -1523,6 +1566,34 @@ var NameToField = map[string]Field{
 		IsSigningField: true,
 		IsVLEncoded:    false,
 		Nth:            1,
+		Type:           Number,
+	},
+	"AssetsAvailable": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            2,
+		Type:           Number,
+	},
+	"AssetsMaximum": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            3,
+		Type:           Number,
+	},
+	"AssetsTotal": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            4,
+		Type:           Number,
+	},
+	"LossUnrealized": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            5,
 		Type:           Number,
 	},
 	"TransactionMetaData": {
@@ -1614,6 +1685,13 @@ var NameToField = map[string]Field{
 		IsSigningField: true,
 		IsVLEncoded:    false,
 		Nth:            14,
+		Type:           STObject,
+	},
+	"Permission": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            15,
 		Type:           STObject,
 	},
 	"Signer": {
@@ -1735,6 +1813,27 @@ var NameToField = map[string]Field{
 		Nth:            33,
 		Type:           STObject,
 	},
+	"RawTransaction": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            34,
+		Type:           STObject,
+	},
+	"BatchSigner": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            35,
+		Type:           STObject,
+	},
+	"Book": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            36,
+		Type:           STObject,
+	},
 	"Signers": {
 		IsSerialized:   true,
 		IsSigningField: false,
@@ -1803,6 +1902,13 @@ var NameToField = map[string]Field{
 		IsSigningField: true,
 		IsVLEncoded:    false,
 		Nth:            12,
+		Type:           STArray,
+	},
+	"AdditionalBooks": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            13,
 		Type:           STArray,
 	},
 	"Majorities": {
@@ -1889,6 +1995,27 @@ var NameToField = map[string]Field{
 		Nth:            28,
 		Type:           STArray,
 	},
+	"Permissions": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            29,
+		Type:           STArray,
+	},
+	"RawTransactions": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            30,
+		Type:           STArray,
+	},
+	"BatchSigners": {
+		IsSerialized:   true,
+		IsSigningField: false,
+		IsVLEncoded:    false,
+		Nth:            31,
+		Type:           STArray,
+	},
 	"CloseResolution": {
 		IsSerialized:   true,
 		IsSigningField: true,
@@ -1950,6 +2077,13 @@ var NameToField = map[string]Field{
 		IsSigningField: true,
 		IsVLEncoded:    false,
 		Nth:            19,
+		Type:           UInt8,
+	},
+	"WithdrawalPolicy": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            20,
 		Type:           UInt8,
 	},
 	"TakerPaysCurrency": {
@@ -2027,6 +2161,13 @@ var NameToField = map[string]Field{
 		IsSigningField: true,
 		IsVLEncoded:    false,
 		Nth:            1,
+		Type:           Hash192,
+	},
+	"ShareMPTID": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            2,
 		Type:           Hash192,
 	},
 	"LockingChainIssue": {

@@ -1,12 +1,15 @@
 package ed25519
 
 import (
+	"bytes"
 	"crypto/ed25519"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"strings"
 
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/address"
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/base58"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/types"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/hash"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/signing/signer"
@@ -77,8 +80,38 @@ func SignTxMultisig(tx map[string]any, prv ed25519.PrivateKey) (*signer.Signer, 
 	}, nil
 }
 
+// PrivKeyFromSecret converts a xrpl secret string to an Ed25519 private key.
+// The secret should be a base58-encoded XRPL secret starting with 'sEd'.
+func PrivKeyFromSecret(secret string) (ed25519.PrivateKey, error) {
+	secretBytes, err := base58.XRPLCoder.Decode(secret)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(secret) < 8 {
+		return nil, errors.New("invalid secret length")
+	}
+
+	cs := hash.Checksum(secretBytes[:len(secretBytes)-4])
+
+	if !bytes.Equal(cs, secretBytes[len(secretBytes)-4:]) {
+		return nil, errors.New("invalid checksum")
+	}
+
+	if !bytes.Equal(secretBytes[:3], []byte{0x01, 0xe1, 0x4b}) {
+		return nil, errors.New("invalid secret start")
+	}
+
+	stripped := secretBytes[3 : len(secretBytes)-4] // strip checksum
+	rawPriv := hash.Sha512Half(stripped)
+
+	prv := ed25519.NewKeyFromSeed(rawPriv)
+
+	return prv, nil
+}
+
 // PrvToAddress calculates xrpl address for Ed25519 private key.
-func PrvToAddress(prv []byte) (string, error) {
+func PrvToAddress(prv ed25519.PrivateKey) (string, error) {
 	accountID, err := PrvToID(prv)
 	if err != nil {
 		return "", fmt.Errorf("private key to address: %v", err)
@@ -93,7 +126,7 @@ func PrvToAddress(prv []byte) (string, error) {
 }
 
 // PrvToID calculates xrpl account ID for Ed25519 private key.
-func PrvToID(prv []byte) ([]byte, error) {
+func PrvToID(prv ed25519.PrivateKey) ([]byte, error) {
 	if len(prv) != 64 {
 		return nil, fmt.Errorf("wrong length prv is %d bytes long, should be 64", len(prv))
 	}
@@ -105,8 +138,9 @@ func PrvToID(prv []byte) ([]byte, error) {
 	return hash.Sha256RipeMD160(pub), nil
 }
 
-// PrvToPub calculates public key in hex string for Ed25519 private key.
-func PrvToPub(prv []byte) (string, error) {
+// PrvToPub calculates (xrpl) public key in hex string for Ed25519 private key.
+// Public key is ED prefixed.
+func PrvToPub(prv ed25519.PrivateKey) (string, error) {
 	if len(prv) != 64 {
 		return "", fmt.Errorf("wrong length prv is %d bytes long, should be 64", len(prv))
 	}
@@ -119,19 +153,24 @@ func PrvToPub(prv []byte) (string, error) {
 }
 
 // validate checks that the sig is a valid Ed25519 signature of msg by pub.
+// The public key should hex string be prefixed with ED and 33 bytes (including the prefix).
 func Validate(msg, sig []byte, pub string) (bool, error) {
 	pubBytes, err := hex.DecodeString(pub)
 	if err != nil {
 		return false, fmt.Errorf("cannot read pub: %v", err)
 	}
 
-	if len(pubBytes) != ed25519.PublicKeySize {
-		return false, fmt.Errorf("invalid pubKey length (require 32 bytes): %s", pub)
+	if pubBytes[0] != 0xed {
+		return false, errors.New("pub key should ED (or ed) prefixed")
+	}
+
+	if len(pubBytes) != ed25519.PublicKeySize+1 {
+		return false, fmt.Errorf("invalid pubKey length (require %d bytes)", ed25519.PublicKeySize+1)
 	}
 
 	if len(sig) != ed25519.SignatureSize {
 		return false, fmt.Errorf("invalid signature length (require 64 bytes): %s", pub)
 	}
 
-	return ed25519.Verify(pubBytes, msg, sig), nil
+	return ed25519.Verify(pubBytes[1:], msg, sig), nil
 }
