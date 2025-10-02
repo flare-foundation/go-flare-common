@@ -1,0 +1,199 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "contract ITeeExtensionRegistry",
+        "name": "_teeExtensionRegistry",
+        "type": "address"
+      },
+      {
+        "internalType": "contract ITeeWalletProjectManager",
+        "name": "_teeWalletProjectManager",
+        "type": "address"
+      },
+      {
+        "internalType": "contract ITeeWalletManager",
+        "name": "_teeWalletManager",
+        "type": "address"
+      },
+      {
+        "internalType": "contract ITeeWalletKeyManager",
+        "name": "_teeWalletKeyManager",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [],
+    "name": "OnlyAuthorizationAddress",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "WalletNotInProduction",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "WrongKeyType",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "KEY_TYPE",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "OP_COMMAND",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "OP_TYPE",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_walletId",
+        "type": "bytes32"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "nonce",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "chainId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "to",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes",
+            "name": "data",
+            "type": "bytes"
+          },
+          {
+            "internalType": "uint256",
+            "name": "value",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "gasPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maxFeePerGas",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maxPriorityFeePerGas",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "gas",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct TeeExtensionInstructionsSenderMock.Transaction",
+        "name": "_transaction",
+        "type": "tuple"
+      }
+    ],
+    "name": "signTransaction",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "teeExtensionRegistry",
+    "outputs": [
+      {
+        "internalType": "contract ITeeExtensionRegistry",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "teeWalletKeyManager",
+    "outputs": [
+      {
+        "internalType": "contract ITeeWalletKeyManager",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "teeWalletManager",
+    "outputs": [
+      {
+        "internalType": "contract ITeeWalletManager",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "teeWalletProjectManager",
+    "outputs": [
+      {
+        "internalType": "contract ITeeWalletProjectManager",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

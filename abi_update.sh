@@ -20,6 +20,7 @@ FILES=(
   "tee/structs/TeeVersionStructs.sol/TeeVersionStructs.json:tee/structs/version/version.abi"
   "tee/structs/TeeWalletStructs.sol/TeeWalletStructs.json:tee/structs/wallet/wallet.abi"
   "ftdc/structs/FtdcStructs.sol/FtdcStructs.json:tee/structs/connector/connector.abi"
+  "tee/mock/TeeExtensionInstructionsSenderMock.sol/TeeExtensionInstructionsSenderMock.json:contracts/mock/teeextensioninstructionsender/teeextensioninstructionsendermock.abi"
 )
 
 for entry in "${FILES[@]}"; do

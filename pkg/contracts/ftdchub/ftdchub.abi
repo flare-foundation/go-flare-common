@@ -41,6 +41,17 @@
     "type": "error"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "teeId",
+        "type": "address"
+      }
+    ],
+    "name": "DuplicatedTeeId",
+    "type": "error"
+  },
+  {
     "inputs": [],
     "name": "FeeTooLow",
     "type": "error"
