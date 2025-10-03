@@ -9,7 +9,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/address"
-	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/types"
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/hash"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/signing/signer"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/signing/utils"
@@ -55,7 +55,7 @@ const (
 func SignTxMultisig(tx map[string]any, prv *ecdsa.PrivateKey) (*signer.Signer, error) {
 	tx["SigningPubKey"] = ""
 
-	encoded, err := types.Encode(tx, true)
+	encoded, err := encoding.Encode(tx, true)
 	if err != nil {
 		return nil, fmt.Errorf("cannot encode tx: %v", err)
 	}
