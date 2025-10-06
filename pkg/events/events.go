@@ -33,8 +33,12 @@ func ConvertDatabaseLogToChainLog(dbLog database.Log) (*types.Log, error) {
 		topics = append(topics, common.HexToHash(dbLog.Topic3))
 	}
 	return &types.Log{
-		Topics: topics,
-		Data:   data,
-		// Other fields are not used by log decoder
+		Topics:         topics,
+		Data:           data,
+		BlockNumber:    dbLog.BlockNumber,
+		BlockTimestamp: dbLog.Timestamp,
+		Address:        common.HexToAddress(dbLog.Address),
+		Index:          uint(dbLog.LogIndex),
+		TxHash:         common.HexToHash(dbLog.TransactionHash),
 	}, nil
 }
