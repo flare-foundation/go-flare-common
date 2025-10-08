@@ -52,7 +52,7 @@ func (*issue) ToBytes(value any, _ bool) ([]byte, error) {
 		return nil, fmt.Errorf("issuer address: %v", err)
 	}
 
-	code, err := serializeCurrency(currencyStr)
+	code, err := serializeCurrency(currencyStr, disallowedCodes)
 	if err != nil {
 		return nil, fmt.Errorf("invalid issuer %v: %v", issuerStr, err)
 	}

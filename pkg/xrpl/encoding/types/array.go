@@ -58,7 +58,7 @@ func (*stArray) ToBytes(value any, signing bool) ([]byte, error) {
 
 // ToJson decodes an encoded array.
 func (*stArray) ToJSON(b *bytes.Buffer, _ int) (any, error) {
-	out := make([]any, 0)
+	out := make([]any, 0, 2)
 
 	for {
 		nextByte, err := b.ReadByte()
