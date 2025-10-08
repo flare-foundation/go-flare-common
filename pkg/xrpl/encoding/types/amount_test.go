@@ -403,3 +403,271 @@ func TestAmountDecodeFail(t *testing.T) {
 		require.Error(t, err, j)
 	}
 }
+
+func TestMPT(t *testing.T) {
+	tests := []map[string]any{
+		{
+			"value":           "1",
+			"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+		},
+		{
+			"value":           "9223372036854775807",
+			"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+		},
+	}
+
+	for _, test := range tests {
+		b, err := Amount.ToBytes(test, false)
+		require.NoError(t, err)
+
+		buf := bytes.NewBuffer(b)
+
+		j, err := Amount.ToJSON(buf, 0)
+		require.NoError(t, err)
+
+		_, ok := j.(map[string]any)
+		require.True(t, ok)
+
+		b2, err := Amount.ToBytes(j, false)
+		require.NoError(t, err)
+
+		require.Equal(t, b, b2)
+	}
+}
+
+func TestMPTWithExpectation(t *testing.T) {
+	tests := []struct {
+		amount           map[string]any
+		expectedEncoding string
+	}{
+		{
+			amount: map[string]any{
+				"value":           "9223372036854775807",
+				"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+			},
+			expectedEncoding: "607FFFFFFFFFFFFFFF00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+		},
+		{
+			amount: map[string]any{
+				"value":           "0",
+				"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+			},
+			expectedEncoding: "60000000000000000000002403C84A0A28E0190E208E982C352BBD5006600555CF",
+		},
+		{
+			amount: map[string]any{
+				"value":           "-0",
+				"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+			},
+			expectedEncoding: "60000000000000000000002403C84A0A28E0190E208E982C352BBD5006600555CF",
+		},
+		{
+			amount: map[string]any{
+				"value":           "100",
+				"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+			},
+			expectedEncoding: "60000000000000006400002403C84A0A28E0190E208E982C352BBD5006600555CF",
+		},
+		{
+			amount: map[string]any{
+				"value":           "0xa",
+				"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+			},
+			expectedEncoding: "60000000000000000A00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+		},
+		{
+			amount: map[string]any{
+				"value":           "0x7FFFFFFFFFFFFFFF",
+				"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+			},
+			expectedEncoding: "607FFFFFFFFFFFFFFF00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+		},
+	}
+
+	for _, test := range tests {
+		b, err := Amount.ToBytes(test.amount, false)
+		require.NoError(t, err)
+
+		bExpected, err := hex.DecodeString(test.expectedEncoding)
+		require.NoError(t, err)
+
+		require.Equal(t, bExpected, b)
+
+		buf := bytes.NewBuffer(b)
+
+		j, err := Amount.ToJSON(buf, 0)
+		require.NoError(t, err)
+
+		_, ok := j.(map[string]any)
+		require.True(t, ok)
+
+		b2, err := Amount.ToBytes(j, false)
+		require.NoError(t, err)
+
+		require.Equal(t, b, b2)
+	}
+}
+
+func TestExoticValues(t *testing.T) {
+	tests := []struct {
+		amount        map[string]any
+		expectedValue string
+	}{
+		{
+			amount: map[string]any{
+				"value":           "1E1",
+				"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+			},
+			expectedValue: "10",
+		},
+		{
+			amount: map[string]any{
+				"value":           "1e1",
+				"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+			},
+			expectedValue: "10",
+		},
+		{
+			amount: map[string]any{
+				"value":           "0x01",
+				"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+			},
+			expectedValue: "1",
+		},
+		{
+			amount: map[string]any{
+				"value":           "0x1",
+				"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+			},
+			expectedValue: "1",
+		},
+		{
+			amount: map[string]any{
+				"value":           "0",
+				"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+			},
+			expectedValue: "0",
+		},
+	}
+
+	for _, test := range tests {
+		b, err := Amount.ToBytes(test.amount, false)
+		require.NoError(t, err)
+
+		buf := bytes.NewBuffer(b)
+
+		j, err := Amount.ToJSON(buf, 0)
+		require.NoError(t, err)
+
+		jm, ok := j.(map[string]any)
+		require.True(t, ok)
+
+		require.Equal(t, test.expectedValue, jm["value"])
+
+		b2, err := Amount.ToBytes(j, false)
+		require.NoError(t, err)
+
+		require.Equal(t, b, b2)
+	}
+}
+
+func TestMPTFail(t *testing.T) {
+	tests := []map[string]any{
+		{
+			"value":           "9223372036854775808",
+			"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+		},
+		{
+			"value":           "18446744073709551615",
+			"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+		},
+		{
+			"value":           "-1",
+			"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+		},
+		{
+			"value":           "10.1",
+			"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+		},
+		{
+			"value":           "1E100",
+			"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+		},
+		{
+			"value":           "1E-1",
+			"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+		},
+		{
+			"value":           "-1E1",
+			"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+		},
+		{
+			"value":           "-1E",
+			"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+		},
+		{
+			"value":           "",
+			"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+		},
+		{
+			"value":           "10",
+			"mpt_issuance_id": "10",
+		},
+		{
+			"value":           "1",
+			"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+			"currency":        "USD",
+		},
+		{
+			"value":           "1",
+			"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+			"issuer":          "rrrrrrrrrrrrrrrrrrrrBZbvji",
+		},
+		{
+			"value":           "a",
+			"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+		},
+		{
+			"value":           "?",
+			"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+		},
+		{
+			"value":           "0xFFFFFFFFFFFFFFFF",
+			"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+		},
+		{
+			"value":           "0x-1",
+			"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+		},
+		{
+			"value":           "-0x1",
+			"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+		},
+	}
+
+	for _, test := range tests {
+		_, err := Amount.ToBytes(test, false)
+		require.Error(t, err)
+	}
+}
+
+func TestMPTToJSONFail(t *testing.T) {
+	inputs := [][]byte{
+		{},
+		{0x60},
+		{0x60, 0x00},
+		{0x60, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+		{0x60, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+		{0x60, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+		{0x60, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+		{0x60, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	}
+
+	for j, input := range inputs {
+		b := bytes.NewBuffer(input)
+
+		_, err := Amount.ToJSON(b, 0)
+		require.Error(t, err, j)
+		fmt.Printf("err: %v\n", err)
+	}
+}

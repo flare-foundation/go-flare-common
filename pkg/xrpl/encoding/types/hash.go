@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/hex"
 	"fmt"
+	"strings"
 )
 
 type hash struct {
@@ -49,7 +50,7 @@ func (h *hash) ToJSON(b *bytes.Buffer, length int) (any, error) {
 		return nil, outOfBytes("hash", l, n)
 	}
 
-	return hex.EncodeToString(value), nil
+	return strings.ToUpper(hex.EncodeToString(value)), nil
 }
 
 // Blob is used for serialization of Blob fields. https://xrpl.org/docs/references/protocol/binary-format#blob-fields

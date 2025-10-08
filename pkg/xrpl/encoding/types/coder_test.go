@@ -242,6 +242,39 @@ func TestCoderEncodeDecode(t *testing.T) {
 			"SigningPubKey":   "",
 			"Sequence":        uint32(10),
 		},
+		{
+			"TransactionType": "Payment",
+			"Account":         "rUn84CUYbNjRoTQ6mSW7BVJPSVJNLb1QLo",
+			"Amount": map[string]any{
+				"mpt_issuance_id": "000004C463C52827307480341125DA0577DEFC38405B0E3E",
+				"value":           "10",
+			},
+			"Destination": "rfkE1aSy9G8Upk4JssnwBxhEv5p4mn2KTy",
+		},
+		{
+			"TransactionType":    "Payment",
+			"Account":            "rUn84CUYbNjRoTQ6mSW7BVJPSVJNLb1QLo",
+			"Amount":             "1234",
+			"Destination":        "rfkE1aSy9G8Upk4JssnwBxhEv5p4mn2KTy",
+			"DestinationTag":     uint32(1),
+			"Fee":                "12",
+			"Flags":              uint32(2147483648),
+			"LastLedgerSequence": uint32(65953073),
+			"Sequence":           uint32(65923914),
+			"SigningPubKey":      "02F9E33F16DF9507705EC954E3F94EB5F10D1FC4A354606DBE6297DBB1096FE654",
+			// "TxnSignature":       "3045022100E3FAE0EDEC3D6A8FF6D81BC9CF8288A61B7EEDE8071E90FF9314CB4621058D10022043545CF631706D700CEE65A1DB83EFDD185413808292D9D90F14D87D3DC2D8CB",
+			"InvoiceID": "6F1DFD1D0FE8A32E40E1F2C05CF1C15545BAB56B617F9C6C2D63A6B704BEF59B",
+			"Paths": []any{
+				[]any{
+					map[string]any{
+						"currency": "BTC",
+						"issuer":   "r9vbV3EHvXWjSkeQ6CAcYVPGeq7TuiXY2X",
+					},
+				},
+			},
+			"SendMax":  "100000000",
+			"DomainID": "5555555555555555555555555555555555555555555555555555555555555555",
+		},
 	}
 
 	for _, tx := range txs {

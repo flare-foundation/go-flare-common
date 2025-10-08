@@ -14,11 +14,22 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/address"
 )
 
-// TODO amounts without issuer/amount.... MPT support
+type amountType uint8
+
+const (
+	invalid amountType = iota
+	xrpAmount
+	tokenAmount
+	mptAmount
+)
 
 const e = byte(69) // E in utf8 encoding
 
 const XRP = "XRP"
+
+const maxMPTValue = uint64(0x7FFFFFFFFFFFFFFF)
+
+var maxMPTValueBig = new(big.Int).SetUint64(maxMPTValue)
 
 const (
 	xrpValuePrefix uint64 = 0x4000000000000000
@@ -35,10 +46,17 @@ const (
 	maxSignificant        uint64 = 9999999999999999 // 10^16-1
 )
 
-const notXRPBitMask uint8 = 0b10000000
-const signBitMask uint8 = 0b01000000
-const signedValueBitMask uint8 = 0b01111111
-const valueBitMask uint8 = 0b00111111
+const (
+	typeBitMask uint8 = 0b10100000
+	xrpType     uint8 = 0b00000000
+	tokenType0  uint8 = 0b10000000
+	tokenType1  uint8 = 0b10100000
+	mptType     uint8 = 0b00100000
+
+	signBitMask        uint8 = 0b01000000
+	signedValueBitMask uint8 = 0b01111111
+	valueBitMask       uint8 = 0b00111111
+)
 
 const StandardCodeRegex = `[0-9A-Za-z?!@#$%^&*<>(){}\[\]|]`
 
@@ -55,28 +73,37 @@ func (*amount) ToBytes(value any, _ bool) ([]byte, error) {
 	case string:
 		return xrpToBytes(value)
 	case map[string]any:
-		return tokenToBytes(value)
+		switch decideAmountType(value) {
+		case tokenAmount:
+			return tokenToBytes(value)
+		case mptAmount:
+			return mptToBytes(value)
+		default:
+			return nil, fmt.Errorf("invalid amount struct: %v", value)
+		}
 	default:
 		return nil, fmt.Errorf("invalid amount: %v", value)
 	}
 }
 
-// ToJson decodes amount field.
+// ToJSON decodes amount field.
 func (a *amount) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	firstByte, err := b.ReadByte()
 	if err != nil {
 		return nil, fmt.Errorf("cannot read first byte: %v", err)
 	}
 
-	first := firstByte & notXRPBitMask
+	amountType := firstByte & typeBitMask
 
-	switch first {
-	case 0:
+	switch amountType {
+	case xrpType:
 		return xrpToJSON(firstByte, b)
-	case notXRPBitMask:
+	case tokenType0, tokenType1:
 		return tokenToJSON(firstByte, b)
+	case mptType:
+		return mptToJSON(b)
 	default:
-		return nil, fmt.Errorf("impossible, first bit neither 1 nor 0: %v", first) // unreachable
+		return nil, fmt.Errorf("impossible, unknown amount type: %v", amountType) // unreachable
 	}
 }
 
@@ -135,6 +162,46 @@ func tokenToBytes(amount map[string]any) ([]byte, error) {
 	out = append(out, normalizedValue...)
 	out = append(out, currencyBytes...)
 	out = append(out, issuerBytes...)
+
+	return out, nil
+}
+
+func mptToBytes(amount map[string]any) ([]byte, error) {
+	out := make([]byte, 0, 33)
+
+	out = append(out, 0x60) // MPT indicator
+
+	if len(amount) != 2 {
+		return nil, errors.New("invalid amount struct")
+	}
+
+	value, err := extractString(amount, "value")
+	if err != nil {
+		return nil, fmt.Errorf("extracting value: %v", err)
+	}
+
+	valueBytes, err := serializeMPTValue(value)
+	if err != nil {
+		return nil, fmt.Errorf("serializing value: %v", err)
+	}
+
+	out = append(out, valueBytes[:]...)
+
+	issuanceID, err := extractString(amount, "mpt_issuance_id")
+	if err != nil {
+		return nil, fmt.Errorf("extracting mpt_issuance_id: %v", err)
+	}
+
+	isID, err := hex.DecodeString(issuanceID)
+	if err != nil {
+		return nil, fmt.Errorf("mpt_issuance_id: %v", err)
+	}
+
+	if len(isID) != 24 {
+		return nil, errors.New("mpt_issuance_id invalid length")
+	}
+
+	out = append(out, isID...)
 
 	return out, nil
 }
@@ -431,4 +498,108 @@ func tokenToJSON(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
 	out["issuer"] = iAddress
 
 	return out, nil
+}
+
+func mptToJSON(b *bytes.Buffer) (map[string]any, error) {
+	out := make(map[string]any, 2)
+
+	l := 8
+	v := make([]byte, l)
+	n, err := b.Read(v)
+	if err != nil {
+		return nil, fmt.Errorf("cannot read mpt value: %v", err)
+	}
+	if n != l {
+		return nil, outOfBytes("mpt value", l, n)
+	}
+
+	bv := new(big.Int).SetBytes(v)
+
+	if bv.Cmp(maxMPTValueBig) > 0 {
+		return nil, errors.New("mpt value to large")
+	}
+
+	out["value"] = bv.String()
+
+	l = 24
+	mii := make([]byte, l)
+	n, err = b.Read(mii)
+	if err != nil {
+		return nil, fmt.Errorf("cannot read mpt issuance id: %v", err)
+	}
+	if n != l {
+		return nil, outOfBytes("mpt issuance id", l, n)
+	}
+
+	out["mpt_issuance_id"] = strings.ToUpper(hex.EncodeToString(mii))
+
+	return out, nil
+}
+
+func serializeMPTValue(value string) ([8]byte, error) {
+	out := [8]byte{}
+
+	zeroB := big.NewInt(0)
+
+	value = strings.ToLower(value)
+
+	valueBig := new(big.Int)
+	var ok bool
+
+	if strings.HasPrefix(value, "0x") {
+		if strings.HasPrefix(value, "0x-") {
+			return out, errors.New("invalid hex syntax")
+		}
+
+		valueBig, ok = valueBig.SetString(value[2:], 16)
+		if !ok {
+			return out, errors.New("invalid hexadecimal value format")
+		}
+	} else {
+		values := strings.Split(value, "e")
+
+		if len(values) == 0 || len(values) > 2 {
+			return out, errors.New("invalid value format")
+		}
+
+		valueBig, ok = new(big.Int).SetString(values[0], 10)
+		if !ok {
+			return out, errors.New("invalid value format main part")
+		}
+
+		if len(values) == 2 {
+			exponent, ok := new(big.Int).SetString(values[1], 10)
+			if !ok {
+				return out, errors.New("invalid value format exponent")
+			}
+
+			if exponent.Cmp(zeroB) == -1 {
+				return out, errors.New("negative exponent now allowed")
+			}
+
+			multiplier := new(big.Int).Exp(big.NewInt(10), exponent, nil)
+
+			valueBig.Mul(valueBig, multiplier)
+		}
+	}
+
+	if valueBig.Cmp(maxMPTValueBig) == 1 || valueBig.Cmp(zeroB) == -1 {
+		return out, errors.New("invalid value")
+	}
+
+	binary.BigEndian.PutUint64(out[:], valueBig.Uint64())
+
+	return out, nil
+}
+
+func decideAmountType(amount map[string]any) amountType {
+	if _, hasCurrency := amount["currency"]; hasCurrency {
+		return tokenAmount
+	}
+
+	if _, hasMPTID := amount["mpt_issuance_id"]; hasMPTID {
+		return mptAmount
+	}
+
+	return 0 // invalid
 }
