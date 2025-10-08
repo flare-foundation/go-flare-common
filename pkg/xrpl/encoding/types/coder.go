@@ -80,7 +80,7 @@ func typeCoder(xt defs.XType) (Coder, error) {
 	case defs.AccountID:
 		return AccountID, nil
 	case defs.Currency:
-		return nil, &TODOError{xt}
+		return Currency, nil
 	case defs.Hash128:
 		return Hash128, nil
 	case defs.Metadata:

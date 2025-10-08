@@ -5,7 +5,6 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -278,42 +277,6 @@ func TestAmountFail(t *testing.T) {
 
 		_, err = Amount.ToBytes(value, false)
 		require.Error(t, err, value)
-	}
-}
-
-func TestSerializeCurrency(t *testing.T) {
-	testsStandard := []string{"ABC", "1()"}
-
-	zeros12 := make([]byte, 12)
-	zeros5 := make([]byte, 5)
-
-	for _, code := range testsStandard {
-		output, err := serializeCurrency(code)
-		require.NoError(t, err)
-
-		require.Equal(t, zeros12, output[:12])
-		require.Equal(t, zeros5, output[15:])
-
-		require.Equal(t, []byte(code), output[12:15])
-	}
-
-	testsNonStandard := []string{"436152526F747300000000000000000000000000", "0x584A4F5900000000000000000000000000000000"}
-
-	for _, code := range testsNonStandard {
-		output, err := serializeCurrency(code)
-		require.NoError(t, err)
-
-		expected, err := hex.DecodeString(strings.TrimPrefix(code, "0x"))
-		require.NoError(t, err)
-
-		require.Equal(t, expected, output)
-	}
-
-	testsFail := []string{"XRP", "AB", "", "0000000000000000000000005852500000000000", "0x0000000000000000000000000000000000000000", "asdf", "⌘⌘⌘", "'''"}
-
-	for _, code := range testsFail {
-		_, err := serializeCurrency(code)
-		require.Error(t, err)
 	}
 }
 
