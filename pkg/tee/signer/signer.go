@@ -16,6 +16,7 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/crypto/ecies"
+	"github.com/ethereum/go-ethereum/crypto/secp256k1"
 )
 
 const (
@@ -341,9 +342,29 @@ func decryptHandler(prv *ecdsa.PrivateKey, maxReqBodySize int64) http.HandlerFun
 	}
 }
 
+func ECDSAPubKeyToECIES(pubKey *ecdsa.PublicKey) (*ecies.PublicKey, error) {
+	if pubKey.Curve != secp256k1.S256() && pubKey.Curve != crypto.S256() {
+		return nil, errors.New("curve not S256")
+	}
+
+	return &ecies.PublicKey{X: pubKey.X, Y: pubKey.Y, Curve: ecies.DefaultCurve, Params: ecies.ECIES_AES128_SHA256}, nil
+}
+
+func ECDSAPrivKeyToECIES(privKey *ecdsa.PrivateKey) (*ecies.PrivateKey, error) {
+	pubKey, err := ECDSAPubKeyToECIES(&privKey.PublicKey)
+	if err != nil {
+		return nil, err
+	}
+
+	return &ecies.PrivateKey{PublicKey: *pubKey, D: privKey.D}, nil
+}
+
 // decrypt decrypts the given cipher text using the provided ECDSA private key and returns the plain text.
 func decrypt(cipher []byte, privKeyECDSA *ecdsa.PrivateKey) (hexutil.Bytes, error) {
-	privKeyDecryption := ecies.ImportECDSA(privKeyECDSA)
+	privKeyDecryption, err := ECDSAPrivKeyToECIES(privKeyECDSA)
+	if err != nil {
+		return nil, err
+	}
 	plainText, err := privKeyDecryption.Decrypt(cipher, nil, nil)
 	if err != nil {
 		return nil, err
