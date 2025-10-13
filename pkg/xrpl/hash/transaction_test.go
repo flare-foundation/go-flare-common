@@ -21,3 +21,26 @@ func TestHashSigned(t *testing.T) {
 
 	require.Equal(t, expectedH, computedH)
 }
+
+func TestChecksum(t *testing.T) {
+	tests := []struct {
+		data     string
+		expected string
+	}{
+		{
+			data:     "0053e1d2aa89ffd9b652ee438f1de36d183bcd32f1",
+			expected: "5464291b",
+		},
+	}
+
+	for _, test := range tests {
+		b, err := hex.DecodeString(test.data)
+		require.NoError(t, err)
+
+		result := Checksum(b)
+		r, err := hex.DecodeString(test.expected)
+		require.NoError(t, err)
+
+		require.Equal(t, r, result)
+	}
+}
