@@ -81,6 +81,10 @@ func extractString(values map[string]any, key string) (string, error) {
 
 // Parse builds Signer.
 func Parse(arrayObject types.ArrayObject) (*Signer, error) {
+	if len(arrayObject) != 1 {
+		return nil, errors.New("invalid signer array")
+	}
+
 	s, ok := arrayObject["Signer"]
 	if !ok {
 		return nil, fmt.Errorf("not a Signer %v", arrayObject)
