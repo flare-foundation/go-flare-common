@@ -24,16 +24,18 @@ Contains the following packages:
 - storage: an implementation of a cyclic storage
 - tee
   - instructions: working with tee instructions
-  - signer: signer server for remote eth messages signing
-  - structs: decoding messages from tee instructions events
+  - op: opTypes and opCommands
+  - signer: signer server for remote eth messages signing and decrypting
+  - structs: encoding and decoding messages from tee instructions events, FTDC requests and attestations
 - toml: reading toml files
 - voters: working with Flare entities
 - xrpl
-  - aggregator: working with XRPL multisig
   - address: XRPL addresses, account ID, and public keys
-  - base58: base58 encoding with custom alphabet
+  - aggregator: working with XRPL multisig
+  - base58: base58 encoding with xrpl or custom alphabet
   - encoding: encoding and decoding XRPL transactions
   - hash: hashes used in XRPL
   - signing: signing of XRPL transactions
     - ed25519
     - secp256k1
+    - signer: working with xrpl signer items
