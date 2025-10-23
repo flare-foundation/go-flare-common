@@ -133,29 +133,29 @@ func fileLevelEncoder(l zapcore.Level, enc zapcore.PrimitiveArrayEncoder) {
 }
 
 // Debugf formats the message and logs it at DEBUG level.
-func Debugf(msg string, args ...interface{}) {
+func Debugf(msg string, args ...any) {
 	sugaredLogger.Debugf(msg, args...)
 }
 
 // Infof formats the message and logs it at INFO level.
-func Infof(msg string, args ...interface{}) {
+func Infof(msg string, args ...any) {
 	sugaredLogger.Infof(msg, args...)
 }
 
 // Warnf formats the message and logs it at WARN level.
-func Warnf(msg string, args ...interface{}) {
+func Warnf(msg string, args ...any) {
 	sugaredLogger.Warnf(msg, args...)
 }
 
 // Errorf formats the message and logs it at ERROR level.
-func Errorf(msg string, args ...interface{}) {
+func Errorf(msg string, args ...any) {
 	sugaredLogger.Errorf(msg, args...)
 }
 
 // Panicf formats the message and logs it at PANIC level and panics.
 //
 // Defers will be executed.
-func Panicf(msg string, args ...interface{}) {
+func Panicf(msg string, args ...any) {
 	SyncFileLogger()
 	sugaredLogger.Panicf(msg, args...)
 }
@@ -163,35 +163,35 @@ func Panicf(msg string, args ...interface{}) {
 // Fatalf formats the message and logs it at FATAL level and calls os.Exit.
 //
 // Defers will not be executed.
-func Fatalf(msg string, args ...interface{}) {
+func Fatalf(msg string, args ...any) {
 	SyncFileLogger()
 	sugaredLogger.Fatalf(msg, args...)
 }
 
 // Debug logs arguments at DEBUG level.
-func Debug(args ...interface{}) {
+func Debug(args ...any) {
 	sugaredLogger.Debug(args...)
 }
 
 // Info logs arguments at INFO level.
-func Info(args ...interface{}) {
+func Info(args ...any) {
 	sugaredLogger.Info(args...)
 }
 
 // Warn logs arguments at WARN level.
-func Warn(args ...interface{}) {
+func Warn(args ...any) {
 	sugaredLogger.Warn(args...)
 }
 
 // Error logs arguments at ERROR level.
-func Error(args ...interface{}) {
+func Error(args ...any) {
 	sugaredLogger.Error(args...)
 }
 
 // Panic logs arguments at PANIC level and panics.
 //
 // Defers will be executed.
-func Panic(args ...interface{}) {
+func Panic(args ...any) {
 	SyncFileLogger()
 	sugaredLogger.Panic(args...)
 }
@@ -199,7 +199,7 @@ func Panic(args ...interface{}) {
 // Fatal logs arguments at FATAL level  and calls os.Exit.
 //
 // Defers will not be executed.
-func Fatal(args ...interface{}) {
+func Fatal(args ...any) {
 	SyncFileLogger()
 	sugaredLogger.Fatal(args...)
 }

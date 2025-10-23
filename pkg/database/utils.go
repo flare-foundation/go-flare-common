@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/flare-foundation/go-flare-common/pkg/logger"
 	"github.com/go-sql-driver/mysql"
 	gormMysql "gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -52,20 +51,26 @@ type SyncParams struct {
 	MinSleepTime       time.Duration // Minimal duration of sleep between retries
 }
 
-// WaitToSync waits for C-chain indexer DB to sync.
+// WaitCIndexerToSync waits for C-chain indexer DB to sync.
 //
 // If db is not up to date, the check is performed again after 1/20 of the delay (bound by MaxSleepTime and MinSleepTime).
 // Reties specifies at most how many times is the check done.
-// If the check does not succeed by then, panic is raised.
-func WaitCIndexerToSync(ctx context.Context, db *gorm.DB, params SyncParams) {
+// If the check does not succeed by then, error is returned.
+//
+// Logger for logging can be provided. If it is nil, no logging is done.
+func WaitCIndexerToSync(ctx context.Context, db *gorm.DB, params SyncParams, logger logger) error {
+	if logger == nil {
+		logger = &noLogger{}
+	}
+
 	k := 0
 	for k < params.Retries {
 		if k > 0 {
-			logger.Debugf("Checking database for %v/%v time", k, params.Retries)
+			logger.Debugf("Checking database for %v/%v time", k, params.Retries+1)
 		}
 		state, err := FetchState(ctx, db, nil)
 		if err != nil {
-			logger.Panic("database error:", err)
+			return fmt.Errorf("database error: %w", err)
 		}
 
 		dbTime := time.Unix(int64(state.BlockTimestamp), 0)
@@ -73,7 +78,7 @@ func WaitCIndexerToSync(ctx context.Context, db *gorm.DB, params SyncParams) {
 		outOfSync := time.Since(dbTime)
 		if outOfSync < params.OutOfSyncTolerance {
 			logger.Debug("Database in sync")
-			return
+			return nil
 		}
 
 		logger.Warnf("Database out of sync. Delayed for %v", outOfSync)
@@ -87,15 +92,32 @@ func WaitCIndexerToSync(ctx context.Context, db *gorm.DB, params SyncParams) {
 	logger.Warnf("Checking database for the final time")
 	state, err := FetchState(ctx, db, nil)
 	if err != nil {
-		logger.Panic("database error:", err)
+		return fmt.Errorf("database error: %w", err)
 	}
 
 	dbTime := time.Unix(int64(state.BlockTimestamp), 0)
 	outOfSync := time.Since(dbTime)
 	if outOfSync > params.OutOfSyncTolerance {
-		logger.Panic("Database out of sync after %v retries. Delayed for %v", params.Retries, outOfSync)
+		return fmt.Errorf("database out of sync after %v retries. Delayed for %v", params.Retries, outOfSync)
 	}
 	logger.Debug("Database in sync")
+	return nil
+}
+
+// logger is an interface for logging.
+type logger interface {
+	Debug(...any)
+	Debugf(string, ...any)
+	Warnf(string, ...any)
+}
+
+type noLogger struct{}
+
+func (*noLogger) Debug(...any) {
+}
+func (*noLogger) Debugf(string, ...any) {
+}
+func (*noLogger) Warnf(string, ...any) {
 }
 
 func DoInTransaction(db *gorm.DB, operations ...func(db *gorm.DB) error) error {

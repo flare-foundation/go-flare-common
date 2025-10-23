@@ -10,12 +10,29 @@ import (
 	"github.com/cenkalti/backoff/v4"
 	"github.com/ethereum/go-ethereum/common"
 
-	"github.com/flare-foundation/go-flare-common/pkg/logger"
-
 	"gorm.io/gorm"
 )
 
 const maxQueryDuration = 15 * time.Second
+
+// Sets logger used to log errors on queries.
+// Default is without logging.
+func SetErrorLogger(logger errorer) {
+	if logger != nil {
+		errorLogger = logger
+	}
+}
+
+var errorLogger errorer = &noErrorer{}
+
+type errorer interface {
+	Errorf(string, ...any)
+}
+
+type noErrorer struct {
+}
+
+func (*noErrorer) Errorf(_ string, _ ...any) {}
 
 // FetchLatestBlock returns the latest block in the database.
 func FetchLatestBlock(
@@ -307,7 +324,7 @@ func RetryWrapper[F any, P any](query func(context.Context, *gorm.DB, P) (F, err
 			},
 			backoff.WithContext(backoff.NewExponentialBackOff(backoff.WithMaxElapsedTime(maxQueryDuration)), ctx),
 			func(err error, duration time.Duration) {
-				logger.Errorf("error %s: %v, retrying after %v", errorMsg, err, duration)
+				errorLogger.Errorf("error %s: %v, retrying after %v", errorMsg, err, duration)
 			},
 		)
 
