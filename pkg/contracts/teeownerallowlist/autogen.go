@@ -31,7 +31,7 @@ var (
 
 // TeeOwnerAllowlistMetaData contains all meta data concerning the TeeOwnerAllowlist contract.
 var TeeOwnerAllowlistMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"}],\"name\":\"AddressEmptyCode\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"ERC1967InvalidImplementation\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC1967NonPayable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FailedInnerCall\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExtensionOwner\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"OwnerAlreadyAllowed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UUPSUnauthorizedCallContext\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"slot\",\"type\":\"bytes32\"}],\"name\":\"UUPSUnsupportedProxiableUUID\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"AllTeeMachineOwnersAllowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"AllTeeWalletProjectOwnersAllowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedTeeMachineOwnersAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedTeeWalletProjectOwnersAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"name\":\"GovernanceCallTimelocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"initialGovernance\",\"type\":\"address\"}],\"name\":\"GovernanceInitialised\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"governanceSettings\",\"type\":\"address\"}],\"name\":\"GovernedProductionModeEntered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallCanceled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallExecuted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"Upgraded\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"UPGRADE_INTERFACE_VERSION\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"addAllowedTeeMachineOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"addAllowedTeeWalletProjectOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"allTeeMachineOwnersAllowed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"allTeeWalletProjectOwnersAllowed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"allowAllTeeMachineOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"allowAllTeeWalletProjectOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"cancelGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"executeGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAddressUpdater\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getAllowedTeeMachineOwners\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getAllowedTeeWalletProjectOwners\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governance\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governanceSettings\",\"outputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"implementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"}],\"name\":\"initialise\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"isAllowedTeeMachineOwner\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_isAllowed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"isAllowedTeeWalletProjectOwner\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_isAllowed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"isExecutor\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"productionMode\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"proxiableUUID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"switchToProductionMode\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeExtensionRegistry\",\"outputs\":[{\"internalType\":\"contractITeeExtensionRegistry\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"}],\"name\":\"timelockedCalls\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_contractNameHashes\",\"type\":\"bytes32[]\"},{\"internalType\":\"address[]\",\"name\":\"_contractAddresses\",\"type\":\"address[]\"}],\"name\":\"updateContractAddresses\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newImplementation\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"upgradeToAndCall\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"}],\"name\":\"AddressEmptyCode\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"ERC1967InvalidImplementation\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC1967NonPayable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FailedInnerCall\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExtensionOwner\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"OwnerAlreadyAllowed\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"OwnerNotAllowed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UUPSUnauthorizedCallContext\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"slot\",\"type\":\"bytes32\"}],\"name\":\"UUPSUnsupportedProxiableUUID\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"AllTeeMachineOwnersAllowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"AllTeeMachineOwnersDisallowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"AllTeeWalletProjectOwnersAllowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"AllTeeWalletProjectOwnersDisallowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedTeeMachineOwnersAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedTeeMachineOwnersRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedTeeWalletProjectOwnersAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedTeeWalletProjectOwnersRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"name\":\"GovernanceCallTimelocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"initialGovernance\",\"type\":\"address\"}],\"name\":\"GovernanceInitialised\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"governanceSettings\",\"type\":\"address\"}],\"name\":\"GovernedProductionModeEntered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallCanceled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallExecuted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"Upgraded\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"UPGRADE_INTERFACE_VERSION\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"addAllowedTeeMachineOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"addAllowedTeeWalletProjectOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"allTeeMachineOwnersAllowed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"allTeeWalletProjectOwnersAllowed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"allowAllTeeMachineOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"allowAllTeeWalletProjectOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"cancelGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"disallowAllTeeMachineOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"disallowAllTeeWalletProjectOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"executeGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAddressUpdater\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getAllowedTeeMachineOwners\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getAllowedTeeWalletProjectOwners\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governance\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governanceSettings\",\"outputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"implementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"}],\"name\":\"initialise\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"isAllowedTeeMachineOwner\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_isAllowed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"isAllowedTeeWalletProjectOwner\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_isAllowed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"isExecutor\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"productionMode\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"proxiableUUID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"removeAllowedTeeMachineOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"removeAllowedTeeWalletProjectOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"switchToProductionMode\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeExtensionRegistry\",\"outputs\":[{\"internalType\":\"contractITeeExtensionRegistry\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"}],\"name\":\"timelockedCalls\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_contractNameHashes\",\"type\":\"bytes32[]\"},{\"internalType\":\"address[]\",\"name\":\"_contractAddresses\",\"type\":\"address[]\"}],\"name\":\"updateContractAddresses\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newImplementation\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"upgradeToAndCall\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}]",
 }
 
 // TeeOwnerAllowlistABI is the input ABI used to generate the binding from.
@@ -795,6 +795,48 @@ func (_TeeOwnerAllowlist *TeeOwnerAllowlistTransactorSession) CancelGovernanceCa
 	return _TeeOwnerAllowlist.Contract.CancelGovernanceCall(&_TeeOwnerAllowlist.TransactOpts, _selector)
 }
 
+// DisallowAllTeeMachineOwners is a paid mutator transaction binding the contract method 0xb86936ba.
+//
+// Solidity: function disallowAllTeeMachineOwners(uint256 _extensionId) returns()
+func (_TeeOwnerAllowlist *TeeOwnerAllowlistTransactor) DisallowAllTeeMachineOwners(opts *bind.TransactOpts, _extensionId *big.Int) (*types.Transaction, error) {
+	return _TeeOwnerAllowlist.contract.Transact(opts, "disallowAllTeeMachineOwners", _extensionId)
+}
+
+// DisallowAllTeeMachineOwners is a paid mutator transaction binding the contract method 0xb86936ba.
+//
+// Solidity: function disallowAllTeeMachineOwners(uint256 _extensionId) returns()
+func (_TeeOwnerAllowlist *TeeOwnerAllowlistSession) DisallowAllTeeMachineOwners(_extensionId *big.Int) (*types.Transaction, error) {
+	return _TeeOwnerAllowlist.Contract.DisallowAllTeeMachineOwners(&_TeeOwnerAllowlist.TransactOpts, _extensionId)
+}
+
+// DisallowAllTeeMachineOwners is a paid mutator transaction binding the contract method 0xb86936ba.
+//
+// Solidity: function disallowAllTeeMachineOwners(uint256 _extensionId) returns()
+func (_TeeOwnerAllowlist *TeeOwnerAllowlistTransactorSession) DisallowAllTeeMachineOwners(_extensionId *big.Int) (*types.Transaction, error) {
+	return _TeeOwnerAllowlist.Contract.DisallowAllTeeMachineOwners(&_TeeOwnerAllowlist.TransactOpts, _extensionId)
+}
+
+// DisallowAllTeeWalletProjectOwners is a paid mutator transaction binding the contract method 0x919fd33a.
+//
+// Solidity: function disallowAllTeeWalletProjectOwners(uint256 _extensionId) returns()
+func (_TeeOwnerAllowlist *TeeOwnerAllowlistTransactor) DisallowAllTeeWalletProjectOwners(opts *bind.TransactOpts, _extensionId *big.Int) (*types.Transaction, error) {
+	return _TeeOwnerAllowlist.contract.Transact(opts, "disallowAllTeeWalletProjectOwners", _extensionId)
+}
+
+// DisallowAllTeeWalletProjectOwners is a paid mutator transaction binding the contract method 0x919fd33a.
+//
+// Solidity: function disallowAllTeeWalletProjectOwners(uint256 _extensionId) returns()
+func (_TeeOwnerAllowlist *TeeOwnerAllowlistSession) DisallowAllTeeWalletProjectOwners(_extensionId *big.Int) (*types.Transaction, error) {
+	return _TeeOwnerAllowlist.Contract.DisallowAllTeeWalletProjectOwners(&_TeeOwnerAllowlist.TransactOpts, _extensionId)
+}
+
+// DisallowAllTeeWalletProjectOwners is a paid mutator transaction binding the contract method 0x919fd33a.
+//
+// Solidity: function disallowAllTeeWalletProjectOwners(uint256 _extensionId) returns()
+func (_TeeOwnerAllowlist *TeeOwnerAllowlistTransactorSession) DisallowAllTeeWalletProjectOwners(_extensionId *big.Int) (*types.Transaction, error) {
+	return _TeeOwnerAllowlist.Contract.DisallowAllTeeWalletProjectOwners(&_TeeOwnerAllowlist.TransactOpts, _extensionId)
+}
+
 // ExecuteGovernanceCall is a paid mutator transaction binding the contract method 0x5ff27079.
 //
 // Solidity: function executeGovernanceCall(bytes4 _selector) returns()
@@ -856,6 +898,48 @@ func (_TeeOwnerAllowlist *TeeOwnerAllowlistSession) Initialize(_governanceSettin
 // Solidity: function initialize(address _governanceSettings, address _initialGovernance, address _addressUpdater) returns()
 func (_TeeOwnerAllowlist *TeeOwnerAllowlistTransactorSession) Initialize(_governanceSettings common.Address, _initialGovernance common.Address, _addressUpdater common.Address) (*types.Transaction, error) {
 	return _TeeOwnerAllowlist.Contract.Initialize(&_TeeOwnerAllowlist.TransactOpts, _governanceSettings, _initialGovernance, _addressUpdater)
+}
+
+// RemoveAllowedTeeMachineOwners is a paid mutator transaction binding the contract method 0x5d371c3c.
+//
+// Solidity: function removeAllowedTeeMachineOwners(uint256 _extensionId, address[] _owners) returns()
+func (_TeeOwnerAllowlist *TeeOwnerAllowlistTransactor) RemoveAllowedTeeMachineOwners(opts *bind.TransactOpts, _extensionId *big.Int, _owners []common.Address) (*types.Transaction, error) {
+	return _TeeOwnerAllowlist.contract.Transact(opts, "removeAllowedTeeMachineOwners", _extensionId, _owners)
+}
+
+// RemoveAllowedTeeMachineOwners is a paid mutator transaction binding the contract method 0x5d371c3c.
+//
+// Solidity: function removeAllowedTeeMachineOwners(uint256 _extensionId, address[] _owners) returns()
+func (_TeeOwnerAllowlist *TeeOwnerAllowlistSession) RemoveAllowedTeeMachineOwners(_extensionId *big.Int, _owners []common.Address) (*types.Transaction, error) {
+	return _TeeOwnerAllowlist.Contract.RemoveAllowedTeeMachineOwners(&_TeeOwnerAllowlist.TransactOpts, _extensionId, _owners)
+}
+
+// RemoveAllowedTeeMachineOwners is a paid mutator transaction binding the contract method 0x5d371c3c.
+//
+// Solidity: function removeAllowedTeeMachineOwners(uint256 _extensionId, address[] _owners) returns()
+func (_TeeOwnerAllowlist *TeeOwnerAllowlistTransactorSession) RemoveAllowedTeeMachineOwners(_extensionId *big.Int, _owners []common.Address) (*types.Transaction, error) {
+	return _TeeOwnerAllowlist.Contract.RemoveAllowedTeeMachineOwners(&_TeeOwnerAllowlist.TransactOpts, _extensionId, _owners)
+}
+
+// RemoveAllowedTeeWalletProjectOwners is a paid mutator transaction binding the contract method 0x62a2513d.
+//
+// Solidity: function removeAllowedTeeWalletProjectOwners(uint256 _extensionId, address[] _owners) returns()
+func (_TeeOwnerAllowlist *TeeOwnerAllowlistTransactor) RemoveAllowedTeeWalletProjectOwners(opts *bind.TransactOpts, _extensionId *big.Int, _owners []common.Address) (*types.Transaction, error) {
+	return _TeeOwnerAllowlist.contract.Transact(opts, "removeAllowedTeeWalletProjectOwners", _extensionId, _owners)
+}
+
+// RemoveAllowedTeeWalletProjectOwners is a paid mutator transaction binding the contract method 0x62a2513d.
+//
+// Solidity: function removeAllowedTeeWalletProjectOwners(uint256 _extensionId, address[] _owners) returns()
+func (_TeeOwnerAllowlist *TeeOwnerAllowlistSession) RemoveAllowedTeeWalletProjectOwners(_extensionId *big.Int, _owners []common.Address) (*types.Transaction, error) {
+	return _TeeOwnerAllowlist.Contract.RemoveAllowedTeeWalletProjectOwners(&_TeeOwnerAllowlist.TransactOpts, _extensionId, _owners)
+}
+
+// RemoveAllowedTeeWalletProjectOwners is a paid mutator transaction binding the contract method 0x62a2513d.
+//
+// Solidity: function removeAllowedTeeWalletProjectOwners(uint256 _extensionId, address[] _owners) returns()
+func (_TeeOwnerAllowlist *TeeOwnerAllowlistTransactorSession) RemoveAllowedTeeWalletProjectOwners(_extensionId *big.Int, _owners []common.Address) (*types.Transaction, error) {
+	return _TeeOwnerAllowlist.Contract.RemoveAllowedTeeWalletProjectOwners(&_TeeOwnerAllowlist.TransactOpts, _extensionId, _owners)
 }
 
 // SwitchToProductionMode is a paid mutator transaction binding the contract method 0xf5a98383.
@@ -1055,6 +1139,140 @@ func (_TeeOwnerAllowlist *TeeOwnerAllowlistFilterer) ParseAllTeeMachineOwnersAll
 	return event, nil
 }
 
+// TeeOwnerAllowlistAllTeeMachineOwnersDisallowedIterator is returned from FilterAllTeeMachineOwnersDisallowed and is used to iterate over the raw logs and unpacked data for AllTeeMachineOwnersDisallowed events raised by the TeeOwnerAllowlist contract.
+type TeeOwnerAllowlistAllTeeMachineOwnersDisallowedIterator struct {
+	Event *TeeOwnerAllowlistAllTeeMachineOwnersDisallowed // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeeOwnerAllowlistAllTeeMachineOwnersDisallowedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeeOwnerAllowlistAllTeeMachineOwnersDisallowed)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeeOwnerAllowlistAllTeeMachineOwnersDisallowed)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeeOwnerAllowlistAllTeeMachineOwnersDisallowedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeeOwnerAllowlistAllTeeMachineOwnersDisallowedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeeOwnerAllowlistAllTeeMachineOwnersDisallowed represents a AllTeeMachineOwnersDisallowed event raised by the TeeOwnerAllowlist contract.
+type TeeOwnerAllowlistAllTeeMachineOwnersDisallowed struct {
+	ExtensionId *big.Int
+	Raw         types.Log // Blockchain specific contextual infos
+}
+
+// FilterAllTeeMachineOwnersDisallowed is a free log retrieval operation binding the contract event 0x76fc91f6aa03fa961257e10347e87c3844fd0547a18ab3967b5a52db80c353d3.
+//
+// Solidity: event AllTeeMachineOwnersDisallowed(uint256 extensionId)
+func (_TeeOwnerAllowlist *TeeOwnerAllowlistFilterer) FilterAllTeeMachineOwnersDisallowed(opts *bind.FilterOpts) (*TeeOwnerAllowlistAllTeeMachineOwnersDisallowedIterator, error) {
+
+	logs, sub, err := _TeeOwnerAllowlist.contract.FilterLogs(opts, "AllTeeMachineOwnersDisallowed")
+	if err != nil {
+		return nil, err
+	}
+	return &TeeOwnerAllowlistAllTeeMachineOwnersDisallowedIterator{contract: _TeeOwnerAllowlist.contract, event: "AllTeeMachineOwnersDisallowed", logs: logs, sub: sub}, nil
+}
+
+// WatchAllTeeMachineOwnersDisallowed is a free log subscription operation binding the contract event 0x76fc91f6aa03fa961257e10347e87c3844fd0547a18ab3967b5a52db80c353d3.
+//
+// Solidity: event AllTeeMachineOwnersDisallowed(uint256 extensionId)
+func (_TeeOwnerAllowlist *TeeOwnerAllowlistFilterer) WatchAllTeeMachineOwnersDisallowed(opts *bind.WatchOpts, sink chan<- *TeeOwnerAllowlistAllTeeMachineOwnersDisallowed) (event.Subscription, error) {
+
+	logs, sub, err := _TeeOwnerAllowlist.contract.WatchLogs(opts, "AllTeeMachineOwnersDisallowed")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeeOwnerAllowlistAllTeeMachineOwnersDisallowed)
+				if err := _TeeOwnerAllowlist.contract.UnpackLog(event, "AllTeeMachineOwnersDisallowed", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseAllTeeMachineOwnersDisallowed is a log parse operation binding the contract event 0x76fc91f6aa03fa961257e10347e87c3844fd0547a18ab3967b5a52db80c353d3.
+//
+// Solidity: event AllTeeMachineOwnersDisallowed(uint256 extensionId)
+func (_TeeOwnerAllowlist *TeeOwnerAllowlistFilterer) ParseAllTeeMachineOwnersDisallowed(log types.Log) (*TeeOwnerAllowlistAllTeeMachineOwnersDisallowed, error) {
+	event := new(TeeOwnerAllowlistAllTeeMachineOwnersDisallowed)
+	if err := _TeeOwnerAllowlist.contract.UnpackLog(event, "AllTeeMachineOwnersDisallowed", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
 // TeeOwnerAllowlistAllTeeWalletProjectOwnersAllowedIterator is returned from FilterAllTeeWalletProjectOwnersAllowed and is used to iterate over the raw logs and unpacked data for AllTeeWalletProjectOwnersAllowed events raised by the TeeOwnerAllowlist contract.
 type TeeOwnerAllowlistAllTeeWalletProjectOwnersAllowedIterator struct {
 	Event *TeeOwnerAllowlistAllTeeWalletProjectOwnersAllowed // Event containing the contract specifics and raw log
@@ -1183,6 +1401,140 @@ func (_TeeOwnerAllowlist *TeeOwnerAllowlistFilterer) WatchAllTeeWalletProjectOwn
 func (_TeeOwnerAllowlist *TeeOwnerAllowlistFilterer) ParseAllTeeWalletProjectOwnersAllowed(log types.Log) (*TeeOwnerAllowlistAllTeeWalletProjectOwnersAllowed, error) {
 	event := new(TeeOwnerAllowlistAllTeeWalletProjectOwnersAllowed)
 	if err := _TeeOwnerAllowlist.contract.UnpackLog(event, "AllTeeWalletProjectOwnersAllowed", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// TeeOwnerAllowlistAllTeeWalletProjectOwnersDisallowedIterator is returned from FilterAllTeeWalletProjectOwnersDisallowed and is used to iterate over the raw logs and unpacked data for AllTeeWalletProjectOwnersDisallowed events raised by the TeeOwnerAllowlist contract.
+type TeeOwnerAllowlistAllTeeWalletProjectOwnersDisallowedIterator struct {
+	Event *TeeOwnerAllowlistAllTeeWalletProjectOwnersDisallowed // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeeOwnerAllowlistAllTeeWalletProjectOwnersDisallowedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeeOwnerAllowlistAllTeeWalletProjectOwnersDisallowed)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeeOwnerAllowlistAllTeeWalletProjectOwnersDisallowed)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeeOwnerAllowlistAllTeeWalletProjectOwnersDisallowedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeeOwnerAllowlistAllTeeWalletProjectOwnersDisallowedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeeOwnerAllowlistAllTeeWalletProjectOwnersDisallowed represents a AllTeeWalletProjectOwnersDisallowed event raised by the TeeOwnerAllowlist contract.
+type TeeOwnerAllowlistAllTeeWalletProjectOwnersDisallowed struct {
+	ExtensionId *big.Int
+	Raw         types.Log // Blockchain specific contextual infos
+}
+
+// FilterAllTeeWalletProjectOwnersDisallowed is a free log retrieval operation binding the contract event 0x1c6abd0ba2324be35a8b8dac7bef3bf25c5d2d2cc45c216ee3b38a82da6948e8.
+//
+// Solidity: event AllTeeWalletProjectOwnersDisallowed(uint256 extensionId)
+func (_TeeOwnerAllowlist *TeeOwnerAllowlistFilterer) FilterAllTeeWalletProjectOwnersDisallowed(opts *bind.FilterOpts) (*TeeOwnerAllowlistAllTeeWalletProjectOwnersDisallowedIterator, error) {
+
+	logs, sub, err := _TeeOwnerAllowlist.contract.FilterLogs(opts, "AllTeeWalletProjectOwnersDisallowed")
+	if err != nil {
+		return nil, err
+	}
+	return &TeeOwnerAllowlistAllTeeWalletProjectOwnersDisallowedIterator{contract: _TeeOwnerAllowlist.contract, event: "AllTeeWalletProjectOwnersDisallowed", logs: logs, sub: sub}, nil
+}
+
+// WatchAllTeeWalletProjectOwnersDisallowed is a free log subscription operation binding the contract event 0x1c6abd0ba2324be35a8b8dac7bef3bf25c5d2d2cc45c216ee3b38a82da6948e8.
+//
+// Solidity: event AllTeeWalletProjectOwnersDisallowed(uint256 extensionId)
+func (_TeeOwnerAllowlist *TeeOwnerAllowlistFilterer) WatchAllTeeWalletProjectOwnersDisallowed(opts *bind.WatchOpts, sink chan<- *TeeOwnerAllowlistAllTeeWalletProjectOwnersDisallowed) (event.Subscription, error) {
+
+	logs, sub, err := _TeeOwnerAllowlist.contract.WatchLogs(opts, "AllTeeWalletProjectOwnersDisallowed")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeeOwnerAllowlistAllTeeWalletProjectOwnersDisallowed)
+				if err := _TeeOwnerAllowlist.contract.UnpackLog(event, "AllTeeWalletProjectOwnersDisallowed", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseAllTeeWalletProjectOwnersDisallowed is a log parse operation binding the contract event 0x1c6abd0ba2324be35a8b8dac7bef3bf25c5d2d2cc45c216ee3b38a82da6948e8.
+//
+// Solidity: event AllTeeWalletProjectOwnersDisallowed(uint256 extensionId)
+func (_TeeOwnerAllowlist *TeeOwnerAllowlistFilterer) ParseAllTeeWalletProjectOwnersDisallowed(log types.Log) (*TeeOwnerAllowlistAllTeeWalletProjectOwnersDisallowed, error) {
+	event := new(TeeOwnerAllowlistAllTeeWalletProjectOwnersDisallowed)
+	if err := _TeeOwnerAllowlist.contract.UnpackLog(event, "AllTeeWalletProjectOwnersDisallowed", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
@@ -1324,6 +1676,141 @@ func (_TeeOwnerAllowlist *TeeOwnerAllowlistFilterer) ParseAllowedTeeMachineOwner
 	return event, nil
 }
 
+// TeeOwnerAllowlistAllowedTeeMachineOwnersRemovedIterator is returned from FilterAllowedTeeMachineOwnersRemoved and is used to iterate over the raw logs and unpacked data for AllowedTeeMachineOwnersRemoved events raised by the TeeOwnerAllowlist contract.
+type TeeOwnerAllowlistAllowedTeeMachineOwnersRemovedIterator struct {
+	Event *TeeOwnerAllowlistAllowedTeeMachineOwnersRemoved // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeeOwnerAllowlistAllowedTeeMachineOwnersRemovedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeeOwnerAllowlistAllowedTeeMachineOwnersRemoved)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeeOwnerAllowlistAllowedTeeMachineOwnersRemoved)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeeOwnerAllowlistAllowedTeeMachineOwnersRemovedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeeOwnerAllowlistAllowedTeeMachineOwnersRemovedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeeOwnerAllowlistAllowedTeeMachineOwnersRemoved represents a AllowedTeeMachineOwnersRemoved event raised by the TeeOwnerAllowlist contract.
+type TeeOwnerAllowlistAllowedTeeMachineOwnersRemoved struct {
+	ExtensionId *big.Int
+	Owners      []common.Address
+	Raw         types.Log // Blockchain specific contextual infos
+}
+
+// FilterAllowedTeeMachineOwnersRemoved is a free log retrieval operation binding the contract event 0x8444f01824cfebbd6772bffe7855e88270c338f6879216e756f86cd54c53ddf6.
+//
+// Solidity: event AllowedTeeMachineOwnersRemoved(uint256 extensionId, address[] owners)
+func (_TeeOwnerAllowlist *TeeOwnerAllowlistFilterer) FilterAllowedTeeMachineOwnersRemoved(opts *bind.FilterOpts) (*TeeOwnerAllowlistAllowedTeeMachineOwnersRemovedIterator, error) {
+
+	logs, sub, err := _TeeOwnerAllowlist.contract.FilterLogs(opts, "AllowedTeeMachineOwnersRemoved")
+	if err != nil {
+		return nil, err
+	}
+	return &TeeOwnerAllowlistAllowedTeeMachineOwnersRemovedIterator{contract: _TeeOwnerAllowlist.contract, event: "AllowedTeeMachineOwnersRemoved", logs: logs, sub: sub}, nil
+}
+
+// WatchAllowedTeeMachineOwnersRemoved is a free log subscription operation binding the contract event 0x8444f01824cfebbd6772bffe7855e88270c338f6879216e756f86cd54c53ddf6.
+//
+// Solidity: event AllowedTeeMachineOwnersRemoved(uint256 extensionId, address[] owners)
+func (_TeeOwnerAllowlist *TeeOwnerAllowlistFilterer) WatchAllowedTeeMachineOwnersRemoved(opts *bind.WatchOpts, sink chan<- *TeeOwnerAllowlistAllowedTeeMachineOwnersRemoved) (event.Subscription, error) {
+
+	logs, sub, err := _TeeOwnerAllowlist.contract.WatchLogs(opts, "AllowedTeeMachineOwnersRemoved")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeeOwnerAllowlistAllowedTeeMachineOwnersRemoved)
+				if err := _TeeOwnerAllowlist.contract.UnpackLog(event, "AllowedTeeMachineOwnersRemoved", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseAllowedTeeMachineOwnersRemoved is a log parse operation binding the contract event 0x8444f01824cfebbd6772bffe7855e88270c338f6879216e756f86cd54c53ddf6.
+//
+// Solidity: event AllowedTeeMachineOwnersRemoved(uint256 extensionId, address[] owners)
+func (_TeeOwnerAllowlist *TeeOwnerAllowlistFilterer) ParseAllowedTeeMachineOwnersRemoved(log types.Log) (*TeeOwnerAllowlistAllowedTeeMachineOwnersRemoved, error) {
+	event := new(TeeOwnerAllowlistAllowedTeeMachineOwnersRemoved)
+	if err := _TeeOwnerAllowlist.contract.UnpackLog(event, "AllowedTeeMachineOwnersRemoved", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
 // TeeOwnerAllowlistAllowedTeeWalletProjectOwnersAddedIterator is returned from FilterAllowedTeeWalletProjectOwnersAdded and is used to iterate over the raw logs and unpacked data for AllowedTeeWalletProjectOwnersAdded events raised by the TeeOwnerAllowlist contract.
 type TeeOwnerAllowlistAllowedTeeWalletProjectOwnersAddedIterator struct {
 	Event *TeeOwnerAllowlistAllowedTeeWalletProjectOwnersAdded // Event containing the contract specifics and raw log
@@ -1453,6 +1940,141 @@ func (_TeeOwnerAllowlist *TeeOwnerAllowlistFilterer) WatchAllowedTeeWalletProjec
 func (_TeeOwnerAllowlist *TeeOwnerAllowlistFilterer) ParseAllowedTeeWalletProjectOwnersAdded(log types.Log) (*TeeOwnerAllowlistAllowedTeeWalletProjectOwnersAdded, error) {
 	event := new(TeeOwnerAllowlistAllowedTeeWalletProjectOwnersAdded)
 	if err := _TeeOwnerAllowlist.contract.UnpackLog(event, "AllowedTeeWalletProjectOwnersAdded", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// TeeOwnerAllowlistAllowedTeeWalletProjectOwnersRemovedIterator is returned from FilterAllowedTeeWalletProjectOwnersRemoved and is used to iterate over the raw logs and unpacked data for AllowedTeeWalletProjectOwnersRemoved events raised by the TeeOwnerAllowlist contract.
+type TeeOwnerAllowlistAllowedTeeWalletProjectOwnersRemovedIterator struct {
+	Event *TeeOwnerAllowlistAllowedTeeWalletProjectOwnersRemoved // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeeOwnerAllowlistAllowedTeeWalletProjectOwnersRemovedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeeOwnerAllowlistAllowedTeeWalletProjectOwnersRemoved)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeeOwnerAllowlistAllowedTeeWalletProjectOwnersRemoved)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeeOwnerAllowlistAllowedTeeWalletProjectOwnersRemovedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeeOwnerAllowlistAllowedTeeWalletProjectOwnersRemovedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeeOwnerAllowlistAllowedTeeWalletProjectOwnersRemoved represents a AllowedTeeWalletProjectOwnersRemoved event raised by the TeeOwnerAllowlist contract.
+type TeeOwnerAllowlistAllowedTeeWalletProjectOwnersRemoved struct {
+	ExtensionId *big.Int
+	Owners      []common.Address
+	Raw         types.Log // Blockchain specific contextual infos
+}
+
+// FilterAllowedTeeWalletProjectOwnersRemoved is a free log retrieval operation binding the contract event 0x676aa060014299ae54ae19d4e1fd6fe0b4681aad07cc8ddf7979673262e3fcac.
+//
+// Solidity: event AllowedTeeWalletProjectOwnersRemoved(uint256 extensionId, address[] owners)
+func (_TeeOwnerAllowlist *TeeOwnerAllowlistFilterer) FilterAllowedTeeWalletProjectOwnersRemoved(opts *bind.FilterOpts) (*TeeOwnerAllowlistAllowedTeeWalletProjectOwnersRemovedIterator, error) {
+
+	logs, sub, err := _TeeOwnerAllowlist.contract.FilterLogs(opts, "AllowedTeeWalletProjectOwnersRemoved")
+	if err != nil {
+		return nil, err
+	}
+	return &TeeOwnerAllowlistAllowedTeeWalletProjectOwnersRemovedIterator{contract: _TeeOwnerAllowlist.contract, event: "AllowedTeeWalletProjectOwnersRemoved", logs: logs, sub: sub}, nil
+}
+
+// WatchAllowedTeeWalletProjectOwnersRemoved is a free log subscription operation binding the contract event 0x676aa060014299ae54ae19d4e1fd6fe0b4681aad07cc8ddf7979673262e3fcac.
+//
+// Solidity: event AllowedTeeWalletProjectOwnersRemoved(uint256 extensionId, address[] owners)
+func (_TeeOwnerAllowlist *TeeOwnerAllowlistFilterer) WatchAllowedTeeWalletProjectOwnersRemoved(opts *bind.WatchOpts, sink chan<- *TeeOwnerAllowlistAllowedTeeWalletProjectOwnersRemoved) (event.Subscription, error) {
+
+	logs, sub, err := _TeeOwnerAllowlist.contract.WatchLogs(opts, "AllowedTeeWalletProjectOwnersRemoved")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeeOwnerAllowlistAllowedTeeWalletProjectOwnersRemoved)
+				if err := _TeeOwnerAllowlist.contract.UnpackLog(event, "AllowedTeeWalletProjectOwnersRemoved", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseAllowedTeeWalletProjectOwnersRemoved is a log parse operation binding the contract event 0x676aa060014299ae54ae19d4e1fd6fe0b4681aad07cc8ddf7979673262e3fcac.
+//
+// Solidity: event AllowedTeeWalletProjectOwnersRemoved(uint256 extensionId, address[] owners)
+func (_TeeOwnerAllowlist *TeeOwnerAllowlistFilterer) ParseAllowedTeeWalletProjectOwnersRemoved(log types.Log) (*TeeOwnerAllowlistAllowedTeeWalletProjectOwnersRemoved, error) {
+	event := new(TeeOwnerAllowlistAllowedTeeWalletProjectOwnersRemoved)
+	if err := _TeeOwnerAllowlist.contract.UnpackLog(event, "AllowedTeeWalletProjectOwnersRemoved", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
