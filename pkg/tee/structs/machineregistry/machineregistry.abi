@@ -4,6 +4,58 @@
       {
         "components": [
           {
+            "internalType": "uint256",
+            "name": "extensionId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "initialOwner",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "codeHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "platform",
+            "type": "bytes32"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "x",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "y",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct PublicKey",
+            "name": "publicKey",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct ITeeMachineRegistry.TeeMachineData",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "teeMachineDataStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
             "internalType": "address",
             "name": "teeId",
             "type": "address"

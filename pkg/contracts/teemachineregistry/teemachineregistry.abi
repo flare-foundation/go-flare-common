@@ -26,6 +26,33 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "ECDSAInvalidSignature",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "length",
+        "type": "uint256"
+      }
+    ],
+    "name": "ECDSAInvalidSignatureLength",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "s",
+        "type": "bytes32"
+      }
+    ],
+    "name": "ECDSAInvalidSignatureS",
+    "type": "error"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -88,12 +115,22 @@
   },
   {
     "inputs": [],
+    "name": "InvalidTeePublicKeyOrSignature",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "InvalidTeeStatus",
     "type": "error"
   },
   {
     "inputs": [],
     "name": "InvalidUrl",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OnlyExtensionOwner",
     "type": "error"
   },
   {
@@ -420,6 +457,19 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_teeId",
+        "type": "address"
+      }
+    ],
+    "name": "ban",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -1012,6 +1062,11 @@
                 "internalType": "bytes32",
                 "name": "challenge",
                 "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "instructionId",
+                "type": "bytes32"
               }
             ],
             "internalType": "struct ITeeAvailabilityCheck.RequestBody",
@@ -1159,25 +1214,69 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_extensionId",
-        "type": "uint256"
-      },
-      {
         "components": [
           {
+            "internalType": "uint256",
+            "name": "extensionId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "initialOwner",
+            "type": "address"
+          },
+          {
             "internalType": "bytes32",
-            "name": "x",
+            "name": "codeHash",
             "type": "bytes32"
           },
           {
             "internalType": "bytes32",
-            "name": "y",
+            "name": "platform",
+            "type": "bytes32"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "x",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "y",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct PublicKey",
+            "name": "publicKey",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct ITeeMachineRegistry.TeeMachineData",
+        "name": "_teeMachineData",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint8",
+            "name": "v",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "r",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "s",
             "type": "bytes32"
           }
         ],
-        "internalType": "struct PublicKey",
-        "name": "_teePublicKey",
+        "internalType": "struct Signature",
+        "name": "_teeMachineDataSignature",
         "type": "tuple"
       },
       {
@@ -1189,16 +1288,6 @@
         "internalType": "string",
         "name": "_url",
         "type": "string"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_codeHash",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_platform",
-        "type": "bytes32"
       }
     ],
     "name": "register",
@@ -1341,6 +1430,11 @@
               {
                 "internalType": "bytes32",
                 "name": "challenge",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "instructionId",
                 "type": "bytes32"
               }
             ],
@@ -1624,6 +1718,11 @@
                 "internalType": "bytes32",
                 "name": "challenge",
                 "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "instructionId",
+                "type": "bytes32"
               }
             ],
             "internalType": "struct ITeeAvailabilityCheck.RequestBody",
@@ -1701,6 +1800,19 @@
       }
     ],
     "name": "toProduction",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_teeId",
+        "type": "address"
+      }
+    ],
+    "name": "unban",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

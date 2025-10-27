@@ -529,6 +529,11 @@
                 "internalType": "bytes32",
                 "name": "challenge",
                 "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "instructionId",
+                "type": "bytes32"
               }
             ],
             "internalType": "struct ITeeAvailabilityCheck.RequestBody",
@@ -870,6 +875,11 @@
         "internalType": "address",
         "name": "_teeId",
         "type": "address"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_instructionId",
+        "type": "bytes32"
       },
       {
         "internalType": "address",
@@ -1239,6 +1249,11 @@
               {
                 "internalType": "bytes32",
                 "name": "challenge",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "instructionId",
                 "type": "bytes32"
               }
             ],

@@ -303,6 +303,18 @@
         "internalType": "uint64",
         "name": "initialNonce",
         "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "batchSize",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "batchDurationSeconds",
+        "type": "uint64"
       }
     ],
     "name": "PMWMultisigAccountAdded",
@@ -1206,7 +1218,7 @@
     "name": "teeExtensionRegistry",
     "outputs": [
       {
-        "internalType": "contract ITeeExtensionRegistry",
+        "internalType": "contract IITeeExtensionRegistry",
         "name": "",
         "type": "address"
       }
