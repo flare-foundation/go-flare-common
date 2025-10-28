@@ -83,6 +83,10 @@ func (sp *SigningPolicy) Equals(other *SigningPolicy) bool {
 //
 // Total 43 + size * (20 + 2) bytes.
 func FromRawBytes(b []byte) (*SigningPolicy, int, error) {
+	if len(b) < 2 {
+		return nil, 0, errors.New("message to short for decoding signing policy")
+	}
+
 	p := 0
 	size := int(decodeUint32(b[p : p+2]))
 	p += 2
