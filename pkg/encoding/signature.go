@@ -49,7 +49,7 @@ func EncodeSignatures(signatures []IndexedSignature) ([]byte, error) {
 func TransformSignatureVRStoRSV(vrs []byte) (rsv []byte) {
 	rsv = make([]byte, 65)
 
-	copy(rsv[:], vrs[1:33])
+	copy(rsv, vrs[1:33])
 	copy(rsv[32:], vrs[33:65])
 	rsv[64] = vrs[0] - 27
 
