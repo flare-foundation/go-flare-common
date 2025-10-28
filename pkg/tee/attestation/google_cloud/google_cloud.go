@@ -10,7 +10,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/flare-foundation/go-flare-common/pkg/convert"
-	"github.com/golang-jwt/jwt/v4"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 // This code is slightly modified from Google documentation.
@@ -20,12 +20,7 @@ type GoogleTeeClaims struct {
 	SecBoot  bool     `json:"secboot"`
 	EatNonce []string `json:"eat_nonce"`
 	SubMods  subMods  `json:"submods"`
-	jwt.StandardClaims
-}
-
-// Valid satisfies the jwt.Claims interface without additional checks.
-func (c GoogleTeeClaims) Valid() error {
-	return nil
+	jwt.RegisteredClaims
 }
 
 func (c *GoogleTeeClaims) Platform() (common.Hash, error) {
