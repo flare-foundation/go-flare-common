@@ -92,7 +92,6 @@ func ParseAndValidatePKIToken(attestationToken string, storedRootCertificate x50
 
 func ParsePKITokenUnverified(attestationToken string) (*jwt.Token, *GoogleTeeClaims, error) {
 	claims := &GoogleTeeClaims{}
-	// claims := new(GoogleTeeClaims)
 
 	token, _, err := jwt.NewParser().ParseUnverified(attestationToken, claims)
 	if err != nil {
