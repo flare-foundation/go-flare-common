@@ -3,6 +3,8 @@ package googlecloud
 import (
 	"crypto/x509"
 	"encoding/base64"
+	"encoding/json"
+	"encoding/pem"
 	"errors"
 	"fmt"
 	"strings"
@@ -13,13 +15,37 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+type EATNonce []string
+
+func (e *EATNonce) UnmarshalJSON(data []byte) error {
+	var arr []string
+	if err := json.Unmarshal(data, &arr); err == nil {
+		*e = arr
+		return nil
+	}
+	var s string
+	if err := json.Unmarshal(data, &s); err == nil {
+		*e = []string{s}
+		return nil
+	}
+	*e = []string{}
+	return nil
+}
+
+type A[P any] interface {
+	*P
+}
+
 // This code is slightly modified from Google documentation.
 type GoogleTeeClaims struct {
-	HWModel  string   `json:"hwmodel"`
-	SWName   string   `json:"swname"`
-	SecBoot  bool     `json:"secboot"`
-	EatNonce []string `json:"eat_nonce"`
-	SubMods  subMods  `json:"submods"`
+	SecBoot               bool     `json:"secboot"`
+	OEMID                 int      `json:"oemid"`
+	HWModel               string   `json:"hwmodel"`
+	SWName                string   `json:"swname"`
+	GoogleServiceAccounts []string `json:"google_service_accounts"`
+	DebugStatus           string   `json:"dbgstat"`
+	EATNonce              EATNonce `json:"eat_nonce"`
+	SubMods               subMods  `json:"submods"`
 	jwt.RegisteredClaims
 }
 
@@ -55,27 +81,28 @@ type container struct {
 
 // ExtractAndValidatePKIToken validates the PKI token returned from the attestation service is valid.
 // Returns a valid jwt.Token or returns an error if invalid.
-func ParseAndValidatePKIToken(attestationToken string, storedRootCertificate x509.Certificate) (jwt.Token, error) {
+func ParseAndValidatePKIToken(attestationToken string, storedRootCertificate x509.Certificate) (jwt.Token, *GoogleTeeClaims, error) {
 	keyFunc := extractAndValidateKey(storedRootCertificate)
 
-	verifiedJWT, err := jwt.ParseWithClaims(attestationToken, &GoogleTeeClaims{}, keyFunc)
-	return *verifiedJWT, err
+	claims := new(GoogleTeeClaims)
+
+	verifiedJWT, err := jwt.ParseWithClaims(attestationToken, claims, keyFunc, jwt.WithValidMethods([]string{"RS256"}))
+	return *verifiedJWT, claims, err
 }
 
-func ParsePKITokenUnverified(attestationToken string) (*jwt.Token, error) {
-	token, _, err := jwt.NewParser().ParseUnverified(attestationToken, &GoogleTeeClaims{})
+func ParsePKITokenUnverified(attestationToken string) (*jwt.Token, *GoogleTeeClaims, error) {
+	claims := &GoogleTeeClaims{}
+	// claims := new(GoogleTeeClaims)
+
+	token, _, err := jwt.NewParser().ParseUnverified(attestationToken, claims)
 	if err != nil {
-		return nil, fmt.Errorf("could not parse token, %w", err)
+		return nil, nil, fmt.Errorf("could not parse token, %w", err)
 	}
-	return token, nil
+	return token, claims, nil
 }
 
 func extractAndValidateKey(expectedRoot x509.Certificate) func(*jwt.Token) (any, error) {
 	return func(token *jwt.Token) (any, error) {
-		if alg := token.Header["alg"]; alg != "RS256" {
-			return nil, fmt.Errorf("unsupported alg in header: %v, expected %v", alg, "RS256")
-		}
-
 		x5cs, ok := token.Header["x5c"]
 		if !ok {
 			return jwt.Token{}, errors.New("x5c headers missing")
@@ -117,29 +144,29 @@ func ExtractCertificatesFromX5CHeader(x5cHeaders []any) (PKICertificates, error)
 		return PKICertificates{}, fmt.Errorf("incorrect number of certificates, expected 3 certificates, got %v", len(x5cHeaders))
 	}
 
-	h, ok := x5cHeaders[0].(string)
+	h0, ok := x5cHeaders[0].(string)
 	if !ok {
 		return PKICertificates{}, fmt.Errorf("leaf certificate is not a string:% v", x5cHeaders[0])
 	}
-	leaf, err := ParseDERCertificate(h)
+	leaf, err := ParseDERCertificate(h0)
 	if err != nil {
 		return PKICertificates{}, fmt.Errorf("cannot parse leaf certificate: %v", err)
 	}
 
-	h, ok = x5cHeaders[1].(string)
+	h1, ok := x5cHeaders[1].(string)
 	if !ok {
 		return PKICertificates{}, fmt.Errorf("intermediate certificate is not a string:% v", x5cHeaders[1])
 	}
-	intermediate, err := ParseDERCertificate(h)
+	intermediate, err := ParseDERCertificate(h1)
 	if err != nil {
 		return PKICertificates{}, fmt.Errorf("cannot parse intermediate certificate: %v", err)
 	}
 
-	h, ok = x5cHeaders[1].(string)
+	h2, ok := x5cHeaders[2].(string)
 	if !ok {
 		return PKICertificates{}, fmt.Errorf("root certificate is not a string:% v", x5cHeaders[2])
 	}
-	root, err := ParseDERCertificate(h)
+	root, err := ParseDERCertificate(h2)
 	if err != nil {
 		return PKICertificates{}, fmt.Errorf("cannot parse root certificate: %v", err)
 	}
@@ -157,6 +184,19 @@ func ParseDERCertificate(certificate string) (*x509.Certificate, error) {
 	bytes, _ := base64.StdEncoding.DecodeString(certificate)
 
 	cert, err := x509.ParseCertificate(bytes)
+	if err != nil {
+		return nil, fmt.Errorf("cannot parse certificate: %v", err)
+	}
+
+	return cert, nil
+}
+func ParsePEMCertificate(certificate string) (*x509.Certificate, error) {
+	block, _ := pem.Decode([]byte(certificate))
+	if block == nil {
+		return nil, fmt.Errorf("cannot decode certificate")
+	}
+
+	cert, err := x509.ParseCertificate(block.Bytes)
 	if err != nil {
 		return nil, fmt.Errorf("cannot parse certificate: %v", err)
 	}
@@ -194,15 +234,15 @@ func (c *PKICertificates) Verify(expectedRoot x509.Certificate) error {
 
 // verifyLifetime checks that all certificate lifetimes are valid.
 func (c *PKICertificates) verifyLifetime() error {
-	if isCertificateLifetimeValid(c.Leaf) {
+	if !isCertificateLifetimeValid(c.Leaf) {
 		return fmt.Errorf("leaf is not valid")
 	}
 
-	if isCertificateLifetimeValid(c.Intermediate) {
+	if !isCertificateLifetimeValid(c.Intermediate) {
 		return fmt.Errorf("intermediate is not valid")
 	}
 
-	if isCertificateLifetimeValid(c.Root) {
+	if !isCertificateLifetimeValid(c.Root) {
 		return fmt.Errorf("root is not valid")
 	}
 
