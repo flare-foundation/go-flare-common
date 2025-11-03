@@ -82,9 +82,12 @@ type Container struct {
 // ParseAndValidatePKIToken validates the PKI token returned from the Google cloud confidential compute is valid.
 // Returns a valid jwt.Token and Claims or returns an error if invalid.
 func ParseAndValidatePKIToken(attestationToken string, storedRootCertificate x509.Certificate) (jwt.Token, *GoogleTeeClaims, error) {
-	keyFunc := extractAndValidateKey(storedRootCertificate)
+	claims := &GoogleTeeClaims{}
+	return ParseAndValidatePKITokenClaims(attestationToken, storedRootCertificate, claims)
+}
 
-	claims := new(GoogleTeeClaims)
+func ParseAndValidatePKITokenClaims[T jwt.Claims](attestationToken string, storedRootCertificate x509.Certificate, claims T) (jwt.Token, T, error) {
+	keyFunc := extractAndValidateKey(storedRootCertificate)
 
 	verifiedJWT, err := jwt.ParseWithClaims(attestationToken, claims, keyFunc, jwt.WithValidMethods([]string{"RS256"}))
 	return *verifiedJWT, claims, err
@@ -93,9 +96,13 @@ func ParseAndValidatePKIToken(attestationToken string, storedRootCertificate x50
 func ParsePKITokenUnverified(attestationToken string) (*jwt.Token, *GoogleTeeClaims, error) {
 	claims := &GoogleTeeClaims{}
 
+	return ParsePKITokenUnverifiedClaims(attestationToken, claims)
+}
+
+func ParsePKITokenUnverifiedClaims[T jwt.Claims](attestationToken string, claims T) (*jwt.Token, T, error) {
 	token, _, err := jwt.NewParser().ParseUnverified(attestationToken, claims)
 	if err != nil {
-		return nil, nil, fmt.Errorf("could not parse token, %w", err)
+		return nil, claims, fmt.Errorf("could not parse token, %w", err)
 	}
 	return token, claims, nil
 }

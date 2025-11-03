@@ -4,6 +4,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/stretchr/testify/require"
 )
 
@@ -53,4 +54,11 @@ func TestParseAndValidatePKITokenHappy(t *testing.T) {
 
 	_, _, err = ParsePKITokenUnverified(string(tokenString))
 	require.NoError(t, err)
+
+	claims := jwt.MapClaims{}
+
+	_, claims2, err := ParsePKITokenUnverifiedClaims(string(tokenString), claims)
+	require.NoError(t, err)
+
+	require.Equal(t, claims, claims2)
 }
