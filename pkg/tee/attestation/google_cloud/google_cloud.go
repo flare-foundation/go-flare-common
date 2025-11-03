@@ -90,6 +90,9 @@ func ParseAndValidatePKITokenClaims[T jwt.Claims](attestationToken string, store
 	keyFunc := extractAndValidateKey(storedRootCertificate)
 
 	verifiedJWT, err := jwt.ParseWithClaims(attestationToken, claims, keyFunc, jwt.WithValidMethods([]string{"RS256"}))
+	if err != nil {
+		return jwt.Token{}, claims, fmt.Errorf("could not verify token: %w", err)
+	}
 	return *verifiedJWT, claims, err
 }
 
