@@ -32,11 +32,9 @@ func (e *EATNonce) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-type A[P any] interface {
-	*P
-}
-
-// This code is slightly modified from Google documentation.
+// GoogleTeeClaims represents the claims present in a Google Cloud TEE attestation JWT.
+//
+// Based on https://cloud.google.com/confidential-computing/confidential-space/docs/reference/token-claims.
 type GoogleTeeClaims struct {
 	SecBoot               bool     `json:"secboot"`
 	OEMID                 int      `json:"oemid"`
@@ -45,7 +43,7 @@ type GoogleTeeClaims struct {
 	GoogleServiceAccounts []string `json:"google_service_accounts"`
 	DebugStatus           string   `json:"dbgstat"`
 	EATNonce              EATNonce `json:"eat_nonce"`
-	SubMods               subMods  `json:"submods"`
+	SubMods               SubMods  `json:"submods"`
 	jwt.RegisteredClaims
 }
 
@@ -67,20 +65,22 @@ func (c *GoogleTeeClaims) CodeHash() (common.Hash, error) {
 	return ch, nil
 }
 
-type subMods struct {
-	Container container `json:"container"`
+type SubMods struct {
+	ConfidentialSpace ConfidentialSpaceInfo `json:"confidential_space"`
+	Container         Container             `json:"container"`
 }
 
-type container struct {
+type ConfidentialSpaceInfo struct {
+	SupportAttributes []string `json:"support_attributes"`
+}
+
+type Container struct {
 	ImageDigest string `json:"image_digest"`
 	ImageID     string `json:"image_id"`
 }
 
-// This code is an example of how to validate a PKI token. This library is not an official library,
-// nor is it endorsed by Google.
-
-// ExtractAndValidatePKIToken validates the PKI token returned from the attestation service is valid.
-// Returns a valid jwt.Token or returns an error if invalid.
+// ParseAndValidatePKIToken validates the PKI token returned from the Google cloud confidential compute is valid.
+// Returns a valid jwt.Token and Claims or returns an error if invalid.
 func ParseAndValidatePKIToken(attestationToken string, storedRootCertificate x509.Certificate) (jwt.Token, *GoogleTeeClaims, error) {
 	keyFunc := extractAndValidateKey(storedRootCertificate)
 
@@ -100,7 +100,7 @@ func ParsePKITokenUnverified(attestationToken string) (*jwt.Token, *GoogleTeeCla
 	return token, claims, nil
 }
 
-func extractAndValidateKey(expectedRoot x509.Certificate) func(*jwt.Token) (any, error) {
+func extractAndValidateKey(expectedRoot x509.Certificate) jwt.Keyfunc {
 	return func(token *jwt.Token) (any, error) {
 		x5cs, ok := token.Header["x5c"]
 		if !ok {
