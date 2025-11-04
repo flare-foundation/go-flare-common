@@ -1,8 +1,16 @@
 package googlecloud
 
 import (
+	"crypto"
+	"crypto/rand"
+	"crypto/rsa"
+	"crypto/x509"
+	"encoding/base64"
+	"fmt"
+	"math/big"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/stretchr/testify/require"
@@ -44,7 +52,7 @@ kNPLowCd0NqxYYSLNL7GroYCFPxoBpr+++4vsCaXalbs8iJxdU2EPqG4MB4xWKYg
 uyT5CnJulxSC5CT1
 -----END CERTIFICATE-----`
 
-func TestParseAndValidatePKITokenHappy(t *testing.T) {
+func TestParsePKITokenUnverifiedHappy(t *testing.T) {
 	_, err := ParsePEMCertificate(rootCert)
 
 	require.NoError(t, err)
@@ -52,13 +60,287 @@ func TestParseAndValidatePKITokenHappy(t *testing.T) {
 	tokenString, err := os.ReadFile("test_attestation.jwt")
 	require.NoError(t, err)
 
-	_, _, err = ParsePKITokenUnverified(string(tokenString))
+	tokenStruct, claimsStruct, err := ParsePKITokenUnverified(string(tokenString))
 	require.NoError(t, err)
 
-	claims := jwt.MapClaims{}
+	claimsStructT, ok := tokenStruct.Claims.(*GoogleTeeClaims)
+	require.True(t, ok)
+	require.Equal(t, claimsStruct, claimsStructT)
+	require.False(t, tokenStruct.Valid)
 
-	_, claims2, err := ParsePKITokenUnverifiedClaims(string(tokenString), claims)
+	claimsMap := jwt.MapClaims{}
+	tokenMap, claims2, err := ParsePKITokenUnverifiedClaims(string(tokenString), claimsMap)
 	require.NoError(t, err)
 
-	require.Equal(t, claims, claims2)
+	require.Equal(t, claimsMap, claims2)
+	require.False(t, tokenMap.Valid)
+
+	require.Equal(t, claimsStruct.HWModel, claimsMap["hwmodel"])
+}
+
+func TestParseAndValidatePKITokenHappy(t *testing.T) {
+	tokenClaims := GoogleTeeClaims{
+		HWModel: "testmodel",
+		RegisteredClaims: jwt.RegisteredClaims{
+			Issuer: "issuer",
+		},
+	}
+
+	now := time.Now()
+
+	signedToken, root := generateTestPKIToken(t, now, now, now, tokenClaims)
+
+	parsedToken, parsedClaims, err := ParseAndValidatePKIToken(signedToken, root)
+	require.NoError(t, err)
+	require.NotNil(t, parsedToken)
+	require.Equal(t, "testmodel", parsedClaims.HWModel)
+	require.Equal(t, "issuer", parsedClaims.Issuer)
+}
+
+func TestParseAndValidatePKITokenFail(t *testing.T) {
+	defClaims := GoogleTeeClaims{
+		HWModel: "testmodel",
+		RegisteredClaims: jwt.RegisteredClaims{
+			Issuer: "issuer",
+		},
+	}
+
+	now := time.Now()
+	past := now.Add(-300 * time.Hour)
+	future := now.Add(300 * time.Hour)
+
+	t.Run("random strings", func(t *testing.T) {
+		t.Parallel()
+
+		examples := []string{
+			"",
+			"11",
+			"..1",
+			"1.1.1",
+			"00.00.00",
+		}
+
+		for _, example := range examples {
+			_, _, err := ParsePKITokenUnverified(example)
+			require.Error(t, err)
+		}
+	})
+
+	t.Run("invalid lifetime certificates", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			rt, it, lt time.Time
+		}{
+			{now, now, future},
+			{past, now, now},
+			{future, now, now},
+			{now, past, now},
+			{now, future, now},
+			{past, past, now},
+			{past, future, now},
+			{future, past, now},
+			{future, future, now},
+			{now, now, past},
+			{past, past, past},
+		}
+
+		for _, test := range tests {
+			signedToken, root := generateTestPKIToken(t, test.rt, test.it, test.lt, defClaims)
+
+			_, _, err := ParseAndValidatePKIToken(signedToken, root)
+			require.Error(t, err)
+		}
+	})
+
+	t.Run("invalid lifetime token", func(t *testing.T) {
+		t.Parallel()
+		claims := []jwt.RegisteredClaims{
+			{
+				Issuer:    "issuer",
+				ExpiresAt: jwt.NewNumericDate(past), // expired token
+			},
+			{
+				Issuer:    "issuer",
+				NotBefore: jwt.NewNumericDate(future), // not before future time
+			},
+		}
+
+		for _, claims := range claims {
+			now := time.Now()
+			signedToken, root := generateTestPKIToken(t, now, now, now, claims)
+
+			_, _, err := ParseAndValidatePKIToken(signedToken, root)
+			require.Error(t, err)
+		}
+	})
+
+	t.Run("invalid certificates", func(t *testing.T) {
+		t.Parallel()
+
+		root, rootKey := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), true, nil, nil)
+
+		invalidRoot := base64.StdEncoding.EncodeToString([]byte("not a real root"))
+		invalidInter := base64.StdEncoding.EncodeToString([]byte("not a real inter"))
+		invalidLeaf := base64.StdEncoding.EncodeToString([]byte("not a real leaf"))
+
+		signedToken := assembleSignedToken(t, defClaims, []string{invalidLeaf, invalidInter, invalidRoot}, rootKey)
+		_, _, err := ParseAndValidatePKIToken(signedToken, root)
+		require.Error(t, err)
+
+		fmt.Printf("err: %v\n", err)
+	})
+}
+
+func TestInvalidChains(t *testing.T) {
+	now := time.Now()
+
+	root, rootKey := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), true, nil, nil)
+	leaf, leafKey := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), false, root, rootKey)
+
+	inter0, intermediateKey0 := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), true, root, rootKey)
+	leaf0, leafKey0 := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), false, inter0, intermediateKey0)
+
+	inter1, intermediateKey1 := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), true, inter0, intermediateKey0)
+	leaf1, leafKey1 := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), false, inter1, intermediateKey1)
+
+	defClaims := GoogleTeeClaims{
+		HWModel: "testmodel",
+		RegisteredClaims: jwt.RegisteredClaims{
+			Issuer: "issuer",
+		},
+	}
+
+	tests := []struct {
+		certs  []*x509.Certificate
+		signer crypto.Signer
+	}{
+		{
+			certs:  []*x509.Certificate{},
+			signer: leafKey,
+		},
+		{
+			certs:  []*x509.Certificate{leaf, root},
+			signer: leafKey,
+		},
+		{
+			certs:  []*x509.Certificate{leaf1, inter1, inter0, root},
+			signer: leafKey1,
+		},
+		// todo do we allow enforce KeyUsage
+		// {
+		// 	certs:  []*x509.Certificate{inter1, inter0, root},
+		// 	signer: intermediateKey1,
+		// },
+		{
+			certs:  []*x509.Certificate{leaf1, inter0, root},
+			signer: leafKey1,
+		},
+		{
+			certs:  []*x509.Certificate{leaf1, inter1, root},
+			signer: leafKey1,
+		},
+		{
+			certs:  []*x509.Certificate{leaf0, inter1, root},
+			signer: leafKey0,
+		},
+		{
+			certs:  []*x509.Certificate{leaf0, inter0, root},
+			signer: leafKey1,
+		},
+		{
+			certs:  []*x509.Certificate{leaf1, inter0, inter1},
+			signer: leafKey1,
+		},
+	}
+
+	for _, test := range tests {
+		signedToken := assembleSignedToken(t, defClaims, convertToHeaderEntry(test.certs), test.signer)
+
+		_, _, err := ParseAndValidatePKIToken(signedToken, root)
+		require.Error(t, err)
+	}
+}
+
+func generateTestCertificate(
+	t *testing.T,
+	notBefore, notAfter time.Time,
+	isCA bool,
+	parent *x509.Certificate,
+	parentKey crypto.Signer,
+) (*x509.Certificate, *rsa.PrivateKey) {
+	t.Helper()
+	priv, err := rsa.GenerateKey(rand.Reader, 2048)
+	require.NoError(t, err)
+
+	serial := big.NewInt(time.Now().UnixNano())
+
+	template := &x509.Certificate{
+		SerialNumber:          serial,
+		NotBefore:             notBefore,
+		NotAfter:              notAfter,
+		SignatureAlgorithm:    x509.SHA256WithRSA,
+		PublicKeyAlgorithm:    x509.RSA,
+		IsCA:                  isCA,
+		BasicConstraintsValid: true,
+	}
+
+	if isCA {
+		template.KeyUsage = x509.KeyUsageCertSign | x509.KeyUsageCRLSign
+	} else {
+		template.KeyUsage = x509.KeyUsageDigitalSignature
+	}
+
+	if parent == nil {
+		parent = template
+		parentKey = priv
+	}
+
+	certDER, err := x509.CreateCertificate(rand.Reader, template, parent, &priv.PublicKey, parentKey)
+	require.NoError(t, err)
+	cert, err := x509.ParseCertificate(certDER)
+	require.NoError(t, err)
+	return cert, priv
+}
+
+func generateTestPKIToken(
+	t *testing.T,
+	tr, ti, tl time.Time,
+	claims jwt.Claims,
+) (string, *x509.Certificate) {
+	t.Helper()
+
+	root, rootKey := generateTestCertificate(t, tr.Add(-time.Hour), tr.Add(time.Hour), true, nil, nil)
+	inter, intermediateKey := generateTestCertificate(t, ti.Add(-time.Hour), ti.Add(time.Hour), true, root, rootKey)
+	leaf, leafKey := generateTestCertificate(t, tl.Add(-time.Hour), tl.Add(time.Hour), false, inter, intermediateKey)
+
+	x5c := []*x509.Certificate{leaf, inter, root}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
+	token.Header["x5c"] = x5c
+
+	signedToken := assembleSignedToken(t, claims, convertToHeaderEntry(x5c), leafKey)
+
+	return signedToken, root
+}
+
+func assembleSignedToken(t *testing.T, claims jwt.Claims, x5c []string, key crypto.Signer) string {
+	t.Helper()
+	token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
+
+	token.Header["x5c"] = x5c
+
+	signedToken, err := token.SignedString(key)
+	require.NoError(t, err)
+
+	return signedToken
+}
+
+func convertToHeaderEntry(certs []*x509.Certificate) []string {
+	cs := make([]string, 0, len(certs))
+	for _, cert := range certs {
+		cs = append(cs, base64.StdEncoding.EncodeToString(cert.Raw))
+	}
+
+	return cs
 }
