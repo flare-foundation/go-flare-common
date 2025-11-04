@@ -38,11 +38,11 @@ func (e *EATNonce) UnmarshalJSON(data []byte) error {
 type GoogleTeeClaims struct {
 	SecBoot               bool     `json:"secboot"`
 	OEMID                 int      `json:"oemid"`
-	HWModel               string   `json:"hwmodel"`
+	HWModel               string   `json:"hwmodel"` // Hardware Model
 	SWName                string   `json:"swname"`
 	GoogleServiceAccounts []string `json:"google_service_accounts"`
 	DebugStatus           string   `json:"dbgstat"`
-	EATNonce              EATNonce `json:"eat_nonce"`
+	EATNonce              EATNonce `json:"eat_nonce"` // Entity Attestation Token nonce
 	SubMods               SubMods  `json:"submods"`
 	jwt.RegisteredClaims
 }
@@ -81,17 +81,17 @@ type Container struct {
 
 // ParseAndValidatePKIToken validates the PKI token returned from the Google cloud confidential compute is valid.
 // Returns a valid jwt.Token and Claims or returns an error if invalid.
-func ParseAndValidatePKIToken(attestationToken string, storedRootCertificate x509.Certificate) (jwt.Token, *GoogleTeeClaims, error) {
+func ParseAndValidatePKIToken(attestationToken string, storedRootCertificate *x509.Certificate) (jwt.Token, *GoogleTeeClaims, error) {
 	claims := &GoogleTeeClaims{}
 	return ParseAndValidatePKITokenClaims(attestationToken, storedRootCertificate, claims)
 }
 
-func ParseAndValidatePKITokenClaims[T jwt.Claims](attestationToken string, storedRootCertificate x509.Certificate, claims T) (jwt.Token, T, error) {
+func ParseAndValidatePKITokenClaims[T jwt.Claims](attestationToken string, storedRootCertificate *x509.Certificate, claims T) (jwt.Token, T, error) {
 	keyFunc := extractAndValidateKey(storedRootCertificate)
 
 	verifiedJWT, err := jwt.ParseWithClaims(attestationToken, claims, keyFunc, jwt.WithValidMethods([]string{"RS256"}))
 	if err != nil {
-		return jwt.Token{}, claims, fmt.Errorf("could not verify token: %w", err)
+		return jwt.Token{}, claims, fmt.Errorf("parsing and verifying: %w", err)
 	}
 	return *verifiedJWT, claims, err
 }
@@ -110,7 +110,7 @@ func ParsePKITokenUnverifiedClaims[T jwt.Claims](attestationToken string, claims
 	return token, claims, nil
 }
 
-func extractAndValidateKey(expectedRoot x509.Certificate) jwt.Keyfunc {
+func extractAndValidateKey(expectedRoot *x509.Certificate) jwt.Keyfunc {
 	return func(token *jwt.Token) (any, error) {
 		x5cs, ok := token.Header["x5c"]
 		if !ok {
@@ -127,7 +127,7 @@ func extractAndValidateKey(expectedRoot x509.Certificate) jwt.Keyfunc {
 			return nil, fmt.Errorf("extracting certificates from x5c headers: %v", err)
 		}
 
-		err = certificates.Verify(expectedRoot)
+		err = certificates.Verify(*expectedRoot)
 		if err != nil {
 			return nil, fmt.Errorf("verifying certificates: %v", err)
 		}
@@ -150,40 +150,29 @@ func ExtractCertificatesFromX5CHeader(x5cHeaders []any) (PKICertificates, error)
 	}
 
 	if len(x5cHeaders) != 3 {
-		return PKICertificates{}, fmt.Errorf("incorrect number of certificates, expected 3 certificates, got %v", len(x5cHeaders))
+		return PKICertificates{}, fmt.Errorf("incorrect number of certificates, expected 3, got %v", len(x5cHeaders))
 	}
 
-	h0, ok := x5cHeaders[0].(string)
-	if !ok {
-		return PKICertificates{}, fmt.Errorf("leaf certificate is not a string:% v", x5cHeaders[0])
-	}
-	leaf, err := ParseDERCertificate(h0)
-	if err != nil {
-		return PKICertificates{}, fmt.Errorf("cannot parse leaf certificate: %v", err)
-	}
+	parsedHeaders := make([]*x509.Certificate, 3)
 
-	h1, ok := x5cHeaders[1].(string)
-	if !ok {
-		return PKICertificates{}, fmt.Errorf("intermediate certificate is not a string:% v", x5cHeaders[1])
-	}
-	intermediate, err := ParseDERCertificate(h1)
-	if err != nil {
-		return PKICertificates{}, fmt.Errorf("cannot parse intermediate certificate: %v", err)
-	}
+	for j := range x5cHeaders {
+		h, ok := x5cHeaders[j].(string)
+		if !ok {
+			return PKICertificates{}, fmt.Errorf("certificate at index %d is not a string:% v", j, x5cHeaders[j])
+		}
 
-	h2, ok := x5cHeaders[2].(string)
-	if !ok {
-		return PKICertificates{}, fmt.Errorf("root certificate is not a string:% v", x5cHeaders[2])
-	}
-	root, err := ParseDERCertificate(h2)
-	if err != nil {
-		return PKICertificates{}, fmt.Errorf("cannot parse root certificate: %v", err)
+		cert, err := ParseDERCertificate(h)
+		if err != nil {
+			return PKICertificates{}, fmt.Errorf("cannot parse certificate at index %d: %v", j, err)
+		}
+
+		parsedHeaders[j] = cert
 	}
 
 	certificates := PKICertificates{
-		Leaf:         leaf,
-		Intermediate: intermediate,
-		Root:         root,
+		Leaf:         parsedHeaders[0],
+		Intermediate: parsedHeaders[1],
+		Root:         parsedHeaders[2],
 	}
 	return certificates, nil
 }
@@ -230,7 +219,7 @@ func (c *PKICertificates) Verify(expectedRoot x509.Certificate) error {
 
 	err := c.verifyLifetime()
 	if err != nil {
-		return fmt.Errorf("certificate lifetime: %v", err)
+		return fmt.Errorf("lifetime: %v", err)
 	}
 
 	err = c.verifyChain()
@@ -244,15 +233,15 @@ func (c *PKICertificates) Verify(expectedRoot x509.Certificate) error {
 // verifyLifetime checks that all certificate lifetimes are valid.
 func (c *PKICertificates) verifyLifetime() error {
 	if !isCertificateLifetimeValid(c.Leaf) {
-		return fmt.Errorf("leaf is not valid")
+		return errors.New("leaf invalid")
 	}
 
 	if !isCertificateLifetimeValid(c.Intermediate) {
-		return fmt.Errorf("intermediate is not valid")
+		return errors.New("intermediate invalid")
 	}
 
 	if !isCertificateLifetimeValid(c.Root) {
-		return fmt.Errorf("root is not valid")
+		return errors.New("root invalid")
 	}
 
 	return nil
