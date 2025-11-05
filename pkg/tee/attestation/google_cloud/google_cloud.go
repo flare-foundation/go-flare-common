@@ -18,18 +18,20 @@ import (
 type EATNonce []string
 
 func (e *EATNonce) UnmarshalJSON(data []byte) error {
+	var err1, err2 error
+
 	var arr []string
-	if err := json.Unmarshal(data, &arr); err == nil {
+	if err1 = json.Unmarshal(data, &arr); err1 == nil {
 		*e = arr
 		return nil
 	}
 	var s string
-	if err := json.Unmarshal(data, &s); err == nil {
+	if err2 = json.Unmarshal(data, &s); err2 == nil {
 		*e = []string{s}
 		return nil
 	}
-	*e = []string{}
-	return nil
+
+	return fmt.Errorf("%w and %w", err1, err2)
 }
 
 // GoogleTeeClaims represents the claims present in a Google Cloud TEE attestation JWT.
@@ -127,7 +129,7 @@ func extractAndValidateKey(expectedRoot *x509.Certificate) jwt.Keyfunc {
 			return nil, fmt.Errorf("extracting certificates from x5c headers: %v", err)
 		}
 
-		err = certificates.Verify(*expectedRoot)
+		err = certificates.Verify(expectedRoot)
 		if err != nil {
 			return nil, fmt.Errorf("verifying certificates: %v", err)
 		}
@@ -205,7 +207,7 @@ func ParsePEMCertificate(certificate string) (*x509.Certificate, error) {
 	return cert, nil
 }
 
-func (c *PKICertificates) Verify(expectedRoot x509.Certificate) error {
+func (c *PKICertificates) Verify(expectedRoot *x509.Certificate) error {
 	// Verify the leaf certificate signature algorithm is an RSA key
 	if c.Leaf.SignatureAlgorithm != x509.SHA256WithRSA {
 		return errors.New("leaf certificate signature algorithm is not SHA256WithRSA")

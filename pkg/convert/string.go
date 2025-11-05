@@ -21,6 +21,11 @@ func StringToCommonHash(s string) (common.Hash, error) {
 	return x, nil
 }
 
+// CommonHashToString is the inverse of StringToCommonHash. It trims trailing zero bytes and converts the rest to string using utf-8.
+func CommonHashToString(h common.Hash) string {
+	return strings.TrimRight(string(h[:]), "\x00")
+}
+
 func Hex32StringToCommonHash(s string) (common.Hash, error) {
 	st := removeHexPrefix(s)
 
