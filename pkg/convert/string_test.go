@@ -16,6 +16,9 @@ func TestStringToCommonHash(t *testing.T) {
 		result, err := StringToCommonHash(input)
 		require.NoError(t, err)
 		require.Equal(t, expected, result)
+
+		back := CommonHashToString(result)
+		require.Equal(t, input, back)
 	})
 
 	t.Run("valid 32 character string", func(t *testing.T) {
@@ -26,6 +29,9 @@ func TestStringToCommonHash(t *testing.T) {
 		result, err := StringToCommonHash(input)
 		require.NoError(t, err)
 		require.Equal(t, expected, result)
+
+		back := CommonHashToString(result)
+		require.Equal(t, input, back)
 	})
 
 	t.Run("empty string", func(t *testing.T) {
@@ -35,6 +41,9 @@ func TestStringToCommonHash(t *testing.T) {
 		result, err := StringToCommonHash(input)
 		require.NoError(t, err)
 		require.Equal(t, expected, result)
+
+		back := CommonHashToString(result)
+		require.Equal(t, input, back)
 	})
 
 	t.Run("string too long", func(t *testing.T) {

@@ -6,12 +6,14 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"math/big"
 	"os"
 	"testing"
 	"time"
 
+	"github.com/flare-foundation/go-flare-common/pkg/convert"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/stretchr/testify/require"
 )
@@ -52,6 +54,61 @@ kNPLowCd0NqxYYSLNL7GroYCFPxoBpr+++4vsCaXalbs8iJxdU2EPqG4MB4xWKYg
 uyT5CnJulxSC5CT1
 -----END CERTIFICATE-----`
 
+func TestEATNonceMarshaling(t *testing.T) {
+	t.Run("success", func(t *testing.T) {
+		tests := []struct {
+			data     any
+			expected EATNonce
+		}{
+			{
+				data:     "",
+				expected: []string{""},
+			},
+			{
+				data:     "nonzero",
+				expected: []string{"nonzero"},
+			},
+			{
+				data:     []any{""},
+				expected: []string{""},
+			},
+			{
+				data:     []any{"1", "2"},
+				expected: []string{"1", "2"},
+			},
+		}
+
+		for _, test := range tests {
+			jData, err := json.Marshal(test.data)
+			require.NoError(t, err)
+
+			var en EATNonce
+
+			err = json.Unmarshal(jData, &en)
+			require.NoError(t, err)
+
+			require.Equal(t, test.expected, en)
+		}
+	})
+
+	t.Run("fail", func(t *testing.T) {
+		tests := []any{
+			1,
+			[]any{0, []any{1}},
+		}
+
+		for _, test := range tests {
+			jData, err := json.Marshal(test)
+			require.NoError(t, err)
+
+			var x EATNonce
+
+			err = json.Unmarshal(jData, &x)
+			require.Error(t, err, test)
+		}
+	})
+}
+
 func TestParsePKITokenUnverifiedHappy(t *testing.T) {
 	_, err := ParsePEMCertificate(rootCert)
 
@@ -62,6 +119,17 @@ func TestParsePKITokenUnverifiedHappy(t *testing.T) {
 
 	tokenStruct, claimsStruct, err := ParsePKITokenUnverified(string(tokenString))
 	require.NoError(t, err)
+
+	platform, err := claimsStruct.Platform()
+	require.NoError(t, err)
+
+	hrPlatform := convert.CommonHashToString(platform)
+	require.Equal(t, "GCP_AMD_SEV", hrPlatform)
+
+	ch, err := claimsStruct.CodeHash()
+	require.NoError(t, err)
+
+	require.Equal(t, "cfc0496335c6a4eedd408e87b64c08945d9058963b31fd64ac92754d395d291f", ch.Hex()[2:])
 
 	claimsStructT, ok := tokenStruct.Claims.(*GoogleTeeClaims)
 	require.True(t, ok)
@@ -150,6 +218,8 @@ func TestParseAndValidatePKITokenFail(t *testing.T) {
 
 			_, _, err := ParseAndValidatePKIToken(signedToken, root)
 			require.Error(t, err)
+
+			fmt.Printf("err: %v\n", err)
 		}
 	})
 
@@ -187,8 +257,16 @@ func TestParseAndValidatePKITokenFail(t *testing.T) {
 		signedToken := assembleSignedToken(t, defClaims, []string{invalidLeaf, invalidInter, invalidRoot}, rootKey)
 		_, _, err := ParseAndValidatePKIToken(signedToken, root)
 		require.Error(t, err)
+	})
 
-		fmt.Printf("err: %v\n", err)
+	t.Run("nil certificates", func(t *testing.T) {
+		t.Parallel()
+
+		root, rootKey := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), true, nil, nil)
+
+		signedToken := assembleSignedToken(t, defClaims, nil, rootKey)
+		_, _, err := ParseAndValidatePKIToken(signedToken, root)
+		require.Error(t, err)
 	})
 }
 
@@ -260,6 +338,73 @@ func TestInvalidChains(t *testing.T) {
 		_, _, err := ParseAndValidatePKIToken(signedToken, root)
 		require.Error(t, err)
 	}
+}
+
+func TestExtractCertificatesFromX5CHeader(t *testing.T) {
+	now := time.Now()
+
+	root, rootKey := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), true, nil, nil)
+	leaf, _ := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), false, root, rootKey)
+
+	inter0, intermediateKey0 := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), true, root, rootKey)
+	leaf0, _ := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), false, inter0, intermediateKey0)
+
+	inter1, intermediateKey1 := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), true, inter0, intermediateKey0)
+	leaf1, _ := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), false, inter1, intermediateKey1)
+
+	t.Run("success", func(t *testing.T) {
+		x5c := []any{pemEncode(leaf0), pemEncode(inter0), pemEncode(root)}
+		certs, err := ExtractCertificatesFromX5CHeader(x5c)
+		require.NoError(t, err)
+		require.NotNil(t, certs.Leaf)
+		require.NotNil(t, certs.Intermediate)
+		require.NotNil(t, certs.Root)
+
+		require.NoError(t, certs.Verify(root))
+	})
+	t.Run("wrong type", func(t *testing.T) {
+		certs, err := ExtractCertificatesFromX5CHeader([]any{123, 456, 789})
+		require.Equal(t, PKICertificates{}, certs)
+		require.Error(t, err)
+	})
+	t.Run("wrong number of certs", func(t *testing.T) {
+		certs, err := ExtractCertificatesFromX5CHeader([]any{pemEncode(leaf)})
+		require.Equal(t, PKICertificates{}, certs)
+		require.Error(t, err)
+
+		certs, err = ExtractCertificatesFromX5CHeader([]any{pemEncode(leaf), pemEncode(root)})
+		require.Equal(t, PKICertificates{}, certs)
+		require.Error(t, err)
+
+		certs, err = ExtractCertificatesFromX5CHeader([]any{pemEncode(leaf1), pemEncode(inter1), pemEncode(inter0), pemEncode(root)})
+		require.Equal(t, PKICertificates{}, certs)
+		require.Error(t, err)
+
+		certs, err = ExtractCertificatesFromX5CHeader([]any{})
+		require.Equal(t, PKICertificates{}, certs)
+		require.Error(t, err)
+	})
+	t.Run("invalid leaf base64", func(t *testing.T) {
+		certs, err := ExtractCertificatesFromX5CHeader([]any{"!!!", "!!!", "!!!"})
+		require.Equal(t, PKICertificates{}, certs)
+		require.Error(t, err)
+	})
+	t.Run("invalid intermediate base64", func(t *testing.T) {
+		certs, err := ExtractCertificatesFromX5CHeader([]any{pemEncode(leaf0), "!!!", "!!!"})
+		require.Equal(t, PKICertificates{}, certs)
+		require.Error(t, err)
+	})
+	t.Run("invalid root base64", func(t *testing.T) {
+		invalidDER := base64.StdEncoding.EncodeToString([]byte("not a real certificate"))
+		certs, err := ExtractCertificatesFromX5CHeader([]any{pemEncode(leaf0), pemEncode(inter0), invalidDER})
+		require.Equal(t, PKICertificates{}, certs)
+		require.Error(t, err)
+	})
+	t.Run("nil x5cHeaders", func(t *testing.T) {
+		certs, err := ExtractCertificatesFromX5CHeader(nil)
+		require.Equal(t, PKICertificates{}, certs)
+		require.Error(t, err)
+	})
 }
 
 func generateTestCertificate(
@@ -339,8 +484,12 @@ func assembleSignedToken(t *testing.T, claims jwt.Claims, x5c []string, key cryp
 func convertToHeaderEntry(certs []*x509.Certificate) []string {
 	cs := make([]string, 0, len(certs))
 	for _, cert := range certs {
-		cs = append(cs, base64.StdEncoding.EncodeToString(cert.Raw))
+		cs = append(cs, pemEncode(cert))
 	}
 
 	return cs
+}
+
+func pemEncode(cert *x509.Certificate) string {
+	return base64.StdEncoding.EncodeToString(cert.Raw)
 }
