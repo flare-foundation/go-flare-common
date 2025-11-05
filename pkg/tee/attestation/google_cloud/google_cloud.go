@@ -114,12 +114,12 @@ func extractAndValidateKey(expectedRoot *x509.Certificate) jwt.Keyfunc {
 	return func(token *jwt.Token) (any, error) {
 		x5cs, ok := token.Header["x5c"]
 		if !ok {
-			return jwt.Token{}, errors.New("x5c headers missing")
+			return nil, errors.New("x5c headers missing")
 		}
 
 		x5cHeaders, ok := x5cs.([]any)
 		if !ok {
-			return jwt.Token{}, errors.New("x5c headers not slice")
+			return nil, errors.New("x5c headers not slice")
 		}
 
 		certificates, err := ExtractCertificatesFromX5CHeader(x5cHeaders)
@@ -179,7 +179,10 @@ func ExtractCertificatesFromX5CHeader(x5cHeaders []any) (PKICertificates, error)
 
 // ParseDERCertificate decodes the given DER certificate string and parses it into an x509 certificate.
 func ParseDERCertificate(certificate string) (*x509.Certificate, error) {
-	bytes, _ := base64.StdEncoding.DecodeString(certificate)
+	bytes, err := base64.StdEncoding.DecodeString(certificate)
+	if err != nil {
+		return nil, fmt.Errorf("cannot decode certificate %w", err)
+	}
 
 	cert, err := x509.ParseCertificate(bytes)
 	if err != nil {
@@ -261,7 +264,6 @@ func (c *PKICertificates) verifyChain() error {
 		Roots:         rootPool,
 		KeyUsages:     []x509.ExtKeyUsage{x509.ExtKeyUsageAny},
 	})
-
 	if err != nil {
 		return fmt.Errorf("failed to verify certificate chain: %v", err)
 	}
