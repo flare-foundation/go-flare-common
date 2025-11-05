@@ -111,6 +111,9 @@ func TestSigner(t *testing.T) {
 		request.Header.Set("X-API-KEY", apiKey)
 
 		resp := sendRequest(t, request)
+
+		defer resp.Body.Close() //nolint:errcheck
+
 		require.Equal(t, http.StatusOK, resp.StatusCode)
 
 		require.Equal(t, resp.Header.Get("Content-Type"), "application/json")
@@ -137,6 +140,8 @@ func TestSigner(t *testing.T) {
 		requestFail0.Header.Set("X-API-KEY", apiKey)
 
 		respFail0 := sendRequest(t, requestFail0)
+		defer respFail0.Body.Close() //nolint:errcheck
+
 		require.Equal(t, http.StatusRequestEntityTooLarge, respFail0.StatusCode)
 	})
 
@@ -151,7 +156,10 @@ func TestSigner(t *testing.T) {
 		requestUnknown.Header.Set("X-API-KEY", apiKey)
 
 		respUnknown := sendRequest(t, requestUnknown)
+
 		require.Equal(t, http.StatusBadRequest, respUnknown.StatusCode)
+		err := respUnknown.Body.Close()
+		require.NoError(t, err)
 	})
 
 	t.Run("sign unauthorized", func(t *testing.T) {
@@ -165,6 +173,9 @@ func TestSigner(t *testing.T) {
 
 		respFailUnauth := sendRequest(t, requestUnauth)
 		require.Equal(t, http.StatusUnauthorized, respFailUnauth.StatusCode)
+
+		err := respFailUnauth.Body.Close()
+		require.NoError(t, err)
 	})
 
 	t.Run("sign missing Content-Type", func(t *testing.T) {
@@ -177,6 +188,9 @@ func TestSigner(t *testing.T) {
 
 		respFailNoContentType := sendRequest(t, requestNoContentType)
 		require.Equal(t, http.StatusNotAcceptable, respFailNoContentType.StatusCode)
+
+		err := respFailNoContentType.Body.Close()
+		require.NoError(t, err)
 	})
 
 	t.Run("sign header too large", func(t *testing.T) {
@@ -193,6 +207,8 @@ func TestSigner(t *testing.T) {
 		respFailLargeHeader := sendRequest(t, requestLargeHeader)
 
 		require.Equal(t, http.StatusRequestHeaderFieldsTooLarge, respFailLargeHeader.StatusCode)
+
+		respFailLargeHeader.Body.Close() //nolint:errcheck
 	})
 
 	t.Run("identity happy path", func(t *testing.T) {
@@ -205,6 +221,7 @@ func TestSigner(t *testing.T) {
 		req.Header.Set("Content-Type", "application/json")
 
 		resp := sendRequest(t, req)
+		defer resp.Body.Close() //nolint:errcheck
 
 		require.Equal(t, http.StatusOK, resp.StatusCode)
 		decoder := json.NewDecoder(resp.Body)
@@ -229,6 +246,9 @@ func TestSigner(t *testing.T) {
 		resp := sendRequest(t, req)
 
 		require.Equal(t, http.StatusUnauthorized, resp.StatusCode)
+
+		err = resp.Body.Close()
+		require.NoError(t, err)
 	})
 
 	t.Run("decrypt happy path", func(t *testing.T) {
@@ -250,6 +270,7 @@ func TestSigner(t *testing.T) {
 		req.Header.Set("X-API-KEY", apiKey)
 
 		resp := sendRequest(t, req)
+		defer resp.Body.Close() //nolint:errcheck
 
 		require.Equal(t, http.StatusOK, resp.StatusCode)
 		require.Equal(t, resp.Header.Get("Content-Type"), "application/json")
@@ -275,6 +296,9 @@ func TestSigner(t *testing.T) {
 
 		respUnknown := sendRequest(t, requestUnknown)
 		require.Equal(t, http.StatusBadRequest, respUnknown.StatusCode)
+
+		err := respUnknown.Body.Close()
+		require.NoError(t, err)
 	})
 
 	t.Run("invalid endpoint", func(t *testing.T) {
@@ -289,6 +313,9 @@ func TestSigner(t *testing.T) {
 		resp := sendRequest(t, req)
 
 		require.Equal(t, http.StatusNotFound, resp.StatusCode)
+
+		err = resp.Body.Close()
+		require.NoError(t, err)
 	})
 
 	t.Cleanup(func() {
@@ -365,6 +392,9 @@ func TestConfigs(t *testing.T) {
 		resp := sendRequest(t, request)
 		require.Equal(t, http.StatusRequestEntityTooLarge, resp.StatusCode)
 
+		err := resp.Body.Close()
+		require.NoError(t, err)
+
 		const nuOfHashesSuccess uint64 = 1
 
 		body = prepareSignBody(nuOfHashesSuccess)
@@ -375,8 +405,10 @@ func TestConfigs(t *testing.T) {
 
 		resp = sendRequest(t, request)
 		require.Equal(t, http.StatusOK, resp.StatusCode)
-	})
 
+		err = resp.Body.Close()
+		require.NoError(t, err)
+	})
 	t.Run("decrypt with custom limit ok", func(t *testing.T) {
 		textLength := 10
 		plaintext := bytes.Repeat([]byte("a"), textLength)
@@ -395,8 +427,10 @@ func TestConfigs(t *testing.T) {
 		req.Header.Set("X-API-KEY", apiKey)
 
 		resp := sendRequest(t, req)
-
 		require.Equal(t, http.StatusOK, resp.StatusCode)
+
+		err = resp.Body.Close()
+		require.NoError(t, err)
 	})
 
 	t.Run("decrypt with custom limit fail", func(t *testing.T) {
@@ -413,12 +447,14 @@ func TestConfigs(t *testing.T) {
 		}
 
 		req := preparePOSTRequest(t, eb, decryptEP)
-
 		req.Header.Set("X-API-KEY", apiKey)
 
 		resp := sendRequest(t, req)
 
 		require.Equal(t, http.StatusRequestEntityTooLarge, resp.StatusCode)
+
+		err = resp.Body.Close()
+		require.NoError(t, err)
 	})
 
 	t.Cleanup(func() {
