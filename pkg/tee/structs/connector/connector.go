@@ -2,8 +2,9 @@
 package connector
 
 import (
+	"fmt"
+
 	"github.com/ethereum/go-ethereum/accounts/abi"
-	"github.com/flare-foundation/go-flare-common/pkg/logger"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/op"
 )
 
@@ -62,18 +63,18 @@ var AttestationTypeArguments map[AttestationType]AttestationArguments
 func init() {
 	connectorAbi, err := ConnectorMetaData.GetAbi()
 	if err != nil {
-		logger.Panicf("error getting tee data connector abi: %v", err)
+		panic(fmt.Sprintf("error getting tee data connector abi: %v", err))
 	}
 
 	if len(methods) != len(opCommands) {
-		logger.Panicf("methods, opCommands miss match")
+		panic("methods, opCommands miss match")
 	}
 
 	MessageArguments = make(map[op.Command]abi.Argument)
 	for j := range opCommands {
 		method, ok := connectorAbi.Methods[methods[j]]
 		if !ok {
-			logger.Panicf("missing method %s", methods[j])
+			panic(fmt.Sprintf("missing method %s", methods[j]))
 		}
 		MessageArguments[opCommands[j]] = method.Inputs[0]
 	}
@@ -84,21 +85,21 @@ func init() {
 		request := attestationTypeMethods[j] + reqStruct
 		method, ok := connectorAbi.Methods[request]
 		if !ok {
-			logger.Panicf("missing method %s", request)
+			panic(fmt.Sprintf("missing method %s", request))
 		}
 		requestAbi := method.Inputs[0]
 
 		response := attestationTypeMethods[j] + resStruct
 		method, ok = connectorAbi.Methods[response]
 		if !ok {
-			logger.Panicf("missing method %s", response)
+			panic(fmt.Sprintf("missing method %s", response))
 		}
 		responseAbi := method.Inputs[0]
 
 		proof := attestationTypeMethods[j] + proofStruct
 		method, ok = connectorAbi.Methods[proof]
 		if !ok {
-			logger.Panicf("missing method %s", proof)
+			panic(fmt.Sprintf("missing method %s", proof))
 		}
 		proofAbi := method.Inputs[0]
 
@@ -111,19 +112,19 @@ func init() {
 
 	method, ok := connectorAbi.Methods["ftdcRequestHeaderStruct"]
 	if !ok {
-		logger.Panic("missing method ftdcRequestHeaderStruct")
+		panic("missing method ftdcRequestHeaderStruct")
 	}
 	RequestHeaderArg = method.Inputs[0]
 
 	method, ok = connectorAbi.Methods["ftdcResponseHeaderStruct"]
 	if !ok {
-		logger.Panic("missing method ftdcResponseHeaderStruct")
+		panic("missing method ftdcResponseHeaderStruct")
 	}
 	ResponseHeaderArg = method.Inputs[0]
 
 	method, ok = connectorAbi.Methods["ftdcAttestationRequestStruct"]
 	if !ok {
-		logger.Panic("missing method ftdcAttestationRequestStruct")
+		panic("missing method ftdcAttestationRequestStruct")
 	}
 	AttestationRequestArg = method.Inputs[0]
 }

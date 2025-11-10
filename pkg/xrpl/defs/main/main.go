@@ -6,8 +6,6 @@ import (
 	"go/format"
 	"math"
 	"os"
-
-	"github.com/flare-foundation/go-flare-common/pkg/logger"
 )
 
 type defFile struct {
@@ -70,8 +68,7 @@ func main() {
 	file, err := os.Open("./pkg/xrpl/defs/main/definitions.json")
 
 	if err != nil {
-		fmt.Printf("building xrpl definitions: %v", err)
-		return
+		panic(fmt.Sprintf("building xrpl definitions: %v", err))
 	}
 
 	dc := json.NewDecoder(file)
@@ -80,8 +77,7 @@ func main() {
 
 	err = dc.Decode(&df)
 	if err != nil {
-		logger.Errorf("reading definitions: %v", err)
-		return
+		panic(fmt.Sprintf("reading definitions: %v", err))
 	}
 
 	generatedFile := []byte{}
@@ -109,8 +105,7 @@ func main() {
 	for j := range df.Fields {
 		f, err := parseField(df.Fields[j])
 		if err != nil {
-			fmt.Printf("parsing xrpl definitions: %v", err)
-			return
+			panic(fmt.Sprintf("parsing xrpl definitions: %v", err))
 		}
 		generatedFile = fmt.Append(generatedFile, generateType(f))
 	}
@@ -118,21 +113,18 @@ func main() {
 
 	auto, err := os.OpenFile("./pkg/xrpl/defs/autogen.go", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
 	if err != nil {
-		fmt.Printf("opening write file: %v", err)
-		return
+		panic(fmt.Sprintf("opening write file: %v", err))
 	}
 
 	// format
 	generatedFile, err = format.Source(generatedFile)
 	if err != nil {
-		fmt.Printf("formatting: %v", err)
-		return
+		panic(fmt.Sprintf("formatting: %v", err))
 	}
 
 	_, err = auto.Write(generatedFile)
 	if err != nil {
-		logger.Errorf("writing to definitions.go file: %v", err)
-		return
+		panic(fmt.Sprintf("writing to definitions.go file: %v", err))
 	}
 
 	defer auto.Close() //nolint:errcheck

@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/flare-foundation/go-flare-common/pkg/heapt"
-	"github.com/flare-foundation/go-flare-common/pkg/logger"
 	"golang.org/x/time/rate"
 )
 
@@ -13,12 +12,25 @@ type backOff func(int) time.Duration // custom function defining timeOut after a
 
 const bucketSize = 2
 
+type logger interface {
+	Infof(string, ...any)
+	Errorf(string, ...any)
+	Panic(...any)
+}
+
+type noLogger struct{}
+
+func (noLogger) Infof(string, ...any)  {}
+func (noLogger) Errorf(string, ...any) {}
+func (noLogger) Panic(...any)          {}
+
 type Params struct {
 	MaxDequeuesPerSecond int           `toml:"max_dequeues_per_second"` // Set to 0 to disable rate-limiting.
 	MaxWorkers           int           `toml:"max_workers"`             // Set to 0 for unlimited workers.
 	MaxAttempts          int           `toml:"max_attempts"`            // If not positive or unset, it defaults to one attempt.
 	TimeOff              time.Duration `toml:"time_off"`                // TimeOff between attempts
 	ErrorChan            bool          `toml:"error_chan"`              // If true, errors on final attempts are pushed to the channel
+
 }
 
 type Wrapped[T any] struct {
@@ -45,6 +57,8 @@ type PriorityQueue[T any, W weight[W]] struct {
 	bo          backOff
 
 	limiter *rate.Limiter
+
+	logger logger
 }
 
 // New returns new Priority from params.
@@ -78,6 +92,43 @@ func New[T any, W weight[W]](params Params, name string) PriorityQueue[T, W] {
 		timeOff:     params.TimeOff,
 
 		limiter: limiter,
+
+		logger: noLogger{},
+	}
+}
+
+// NewWithLogger returns new Priority from params with logger.
+func NewWithLogger[T any, W weight[W]](params Params, name string, logger logger) PriorityQueue[T, W] {
+	var limiter *rate.Limiter
+
+	if params.MaxDequeuesPerSecond > 0 {
+		limiter = rate.NewLimiter(rate.Limit(params.MaxDequeuesPerSecond), bucketSize)
+	} else {
+		limiter = rate.NewLimiter(rate.Inf, 0)
+	}
+
+	var workers chan bool
+	if params.MaxWorkers > 0 {
+		workers = make(chan bool, params.MaxWorkers)
+	}
+
+	var errors chan error
+	if params.ErrorChan {
+		errors = make(chan error, 10)
+	}
+
+	return PriorityQueue[T, W]{
+		name:    name,
+		regular: QueueMutex[Wrapped[T], W]{},
+		fast:    QueueMutex[Wrapped[T], W]{},
+		workers: workers,
+		Errors:  errors,
+
+		maxAttempts: params.MaxAttempts,
+		timeOff:     params.TimeOff,
+
+		limiter: limiter,
+		logger:  logger,
 	}
 }
 
@@ -115,7 +166,7 @@ func (p *PriorityQueue[T, W]) processIn(ctx context.Context) {
 			}
 			p.regular.Unlock()
 		case <-ctx.Done():
-			logger.Infof("processIn exiting in queue %s, %v", p.Name(), ctx.Err())
+			p.logger.Infof("processIn exiting in queue %s, %v", p.Name(), ctx.Err())
 			return
 		}
 	}
@@ -134,7 +185,7 @@ func (p *PriorityQueue[T, W]) processInFast(ctx context.Context) {
 			}
 			p.fast.Unlock()
 		case <-ctx.Done():
-			logger.Infof("processInFast exiting in queue %s, %v", p.Name(), ctx.Err())
+			p.logger.Infof("processInFast exiting in queue %s, %v", p.Name(), ctx.Err())
 			return
 		}
 	}
@@ -233,7 +284,7 @@ func (p *PriorityQueue[T, W]) Dequeue(ctx context.Context, handler func(context.
 
 	err := p.limiter.Wait(ctx)
 	if err != nil {
-		logger.Errorf("queue %s wait error %v", p.Name(), err)
+		p.logger.Errorf("queue %s wait error %v", p.Name(), err)
 		return
 	}
 
@@ -281,7 +332,7 @@ func (p *PriorityQueue[T, W]) decrementWorkers() {
 	case <-p.workers:
 		return
 	default:
-		logger.Panic("should never block")
+		p.logger.Panic("should never block")
 	}
 }
 

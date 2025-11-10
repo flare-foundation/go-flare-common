@@ -7,7 +7,6 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/contracts/relay"
 	"github.com/flare-foundation/go-flare-common/pkg/database"
 	"github.com/flare-foundation/go-flare-common/pkg/events"
-	"github.com/flare-foundation/go-flare-common/pkg/logger"
 )
 
 var RelayFilterer *relay.RelayFilterer
@@ -18,12 +17,12 @@ func init() {
 	var err error
 	RelayFilterer, err = relay.NewRelayFilterer(common.Address{}, nil)
 	if err != nil {
-		logger.Panic(err)
+		panic(err)
 	}
 
 	RegistryFilterer, err = registry.NewRegistryFilterer(common.Address{}, nil)
 	if err != nil {
-		logger.Panic(err)
+		panic(err)
 	}
 }
 
