@@ -5,7 +5,7 @@ All contributions are welcome.
 
 ## Issues
 
-_Sensitive security-related issues should be reported to any of codeowners._
+_Sensitive security-related issues should be reported to any of [codeowners](/CODEOWNERS)._
 
 To share ideas, considerations, or concerned open an issue.
 Before filing an issue make sure the issue has not been already raised.
@@ -35,7 +35,7 @@ The request must:
 
 ## Setting the environment
 
-Make sure you are using go with higher or equal to the one specified in go.mod.
+Make sure you are using go with higher or equal version to the one specified in go.mod.
 
 Get all the dependencies
 

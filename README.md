@@ -23,9 +23,10 @@ Contains the following packages:
 - retry: retried execution of a function
 - storage: an implementation of a cyclic storage
 - tee
+  - attestation: working with jwt tokens carrying Google Cloud tee attestations
   - instructions: working with tee instructions
   - op: opTypes and opCommands
-  - signer: signer server for remote eth messages signing and decrypting
+  - signer: signer server for remote ETH messages signing and decrypting
   - structs: encoding and decoding messages from tee instructions events, FTDC requests and attestations
 - toml: reading toml files
 - voters: working with Flare entities
