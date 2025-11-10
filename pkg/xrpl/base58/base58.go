@@ -6,8 +6,6 @@ import (
 	"strings"
 	"unicode"
 	"unicode/utf8"
-
-	"github.com/flare-foundation/go-flare-common/pkg/logger"
 )
 
 const AlphabetXRPL = "rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz" // alphabet used for base 58 encoding by XRPL: https://xrpl.org/docs/references/protocol/data-types/base58-encodings
@@ -39,7 +37,7 @@ func init() {
 	var err error
 	XRPLCoder, err = NewCoder(AlphabetXRPL)
 	if err != nil {
-		logger.Panicf("invalid xrpl alphabet: %v", err)
+		panic(fmt.Sprintf("invalid xrpl alphabet: %v", err))
 	}
 }
 

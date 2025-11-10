@@ -2,8 +2,9 @@
 package verification
 
 import (
+	"fmt"
+
 	"github.com/ethereum/go-ethereum/accounts/abi"
-	"github.com/flare-foundation/go-flare-common/pkg/logger"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/op"
 )
 
@@ -22,18 +23,18 @@ var MessageArguments map[op.Command]abi.Argument
 func init() {
 	verificationAbi, err := VerificationMetaData.GetAbi()
 	if err != nil {
-		logger.Panicf("error getting verification abi: %v", err)
+		panic(fmt.Sprintf("error getting verification abi: %v", err))
 	}
 
 	if len(methods) != len(opCommands) {
-		logger.Panicf("methods, opCommands miss match")
+		panic("methods, opCommands miss match")
 	}
 
 	MessageArguments = make(map[op.Command]abi.Argument)
 	for j := range opCommands {
 		method, ok := verificationAbi.Methods[methods[j]]
 		if !ok {
-			logger.Panicf("missing method %s", methods[j])
+			panic(fmt.Sprintf("missing method %s", methods[j]))
 		}
 		MessageArguments[opCommands[j]] = method.Inputs[0]
 	}

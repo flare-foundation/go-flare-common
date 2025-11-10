@@ -2,8 +2,9 @@
 package tee
 
 import (
+	"fmt"
+
 	"github.com/ethereum/go-ethereum/accounts/abi"
-	"github.com/flare-foundation/go-flare-common/pkg/logger"
 )
 
 type Struct string
@@ -31,7 +32,7 @@ func init() {
 
 	teeAbi, err := TeeMetaData.GetAbi()
 	if err != nil {
-		logger.Panicf("error getting tee abi: %v", err)
+		panic(fmt.Sprintf("error getting tee abi: %v", err))
 	}
 
 	for j := range s {
@@ -39,7 +40,7 @@ func init() {
 
 		method, ok := teeAbi.Methods[name]
 		if !ok {
-			logger.Panicf("missing method %s", name)
+			panic(fmt.Sprintf("missing method %s", name))
 		}
 
 		StructArg[s[j]] = method.Inputs[0]
