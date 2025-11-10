@@ -7,7 +7,6 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/flare-foundation/go-flare-common/pkg/logger"
 )
 
 type VoterData struct {
@@ -28,10 +27,9 @@ type Set struct {
 // NewSet creates Set from voters' addresses and their weights.
 // Optionally, a map from submitAddresses to signingAddress can be added.
 //
-// There has to be the same number of voters and weights.
+// There has to be the same number of voters and weights otherwise a nil pointer is returned.
 func NewSet(voters []common.Address, weights []uint16, submitToSigningAddress map[common.Address]common.Address) *Set {
 	if len(voters) != len(weights) {
-		logger.Errorf("New voter set: mismatched lengths: %d voters and  %d weights", len(voters), len(weights))
 		return nil
 	}
 
