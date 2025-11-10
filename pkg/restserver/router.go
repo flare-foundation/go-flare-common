@@ -1,3 +1,6 @@
+// Package restserver implements a rest server framework that allow developers to create REST APIs with optional Swagger documentation support.
+//
+// Deprecated: This package is deprecated and no longer maintained. Please use alternative solutions.
 package restserver
 
 import (
