@@ -15,8 +15,10 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+// EATNonce allows the EAT nonce to be serialized both from a string or an array of strings.
 type EATNonce []string
 
+// UnmarshalJSON unmarshals an JSON encoded string or an array of strings into an EATNonce value.
 func (e *EATNonce) UnmarshalJSON(data []byte) error {
 	var err1, err2 error
 
@@ -49,6 +51,7 @@ type GoogleTeeClaims struct {
 	jwt.RegisteredClaims
 }
 
+// Platform is the utf-8 encoded hwmodel (hardware module) on which the confidential computing workload is running.
 func (c *GoogleTeeClaims) Platform() (common.Hash, error) {
 	p, err := convert.StringToCommonHash(c.HWModel)
 	if err != nil {
@@ -58,6 +61,7 @@ func (c *GoogleTeeClaims) Platform() (common.Hash, error) {
 	return p, nil
 }
 
+// CodeHash is the image digest of the workload container.
 func (c *GoogleTeeClaims) CodeHash() (common.Hash, error) {
 	ch, err := convert.Hex32StringToCommonHash(strings.TrimPrefix(c.SubMods.Container.ImageDigest, "sha256:"))
 	if err != nil {
@@ -98,20 +102,24 @@ func ParseAndValidatePKITokenClaims[T jwt.Claims](attestationToken string, store
 	return verifiedJWT, claims, err
 }
 
+// ParsePKITokenUnverified parses a Google Cloud TEE attestation JWT without verifying the signature.
 func ParsePKITokenUnverified(attestationToken string) (*jwt.Token, *GoogleTeeClaims, error) {
 	claims := &GoogleTeeClaims{}
 
 	return ParsePKITokenUnverifiedClaims(attestationToken, claims)
 }
 
-func ParsePKITokenUnverifiedClaims[T jwt.Claims](attestationToken string, claims T) (*jwt.Token, T, error) {
-	token, _, err := jwt.NewParser().ParseUnverified(attestationToken, claims)
+// ParsePKITokenUnverifiedClaims parses a jwt token with custom provided claims.
+func ParsePKITokenUnverifiedClaims[T jwt.Claims](jwtToken string, claims T) (*jwt.Token, T, error) {
+	token, _, err := jwt.NewParser().ParseUnverified(jwtToken, claims)
 	if err != nil {
 		return nil, claims, fmt.Errorf("could not parse token, %w", err)
 	}
 	return token, claims, nil
 }
 
+// extractAndValidateKey returns a jwt.KeyFunc that extracts and validates the public key used for verification from a JWT token's x5c header chain.
+// It verifies the certificate chain against the expected root certificate and returns the leaf certificate's public key.
 func extractAndValidateKey(expectedRoot *x509.Certificate) jwt.Keyfunc {
 	return func(token *jwt.Token) (any, error) {
 		x5cs, ok := token.Header["x5c"]
@@ -207,6 +215,12 @@ func ParsePEMCertificate(certificate string) (*x509.Certificate, error) {
 	return cert, nil
 }
 
+// Verify checks the following:
+//   - Leaf signature algorithm is SHA256 With RSA,
+//   - Leaf public key algorithm is RSA,
+//   - Root certificate matches the expected root certificate,
+//   - All certificates have valid lifetimes,
+//   - Certificate chain is valid from leaf to root.
 func (c *PKICertificates) Verify(expectedRoot *x509.Certificate) error {
 	// Verify the leaf certificate signature algorithm is an RSA key
 	if c.Leaf.SignatureAlgorithm != x509.SHA256WithRSA {
@@ -253,7 +267,6 @@ func (c *PKICertificates) verifyLifetime() error {
 }
 
 // verifyChain verifies the certificate chain from leaf to root.
-// It also checks that all certificate lifetimes are valid.
 func (c *PKICertificates) verifyChain() error {
 	interPool := x509.NewCertPool()
 	interPool.AddCert(c.Intermediate)
@@ -273,6 +286,7 @@ func (c *PKICertificates) verifyChain() error {
 	return nil
 }
 
+// isCertificateLifetimeValid checks that the current time is within the certificate's validity period.
 func isCertificateLifetimeValid(certificate *x509.Certificate) bool {
 	currentTime := time.Now()
 	if currentTime.Before(certificate.NotBefore) {
