@@ -3,42 +3,11 @@ package encoding
 import (
 	"testing"
 
+	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/flare-foundation/go-flare-common/pkg/convert"
 	"github.com/stretchr/testify/require"
 )
-
-func TestUint16toBytes(t *testing.T) {
-	tests := []struct {
-		input    uint16
-		expected [2]byte
-	}{
-		{
-			input:    0,
-			expected: [2]byte{0x00, 0x00},
-		},
-		{
-			input:    1,
-			expected: [2]byte{0x00, 0x01},
-		},
-		{
-			input:    256,
-			expected: [2]byte{0x01, 0x00},
-		},
-		{
-			input:    65535,
-			expected: [2]byte{0xFF, 0xFF},
-		},
-		{
-			input:    0x1234,
-			expected: [2]byte{0x12, 0x34},
-		},
-	}
-
-	for _, tt := range tests {
-		result := Uint16toBytes(tt.input)
-		require.Equal(t, tt.expected, result, tt.input)
-	}
-}
 
 func TestSignatureConversion(t *testing.T) {
 	prv, err := crypto.GenerateKey()
@@ -53,4 +22,84 @@ func TestSignatureConversion(t *testing.T) {
 	rsv := TransformSignatureVRStoRSV(vrs)
 
 	require.Equal(t, sig, rsv)
+}
+
+func TestEncodeSignature(t *testing.T) {
+	x := []byte("payload")
+
+	h := accounts.TextHash(x)
+
+	tests := []struct {
+		indexes []int
+		fail    bool
+	}{
+		{
+			indexes: nil,
+			fail:    false,
+		},
+		{
+			indexes: []int{0, 1},
+			fail:    false,
+		},
+		{
+			indexes: []int{1, 2},
+			fail:    false,
+		},
+		{
+			indexes: []int{1, 10, 100},
+			fail:    false,
+		},
+		{
+			indexes: []int{0, 0},
+			fail:    true,
+		},
+		{
+			indexes: []int{-1, 0},
+			fail:    true,
+		},
+		{
+			indexes: []int{10, 11, 9},
+			fail:    true,
+		},
+	}
+
+	m := 0
+	for j := range tests {
+		if n := len(tests[j].indexes); n > m {
+			m = n
+		}
+	}
+
+	sigs := make([][]byte, m)
+
+	for j := range sigs {
+		priv, err := crypto.GenerateKey()
+		require.NoError(t, err)
+
+		sigs[j], err = crypto.Sign(h, priv)
+		require.NoError(t, err)
+	}
+
+	for j, test := range tests {
+		inSigs := make([]IndexedSignature, len(test.indexes))
+		for j := range inSigs {
+			inSigs[j] = IndexedSignature{
+				Index:     test.indexes[j],
+				Signature: sigs[j],
+			}
+		}
+
+		eSigs, err := EncodeSignatures(inSigs)
+
+		if test.fail {
+			require.Error(t, err, j)
+		} else {
+			require.NoError(t, err, j)
+
+			l, err := convert.BytesToUint16(eSigs[0:2])
+			require.NoError(t, err, j)
+
+			require.Equal(t, int(l), len(test.indexes), j)
+		}
+	}
 }
