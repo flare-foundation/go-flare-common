@@ -2,10 +2,12 @@ package encoding
 
 import (
 	"bytes"
+	"errors"
+	"fmt"
 	"math"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/pkg/errors"
+	"github.com/flare-foundation/go-flare-common/pkg/convert"
 )
 
 type IndexedSignature struct {
@@ -15,14 +17,15 @@ type IndexedSignature struct {
 
 // EncodeSignatures encodes indexed signature to be used in the finalization transaction input.
 // Signatures should be ordered by the indexes of their providers.
+// Signatures should be 65 bytes long, otherwise the function will panic.
 func EncodeSignatures(signatures []IndexedSignature) ([]byte, error) {
 	buffer := bytes.NewBuffer(nil)
 	if len(signatures) > math.MaxUint16 {
-		return nil, errors.Errorf("too many payloads: %d", len(signatures))
+		return nil, fmt.Errorf("too many payloads: %d", len(signatures))
 	}
 
-	sizeBytes := Uint16toBytes(uint16(len(signatures)))
-	buffer.Write(sizeBytes[:])
+	sizeBytes := convert.Uint16ToBytes(uint16(len(signatures)))
+	buffer.Write(sizeBytes)
 	prevIndex := -1
 	for _, signature := range signatures {
 		if signature.Index < 0 {
@@ -35,8 +38,8 @@ func EncodeSignatures(signatures []IndexedSignature) ([]byte, error) {
 		sig := TransformSignatureRSVtoVRS(signature.Signature)
 		buffer.Write(sig)
 
-		indexBytes := Uint16toBytes(uint16(signature.Index))
-		buffer.Write(indexBytes[:])
+		indexBytes := convert.Uint16ToBytes(uint16(signature.Index))
+		buffer.Write(indexBytes)
 
 		prevIndex = signature.Index
 	}

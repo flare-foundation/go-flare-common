@@ -70,6 +70,13 @@ func Uint64ToHash(n uint64) common.Hash {
 	return h
 }
 
+// Uint64ToBytes hex encodes uint64.
+func Uint64ToBytes(n uint64) []byte {
+	h := make([]byte, 8)
+	binary.BigEndian.PutUint64(h, n)
+	return h
+}
+
 // Uint32ToHash hex encodes uint32 and zero prefixes to 32 bytes.
 func Uint32ToHash(n uint32) common.Hash {
 	h := common.Hash{}
@@ -77,9 +84,23 @@ func Uint32ToHash(n uint32) common.Hash {
 	return h
 }
 
+// Uin32ToBytes hex encodes uint32.
+func Uint32ToBytes(n uint32) []byte {
+	h := make([]byte, 4)
+	binary.BigEndian.PutUint32(h, n)
+	return h
+}
+
 // Uint16ToHash hex encodes uint16 and zero prefixes to 32 bytes.
 func Uint16ToHash(n uint16) common.Hash {
 	h := common.Hash{}
 	binary.BigEndian.PutUint16(h[30:], n)
+	return h
+}
+
+// Uint16ToBytes hex encodes uint16.
+func Uint16ToBytes(n uint16) []byte {
+	h := make([]byte, 2)
+	binary.BigEndian.PutUint16(h, n)
 	return h
 }

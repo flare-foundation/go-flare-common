@@ -346,3 +346,141 @@ func TestUint16ToHash(t *testing.T) {
 		})
 	}
 }
+
+func TestUint64ToBytes(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    uint64
+		expected []byte
+	}{
+		{
+			name:     "zero",
+			input:    0,
+			expected: []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+		},
+		{
+			name:     "one",
+			input:    1,
+			expected: []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01},
+		},
+		{
+			name:     "small value",
+			input:    0x1234,
+			expected: []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x12, 0x34},
+		},
+		{
+			name:     "medium value",
+			input:    0x12345678,
+			expected: []byte{0x00, 0x00, 0x00, 0x00, 0x12, 0x34, 0x56, 0x78},
+		},
+		{
+			name:     "large value",
+			input:    0x1234567890123456,
+			expected: []byte{0x12, 0x34, 0x56, 0x78, 0x90, 0x12, 0x34, 0x56},
+		},
+		{
+			name:     "max uint64",
+			input:    0xFFFFFFFFFFFFFFFF,
+			expected: []byte{0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			result := Uint64ToBytes(test.input)
+			require.Equal(t, test.expected, result)
+
+			back, err := BytesToUint64(result)
+			require.NoError(t, err)
+
+			require.Equal(t, test.input, back)
+		})
+	}
+}
+
+func TestUint32ToBytes(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    uint32
+		expected []byte
+	}{
+		{
+			name:     "zero",
+			input:    0,
+			expected: []byte{0x00, 0x00, 0x00, 0x00},
+		},
+		{
+			name:     "one",
+			input:    1,
+			expected: []byte{0x00, 0x00, 0x00, 0x01},
+		},
+		{
+			name:     "small value",
+			input:    0x1234,
+			expected: []byte{0x00, 0x00, 0x12, 0x34},
+		},
+		{
+			name:     "medium value",
+			input:    0x12345678,
+			expected: []byte{0x12, 0x34, 0x56, 0x78},
+		},
+		{
+			name:     "max uint32",
+			input:    0xFFFFFFFF,
+			expected: []byte{0xFF, 0xFF, 0xFF, 0xFF},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			result := Uint32ToBytes(test.input)
+			require.Equal(t, test.expected, result)
+
+			back, err := BytesToUint32(result)
+			require.NoError(t, err)
+
+			require.Equal(t, test.input, back)
+		})
+	}
+}
+
+func TestUint16ToBytes(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    uint16
+		expected []byte
+	}{
+		{
+			name:     "zero",
+			input:    0,
+			expected: []byte{0x00, 0x00},
+		},
+		{
+			name:     "one",
+			input:    1,
+			expected: []byte{0x00, 0x01},
+		},
+		{
+			name:     "small value",
+			input:    0x1234,
+			expected: []byte{0x12, 0x34},
+		},
+		{
+			name:     "max uint16",
+			input:    0xFFFF,
+			expected: []byte{0xFF, 0xFF},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			result := Uint16ToBytes(test.input)
+			require.Equal(t, test.expected, result)
+
+			back, err := BytesToUint16(result)
+			require.NoError(t, err)
+
+			require.Equal(t, test.input, back)
+		})
+	}
+}
