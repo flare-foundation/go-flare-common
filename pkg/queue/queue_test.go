@@ -33,12 +33,12 @@ func TestEnqueueDequeue(t *testing.T) {
 
 	q := queue.NewPriority[int](&queue.PriorityQueueParams{Size: size})
 
-	for i := 0; i < size; i++ {
+	for i := range size {
 		err := q.Enqueue(ctx, i)
 		require.NoError(t, err)
 	}
 
-	for i := 0; i < size; i++ {
+	for i := range size {
 		err := q.Dequeue(ctx, itemCheckCallback(i))
 		require.NoError(t, err)
 	}
@@ -63,7 +63,7 @@ func TestEnqueueDequeueAsync(t *testing.T) {
 		return nil
 	}
 
-	for i := 0; i < size; i++ {
+	for i := range size {
 		err := q.Enqueue(ctx, i)
 		require.NoError(t, err)
 	}
@@ -71,7 +71,7 @@ func TestEnqueueDequeueAsync(t *testing.T) {
 	err := q.EnqueuePriority(ctx, size+1)
 	require.NoError(t, err)
 
-	for i := 0; i < size+1; i++ {
+	for range size + 1 {
 		wg.Add(1)
 		err := q.DequeueAsync(ctx, handler, nil)
 		require.NoError(t, err)
@@ -108,12 +108,11 @@ func TestBlockingDequeue(t *testing.T) {
 	q := queue.NewPriority[int](&queue.PriorityQueueParams{Size: size})
 
 	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
+
+	wg.Go(func() {
 		err := q.Dequeue(ctx, itemCheckCallback(42))
 		assert.NoError(t, err)
-	}()
+	})
 
 	err := q.Enqueue(ctx, 42)
 	require.NoError(t, err)
@@ -127,7 +126,9 @@ func TestBlockingDequeueAsync(t *testing.T) {
 	q := queue.NewPriority[int](&queue.PriorityQueueParams{Size: size})
 
 	var wg sync.WaitGroup
+
 	wg.Add(1)
+
 	go func() {
 		err := q.DequeueAsync(ctx, itemCheckCallbackWG(42, &wg), nil)
 		assert.NoError(t, err)
@@ -145,12 +146,11 @@ func TestBlockingDequeuePriority(t *testing.T) {
 	q := queue.NewPriority[int](&queue.PriorityQueueParams{Size: size})
 
 	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
+
+	wg.Go(func() {
 		err := q.Dequeue(ctx, itemCheckCallback(42))
 		assert.NoError(t, err)
-	}()
+	})
 
 	err := q.EnqueuePriority(ctx, 42)
 	require.NoError(t, err)
@@ -209,7 +209,7 @@ func TestDequeueRateLimitTimeout(t *testing.T) {
 		MaxDequeuesPerSecond: 1,
 	})
 
-	for i := 0; i < 2; i++ {
+	for i := range 2 {
 		err := q.Enqueue(ctx, i)
 		require.NoError(t, err)
 	}
@@ -245,7 +245,7 @@ func TestWorkersLimit(t *testing.T) {
 	})
 
 	require.Less(t, numWorkers, size)
-	for i := 0; i < numWorkers+1; i++ {
+	for i := range numWorkers + 1 {
 		err := q.Enqueue(ctx, i)
 		require.NoError(t, err)
 	}
@@ -253,7 +253,7 @@ func TestWorkersLimit(t *testing.T) {
 	// Set up some blocking workers to fill the limit.
 	var readyGroup sync.WaitGroup
 	var finishedGroup sync.WaitGroup
-	for i := 0; i < numWorkers; i++ {
+	for i := range numWorkers {
 		readyGroup.Add(1)
 		finishedGroup.Add(1)
 		go func(ctx context.Context, i int) {
@@ -304,7 +304,7 @@ func TestMaxAttempts(t *testing.T) {
 
 	handlerErr := errors.New("handler error")
 
-	for i := 0; i < maxAttempts; i++ {
+	for range maxAttempts {
 		err := q.Dequeue(ctx, func(ctx context.Context, item int) error {
 			return handlerErr
 		})
@@ -333,7 +333,7 @@ func TestMaxAttemptsAsync(t *testing.T) {
 
 	handlerErr := errors.New("handler error")
 
-	for i := 0; i < maxAttempts; i++ {
+	for range maxAttempts {
 		err := q.DequeueAsync(ctx, func(ctx context.Context, item int) error {
 			return handlerErr
 		}, nil)
@@ -363,7 +363,7 @@ func TestConstantBackOff(t *testing.T) {
 	handlerErr := errors.New("handler error")
 	start := time.Now()
 
-	for i := 0; i < maxAttempts; i++ {
+	for range maxAttempts {
 		err := q.Dequeue(ctx, func(ctx context.Context, item int) error {
 			return handlerErr
 		})
@@ -439,7 +439,6 @@ func run[T any](ctx context.Context, q queue.PriorityQueue[T], handler func(cont
 
 func testHandlerFactory(errs map[int]bool, counter map[int]int, activity chan bool) func(context.Context, int) error {
 	return func(ctx context.Context, j int) error {
-		fmt.Printf("j: %v\n", j)
 		activity <- true
 		counter[j]++
 		if errs[j] {
@@ -475,7 +474,7 @@ func BenchmarkPriorityQueue(b *testing.B) {
 
 	q := queue.NewPriority[int](&queue.PriorityQueueParams{Size: size})
 
-	for n := 0; n < b.N; n++ {
+	for b.Loop() {
 		_ = q.Enqueue(ctx, 1)
 		_ = q.EnqueuePriority(ctx, 2)
 		_ = q.Dequeue(ctx, nil)
