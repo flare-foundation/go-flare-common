@@ -23,7 +23,7 @@ type ErrorHandler struct {
 // APIResponseWrapper object and returned as json. OpenAPI definitions for the path parameters are generated from the
 // paramDescriptions map, definitions for the query parameters are generated from the queryObject and definitions for the
 // request body are generated from the bodyObject.
-func GeneralRouteHandler[Q interface{}, B interface{}, R interface{}](
+func GeneralRouteHandler[Q any, B any, R any](
 	handler func(map[string]string, Q, B) (R, *ErrorHandler),
 	method string,
 	responseCode int,
@@ -110,7 +110,7 @@ func createPathParamsDescription(paramDescriptions map[string]string) map[string
 }
 
 // Create openAPI query parameters description from a struct.
-func createQueryDescription(queryObject interface{}) swagger.ParameterValue {
+func createQueryDescription(queryObject any) swagger.ParameterValue {
 	if queryObject == nil {
 		return nil
 	}
@@ -134,7 +134,7 @@ func createQueryDescription(queryObject interface{}) swagger.ParameterValue {
 }
 
 // Create openAPI request body description from a struct.
-func createRequestBodyDescription(bodyObject interface{}) *swagger.ContentValue {
+func createRequestBodyDescription(bodyObject any) *swagger.ContentValue {
 	if bodyObject == nil {
 		return nil
 	}
