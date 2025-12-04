@@ -2,13 +2,14 @@ package database
 
 import "time"
 
-// BaseEntity is an abstract entity, all other entities should be derived from it.
+// BaseEntity is an abstract entity. All other entities should be derived from it.
 type BaseEntity struct {
 	ID uint64 `gorm:"primaryKey;unique"`
 }
 
 type State struct {
 	BaseEntity
+
 	Name           string `gorm:"type:varchar(50);index"` // first_database_block", “last_database_block”, or “last_chain_block”
 	Index          uint64 // blockNumber
 	BlockTimestamp uint64
@@ -17,6 +18,7 @@ type State struct {
 
 type Transaction struct {
 	BaseEntity
+
 	Hash             string `gorm:"type:varchar(64);index;unique"`
 	FunctionSig      string `gorm:"type:varchar(50);index"` // function selector
 	Input            string `gorm:"type:string"`

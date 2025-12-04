@@ -84,7 +84,7 @@ func Uint32ToHash(n uint32) common.Hash {
 	return h
 }
 
-// Uin32ToBytes hex encodes uint32.
+// Uint32ToBytes hex encodes uint32.
 func Uint32ToBytes(n uint32) []byte {
 	h := make([]byte, 4)
 	binary.BigEndian.PutUint32(h, n)

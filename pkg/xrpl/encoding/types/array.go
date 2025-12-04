@@ -56,7 +56,7 @@ func (*stArray) ToBytes(value any, signing bool) ([]byte, error) {
 	return outBuff.Bytes(), nil
 }
 
-// ToJson decodes an encoded array.
+// ToJSON decodes an encoded array.
 func (*stArray) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	out := make([]any, 0, 2)
 

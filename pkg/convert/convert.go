@@ -13,7 +13,7 @@ func MapToValueSlice[T comparable, S any](m map[T]S) []S {
 	return s
 }
 
-// MapToValueSlice returns the slice of map keys.
+// MapToKeySlice returns the slice of map keys.
 //
 // The order in slice is nondeterministic.
 func MapToKeySlice[T comparable, S any](m map[T]S) []T {

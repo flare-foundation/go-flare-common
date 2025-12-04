@@ -152,7 +152,7 @@ func PrvToPub(prv ed25519.PrivateKey) (string, error) {
 	return strings.ToUpper(hex.EncodeToString(pub)), nil
 }
 
-// validate checks that the sig is a valid Ed25519 signature of msg by pub.
+// Validate checks that the sig is a valid Ed25519 signature of msg by pub.
 // The public key should hex string be prefixed with ED and 33 bytes (including the prefix).
 func Validate(msg, sig []byte, pub string) (bool, error) {
 	pubBytes, err := hex.DecodeString(pub)

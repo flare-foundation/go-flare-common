@@ -34,7 +34,7 @@ type priorityQueueItem[T any] struct {
 	priority bool
 }
 
-// PriorityQueueInput values are used to construct a new PriorityQueue.
+// PriorityQueueParams values are used to construct a new PriorityQueue.
 type PriorityQueueParams struct {
 	Size                 int           `toml:"size"`                    // Capacity of the queue and priority queue
 	MaxDequeuesPerSecond int           `toml:"max_dequeues_per_second"` // Set to 0 to disable rate-limiting.

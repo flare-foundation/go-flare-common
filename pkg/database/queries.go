@@ -15,7 +15,8 @@ import (
 
 const maxQueryDuration = 15 * time.Second
 
-// Sets logger used to log errors on queries.
+// SetErrorLogger sets logger used to log errors on queries.
+//
 // Default is without logging.
 func SetErrorLogger(logger errorer) {
 	if logger != nil {
@@ -248,7 +249,7 @@ func fetchTransactionsByAddressAndSelectorBlockNumber(ctx context.Context, db *g
 	return transactions, nil
 }
 
-// FetchTransactionsByAddressAndSelectorBlockNumber fetches all transactions matching ToAddress and FunctionSel with blockNumber higher than From, order by timestamp.
+// FetchTransactionsByAddressAndSelectorFromBlockNumber fetches all transactions matching ToAddress and FunctionSel with blockNumber higher than From, order by timestamp.
 func FetchTransactionsByAddressAndSelectorFromBlockNumber(ctx context.Context, db *gorm.DB, params TxParams) ([]Transaction, error) {
 	return RetryWrapper(fetchTransactionsByAddressAndSelectorFromBlockNumber, "fetching transactions")(ctx, db, params)
 }

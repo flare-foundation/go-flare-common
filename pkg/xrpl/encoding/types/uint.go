@@ -10,11 +10,6 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/defs"
 )
 
-// TODO: ??Allow hexadecimal string??
-
-type UInt8 struct {
-}
-
 type InvalidTypeError struct {
 	t string
 	v any
@@ -26,6 +21,9 @@ func (i *InvalidTypeError) Error() string {
 
 func InvalidUInt8(v any) *InvalidTypeError {
 	return &InvalidTypeError{t: "UInt8", v: v}
+}
+
+type UInt8 struct {
 }
 
 // ToBytes serializes values of UInt8 fields.
@@ -88,7 +86,7 @@ func (*UInt16) ToBytes(value any, _ bool) ([]byte, error) {
 	return out, nil
 }
 
-// ToJson reads 2 bytes and decodes them to uint16 value.
+// ToJSON reads 2 bytes and decodes them to uint16 value.
 func (*UInt16) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	const l = 2
 	v := make([]byte, l)
