@@ -116,7 +116,7 @@ func Test(t *testing.T) {
 
 func TestRemove0(t *testing.T) {
 	h := new(myHeap)
-	for i := 0; i < 10; i++ {
+	for i := range 10 {
 		h.Push(i)
 	}
 	heapt.Init(h)
@@ -131,7 +131,7 @@ func TestRemove0(t *testing.T) {
 
 func TestRemove1(t *testing.T) {
 	h := new(myHeap)
-	for i := 0; i < 10; i++ {
+	for i := range 10 {
 		h.Push(i)
 	}
 	heapt.Init(h)
@@ -149,7 +149,7 @@ func TestRemove2(t *testing.T) {
 	N := 10
 
 	h := new(myHeap)
-	for i := 0; i < N; i++ {
+	for i := range N {
 		h.Push(i)
 	}
 	heapt.Init(h)
@@ -171,7 +171,7 @@ func TestFix(t *testing.T) {
 	N := 10
 
 	h := new(myHeap)
-	for i := 0; i < N; i++ {
+	for i := range N {
 		heapt.Push(h, i)
 	}
 	h.verify(t, 0)
@@ -185,7 +185,7 @@ func TestFixInexistentIndex(t *testing.T) {
 	N := 10
 
 	h := new(myHeap)
-	for i := 0; i < N; i++ {
+	for i := range N {
 		heapt.Push(h, i)
 	}
 	h.verify(t, 0)

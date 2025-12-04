@@ -21,7 +21,7 @@ func (x wInt) Less(y wInt) bool {
 func TestPushPopRandom(t *testing.T) {
 	size := 25
 
-	for j := 0; j < 1; j++ {
+	for range 2 {
 		list := rand.Perm(size)
 		queue := Queue[int, wInt]{}
 
@@ -32,7 +32,7 @@ func TestPushPopRandom(t *testing.T) {
 			})
 		}
 
-		for i := 0; i < size; i++ {
+		for i := range size {
 			item, _ := heapt.Pop(&queue)
 			require.Equal(t, size-1-i, item.value)
 			require.Equal(t, wInt(size-1-i), item.weight.Self())
@@ -43,7 +43,7 @@ func TestPushPopRandom(t *testing.T) {
 func TestAddValuePopRandom(t *testing.T) {
 	size := 25
 
-	for j := 0; j < 1; j++ {
+	for range 2 {
 		list := rand.Perm(size)
 		queue := Queue[int, wInt]{}
 
@@ -51,7 +51,7 @@ func TestAddValuePopRandom(t *testing.T) {
 			queue.AddValue(list[i], wInt(list[i]))
 		}
 
-		for i := 0; i < size; i++ {
+		for i := range size {
 			item, _ := heapt.Pop(&queue)
 			require.Equal(t, size-1-i, item.value)
 			require.Equal(t, wInt(size-1-i), item.weight.Self())

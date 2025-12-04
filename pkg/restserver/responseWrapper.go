@@ -47,7 +47,7 @@ func WriteAPIResponseError(
 // Decode body from the request into value.
 // Any error is written into the response and false is returned.
 // (It is enough to just return from the request handler on false value).
-func DecodeBody(w http.ResponseWriter, r *http.Request, value interface{}) bool {
+func DecodeBody(w http.ResponseWriter, r *http.Request, value any) bool {
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&value)
 	if err != nil {
@@ -70,7 +70,7 @@ func DecodeBody(w http.ResponseWriter, r *http.Request, value interface{}) bool 
 	return true
 }
 
-func DecodeQueryParams(w http.ResponseWriter, r *http.Request, value interface{}) bool {
+func DecodeQueryParams(w http.ResponseWriter, r *http.Request, value any) bool {
 	decoder := schema.NewDecoder()
 	err := decoder.Decode(value, r.URL.Query())
 	if err != nil {

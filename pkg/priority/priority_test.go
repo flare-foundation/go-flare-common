@@ -346,14 +346,14 @@ func TestDoubleWeights(t *testing.T) {
 		return nil
 	}
 
-	for i := 0; i < 100; i++ {
+	for i := range 100 {
 		wg.Add(1)
 		pQueue.Add(i, wTup{-i, i})
 	}
 
 	time.Sleep(100 * time.Millisecond)
 
-	for j := 0; j < 100; j++ {
+	for range 100 {
 		time.Sleep(time.Millisecond)
 		pQueue.Dequeue(ctx, handle, nil)
 	}

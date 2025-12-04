@@ -55,7 +55,7 @@ func TestBinarySearch(t *testing.T) {
 	t.Run("test2", func(t *testing.T) {
 		vs := voters.NewSet(testVoters, testWeights, nil)
 		test2Results := make([]int, len(testPairs))
-		for i := 0; i < len(testPairs); i++ {
+		for i := range testPairs {
 			test2Results[i] = vs.BinarySearch(testPairs[i])
 		}
 		cupaloy.SnapshotT(t, test2Results)
