@@ -59,7 +59,7 @@ func (q *Queue[T, W]) Push(item *Item[T, W]) {
 	*q = append(*q, item)
 }
 
-// Update updates the weight of an item and updates the queue accordingly.
+// UpdateWeight updates the weight of an item and updates the queue accordingly.
 //
 // Does not effect the queue if the item is not in it.
 func (q *Queue[T, W]) UpdateWeight(item *Item[T, W], weight W) {

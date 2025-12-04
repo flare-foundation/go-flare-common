@@ -43,7 +43,7 @@ func (h *hash) ToBytes(value any, _ bool) ([]byte, error) {
 	return v, nil
 }
 
-// ToJson decodes hash to hexadecimal string.
+// ToJSON decodes hash to hexadecimal string.
 //
 // If length is fixed for type, the parameter is shadowed.
 func (h *hash) ToJSON(b *bytes.Buffer, length int) (any, error) {

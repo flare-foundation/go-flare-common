@@ -65,7 +65,7 @@ func JoinMultisig(tx map[string]any, signers []*signer.Signer) ([]byte, error) {
 	return encoding.Encode(tx, false)
 }
 
-// JoinMultisig appends signers to transactions.
+// JoinMultisigJSON appends signers to transactions.
 //
 // It is assumed that signer are valid.
 func JoinMultisigJSON(tx map[string]any, signers []*signer.Signer) map[string]any {
