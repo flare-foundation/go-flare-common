@@ -31,7 +31,7 @@ The request must:
 - Compile,
 - Pass all the tests,
 - Pass all the linters,
-- Be based on opened against `main` branch.
+- Be based on and opened against `main` branch.
 
 ## Setting the environment
 

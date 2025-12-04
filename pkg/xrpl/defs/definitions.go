@@ -20,8 +20,10 @@ type IDPair struct {
 	T XType
 }
 
-// pair of (field code, type code) to field name.
+// IDToName maps pair of (field code, type code) to field name.
 var IDToName map[IDPair]string
+
+// ValueToTxType maps transaction type value to transaction type name.
 var ValueToTxType map[int32]string
 
 func init() {

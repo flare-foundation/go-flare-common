@@ -14,10 +14,11 @@ var (
 	ErrHashNotFound = errors.New("hash not found")
 )
 
-// Merkle Tree implementation with helper functions.
+// Tree is Merkle tree implementation with helper functions.
 type Tree []common.Hash
 
-// Given an array of leaf hashes, builds the Merkle tree.
+// Build builds the Merkle tree from a slice of leaf hashes.
+// If initialHash is true, each leaf hash is hashed again before building the tree.
 func Build(hashes []common.Hash, initialHash bool) Tree {
 	if initialHash {
 		hashes = mapSingleHash(hashes)
@@ -46,7 +47,8 @@ func Build(hashes []common.Hash, initialHash bool) Tree {
 	return tree
 }
 
-// Given an array of hex-encoded leaf hashes, builds the Merkle tree.
+// BuildFromHex builds the Merkle tree from a slice of hex-encoded leaf hashes.
+// If initialHash is true, each leaf hash is hashed again before building the tree.
 func BuildFromHex(hexValues []string, initialHash bool) Tree {
 	var hashes []common.Hash
 	for i := range hexValues {

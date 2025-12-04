@@ -29,7 +29,7 @@ type DataFixed struct {
 	AdditionalFixedMessage hexutil.Bytes    `json:"additionalFixedMessage"`
 }
 
-// Hash computes the hash of the DataFixed d.
+// HashFixed computes the hash of the DataFixed.
 func (d DataFixed) HashFixed() (common.Hash, error) {
 	e, err := structs.Encode(tee.StructArg[tee.Instruction], d.prepareForEncoding())
 	if err != nil {

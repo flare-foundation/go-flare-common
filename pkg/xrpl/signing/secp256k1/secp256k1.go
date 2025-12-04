@@ -78,7 +78,7 @@ func SignTxMultisig(tx map[string]any, prv *ecdsa.PrivateKey) (*signer.Signer, e
 	}, nil
 }
 
-// Sign computes Secp256k1 signature of the message and returns it in DER format
+// SignXRPL computes Secp256k1 signature of the message and returns it in DER format
 // as needed for signing of an XRPL transaction.
 func SignXRPL(message []byte, privKey *ecdsa.PrivateKey) ([]byte, error) {
 	h := hash.Sha512Half(message)

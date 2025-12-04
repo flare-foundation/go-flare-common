@@ -2,6 +2,7 @@ package instruction
 
 import (
 	"testing"
+	"time"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -69,6 +70,17 @@ func TestHash(t *testing.T) {
 	require.NoError(t, err)
 
 	require.Equal(t, vhFixed, vh)
+
+	ts := time.Now().Unix()
+
+	priv, err := crypto.GenerateKey()
+	require.NoError(t, err)
+
+	sig, err := crypto.Sign(hFixed[:], priv)
+	require.NoError(t, err)
+
+	_, err = NextVoteHash(vh, 0, sig, nil, uint64(ts))
+	require.NoError(t, err)
 }
 
 func TestSignAndRecover(t *testing.T) {
