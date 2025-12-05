@@ -2,14 +2,14 @@ include:
   - component: $CI_SERVER_FQDN/flarenetwork/infra-public/ci-components/dependency-track@~latest
 
 stages:
-    - build
-    - test
-    - sbom
+  - build
+  - test
+  - sbom
 
 variables:
   GOPATH: /go
   GOLANG_VERSION: "1.25.1"
-  GOLINT_VERSION: "v2.5.0"
+  GOLINT_VERSION: "v2.7.0"
 
 .gocache:
   key: ${CI_COMMIT_REF_SLUG}
