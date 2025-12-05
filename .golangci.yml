@@ -16,11 +16,13 @@ linters:
     - exhaustive
     - exptostd
     - forcetypeassert
-    - godot
     - misspell
     - nolintlint
     - unconvert
     - whitespace
+
+    - modernize
+    - thelper
 
   settings:
     exhaustive:
