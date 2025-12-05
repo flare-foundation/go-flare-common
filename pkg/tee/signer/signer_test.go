@@ -34,6 +34,8 @@ const (
 var url = fmt.Sprintf("http://localhost:%d", port)
 
 func prepareServer(t *testing.T) (*Signer, *ecdsa.PrivateKey) {
+	t.Helper()
+
 	randomStr := []byte(prvSeed)
 	pkStr := crypto.Keccak256(randomStr)
 	prv, err := crypto.ToECDSA(pkStr)
@@ -61,6 +63,8 @@ func prepareSignBody(n uint64) SignBody {
 }
 
 func preparePOSTRequest(t *testing.T, body any, endpoint string) *http.Request {
+	t.Helper()
+
 	encodedBody, err := json.Marshal(body)
 	require.NoError(t, err)
 
@@ -71,6 +75,8 @@ func preparePOSTRequest(t *testing.T, body any, endpoint string) *http.Request {
 }
 
 func sendRequest(t *testing.T, r *http.Request) *http.Response {
+	t.Helper()
+
 	client := &http.Client{}
 	resp, err := client.Do(r)
 	require.NoError(t, err)
@@ -83,17 +89,15 @@ func TestSigner(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 
 	var wg sync.WaitGroup
-	wg.Add(1)
 
 	var wg2 sync.WaitGroup
 	wg2.Add(1)
 
-	go func() {
+	wg.Go(func() {
 		wg2.Done()
 		err := signer.Run(ctx)
 		require.Error(t, err)
-		wg.Done()
-	}()
+	})
 
 	wg2.Wait()
 	time.Sleep(100 * time.Millisecond)
