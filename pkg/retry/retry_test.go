@@ -81,7 +81,7 @@ func TestExecuteWithRetry(t *testing.T) {
 			},
 			expected: ExecuteStatus[int]{
 				Success: false,
-				Err:     fmt.Errorf("max retries reached: %v", errRetry),
+				Err:     fmt.Errorf("max retries reached. Last error: %v", errRetry),
 				Value:   0,
 			},
 		},
@@ -107,7 +107,7 @@ func TestExecuteWithRetry(t *testing.T) {
 			},
 			expected: ExecuteStatus[int]{
 				Success: false,
-				Err:     fmt.Errorf("context error mid retry: %v: last error: %w", context.DeadlineExceeded, errRetry),
+				Err:     fmt.Errorf("context error mid retry: %v. Last error: %w", context.DeadlineExceeded, errRetry),
 				Value:   0,
 			},
 		},
@@ -156,13 +156,11 @@ func TestIngrainAttemptConcurrent(t *testing.T) {
 	var wg sync.WaitGroup
 
 	const n = 100
-	wg.Add(n)
 	for range n {
-		go func() {
+		wg.Go(func() {
 			_, err := ingrained()
 			require.NoError(t, err)
-			wg.Done()
-		}()
+		})
 	}
 
 	wg.Wait()
@@ -202,7 +200,7 @@ func TestExecuteAttempt(t *testing.T) {
 			},
 			e: ExecuteStatus[bool]{
 				Success: false,
-				Err:     fmt.Errorf("max retries reached: %v", errRetry),
+				Err:     fmt.Errorf("max retries reached. Last error: %v", errRetry),
 				Value:   false,
 			},
 		},

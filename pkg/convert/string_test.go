@@ -56,55 +56,65 @@ func TestStringToCommonHash(t *testing.T) {
 }
 
 func TestHex32StringToCommonHash(t *testing.T) {
-	t.Run("valid hex string with 0x prefix", func(t *testing.T) {
-		input := "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+	tests := []struct {
+		description string
+		input       string
+		expected    string
+		err         bool
+	}{
+		{
+			description: "valid hex string with 0x prefix",
+			input:       "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+			expected:    "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+			err:         false,
+		},
+		{
+			description: "valid hex string with 0X prefix",
+			input:       "0X1234567890ABCDEF1234567890ABCDEF1234567890ABCDEF1234567890ABCDEF",
+			expected:    "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+			err:         false,
+		},
+		{
+			description: "valid hex string without prefix",
+			input:       "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+			expected:    "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+			err:         false,
+		},
+		{
+			description: "invalid hex characters",
+			input:       "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdeg",
+			expected:    "",
+			err:         true,
+		},
+		{
+			description: "wrong length - too short",
+			input:       "0x1234567890abcdef",
+			expected:    "",
+			err:         true,
+		},
+		{
+			description: "wrong length - too long",
+			input:       "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef12",
+			expected:    "",
+			err:         true,
+		},
+		{
+			description: "empty string",
+			input:       "",
+			expected:    "",
+			err:         true,
+		},
+	}
 
-		result, err := Hex32StringToCommonHash(input)
-		require.NoError(t, err)
-		require.Equal(t, "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef", result.Hex()[2:])
-	})
-
-	t.Run("valid hex string with 0X prefix", func(t *testing.T) {
-		input := "0X1234567890ABCDEF1234567890ABCDEF1234567890ABCDEF1234567890ABCDEF"
-
-		result, err := Hex32StringToCommonHash(input)
-		require.NoError(t, err)
-		require.Equal(t, "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef", result.Hex()[2:])
-	})
-
-	t.Run("valid hex string without prefix", func(t *testing.T) {
-		input := "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
-
-		result, err := Hex32StringToCommonHash(input)
-		require.NoError(t, err)
-		require.Equal(t, input, result.Hex()[2:])
-	})
-
-	t.Run("invalid hex characters", func(t *testing.T) {
-		input := "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdeg"
-
-		_, err := Hex32StringToCommonHash(input)
-		require.Error(t, err)
-	})
-
-	t.Run("wrong length - too short", func(t *testing.T) {
-		input := "0x1234567890abcdef"
-
-		_, err := Hex32StringToCommonHash(input)
-		require.Error(t, err)
-	})
-
-	t.Run("wrong length - too long", func(t *testing.T) {
-		input := "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef12"
-
-		_, err := Hex32StringToCommonHash(input)
-		require.Error(t, err)
-	})
-
-	t.Run("empty string", func(t *testing.T) {
-		input := ""
-
-		_, err := Hex32StringToCommonHash(input)
-		require.Error(t, err)
-	})
+	for _, test := range tests {
+		t.Run(test.description, func(t *testing.T) {
+			result, err := Hex32StringToCommonHash(test.input)
+			if !test.err {
+				require.NoError(t, err)
+				require.Equal(t, test.expected, result.Hex()[2:])
+			} else {
+				require.Error(t, err)
+			}
+		})
+	}
 }

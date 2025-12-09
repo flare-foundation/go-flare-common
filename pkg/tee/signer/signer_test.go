@@ -68,7 +68,7 @@ func preparePOSTRequest(t *testing.T, body any, endpoint string) *http.Request {
 	encodedBody, err := json.Marshal(body)
 	require.NoError(t, err)
 
-	req, err := http.NewRequest("POST", url+endpoint, bytes.NewBuffer(encodedBody))
+	req, err := http.NewRequest(http.MethodPost, url+endpoint, bytes.NewBuffer(encodedBody))
 	require.NoError(t, err)
 
 	return req
