@@ -49,7 +49,7 @@ func Execute[T any](ctx context.Context, f func() (T, error), params Params) Exe
 
 	for j := 0; cond(j, params.MaxAttempts); j++ {
 		if cerr := ctx.Err(); cerr != nil {
-			result.Err = fmt.Errorf("context error mid retry: %v: last error: %w", cerr, err)
+			result.Err = fmt.Errorf("context error mid retry: %v. Last error: %w", cerr, err)
 			return result
 		}
 
@@ -65,9 +65,15 @@ func Execute[T any](ctx context.Context, f func() (T, error), params Params) Exe
 		}
 	}
 
-	result.Err = fmt.Errorf("max retries reached: %v", err)
+	result.Err = fmt.Errorf("max retries reached. Last error: %v", err)
 
 	return result
+}
+
+// ExecuteAttempt executes function f that takes the index of the attempt as a parameter and retries on error according to params.
+func ExecuteAttempt[T any](ctx context.Context, f func(j int) (T, error), params Params) ExecuteStatus[T] {
+	h := ingrainAttempt(f)
+	return Execute(ctx, h, params)
 }
 
 // ingrainAttempt takes a function f that takes an integer for the param and returns a function that on the j-th call returns f(j-1).
@@ -83,10 +89,4 @@ func ingrainAttempt[T any](f func(int) (T, error)) func() (T, error) {
 		x.Unlock()
 		return f(i)
 	}
-}
-
-// ExecuteAttempt executes function f that takes the index of the attempt as a parameter and retries on error according to params.
-func ExecuteAttempt[T any](ctx context.Context, f func(j int) (T, error), params Params) ExecuteStatus[T] {
-	h := ingrainAttempt(f)
-	return Execute(ctx, h, params)
 }

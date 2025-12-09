@@ -13,7 +13,7 @@ import (
 
 type Data struct {
 	DataFixed
-	AdditionalVariableMessage hexutil.Bytes `json:"AdditionalVariableMessage"`
+	AdditionalVariableMessage hexutil.Bytes `json:"additionalVariableMessage"`
 }
 
 type DataFixed struct {
@@ -30,7 +30,7 @@ type DataFixed struct {
 }
 
 // HashFixed computes the hash of the DataFixed.
-func (d DataFixed) HashFixed() (common.Hash, error) {
+func (d *DataFixed) HashFixed() (common.Hash, error) {
 	e, err := structs.Encode(tee.StructArg[tee.Instruction], d.prepareForEncoding())
 	if err != nil {
 		return common.Hash{}, err
@@ -54,6 +54,7 @@ func (d *DataFixed) prepareForEncoding() tee.TeeStructsInstruction {
 	}
 }
 
+// InitialVoteHash computes the initial vote hash for the voting on instruction data.
 func (d *DataFixed) InitialVoteHash() (common.Hash, error) {
 	ih, err := d.HashFixed()
 	if err != nil {

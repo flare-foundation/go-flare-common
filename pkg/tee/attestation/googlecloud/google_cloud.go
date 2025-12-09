@@ -51,6 +51,20 @@ type GoogleTeeClaims struct {
 	jwt.RegisteredClaims
 }
 
+type SubMods struct {
+	ConfidentialSpace ConfidentialSpaceInfo `json:"confidential_space"`
+	Container         Container             `json:"container"`
+}
+
+type ConfidentialSpaceInfo struct {
+	SupportAttributes []string `json:"support_attributes"`
+}
+
+type Container struct {
+	ImageDigest string `json:"image_digest"`
+	ImageID     string `json:"image_id"`
+}
+
 // Platform is the utf-8 encoded hwmodel (hardware module) on which the confidential computing workload is running.
 func (c *GoogleTeeClaims) Platform() (common.Hash, error) {
 	p, err := convert.StringToCommonHash(c.HWModel)
@@ -69,20 +83,6 @@ func (c *GoogleTeeClaims) CodeHash() (common.Hash, error) {
 	}
 
 	return ch, nil
-}
-
-type SubMods struct {
-	ConfidentialSpace ConfidentialSpaceInfo `json:"confidential_space"`
-	Container         Container             `json:"container"`
-}
-
-type ConfidentialSpaceInfo struct {
-	SupportAttributes []string `json:"support_attributes"`
-}
-
-type Container struct {
-	ImageDigest string `json:"image_digest"`
-	ImageID     string `json:"image_id"`
 }
 
 // ParseAndValidatePKIToken validates the PKI token returned from the Google cloud confidential compute is valid.
@@ -201,6 +201,8 @@ func ParseDERCertificate(certificate string) (*x509.Certificate, error) {
 
 	return cert, nil
 }
+
+// ParsePEMCertificate decodes the given PEM certificate string and parses it into an x509 certificate.
 func ParsePEMCertificate(certificate string) (*x509.Certificate, error) {
 	block, _ := pem.Decode([]byte(certificate))
 	if block == nil {

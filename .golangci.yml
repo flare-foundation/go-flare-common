@@ -23,6 +23,7 @@ linters:
 
     - modernize
     - thelper
+    - usestdlibvars
 
   settings:
     exhaustive:

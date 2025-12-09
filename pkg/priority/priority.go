@@ -18,12 +18,14 @@ type logger interface {
 	Panic(...any)
 }
 
+// noLogger is a empty logger that implements the logger interface.
 type noLogger struct{}
 
 func (noLogger) Infof(string, ...any)  {}
 func (noLogger) Errorf(string, ...any) {}
 func (noLogger) Panic(...any)          {}
 
+// Params for the priority queue.
 type Params struct {
 	MaxDequeuesPerSecond int           `toml:"max_dequeues_per_second"` // Set to 0 to disable rate-limiting.
 	MaxWorkers           int           `toml:"max_workers"`             // Set to 0 for unlimited workers.
@@ -33,6 +35,8 @@ type Params struct {
 
 }
 
+// Wrapped is a wrapper around the item that is stored in the queue.
+// It contains the item itself, the number of attempts left to process it, and a flag indicating if it's a fast lane item.
 type Wrapped[T any] struct {
 	item         T
 	attemptsLeft int
