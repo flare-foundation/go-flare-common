@@ -147,7 +147,7 @@ func CheckDelay(ctx context.Context, db *gorm.DB, tolerance time.Duration) error
 	dbTime := time.Unix(int64(state.BlockTimestamp), 0)
 
 	outOfSync := time.Since(dbTime)
-	if outOfSync < tolerance {
+	if outOfSync > tolerance {
 		return fmt.Errorf("database out of sync for %v", outOfSync)
 	}
 	return nil
