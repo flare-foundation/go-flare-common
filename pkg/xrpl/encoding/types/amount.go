@@ -347,11 +347,9 @@ func xrpToJSON(firstByte byte, b *bytes.Buffer) (string, error) {
 		return "", outOfBytes("xrp amount", l, n+1)
 	}
 
-	var out string
-
 	sign := firstByte & signBitMask
 	if sign == 0 {
-		out = "-"
+		return "", errors.New("negative xrp amount")
 	}
 
 	value := binary.BigEndian.Uint64(v)
@@ -359,9 +357,7 @@ func xrpToJSON(firstByte byte, b *bytes.Buffer) (string, error) {
 		return "", errors.New("xrp amount to large")
 	}
 
-	out += strconv.FormatUint(value, 10)
-
-	return out, nil
+	return strconv.FormatUint(value, 10), nil
 }
 
 func tokenToJSON(firstByte byte, b *bytes.Buffer) (map[string]any, error) {

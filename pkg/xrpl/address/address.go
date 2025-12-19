@@ -70,21 +70,21 @@ func IDToAddress(id []byte) string {
 }
 
 // PubToAddress converts public key in hex string to XRPL address.
-func PubToAddress(prv string) (string, error) {
-	prvBytes, err := hex.DecodeString(prv)
+func PubToAddress(pub string) (string, error) {
+	pubBytes, err := hex.DecodeString(pub)
 	if err != nil {
-		return "", fmt.Errorf("decoding prv kye: %v", err)
+		return "", fmt.Errorf("decoding prv key: %v", err)
 	}
 
-	if len(prvBytes) != 33 {
+	if len(pubBytes) != 33 {
 		return "", errors.New("wrong private key length. Should be 33 bytes long")
 	}
 
-	if !slices.Contains([]byte{0x03, 0x02, 0xed}, prvBytes[0]) {
-		return "", fmt.Errorf("invalid first byte of prv key %X", prvBytes[0])
+	if !slices.Contains([]byte{0x03, 0x02, 0xed}, pubBytes[0]) {
+		return "", fmt.Errorf("invalid first byte of pub key %X", pubBytes[0])
 	}
 
-	id := hash.Sha256RipeMD160(prvBytes)
+	id := hash.Sha256RipeMD160(pubBytes)
 
 	return IDToAddress(id), nil
 }
