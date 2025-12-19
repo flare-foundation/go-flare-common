@@ -2,7 +2,6 @@ package types
 
 import (
 	"bytes"
-	"encoding/hex"
 	"fmt"
 
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/address"
@@ -41,10 +40,5 @@ func (*accountID) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 		return nil, outOfBytes("account id", l, n)
 	}
 
-	addr, err := address.Address(value)
-	if err != nil {
-		return nil, fmt.Errorf("deserializing accountID %v: %v", hex.EncodeToString(value), err) // note: currently unreachable. It only errors if len(value) is not 20, which is checked above.
-	}
-
-	return addr, nil
+	return address.IDToAddress(value), nil
 }
