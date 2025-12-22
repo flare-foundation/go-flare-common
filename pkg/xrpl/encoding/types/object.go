@@ -2,6 +2,7 @@ package types
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 )
 
@@ -27,8 +28,11 @@ func (*STObject) ToBytes(value any, signing bool) ([]byte, error) {
 	return bytes, nil
 }
 
+// ToJSON deserializes Object Field
 func (*STObject) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	out := make(map[string]any)
+
+	empty := true
 
 	for {
 		nextByte, err := b.ReadByte()
@@ -51,6 +55,12 @@ func (*STObject) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 		}
 
 		out[name] = value
+
+		empty = false
+	}
+
+	if empty {
+		return nil, errors.New("empty object")
 	}
 
 	return out, nil

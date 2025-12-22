@@ -2,6 +2,7 @@ package types
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"slices"
 
@@ -34,6 +35,10 @@ func (e *IllegalError) Error() string {
 
 // Encode serializes an object.
 func Encode(value Object, signing bool) ([]byte, error) {
+	if len(value) == 0 {
+		return nil, errors.New("empty object")
+	}
+
 	outBuff := bytes.NewBuffer(nil)
 
 	names := keys(value)
