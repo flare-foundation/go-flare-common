@@ -1,6 +1,7 @@
 package types
 
 import (
+	"bytes"
 	"encoding/hex"
 	"testing"
 
@@ -25,8 +26,8 @@ func TestArrayToBytes(t *testing.T) {
 					},
 				},
 			},
-			// Memo field ID (ea) + MemoType field ID (7c) + length (01) + data (01) + MemoData field ID (7d) + length (02) + data (0102) + ObjectEnd (e1) + ArrayEnd (f1)
-			expectedHex: "ea7c01017d020102e1f1",
+			expectedHex: "ea7c01017d020102e1f1", // Memo field ID (ea) + MemoType field ID (7c) + length (01) + data (01) + MemoData field ID (7d) + length (02) + data (0102) + ObjectEnd (e1) + ArrayEnd (f1)
+
 			expectError: false,
 		},
 		{
@@ -43,7 +44,7 @@ func TestArrayToBytes(t *testing.T) {
 					},
 				},
 			},
-			expectedHex: "ea7d0131e1ea7d0132e1f1",
+			expectedHex: "ea7d0131e1ea7d0132e1f1", // first memo (memo field id (ea) + MemoType ID (7c) + length (01) + data (31) + objectEnd (e1)) + seconde memo (memo field id (ea) + MemoType ID (7c) + length (01) + data (32) + objectEnd (e1)) + ArrayEnd (f1)
 			expectError: false,
 		},
 		{
@@ -111,7 +112,45 @@ func TestArrayToBytes(t *testing.T) {
 				expected, err := hex.DecodeString(test.expectedHex)
 				require.NoError(t, err)
 				require.Equal(t, expected, result)
+
+				b := bytes.NewBuffer(result)
+				obj, err := STArray.ToJSON(b, 0)
+				require.NoError(t, err)
+
+				resultAgain, err := STArray.ToBytes(obj, false)
+				require.NoError(t, err)
+
+				require.Equal(t, result, resultAgain)
 			}
+		})
+	}
+}
+
+func TestArrayToJSONErrors(t *testing.T) {
+	tests := []struct {
+		name  string
+		input string
+	}{
+		{
+			name: "empty", input: "",
+		},
+		{
+			name: "zero", input: "0000",
+		},
+		{
+			name: "gibberish", input: "0100aa1256",
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			h, err := hex.DecodeString(test.input)
+			require.NoError(t, err)
+
+			b := bytes.NewBuffer(h)
+
+			_, err = STArray.ToJSON(b, 0)
+			require.Error(t, err)
 		})
 	}
 }
