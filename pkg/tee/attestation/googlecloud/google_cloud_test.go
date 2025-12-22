@@ -7,7 +7,6 @@ import (
 	"crypto/x509"
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
 	"math/big"
 	"os"
 	"testing"
@@ -218,8 +217,6 @@ func TestParseAndValidatePKITokenFail(t *testing.T) {
 
 			_, _, err := ParseAndValidatePKIToken(signedToken, root)
 			require.Error(t, err)
-
-			fmt.Printf("err: %v\n", err)
 		}
 	})
 

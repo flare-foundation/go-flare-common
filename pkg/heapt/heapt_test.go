@@ -1,7 +1,6 @@
 package heapt_test
 
 import (
-	"fmt"
 	"testing"
 
 	heapt "github.com/flare-foundation/go-flare-common/pkg/heapt"
@@ -139,7 +138,6 @@ func TestRemove1(t *testing.T) {
 
 	for i := 0; h.Len() > 0; i++ {
 		x := heapt.Remove(h, 0)
-		fmt.Printf("h: %v\n", h)
 		require.Equalf(t, i, x, "Remove(0) got %d; want %d", i)
 		h.verify(t, 0)
 	}
