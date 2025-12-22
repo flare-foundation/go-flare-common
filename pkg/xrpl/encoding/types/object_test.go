@@ -51,7 +51,8 @@ func TestObjectEncodeDecode(t *testing.T) {
 			"Flags":         uint32(524288),
 			"OfferSequence": uint32(1752791),
 			"TakerGets":     "150000000000",
-		}}
+		},
+	}
 
 	for j, mapIn := range maps {
 		serialized, err := (&STObject{}).ToBytes(mapIn, false)
@@ -93,5 +94,39 @@ func TestObjectDecodeEncode(t *testing.T) {
 		encoded, err := Obj.ToBytes(decoded, false)
 		require.NoError(t, err)
 		require.Equal(t, input, encoded)
+	}
+}
+
+func TestDecodeError(t *testing.T) {
+	inputs := []string{
+		"",
+		"00",
+		"e1",
+	}
+
+	for _, input := range inputs {
+		h, err := hex.DecodeString(input)
+		require.NoError(t, err)
+
+		b := bytes.NewBuffer(h)
+
+		_, err = (&STObject{}).ToJSON(b, 0)
+		require.Error(t, err)
+	}
+}
+
+func TestEncodeError(t *testing.T) {
+	inputs := []any{
+		"",
+		nil,
+		1,
+		struct{}{},
+		map[string]any{},
+		map[string]any{"random11": 1},
+	}
+
+	for _, input := range inputs {
+		_, err := (&STObject{}).ToBytes(input, false)
+		require.Error(t, err)
 	}
 }

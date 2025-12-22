@@ -75,7 +75,7 @@ func TestAmountDecodeEncode(t *testing.T) {
 
 		decoded, err := Amount.ToJSON(b, 0)
 		require.NoError(t, err)
-		require.Len(t, 0, b.Len())
+		require.Equal(t, 0, b.Len())
 
 		encoded, err := Amount.ToBytes(decoded, false)
 		require.NoError(t, err)
