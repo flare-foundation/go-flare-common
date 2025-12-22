@@ -26,7 +26,7 @@ func Build(hashes []common.Hash, initialHash bool) Tree {
 
 	n := len(hashes)
 
-	if n == 0 {
+	if len(hashes) == 0 {
 		return Tree{}
 	}
 
@@ -37,8 +37,11 @@ func Build(hashes []common.Hash, initialHash bool) Tree {
 		return sortedHashes[i].Hex() < sortedHashes[j].Hex()
 	})
 
-	tree := make([]common.Hash, n-1, (2*n)-1)
-	tree = append(tree, sortedHashes...)
+	sortedHashes = removeDuplicates(sortedHashes)
+	n = len(sortedHashes)
+
+	tree := make(Tree, 2*n-1)
+	copy(tree[n-1:], sortedHashes)
 
 	for i := n - 2; i >= 0; i-- {
 		tree[i] = SortedHashPair(tree[2*i+1], tree[2*i+2])
@@ -47,14 +50,26 @@ func Build(hashes []common.Hash, initialHash bool) Tree {
 	return tree
 }
 
+// removeDuplicates removes duplicated hashes from an ordered slice.
+//
+// The function will work properly if the slice is not sorted.
+func removeDuplicates(hashes []common.Hash) []common.Hash {
+	output := make([]common.Hash, 0, len(hashes))
+	for i := range hashes {
+		if i == 0 || hashes[i] != hashes[i-1] {
+			output = append(output, hashes[i])
+		}
+	}
+
+	return output
+}
+
 // BuildFromHex builds the Merkle tree from a slice of hex-encoded leaf hashes.
 // If initialHash is true, each leaf hash is hashed again before building the tree.
 func BuildFromHex(hexValues []string, initialHash bool) Tree {
-	var hashes []common.Hash
+	hashes := make([]common.Hash, 0, len(hexValues))
 	for i := range hexValues {
-		if i == 0 || hexValues[i] != hexValues[i-1] {
-			hashes = append(hashes, common.HexToHash(hexValues[i]))
-		}
+		hashes = append(hashes, common.HexToHash(hexValues[i]))
 	}
 
 	return Build(hashes, initialHash)

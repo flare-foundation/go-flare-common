@@ -149,3 +149,31 @@ func TestMultiLeafTree(t *testing.T) {
 		})
 	}
 }
+
+func TestSorting(t *testing.T) {
+	vals := [][]string{
+		{
+			"0x01", "0x02", "0x03", "0x04", "0x05",
+		},
+		{
+			"0x05", "0x04", "0x03", "0x02", "0x01",
+		},
+		{
+			"0x02", "0x01", "0x05", "0x04", "0x03", "0x01",
+		},
+	}
+
+	prevRoot := common.Hash{}
+
+	for i, val := range vals {
+		tree := merkle.BuildFromHex(val, false)
+		root, err := tree.Root()
+		require.NoError(t, err)
+
+		if i > 0 {
+			require.Equal(t, prevRoot, root)
+		}
+
+		prevRoot = root
+	}
+}
