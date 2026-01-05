@@ -62,7 +62,11 @@ func SignTxMultisig(tx map[string]any, prv *ecdsa.PrivateKey) (*signer.Signer, e
 
 	accID := PrvToID(prv)
 
-	msg := utils.Prepare(encoded, true, accID)
+	msg, err := utils.Prepare(encoded, true, accID)
+	if err != nil {
+		return nil, fmt.Errorf("cannot prepare message: %v", err)
+	}
+
 	signature, err := SignXRPL(msg, prv)
 	if err != nil {
 		return nil, fmt.Errorf("signing %v,", err)

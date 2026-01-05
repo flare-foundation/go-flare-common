@@ -44,7 +44,7 @@ func ExtractPayloads(tx *database.Transaction) (map[uint8]Message, error) {
 	}
 	data = data[4:] // trim function selector
 	for len(data) > 0 {
-		if len(data) < 7 { // 7 = 1 + 4 + 2
+		if len(data) < msgHeaderLength { // 7 = 1 + 4 + 2
 			return nil, errors.New("wrongly formatted tx input, too short")
 		}
 
@@ -52,12 +52,12 @@ func ExtractPayloads(tx *database.Transaction) (map[uint8]Message, error) {
 		votingRound := binary.BigEndian.Uint32(data[1:5]) // 4 bytes votingRoundID
 		length := binary.BigEndian.Uint16(data[5:7])      // 2 bytes length of payload in bytes
 
-		end := 7 + length
+		end := msgHeaderLength + length
 		if len(data) < int(end) {
 			return nil, errors.New("wrongly formatted tx input")
 		}
 
-		payload := data[7:end]
+		payload := data[msgHeaderLength:end]
 
 		message := Message{
 			From:             common.HexToAddress(tx.FromAddress),
