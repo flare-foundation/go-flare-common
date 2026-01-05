@@ -60,7 +60,11 @@ func SignTxMultisig(tx map[string]any, prv ed25519.PrivateKey) (*signer.Signer, 
 		return nil, fmt.Errorf("cannot get account id: %v", err)
 	}
 
-	msg := utils.Prepare(encoded, true, accID)
+	msg, err := utils.Prepare(encoded, true, accID)
+	if err != nil {
+		return nil, fmt.Errorf("cannot prepare message: %v", err)
+	}
+
 	signature := ed25519.Sign(prv, msg)
 
 	add, err := PrvToAddress(prv)

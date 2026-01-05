@@ -2,36 +2,43 @@ package utils
 
 import (
 	"encoding/binary"
+	"errors"
 )
 
 const (
 	singlePrefix uint32 = 0x53545800
 	multiPrefix  uint32 = 0x534D5400
+
+	prefixLength    = 4
+	accountIDLength = 20
 )
 
 // Prepare creates a tx message for signing.
 // If multiSig is true, txBlob is prefixed with multi-signing prefix and postfixed with accountID.
-// For multi-signing, accountID of the signer should be provided.
+// For multi-signing, accountID of the signer should be provided. AccountID should be 20 bytes long
 // If multiSig is false, txBlob is prefixed with single-signing prefix.
-func Prepare(txBlob []byte, multiSig bool, accountID []byte) []byte {
-	length := len(txBlob) + 4
+func Prepare(txBlob []byte, multiSig bool, accountID []byte) ([]byte, error) {
+	length := prefixLength + len(txBlob)
 	if multiSig {
-		length += 20
+		if len(accountID) != accountIDLength {
+			return nil, errors.New("invalid accountID length")
+		}
+		length += accountIDLength
 	}
 
-	prefixed := make([]byte, 0, length)
+	forSigning := make([]byte, 0, length)
 
 	if multiSig {
-		prefixed = binary.BigEndian.AppendUint32(prefixed, multiPrefix)
+		forSigning = binary.BigEndian.AppendUint32(forSigning, multiPrefix)
 	} else {
-		prefixed = binary.BigEndian.AppendUint32(prefixed, singlePrefix)
+		forSigning = binary.BigEndian.AppendUint32(forSigning, singlePrefix)
 	}
 
-	prefixed = append(prefixed, txBlob...)
+	forSigning = append(forSigning, txBlob...)
 
 	if multiSig {
-		prefixed = append(prefixed, accountID...)
+		forSigning = append(forSigning, accountID...)
 	}
 
-	return prefixed
+	return forSigning, nil
 }
