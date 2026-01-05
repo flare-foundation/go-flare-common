@@ -24,7 +24,10 @@ func ValidateMultiSig(tx map[string]any, s *signer.Signer) (bool, error) {
 		return false, fmt.Errorf("cannot encode tx: %v", err)
 	}
 
-	msg := utils.Prepare(txBlob, true, id)
+	msg, err := utils.Prepare(txBlob, true, id)
+	if err != nil {
+		return false, fmt.Errorf("cannot prepare message: %v", err)
+	}
 
 	pubPrefix := s.SigningPubKey[0:2]
 

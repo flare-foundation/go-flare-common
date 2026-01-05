@@ -1,9 +1,8 @@
 package op
 
 import (
-	"strings"
-
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/flare-foundation/go-flare-common/pkg/convert"
 )
 
 type Type string
@@ -21,7 +20,7 @@ const (
 type Command string
 
 const (
-	// ReplicateFrom    OPCommand = "REPLICATE_FROM".
+	// ReplicateFrom    OPCommand = "REPLICATE_FROM"
 
 	TEEAttestation Command = "TEE_ATTESTATION"
 
@@ -43,6 +42,10 @@ const (
 	Reissue Command = "REISSUE"
 
 	Prove Command = "PROVE"
+)
+
+const (
+	flarePrefix = "F_"
 )
 
 var validSystemPairs = map[Type]map[Command]bool{
@@ -79,8 +82,7 @@ var validSystemPairs = map[Type]map[Command]bool{
 
 // HashToOPType converts hash to op.Type.
 func HashToOPType(h common.Hash) Type {
-	s := strings.TrimRight(string(h.Bytes()), "\x00")
-
+	s := convert.CommonHashToString(h)
 	return Type(s)
 }
 
@@ -98,13 +100,12 @@ func (t Type) isF() bool {
 	if len(t) < 2 {
 		return false
 	}
-	return t[0:2] == "F_"
+	return t[0:2] == flarePrefix
 }
 
 // HashToOPCommand converts hash to OpCommand and indicates whether it is a valid OpCommand.
 func HashToOPCommand(h common.Hash) Command {
-	s := strings.TrimRight(string(h.Bytes()), "\x00")
-
+	s := convert.CommonHashToString(h)
 	return Command(s)
 }
 

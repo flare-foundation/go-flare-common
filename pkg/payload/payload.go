@@ -44,7 +44,7 @@ func ExtractPayloads(tx *database.Transaction) (map[uint8]Message, error) {
 	}
 	data = data[4:] // trim function selector
 	for len(data) > 0 {
-		if len(data) < 7 { // 7 = 1 + 4 + 2
+		if len(data) < msgHeaderLength { // 7 = 1 + 4 + 2
 			return nil, errors.New("wrongly formatted tx input, too short")
 		}
 
@@ -57,7 +57,7 @@ func ExtractPayloads(tx *database.Transaction) (map[uint8]Message, error) {
 			return nil, errors.New("wrongly formatted tx input")
 		}
 
-		payload := data[7:end]
+		payload := data[msgHeaderLength:end]
 
 		message := Message{
 			From:             common.HexToAddress(tx.FromAddress),
