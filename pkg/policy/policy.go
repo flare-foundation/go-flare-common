@@ -3,11 +3,12 @@ package policy
 import (
 	"bytes"
 	"encoding/binary"
+	"errors"
+	"fmt"
 	"math"
 	"math/big"
 
-	"github.com/flare-foundation/go-flare-common/pkg/logger"
-	"github.com/pkg/errors"
+	"github.com/flare-foundation/go-flare-common/pkg/convert"
 
 	"slices"
 
@@ -88,19 +89,33 @@ func FromRawBytes(b []byte) (*SigningPolicy, int, error) {
 	}
 
 	p := 0
-	size := int(decodeUint32(b[p : p+2]))
+	size32, err := convert.BytesToUint32(b[p : p+2])
+	if err != nil {
+		return nil, p, fmt.Errorf("reading size %w", err)
+	}
+	size := int(size32)
 	p += 2
+
 	expectedLength := 43 + size*(common.AddressLength+2)
 	if len(b) < expectedLength {
-		return nil, p, errors.Errorf("message to short for decoding signing policy: expected >=%d, got %d", expectedLength, len(b))
+		return nil, p, fmt.Errorf("message to short for decoding signing policy: expected >=%d, got %d", expectedLength, len(b))
 	}
 
-	epoch := decodeUint32(b[p : p+3])
+	epoch, err := convert.BytesToUint32(b[p : p+3])
+	if err != nil {
+		return nil, p, fmt.Errorf("reading epoch %w", err)
+	}
 	p += 3
-	startingRound := decodeUint32(b[p : p+4])
+
+	startingRound, err := convert.BytesToUint32(b[p : p+4])
+	if err != nil {
+		return nil, p, fmt.Errorf("reading starting round %w", err)
+	}
 	p += 4
+
 	threshold := binary.BigEndian.Uint16(b[p : p+2])
 	p += 2
+
 	seed := common.BytesToHash(b[p : p+common.HashLength])
 	p += common.HashLength
 
@@ -130,18 +145,6 @@ func FromRawBytes(b []byte) (*SigningPolicy, int, error) {
 		rawBytes:           slices.Clone(b[:p]),
 		Voters:             voters.NewSet(signers, weights, nil),
 	}, p, nil
-}
-
-// decodeUint32 decodes a big-endian uint32 from a variable length byte slice of up to 4 bytes.
-func decodeUint32(b []byte) uint32 {
-	if len(b) > 4 {
-		logger.Fatal("invalid length for decoding uint32: %d", len(b))
-	}
-	var tmpUint32 = make([]byte, 4)
-	padding := 4 - len(b)
-	copy(tmpUint32[padding:], b)
-
-	return binary.BigEndian.Uint32(tmpUint32)
 }
 
 // Hash computes hash of a signing policy from signingPolicyBytes.

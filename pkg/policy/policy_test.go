@@ -106,6 +106,17 @@ func TestNewSiginigPolicyLogs(t *testing.T) {
 		require.Truef(t, ok, "error missing voter in test %d", i)
 		require.Equalf(t, test.voterWeight, voterData.Weight, "error wrong weight test %d", i)
 		require.Equalf(t, test.voterWeight, voterData.Weight, "error wrong index test %d", i)
+
+		fromBytes, j, err := policy.FromRawBytes(siginingPolicy.RawBytes())
+
+		require.NoError(t, err)
+		require.Equal(t, siginingPolicy.RewardEpochID, fromBytes.RewardEpochID)
+		require.Equal(t, siginingPolicy.StartVotingRoundID, fromBytes.StartVotingRoundID)
+		require.Equal(t, siginingPolicy.Threshold, fromBytes.Threshold)
+		require.Equal(t, siginingPolicy.RawBytes(), fromBytes.RawBytes())
+		require.Equal(t, siginingPolicy.Voters, fromBytes.Voters)
+
+		require.Equal(t, len(siginingPolicy.RawBytes()), j)
 	}
 }
 
