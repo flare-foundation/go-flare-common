@@ -38,7 +38,22 @@
   },
   {
     "inputs": [],
+    "name": "FeeMustBeGreaterThanZero",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "FeeNotSet",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "LengthsMismatch",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TypeAndSourceCombinationNotSupported",
     "type": "error"
   },
   {
@@ -56,19 +71,6 @@
     ],
     "name": "UUPSUnsupportedProxiableUUID",
     "type": "error"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "defaultFee",
-        "type": "uint256"
-      }
-    ],
-    "name": "DefaultFeeSet",
-    "type": "event"
   },
   {
     "anonymous": false,
@@ -126,31 +128,6 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "bytes32",
-        "name": "opType",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes32",
-        "name": "opCommand",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "fee",
-        "type": "uint256"
-      }
-    ],
-    "name": "OperationFeeSet",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
         "internalType": "bytes4",
         "name": "selector",
         "type": "bytes4"
@@ -189,6 +166,50 @@
     "inputs": [
       {
         "indexed": true,
+        "internalType": "bytes32",
+        "name": "attestationType",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "source",
+        "type": "bytes32"
+      }
+    ],
+    "name": "TypeAndSourceFeeRemoved",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "attestationType",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "source",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "fee",
+        "type": "uint256"
+      }
+    ],
+    "name": "TypeAndSourceFeeSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
         "internalType": "address",
         "name": "implementation",
         "type": "address"
@@ -205,35 +226,6 @@
         "internalType": "string",
         "name": "",
         "type": "string"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_opType",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_opCommand",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "address[]",
-        "name": "_teeIds",
-        "type": "address[]"
-      }
-    ],
-    "name": "calculateFeeByTeeIds",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "_fee",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -266,36 +258,23 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "getDefaultFee",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "bytes32",
-        "name": "_opType",
+        "name": "_type",
         "type": "bytes32"
       },
       {
         "internalType": "bytes32",
-        "name": "_opCommand",
+        "name": "_source",
         "type": "bytes32"
       }
     ],
-    "name": "getOperationFee",
+    "name": "getTypeAndSourceFee",
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "_fee",
         "type": "uint256"
       }
     ],
@@ -370,11 +349,6 @@
         "internalType": "address",
         "name": "_initialGovernance",
         "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_defaultFee",
-        "type": "uint256"
       }
     ],
     "name": "initialize",
@@ -430,12 +404,17 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_defaultFee",
-        "type": "uint256"
+        "internalType": "bytes32",
+        "name": "_type",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_source",
+        "type": "bytes32"
       }
     ],
-    "name": "setDefaultFee",
+    "name": "removeTypeAndSourceFee",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -444,12 +423,53 @@
     "inputs": [
       {
         "internalType": "bytes32[]",
-        "name": "_opTypes",
+        "name": "_types",
         "type": "bytes32[]"
       },
       {
         "internalType": "bytes32[]",
-        "name": "_opCommands",
+        "name": "_sources",
+        "type": "bytes32[]"
+      }
+    ],
+    "name": "removeTypeAndSourceFees",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_type",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_source",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_fee",
+        "type": "uint256"
+      }
+    ],
+    "name": "setTypeAndSourceFee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32[]",
+        "name": "_types",
+        "type": "bytes32[]"
+      },
+      {
+        "internalType": "bytes32[]",
+        "name": "_sources",
         "type": "bytes32[]"
       },
       {
@@ -458,7 +478,7 @@
         "type": "uint256[]"
       }
     ],
-    "name": "setOperationFees",
+    "name": "setTypeAndSourceFees",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
