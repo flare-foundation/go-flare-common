@@ -501,6 +501,7 @@ func generateTestCRL(
 	issuerKey crypto.Signer,
 	revokedSerials []*big.Int,
 ) *x509.RevocationList {
+	t.Helper()
 	now := time.Now()
 	return generateTestCRLWithTimes(t, issuer, issuerKey, revokedSerials, now.Add(-time.Hour), now.Add(time.Hour))
 }
