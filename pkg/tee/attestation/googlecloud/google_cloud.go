@@ -12,6 +12,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/flare-foundation/go-flare-common/pkg/convert"
+	"github.com/flare-foundation/go-flare-common/pkg/logger"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -87,13 +88,14 @@ func (c *GoogleTeeClaims) CodeHash() (common.Hash, error) {
 
 // ParseAndValidatePKIToken validates the PKI token returned from the Google cloud confidential compute is valid.
 // Returns a valid jwt.Token and GoogleTeeClaims or returns an error if invalid.
-func ParseAndValidatePKIToken(attestationToken string, storedRootCertificate *x509.Certificate) (*jwt.Token, *GoogleTeeClaims, error) {
+// leafCRL and intermediateCRL are optional pre-fetched CRLs for revocation checking.
+func ParseAndValidatePKIToken(attestationToken string, storedRootCertificate *x509.Certificate, leafCRL, intermediateCRL *x509.RevocationList) (*jwt.Token, *GoogleTeeClaims, error) {
 	claims := &GoogleTeeClaims{}
-	return ParseAndValidatePKITokenClaims(attestationToken, storedRootCertificate, claims)
+	return ParseAndValidatePKITokenClaims(attestationToken, storedRootCertificate, leafCRL, intermediateCRL, claims)
 }
 
-func ParseAndValidatePKITokenClaims[T jwt.Claims](attestationToken string, storedRootCertificate *x509.Certificate, claims T) (*jwt.Token, T, error) {
-	keyFunc := extractAndValidateKey(storedRootCertificate)
+func ParseAndValidatePKITokenClaims[T jwt.Claims](attestationToken string, storedRootCertificate *x509.Certificate, leafCRL, intermediateCRL *x509.RevocationList, claims T) (*jwt.Token, T, error) {
+	keyFunc := extractAndValidateKey(storedRootCertificate, leafCRL, intermediateCRL)
 
 	verifiedJWT, err := jwt.ParseWithClaims(attestationToken, claims, keyFunc, jwt.WithValidMethods([]string{"RS256"}))
 	if err != nil {
@@ -120,7 +122,7 @@ func ParsePKITokenUnverifiedClaims[T jwt.Claims](jwtToken string, claims T) (*jw
 
 // extractAndValidateKey returns a jwt.KeyFunc that extracts and validates the public key used for verification from a JWT token's x5c header chain.
 // It verifies the certificate chain against the expected root certificate and returns the leaf certificate's public key.
-func extractAndValidateKey(expectedRoot *x509.Certificate) jwt.Keyfunc {
+func extractAndValidateKey(expectedRoot *x509.Certificate, leafCRL, intermediateCRL *x509.RevocationList) jwt.Keyfunc {
 	return func(token *jwt.Token) (any, error) {
 		x5cs, ok := token.Header["x5c"]
 		if !ok {
@@ -137,7 +139,7 @@ func extractAndValidateKey(expectedRoot *x509.Certificate) jwt.Keyfunc {
 			return nil, fmt.Errorf("extracting certificates from x5c headers: %v", err)
 		}
 
-		err = certificates.Verify(expectedRoot)
+		err = certificates.Verify(expectedRoot, leafCRL, intermediateCRL)
 		if err != nil {
 			return nil, fmt.Errorf("verifying certificates: %v", err)
 		}
@@ -222,8 +224,9 @@ func ParsePEMCertificate(certificate string) (*x509.Certificate, error) {
 //   - Leaf public key algorithm is RSA,
 //   - Root certificate matches the expected root certificate,
 //   - All certificates have valid lifetimes,
-//   - Certificate chain is valid from leaf to root.
-func (c *PKICertificates) Verify(expectedRoot *x509.Certificate) error {
+//   - Certificate chain is valid from leaf to root,
+//   - Leaf and intermediate certificates are not revoked (if CRLs are provided).
+func (c *PKICertificates) Verify(expectedRoot *x509.Certificate, leafCRL, intermediateCRL *x509.RevocationList) error {
 	// Verify the leaf certificate signature algorithm is an RSA key
 	if c.Leaf.SignatureAlgorithm != x509.SHA256WithRSA {
 		return errors.New("leaf certificate signature algorithm is not SHA256WithRSA")
@@ -244,6 +247,11 @@ func (c *PKICertificates) Verify(expectedRoot *x509.Certificate) error {
 	}
 
 	err = c.verifyChain()
+	if err != nil {
+		return err
+	}
+
+	err = c.verifyCRL(leafCRL, intermediateCRL)
 	if err != nil {
 		return err
 	}
@@ -283,6 +291,53 @@ func (c *PKICertificates) verifyChain() error {
 	})
 	if err != nil {
 		return fmt.Errorf("failed to verify certificate chain: %v", err)
+	}
+
+	return nil
+}
+
+// verifyCRL checks whether the leaf or intermediate certificates have been revoked
+// according to the provided CRLs. If a CRL is nil, a warning is logged and the check is skipped.
+func (c *PKICertificates) verifyCRL(leafCRL, intermediateCRL *x509.RevocationList) error {
+	if err := checkCRL("leaf", c.Leaf, leafCRL, c.Intermediate); err != nil {
+		return err
+	}
+
+	if err := checkCRL("intermediate", c.Intermediate, intermediateCRL, c.Root); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// checkCRL verifies a single certificate against its CRL. The issuer is the certificate
+// that should have signed the CRL.
+func checkCRL(name string, cert *x509.Certificate, crl *x509.RevocationList, issuer *x509.Certificate) error {
+	if crl == nil {
+		if len(cert.CRLDistributionPoints) == 0 {
+			logger.Warnf("%s certificate has no CRL distribution points, skipping CRL check", name)
+		} else {
+			logger.Warnf("%s certificate has CRL distribution points but no CRL was provided, skipping CRL check", name)
+		}
+		return nil
+	}
+
+	now := time.Now()
+	if now.Before(crl.ThisUpdate) {
+		return fmt.Errorf("%s CRL is not yet valid (thisUpdate: %s)", name, crl.ThisUpdate.Format(time.RFC3339))
+	}
+	if !crl.NextUpdate.IsZero() && now.After(crl.NextUpdate) {
+		return fmt.Errorf("%s CRL is expired (nextUpdate: %s)", name, crl.NextUpdate.Format(time.RFC3339))
+	}
+
+	if err := crl.CheckSignatureFrom(issuer); err != nil {
+		return fmt.Errorf("%s CRL signature verification failed: %w", name, err)
+	}
+
+	for _, entry := range crl.RevokedCertificateEntries {
+		if entry.SerialNumber.Cmp(cert.SerialNumber) == 0 {
+			return fmt.Errorf("%s certificate has been revoked (serial: %s)", name, cert.SerialNumber.String())
+		}
 	}
 
 	return nil
