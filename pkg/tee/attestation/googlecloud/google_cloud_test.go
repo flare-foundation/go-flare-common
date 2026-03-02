@@ -157,7 +157,7 @@ func TestParseAndValidatePKITokenHappy(t *testing.T) {
 
 	signedToken, root := generateTestPKIToken(t, now, now, now, tokenClaims)
 
-	parsedToken, parsedClaims, err := ParseAndValidatePKIToken(signedToken, root)
+	parsedToken, parsedClaims, err := ParseAndValidatePKIToken(signedToken, root, nil, nil)
 	require.NoError(t, err)
 	require.NotNil(t, parsedToken)
 	require.Equal(t, "testmodel", parsedClaims.HWModel)
@@ -215,7 +215,7 @@ func TestParseAndValidatePKITokenFail(t *testing.T) {
 		for _, test := range tests {
 			signedToken, root := generateTestPKIToken(t, test.rt, test.it, test.lt, defClaims)
 
-			_, _, err := ParseAndValidatePKIToken(signedToken, root)
+			_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil)
 			require.Error(t, err)
 		}
 	})
@@ -237,7 +237,7 @@ func TestParseAndValidatePKITokenFail(t *testing.T) {
 			now := time.Now()
 			signedToken, root := generateTestPKIToken(t, now, now, now, claims)
 
-			_, _, err := ParseAndValidatePKIToken(signedToken, root)
+			_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil)
 			require.Error(t, err)
 		}
 	})
@@ -252,7 +252,7 @@ func TestParseAndValidatePKITokenFail(t *testing.T) {
 		invalidLeaf := base64.StdEncoding.EncodeToString([]byte("not a real leaf"))
 
 		signedToken := assembleSignedToken(t, defClaims, []string{invalidLeaf, invalidInter, invalidRoot}, rootKey)
-		_, _, err := ParseAndValidatePKIToken(signedToken, root)
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil)
 		require.Error(t, err)
 	})
 
@@ -262,7 +262,7 @@ func TestParseAndValidatePKITokenFail(t *testing.T) {
 		root, rootKey := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), true, nil, nil)
 
 		signedToken := assembleSignedToken(t, defClaims, nil, rootKey)
-		_, _, err := ParseAndValidatePKIToken(signedToken, root)
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil)
 		require.Error(t, err)
 	})
 }
@@ -332,7 +332,7 @@ func TestInvalidChains(t *testing.T) {
 	for _, test := range tests {
 		signedToken := assembleSignedToken(t, defClaims, convertToHeaderEntry(test.certs), test.signer)
 
-		_, _, err := ParseAndValidatePKIToken(signedToken, root)
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil)
 		require.Error(t, err)
 	}
 }
@@ -357,7 +357,7 @@ func TestExtractCertificatesFromX5CHeader(t *testing.T) {
 		require.NotNil(t, certs.Intermediate)
 		require.NotNil(t, certs.Root)
 
-		require.NoError(t, certs.Verify(root))
+		require.NoError(t, certs.Verify(root, nil, nil))
 	})
 	t.Run("wrong type", func(t *testing.T) {
 		certs, err := ExtractCertificatesFromX5CHeader([]any{123, 456, 789})
@@ -402,6 +402,141 @@ func TestExtractCertificatesFromX5CHeader(t *testing.T) {
 		require.Equal(t, PKICertificates{}, certs)
 		require.Error(t, err)
 	})
+}
+
+func TestVerifyCRL(t *testing.T) {
+	now := time.Now()
+
+	root, rootKey := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), true, nil, nil)
+	inter, interKey := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), true, root, rootKey)
+	leaf, leafKey := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), false, inter, interKey)
+
+	claims := GoogleTeeClaims{
+		HWModel: "testmodel",
+		RegisteredClaims: jwt.RegisteredClaims{
+			Issuer: "issuer",
+		},
+	}
+
+	signedToken := assembleSignedToken(t, claims, convertToHeaderEntry([]*x509.Certificate{leaf, inter, root}), leafKey)
+
+	t.Run("nil CRLs succeed with warning", func(t *testing.T) {
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil)
+		require.NoError(t, err)
+	})
+
+	t.Run("valid CRLs with no revocations", func(t *testing.T) {
+		leafCRL := generateTestCRL(t, inter, interKey, nil)
+		interCRL := generateTestCRL(t, root, rootKey, nil)
+
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, leafCRL, interCRL)
+		require.NoError(t, err)
+	})
+
+	t.Run("leaf CRL not yet valid", func(t *testing.T) {
+		now := time.Now()
+		leafCRL := generateTestCRLWithTimes(t, inter, interKey, nil, now.Add(time.Hour), now.Add(2*time.Hour))
+
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, leafCRL, nil)
+		require.Error(t, err)
+		require.Contains(t, err.Error(), "not yet valid")
+	})
+
+	t.Run("intermediate CRL expired", func(t *testing.T) {
+		now := time.Now()
+		interCRL := generateTestCRLWithTimes(t, root, rootKey, nil, now.Add(-2*time.Hour), now.Add(-time.Hour))
+
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, interCRL)
+		require.Error(t, err)
+		require.Contains(t, err.Error(), "expired")
+	})
+
+	t.Run("revoked leaf certificate", func(t *testing.T) {
+		leafCRL := generateTestCRL(t, inter, interKey, []*big.Int{leaf.SerialNumber})
+
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, leafCRL, nil)
+		require.Error(t, err)
+		require.Contains(t, err.Error(), "revoked")
+	})
+
+	t.Run("revoked intermediate certificate", func(t *testing.T) {
+		interCRL := generateTestCRL(t, root, rootKey, []*big.Int{inter.SerialNumber})
+
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, interCRL)
+		require.Error(t, err)
+		require.Contains(t, err.Error(), "revoked")
+	})
+
+	t.Run("CRL signed by wrong issuer", func(t *testing.T) {
+		// Leaf CRL signed by root instead of intermediate
+		wrongLeafCRL := generateTestCRL(t, root, rootKey, nil)
+
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, wrongLeafCRL, nil)
+		require.Error(t, err)
+		require.Contains(t, err.Error(), "CRL signature verification failed")
+	})
+
+	t.Run("intermediate CRL signed by wrong issuer", func(t *testing.T) {
+		// Intermediate CRL signed by intermediate instead of root
+		wrongInterCRL := generateTestCRL(t, inter, interKey, nil)
+
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, wrongInterCRL)
+		require.Error(t, err)
+		require.Contains(t, err.Error(), "CRL signature verification failed")
+	})
+
+	t.Run("CRL with other serial does not revoke", func(t *testing.T) {
+		otherSerial := big.NewInt(999999)
+		leafCRL := generateTestCRL(t, inter, interKey, []*big.Int{otherSerial})
+		interCRL := generateTestCRL(t, root, rootKey, []*big.Int{otherSerial})
+
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, leafCRL, interCRL)
+		require.NoError(t, err)
+	})
+}
+
+func generateTestCRL(
+	t *testing.T,
+	issuer *x509.Certificate,
+	issuerKey crypto.Signer,
+	revokedSerials []*big.Int,
+) *x509.RevocationList {
+	now := time.Now()
+	return generateTestCRLWithTimes(t, issuer, issuerKey, revokedSerials, now.Add(-time.Hour), now.Add(time.Hour))
+}
+
+func generateTestCRLWithTimes(
+	t *testing.T,
+	issuer *x509.Certificate,
+	issuerKey crypto.Signer,
+	revokedSerials []*big.Int,
+	thisUpdate time.Time,
+	nextUpdate time.Time,
+) *x509.RevocationList {
+	t.Helper()
+
+	revokedEntries := make([]x509.RevocationListEntry, 0, len(revokedSerials))
+	for _, serial := range revokedSerials {
+		revokedEntries = append(revokedEntries, x509.RevocationListEntry{
+			SerialNumber:   serial,
+			RevocationTime: thisUpdate.Add(-time.Minute),
+		})
+	}
+
+	template := &x509.RevocationList{
+		RevokedCertificateEntries: revokedEntries,
+		Number:                    big.NewInt(1),
+		ThisUpdate:                thisUpdate,
+		NextUpdate:                nextUpdate,
+	}
+
+	crlBytes, err := x509.CreateRevocationList(rand.Reader, template, issuer, issuerKey)
+	require.NoError(t, err)
+
+	crl, err := x509.ParseRevocationList(crlBytes)
+	require.NoError(t, err)
+
+	return crl
 }
 
 func generateTestCertificate(
