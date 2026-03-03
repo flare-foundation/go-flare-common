@@ -26,11 +26,13 @@ func TestPaymentTransactionMultisig(t *testing.T) {
 		PaymentReference: crypto.Keccak256Hash([]byte("test")),
 		Nonce:            10,
 		SubNonce:         0,
-		Fee:              big.NewInt(10),
+		MaxFee:           big.NewInt(10),
+		FeeSchedule:      []byte{0x27, 0x10, 1},
 		BatchEndTs:       0,
 	}
 
-	tx := PaymentTxFromInstruction(instruction)
+	tx, err := PaymentTxFromInstruction(instruction, 0)
+	require.NoError(t, err)
 
 	err = CheckNativePayment(tx)
 	require.NoError(t, err)

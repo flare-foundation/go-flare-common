@@ -1,18 +1,20 @@
 package xrpl
 
 import (
+	"encoding/binary"
 	"encoding/hex"
 	"errors"
 	"fmt"
 	"math/big"
 	"reflect"
 	"strconv"
+	"time"
 
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/payment"
 )
 
 // PaymentTxFromInstruction prepares a transaction from the Payment Instruction Message.
-func PaymentTxFromInstruction(i payment.ITeePaymentsPaymentInstructionMessage) map[string]any {
+func PaymentTxFromInstruction(i payment.ITeePaymentsPaymentInstructionMessage, try int) (map[string]any, error) {
 	tx := make(map[string]any)
 
 	tx["TransactionType"] = "Payment"
@@ -37,14 +39,25 @@ func PaymentTxFromInstruction(i payment.ITeePaymentsPaymentInstructionMessage) m
 	}
 	tx["Memos"] = memos
 
-	tx["Fee"] = i.Fee.String()
+	feeFixture, err := ParseFeeEntry(i.FeeSchedule, try)
+	if err != nil {
+		return nil, err
+	}
 
-	return tx
+	fee := feeFixture.Fee(i.MaxFee)
+
+	if feeFixture.Nullify {
+		return Nullify(i, fee), nil
+	}
+
+	tx["Fee"] = feeFixture.Fee(i.MaxFee)
+
+	return tx, nil
 }
 
 // Nullify prepares a transaction that nullifies the transaction prepared for the the Payment Instruction Message.
 // Cannot be used as a replacement as the fee is not raised.
-func Nullify(i payment.ITeePaymentsPaymentInstructionMessage) map[string]any {
+func Nullify(i payment.ITeePaymentsPaymentInstructionMessage, fee string) map[string]any {
 	tx := make(map[string]any)
 
 	tx["TransactionType"] = "AccountSet"
@@ -67,7 +80,7 @@ func Nullify(i payment.ITeePaymentsPaymentInstructionMessage) map[string]any {
 	}
 	tx["Memos"] = memos
 
-	tx["Fee"] = i.Fee.String()
+	tx["Fee"] = fee
 
 	return tx
 }
@@ -156,4 +169,81 @@ func CheckNativePayment(tx map[string]any) error {
 	}
 
 	return nil
+}
+
+type ScheduledFee struct {
+	Nullify bool
+	FeeBIPS uint16
+	Delay   time.Duration
+}
+
+// Fee returns the FeeBIPS of max.
+func (s *ScheduledFee) Fee(max *big.Int) string {
+	bips := big.NewInt(int64(s.FeeBIPS))
+	fee := new(big.Int).Mul(bips, max)
+	fee.Div(fee, big.NewInt(10000))
+	return fee.String()
+}
+
+func ParseFeeEntries(schedule []byte) ([]ScheduledFee, error) {
+	if len(schedule)%3 != 0 {
+		return nil, errors.New("invalid schedule length")
+	}
+	num := len(schedule) / 3
+
+	out := make([]ScheduledFee, 0, num)
+
+	for i := range num {
+		entry := schedule[i*3 : (i+1)*3]
+		fee, err := parseScheduledFee(entry)
+		if err != nil {
+			return nil, err
+		}
+		out = append(out, fee)
+	}
+
+	return out, nil
+}
+
+func ParseFeeEntry(schedule []byte, try int) (ScheduledFee, error) {
+	if len(schedule)%3 != 0 {
+		return ScheduledFee{}, errors.New("invalid schedule length")
+	}
+	if len(schedule) < (try+1)*3 {
+		return ScheduledFee{}, errors.New("try beyond schedule length")
+	}
+
+	entry := schedule[try*3 : (try+1)*3]
+	fee, err := parseScheduledFee(entry)
+	if err != nil {
+		return ScheduledFee{}, err
+	}
+
+	return fee, nil
+}
+
+func parseScheduledFee(fixture []byte) (ScheduledFee, error) {
+	if len(fixture) != 3 {
+		return ScheduledFee{}, errors.New("invalid fixture length")
+	}
+	bips := binary.BigEndian.Uint16(fixture[0:2])
+
+	bipsInt16 := int16(bips)
+	if bipsInt16 == 0 {
+		return ScheduledFee{}, errors.New("invalidBIPS")
+	}
+
+	delay := time.Duration(fixture[2]) * time.Second
+
+	nullify := bipsInt16 < 0
+
+	if nullify {
+		bipsInt16 = -bipsInt16
+	}
+
+	return ScheduledFee{
+		Nullify: nullify,
+		FeeBIPS: uint16(bipsInt16),
+		Delay:   delay,
+	}, nil
 }
