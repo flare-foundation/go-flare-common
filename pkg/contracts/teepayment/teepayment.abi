@@ -68,7 +68,29 @@
   },
   {
     "inputs": [],
-    "name": "FailedInnerCall",
+    "name": "FailedCall",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
+    "name": "InvalidFeeDelay",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
+    "name": "InvalidFeeFactor",
     "type": "error"
   },
   {
@@ -129,6 +151,16 @@
   {
     "inputs": [],
     "name": "PMWMultisigAccountAddressAlreadySet",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "PaymentAmountZero",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "RecipientIsSender",
     "type": "error"
   },
   {
@@ -224,6 +256,43 @@
       }
     ],
     "name": "BatchSettingsSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "walletId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "sourceId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "accountAddress",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "int16[]",
+        "name": "factorsBIPS",
+        "type": "int16[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint8[]",
+        "name": "delaysSeconds",
+        "type": "uint8[]"
+      }
+    ],
+    "name": "FeeScheduleSet",
     "type": "event"
   },
   {
@@ -389,6 +458,19 @@
     ],
     "name": "Upgraded",
     "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "DEFAULT_FEE_SCHEDULE",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   },
   {
     "inputs": [],
@@ -690,6 +772,42 @@
         "internalType": "uint64",
         "name": "_batchDurationSeconds",
         "type": "uint64"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct ITeePayments.PMWMultisigAccount",
+        "name": "_account",
+        "type": "tuple"
+      }
+    ],
+    "name": "getFeeSchedule",
+    "outputs": [
+      {
+        "internalType": "int16[]",
+        "name": "_factorsBIPS",
+        "type": "int16[]"
+      },
+      {
+        "internalType": "uint8[]",
+        "name": "_delaysSeconds",
+        "type": "uint8[]"
       }
     ],
     "stateMutability": "view",
@@ -1003,7 +1121,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "fee",
+            "name": "maxFee",
             "type": "uint256"
           },
           {
@@ -1107,7 +1225,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "fee",
+            "name": "maxFee",
             "type": "uint256"
           },
           {
@@ -1122,13 +1240,18 @@
       },
       {
         "internalType": "uint256[]",
-        "name": "_fees",
+        "name": "_maxFees",
         "type": "uint256[]"
       },
       {
-        "internalType": "bool[]",
-        "name": "_nullify",
-        "type": "bool[]"
+        "internalType": "int16[][]",
+        "name": "_feeFactorScheduleBIPS",
+        "type": "int16[][]"
+      },
+      {
+        "internalType": "uint8[]",
+        "name": "_feeDelayScheduleSeconds",
+        "type": "uint8[]"
       }
     ],
     "name": "reissue",
@@ -1167,6 +1290,41 @@
       }
     ],
     "name": "setBatchSettings",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct ITeePayments.PMWMultisigAccount",
+        "name": "_account",
+        "type": "tuple"
+      },
+      {
+        "internalType": "int16[]",
+        "name": "_factorsBIPS",
+        "type": "int16[]"
+      },
+      {
+        "internalType": "uint8[]",
+        "name": "_delaysSeconds",
+        "type": "uint8[]"
+      }
+    ],
+    "name": "setFeeSchedule",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

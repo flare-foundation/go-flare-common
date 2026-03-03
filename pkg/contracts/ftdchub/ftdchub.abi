@@ -1,34 +1,19 @@
 [
   {
-    "inputs": [
-      {
-        "internalType": "contract IGovernanceSettings",
-        "name": "_governanceSettings",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_initialGovernance",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_addressUpdater",
-        "type": "address"
-      },
-      {
-        "internalType": "uint16",
-        "name": "_minThresholdBIPS",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint8",
-        "name": "_defaultNumberOfTees",
-        "type": "uint8"
-      }
-    ],
+    "inputs": [],
     "stateMutability": "nonpayable",
     "type": "constructor"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "target",
+        "type": "address"
+      }
+    ],
+    "name": "AddressEmptyCode",
+    "type": "error"
   },
   {
     "inputs": [],
@@ -49,6 +34,27 @@
       }
     ],
     "name": "DuplicatedTeeId",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "implementation",
+        "type": "address"
+      }
+    ],
+    "name": "ERC1967InvalidImplementation",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ERC1967NonPayable",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "FailedCall",
     "type": "error"
   },
   {
@@ -90,6 +96,22 @@
   {
     "inputs": [],
     "name": "ThresholdInvalid",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "UUPSUnauthorizedCallContext",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "slot",
+        "type": "bytes32"
+      }
+    ],
+    "name": "UUPSUnsupportedProxiableUUID",
     "type": "error"
   },
   {
@@ -239,6 +261,19 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "implementation",
+        "type": "address"
+      }
+    ],
+    "name": "Upgraded",
+    "type": "event"
+  },
+  {
     "inputs": [],
     "name": "FTDC_OP_TYPE",
     "outputs": [
@@ -259,6 +294,19 @@
         "internalType": "bytes32",
         "name": "",
         "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "UPGRADE_INTERFACE_VERSION",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
       }
     ],
     "stateMutability": "view",
@@ -369,6 +417,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "implementation",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "contract IGovernanceSettings",
@@ -382,6 +443,39 @@
       }
     ],
     "name": "initialise",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract IGovernanceSettings",
+        "name": "_governanceSettings",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_initialGovernance",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_addressUpdater",
+        "type": "address"
+      },
+      {
+        "internalType": "uint16",
+        "name": "_minThresholdBIPS",
+        "type": "uint16"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_defaultNumberOfTees",
+        "type": "uint8"
+      }
+    ],
+    "name": "initialize",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -426,6 +520,19 @@
         "internalType": "bool",
         "name": "",
         "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "proxiableUUID",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
       }
     ],
     "stateMutability": "view",
@@ -604,6 +711,24 @@
     "name": "updateContractAddresses",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_newImplementation",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_data",
+        "type": "bytes"
+      }
+    ],
+    "name": "upgradeToAndCall",
+    "outputs": [],
+    "stateMutability": "payable",
     "type": "function"
   }
 ]
