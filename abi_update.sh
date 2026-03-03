@@ -14,7 +14,7 @@ FILES=(
   "tee/implementation/TeeWalletProjectManager.sol/TeeWalletProjectManager.json:contracts/teewalletprojectmanager/teewalletprojectmanager.abi"
   "tee/implementation/TeeFeeCalculator.sol/TeeFeeCalculator.json:contracts/teefeecalculator/teefeecalculator.abi"
   "ftdc/implementation/FtdcHub.sol/FtdcHub.json:contracts/ftdchub/ftdchub.abi"
-  "ftdc/implementation/FtdcRequestFeeConfigurations.sol/FtdcRequestFeeConfigurations.json:contracts/ftdcrequestfeeconfigurations/ftdcrequestfeeconfigurations.abi",
+  "ftdc/implementation/FtdcRequestFeeConfigurations.sol/FtdcRequestFeeConfigurations.json:contracts/ftdcrequestfeeconfigurations/ftdcrequestfeeconfigurations.abi"
   "tee/structs/TeeMachineRegistryStructs.sol/TeeMachineRegistryStructs.json:tee/structs/machineregistry/machineregistry.abi"
   "tee/structs/TeePaymentsStructs.sol/TeePaymentsStructs.json:tee/structs/payment/payment.abi"
   "tee/structs/TeeStructs.sol/TeeStructs.json:tee/structs/tee/tee.abi"
