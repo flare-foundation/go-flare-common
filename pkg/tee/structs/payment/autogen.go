@@ -40,7 +40,7 @@ type ITeePaymentsPaymentInstruction struct {
 	RecipientAddress string
 	TokenId          [32]byte
 	Amount           *big.Int
-	Fee              *big.Int
+	MaxFee           *big.Int
 	PaymentReference [32]byte
 }
 
@@ -53,7 +53,8 @@ type ITeePaymentsPaymentInstructionMessage struct {
 	RecipientAddress string
 	TokenId          [32]byte
 	Amount           *big.Int
-	Fee              *big.Int
+	MaxFee           *big.Int
+	FeeSchedule      []byte
 	PaymentReference [32]byte
 	Nonce            uint64
 	SubNonce         uint64
@@ -79,7 +80,7 @@ type TeeIdKeyIdPair struct {
 
 // PaymentMetaData contains all meta data concerning the Payment contract.
 var PaymentMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"}],\"internalType\":\"structTeeIdKeyIdPair[]\",\"name\":\"teeIdKeyIdPairs\",\"type\":\"tuple[]\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"senderAddress\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"tokenId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"subNonce\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"batchEndTs\",\"type\":\"uint64\"}],\"internalType\":\"structITeePayments.PaymentInstructionMessage\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"paymentInstructionMessageStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"tokenId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"}],\"internalType\":\"structITeePayments.PaymentInstruction\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"paymentInstructionStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePayments.PMWMultisigAccount\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"pmwMultisigAccountStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"}],\"internalType\":\"structTeeIdKeyIdPair[]\",\"name\":\"teeIdKeyIdPairs\",\"type\":\"tuple[]\"},{\"internalType\":\"uint256\",\"name\":\"transactionLimit\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"dailyLimit\",\"type\":\"uint256\"}],\"internalType\":\"structITeePayments.SetPaymentLimits\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"setPaymentLimitsStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"}],\"internalType\":\"structTeeIdKeyIdPair[]\",\"name\":\"teeIdKeyIdPairs\",\"type\":\"tuple[]\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"senderAddress\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"tokenId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"feeSchedule\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"subNonce\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"batchEndTs\",\"type\":\"uint64\"}],\"internalType\":\"structITeePayments.PaymentInstructionMessage\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"paymentInstructionMessageStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"tokenId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"}],\"internalType\":\"structITeePayments.PaymentInstruction\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"paymentInstructionStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePayments.PMWMultisigAccount\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"pmwMultisigAccountStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"}],\"internalType\":\"structTeeIdKeyIdPair[]\",\"name\":\"teeIdKeyIdPairs\",\"type\":\"tuple[]\"},{\"internalType\":\"uint256\",\"name\":\"transactionLimit\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"dailyLimit\",\"type\":\"uint256\"}],\"internalType\":\"structITeePayments.SetPaymentLimits\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"setPaymentLimitsStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // PaymentABI is the input ABI used to generate the binding from.
@@ -228,23 +229,23 @@ func (_Payment *PaymentTransactorRaw) Transact(opts *bind.TransactOpts, method s
 	return _Payment.Contract.contract.Transact(opts, method, params...)
 }
 
-// PaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0x95cd666c.
+// PaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0xe960e9c3.
 //
-// Solidity: function paymentInstructionMessageStruct((bytes32,(address,uint64)[],bytes32,string,string,bytes32,uint256,uint256,bytes32,uint64,uint64,uint64) ) returns()
+// Solidity: function paymentInstructionMessageStruct((bytes32,(address,uint64)[],bytes32,string,string,bytes32,uint256,uint256,bytes,bytes32,uint64,uint64,uint64) ) returns()
 func (_Payment *PaymentTransactor) PaymentInstructionMessageStruct(opts *bind.TransactOpts, arg0 ITeePaymentsPaymentInstructionMessage) (*types.Transaction, error) {
 	return _Payment.contract.Transact(opts, "paymentInstructionMessageStruct", arg0)
 }
 
-// PaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0x95cd666c.
+// PaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0xe960e9c3.
 //
-// Solidity: function paymentInstructionMessageStruct((bytes32,(address,uint64)[],bytes32,string,string,bytes32,uint256,uint256,bytes32,uint64,uint64,uint64) ) returns()
+// Solidity: function paymentInstructionMessageStruct((bytes32,(address,uint64)[],bytes32,string,string,bytes32,uint256,uint256,bytes,bytes32,uint64,uint64,uint64) ) returns()
 func (_Payment *PaymentSession) PaymentInstructionMessageStruct(arg0 ITeePaymentsPaymentInstructionMessage) (*types.Transaction, error) {
 	return _Payment.Contract.PaymentInstructionMessageStruct(&_Payment.TransactOpts, arg0)
 }
 
-// PaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0x95cd666c.
+// PaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0xe960e9c3.
 //
-// Solidity: function paymentInstructionMessageStruct((bytes32,(address,uint64)[],bytes32,string,string,bytes32,uint256,uint256,bytes32,uint64,uint64,uint64) ) returns()
+// Solidity: function paymentInstructionMessageStruct((bytes32,(address,uint64)[],bytes32,string,string,bytes32,uint256,uint256,bytes,bytes32,uint64,uint64,uint64) ) returns()
 func (_Payment *PaymentTransactorSession) PaymentInstructionMessageStruct(arg0 ITeePaymentsPaymentInstructionMessage) (*types.Transaction, error) {
 	return _Payment.Contract.PaymentInstructionMessageStruct(&_Payment.TransactOpts, arg0)
 }
