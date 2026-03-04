@@ -41,9 +41,9 @@
             "type": "string"
           },
           {
-            "internalType": "bytes32",
+            "internalType": "bytes",
             "name": "tokenId",
-            "type": "bytes32"
+            "type": "bytes"
           },
           {
             "internalType": "uint256",
@@ -101,9 +101,9 @@
             "type": "string"
           },
           {
-            "internalType": "bytes32",
+            "internalType": "bytes",
             "name": "tokenId",
-            "type": "bytes32"
+            "type": "bytes"
           },
           {
             "internalType": "uint256",

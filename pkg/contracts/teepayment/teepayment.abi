@@ -287,9 +287,9 @@
       },
       {
         "indexed": false,
-        "internalType": "uint8[]",
+        "internalType": "uint16[]",
         "name": "delaysSeconds",
-        "type": "uint8[]"
+        "type": "uint16[]"
       }
     ],
     "name": "FeeScheduleSet",
@@ -805,9 +805,9 @@
         "type": "int16[]"
       },
       {
-        "internalType": "uint8[]",
+        "internalType": "uint16[]",
         "name": "_delaysSeconds",
-        "type": "uint8[]"
+        "type": "uint16[]"
       }
     ],
     "stateMutability": "view",
@@ -1110,9 +1110,9 @@
             "type": "string"
           },
           {
-            "internalType": "bytes32",
+            "internalType": "bytes",
             "name": "tokenId",
-            "type": "bytes32"
+            "type": "bytes"
           },
           {
             "internalType": "uint256",
@@ -1214,9 +1214,9 @@
             "type": "string"
           },
           {
-            "internalType": "bytes32",
+            "internalType": "bytes",
             "name": "tokenId",
-            "type": "bytes32"
+            "type": "bytes"
           },
           {
             "internalType": "uint256",
@@ -1249,9 +1249,9 @@
         "type": "int16[][]"
       },
       {
-        "internalType": "uint8[]",
+        "internalType": "uint16[]",
         "name": "_feeDelayScheduleSeconds",
-        "type": "uint8[]"
+        "type": "uint16[]"
       }
     ],
     "name": "reissue",
@@ -1319,9 +1319,9 @@
         "type": "int16[]"
       },
       {
-        "internalType": "uint8[]",
+        "internalType": "uint16[]",
         "name": "_delaysSeconds",
-        "type": "uint8[]"
+        "type": "uint16[]"
       }
     ],
     "name": "setFeeSchedule",

@@ -186,15 +186,15 @@ func (s *ScheduledFee) Fee(max *big.Int) string {
 }
 
 func ParseFeeEntries(schedule []byte) ([]ScheduledFee, error) {
-	if len(schedule)%3 != 0 {
+	if len(schedule)%4 != 0 {
 		return nil, errors.New("invalid schedule length")
 	}
-	num := len(schedule) / 3
+	num := len(schedule) / 4
 
 	out := make([]ScheduledFee, 0, num)
 
 	for i := range num {
-		entry := schedule[i*3 : (i+1)*3]
+		entry := schedule[i*4 : (i+1)*4]
 		fee, err := parseScheduledFee(entry)
 		if err != nil {
 			return nil, err
@@ -206,14 +206,14 @@ func ParseFeeEntries(schedule []byte) ([]ScheduledFee, error) {
 }
 
 func ParseFeeEntry(schedule []byte, try int) (ScheduledFee, error) {
-	if len(schedule)%3 != 0 {
+	if len(schedule)%4 != 0 {
 		return ScheduledFee{}, errors.New("invalid schedule length")
 	}
-	if len(schedule) < (try+1)*3 {
+	if len(schedule) < (try+1)*4 {
 		return ScheduledFee{}, errors.New("try beyond schedule length")
 	}
 
-	entry := schedule[try*3 : (try+1)*3]
+	entry := schedule[try*4 : (try+1)*4]
 	fee, err := parseScheduledFee(entry)
 	if err != nil {
 		return ScheduledFee{}, err
@@ -223,17 +223,17 @@ func ParseFeeEntry(schedule []byte, try int) (ScheduledFee, error) {
 }
 
 func parseScheduledFee(fixture []byte) (ScheduledFee, error) {
-	if len(fixture) != 3 {
+	if len(fixture) != 4 {
 		return ScheduledFee{}, errors.New("invalid fixture length")
 	}
 	bips := binary.BigEndian.Uint16(fixture[0:2])
 
 	bipsInt16 := int16(bips)
-	if bipsInt16 == 0 {
+	if bipsInt16 == 0 || bipsInt16 < -10000 || bipsInt16 > 10000 {
 		return ScheduledFee{}, errors.New("invalidBIPS")
 	}
 
-	delay := time.Duration(fixture[2]) * time.Second
+	delay := time.Duration(binary.BigEndian.Uint16(fixture[2:4])) * time.Second
 
 	nullify := bipsInt16 < 0
 
