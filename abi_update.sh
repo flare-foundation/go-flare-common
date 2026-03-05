@@ -3,7 +3,6 @@
 # List of input/output pairs:
 FILES=(
   "tee/implementation/TeeExtensionRegistry.sol/TeeExtensionRegistry.json:contracts/teeextensionregistry/teeextensionregistry.abi"
-  "tee/implementation/TeeInstructions.sol/TeeInstructions.json:contracts/teeinstructions/teeinstructions.abi"
   "tee/implementation/TeeMachineRegistry.sol/TeeMachineRegistry.json:contracts/teemachineregistry/teemachineregistry.abi"
   "tee/implementation/TeeOwnerAllowlist.sol/TeeOwnerAllowlist.json:contracts/teeownerallowlist/teeownerallowlist.abi"
   "tee/implementation/TeePayments.sol/TeePayments.json:contracts/teepayment/teepayment.abi"

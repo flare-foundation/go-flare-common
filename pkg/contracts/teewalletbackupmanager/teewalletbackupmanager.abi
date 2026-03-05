@@ -111,6 +111,37 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": true,
+        "internalType": "address",
+        "name": "teeId",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "walletId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint64",
+        "name": "keyId",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "nonce",
+        "type": "uint256"
+      }
+    ],
+    "name": "BackupRestoreTriggered",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": false,
         "internalType": "bytes4",
         "name": "selector",

@@ -140,7 +140,7 @@
   },
   {
     "inputs": [],
-    "name": "OnlyOwnerOrDisabledVersion",
+    "name": "OnlyOwnerOrExpiredAvailabilityCheckOrDisabledVersion",
     "type": "error"
   },
   {

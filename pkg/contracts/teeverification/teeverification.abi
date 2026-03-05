@@ -681,6 +681,30 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_teeId",
+        "type": "address"
+      }
+    ],
+    "name": "getAvailabilityCheckValidity",
+    "outputs": [
+      {
+        "internalType": "uint64",
+        "name": "_endTs",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint32",
+        "name": "_lastSigningPolicyId",
+        "type": "uint32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "getCosigners",
     "outputs": [

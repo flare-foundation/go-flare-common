@@ -16,11 +16,6 @@
     "type": "error"
   },
   {
-    "inputs": [],
-    "name": "AuthorizationAddressZero",
-    "type": "error"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -232,12 +227,6 @@
         "internalType": "bytes32",
         "name": "signingAlgo",
         "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "authorizationAddress",
-        "type": "address"
       }
     ],
     "name": "ProjectCreated",
@@ -349,11 +338,6 @@
         "internalType": "bytes32",
         "name": "_signingAlgo",
         "type": "bytes32"
-      },
-      {
-        "internalType": "address",
-        "name": "_authorizationAddress",
-        "type": "address"
       }
     ],
     "name": "createProject",
@@ -387,25 +371,6 @@
       {
         "internalType": "address",
         "name": "_addressUpdater",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_projectId",
-        "type": "bytes32"
-      }
-    ],
-    "name": "getAuthorizationAddress",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "_authorizationAddress",
         "type": "address"
       }
     ],
