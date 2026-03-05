@@ -11,7 +11,7 @@ import (
 )
 
 func TestFull(t *testing.T) {
-	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	ctx, cancel := context.WithTimeout(t.Context(), 15*time.Second)
 
 	params := Params{}
 
@@ -49,7 +49,7 @@ func TestFull(t *testing.T) {
 }
 
 func TestDequeue(t *testing.T) {
-	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	ctx, cancel := context.WithTimeout(t.Context(), 15*time.Second)
 
 	perSecond := 100
 
@@ -108,7 +108,7 @@ func TestDequeue(t *testing.T) {
 }
 
 func TestDequeue2(t *testing.T) {
-	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	ctx, cancel := context.WithTimeout(t.Context(), 15*time.Second)
 
 	perSecond := 100
 
@@ -163,7 +163,7 @@ func TestDequeue2(t *testing.T) {
 }
 
 func TestDequeueDiscard(t *testing.T) {
-	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	ctx, cancel := context.WithTimeout(t.Context(), 15*time.Second)
 
 	perSecond := 1
 
@@ -223,10 +223,13 @@ func TestDequeueDiscard(t *testing.T) {
 }
 
 func TestMaxAttempts(t *testing.T) {
-	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	ctx, cancel := context.WithTimeout(t.Context(), 15*time.Second)
+
+	const maxAttempts = 2
+	const numOfItems = 3
 
 	params := Params{
-		MaxAttempts: 2,
+		MaxAttempts: maxAttempts,
 	}
 
 	pQueue := New[int, wInt](params, "test")
@@ -251,18 +254,21 @@ func TestMaxAttempts(t *testing.T) {
 		}
 	}()
 
-	for i := range 3 {
+	for i := range numOfItems {
 		pQueue.Add(i, wInt(i))
 	}
 
-	time.Sleep(50 * time.Millisecond)
-	require.Equal(t, 2, stats.attempts[0])
+	require.Eventually(t, func() bool {
+		stats.Lock()
+		defer stats.Unlock()
+		return len(stats.attempts) == numOfItems && stats.attempts[0] == maxAttempts && stats.attempts[numOfItems-1] == maxAttempts
+	}, 1*time.Second, 10*time.Millisecond)
 
 	cancel()
 }
 
 func TestMaxWorkers(t *testing.T) {
-	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	ctx, cancel := context.WithTimeout(t.Context(), 15*time.Second)
 
 	params := Params{
 		MaxAttempts: 1,
@@ -325,7 +331,7 @@ func (x wTup) Less(y wTup) bool {
 }
 
 func TestDoubleWeights(t *testing.T) {
-	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	ctx, cancel := context.WithTimeout(t.Context(), 15*time.Second)
 
 	params := Params{}
 
