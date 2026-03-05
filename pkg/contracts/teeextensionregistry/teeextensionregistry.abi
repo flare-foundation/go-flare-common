@@ -17,6 +17,11 @@
   },
   {
     "inputs": [],
+    "name": "CodeHashPlatformAlreadyDisabled",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "CodeHashZero",
     "type": "error"
   },
@@ -48,7 +53,7 @@
   },
   {
     "inputs": [],
-    "name": "FailedInnerCall",
+    "name": "FailedCall",
     "type": "error"
   },
   {
@@ -199,6 +204,28 @@
   {
     "inputs": [],
     "name": "SigningAlgoEmpty",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "instructionsSender",
+        "type": "address"
+      }
+    ],
+    "name": "SystemInstructionsSenderAlreadyExists",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "instructionsSender",
+        "type": "address"
+      }
+    ],
+    "name": "SystemInstructionsSenderNotFound",
     "type": "error"
   },
   {
@@ -389,13 +416,13 @@
         "type": "uint256"
       },
       {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "keyType",
-        "type": "bytes32"
+        "indexed": false,
+        "internalType": "bytes32[]",
+        "name": "keyTypes",
+        "type": "bytes32[]"
       }
     ],
-    "name": "SupportedKeyTypeAdded",
+    "name": "SupportedKeyTypesAdded",
     "type": "event"
   },
   {
@@ -408,45 +435,71 @@
         "type": "uint256"
       },
       {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "keyType",
-        "type": "bytes32"
+        "indexed": false,
+        "internalType": "bytes32[]",
+        "name": "keyTypes",
+        "type": "bytes32[]"
       }
     ],
-    "name": "SupportedKeyTypeRemoved",
+    "name": "SupportedKeyTypesRemoved",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "keyType",
-        "type": "bytes32"
+        "indexed": false,
+        "internalType": "address[]",
+        "name": "instructionsSenders",
+        "type": "address[]"
+      }
+    ],
+    "name": "SystemInstructionsSendersRegistered",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address[]",
+        "name": "instructionsSenders",
+        "type": "address[]"
+      }
+    ],
+    "name": "SystemInstructionsSendersUnregistered",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes32[]",
+        "name": "keyTypes",
+        "type": "bytes32[]"
       },
       {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "signingAlgo",
-        "type": "bytes32"
+        "indexed": false,
+        "internalType": "bytes32[][]",
+        "name": "_signingAlgosByKeyType",
+        "type": "bytes32[][]"
       }
     ],
-    "name": "SystemSupportedKeyTypeAndSigningAlgoAdded",
+    "name": "SystemSupportedKeyTypesAndSigningAlgosAdded",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "platform",
-        "type": "bytes32"
+        "indexed": false,
+        "internalType": "bytes32[]",
+        "name": "platforms",
+        "type": "bytes32[]"
       }
     ],
-    "name": "SystemSupportedPlatformAdded",
+    "name": "SystemSupportedPlatformsAdded",
     "type": "event"
   },
   {
@@ -922,6 +975,25 @@
         "internalType": "address",
         "name": "",
         "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extensionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getSupportedCodeHashes",
+    "outputs": [
+      {
+        "internalType": "bytes32[]",
+        "name": "_supportedCodeHashes",
+        "type": "bytes32[]"
       }
     ],
     "stateMutability": "view",

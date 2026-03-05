@@ -65,7 +65,7 @@
   },
   {
     "inputs": [],
-    "name": "FailedInnerCall",
+    "name": "FailedCall",
     "type": "error"
   },
   {
@@ -286,19 +286,6 @@
     "inputs": [
       {
         "indexed": true,
-        "internalType": "bytes32",
-        "name": "walletId",
-        "type": "bytes32"
-      }
-    ],
-    "name": "WalletEnabled",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
         "internalType": "address",
         "name": "teeId",
         "type": "address"
@@ -411,19 +398,6 @@
       }
     ],
     "name": "WalletMultisigThresholdSet",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "walletId",
-        "type": "bytes32"
-      }
-    ],
-    "name": "WalletPaused",
     "type": "event"
   },
   {
