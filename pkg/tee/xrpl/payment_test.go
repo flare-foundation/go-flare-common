@@ -27,7 +27,7 @@ func TestPaymentTransactionMultisig(t *testing.T) {
 		Nonce:            10,
 		SubNonce:         0,
 		MaxFee:           big.NewInt(10),
-		FeeSchedule:      []byte{0x27, 0x10, 1},
+		FeeSchedule:      []byte{0x27, 0x10, 0, 1},
 		BatchEndTs:       0,
 	}
 
