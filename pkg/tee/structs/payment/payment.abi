@@ -41,9 +41,9 @@
             "type": "string"
           },
           {
-            "internalType": "bytes32",
+            "internalType": "bytes",
             "name": "tokenId",
-            "type": "bytes32"
+            "type": "bytes"
           },
           {
             "internalType": "uint256",
@@ -52,8 +52,13 @@
           },
           {
             "internalType": "uint256",
-            "name": "fee",
+            "name": "maxFee",
             "type": "uint256"
+          },
+          {
+            "internalType": "bytes",
+            "name": "feeSchedule",
+            "type": "bytes"
           },
           {
             "internalType": "bytes32",
@@ -96,9 +101,9 @@
             "type": "string"
           },
           {
-            "internalType": "bytes32",
+            "internalType": "bytes",
             "name": "tokenId",
-            "type": "bytes32"
+            "type": "bytes"
           },
           {
             "internalType": "uint256",
@@ -107,7 +112,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "fee",
+            "name": "maxFee",
             "type": "uint256"
           },
           {

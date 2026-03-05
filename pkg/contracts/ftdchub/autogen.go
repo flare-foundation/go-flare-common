@@ -31,7 +31,7 @@ var (
 
 // FtdcHubMetaData contains all meta data concerning the FtdcHub contract.
 var FtdcHubMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"},{\"internalType\":\"uint16\",\"name\":\"_minThresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"uint8\",\"name\":\"_defaultNumberOfTees\",\"type\":\"uint8\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"CosignersThresholdInvalid\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"DefaultNumberOfTeesZero\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"}],\"name\":\"DuplicatedTeeId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FeeTooLow\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"MinThresholdInvalid\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"MultipleResponsesPossible\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NumberOfTeesAndTeeIdsInvalid\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"}],\"name\":\"OnlySystemExtensionId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TeeMachineNotAvailable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ThresholdInvalid\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"requestBody\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"}],\"name\":\"AttestationRequested\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"defaultNumberOfTees\",\"type\":\"uint8\"}],\"name\":\"DefaultNumberOfTeesSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"name\":\"GovernanceCallTimelocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"initialGovernance\",\"type\":\"address\"}],\"name\":\"GovernanceInitialised\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"governanceSettings\",\"type\":\"address\"}],\"name\":\"GovernedProductionModeEntered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint16\",\"name\":\"minThresholdBIPS\",\"type\":\"uint16\"}],\"name\":\"MinThresholdBIPSSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallCanceled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallExecuted\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"FTDC_OP_TYPE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PROVE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"cancelGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"defaultNumberOfTees\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"executeGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"flareSystemsManager\",\"outputs\":[{\"internalType\":\"contractIFlareSystemsManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"ftdcRequestFeeConfigurations\",\"outputs\":[{\"internalType\":\"contractIFtdcRequestFeeConfigurations\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAddressUpdater\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governance\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governanceSettings\",\"outputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"}],\"name\":\"initialise\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"isExecutor\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"minThresholdBIPS\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"productionMode\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint16\",\"name\":\"_thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"uint256\",\"name\":\"_numberOfTees\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_teeIds\",\"type\":\"address[]\"},{\"internalType\":\"address[]\",\"name\":\"_cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"_cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"_attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"_requestBody\",\"type\":\"bytes\"}],\"name\":\"requestAttestation\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"rewardManager\",\"outputs\":[{\"internalType\":\"contractIIRewardManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_defaultNumberOfTees\",\"type\":\"uint8\"}],\"name\":\"setDefaultNumberOfTees\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint16\",\"name\":\"_minThresholdBIPS\",\"type\":\"uint16\"}],\"name\":\"setMinThresholdBIPS\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"switchToProductionMode\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeExtensionRegistry\",\"outputs\":[{\"internalType\":\"contractIITeeExtensionRegistry\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeMachineRegistry\",\"outputs\":[{\"internalType\":\"contractITeeMachineRegistry\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeReplication\",\"outputs\":[{\"internalType\":\"contractITeeReplication\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"}],\"name\":\"timelockedCalls\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_contractNameHashes\",\"type\":\"bytes32[]\"},{\"internalType\":\"address[]\",\"name\":\"_contractAddresses\",\"type\":\"address[]\"}],\"name\":\"updateContractAddresses\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"}],\"name\":\"AddressEmptyCode\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CosignersThresholdInvalid\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"DefaultNumberOfTeesZero\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"}],\"name\":\"DuplicatedTeeId\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"ERC1967InvalidImplementation\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC1967NonPayable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FailedCall\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FeeTooLow\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"MinThresholdInvalid\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"MultipleResponsesPossible\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NumberOfTeesAndTeeIdsInvalid\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"}],\"name\":\"OnlySystemExtensionId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TeeMachineNotAvailable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ThresholdInvalid\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UUPSUnauthorizedCallContext\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"slot\",\"type\":\"bytes32\"}],\"name\":\"UUPSUnsupportedProxiableUUID\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"requestBody\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"}],\"name\":\"AttestationRequested\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"defaultNumberOfTees\",\"type\":\"uint8\"}],\"name\":\"DefaultNumberOfTeesSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"name\":\"GovernanceCallTimelocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"initialGovernance\",\"type\":\"address\"}],\"name\":\"GovernanceInitialised\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"governanceSettings\",\"type\":\"address\"}],\"name\":\"GovernedProductionModeEntered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint16\",\"name\":\"minThresholdBIPS\",\"type\":\"uint16\"}],\"name\":\"MinThresholdBIPSSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallCanceled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallExecuted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"Upgraded\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"FTDC_OP_TYPE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PROVE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"UPGRADE_INTERFACE_VERSION\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"cancelGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"defaultNumberOfTees\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"executeGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"flareSystemsManager\",\"outputs\":[{\"internalType\":\"contractIFlareSystemsManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"ftdcRequestFeeConfigurations\",\"outputs\":[{\"internalType\":\"contractIFtdcRequestFeeConfigurations\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAddressUpdater\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governance\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governanceSettings\",\"outputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"implementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"}],\"name\":\"initialise\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"},{\"internalType\":\"uint16\",\"name\":\"_minThresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"uint8\",\"name\":\"_defaultNumberOfTees\",\"type\":\"uint8\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"isExecutor\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"minThresholdBIPS\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"productionMode\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"proxiableUUID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint16\",\"name\":\"_thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"uint256\",\"name\":\"_numberOfTees\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_teeIds\",\"type\":\"address[]\"},{\"internalType\":\"address[]\",\"name\":\"_cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"_cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"_attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"_requestBody\",\"type\":\"bytes\"}],\"name\":\"requestAttestation\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"rewardManager\",\"outputs\":[{\"internalType\":\"contractIIRewardManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_defaultNumberOfTees\",\"type\":\"uint8\"}],\"name\":\"setDefaultNumberOfTees\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint16\",\"name\":\"_minThresholdBIPS\",\"type\":\"uint16\"}],\"name\":\"setMinThresholdBIPS\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"switchToProductionMode\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeExtensionRegistry\",\"outputs\":[{\"internalType\":\"contractIITeeExtensionRegistry\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeMachineRegistry\",\"outputs\":[{\"internalType\":\"contractITeeMachineRegistry\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeReplication\",\"outputs\":[{\"internalType\":\"contractITeeReplication\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"}],\"name\":\"timelockedCalls\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_contractNameHashes\",\"type\":\"bytes32[]\"},{\"internalType\":\"address[]\",\"name\":\"_contractAddresses\",\"type\":\"address[]\"}],\"name\":\"updateContractAddresses\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newImplementation\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"upgradeToAndCall\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}]",
 }
 
 // FtdcHubABI is the input ABI used to generate the binding from.
@@ -242,6 +242,37 @@ func (_FtdcHub *FtdcHubCallerSession) PROVE() ([32]byte, error) {
 	return _FtdcHub.Contract.PROVE(&_FtdcHub.CallOpts)
 }
 
+// UPGRADEINTERFACEVERSION is a free data retrieval call binding the contract method 0xad3cb1cc.
+//
+// Solidity: function UPGRADE_INTERFACE_VERSION() view returns(string)
+func (_FtdcHub *FtdcHubCaller) UPGRADEINTERFACEVERSION(opts *bind.CallOpts) (string, error) {
+	var out []interface{}
+	err := _FtdcHub.contract.Call(opts, &out, "UPGRADE_INTERFACE_VERSION")
+
+	if err != nil {
+		return *new(string), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(string)).(*string)
+
+	return out0, err
+
+}
+
+// UPGRADEINTERFACEVERSION is a free data retrieval call binding the contract method 0xad3cb1cc.
+//
+// Solidity: function UPGRADE_INTERFACE_VERSION() view returns(string)
+func (_FtdcHub *FtdcHubSession) UPGRADEINTERFACEVERSION() (string, error) {
+	return _FtdcHub.Contract.UPGRADEINTERFACEVERSION(&_FtdcHub.CallOpts)
+}
+
+// UPGRADEINTERFACEVERSION is a free data retrieval call binding the contract method 0xad3cb1cc.
+//
+// Solidity: function UPGRADE_INTERFACE_VERSION() view returns(string)
+func (_FtdcHub *FtdcHubCallerSession) UPGRADEINTERFACEVERSION() (string, error) {
+	return _FtdcHub.Contract.UPGRADEINTERFACEVERSION(&_FtdcHub.CallOpts)
+}
+
 // DefaultNumberOfTees is a free data retrieval call binding the contract method 0x1b92dbb4.
 //
 // Solidity: function defaultNumberOfTees() view returns(uint8)
@@ -428,6 +459,37 @@ func (_FtdcHub *FtdcHubCallerSession) GovernanceSettings() (common.Address, erro
 	return _FtdcHub.Contract.GovernanceSettings(&_FtdcHub.CallOpts)
 }
 
+// Implementation is a free data retrieval call binding the contract method 0x5c60da1b.
+//
+// Solidity: function implementation() view returns(address)
+func (_FtdcHub *FtdcHubCaller) Implementation(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _FtdcHub.contract.Call(opts, &out, "implementation")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// Implementation is a free data retrieval call binding the contract method 0x5c60da1b.
+//
+// Solidity: function implementation() view returns(address)
+func (_FtdcHub *FtdcHubSession) Implementation() (common.Address, error) {
+	return _FtdcHub.Contract.Implementation(&_FtdcHub.CallOpts)
+}
+
+// Implementation is a free data retrieval call binding the contract method 0x5c60da1b.
+//
+// Solidity: function implementation() view returns(address)
+func (_FtdcHub *FtdcHubCallerSession) Implementation() (common.Address, error) {
+	return _FtdcHub.Contract.Implementation(&_FtdcHub.CallOpts)
+}
+
 // IsExecutor is a free data retrieval call binding the contract method 0xdebfda30.
 //
 // Solidity: function isExecutor(address _address) view returns(bool)
@@ -519,6 +581,37 @@ func (_FtdcHub *FtdcHubSession) ProductionMode() (bool, error) {
 // Solidity: function productionMode() view returns(bool)
 func (_FtdcHub *FtdcHubCallerSession) ProductionMode() (bool, error) {
 	return _FtdcHub.Contract.ProductionMode(&_FtdcHub.CallOpts)
+}
+
+// ProxiableUUID is a free data retrieval call binding the contract method 0x52d1902d.
+//
+// Solidity: function proxiableUUID() view returns(bytes32)
+func (_FtdcHub *FtdcHubCaller) ProxiableUUID(opts *bind.CallOpts) ([32]byte, error) {
+	var out []interface{}
+	err := _FtdcHub.contract.Call(opts, &out, "proxiableUUID")
+
+	if err != nil {
+		return *new([32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
+
+	return out0, err
+
+}
+
+// ProxiableUUID is a free data retrieval call binding the contract method 0x52d1902d.
+//
+// Solidity: function proxiableUUID() view returns(bytes32)
+func (_FtdcHub *FtdcHubSession) ProxiableUUID() ([32]byte, error) {
+	return _FtdcHub.Contract.ProxiableUUID(&_FtdcHub.CallOpts)
+}
+
+// ProxiableUUID is a free data retrieval call binding the contract method 0x52d1902d.
+//
+// Solidity: function proxiableUUID() view returns(bytes32)
+func (_FtdcHub *FtdcHubCallerSession) ProxiableUUID() ([32]byte, error) {
+	return _FtdcHub.Contract.ProxiableUUID(&_FtdcHub.CallOpts)
 }
 
 // RewardManager is a free data retrieval call binding the contract method 0x0f4ef8a6.
@@ -753,6 +846,27 @@ func (_FtdcHub *FtdcHubTransactorSession) Initialise(_governanceSettings common.
 	return _FtdcHub.Contract.Initialise(&_FtdcHub.TransactOpts, _governanceSettings, _initialGovernance)
 }
 
+// Initialize is a paid mutator transaction binding the contract method 0xd6b35a06.
+//
+// Solidity: function initialize(address _governanceSettings, address _initialGovernance, address _addressUpdater, uint16 _minThresholdBIPS, uint8 _defaultNumberOfTees) returns()
+func (_FtdcHub *FtdcHubTransactor) Initialize(opts *bind.TransactOpts, _governanceSettings common.Address, _initialGovernance common.Address, _addressUpdater common.Address, _minThresholdBIPS uint16, _defaultNumberOfTees uint8) (*types.Transaction, error) {
+	return _FtdcHub.contract.Transact(opts, "initialize", _governanceSettings, _initialGovernance, _addressUpdater, _minThresholdBIPS, _defaultNumberOfTees)
+}
+
+// Initialize is a paid mutator transaction binding the contract method 0xd6b35a06.
+//
+// Solidity: function initialize(address _governanceSettings, address _initialGovernance, address _addressUpdater, uint16 _minThresholdBIPS, uint8 _defaultNumberOfTees) returns()
+func (_FtdcHub *FtdcHubSession) Initialize(_governanceSettings common.Address, _initialGovernance common.Address, _addressUpdater common.Address, _minThresholdBIPS uint16, _defaultNumberOfTees uint8) (*types.Transaction, error) {
+	return _FtdcHub.Contract.Initialize(&_FtdcHub.TransactOpts, _governanceSettings, _initialGovernance, _addressUpdater, _minThresholdBIPS, _defaultNumberOfTees)
+}
+
+// Initialize is a paid mutator transaction binding the contract method 0xd6b35a06.
+//
+// Solidity: function initialize(address _governanceSettings, address _initialGovernance, address _addressUpdater, uint16 _minThresholdBIPS, uint8 _defaultNumberOfTees) returns()
+func (_FtdcHub *FtdcHubTransactorSession) Initialize(_governanceSettings common.Address, _initialGovernance common.Address, _addressUpdater common.Address, _minThresholdBIPS uint16, _defaultNumberOfTees uint8) (*types.Transaction, error) {
+	return _FtdcHub.Contract.Initialize(&_FtdcHub.TransactOpts, _governanceSettings, _initialGovernance, _addressUpdater, _minThresholdBIPS, _defaultNumberOfTees)
+}
+
 // RequestAttestation is a paid mutator transaction binding the contract method 0x8dec79a0.
 //
 // Solidity: function requestAttestation(uint16 _thresholdBIPS, uint256 _numberOfTees, address[] _teeIds, address[] _cosigners, uint64 _cosignersThreshold, bytes32 _attestationType, bytes32 _sourceId, bytes _requestBody) payable returns()
@@ -856,6 +970,27 @@ func (_FtdcHub *FtdcHubSession) UpdateContractAddresses(_contractNameHashes [][3
 // Solidity: function updateContractAddresses(bytes32[] _contractNameHashes, address[] _contractAddresses) returns()
 func (_FtdcHub *FtdcHubTransactorSession) UpdateContractAddresses(_contractNameHashes [][32]byte, _contractAddresses []common.Address) (*types.Transaction, error) {
 	return _FtdcHub.Contract.UpdateContractAddresses(&_FtdcHub.TransactOpts, _contractNameHashes, _contractAddresses)
+}
+
+// UpgradeToAndCall is a paid mutator transaction binding the contract method 0x4f1ef286.
+//
+// Solidity: function upgradeToAndCall(address _newImplementation, bytes _data) payable returns()
+func (_FtdcHub *FtdcHubTransactor) UpgradeToAndCall(opts *bind.TransactOpts, _newImplementation common.Address, _data []byte) (*types.Transaction, error) {
+	return _FtdcHub.contract.Transact(opts, "upgradeToAndCall", _newImplementation, _data)
+}
+
+// UpgradeToAndCall is a paid mutator transaction binding the contract method 0x4f1ef286.
+//
+// Solidity: function upgradeToAndCall(address _newImplementation, bytes _data) payable returns()
+func (_FtdcHub *FtdcHubSession) UpgradeToAndCall(_newImplementation common.Address, _data []byte) (*types.Transaction, error) {
+	return _FtdcHub.Contract.UpgradeToAndCall(&_FtdcHub.TransactOpts, _newImplementation, _data)
+}
+
+// UpgradeToAndCall is a paid mutator transaction binding the contract method 0x4f1ef286.
+//
+// Solidity: function upgradeToAndCall(address _newImplementation, bytes _data) payable returns()
+func (_FtdcHub *FtdcHubTransactorSession) UpgradeToAndCall(_newImplementation common.Address, _data []byte) (*types.Transaction, error) {
+	return _FtdcHub.Contract.UpgradeToAndCall(&_FtdcHub.TransactOpts, _newImplementation, _data)
 }
 
 // FtdcHubAttestationRequestedIterator is returned from FilterAttestationRequested and is used to iterate over the raw logs and unpacked data for AttestationRequested events raised by the FtdcHub contract.
@@ -1931,6 +2066,150 @@ func (_FtdcHub *FtdcHubFilterer) WatchTimelockedGovernanceCallExecuted(opts *bin
 func (_FtdcHub *FtdcHubFilterer) ParseTimelockedGovernanceCallExecuted(log types.Log) (*FtdcHubTimelockedGovernanceCallExecuted, error) {
 	event := new(FtdcHubTimelockedGovernanceCallExecuted)
 	if err := _FtdcHub.contract.UnpackLog(event, "TimelockedGovernanceCallExecuted", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// FtdcHubUpgradedIterator is returned from FilterUpgraded and is used to iterate over the raw logs and unpacked data for Upgraded events raised by the FtdcHub contract.
+type FtdcHubUpgradedIterator struct {
+	Event *FtdcHubUpgraded // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *FtdcHubUpgradedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(FtdcHubUpgraded)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(FtdcHubUpgraded)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *FtdcHubUpgradedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *FtdcHubUpgradedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// FtdcHubUpgraded represents a Upgraded event raised by the FtdcHub contract.
+type FtdcHubUpgraded struct {
+	Implementation common.Address
+	Raw            types.Log // Blockchain specific contextual infos
+}
+
+// FilterUpgraded is a free log retrieval operation binding the contract event 0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b.
+//
+// Solidity: event Upgraded(address indexed implementation)
+func (_FtdcHub *FtdcHubFilterer) FilterUpgraded(opts *bind.FilterOpts, implementation []common.Address) (*FtdcHubUpgradedIterator, error) {
+
+	var implementationRule []interface{}
+	for _, implementationItem := range implementation {
+		implementationRule = append(implementationRule, implementationItem)
+	}
+
+	logs, sub, err := _FtdcHub.contract.FilterLogs(opts, "Upgraded", implementationRule)
+	if err != nil {
+		return nil, err
+	}
+	return &FtdcHubUpgradedIterator{contract: _FtdcHub.contract, event: "Upgraded", logs: logs, sub: sub}, nil
+}
+
+// WatchUpgraded is a free log subscription operation binding the contract event 0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b.
+//
+// Solidity: event Upgraded(address indexed implementation)
+func (_FtdcHub *FtdcHubFilterer) WatchUpgraded(opts *bind.WatchOpts, sink chan<- *FtdcHubUpgraded, implementation []common.Address) (event.Subscription, error) {
+
+	var implementationRule []interface{}
+	for _, implementationItem := range implementation {
+		implementationRule = append(implementationRule, implementationItem)
+	}
+
+	logs, sub, err := _FtdcHub.contract.WatchLogs(opts, "Upgraded", implementationRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(FtdcHubUpgraded)
+				if err := _FtdcHub.contract.UnpackLog(event, "Upgraded", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseUpgraded is a log parse operation binding the contract event 0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b.
+//
+// Solidity: event Upgraded(address indexed implementation)
+func (_FtdcHub *FtdcHubFilterer) ParseUpgraded(log types.Log) (*FtdcHubUpgraded, error) {
+	event := new(FtdcHubUpgraded)
+	if err := _FtdcHub.contract.UnpackLog(event, "Upgraded", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

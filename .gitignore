@@ -3,3 +3,8 @@
 ci_test_local
 
 *.out
+
+.claude/
+.codex/
+
+ai-scripts
