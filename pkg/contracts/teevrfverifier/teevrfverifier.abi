@@ -1,14 +1,64 @@
 [
   {
+    "inputs": [],
+    "name": "COutOfRange",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "DegenerateInput",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "GammaNotOnCurve",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "HashToCurveExceededIterationLimit",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidCGammaWitness",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidUWitness",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidVWitness",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidZInv",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "PkNotOnCurve",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "SOutOfRange",
+    "type": "error"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "gammaX",
+        "name": "_gammaX",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "gammaY",
+        "name": "_gammaY",
         "type": "uint256"
       }
     ],
@@ -40,7 +90,7 @@
                 "type": "uint256"
               }
             ],
-            "internalType": "struct VRFVerifier.Point",
+            "internalType": "struct VrfVerifier.Point",
             "name": "gamma",
             "type": "tuple"
           },
@@ -67,7 +117,7 @@
                 "type": "uint256"
               }
             ],
-            "internalType": "struct VRFVerifier.Point",
+            "internalType": "struct VrfVerifier.Point",
             "name": "u",
             "type": "tuple"
           },
@@ -84,7 +134,7 @@
                 "type": "uint256"
               }
             ],
-            "internalType": "struct VRFVerifier.Point",
+            "internalType": "struct VrfVerifier.Point",
             "name": "cGamma",
             "type": "tuple"
           },
@@ -101,7 +151,7 @@
                 "type": "uint256"
               }
             ],
-            "internalType": "struct VRFVerifier.Point",
+            "internalType": "struct VrfVerifier.Point",
             "name": "v",
             "type": "tuple"
           },
@@ -111,23 +161,23 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct VRFVerifier.Proof",
-        "name": "proof",
+        "internalType": "struct VrfVerifier.Proof",
+        "name": "_proof",
         "type": "tuple"
       },
       {
         "internalType": "uint256",
-        "name": "pkX",
+        "name": "_pkX",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "pkY",
+        "name": "_pkY",
         "type": "uint256"
       },
       {
         "internalType": "bytes",
-        "name": "nonce",
+        "name": "_nonce",
         "type": "bytes"
       }
     ],
@@ -135,7 +185,7 @@
     "outputs": [
       {
         "internalType": "bool",
-        "name": "valid",
+        "name": "_valid",
         "type": "bool"
       }
     ],

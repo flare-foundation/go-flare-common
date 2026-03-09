@@ -33,7 +33,7 @@
   },
   {
     "inputs": [],
-    "name": "FailedInnerCall",
+    "name": "FailedCall",
     "type": "error"
   },
   {
@@ -44,6 +44,11 @@
   {
     "inputs": [],
     "name": "NonceEmpty",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OnlyAuthorizationAddress",
     "type": "error"
   },
   {
@@ -185,6 +190,25 @@
       },
       {
         "indexed": false,
+        "internalType": "address",
+        "name": "authorizationAddress",
+        "type": "address"
+      }
+    ],
+    "name": "VrfAuthorizationAddressSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "walletId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
         "internalType": "uint64",
         "name": "keyId",
         "type": "uint64"
@@ -215,6 +239,19 @@
   {
     "inputs": [],
     "name": "VRF",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "WALLET_OP_TYPE",
     "outputs": [
       {
         "internalType": "bytes32",
@@ -258,6 +295,25 @@
       {
         "internalType": "address",
         "name": "_addressUpdater",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_walletId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getVrfAuthorizationAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
         "type": "address"
       }
     ],
@@ -419,6 +475,24 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_walletId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "_authorizationAddress",
+        "type": "address"
+      }
+    ],
+    "name": "setVrfAuthorizationAddress",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "switchToProductionMode",
     "outputs": [],
@@ -431,6 +505,19 @@
     "outputs": [
       {
         "internalType": "contract IITeeExtensionRegistry",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "teeMachineRegistry",
+    "outputs": [
+      {
+        "internalType": "contract ITeeMachineRegistry",
         "name": "",
         "type": "address"
       }

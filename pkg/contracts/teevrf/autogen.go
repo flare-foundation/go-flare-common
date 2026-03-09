@@ -31,7 +31,7 @@ var (
 
 // TeeVRFMetaData contains all meta data concerning the TeeVRF contract.
 var TeeVRFMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"}],\"name\":\"AddressEmptyCode\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"ERC1967InvalidImplementation\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC1967NonPayable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FailedInnerCall\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoTeesForKey\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NonceEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyWalletOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UUPSUnauthorizedCallContext\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"slot\",\"type\":\"bytes32\"}],\"name\":\"UUPSUnsupportedProxiableUUID\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"WalletNotInProduction\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"name\":\"GovernanceCallTimelocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"initialGovernance\",\"type\":\"address\"}],\"name\":\"GovernanceInitialised\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"governanceSettings\",\"type\":\"address\"}],\"name\":\"GovernedProductionModeEntered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallCanceled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallExecuted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"Upgraded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"}],\"name\":\"VrfRequested\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"UPGRADE_INTERFACE_VERSION\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VRF\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"cancelGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"executeGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAddressUpdater\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governance\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governanceSettings\",\"outputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"implementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"}],\"name\":\"initialise\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"isExecutor\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"productionMode\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"proxiableUUID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"},{\"internalType\":\"bytes\",\"name\":\"_nonce\",\"type\":\"bytes\"}],\"name\":\"requestVrf\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"_instructionId\",\"type\":\"bytes32\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"switchToProductionMode\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeExtensionRegistry\",\"outputs\":[{\"internalType\":\"contractIITeeExtensionRegistry\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeWalletKeyManager\",\"outputs\":[{\"internalType\":\"contractITeeWalletKeyManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeWalletManager\",\"outputs\":[{\"internalType\":\"contractITeeWalletManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeWalletProjectManager\",\"outputs\":[{\"internalType\":\"contractITeeWalletProjectManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"}],\"name\":\"timelockedCalls\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_contractNameHashes\",\"type\":\"bytes32[]\"},{\"internalType\":\"address[]\",\"name\":\"_contractAddresses\",\"type\":\"address[]\"}],\"name\":\"updateContractAddresses\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newImplementation\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"upgradeToAndCall\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"}],\"name\":\"AddressEmptyCode\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"ERC1967InvalidImplementation\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC1967NonPayable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FailedCall\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoTeesForKey\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NonceEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyAuthorizationAddress\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyWalletOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UUPSUnauthorizedCallContext\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"slot\",\"type\":\"bytes32\"}],\"name\":\"UUPSUnsupportedProxiableUUID\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"WalletNotInProduction\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"name\":\"GovernanceCallTimelocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"initialGovernance\",\"type\":\"address\"}],\"name\":\"GovernanceInitialised\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"governanceSettings\",\"type\":\"address\"}],\"name\":\"GovernedProductionModeEntered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallCanceled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallExecuted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"Upgraded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"authorizationAddress\",\"type\":\"address\"}],\"name\":\"VrfAuthorizationAddressSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"}],\"name\":\"VrfRequested\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"UPGRADE_INTERFACE_VERSION\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VRF\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"WALLET_OP_TYPE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"cancelGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"executeGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAddressUpdater\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"getVrfAuthorizationAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governance\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governanceSettings\",\"outputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"implementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"}],\"name\":\"initialise\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"isExecutor\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"productionMode\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"proxiableUUID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"},{\"internalType\":\"bytes\",\"name\":\"_nonce\",\"type\":\"bytes\"}],\"name\":\"requestVrf\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"_instructionId\",\"type\":\"bytes32\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"_authorizationAddress\",\"type\":\"address\"}],\"name\":\"setVrfAuthorizationAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"switchToProductionMode\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeExtensionRegistry\",\"outputs\":[{\"internalType\":\"contractIITeeExtensionRegistry\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeMachineRegistry\",\"outputs\":[{\"internalType\":\"contractITeeMachineRegistry\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeWalletKeyManager\",\"outputs\":[{\"internalType\":\"contractITeeWalletKeyManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeWalletManager\",\"outputs\":[{\"internalType\":\"contractITeeWalletManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeWalletProjectManager\",\"outputs\":[{\"internalType\":\"contractITeeWalletProjectManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"}],\"name\":\"timelockedCalls\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_contractNameHashes\",\"type\":\"bytes32[]\"},{\"internalType\":\"address[]\",\"name\":\"_contractAddresses\",\"type\":\"address[]\"}],\"name\":\"updateContractAddresses\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newImplementation\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"upgradeToAndCall\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}]",
 }
 
 // TeeVRFABI is the input ABI used to generate the binding from.
@@ -242,6 +242,37 @@ func (_TeeVRF *TeeVRFCallerSession) VRF() ([32]byte, error) {
 	return _TeeVRF.Contract.VRF(&_TeeVRF.CallOpts)
 }
 
+// WALLETOPTYPE is a free data retrieval call binding the contract method 0xc3500300.
+//
+// Solidity: function WALLET_OP_TYPE() view returns(bytes32)
+func (_TeeVRF *TeeVRFCaller) WALLETOPTYPE(opts *bind.CallOpts) ([32]byte, error) {
+	var out []interface{}
+	err := _TeeVRF.contract.Call(opts, &out, "WALLET_OP_TYPE")
+
+	if err != nil {
+		return *new([32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
+
+	return out0, err
+
+}
+
+// WALLETOPTYPE is a free data retrieval call binding the contract method 0xc3500300.
+//
+// Solidity: function WALLET_OP_TYPE() view returns(bytes32)
+func (_TeeVRF *TeeVRFSession) WALLETOPTYPE() ([32]byte, error) {
+	return _TeeVRF.Contract.WALLETOPTYPE(&_TeeVRF.CallOpts)
+}
+
+// WALLETOPTYPE is a free data retrieval call binding the contract method 0xc3500300.
+//
+// Solidity: function WALLET_OP_TYPE() view returns(bytes32)
+func (_TeeVRF *TeeVRFCallerSession) WALLETOPTYPE() ([32]byte, error) {
+	return _TeeVRF.Contract.WALLETOPTYPE(&_TeeVRF.CallOpts)
+}
+
 // GetAddressUpdater is a free data retrieval call binding the contract method 0x5267a15d.
 //
 // Solidity: function getAddressUpdater() view returns(address _addressUpdater)
@@ -271,6 +302,37 @@ func (_TeeVRF *TeeVRFSession) GetAddressUpdater() (common.Address, error) {
 // Solidity: function getAddressUpdater() view returns(address _addressUpdater)
 func (_TeeVRF *TeeVRFCallerSession) GetAddressUpdater() (common.Address, error) {
 	return _TeeVRF.Contract.GetAddressUpdater(&_TeeVRF.CallOpts)
+}
+
+// GetVrfAuthorizationAddress is a free data retrieval call binding the contract method 0x918945a0.
+//
+// Solidity: function getVrfAuthorizationAddress(bytes32 _walletId) view returns(address)
+func (_TeeVRF *TeeVRFCaller) GetVrfAuthorizationAddress(opts *bind.CallOpts, _walletId [32]byte) (common.Address, error) {
+	var out []interface{}
+	err := _TeeVRF.contract.Call(opts, &out, "getVrfAuthorizationAddress", _walletId)
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// GetVrfAuthorizationAddress is a free data retrieval call binding the contract method 0x918945a0.
+//
+// Solidity: function getVrfAuthorizationAddress(bytes32 _walletId) view returns(address)
+func (_TeeVRF *TeeVRFSession) GetVrfAuthorizationAddress(_walletId [32]byte) (common.Address, error) {
+	return _TeeVRF.Contract.GetVrfAuthorizationAddress(&_TeeVRF.CallOpts, _walletId)
+}
+
+// GetVrfAuthorizationAddress is a free data retrieval call binding the contract method 0x918945a0.
+//
+// Solidity: function getVrfAuthorizationAddress(bytes32 _walletId) view returns(address)
+func (_TeeVRF *TeeVRFCallerSession) GetVrfAuthorizationAddress(_walletId [32]byte) (common.Address, error) {
+	return _TeeVRF.Contract.GetVrfAuthorizationAddress(&_TeeVRF.CallOpts, _walletId)
 }
 
 // Governance is a free data retrieval call binding the contract method 0x5aa6e675.
@@ -488,6 +550,37 @@ func (_TeeVRF *TeeVRFSession) TeeExtensionRegistry() (common.Address, error) {
 // Solidity: function teeExtensionRegistry() view returns(address)
 func (_TeeVRF *TeeVRFCallerSession) TeeExtensionRegistry() (common.Address, error) {
 	return _TeeVRF.Contract.TeeExtensionRegistry(&_TeeVRF.CallOpts)
+}
+
+// TeeMachineRegistry is a free data retrieval call binding the contract method 0x524967d7.
+//
+// Solidity: function teeMachineRegistry() view returns(address)
+func (_TeeVRF *TeeVRFCaller) TeeMachineRegistry(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _TeeVRF.contract.Call(opts, &out, "teeMachineRegistry")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// TeeMachineRegistry is a free data retrieval call binding the contract method 0x524967d7.
+//
+// Solidity: function teeMachineRegistry() view returns(address)
+func (_TeeVRF *TeeVRFSession) TeeMachineRegistry() (common.Address, error) {
+	return _TeeVRF.Contract.TeeMachineRegistry(&_TeeVRF.CallOpts)
+}
+
+// TeeMachineRegistry is a free data retrieval call binding the contract method 0x524967d7.
+//
+// Solidity: function teeMachineRegistry() view returns(address)
+func (_TeeVRF *TeeVRFCallerSession) TeeMachineRegistry() (common.Address, error) {
+	return _TeeVRF.Contract.TeeMachineRegistry(&_TeeVRF.CallOpts)
 }
 
 // TeeWalletKeyManager is a free data retrieval call binding the contract method 0x6b03b74d.
@@ -731,6 +824,27 @@ func (_TeeVRF *TeeVRFSession) RequestVrf(_walletId [32]byte, _keyId uint64, _non
 // Solidity: function requestVrf(bytes32 _walletId, uint64 _keyId, bytes _nonce) payable returns(bytes32 _instructionId)
 func (_TeeVRF *TeeVRFTransactorSession) RequestVrf(_walletId [32]byte, _keyId uint64, _nonce []byte) (*types.Transaction, error) {
 	return _TeeVRF.Contract.RequestVrf(&_TeeVRF.TransactOpts, _walletId, _keyId, _nonce)
+}
+
+// SetVrfAuthorizationAddress is a paid mutator transaction binding the contract method 0x76b87bcf.
+//
+// Solidity: function setVrfAuthorizationAddress(bytes32 _walletId, address _authorizationAddress) returns()
+func (_TeeVRF *TeeVRFTransactor) SetVrfAuthorizationAddress(opts *bind.TransactOpts, _walletId [32]byte, _authorizationAddress common.Address) (*types.Transaction, error) {
+	return _TeeVRF.contract.Transact(opts, "setVrfAuthorizationAddress", _walletId, _authorizationAddress)
+}
+
+// SetVrfAuthorizationAddress is a paid mutator transaction binding the contract method 0x76b87bcf.
+//
+// Solidity: function setVrfAuthorizationAddress(bytes32 _walletId, address _authorizationAddress) returns()
+func (_TeeVRF *TeeVRFSession) SetVrfAuthorizationAddress(_walletId [32]byte, _authorizationAddress common.Address) (*types.Transaction, error) {
+	return _TeeVRF.Contract.SetVrfAuthorizationAddress(&_TeeVRF.TransactOpts, _walletId, _authorizationAddress)
+}
+
+// SetVrfAuthorizationAddress is a paid mutator transaction binding the contract method 0x76b87bcf.
+//
+// Solidity: function setVrfAuthorizationAddress(bytes32 _walletId, address _authorizationAddress) returns()
+func (_TeeVRF *TeeVRFTransactorSession) SetVrfAuthorizationAddress(_walletId [32]byte, _authorizationAddress common.Address) (*types.Transaction, error) {
+	return _TeeVRF.Contract.SetVrfAuthorizationAddress(&_TeeVRF.TransactOpts, _walletId, _authorizationAddress)
 }
 
 // SwitchToProductionMode is a paid mutator transaction binding the contract method 0xf5a98383.
@@ -1608,6 +1722,151 @@ func (_TeeVRF *TeeVRFFilterer) WatchUpgraded(opts *bind.WatchOpts, sink chan<- *
 func (_TeeVRF *TeeVRFFilterer) ParseUpgraded(log types.Log) (*TeeVRFUpgraded, error) {
 	event := new(TeeVRFUpgraded)
 	if err := _TeeVRF.contract.UnpackLog(event, "Upgraded", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// TeeVRFVrfAuthorizationAddressSetIterator is returned from FilterVrfAuthorizationAddressSet and is used to iterate over the raw logs and unpacked data for VrfAuthorizationAddressSet events raised by the TeeVRF contract.
+type TeeVRFVrfAuthorizationAddressSetIterator struct {
+	Event *TeeVRFVrfAuthorizationAddressSet // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeeVRFVrfAuthorizationAddressSetIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeeVRFVrfAuthorizationAddressSet)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeeVRFVrfAuthorizationAddressSet)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeeVRFVrfAuthorizationAddressSetIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeeVRFVrfAuthorizationAddressSetIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeeVRFVrfAuthorizationAddressSet represents a VrfAuthorizationAddressSet event raised by the TeeVRF contract.
+type TeeVRFVrfAuthorizationAddressSet struct {
+	WalletId             [32]byte
+	AuthorizationAddress common.Address
+	Raw                  types.Log // Blockchain specific contextual infos
+}
+
+// FilterVrfAuthorizationAddressSet is a free log retrieval operation binding the contract event 0xdf8b8dac41b0ec7f0b1415d39e5f0885052aa11dbb18bb13043d64a3f1cb9c3b.
+//
+// Solidity: event VrfAuthorizationAddressSet(bytes32 indexed walletId, address authorizationAddress)
+func (_TeeVRF *TeeVRFFilterer) FilterVrfAuthorizationAddressSet(opts *bind.FilterOpts, walletId [][32]byte) (*TeeVRFVrfAuthorizationAddressSetIterator, error) {
+
+	var walletIdRule []interface{}
+	for _, walletIdItem := range walletId {
+		walletIdRule = append(walletIdRule, walletIdItem)
+	}
+
+	logs, sub, err := _TeeVRF.contract.FilterLogs(opts, "VrfAuthorizationAddressSet", walletIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return &TeeVRFVrfAuthorizationAddressSetIterator{contract: _TeeVRF.contract, event: "VrfAuthorizationAddressSet", logs: logs, sub: sub}, nil
+}
+
+// WatchVrfAuthorizationAddressSet is a free log subscription operation binding the contract event 0xdf8b8dac41b0ec7f0b1415d39e5f0885052aa11dbb18bb13043d64a3f1cb9c3b.
+//
+// Solidity: event VrfAuthorizationAddressSet(bytes32 indexed walletId, address authorizationAddress)
+func (_TeeVRF *TeeVRFFilterer) WatchVrfAuthorizationAddressSet(opts *bind.WatchOpts, sink chan<- *TeeVRFVrfAuthorizationAddressSet, walletId [][32]byte) (event.Subscription, error) {
+
+	var walletIdRule []interface{}
+	for _, walletIdItem := range walletId {
+		walletIdRule = append(walletIdRule, walletIdItem)
+	}
+
+	logs, sub, err := _TeeVRF.contract.WatchLogs(opts, "VrfAuthorizationAddressSet", walletIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeeVRFVrfAuthorizationAddressSet)
+				if err := _TeeVRF.contract.UnpackLog(event, "VrfAuthorizationAddressSet", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseVrfAuthorizationAddressSet is a log parse operation binding the contract event 0xdf8b8dac41b0ec7f0b1415d39e5f0885052aa11dbb18bb13043d64a3f1cb9c3b.
+//
+// Solidity: event VrfAuthorizationAddressSet(bytes32 indexed walletId, address authorizationAddress)
+func (_TeeVRF *TeeVRFFilterer) ParseVrfAuthorizationAddressSet(log types.Log) (*TeeVRFVrfAuthorizationAddressSet, error) {
+	event := new(TeeVRFVrfAuthorizationAddressSet)
+	if err := _TeeVRF.contract.UnpackLog(event, "VrfAuthorizationAddressSet", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
