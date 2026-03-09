@@ -33,7 +33,7 @@
   },
   {
     "inputs": [],
-    "name": "FailedInnerCall",
+    "name": "FailedCall",
     "type": "error"
   },
   {
@@ -126,24 +126,24 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "bytes32",
-        "name": "opType",
-        "type": "bytes32"
+        "internalType": "bytes32[]",
+        "name": "opTypes",
+        "type": "bytes32[]"
       },
       {
         "indexed": false,
-        "internalType": "bytes32",
-        "name": "opCommand",
-        "type": "bytes32"
+        "internalType": "bytes32[]",
+        "name": "opCommands",
+        "type": "bytes32[]"
       },
       {
         "indexed": false,
-        "internalType": "uint256",
-        "name": "fee",
-        "type": "uint256"
+        "internalType": "uint256[]",
+        "name": "fees",
+        "type": "uint256[]"
       }
     ],
-    "name": "OperationFeeSet",
+    "name": "OperationFeesSet",
     "type": "event"
   },
   {
