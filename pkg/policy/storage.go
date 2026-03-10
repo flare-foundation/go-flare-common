@@ -12,12 +12,22 @@ type Storage struct {
 	// sorted list of signingPolicies, sorted by rewardEpochID (and also by startVotingRoundID)
 	spList []*SigningPolicy
 
+	// notStrict allows gaps between consecutive reward epoch IDs when adding policies.
+	notStrict bool
+
 	// mutex
 	sync.Mutex
 }
 
 func NewStorage() *Storage {
 	return &Storage{spList: make([]*SigningPolicy, 0, 10)}
+}
+
+// NewStorageO creates a Storage with the given notStrict option.
+// If notStrict is true, Add allows the reward epoch ID of the added signing policy
+// to be higher than the previous ID + 1.
+func NewStorageO(notStrict bool) *Storage {
+	return &Storage{spList: make([]*SigningPolicy, 0, 10), notStrict: notStrict}
 }
 
 // findByVotingRoundID finds signingPolicy that is active in votingRoundID.
@@ -43,14 +53,15 @@ func (s *Storage) findByVotingRoundID(votingRoundID uint32) *SigningPolicy {
 
 // Add adds a signingPolicy to the storage.
 //
-// The added signingPolicy must be a successor of the latest signingPolicy in the storage.
+// Unless the storage was created with notStrict, the added signingPolicy must have a reward epoch ID
+// exactly one greater than the latest stored policy.
 func (s *Storage) Add(sp *SigningPolicy) error {
 	s.Lock()
 	defer s.Unlock()
 
 	if len(s.spList) > 0 {
 		// check consistency, previous epoch should be already added
-		if s.spList[len(s.spList)-1].RewardEpochID != sp.RewardEpochID-1 {
+		if !s.notStrict && s.spList[len(s.spList)-1].RewardEpochID != sp.RewardEpochID-1 {
 			return fmt.Errorf("missing signing policy for reward epoch ID %d", sp.RewardEpochID-1)
 		}
 		// should be sorted by voting round ID, should not happen
