@@ -40,6 +40,13 @@ func TestAmountEncodeDecode(t *testing.T) {
 				"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
 			},
 		},
+		{
+			name: "MPT negative amount",
+			value: map[string]any{
+				"value":           "-1",
+				"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+			},
+		},
 	}
 
 	for _, test := range tests {
@@ -199,7 +206,7 @@ func TestAmountEncoding(t *testing.T) {
 			name: "MPT too large 1", jsonValue: `{"value":"18446744073709551615","mpt_issuance_id":"00002403C84A0A28E0190E208E982C352BBD5006600555CF"}`, expectError: true,
 		},
 		{
-			name: "MPT negative", jsonValue: `{"value":"-1","mpt_issuance_id":"00002403C84A0A28E0190E208E982C352BBD5006600555CF"}`, expectError: true,
+			name: "MPT negative", jsonValue: `{"value":"-1","mpt_issuance_id":"00002403C84A0A28E0190E208E982C352BBD5006600555CF"}`, expectedHex: "20000000000000000100002403c84a0a28e0190e208e982c352bbd5006600555cf", expectError: false,
 		},
 		{
 			name: "MPT invalid issuance id 0", jsonValue: `{"value":"10","mpt_issuance_id":"10"}`, expectError: true,
@@ -223,7 +230,7 @@ func TestAmountEncoding(t *testing.T) {
 			name: "MPT invalid value scientific to small", jsonValue: `{"value":"1e-100","mpt_issuance_id":"00002403C84A0A28E0190E208E982C352BBD5006600555CF"}`, expectError: true,
 		},
 		{
-			name: "MPT invalid value scientific negative", jsonValue: `{"value":"-1e1","mpt_issuance_id":"00002403C84A0A28E0190E208E982C352BBD5006600555CF"}`, expectError: true,
+			name: "MPT negative scientific notation", jsonValue: `{"value":"-1e1","mpt_issuance_id":"00002403C84A0A28E0190E208E982C352BBD5006600555CF"}`, expectedHex: "20000000000000000a00002403c84a0a28e0190e208e982c352bbd5006600555cf", expectError: false,
 		},
 		{
 			name: "MPT invalid value scientific invalid", jsonValue: `{"value":"1e","mpt_issuance_id":"00002403C84A0A28E0190E208E982C352BBD5006600555CF"}`, expectError: true,
@@ -304,6 +311,9 @@ func TestAmountDecoding(t *testing.T) {
 		},
 		{
 			name: "MPT amount", hexInput: "607fffffffffffffff00002403c84a0a28e0190e208e982c352bbd5006600555cf", expectJSON: `{"mpt_issuance_id":"00002403C84A0A28E0190E208E982C352BBD5006600555CF","value":"9223372036854775807"}`,
+		},
+		{
+			name: "MPT negative amount", hexInput: "20000000000000000100002403c84a0a28e0190e208e982c352bbd5006600555cf", expectJSON: `{"mpt_issuance_id":"00002403C84A0A28E0190E208E982C352BBD5006600555CF","value":"-1"}`,
 		},
 
 		{

@@ -92,7 +92,7 @@ func PrivKeyFromSecret(secret string) (ed25519.PrivateKey, error) {
 		return nil, err
 	}
 
-	if len(secret) < 8 {
+	if len(secretBytes) < 7 { // 3 prefix bytes + at least 4 checksum bytes
 		return nil, errors.New("invalid secret length")
 	}
 

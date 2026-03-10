@@ -152,7 +152,7 @@ func checkFlags(f uint64) error {
 	}
 
 	if f&lsfDisableMaster != lsfDisableMaster {
-		return errors.New("master key disabled")
+		return errors.New("master key not disabled")
 	}
 
 	return nil

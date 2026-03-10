@@ -100,7 +100,7 @@ func (a *amount) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	case tokenType0, tokenType1:
 		return tokenToJSON(firstByte, b)
 	case mptType:
-		return mptToJSON(b)
+		return mptToJSON(firstByte, b)
 	default:
 		return nil, fmt.Errorf("impossible, unknown amount type: %v", amountType) // unreachable
 	}
@@ -113,7 +113,7 @@ func xrpToBytes(amount string) ([]byte, error) {
 		return nil, fmt.Errorf("xrp amount %v", err)
 	}
 	if val > maxXRPAmount {
-		return nil, fmt.Errorf("amount to large %v", val)
+		return nil, fmt.Errorf("amount too large %v", val)
 	}
 
 	valPrefix := val | xrpValuePrefix
@@ -166,10 +166,6 @@ func tokenToBytes(amount map[string]any) ([]byte, error) {
 }
 
 func mptToBytes(amount map[string]any) ([]byte, error) {
-	out := make([]byte, 0, 33)
-
-	out = append(out, 0x60) // MPT indicator
-
 	if len(amount) != 2 {
 		return nil, errors.New("invalid amount struct")
 	}
@@ -179,12 +175,17 @@ func mptToBytes(amount map[string]any) ([]byte, error) {
 		return nil, fmt.Errorf("extracting value: %v", err)
 	}
 
-	valueBytes, err := serializeMPTValue(value)
+	absValue, isNegative := mptSign(value)
+
+	valueBytes, err := serializeMPTValue(absValue)
 	if err != nil {
 		return nil, fmt.Errorf("serializing value: %v", err)
 	}
 
-	out = append(out, valueBytes[:]...)
+	indicator := byte(0x60) // cMPToken | cPositive
+	if isNegative && valueBytes != [8]byte{} {
+		indicator = 0x20 // cMPToken only (no cPositive bit)
+	}
 
 	issuanceID, err := extractString(amount, "mpt_issuance_id")
 	if err != nil {
@@ -200,9 +201,21 @@ func mptToBytes(amount map[string]any) ([]byte, error) {
 		return nil, errors.New("mpt_issuance_id invalid length")
 	}
 
+	out := make([]byte, 0, 33)
+	out = append(out, indicator)
+	out = append(out, valueBytes[:]...)
 	out = append(out, isID...)
 
 	return out, nil
+}
+
+// mptSign returns the absolute value string and whether the original was negative.
+// Hex values (0x...) are never treated as negative.
+func mptSign(value string) (string, bool) {
+	if strings.HasPrefix(value, "-") && !strings.HasPrefix(strings.ToLower(value), "-0x") {
+		return value[1:], true
+	}
+	return value, false
 }
 
 func extractString(values map[string]any, key string) (string, error) {
@@ -270,7 +283,7 @@ func serializeTokenValue(value string) ([]byte, error) {
 
 	exponentN := uint64(normalizedExponent)
 
-	outUint := 1<<63 | sign<<62 | exponentN<<54 | significant // not xrp (1bit) | sign (1bit) | exponent (8bits) | significant (5bits)
+	outUint := 1<<63 | sign<<62 | exponentN<<54 | significant // not xrp (1bit) | sign (1bit) | exponent (8bits) | significant (54bits)
 	binary.BigEndian.PutUint64(out, outUint)
 
 	return out, nil
@@ -354,7 +367,7 @@ func xrpToJSON(firstByte byte, b *bytes.Buffer) (string, error) {
 
 	value := binary.BigEndian.Uint64(v)
 	if value > maxXRPAmount {
-		return "", errors.New("xrp amount to large")
+		return "", errors.New("xrp amount too large")
 	}
 
 	return strconv.FormatUint(value, 10), nil
@@ -421,7 +434,7 @@ func tokenToJSON(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
 	return out, nil
 }
 
-func mptToJSON(b *bytes.Buffer) (map[string]any, error) {
+func mptToJSON(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
 	out := make(map[string]any, 2)
 
 	l := 8
@@ -437,10 +450,14 @@ func mptToJSON(b *bytes.Buffer) (map[string]any, error) {
 	bv := new(big.Int).SetBytes(v)
 
 	if bv.Cmp(maxMPTValueBig) > 0 {
-		return nil, errors.New("mpt value to large")
+		return nil, errors.New("mpt value too large")
 	}
 
-	out["value"] = bv.String()
+	valueStr := bv.String()
+	if firstByte&signBitMask == 0 && bv.Sign() != 0 {
+		valueStr = "-" + valueStr
+	}
+	out["value"] = valueStr
 
 	l = 24
 	mii := make([]byte, l)

@@ -215,7 +215,7 @@ func readPath(b *bytes.Buffer) (byte, any, error) {
 			return flag, out, nil
 		}
 
-		if l >= 6 {
+		if l >= 8 {
 			return flag, nil, errors.New("path too long")
 		}
 
