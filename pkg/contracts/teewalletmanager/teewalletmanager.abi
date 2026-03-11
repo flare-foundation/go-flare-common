@@ -944,6 +944,11 @@
         "internalType": "struct ITeeWalletManager.ResumeKeyData[]",
         "name": "_keysData",
         "type": "tuple[]"
+      },
+      {
+        "internalType": "address",
+        "name": "_claimBackAddress",
+        "type": "address"
       }
     ],
     "name": "resume",
@@ -1020,6 +1025,11 @@
         "internalType": "address[]",
         "name": "_pausingAddresses",
         "type": "address[]"
+      },
+      {
+        "internalType": "address",
+        "name": "_claimBackAddress",
+        "type": "address"
       }
     ],
     "name": "setPausingAddresses",

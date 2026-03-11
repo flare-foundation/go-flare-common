@@ -337,6 +337,11 @@
         "internalType": "string",
         "name": "_backupUrl",
         "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "_claimBackAddress",
+        "type": "address"
       }
     ],
     "name": "backupRestore",

@@ -77,6 +77,11 @@
                 "type": "uint16"
               },
               {
+                "internalType": "address",
+                "name": "proofOwner",
+                "type": "address"
+              },
+              {
                 "internalType": "address[]",
                 "name": "cosigners",
                 "type": "address[]"
@@ -370,6 +375,11 @@
                 "internalType": "uint16",
                 "name": "thresholdBIPS",
                 "type": "uint16"
+              },
+              {
+                "internalType": "address",
+                "name": "proofOwner",
+                "type": "address"
               }
             ],
             "internalType": "struct IFtdcHub.FtdcRequestHeader",
@@ -410,6 +420,11 @@
             "internalType": "uint16",
             "name": "thresholdBIPS",
             "type": "uint16"
+          },
+          {
+            "internalType": "address",
+            "name": "proofOwner",
+            "type": "address"
           }
         ],
         "internalType": "struct IFtdcHub.FtdcRequestHeader",
@@ -440,6 +455,11 @@
             "internalType": "uint16",
             "name": "thresholdBIPS",
             "type": "uint16"
+          },
+          {
+            "internalType": "address",
+            "name": "proofOwner",
+            "type": "address"
           },
           {
             "internalType": "address[]",
@@ -543,6 +563,11 @@
                 "internalType": "uint16",
                 "name": "thresholdBIPS",
                 "type": "uint16"
+              },
+              {
+                "internalType": "address",
+                "name": "proofOwner",
+                "type": "address"
               },
               {
                 "internalType": "address[]",
@@ -745,6 +770,11 @@
                 "internalType": "uint16",
                 "name": "thresholdBIPS",
                 "type": "uint16"
+              },
+              {
+                "internalType": "address",
+                "name": "proofOwner",
+                "type": "address"
               },
               {
                 "internalType": "address[]",
