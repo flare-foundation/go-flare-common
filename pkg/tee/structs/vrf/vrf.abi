@@ -1,0 +1,32 @@
+[
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "walletId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint64",
+            "name": "keyId",
+            "type": "uint64"
+          },
+          {
+            "internalType": "bytes",
+            "name": "nonce",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct ITeeVrf.VrfInstructionMessage",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "vrfInstructionMessageStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
