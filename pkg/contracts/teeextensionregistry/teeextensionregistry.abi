@@ -622,6 +622,12 @@
       },
       {
         "indexed": false,
+        "internalType": "address",
+        "name": "claimBackAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "uint256",
         "name": "fee",
         "type": "uint256"
@@ -1505,6 +1511,11 @@
         "internalType": "uint64",
         "name": "_cosignersThreshold",
         "type": "uint64"
+      },
+      {
+        "internalType": "address",
+        "name": "_claimBackAddress",
+        "type": "address"
       }
     ],
     "name": "sendInstructions",
@@ -1571,6 +1582,11 @@
         "internalType": "uint64",
         "name": "_cosignersThreshold",
         "type": "uint64"
+      },
+      {
+        "internalType": "address",
+        "name": "_claimBackAddress",
+        "type": "address"
       }
     ],
     "name": "sendSystemInstructions",
@@ -1620,6 +1636,11 @@
         "internalType": "uint64",
         "name": "_cosignersThreshold",
         "type": "uint64"
+      },
+      {
+        "internalType": "address",
+        "name": "_claimBackAddress",
+        "type": "address"
       }
     ],
     "name": "sendSystemInstructions",

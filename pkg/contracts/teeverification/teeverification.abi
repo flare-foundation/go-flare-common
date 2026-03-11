@@ -489,6 +489,11 @@
                 "type": "uint16"
               },
               {
+                "internalType": "address",
+                "name": "proofOwner",
+                "type": "address"
+              },
+              {
                 "internalType": "address[]",
                 "name": "cosigners",
                 "type": "address[]"
@@ -909,6 +914,16 @@
         "internalType": "address",
         "name": "_testOnTeeId",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_proofOwner",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_claimBackAddress",
+        "type": "address"
       }
     ],
     "name": "requestAvailabilityCheckAttestation",
@@ -937,6 +952,16 @@
         "internalType": "address",
         "name": "_testOnTeeId",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_proofOwner",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_claimBackAddress",
+        "type": "address"
       }
     ],
     "name": "requestPMWMultisigAccountConfiguredAttestation",
@@ -949,6 +974,11 @@
       {
         "internalType": "address",
         "name": "_teeId",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_claimBackAddress",
         "type": "address"
       }
     ],
@@ -1234,6 +1264,11 @@
                 "type": "uint16"
               },
               {
+                "internalType": "address",
+                "name": "proofOwner",
+                "type": "address"
+              },
+              {
                 "internalType": "address[]",
                 "name": "cosigners",
                 "type": "address[]"
@@ -1447,6 +1482,11 @@
                 "internalType": "uint16",
                 "name": "thresholdBIPS",
                 "type": "uint16"
+              },
+              {
+                "internalType": "address",
+                "name": "proofOwner",
+                "type": "address"
               },
               {
                 "internalType": "address[]",

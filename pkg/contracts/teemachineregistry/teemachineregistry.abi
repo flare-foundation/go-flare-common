@@ -1022,6 +1022,11 @@
                 "type": "uint16"
               },
               {
+                "internalType": "address",
+                "name": "proofOwner",
+                "type": "address"
+              },
+              {
                 "internalType": "address[]",
                 "name": "cosigners",
                 "type": "address[]"
@@ -1288,6 +1293,11 @@
         "internalType": "string",
         "name": "_url",
         "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "_claimBackAddress",
+        "type": "address"
       }
     ],
     "name": "register",
@@ -1389,6 +1399,11 @@
                 "internalType": "uint16",
                 "name": "thresholdBIPS",
                 "type": "uint16"
+              },
+              {
+                "internalType": "address",
+                "name": "proofOwner",
+                "type": "address"
               },
               {
                 "internalType": "address[]",
@@ -1676,6 +1691,11 @@
                 "internalType": "uint16",
                 "name": "thresholdBIPS",
                 "type": "uint16"
+              },
+              {
+                "internalType": "address",
+                "name": "proofOwner",
+                "type": "address"
               },
               {
                 "internalType": "address[]",

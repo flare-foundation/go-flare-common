@@ -118,22 +118,34 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "instructionId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
         "internalType": "bytes32",
         "name": "attestationType",
         "type": "bytes32"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "bytes32",
         "name": "sourceId",
         "type": "bytes32"
       },
       {
         "indexed": false,
-        "internalType": "bytes",
-        "name": "requestBody",
-        "type": "bytes"
+        "internalType": "address",
+        "name": "proofOwner",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "claimBackAddress",
+        "type": "address"
       },
       {
         "indexed": false,
@@ -541,9 +553,43 @@
   {
     "inputs": [
       {
-        "internalType": "uint16",
-        "name": "_thresholdBIPS",
-        "type": "uint16"
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "attestationType",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "sourceId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint16",
+                "name": "thresholdBIPS",
+                "type": "uint16"
+              },
+              {
+                "internalType": "address",
+                "name": "proofOwner",
+                "type": "address"
+              }
+            ],
+            "internalType": "struct IFtdcHub.FtdcRequestHeader",
+            "name": "header",
+            "type": "tuple"
+          },
+          {
+            "internalType": "bytes",
+            "name": "requestBody",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct IFtdcHub.FtdcAttestationRequest",
+        "name": "_attestationRequest",
+        "type": "tuple"
       },
       {
         "internalType": "uint256",
@@ -566,19 +612,9 @@
         "type": "uint64"
       },
       {
-        "internalType": "bytes32",
-        "name": "_attestationType",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_sourceId",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_requestBody",
-        "type": "bytes"
+        "internalType": "address",
+        "name": "_claimBackAddress",
+        "type": "address"
       }
     ],
     "name": "requestAttestation",

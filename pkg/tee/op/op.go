@@ -30,6 +30,7 @@ const (
 	KeyDataProviderRestoreTest Command = "KEY_DATA_PROVIDER_RESTORE_TEST"
 	KeyDelete                  Command = "KEY_DELETE"
 	KeyGenerate                Command = "KEY_GENERATE"
+	VRF                        Command = "VRF"
 
 	KeyInfo   Command = "KEY_INFO"
 	TEEBackup Command = "TEE_BACKUP"
@@ -57,6 +58,7 @@ var validSystemPairs = map[Type]map[Command]bool{
 		KeyDataProviderRestoreTest: true,
 		KeyDelete:                  true,
 		KeyGenerate:                true,
+		VRF:                        true,
 	},
 	Get: {
 		KeyInfo:   true,
