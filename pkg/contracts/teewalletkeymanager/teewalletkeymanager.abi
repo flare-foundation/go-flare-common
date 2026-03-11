@@ -463,6 +463,11 @@
         "internalType": "bytes32",
         "name": "_walletId",
         "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "_claimBackAddress",
+        "type": "address"
       }
     ],
     "name": "addKey",
@@ -649,6 +654,11 @@
         "internalType": "uint64",
         "name": "_keyId",
         "type": "uint64"
+      },
+      {
+        "internalType": "address",
+        "name": "_claimBackAddress",
+        "type": "address"
       }
     ],
     "name": "deleteKey",

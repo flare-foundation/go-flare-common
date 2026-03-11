@@ -404,6 +404,43 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "walletId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "sourceId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "accountAddress",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "transactionLimit",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "dailyLimit",
+        "type": "uint256"
+      }
+    ],
+    "name": "PaymentLimitsSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": false,
         "internalType": "bytes32[]",
         "name": "sourceIds",
@@ -610,6 +647,11 @@
                 "internalType": "uint16",
                 "name": "thresholdBIPS",
                 "type": "uint16"
+              },
+              {
+                "internalType": "address",
+                "name": "proofOwner",
+                "type": "address"
               },
               {
                 "internalType": "address[]",
@@ -1174,6 +1216,11 @@
         "internalType": "struct ITeePayments.PaymentInstruction",
         "name": "_paymentInstruction",
         "type": "tuple"
+      },
+      {
+        "internalType": "address",
+        "name": "_claimBackAddress",
+        "type": "address"
       }
     ],
     "name": "pay",
@@ -1280,19 +1327,31 @@
         "type": "tuple[]"
       },
       {
-        "internalType": "uint256[]",
-        "name": "_maxFees",
-        "type": "uint256[]"
+        "components": [
+          {
+            "internalType": "uint256[]",
+            "name": "maxFees",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "int16[][]",
+            "name": "feeFactorScheduleBIPS",
+            "type": "int16[][]"
+          },
+          {
+            "internalType": "uint16[]",
+            "name": "feeDelayScheduleSeconds",
+            "type": "uint16[]"
+          }
+        ],
+        "internalType": "struct ITeePayments.ReissueFeeParams",
+        "name": "_reissueFeeParams",
+        "type": "tuple"
       },
       {
-        "internalType": "int16[][]",
-        "name": "_feeFactorScheduleBIPS",
-        "type": "int16[][]"
-      },
-      {
-        "internalType": "uint16[]",
-        "name": "_feeDelayScheduleSeconds",
-        "type": "uint16[]"
+        "internalType": "address",
+        "name": "_claimBackAddress",
+        "type": "address"
       }
     ],
     "name": "reissue",
@@ -1398,6 +1457,11 @@
         "internalType": "uint256",
         "name": "_dailyLimit",
         "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_claimBackAddress",
+        "type": "address"
       }
     ],
     "name": "setPaymentLimits",
