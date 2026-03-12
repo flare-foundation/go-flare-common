@@ -627,7 +627,7 @@
                 "type": "tuple[]"
               }
             ],
-            "internalType": "struct IFtdcVerification.FtdcSignatures",
+            "internalType": "struct IFdc2Verification.Fdc2Signatures",
             "name": "signatures",
             "type": "tuple"
           },
@@ -669,7 +669,7 @@
                 "type": "uint64"
               }
             ],
-            "internalType": "struct IFtdcHub.FtdcResponseHeader",
+            "internalType": "struct IFdc2Hub.Fdc2ResponseHeader",
             "name": "header",
             "type": "tuple"
           },
