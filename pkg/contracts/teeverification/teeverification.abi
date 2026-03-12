@@ -467,7 +467,7 @@
                 "type": "tuple[]"
               }
             ],
-            "internalType": "struct IFtdcVerification.FtdcSignatures",
+            "internalType": "struct IFdc2Verification.Fdc2Signatures",
             "name": "signatures",
             "type": "tuple"
           },
@@ -509,7 +509,7 @@
                 "type": "uint64"
               }
             ],
-            "internalType": "struct IFtdcHub.FtdcResponseHeader",
+            "internalType": "struct IFdc2Hub.Fdc2ResponseHeader",
             "name": "header",
             "type": "tuple"
           },
@@ -635,36 +635,36 @@
   },
   {
     "inputs": [],
+    "name": "fdc2Hub",
+    "outputs": [
+      {
+        "internalType": "contract IFdc2Hub",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "fdc2Verification",
+    "outputs": [
+      {
+        "internalType": "contract IFdc2Verification",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "flareSystemsManager",
     "outputs": [
       {
         "internalType": "contract IFlareSystemsManager",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "ftdcHub",
-    "outputs": [
-      {
-        "internalType": "contract IFtdcHub",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "ftdcVerification",
-    "outputs": [
-      {
-        "internalType": "contract IFtdcVerification",
         "name": "",
         "type": "address"
       }
@@ -1242,7 +1242,7 @@
                 "type": "tuple[]"
               }
             ],
-            "internalType": "struct IFtdcVerification.FtdcSignatures",
+            "internalType": "struct IFdc2Verification.Fdc2Signatures",
             "name": "signatures",
             "type": "tuple"
           },
@@ -1284,7 +1284,7 @@
                 "type": "uint64"
               }
             ],
-            "internalType": "struct IFtdcHub.FtdcResponseHeader",
+            "internalType": "struct IFdc2Hub.Fdc2ResponseHeader",
             "name": "header",
             "type": "tuple"
           },
@@ -1462,7 +1462,7 @@
                 "type": "tuple[]"
               }
             ],
-            "internalType": "struct IFtdcVerification.FtdcSignatures",
+            "internalType": "struct IFdc2Verification.Fdc2Signatures",
             "name": "signatures",
             "type": "tuple"
           },
@@ -1504,7 +1504,7 @@
                 "type": "uint64"
               }
             ],
-            "internalType": "struct IFtdcHub.FtdcResponseHeader",
+            "internalType": "struct IFdc2Hub.Fdc2ResponseHeader",
             "name": "header",
             "type": "tuple"
           },

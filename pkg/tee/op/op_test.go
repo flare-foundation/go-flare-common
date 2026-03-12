@@ -71,7 +71,7 @@ func TestValidPair(t *testing.T) {
 		c Command
 	}{
 		{"x", "x"},
-		{"F_FTDC", "PROVE"},
+		{"F_FDC2", "PROVE"},
 		{"F", "123"},
 	}
 
@@ -84,7 +84,7 @@ func TestValidPair(t *testing.T) {
 		t Type
 		c Command
 	}{
-		{"F_FTDC", "x"},
+		{"F_FDC2", "x"},
 		{"F_X", "PROVE"},
 		{"F_", "123"},
 	}
