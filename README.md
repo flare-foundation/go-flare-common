@@ -35,7 +35,7 @@ Contains the following packages:
   - instructions: working with tee instructions
   - op: opTypes and opCommands
   - signer: signer server for remote ETH messages signing and decrypting
-  - structs: encoding and decoding messages from tee instructions events, FTDC requests and attestations
+  - structs: encoding and decoding messages from tee instructions events, FDC2 requests and attestations
 - toml: reading toml files
 - voters: working with Flare entities
 - xrpl

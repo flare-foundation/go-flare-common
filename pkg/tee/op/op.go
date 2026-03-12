@@ -14,7 +14,7 @@ const (
 	Policy Type = "F_POLICY"
 	XRP    Type = "F_XRP"
 	BTC    Type = "F_BTC"
-	FTDC   Type = "F_FTDC"
+	FDC2   Type = "F_FDC2"
 )
 
 type Command string
@@ -77,7 +77,7 @@ var validSystemPairs = map[Type]map[Command]bool{
 		Pay:     true,
 		Reissue: true,
 	},
-	FTDC: {
+	FDC2: {
 		Prove: true,
 	},
 }

@@ -21,7 +21,7 @@ var opCommands = []op.Command{
 // i-th method correspond to a method in TeeDataConnectorStruct interface whose
 // input is the type of message emitted with i-th element of opCommands.
 var methods = []string{
-	"ftdcAttestationRequestStruct",
+	"fdc2AttestationRequestStruct",
 }
 
 var MessageArguments map[op.Command]abi.Argument
@@ -61,7 +61,7 @@ var AttestationRequestArg abi.Argument
 var AttestationTypeArguments map[AttestationType]AttestationArguments
 
 func init() {
-	connectorAbi, err := ConnectorMetaData.GetAbi()
+	connectorABI, err := ConnectorMetaData.GetAbi()
 	if err != nil {
 		panic(fmt.Sprintf("error getting tee data connector abi: %v", err))
 	}
@@ -72,7 +72,7 @@ func init() {
 
 	MessageArguments = make(map[op.Command]abi.Argument)
 	for j := range opCommands {
-		method, ok := connectorAbi.Methods[methods[j]]
+		method, ok := connectorABI.Methods[methods[j]]
 		if !ok {
 			panic(fmt.Sprintf("missing method %s", methods[j]))
 		}
@@ -83,48 +83,48 @@ func init() {
 
 	for j := range attestationTypes {
 		request := attestationTypeMethods[j] + reqStruct
-		method, ok := connectorAbi.Methods[request]
+		method, ok := connectorABI.Methods[request]
 		if !ok {
 			panic(fmt.Sprintf("missing method %s", request))
 		}
-		requestAbi := method.Inputs[0]
+		requestABI := method.Inputs[0]
 
 		response := attestationTypeMethods[j] + resStruct
-		method, ok = connectorAbi.Methods[response]
+		method, ok = connectorABI.Methods[response]
 		if !ok {
 			panic(fmt.Sprintf("missing method %s", response))
 		}
-		responseAbi := method.Inputs[0]
+		responseABI := method.Inputs[0]
 
 		proof := attestationTypeMethods[j] + proofStruct
-		method, ok = connectorAbi.Methods[proof]
+		method, ok = connectorABI.Methods[proof]
 		if !ok {
 			panic(fmt.Sprintf("missing method %s", proof))
 		}
-		proofAbi := method.Inputs[0]
+		proofABI := method.Inputs[0]
 
 		AttestationTypeArguments[attestationTypes[j]] = AttestationArguments{
-			Request:  requestAbi,
-			Response: responseAbi,
-			Proof:    proofAbi,
+			Request:  requestABI,
+			Response: responseABI,
+			Proof:    proofABI,
 		}
 	}
 
-	method, ok := connectorAbi.Methods["ftdcRequestHeaderStruct"]
+	method, ok := connectorABI.Methods["fdc2RequestHeaderStruct"]
 	if !ok {
-		panic("missing method ftdcRequestHeaderStruct")
+		panic("missing method fdc2RequestHeaderStruct")
 	}
 	RequestHeaderArg = method.Inputs[0]
 
-	method, ok = connectorAbi.Methods["ftdcResponseHeaderStruct"]
+	method, ok = connectorABI.Methods["fdc2ResponseHeaderStruct"]
 	if !ok {
-		panic("missing method ftdcResponseHeaderStruct")
+		panic("missing method fdc2ResponseHeaderStruct")
 	}
 	ResponseHeaderArg = method.Inputs[0]
 
-	method, ok = connectorAbi.Methods["ftdcAttestationRequestStruct"]
+	method, ok = connectorABI.Methods["fdc2AttestationRequestStruct"]
 	if !ok {
-		panic("missing method ftdcAttestationRequestStruct")
+		panic("missing method fdc2AttestationRequestStruct")
 	}
 	AttestationRequestArg = method.Inputs[0]
 }

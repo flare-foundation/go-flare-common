@@ -1488,37 +1488,105 @@
         "type": "address[]"
       },
       {
-        "internalType": "bytes32",
-        "name": "_opType",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_opCommand",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_message",
-        "type": "bytes"
-      },
-      {
-        "internalType": "address[]",
-        "name": "_cosigners",
-        "type": "address[]"
-      },
-      {
-        "internalType": "uint64",
-        "name": "_cosignersThreshold",
-        "type": "uint64"
-      },
-      {
-        "internalType": "address",
-        "name": "_claimBackAddress",
-        "type": "address"
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "opType",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "opCommand",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "message",
+            "type": "bytes"
+          },
+          {
+            "internalType": "address[]",
+            "name": "cosigners",
+            "type": "address[]"
+          },
+          {
+            "internalType": "uint64",
+            "name": "cosignersThreshold",
+            "type": "uint64"
+          },
+          {
+            "internalType": "address",
+            "name": "claimBackAddress",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct ITeeExtensionRegistry.TeeInstructionParams",
+        "name": "_instructionParams",
+        "type": "tuple"
       }
     ],
     "name": "sendInstructions",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_instructionId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_teeIds",
+        "type": "address[]"
+      },
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "opType",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "opCommand",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "message",
+            "type": "bytes"
+          },
+          {
+            "internalType": "address[]",
+            "name": "cosigners",
+            "type": "address[]"
+          },
+          {
+            "internalType": "uint64",
+            "name": "cosignersThreshold",
+            "type": "uint64"
+          },
+          {
+            "internalType": "address",
+            "name": "claimBackAddress",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct ITeeExtensionRegistry.TeeInstructionParams",
+        "name": "_instructionParams",
+        "type": "tuple"
+      }
+    ],
+    "name": "sendSystemInstructions",
     "outputs": [
       {
         "internalType": "bytes32",
@@ -1559,88 +1627,41 @@
         "type": "tuple[]"
       },
       {
-        "internalType": "bytes32",
-        "name": "_opType",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_opCommand",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_message",
-        "type": "bytes"
-      },
-      {
-        "internalType": "address[]",
-        "name": "_cosigners",
-        "type": "address[]"
-      },
-      {
-        "internalType": "uint64",
-        "name": "_cosignersThreshold",
-        "type": "uint64"
-      },
-      {
-        "internalType": "address",
-        "name": "_claimBackAddress",
-        "type": "address"
-      }
-    ],
-    "name": "sendSystemInstructions",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_instructionId",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "address[]",
-        "name": "_teeIds",
-        "type": "address[]"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_opType",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_opCommand",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_message",
-        "type": "bytes"
-      },
-      {
-        "internalType": "address[]",
-        "name": "_cosigners",
-        "type": "address[]"
-      },
-      {
-        "internalType": "uint64",
-        "name": "_cosignersThreshold",
-        "type": "uint64"
-      },
-      {
-        "internalType": "address",
-        "name": "_claimBackAddress",
-        "type": "address"
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "opType",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "opCommand",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "message",
+            "type": "bytes"
+          },
+          {
+            "internalType": "address[]",
+            "name": "cosigners",
+            "type": "address[]"
+          },
+          {
+            "internalType": "uint64",
+            "name": "cosignersThreshold",
+            "type": "uint64"
+          },
+          {
+            "internalType": "address",
+            "name": "claimBackAddress",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct ITeeExtensionRegistry.TeeInstructionParams",
+        "name": "_instructionParams",
+        "type": "tuple"
       }
     ],
     "name": "sendSystemInstructions",

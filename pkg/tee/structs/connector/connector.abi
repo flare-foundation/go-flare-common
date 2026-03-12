@@ -55,7 +55,7 @@
                 "type": "tuple[]"
               }
             ],
-            "internalType": "struct IFtdcVerification.FtdcSignatures",
+            "internalType": "struct IFdc2Verification.Fdc2Signatures",
             "name": "signatures",
             "type": "tuple"
           },
@@ -97,7 +97,7 @@
                 "type": "uint64"
               }
             ],
-            "internalType": "struct IFtdcHub.FtdcResponseHeader",
+            "internalType": "struct IFdc2Hub.Fdc2ResponseHeader",
             "name": "header",
             "type": "tuple"
           },
@@ -382,7 +382,7 @@
                 "type": "address"
               }
             ],
-            "internalType": "struct IFtdcHub.FtdcRequestHeader",
+            "internalType": "struct IFdc2Hub.Fdc2RequestHeader",
             "name": "header",
             "type": "tuple"
           },
@@ -392,12 +392,12 @@
             "type": "bytes"
           }
         ],
-        "internalType": "struct IFtdcHub.FtdcAttestationRequest",
+        "internalType": "struct IFdc2Hub.Fdc2AttestationRequest",
         "name": "",
         "type": "tuple"
       }
     ],
-    "name": "ftdcAttestationRequestStruct",
+    "name": "fdc2AttestationRequestStruct",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -427,12 +427,12 @@
             "type": "address"
           }
         ],
-        "internalType": "struct IFtdcHub.FtdcRequestHeader",
+        "internalType": "struct IFdc2Hub.Fdc2RequestHeader",
         "name": "",
         "type": "tuple"
       }
     ],
-    "name": "ftdcRequestHeaderStruct",
+    "name": "fdc2RequestHeaderStruct",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -477,12 +477,12 @@
             "type": "uint64"
           }
         ],
-        "internalType": "struct IFtdcHub.FtdcResponseHeader",
+        "internalType": "struct IFdc2Hub.Fdc2ResponseHeader",
         "name": "",
         "type": "tuple"
       }
     ],
-    "name": "ftdcResponseHeaderStruct",
+    "name": "fdc2ResponseHeaderStruct",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -543,7 +543,7 @@
                 "type": "tuple[]"
               }
             ],
-            "internalType": "struct IFtdcVerification.FtdcSignatures",
+            "internalType": "struct IFdc2Verification.Fdc2Signatures",
             "name": "signatures",
             "type": "tuple"
           },
@@ -585,7 +585,7 @@
                 "type": "uint64"
               }
             ],
-            "internalType": "struct IFtdcHub.FtdcResponseHeader",
+            "internalType": "struct IFdc2Hub.Fdc2ResponseHeader",
             "name": "header",
             "type": "tuple"
           },
@@ -750,7 +750,7 @@
                 "type": "tuple[]"
               }
             ],
-            "internalType": "struct IFtdcVerification.FtdcSignatures",
+            "internalType": "struct IFdc2Verification.Fdc2Signatures",
             "name": "signatures",
             "type": "tuple"
           },
@@ -792,7 +792,7 @@
                 "type": "uint64"
               }
             ],
-            "internalType": "struct IFtdcHub.FtdcResponseHeader",
+            "internalType": "struct IFdc2Hub.Fdc2ResponseHeader",
             "name": "header",
             "type": "tuple"
           },

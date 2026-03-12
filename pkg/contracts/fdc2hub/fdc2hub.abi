@@ -287,7 +287,7 @@
   },
   {
     "inputs": [],
-    "name": "FTDC_OP_TYPE",
+    "name": "FDC2_OP_TYPE",
     "outputs": [
       {
         "internalType": "bytes32",
@@ -365,10 +365,10 @@
   },
   {
     "inputs": [],
-    "name": "flareSystemsManager",
+    "name": "fdc2RequestFeeConfigurations",
     "outputs": [
       {
-        "internalType": "contract IFlareSystemsManager",
+        "internalType": "contract IFdc2RequestFeeConfigurations",
         "name": "",
         "type": "address"
       }
@@ -378,10 +378,10 @@
   },
   {
     "inputs": [],
-    "name": "ftdcRequestFeeConfigurations",
+    "name": "flareSystemsManager",
     "outputs": [
       {
-        "internalType": "contract IFtdcRequestFeeConfigurations",
+        "internalType": "contract IFlareSystemsManager",
         "name": "",
         "type": "address"
       }
@@ -577,7 +577,7 @@
                 "type": "address"
               }
             ],
-            "internalType": "struct IFtdcHub.FtdcRequestHeader",
+            "internalType": "struct IFdc2Hub.Fdc2RequestHeader",
             "name": "header",
             "type": "tuple"
           },
@@ -587,7 +587,7 @@
             "type": "bytes"
           }
         ],
-        "internalType": "struct IFtdcHub.FtdcAttestationRequest",
+        "internalType": "struct IFdc2Hub.Fdc2AttestationRequest",
         "name": "_attestationRequest",
         "type": "tuple"
       },
