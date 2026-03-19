@@ -592,6 +592,233 @@
           {
             "components": [
               {
+                "internalType": "bytes32",
+                "name": "opType",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "string",
+                "name": "senderAddress",
+                "type": "string"
+              },
+              {
+                "internalType": "uint64",
+                "name": "fromNonce",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "toNonce",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "untilTimestamp",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct IPMWFeeProof.RequestBody",
+            "name": "requestBody",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "actualFee",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "estimatedFee",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct IPMWFeeProof.ResponseBody",
+            "name": "responseBody",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct IPMWFeeProof.Proof",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "pmwFeeProofProofStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "opType",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "senderAddress",
+            "type": "string"
+          },
+          {
+            "internalType": "uint64",
+            "name": "fromNonce",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "toNonce",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "untilTimestamp",
+            "type": "uint64"
+          }
+        ],
+        "internalType": "struct IPMWFeeProof.RequestBody",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "pmwFeeProofRequestBodyStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "actualFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "estimatedFee",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IPMWFeeProof.ResponseBody",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "pmwFeeProofResponseBodyStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "signingPolicySignatures",
+                "type": "bytes"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint8",
+                    "name": "v",
+                    "type": "uint8"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "r",
+                    "type": "bytes32"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "s",
+                    "type": "bytes32"
+                  }
+                ],
+                "internalType": "struct Signature[]",
+                "name": "teeSignatures",
+                "type": "tuple[]"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint8",
+                    "name": "v",
+                    "type": "uint8"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "r",
+                    "type": "bytes32"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "s",
+                    "type": "bytes32"
+                  }
+                ],
+                "internalType": "struct Signature[]",
+                "name": "cosignerSignatures",
+                "type": "tuple[]"
+              }
+            ],
+            "internalType": "struct IFdc2Verification.Fdc2Signatures",
+            "name": "signatures",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "attestationType",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "sourceId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint16",
+                "name": "thresholdBIPS",
+                "type": "uint16"
+              },
+              {
+                "internalType": "address",
+                "name": "proofOwner",
+                "type": "address"
+              },
+              {
+                "internalType": "address[]",
+                "name": "cosigners",
+                "type": "address[]"
+              },
+              {
+                "internalType": "uint64",
+                "name": "cosignersThreshold",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "timestamp",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct IFdc2Hub.Fdc2ResponseHeader",
+            "name": "header",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
                 "internalType": "string",
                 "name": "accountAddress",
                 "type": "string"
