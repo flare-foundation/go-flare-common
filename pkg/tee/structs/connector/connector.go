@@ -32,12 +32,14 @@ const (
 	AvailabilityCheck            AttestationType = "TeeAvailabilityCheck"
 	PMWPaymentStatus             AttestationType = "PMWPaymentStatus"
 	PMWMultisigAccountConfigured AttestationType = "PMWMultisigAccountConfigured"
+	PMWFeeProof                  AttestationType = "PMWFeeProof"
 )
 
 var attestationTypes = []AttestationType{
 	AvailabilityCheck,
 	PMWPaymentStatus,
 	PMWMultisigAccountConfigured,
+	PMWFeeProof,
 }
 
 // i-th method correspond to a method in TeeDataConnectorStruct interface whose
@@ -46,6 +48,7 @@ var attestationTypeMethods = []string{
 	"availabilityCheck",
 	"pmwPaymentStatus",
 	"pmwMultisigAccountConfigured",
+	"pmwFeeProof",
 }
 
 type AttestationArguments struct {
