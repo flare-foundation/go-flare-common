@@ -29,7 +29,7 @@ func (s *Signer) Value() (*big.Int, error) {
 
 	value, err := base58.XRPLCoder.Decode(s.Account)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("decoding account %s: %w", s.Account, err)
 	}
 
 	s.value = new(big.Int).SetBytes(value)
@@ -122,7 +122,7 @@ func Parse(arrayObject types.ArrayObject) (*Signer, error) {
 
 	_, err = signer.Value()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("parsing signer account: %w", err)
 	}
 
 	return signer, nil

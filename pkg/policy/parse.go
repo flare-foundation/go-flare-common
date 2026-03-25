@@ -1,6 +1,8 @@
 package policy
 
 import (
+	"fmt"
+
 	"github.com/ethereum/go-ethereum/common"
 
 	"github.com/flare-foundation/go-flare-common/pkg/contracts/registry"
@@ -32,7 +34,7 @@ func init() {
 func ParseSigningPolicyInitializedEvent(dbLog database.Log) (*relay.RelaySigningPolicyInitialized, error) {
 	contractLog, err := events.ConvertDatabaseLogToChainLog(dbLog)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("converting database log: %w", err)
 	}
 
 	return RelayFilterer.ParseSigningPolicyInitialized(*contractLog)
@@ -42,7 +44,7 @@ func ParseSigningPolicyInitializedEvent(dbLog database.Log) (*relay.RelaySigning
 func ParseVoterRegisteredEvent(dbLog database.Log) (*registry.RegistryVoterRegistered, error) {
 	contractLog, err := events.ConvertDatabaseLogToChainLog(dbLog)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("converting database log: %w", err)
 	}
 
 	return RegistryFilterer.ParseVoterRegistered(*contractLog)

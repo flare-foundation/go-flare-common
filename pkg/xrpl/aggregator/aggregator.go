@@ -157,12 +157,12 @@ func (a *Account) Finalize(id common.Hash) ([]byte, error) {
 
 	s, err := sort(tx.signers, int(a.Quorum))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("sorting signers: %w", err)
 	}
 
 	blob, err := signing.JoinMultisig(tx.transaction, s)
 	if err != nil {
-		return nil, errors.New("joining signatures")
+		return nil, fmt.Errorf("joining signatures: %w", err)
 	}
 
 	return blob, nil

@@ -3,6 +3,7 @@ package events
 
 import (
 	"encoding/hex"
+	"fmt"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
@@ -16,7 +17,7 @@ const null = "NULL"
 func ConvertDatabaseLogToChainLog(dbLog database.Log) (*types.Log, error) {
 	data, err := hex.DecodeString(dbLog.Data)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("decoding log data: %w", err)
 	}
 
 	var topics []common.Hash
