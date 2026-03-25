@@ -1,4 +1,4 @@
-// Package toml provides utilities for reading and unmarshaling TOML configuration files.
+// Package toml provides utilities for reading and unmarshaling TOML configuration files. Wraps github.com/BurntSushi/toml.
 package toml
 
 import (
