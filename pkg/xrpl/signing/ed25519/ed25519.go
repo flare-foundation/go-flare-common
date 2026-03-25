@@ -91,7 +91,7 @@ func SignTxMultisig(tx map[string]any, prv ed25519.PrivateKey) (*signer.Signer, 
 func PrivKeyFromSecret(secret string) (ed25519.PrivateKey, error) {
 	secretBytes, err := base58.XRPLCoder.Decode(secret)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("decoding secret: %w", err)
 	}
 
 	if len(secretBytes) < 7 { // 3 prefix bytes + at least 4 checksum bytes

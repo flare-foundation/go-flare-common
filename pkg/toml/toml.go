@@ -26,5 +26,9 @@ func ReadTo[T any](filePath string, dest *T, allowUnknownFields bool) error {
 		return fmt.Errorf("unknown field in toml %v", md.Undecoded()[0].String())
 	}
 
-	return err
+	if err != nil {
+		return fmt.Errorf("decoding file %s: %w", filePath, err)
+	}
+
+	return nil
 }

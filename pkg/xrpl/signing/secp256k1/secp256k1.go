@@ -90,7 +90,7 @@ func SignXRPL(message []byte, privKey *ecdsa.PrivateKey) ([]byte, error) {
 
 	sig, err := sign(h, privKey)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("signing: %w", err)
 	}
 
 	return sig.DER(), nil
@@ -100,7 +100,7 @@ func SignXRPL(message []byte, privKey *ecdsa.PrivateKey) ([]byte, error) {
 func sign(hash []byte, privKey *ecdsa.PrivateKey) (*SignatureWithRecovery, error) {
 	sig, err := crypto.Sign(hash, privKey)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("crypto sign: %w", err)
 	}
 	return MarshalRecID(sig)
 }
