@@ -1,4 +1,4 @@
-// Package random provides cryptographic random value generation utilities.
+// Package random provides cryptographic random value generation utilities. Wraps crypto/rand.
 package random
 
 import (
