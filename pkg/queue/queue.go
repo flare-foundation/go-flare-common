@@ -1,3 +1,4 @@
+// Package queue provides a priority queue with configurable rate limiting, retry backoff, and dead letter support.
 package queue
 
 import (
@@ -322,12 +323,12 @@ func (q *PriorityQueue[T]) wait(ctx context.Context) error {
 	return q.limiter.Wait(ctx)
 }
 
-// Length return the number of item in the queue.
+// Length returns the number of items in the queue.
 func (q *PriorityQueue[T]) Length() int {
 	return len(q.priority) + len(q.regular)
 }
 
-// Name return the nam of the queue or "unnamed".
+// Name returns the name of the queue or "unnamed".
 func (q *PriorityQueue[T]) Name() string {
 	if len(q.name) > 0 {
 		return q.name

@@ -59,6 +59,7 @@ func fetchLatestBlock(
 	return blocks[0], nil
 }
 
+// LatestLogsParams holds parameters for fetching the latest logs by address and topic.
 type LatestLogsParams struct {
 	Address common.Address
 	Topic0  common.Hash
@@ -85,6 +86,7 @@ func fetchLatestLogsByAddressAndTopic0(
 	return logs, err
 }
 
+// LogsFullParams holds parameters for fetching logs with optional address and topic filters.
 type LogsFullParams struct {
 	Address common.Address
 	Topics  [4]common.Hash
@@ -129,6 +131,7 @@ func fetchLogsFull(
 	return logs, err
 }
 
+// LogsParams holds parameters for fetching logs within a range by address and topic.
 type LogsParams struct {
 	Address  common.Address
 	Topic0   common.Hash
@@ -199,6 +202,7 @@ func fetchLogsByAddressAndTopic0BlockNumber(ctx context.Context, db *gorm.DB, pa
 	return logs, nil
 }
 
+// TxParams holds parameters for fetching transactions within a range by address and function selector.
 type TxParams struct {
 	ToAddress   common.Address
 	FunctionSel [4]byte
@@ -312,7 +316,7 @@ func fetchState(ctx context.Context, db *gorm.DB, stateName string) (State, erro
 	return states[0], nil
 }
 
-// RetryWrapper wraps a query function to retry until success of 15 second with exponential backoff.
+// RetryWrapper wraps a query function to retry with exponential backoff up to 15 seconds.
 func RetryWrapper[F any, P any](query func(context.Context, *gorm.DB, P) (F, error), errorMsg string) func(context.Context, *gorm.DB, P) (F, error) {
 	wrappedFunc := func(ctx context.Context, db *gorm.DB, params P) (F, error) {
 		var returnValue F

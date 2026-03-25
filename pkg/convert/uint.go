@@ -5,7 +5,7 @@ import (
 	"math/big"
 )
 
-// BigToUint32Safe converts bit.Int into uint32.
+// BigToUint32Safe converts big.Int into uint32.
 // It returns an error if it is out of bounds.
 func BigToUint32Safe(b *big.Int) (uint32, error) {
 	idNegative := b.Sign() == -1
@@ -20,7 +20,7 @@ func BigToUint32Safe(b *big.Int) (uint32, error) {
 	return u, nil
 }
 
-// BigToUint64Safe converts bit.Int into uint64.
+// BigToUint64Safe converts big.Int into uint64.
 // It returns an error if it is out of bounds.
 func BigToUint64Safe(b *big.Int) (uint64, error) {
 	if b.IsUint64() {

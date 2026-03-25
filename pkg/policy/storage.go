@@ -19,6 +19,7 @@ type Storage struct {
 	sync.Mutex
 }
 
+// NewStorage creates an empty Storage with strict sequential reward epoch ID enforcement.
 func NewStorage() *Storage {
 	return &Storage{spList: make([]*SigningPolicy, 0, 10)}
 }

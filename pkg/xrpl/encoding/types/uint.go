@@ -10,6 +10,7 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/defs"
 )
 
+// InvalidTypeError is returned when a value cannot be converted to the expected XRPL integer type.
 type InvalidTypeError struct {
 	t string
 	v any
@@ -19,6 +20,7 @@ func (i *InvalidTypeError) Error() string {
 	return fmt.Sprintf("invalid %s: %v", i.t, i.v)
 }
 
+// InvalidUInt8 returns an InvalidTypeError for a UInt8 value.
 func InvalidUInt8(v any) *InvalidTypeError {
 	return &InvalidTypeError{t: "UInt8", v: v}
 }
@@ -242,7 +244,7 @@ func convertInt64(value any, t string) (int64, error) {
 	}
 }
 
-// Uint16ToTxType converts Uint16 value to a string describing transaction type.
+// Uint16ToTxType converts a uint16 value to its corresponding transaction type name.
 func Uint16ToTxType(uintValue any) (string, error) {
 	v, ok := uintValue.(uint16)
 	if !ok {

@@ -1,3 +1,4 @@
+// Package storage provides a thread-safe cyclic key-value storage with fixed capacity.
 package storage
 
 import (

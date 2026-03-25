@@ -1,3 +1,4 @@
+// Package base58 provides base58 encoding and decoding with configurable alphabets.
 package base58
 
 import (

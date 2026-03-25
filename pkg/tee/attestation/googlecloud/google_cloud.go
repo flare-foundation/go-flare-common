@@ -1,3 +1,4 @@
+// Package googlecloud provides validation and parsing of Google Cloud TEE attestation tokens.
 package googlecloud
 
 import (

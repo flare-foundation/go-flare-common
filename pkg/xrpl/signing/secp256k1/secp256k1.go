@@ -1,3 +1,4 @@
+// Package secp256k1 provides XRPL secp256k1 key management and transaction signing.
 package secp256k1
 
 import (
@@ -51,7 +52,7 @@ const (
 // 	return signed, nil
 // }
 
-// SignTxMultisig returns a signature of a transaction needed for multisig.
+// SignTxMultisig signs a transaction for multi-signing using a secp256k1 private key.
 func SignTxMultisig(tx map[string]any, prv *ecdsa.PrivateKey) (*signer.Signer, error) {
 	tx["SigningPubKey"] = ""
 

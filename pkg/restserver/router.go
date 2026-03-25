@@ -13,6 +13,7 @@ import (
 	v3 "github.com/swaggest/swgui/v3"
 )
 
+// Router defines the interface for registering routes, middleware, and sub-routers.
 type Router interface {
 	AddRoute(path string, handler RouteHandler, description ...string)
 	AddMiddleware(middleware mux.MiddlewareFunc)
@@ -46,6 +47,7 @@ func (r *defaultRouter) WithPrefix(prefix string, tag string) Router {
 func (r *defaultRouter) Finalize() {
 }
 
+// NewDefaultRouter creates a Router backed by the given gorilla/mux router.
 func NewDefaultRouter(mRouter *mux.Router) Router {
 	return &defaultRouter{
 		router: mRouter,
@@ -56,6 +58,7 @@ func NewDefaultRouter(mRouter *mux.Router) Router {
 //////// SWAGGER ROUTER IMPLEMENTATION /////////////////
 ////////////////////////////////////////////////////////
 
+// SwaggerRouterConfig holds configuration for a swagger-enabled router.
 type SwaggerRouterConfig struct {
 	Title           string
 	Version         string
@@ -63,10 +66,12 @@ type SwaggerRouterConfig struct {
 	SecuritySchemes openapi3.SecuritySchemes
 }
 
+// JSONDocumentationPath returns the path for the JSON OpenAPI documentation endpoint.
 func (c *SwaggerRouterConfig) JSONDocumentationPath() string {
 	return c.SwaggerBasePath + "-json"
 }
 
+// YAMLDocumentationPath returns the path for the YAML OpenAPI documentation endpoint.
 func (c *SwaggerRouterConfig) YAMLDocumentationPath() string {
 	return c.SwaggerBasePath + "-yaml"
 }
@@ -79,6 +84,7 @@ type swaggerRouter struct {
 	config  SwaggerRouterConfig
 }
 
+// NewSwaggerRouter creates a Router with OpenAPI documentation support.
 func NewSwaggerRouter(mRouter *mux.Router, config SwaggerRouterConfig) Router {
 	router, _ := swagger.NewRouter(gorilla.NewRouter(mRouter), swagger.Options{
 		Openapi: &openapi3.T{
@@ -102,9 +108,8 @@ func NewSwaggerRouter(mRouter *mux.Router, config SwaggerRouterConfig) Router {
 	}
 }
 
-// Add a route to the router and generate openapi definitions from the handler.
-// The first item in the description parameter is used to set the openapi summary field and
-// the second item is used to set the openapi description field.
+// AddRoute adds a route and generates OpenAPI definitions from the handler.
+// The first description item sets the summary field; the second sets the description field.
 func (r *swaggerRouter) AddRoute(path string, handler RouteHandler, description ...string) {
 	swaggerDefinitions := handler.SwaggerDefinitions
 	swaggerDefinitions.Tags = []string{r.tag}

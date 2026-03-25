@@ -1,3 +1,4 @@
+// Package policy provides signing policy management, parsing, and storage for Flare reward epochs.
 package policy
 
 import (
@@ -18,6 +19,7 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/voters"
 )
 
+// SigningPolicy holds the signing policy data for a reward epoch.
 type SigningPolicy struct {
 	RewardEpochID      uint32
 	StartVotingRoundID uint32
@@ -30,6 +32,7 @@ type SigningPolicy struct {
 	Voters *voters.Set
 }
 
+// RawBytes returns the raw signing policy bytes.
 func (sp *SigningPolicy) RawBytes() []byte {
 	return sp.rawBytes
 }
@@ -39,7 +42,7 @@ func (sp *SigningPolicy) Hash() []byte {
 	return Hash(sp.rawBytes)
 }
 
-// NewSigningPolicy crates SigningPolicy from an SigningPolicyInitialized event.
+// NewSigningPolicy creates a SigningPolicy from an SigningPolicyInitialized event.
 //
 // Mapping from submitAddress to signingPolicyAddress can be added if needed.
 func NewSigningPolicy(r *relay.RelaySigningPolicyInitialized, submitToSigning map[common.Address]common.Address) *SigningPolicy {

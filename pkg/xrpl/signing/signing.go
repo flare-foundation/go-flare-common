@@ -1,3 +1,4 @@
+// Package signing provides XRPL multi-signature validation and assembly.
 package signing
 
 import (

@@ -1,3 +1,4 @@
+// Package priority provides a heap-based priority queue with rate limiting and retry support.
 package priority
 
 import (

@@ -1,7 +1,9 @@
+// Package transactions provides XRPL transaction construction and validation utilities.
 package transactions
 
 import "github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/types"
 
+// CommonFields holds fields shared across XRPL transaction types.
 type CommonFields struct {
 	Account         string
 	TransactionType string
@@ -10,16 +12,19 @@ type CommonFields struct {
 	Memos           []Memo
 }
 
+// Memo represents an XRPL transaction memo with optional data, format, and type fields.
 type Memo struct {
 	MemoData   string
 	MemoFormat string
 	MemoType   string
 }
 
+// Validate checks that the memo fields contain valid characters.
 func (m Memo) Validate() bool {
 	return true // TODO check characters in MemoFormat and MemoType
 }
 
+// Format returns the memo as a serializable array object.
 func (m Memo) Format() types.ArrayObject {
 	inner := make(types.Object)
 

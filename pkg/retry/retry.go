@@ -1,3 +1,4 @@
+// Package retry provides generic retry execution with configurable attempts, delay, and timeout.
 package retry
 
 import (
@@ -7,12 +8,14 @@ import (
 	"time"
 )
 
+// ExecuteStatus holds the result of an Execute call, including success state, value, and any error.
 type ExecuteStatus[T any] struct {
 	Success bool
 	Err     error
 	Value   T
 }
 
+// Params configures retry behavior for Execute.
 type Params struct {
 	MaxAttempts int           // if non positive, number of attempts is not limited.
 	Delay       time.Duration // minimal delay between each attempts

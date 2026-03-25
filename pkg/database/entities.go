@@ -1,3 +1,4 @@
+// Package database provides database connection, query utilities, and entity definitions for the C-chain indexer.
 package database
 
 import "time"
@@ -7,6 +8,7 @@ type BaseEntity struct {
 	ID uint64 `gorm:"primaryKey;unique"`
 }
 
+// State represents the indexer state.
 type State struct {
 	BaseEntity
 
@@ -16,6 +18,7 @@ type State struct {
 	Updated        time.Time
 }
 
+// Transaction represents a C-chain transaction.
 type Transaction struct {
 	BaseEntity
 
@@ -35,6 +38,7 @@ type Transaction struct {
 	Signature        *string `gorm:"type:varchar(130)"`
 }
 
+// Log represents a C-chain event log.
 type Log struct {
 	BaseEntity
 	TransactionID   uint64       `gorm:"default:null"` // database ID of the transaction, should not be confused with the hash of the transaction
@@ -51,6 +55,7 @@ type Log struct {
 	BlockNumber     uint64       `gorm:"index"`
 }
 
+// Block represents a C-chain block.
 type Block struct {
 	BaseEntity
 	Hash      string `gorm:"type:varchar(64);index;unique"`

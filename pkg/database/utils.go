@@ -11,6 +11,7 @@ import (
 	gormLogger "gorm.io/gorm/logger"
 )
 
+// Config holds MySQL database connection parameters.
 type Config struct {
 	Host       string `toml:"host" envconfig:"DB_HOST"`
 	Port       int    `toml:"port" envconfig:"DB_PORT"`
@@ -44,6 +45,7 @@ func Connect(cfg *Config) (*gorm.DB, error) {
 	return gorm.Open(gormMysql.Open(dbConfig.FormatDSN()), &gormConfig)
 }
 
+// SyncParams configures the retry behavior for waiting on C-chain indexer synchronization.
 type SyncParams struct {
 	Retries            int           // Maximal number of retires
 	OutOfSyncTolerance time.Duration // Delay that is tolerable
@@ -120,6 +122,7 @@ func (*noLogger) Debugf(string, ...any) {
 func (*noLogger) Warnf(string, ...any) {
 }
 
+// DoInTransaction executes operations within a single database transaction, rolling back on any error.
 func DoInTransaction(db *gorm.DB, operations ...func(db *gorm.DB) error) error {
 	tx := db.Begin()
 	defer func() {
@@ -137,7 +140,7 @@ func DoInTransaction(db *gorm.DB, operations ...func(db *gorm.DB) error) error {
 	return tx.Commit().Error
 }
 
-// CheckDelay check whether db is delayed by more than tolerance.
+// CheckDelay checks whether db is delayed by more than tolerance.
 func CheckDelay(ctx context.Context, db *gorm.DB, tolerance time.Duration) error {
 	state, err := FetchState(ctx, db, nil)
 	if err != nil {

@@ -1,3 +1,4 @@
+// Package hash provides cryptographic hashing utilities used in XRPL transaction processing.
 package hash
 
 import (

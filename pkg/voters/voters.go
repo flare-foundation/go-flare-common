@@ -1,3 +1,4 @@
+// Package voters provides voter set management and weighted random selection for Flare signing policies.
 package voters
 
 import (
@@ -9,11 +10,13 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
+// VoterData holds the index and weight of a voter in the signing policy.
 type VoterData struct {
 	Index  int
 	Weight uint16
 }
 
+// Set represents a weighted set of voters for a signing policy.
 type Set struct {
 	voters      []common.Address // signingPolicyAddress
 	weights     []uint16
@@ -82,6 +85,7 @@ func (vs *Set) SelectVoters(rewardEpochSeed *big.Int, protocolID byte, votingRou
 	return vs.RandomSelectThresholdWeightVoters(seed, thresholdBIPS)
 }
 
+// RandomSelectThresholdWeightVoters randomly selects voters until the accumulated weight reaches the threshold.
 func (vs *Set) RandomSelectThresholdWeightVoters(randomSeed common.Hash, thresholdBIPS uint16) (map[common.Address]bool, error) {
 	// We limit the threshold to 5000 BIPS to avoid long running loops
 	// In practice it will be used with around 1000 BIPS or lower.
@@ -178,7 +182,7 @@ func (vs *Set) VoterWeightForAddress(a common.Address) uint16 {
 	return d.Weight
 }
 
-// Voters a slice of signing policy addresses of voters.
+// Voters returns a slice of signing policy addresses of voters.
 func (vs *Set) Voters() []common.Address {
 	return vs.voters
 }

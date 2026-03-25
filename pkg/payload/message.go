@@ -1,3 +1,4 @@
+// Package payload provides utilities for building and extracting Flare protocol submission messages.
 package payload
 
 import (

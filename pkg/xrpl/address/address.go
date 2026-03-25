@@ -1,3 +1,4 @@
+// Package address provides XRPL address encoding, decoding, and derivation from public keys.
 package address
 
 import (

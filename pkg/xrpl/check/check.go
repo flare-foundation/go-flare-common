@@ -1,3 +1,4 @@
+// Package check provides XRPL account verification for multi-signature configuration.
 package check
 
 import (

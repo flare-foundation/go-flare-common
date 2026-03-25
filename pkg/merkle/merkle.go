@@ -1,3 +1,4 @@
+// Package merkle provides a Merkle tree implementation with proof generation and verification.
 package merkle
 
 import (

@@ -1,3 +1,4 @@
+// Package encoding provides signature encoding and transformation utilities for Flare protocol finalization.
 package encoding
 
 import (
@@ -10,6 +11,7 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/convert"
 )
 
+// IndexedSignature pairs a signature with the index of its provider.
 type IndexedSignature struct {
 	Index     int
 	Signature hexutil.Bytes
