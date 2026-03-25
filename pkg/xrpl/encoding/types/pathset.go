@@ -39,7 +39,7 @@ func (*PathSet) ToBytes(value any, _ bool) ([]byte, error) {
 
 		pathBytes, err := pathToBytes(pathSlice)
 		if err != nil {
-			return nil, fmt.Errorf("invalid path set: %v", err)
+			return nil, fmt.Errorf("invalid path set: %w", err)
 		}
 
 		out = append(out, pathBytes...)
@@ -61,7 +61,7 @@ func (*PathSet) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	for {
 		flag, path, err := readPath(b)
 		if err != nil {
-			return nil, fmt.Errorf("reading next path: %v", err)
+			return nil, fmt.Errorf("reading next path: %w", err)
 		}
 		switch flag {
 		case endFlag:
@@ -151,7 +151,7 @@ func stepToBytes(step map[string]any) ([]byte, error) {
 		case false:
 			currencyBytes, err := serializeCurrency(curr, disallowedCodes)
 			if err != nil {
-				return nil, fmt.Errorf("invalid path %v, invalid issuer %v", step, err)
+				return nil, fmt.Errorf("invalid path %v, invalid issuer %w", step, err)
 			}
 
 			out = append(out, currencyBytes...)
@@ -190,7 +190,7 @@ func pathToBytes(path []any) ([]byte, error) {
 
 		stepBytes, err := stepToBytes(stepMap)
 		if err != nil {
-			return nil, fmt.Errorf("invalid path: %v", err)
+			return nil, fmt.Errorf("invalid path: %w", err)
 		}
 		out = append(out, stepBytes...)
 	}
@@ -205,7 +205,7 @@ func readPath(b *bytes.Buffer) (byte, any, error) {
 	for {
 		flag, step, err := readStep(b)
 		if err != nil {
-			return flag, nil, fmt.Errorf("reading next step: %v", err)
+			return flag, nil, fmt.Errorf("reading next step: %w", err)
 		}
 
 		if flag == anotherFlag || flag == endFlag {
@@ -227,7 +227,7 @@ func readPath(b *bytes.Buffer) (byte, any, error) {
 func readStep(b *bytes.Buffer) (byte, any, error) {
 	flag, err := b.ReadByte()
 	if err != nil {
-		return 0, nil, fmt.Errorf("reading flag: %v", err)
+		return 0, nil, fmt.Errorf("reading flag: %w", err)
 	}
 
 	if flag == anotherFlag || flag == endFlag {
@@ -240,7 +240,7 @@ func readStep(b *bytes.Buffer) (byte, any, error) {
 	case 0x01:
 		account, err := AccountID.ToJSON(b, 0)
 		if err != nil {
-			return flag, nil, fmt.Errorf("reading account: %v", err)
+			return flag, nil, fmt.Errorf("reading account: %w", err)
 		}
 
 		out["account"] = account
@@ -249,7 +249,7 @@ func readStep(b *bytes.Buffer) (byte, any, error) {
 	case 0x10:
 		currency, err := readCurrency(b)
 		if err != nil {
-			return flag, nil, fmt.Errorf("currency: %v", err)
+			return flag, nil, fmt.Errorf("currency: %w", err)
 		}
 
 		out["currency"] = currency
@@ -258,7 +258,7 @@ func readStep(b *bytes.Buffer) (byte, any, error) {
 	case 0x20:
 		issuer, err := AccountID.ToJSON(b, 0)
 		if err != nil {
-			return flag, nil, fmt.Errorf("issuer: %v", err)
+			return flag, nil, fmt.Errorf("issuer: %w", err)
 		}
 
 		out["issuer"] = issuer
@@ -267,14 +267,14 @@ func readStep(b *bytes.Buffer) (byte, any, error) {
 	case 0x30:
 		currency, err := readCurrency(b)
 		if err != nil {
-			return flag, nil, fmt.Errorf("currency before issuer: %v", err)
+			return flag, nil, fmt.Errorf("currency before issuer: %w", err)
 		}
 
 		out["currency"] = currency
 
 		issuer, err := AccountID.ToJSON(b, 0)
 		if err != nil {
-			return flag, nil, fmt.Errorf("issuer after currency: %v", err)
+			return flag, nil, fmt.Errorf("issuer after currency: %w", err)
 		}
 
 		out["issuer"] = issuer
@@ -291,7 +291,7 @@ func readCurrency(b *bytes.Buffer) (string, error) {
 	c := make([]byte, l)
 	n, err := b.Read(c)
 	if err != nil {
-		return "", fmt.Errorf("reading bytes: %v", err)
+		return "", fmt.Errorf("reading bytes: %w", err)
 	}
 	if n != l {
 		return "nil", outOfBytes("currency", l, n)
@@ -302,7 +302,7 @@ func readCurrency(b *bytes.Buffer) (string, error) {
 	}
 	currency, err := deserializeCurrency(c)
 	if err != nil {
-		return "", fmt.Errorf("deserializing currency code: %v", err)
+		return "", fmt.Errorf("deserializing currency code: %w", err)
 	}
 
 	return currency, nil

@@ -35,7 +35,7 @@ func (h *hash) ToBytes(value any, _ bool) ([]byte, error) {
 
 	v, err := hex.DecodeString(s)
 	if err != nil {
-		return nil, fmt.Errorf("not hex string %v, %v", value, err)
+		return nil, fmt.Errorf("not hex string %v, %w", value, err)
 	}
 	if h.length != 0 && h.length != len(v) {
 		return nil, fmt.Errorf("wrong length, expected %d bytes", h.length)
@@ -59,7 +59,7 @@ func (h *hash) ToJSON(b *bytes.Buffer, length int) (any, error) {
 
 	n, err := b.Read(value)
 	if err != nil {
-		return nil, fmt.Errorf("cannot read hash from buffer: %v", err)
+		return nil, fmt.Errorf("cannot read hash from buffer: %w", err)
 	}
 	if n != l {
 		return nil, outOfBytes("hash", l, n)

@@ -35,12 +35,12 @@ type transaction struct {
 func (a *Account) AddSignatures(blob []byte) (*transaction, bool, error) {
 	txJSON, err := encoding.Decode(blob)
 	if err != nil {
-		return nil, false, fmt.Errorf("invalid tx bloc: %v", err)
+		return nil, false, fmt.Errorf("invalid tx blob: %w", err)
 	}
 
 	en, err := encoding.Encode(txJSON, true)
 	if err != nil {
-		return nil, false, fmt.Errorf("encoding: %v", err)
+		return nil, false, fmt.Errorf("encoding: %w", err)
 	}
 
 	identifier := crypto.Keccak256Hash(en)
@@ -76,7 +76,7 @@ func (a *Account) AddSignatures(blob []byte) (*transaction, bool, error) {
 
 		decoded, err := encoding.Decode(en)
 		if err != nil {
-			return nil, false, fmt.Errorf("decoding: %v", err)
+			return nil, false, fmt.Errorf("decoding: %w", err)
 		}
 		tx.transaction = decoded
 	}

@@ -125,7 +125,7 @@ func CheckNativePayment(tx map[string]any) error {
 	}
 	feeUint, err := strconv.ParseUint(feeStr, 10, 32)
 	if err != nil {
-		return fmt.Errorf("unparsable unsigned integer for Fee: %v: %v", fee, err)
+		return fmt.Errorf("unparsable unsigned integer for Fee: %v: %w", fee, err)
 	}
 	if feeUint == 0 {
 		return errors.New("zero Fee set")
@@ -142,10 +142,10 @@ func CheckNativePayment(tx map[string]any) error {
 	}
 	amountBig, ok := new(big.Int).SetString(amountStr, 10)
 	if !ok {
-		return fmt.Errorf("unparsable integer for Amount: %v: %v", fee, err)
+		return fmt.Errorf("unparsable integer for Amount: %v: %w", fee, err)
 	}
 	if amountBig.Cmp(big.NewInt(0)) != 1 {
-		return fmt.Errorf("non positive integer for Amount: %v: %v", fee, err)
+		return fmt.Errorf("non positive integer for Amount: %v: %w", fee, err)
 	}
 
 	// Sequence

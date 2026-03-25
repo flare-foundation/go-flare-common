@@ -26,7 +26,7 @@ func (c *currency) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	code := make([]byte, l)
 	n, err := b.Read(code)
 	if err != nil {
-		return nil, fmt.Errorf("cannot read currency value: %v", err)
+		return nil, fmt.Errorf("cannot read currency value: %w", err)
 	}
 	if n != l {
 		return nil, outOfBytes("currency value", l, n)
@@ -71,7 +71,7 @@ func serializeStandardCode(code string) ([]byte, error) {
 func serializeNonstandardCode(code string) ([]byte, error) {
 	out, err := hex.DecodeString(code)
 	if err != nil {
-		return nil, fmt.Errorf("invalid nonstandard currency code: %v", err)
+		return nil, fmt.Errorf("invalid nonstandard currency code: %w", err)
 	}
 
 	return out, nil

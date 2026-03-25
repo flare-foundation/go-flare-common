@@ -48,17 +48,17 @@ func Encode(value Object, signing bool) ([]byte, error) {
 	names := keys(value)
 	sortedNames, err := sortFields(names)
 	if err != nil {
-		return nil, fmt.Errorf("cannot sort: %v", err)
+		return nil, fmt.Errorf("cannot sort: %w", err)
 	}
 
 	for _, name := range sortedNames {
 		bytes, err := encodeInner(name, value[name], signing)
 		if err != nil {
-			return nil, fmt.Errorf("%s: %v", name, err)
+			return nil, fmt.Errorf("%s: %w", name, err)
 		}
 		_, err = outBuff.Write(bytes)
 		if err != nil {
-			return nil, fmt.Errorf("cannot add %s to buffer: %v", name, err)
+			return nil, fmt.Errorf("cannot add %s to buffer: %w", name, err)
 		}
 	}
 
@@ -159,7 +159,7 @@ func lengthEncode(n int) ([]byte, error) {
 func lengthDecode(b *bytes.Buffer) (int, error) {
 	byte1, err := b.ReadByte()
 	if err != nil {
-		return -1, fmt.Errorf("cannot read first byte %v", err)
+		return -1, fmt.Errorf("cannot read first byte %w", err)
 	}
 
 	switch {
@@ -168,7 +168,7 @@ func lengthDecode(b *bytes.Buffer) (int, error) {
 	case byte1 < 241:
 		byte2, err := b.ReadByte()
 		if err != nil {
-			return -1, fmt.Errorf("cannot read second byte %v", err)
+			return -1, fmt.Errorf("cannot read second byte %w", err)
 		}
 
 		return 193 + ((int(byte1) - 193) * 256) + int(byte2), nil
@@ -176,7 +176,7 @@ func lengthDecode(b *bytes.Buffer) (int, error) {
 		bytes := make([]byte, 2)
 		n, err := b.Read(bytes)
 		if n != 2 || err != nil {
-			return -1, fmt.Errorf("cannot read second and third byte %v", err)
+			return -1, fmt.Errorf("cannot read second and third byte %w", err)
 		}
 
 		out := 12481 + ((int(byte1) - 241) * 65536) + (int(bytes[0]) * 256) + int(bytes[1])
@@ -210,7 +210,7 @@ func encodeInner(name string, value any, signing bool) ([]byte, error) {
 
 	encoder, err := typeCoder(field.Type)
 	if err != nil {
-		return nil, fmt.Errorf("no encoder: %v", err)
+		return nil, fmt.Errorf("no encoder: %w", err)
 	}
 
 	valueBytes, err := encoder.ToBytes(value, signing)
@@ -222,7 +222,7 @@ func encodeInner(name string, value any, signing bool) ([]byte, error) {
 
 	id, err := field.ID()
 	if err != nil {
-		return nil, fmt.Errorf("invalid field id %s: %v", name, err)
+		return nil, fmt.Errorf("invalid field id %s: %w", name, err)
 	}
 
 	out = append(out, id...)
@@ -230,7 +230,7 @@ func encodeInner(name string, value any, signing bool) ([]byte, error) {
 	if field.IsVLEncoded {
 		prefix, err := lengthEncode(len(valueBytes))
 		if err != nil {
-			return nil, fmt.Errorf("invalid len of field %v: %v", name, err)
+			return nil, fmt.Errorf("invalid len of field %v: %w", name, err)
 		}
 
 		out = append(out, prefix...)
@@ -288,7 +288,7 @@ func keys[K comparable, V any](m map[K]V) []K {
 func decodeNext(b *bytes.Buffer) (string, any, error) {
 	idPair, err := defs.ReadID(b)
 	if err != nil {
-		return "", nil, fmt.Errorf("reading id: %v", err)
+		return "", nil, fmt.Errorf("reading id: %w", err)
 	}
 
 	fName, ok := defs.IDToName[idPair]
@@ -298,7 +298,7 @@ func decodeNext(b *bytes.Buffer) (string, any, error) {
 
 	coder, err := typeCoder(idPair.T)
 	if err != nil {
-		return "", nil, fmt.Errorf("missing coder for %v: %v", idPair.T, err)
+		return "", nil, fmt.Errorf("missing coder for %v: %w", idPair.T, err)
 	}
 
 	field, ok := defs.NameToField[fName]
@@ -310,19 +310,19 @@ func decodeNext(b *bytes.Buffer) (string, any, error) {
 	if field.IsVLEncoded {
 		length, err = lengthDecode(b)
 		if err != nil {
-			return "", nil, fmt.Errorf("reading length %v: %v", idPair.T, err)
+			return "", nil, fmt.Errorf("reading length %v: %w", idPair.T, err)
 		}
 	}
 
 	value, err := coder.ToJSON(b, length)
 	if err != nil {
-		return "", nil, fmt.Errorf("decoding %v: %v", fName, err)
+		return "", nil, fmt.Errorf("decoding %v: %w", fName, err)
 	}
 
 	if fName == "TransactionType" {
 		value, err = Uint16ToTxType(value)
 		if err != nil {
-			return "", nil, fmt.Errorf("invalid tx type: %v", err)
+			return "", nil, fmt.Errorf("invalid tx type: %w", err)
 		}
 	}
 
@@ -338,7 +338,7 @@ func Decode(blob []byte) (map[string]any, error) {
 	for b.Len() > 0 {
 		name, value, err := decodeNext(b)
 		if err != nil {
-			return nil, fmt.Errorf("decoding next: %v", err)
+			return nil, fmt.Errorf("decoding next: %w", err)
 		}
 
 		out[name] = value

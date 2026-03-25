@@ -17,24 +17,24 @@ import (
 func ValidateMultiSig(tx map[string]any, s *signer.Signer) (bool, error) {
 	id, err := types.AccountID.ToBytes(s.Account, false)
 	if err != nil {
-		return false, fmt.Errorf("cannot get accountID: %v", err)
+		return false, fmt.Errorf("cannot get accountID: %w", err)
 	}
 
 	txBlob, err := encoding.Encode(tx, true)
 	if err != nil {
-		return false, fmt.Errorf("cannot encode tx: %v", err)
+		return false, fmt.Errorf("cannot encode tx: %w", err)
 	}
 
 	msg, err := utils.Prepare(txBlob, true, id)
 	if err != nil {
-		return false, fmt.Errorf("cannot prepare message: %v", err)
+		return false, fmt.Errorf("cannot prepare message: %w", err)
 	}
 
 	pubPrefix := s.SigningPubKey[0:2]
 
 	sigBytes, err := hex.DecodeString(s.TxnSignature)
 	if err != nil {
-		return false, fmt.Errorf("cannot decode signature: %v", err)
+		return false, fmt.Errorf("cannot decode signature: %w", err)
 	}
 
 	switch pubPrefix {

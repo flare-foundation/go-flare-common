@@ -81,7 +81,7 @@ func TestExecuteWithRetry(t *testing.T) {
 			},
 			expected: ExecuteStatus[int]{
 				Success: false,
-				Err:     fmt.Errorf("max retries reached. Last error: %v", errRetry),
+				Err:     fmt.Errorf("max retries reached. Last error: %w", errRetry),
 				Value:   0,
 			},
 		},
@@ -107,7 +107,7 @@ func TestExecuteWithRetry(t *testing.T) {
 			},
 			expected: ExecuteStatus[int]{
 				Success: false,
-				Err:     fmt.Errorf("context error mid retry: %v. Last error: %w", context.DeadlineExceeded, errRetry),
+				Err:     fmt.Errorf("context error mid retry: %w. Last error: %w", context.DeadlineExceeded, errRetry),
 				Value:   0,
 			},
 		},
@@ -200,7 +200,7 @@ func TestExecuteAttempt(t *testing.T) {
 			},
 			e: ExecuteStatus[bool]{
 				Success: false,
-				Err:     fmt.Errorf("max retries reached. Last error: %v", errRetry),
+				Err:     fmt.Errorf("max retries reached. Last error: %w", errRetry),
 				Value:   false,
 			},
 		},

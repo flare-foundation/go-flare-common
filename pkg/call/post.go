@@ -78,7 +78,7 @@ func PostRaw[T any](ctx context.Context, url string, apiKey APIKey, body io.Read
 	response := new(T)
 	err = decoder.Decode(response)
 	if err != nil {
-		return resOut, fmt.Errorf("decoding response: %v", err)
+		return resOut, fmt.Errorf("decoding response: %w", err)
 	}
 	resOut.Message = response
 

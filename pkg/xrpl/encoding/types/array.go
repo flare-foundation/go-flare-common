@@ -38,19 +38,19 @@ func (*stArray) ToBytes(value any, signing bool) ([]byte, error) {
 		for key := range arrayObj {
 			bytes, err := encodeInner(key, arrayObj[key], signing)
 			if err != nil {
-				return nil, fmt.Errorf("encoding %v: %v", array[i], err)
+				return nil, fmt.Errorf("encoding %v: %w", array[i], err)
 			}
 
 			_, err = outBuff.Write(bytes)
 			if err != nil {
-				return nil, fmt.Errorf("writing to buffer %v: %v", array[i], err)
+				return nil, fmt.Errorf("writing to buffer %v: %w", array[i], err)
 			}
 		}
 	}
 
 	err := outBuff.WriteByte(arrayEnd)
 	if err != nil {
-		return nil, fmt.Errorf("writing array end to %v: %v", value, err)
+		return nil, fmt.Errorf("writing array end to %v: %w", value, err)
 	}
 
 	return outBuff.Bytes(), nil
@@ -63,7 +63,7 @@ func (*stArray) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	for {
 		nextByte, err := b.ReadByte()
 		if err != nil {
-			return nil, fmt.Errorf("reading next byte: %v", err)
+			return nil, fmt.Errorf("reading next byte: %w", err)
 		}
 		if nextByte == arrayEnd {
 			break
@@ -71,12 +71,12 @@ func (*stArray) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 
 		err = b.UnreadByte()
 		if err != nil {
-			return nil, fmt.Errorf("unreading next byte: %v", err)
+			return nil, fmt.Errorf("unreading next byte: %w", err)
 		}
 
 		name, value, err := decodeNext(b)
 		if err != nil {
-			return nil, fmt.Errorf("decoding next: %v", err)
+			return nil, fmt.Errorf("decoding next: %w", err)
 		}
 
 		wrapped := make(map[string]any)

@@ -20,7 +20,7 @@ const (
 func ID(address string) ([]byte, error) {
 	addressBytes, err := base58.XRPLCoder.Decode(address)
 	if err != nil {
-		return nil, fmt.Errorf("decoding: %v", err)
+		return nil, fmt.Errorf("decoding: %w", err)
 	}
 
 	// length
@@ -74,7 +74,7 @@ func IDToAddress(id []byte) string {
 func PubToAddress(pub string) (string, error) {
 	pubBytes, err := hex.DecodeString(pub)
 	if err != nil {
-		return "", fmt.Errorf("decoding prv key: %v", err)
+		return "", fmt.Errorf("decoding prv key: %w", err)
 	}
 
 	if len(pubBytes) != 33 {
