@@ -89,7 +89,7 @@ func (*amount) ToBytes(value any, _ bool) ([]byte, error) {
 func (a *amount) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	firstByte, err := b.ReadByte()
 	if err != nil {
-		return nil, fmt.Errorf("cannot read first byte: %v", err)
+		return nil, fmt.Errorf("cannot read first byte: %w", err)
 	}
 
 	amountType := firstByte & typeBitMask
@@ -110,7 +110,7 @@ func (a *amount) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 func xrpToBytes(amount string) ([]byte, error) {
 	val, err := strconv.ParseUint(amount, 10, 62)
 	if err != nil {
-		return nil, fmt.Errorf("xrp amount %v", err)
+		return nil, fmt.Errorf("xrp amount %w", err)
 	}
 	if val > maxXRPAmount {
 		return nil, fmt.Errorf("amount too large %v", val)
@@ -132,28 +132,28 @@ func tokenToBytes(amount map[string]any) ([]byte, error) {
 
 	value, err := extractString(amount, "value")
 	if err != nil {
-		return nil, fmt.Errorf("extracting value: %v", err)
+		return nil, fmt.Errorf("extracting value: %w", err)
 	}
 	currency, err := extractString(amount, "currency")
 	if err != nil {
-		return nil, fmt.Errorf("extracting currency: %v", err)
+		return nil, fmt.Errorf("extracting currency: %w", err)
 	}
 	issuer, err := extractString(amount, "issuer")
 	if err != nil {
-		return nil, fmt.Errorf("extracting issuer: %v", err)
+		return nil, fmt.Errorf("extracting issuer: %w", err)
 	}
 
 	issuerBytes, err := address.ID(issuer)
 	if err != nil {
-		return nil, fmt.Errorf("issuer address: %v", err)
+		return nil, fmt.Errorf("issuer address: %w", err)
 	}
 	currencyBytes, err := serializeCurrency(currency, disallowedCodes)
 	if err != nil {
-		return nil, fmt.Errorf("currency: %v", err)
+		return nil, fmt.Errorf("currency: %w", err)
 	}
 	normalizedValue, err := serializeTokenValue(value)
 	if err != nil {
-		return nil, fmt.Errorf("value: %v", err)
+		return nil, fmt.Errorf("value: %w", err)
 	}
 
 	out := make([]byte, 0, 8+20+20)
@@ -172,14 +172,14 @@ func mptToBytes(amount map[string]any) ([]byte, error) {
 
 	value, err := extractString(amount, "value")
 	if err != nil {
-		return nil, fmt.Errorf("extracting value: %v", err)
+		return nil, fmt.Errorf("extracting value: %w", err)
 	}
 
 	absValue, isNegative := mptSign(value)
 
 	valueBytes, err := serializeMPTValue(absValue)
 	if err != nil {
-		return nil, fmt.Errorf("serializing value: %v", err)
+		return nil, fmt.Errorf("serializing value: %w", err)
 	}
 
 	indicator := byte(0x60) // cMPToken | cPositive
@@ -189,12 +189,12 @@ func mptToBytes(amount map[string]any) ([]byte, error) {
 
 	issuanceID, err := extractString(amount, "mpt_issuance_id")
 	if err != nil {
-		return nil, fmt.Errorf("extracting mpt_issuance_id: %v", err)
+		return nil, fmt.Errorf("extracting mpt_issuance_id: %w", err)
 	}
 
 	isID, err := hex.DecodeString(issuanceID)
 	if err != nil {
-		return nil, fmt.Errorf("mpt_issuance_id: %v", err)
+		return nil, fmt.Errorf("mpt_issuance_id: %w", err)
 	}
 
 	if len(isID) != 24 {
@@ -260,12 +260,12 @@ func serializeTokenValue(value string) ([]byte, error) {
 
 	significant, exponent, err := format(fl, precision, 56)
 	if err != nil {
-		return nil, fmt.Errorf("formatting float %v: %v", fl, err)
+		return nil, fmt.Errorf("formatting float %v: %w", fl, err)
 	}
 
 	significantCheck, _, err := format(fl, precision+1, 64)
 	if err != nil {
-		return nil, fmt.Errorf("formatting float %v: %v", fl, err)
+		return nil, fmt.Errorf("formatting float %v: %w", fl, err)
 	}
 
 	if significant*10 != significantCheck {
@@ -304,12 +304,12 @@ func format(f *big.Float, p int, bitSize int) (uint64, int64, error) {
 
 	significant, err := strconv.ParseUint(significantDec, 10, bitSize)
 	if err != nil {
-		return 0, 0, fmt.Errorf("parsing significant part: %v", err)
+		return 0, 0, fmt.Errorf("parsing significant part: %w", err)
 	}
 
 	exponent, err := strconv.ParseInt(exponentStr, 10, 8)
 	if err != nil {
-		return 0, 0, fmt.Errorf("parsing exponent: %v", err)
+		return 0, 0, fmt.Errorf("parsing exponent: %w", err)
 	}
 
 	return significant, exponent, err
@@ -354,7 +354,7 @@ func xrpToJSON(firstByte byte, b *bytes.Buffer) (string, error) {
 
 	n, err := b.Read(v[1:])
 	if err != nil {
-		return "", fmt.Errorf("cannot read xrp amount: %v", err)
+		return "", fmt.Errorf("cannot read xrp amount: %w", err)
 	}
 	if n != l-1 {
 		return "", outOfBytes("xrp amount", l, n+1)
@@ -384,7 +384,7 @@ func tokenToJSON(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
 
 	n, err := b.Read(a[1:])
 	if err != nil {
-		return nil, fmt.Errorf("cannot read token amount: %v", err)
+		return nil, fmt.Errorf("cannot read token amount: %w", err)
 	}
 	if n != l-1 {
 		return nil, outOfBytes("token amount", l, n+1)
@@ -392,7 +392,7 @@ func tokenToJSON(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
 
 	amount, err := deserializeTokenAmount(a)
 	if err != nil {
-		return nil, fmt.Errorf("deserializing amount: %v", err)
+		return nil, fmt.Errorf("deserializing amount: %w", err)
 	}
 	out["value"] = amount
 
@@ -401,7 +401,7 @@ func tokenToJSON(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
 	c := make([]byte, l)
 	n, err = b.Read(c)
 	if err != nil {
-		return nil, fmt.Errorf("cannot read token currency: %v", err)
+		return nil, fmt.Errorf("cannot read token currency: %w", err)
 	}
 	if n != l {
 		return nil, outOfBytes("token currency", l, n)
@@ -409,7 +409,7 @@ func tokenToJSON(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
 
 	cCode, err := deserializeCurrency(c)
 	if err != nil {
-		return nil, fmt.Errorf("deserializing currency: %v", err)
+		return nil, fmt.Errorf("deserializing currency: %w", err)
 	}
 	out["currency"] = cCode
 
@@ -418,7 +418,7 @@ func tokenToJSON(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
 	i := make([]byte, l)
 	n, err = b.Read(i)
 	if err != nil {
-		return nil, fmt.Errorf("cannot read token issuer: %v", err)
+		return nil, fmt.Errorf("cannot read token issuer: %w", err)
 	}
 	if n != l {
 		return nil, outOfBytes("token issuer", l, n)
@@ -426,7 +426,7 @@ func tokenToJSON(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
 
 	iAddress, err := address.Address(i)
 	if err != nil {
-		return nil, fmt.Errorf("deserializing issuer: %v", err)
+		return nil, fmt.Errorf("deserializing issuer: %w", err)
 	}
 
 	out["issuer"] = iAddress
@@ -441,7 +441,7 @@ func mptToJSON(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
 	v := make([]byte, l)
 	n, err := b.Read(v)
 	if err != nil {
-		return nil, fmt.Errorf("cannot read mpt value: %v", err)
+		return nil, fmt.Errorf("cannot read mpt value: %w", err)
 	}
 	if n != l {
 		return nil, outOfBytes("mpt value", l, n)
@@ -463,7 +463,7 @@ func mptToJSON(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
 	mii := make([]byte, l)
 	n, err = b.Read(mii)
 	if err != nil {
-		return nil, fmt.Errorf("cannot read mpt issuance id: %v", err)
+		return nil, fmt.Errorf("cannot read mpt issuance id: %w", err)
 	}
 	if n != l {
 		return nil, outOfBytes("mpt issuance id", l, n)

@@ -21,7 +21,7 @@ func (*accountID) ToBytes(value any, _ bool) ([]byte, error) {
 
 	out, err := address.ID(addr)
 	if err != nil {
-		return nil, fmt.Errorf("invalid address: %v", err)
+		return nil, fmt.Errorf("invalid address: %w", err)
 	}
 
 	return out, nil
@@ -34,7 +34,7 @@ func (*accountID) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 
 	n, err := b.Read(value)
 	if err != nil {
-		return nil, fmt.Errorf("cannot read account id from buffer: %v", err)
+		return nil, fmt.Errorf("cannot read account id from buffer: %w", err)
 	}
 	if n != l {
 		return nil, outOfBytes("account id", l, n)

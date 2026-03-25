@@ -67,7 +67,7 @@ func NewCoder(alphabet string) (*Coder, error) {
 	}
 
 	if err := checkCharacters(alphabet); err != nil {
-		return nil, fmt.Errorf("invalid alphabet %s: %v", alphabet, err)
+		return nil, fmt.Errorf("invalid alphabet %s: %w", alphabet, err)
 	}
 
 	return &Coder{alphabet: alphabet}, nil

@@ -54,29 +54,29 @@ func SignTxMultisig(tx map[string]any, prv ed25519.PrivateKey) (*signer.Signer, 
 
 	encoded, err := encoding.Encode(tx, true)
 	if err != nil {
-		return nil, fmt.Errorf("cannot encode tx: %v", err)
+		return nil, fmt.Errorf("cannot encode tx: %w", err)
 	}
 
 	accID, err := PrvToID(prv)
 	if err != nil {
-		return nil, fmt.Errorf("cannot get account id: %v", err)
+		return nil, fmt.Errorf("cannot get account id: %w", err)
 	}
 
 	msg, err := utils.Prepare(encoded, true, accID)
 	if err != nil {
-		return nil, fmt.Errorf("cannot prepare message: %v", err)
+		return nil, fmt.Errorf("cannot prepare message: %w", err)
 	}
 
 	signature := ed25519.Sign(prv, msg)
 
 	add, err := PrvToAddress(prv)
 	if err != nil {
-		return nil, fmt.Errorf("cannot get address %v", err)
+		return nil, fmt.Errorf("cannot get address %w", err)
 	}
 
 	pub, err := PrvToPub(prv)
 	if err != nil {
-		return nil, fmt.Errorf("cannot get address %v", err)
+		return nil, fmt.Errorf("cannot get address %w", err)
 	}
 
 	return &signer.Signer{
@@ -120,12 +120,12 @@ func PrivKeyFromSecret(secret string) (ed25519.PrivateKey, error) {
 func PrvToAddress(prv ed25519.PrivateKey) (string, error) {
 	accountID, err := PrvToID(prv)
 	if err != nil {
-		return "", fmt.Errorf("private key to address: %v", err)
+		return "", fmt.Errorf("private key to address: %w", err)
 	}
 
 	add, err := address.Address(accountID)
 	if err != nil {
-		return "", fmt.Errorf("private key to address: %v", err)
+		return "", fmt.Errorf("private key to address: %w", err)
 	}
 
 	return add, nil
@@ -163,7 +163,7 @@ func PrvToPub(prv ed25519.PrivateKey) (string, error) {
 func Validate(msg, sig []byte, pub string) (bool, error) {
 	pubBytes, err := hex.DecodeString(pub)
 	if err != nil {
-		return false, fmt.Errorf("cannot read pub: %v", err)
+		return false, fmt.Errorf("cannot read pub: %w", err)
 	}
 
 	if pubBytes[0] != 0xed {

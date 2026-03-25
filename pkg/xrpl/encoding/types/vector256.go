@@ -20,7 +20,7 @@ func (*vector256) ToBytes(value any, _ bool) ([]byte, error) {
 	for j := range array {
 		hash256, err := Hash256.ToBytes(array[j], false)
 		if err != nil {
-			return nil, fmt.Errorf("decoding entry:% v", err)
+			return nil, fmt.Errorf("decoding entry: %w", err)
 		}
 		out = append(out, hash256...)
 	}
@@ -40,7 +40,7 @@ func (*vector256) ToJSON(b *bytes.Buffer, l int) (any, error) {
 	for j := range arrayLen {
 		hash, err := Hash256.ToJSON(b, 0)
 		if err != nil {
-			return nil, fmt.Errorf("reading entry %d of %d long vector256: %v", j, l, err)
+			return nil, fmt.Errorf("reading entry %d of %d long vector256: %w", j, l, err)
 		}
 		out[j] = hash
 	}

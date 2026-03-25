@@ -43,7 +43,7 @@ func (*UInt8) ToBytes(value any, _ bool) ([]byte, error) {
 func (*UInt8) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	u, err := b.ReadByte()
 	if err != nil {
-		return nil, fmt.Errorf("cannot read uint8 from buffer: %v", err)
+		return nil, fmt.Errorf("cannot read uint8 from buffer: %w", err)
 	}
 	return u, nil
 }
@@ -95,7 +95,7 @@ func (*UInt16) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 
 	n, err := b.Read(v)
 	if err != nil {
-		return nil, fmt.Errorf("cannot read uint16 from buffer: %v", err)
+		return nil, fmt.Errorf("cannot read uint16 from buffer: %w", err)
 	}
 	if n != l {
 		return nil, outOfBytes("uint16", l, n)
@@ -132,7 +132,7 @@ func (*UInt32) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 
 	n, err := b.Read(v)
 	if err != nil {
-		return nil, fmt.Errorf("cannot read uint32 from buffer: %v", err)
+		return nil, fmt.Errorf("cannot read uint32 from buffer: %w", err)
 	}
 	if n != l {
 		return nil, outOfBytes("uint32", l, n)
@@ -153,14 +153,14 @@ func (*UInt64) ToBytes(value any, _ bool) ([]byte, error) {
 	case string:
 		valueUint, err = strconv.ParseUint(value, 10, 64)
 		if err != nil {
-			return nil, fmt.Errorf("invalid UInt64: %v, error: %v", value, err)
+			return nil, fmt.Errorf("invalid UInt64: %v, error: %w", value, err)
 		}
 	case uint64:
 		valueUint = value
 	default:
 		valueInt, err := convertInt64(value, "int64")
 		if err != nil || valueInt < 0 {
-			return nil, fmt.Errorf("invalid UInt64: %v, error: %v", value, err)
+			return nil, fmt.Errorf("invalid UInt64: %v, error: %w", value, err)
 		}
 		valueUint = uint64(valueInt)
 	}
@@ -177,7 +177,7 @@ func (*UInt64) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 
 	n, err := b.Read(v)
 	if err != nil {
-		return nil, fmt.Errorf("cannot read uint64 from buffer: %v", err)
+		return nil, fmt.Errorf("cannot read uint64 from buffer: %w", err)
 	}
 	if n != l {
 		return nil, outOfBytes("uint64", l, n)

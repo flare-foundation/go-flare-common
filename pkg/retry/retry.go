@@ -52,7 +52,7 @@ func Execute[T any](ctx context.Context, f func() (T, error), params Params) Exe
 
 	for j := 0; cond(j, params.MaxAttempts); j++ {
 		if cerr := ctx.Err(); cerr != nil {
-			result.Err = fmt.Errorf("context error mid retry: %v. Last error: %w", cerr, err)
+			result.Err = fmt.Errorf("context error mid retry: %w. Last error: %w", cerr, err)
 			return result
 		}
 
@@ -68,7 +68,7 @@ func Execute[T any](ctx context.Context, f func() (T, error), params Params) Exe
 		}
 	}
 
-	result.Err = fmt.Errorf("max retries reached. Last error: %v", err)
+	result.Err = fmt.Errorf("max retries reached. Last error: %w", err)
 
 	return result
 }

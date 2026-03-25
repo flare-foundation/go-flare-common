@@ -123,7 +123,7 @@ func (s *Signer) Run(ctx context.Context) error {
 	select {
 	case <-ctx.Done():
 		err = s.Shutdown(ctx)
-		err = fmt.Errorf("server shut down:%v", err)
+		err = fmt.Errorf("server shut down: %w", err)
 	case err = <-c:
 	}
 

@@ -49,12 +49,12 @@ func (*issue) ToBytes(value any, _ bool) ([]byte, error) {
 
 	issuerBytes, err := address.ID(issuerStr)
 	if err != nil {
-		return nil, fmt.Errorf("issuer address: %v", err)
+		return nil, fmt.Errorf("issuer address: %w", err)
 	}
 
 	code, err := serializeCurrency(currencyStr, disallowedCodes)
 	if err != nil {
-		return nil, fmt.Errorf("invalid issuer %v: %v", issuerStr, err)
+		return nil, fmt.Errorf("invalid issuer %v: %w", issuerStr, err)
 	}
 
 	code = append(code, issuerBytes...)
@@ -69,7 +69,7 @@ func (*issue) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	cCode := make([]byte, l)
 	n, err := b.Read(cCode)
 	if err != nil {
-		return nil, fmt.Errorf("reading currency code: %v", err)
+		return nil, fmt.Errorf("reading currency code: %w", err)
 	}
 	if n != l {
 		return nil, outOfBytes("currency code", l, n)
@@ -83,7 +83,7 @@ func (*issue) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 
 	c, err := deserializeCurrency(cCode)
 	if err != nil {
-		return nil, fmt.Errorf("deserializing currency code: %v", err)
+		return nil, fmt.Errorf("deserializing currency code: %w", err)
 	}
 
 	out["currency"] = c
@@ -92,7 +92,7 @@ func (*issue) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	issuer := make([]byte, l)
 	n, err = b.Read(issuer)
 	if err != nil {
-		return nil, fmt.Errorf("reading issuer: %v", err)
+		return nil, fmt.Errorf("reading issuer: %w", err)
 	}
 	if n != l {
 		return nil, outOfBytes("issuer", l, n)
@@ -100,7 +100,7 @@ func (*issue) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 
 	a, err := address.Address(issuer)
 	if err != nil {
-		return nil, fmt.Errorf("issuer to address: %v", err)
+		return nil, fmt.Errorf("issuer to address: %w", err)
 	}
 
 	out["issuer"] = a

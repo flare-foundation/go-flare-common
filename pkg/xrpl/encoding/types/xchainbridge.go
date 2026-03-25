@@ -18,7 +18,7 @@ func (*XChainBridge) ToBytes(value any, _ bool) ([]byte, error) {
 
 	lockingChainDoor, err := extractString(valueMap, "LockingChainDoor")
 	if err != nil {
-		return nil, fmt.Errorf("invalid XChainBridge %v: %v", value, err)
+		return nil, fmt.Errorf("invalid XChainBridge %v: %w", value, err)
 	}
 
 	lockingChainIssue, ok := valueMap["LockingChainIssue"]
@@ -28,7 +28,7 @@ func (*XChainBridge) ToBytes(value any, _ bool) ([]byte, error) {
 
 	issuingChainDoor, err := extractString(valueMap, "IssuingChainDoor")
 	if err != nil {
-		return nil, fmt.Errorf("invalid XChainBridge %v: %v", value, err)
+		return nil, fmt.Errorf("invalid XChainBridge %v: %w", value, err)
 	}
 
 	issuingChainIssue, ok := valueMap["IssuingChainIssue"]
@@ -40,54 +40,54 @@ func (*XChainBridge) ToBytes(value any, _ bool) ([]byte, error) {
 
 	lockingChainDoorID, err := address.ID(lockingChainDoor)
 	if err != nil {
-		return nil, fmt.Errorf("invalid LockingChainDoor, %v: %v", lockingChainDoor, err)
+		return nil, fmt.Errorf("invalid LockingChainDoor, %v: %w", lockingChainDoor, err)
 	}
 	if len(lockingChainDoorID) >= 256 {
-		return nil, fmt.Errorf("lockingChainDoorID length overflow, %v: %v", issuingChainDoor, err)
+		return nil, fmt.Errorf("lockingChainDoorID length overflow, %v: %w", issuingChainDoor, err)
 	}
 
 	err = out.WriteByte(uint8(len(lockingChainDoorID))) //nolint:gosec // checked in the if above
 	if err != nil {
-		return nil, fmt.Errorf("writing length to buffer, %v: %v", lockingChainDoorID, err)
+		return nil, fmt.Errorf("writing length to buffer, %v: %w", lockingChainDoorID, err)
 	}
 	_, err = out.Write(lockingChainDoorID)
 	if err != nil {
-		return nil, fmt.Errorf("writing to buffer lockingChainDoorID, %v: %v", lockingChainDoorID, err)
+		return nil, fmt.Errorf("writing to buffer lockingChainDoorID, %v: %w", lockingChainDoorID, err)
 	}
 
 	lockingChain, err := Issue.ToBytes(lockingChainIssue, false)
 	if err != nil {
-		return nil, fmt.Errorf("encoding, %v: %v", value, err)
+		return nil, fmt.Errorf("encoding, %v: %w", value, err)
 	}
 	_, err = out.Write(lockingChain)
 	if err != nil {
-		return nil, fmt.Errorf("writing to buffer, %v: %v", lockingChain, err)
+		return nil, fmt.Errorf("writing to buffer, %v: %w", lockingChain, err)
 	}
 
 	issuingChainDoorID, err := address.ID(issuingChainDoor)
 	if err != nil {
-		return nil, fmt.Errorf("invalid IssuingChainDoor, %v: %v", issuingChainDoor, err)
+		return nil, fmt.Errorf("invalid IssuingChainDoor, %v: %w", issuingChainDoor, err)
 	}
 	if len(issuingChainDoorID) >= 256 {
-		return nil, fmt.Errorf("issuingChainDoorID length overflow, %v: %v", issuingChainDoor, err)
+		return nil, fmt.Errorf("issuingChainDoorID length overflow, %v: %w", issuingChainDoor, err)
 	}
 
 	err = out.WriteByte(uint8(len(issuingChainDoorID))) //nolint:gosec // checked in the if above
 	if err != nil {
-		return nil, fmt.Errorf("writing length to buffer, %v: %v", issuingChainDoorID, err)
+		return nil, fmt.Errorf("writing length to buffer, %v: %w", issuingChainDoorID, err)
 	}
 	_, err = out.Write(issuingChainDoorID)
 	if err != nil {
-		return nil, fmt.Errorf("writing to buffer issuingChainDoorID, %v: %v", issuingChainDoorID, err)
+		return nil, fmt.Errorf("writing to buffer issuingChainDoorID, %v: %w", issuingChainDoorID, err)
 	}
 
 	issuingChain, err := Issue.ToBytes(issuingChainIssue, false)
 	if err != nil {
-		return nil, fmt.Errorf("encoding, %v: %v", value, err)
+		return nil, fmt.Errorf("encoding, %v: %w", value, err)
 	}
 	_, err = out.Write(issuingChain)
 	if err != nil {
-		return nil, fmt.Errorf("writing to buffer issuingChain, %v: %v", issuingChain, err)
+		return nil, fmt.Errorf("writing to buffer issuingChain, %v: %w", issuingChain, err)
 	}
 
 	return out.Bytes(), nil
@@ -98,7 +98,7 @@ func (*XChainBridge) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 
 	l, err := b.ReadByte()
 	if err != nil {
-		return nil, fmt.Errorf("reading length byte: %v", err)
+		return nil, fmt.Errorf("reading length byte: %w", err)
 	}
 	if l != 20 {
 		return nil, fmt.Errorf("invalid length byte expected %x is %x", 20, l)
@@ -106,25 +106,25 @@ func (*XChainBridge) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 
 	lockingChainDoor, err := AccountID.ToJSON(b, 0)
 	if err != nil {
-		return nil, fmt.Errorf("reading LockingChainDoor: %v", err)
+		return nil, fmt.Errorf("reading LockingChainDoor: %w", err)
 	}
 	out["LockingChainDoor"] = lockingChainDoor
 
 	lockingChainIssue, err := Issue.ToJSON(b, 0)
 	if err != nil {
-		return nil, fmt.Errorf("reading LockingChainIssue: %v", err)
+		return nil, fmt.Errorf("reading LockingChainIssue: %w", err)
 	}
 	out["LockingChainIssue"] = lockingChainIssue
 
 	issuingChainDoor, err := AccountID.ToJSON(b, 0)
 	if err != nil {
-		return nil, fmt.Errorf("reading IssuingChainDoor: %v", err)
+		return nil, fmt.Errorf("reading IssuingChainDoor: %w", err)
 	}
 	out["IssuingChainDoor"] = issuingChainDoor
 
 	issuingChainIssue, err := Issue.ToJSON(b, 0)
 	if err != nil {
-		return nil, fmt.Errorf("reading IssuingChainIssue: %v", err)
+		return nil, fmt.Errorf("reading IssuingChainIssue: %w", err)
 	}
 	out["IssuingChainIssue"] = issuingChainIssue
 

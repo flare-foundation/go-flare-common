@@ -96,7 +96,7 @@ func (jr JSONRPC) Info(address string) (AccountInfoResponse, error) {
 		MaxResponseSize: 10000,
 	})
 	if err != nil {
-		return AccountInfoResponse{}, fmt.Errorf("calling %s: %v", jr.URL, err)
+		return AccountInfoResponse{}, fmt.Errorf("calling %s: %w", jr.URL, err)
 	}
 
 	return res.Message.Result, nil
@@ -109,7 +109,7 @@ func (jr JSONRPC) Info(address string) (AccountInfoResponse, error) {
 //   - no regular key
 func (ai AccountInfoResponse) Check(quorum uint64, signers []string) error {
 	if err := checkFlags(ai.AccountData.Flags); err != nil {
-		return fmt.Errorf("flags: %v", err)
+		return fmt.Errorf("flags: %w", err)
 	}
 
 	if ai.AccountData.RegularKey != "" {
@@ -121,7 +121,7 @@ func (ai AccountInfoResponse) Check(quorum uint64, signers []string) error {
 	}
 
 	if err := checkSigners(ai.AccountData.SignersLists[0], quorum, signers); err != nil {
-		return fmt.Errorf("signers: %v", err)
+		return fmt.Errorf("signers: %w", err)
 	}
 
 	return nil

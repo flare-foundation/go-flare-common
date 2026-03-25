@@ -20,7 +20,7 @@ func (*STObject) ToBytes(value any, signing bool) ([]byte, error) {
 
 	bytes, err := Encode(valuerObj, signing)
 	if err != nil {
-		return nil, fmt.Errorf("encoding object %v: %v", value, err)
+		return nil, fmt.Errorf("encoding object %v: %w", value, err)
 	}
 
 	bytes = append(bytes, objectEnd)
@@ -37,7 +37,7 @@ func (*STObject) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	for {
 		nextByte, err := b.ReadByte()
 		if err != nil {
-			return nil, fmt.Errorf("reading next byte: %v", err)
+			return nil, fmt.Errorf("reading next byte: %w", err)
 		}
 
 		if nextByte == objectEnd {
@@ -46,12 +46,12 @@ func (*STObject) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 
 		err = b.UnreadByte()
 		if err != nil {
-			return nil, fmt.Errorf("unreading next byte: %v", err)
+			return nil, fmt.Errorf("unreading next byte: %w", err)
 		}
 
 		name, value, err := decodeNext(b)
 		if err != nil {
-			return nil, fmt.Errorf("decoding next: %v", err)
+			return nil, fmt.Errorf("decoding next: %w", err)
 		}
 
 		out[name] = value

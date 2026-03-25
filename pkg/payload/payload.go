@@ -36,7 +36,7 @@ func ExtractPayloads(tx *database.Transaction) (map[uint8]Message, error) {
 
 	data, err := hex.DecodeString(dataStr)
 	if err != nil {
-		return nil, fmt.Errorf("error decoding input of tx: %s, %v", tx.Hash, err)
+		return nil, fmt.Errorf("error decoding input of tx: %s, %w", tx.Hash, err)
 	}
 
 	if len(data) < 4 {

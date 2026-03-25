@@ -12,13 +12,13 @@ import (
 func CheckAndEncodePayment(tx map[string]any, native bool) ([]byte, error) {
 	encoded, err := types.Encode(tx, true)
 	if err != nil {
-		return nil, fmt.Errorf("encoding tx: %v", err)
+		return nil, fmt.Errorf("encoding tx: %w", err)
 	}
 
 	// to get a canonical values
 	decoded, err := types.Decode(encoded)
 	if err != nil {
-		return nil, fmt.Errorf("decoding tx: %v", err)
+		return nil, fmt.Errorf("decoding tx: %w", err)
 	}
 
 	// TxType
@@ -54,7 +54,7 @@ func CheckAndEncodePayment(tx map[string]any, native bool) ([]byte, error) {
 	}
 	fee, err := strconv.ParseUint(feeStr, 10, 0)
 	if err != nil {
-		return nil, fmt.Errorf("invalid fee %s: %v", feeStr, err) // should never happen
+		return nil, fmt.Errorf("invalid fee %s: %w", feeStr, err) // should never happen
 	}
 	if fee == 0 {
 		return nil, errors.New("zero fee")
@@ -71,7 +71,7 @@ func CheckAndEncodePayment(tx map[string]any, native bool) ([]byte, error) {
 		}
 		amount, err := strconv.ParseUint(amountStr, 10, 0)
 		if err != nil {
-			return nil, fmt.Errorf("invalid amount %s: %v", feeStr, err) // should never happen
+			return nil, fmt.Errorf("invalid amount %s: %w", feeStr, err) // should never happen
 		}
 		if amount == 0 {
 			return nil, errors.New("zero amount")

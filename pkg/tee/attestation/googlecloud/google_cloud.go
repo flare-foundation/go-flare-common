@@ -137,12 +137,12 @@ func extractAndValidateKey(expectedRoot *x509.Certificate, leafCRL, intermediate
 
 		certificates, err := ExtractCertificatesFromX5CHeader(x5cHeaders)
 		if err != nil {
-			return nil, fmt.Errorf("extracting certificates from x5c headers: %v", err)
+			return nil, fmt.Errorf("extracting certificates from x5c headers: %w", err)
 		}
 
 		err = certificates.Verify(expectedRoot, leafCRL, intermediateCRL)
 		if err != nil {
-			return nil, fmt.Errorf("verifying certificates: %v", err)
+			return nil, fmt.Errorf("verifying certificates: %w", err)
 		}
 
 		return certificates.Leaf.PublicKey, nil
@@ -176,7 +176,7 @@ func ExtractCertificatesFromX5CHeader(x5cHeaders []any) (PKICertificates, error)
 
 		cert, err := ParseDERCertificate(h)
 		if err != nil {
-			return PKICertificates{}, fmt.Errorf("cannot parse certificate at index %d: %v", j, err)
+			return PKICertificates{}, fmt.Errorf("cannot parse certificate at index %d: %w", j, err)
 		}
 
 		parsedHeaders[j] = cert
@@ -199,7 +199,7 @@ func ParseDERCertificate(certificate string) (*x509.Certificate, error) {
 
 	cert, err := x509.ParseCertificate(bytes)
 	if err != nil {
-		return nil, fmt.Errorf("cannot parse certificate: %v", err)
+		return nil, fmt.Errorf("cannot parse certificate: %w", err)
 	}
 
 	return cert, nil
@@ -214,7 +214,7 @@ func ParsePEMCertificate(certificate string) (*x509.Certificate, error) {
 
 	cert, err := x509.ParseCertificate(block.Bytes)
 	if err != nil {
-		return nil, fmt.Errorf("cannot parse certificate: %v", err)
+		return nil, fmt.Errorf("cannot parse certificate: %w", err)
 	}
 
 	return cert, nil
@@ -244,7 +244,7 @@ func (c *PKICertificates) Verify(expectedRoot *x509.Certificate, leafCRL, interm
 
 	err := c.verifyLifetime()
 	if err != nil {
-		return fmt.Errorf("lifetime: %v", err)
+		return fmt.Errorf("lifetime: %w", err)
 	}
 
 	err = c.verifyChain()
@@ -291,7 +291,7 @@ func (c *PKICertificates) verifyChain() error {
 		KeyUsages:     []x509.ExtKeyUsage{x509.ExtKeyUsageAny},
 	})
 	if err != nil {
-		return fmt.Errorf("failed to verify certificate chain: %v", err)
+		return fmt.Errorf("failed to verify certificate chain: %w", err)
 	}
 
 	return nil
