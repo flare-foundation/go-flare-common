@@ -1,3 +1,4 @@
+// Package xrpl provides XRPL payment transaction construction and fee scheduling for TEE instructions.
 package xrpl
 
 import (

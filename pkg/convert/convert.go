@@ -1,3 +1,4 @@
+// Package convert provides type conversion utilities for common Go and Ethereum types.
 package convert
 
 // MapToValueSlice returns the slice of map values.

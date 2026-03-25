@@ -26,6 +26,7 @@ func CommonHashToString(h common.Hash) string {
 	return strings.TrimRight(string(h[:]), "\x00")
 }
 
+// Hex32StringToCommonHash decodes a 32-byte hex string (with optional 0x prefix) into a common.Hash.
 func Hex32StringToCommonHash(s string) (common.Hash, error) {
 	st := removeHexPrefix(s)
 

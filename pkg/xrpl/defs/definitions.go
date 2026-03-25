@@ -1,3 +1,4 @@
+// Package defs provides XRPL protocol field definitions and binary serialization metadata.
 package defs
 
 import (
@@ -5,8 +6,10 @@ import (
 	"fmt"
 )
 
+// XType represents an XRPL binary serialization type code.
 type XType int16
 
+// Field describes the serialization properties of an XRPL protocol field.
 type Field struct {
 	IsSerialized   bool
 	IsSigningField bool
@@ -15,6 +18,7 @@ type Field struct {
 	Type           XType // Type code
 }
 
+// IDPair uniquely identifies a field by its field code and type code.
 type IDPair struct {
 	F int16
 	T XType
@@ -23,7 +27,7 @@ type IDPair struct {
 // IDToName maps pair of (field code, type code) to field name.
 var IDToName map[IDPair]string
 
-// ValueToTxType maps transaction type value to transaction type name.
+// ValueToTxType maps a transaction type numeric value to its name.
 var ValueToTxType map[int32]string
 
 func init() {
@@ -69,6 +73,7 @@ func (f Field) ID() ([]byte, error) {
 	return b, err
 }
 
+// ReadID reads a field/type ID pair from the buffer according to the XRPL binary format.
 func ReadID(b *bytes.Buffer) (IDPair, error) {
 	byte1, err := b.ReadByte()
 	if err != nil {

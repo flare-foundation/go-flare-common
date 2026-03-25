@@ -2,6 +2,7 @@ package logger
 
 import "go.uber.org/zap/zapcore"
 
+// Color represents an ANSI terminal color escape sequence.
 type Color string
 
 // Colors taken from Avalanche logger colors
@@ -48,6 +49,7 @@ func init() {
 	}
 }
 
+// Wrap surrounds text with the color escape sequence and a reset suffix.
 func (lc Color) Wrap(text string) string {
 	return string(lc) + text + string(Reset)
 }

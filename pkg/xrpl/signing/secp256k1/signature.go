@@ -12,6 +12,7 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/hash"
 )
 
+// Signature holds the r and s components of a secp256k1 signature.
 type Signature struct {
 	r [32]byte
 	s [32]byte

@@ -1,3 +1,4 @@
+// Package instruction provides TEE instruction data types, hashing, and signing utilities.
 package instruction
 
 import (

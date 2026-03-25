@@ -1,3 +1,4 @@
+// Package signer provides XRPL multi-signature signer representation, parsing, and sorting.
 package signer
 
 import (
@@ -10,6 +11,7 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/types"
 )
 
+// Signer represents a single XRPL multi-signer with account, signature, and public key.
 type Signer struct {
 	Account       string
 	TxnSignature  string

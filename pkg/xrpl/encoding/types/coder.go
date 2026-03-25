@@ -1,3 +1,4 @@
+// Package types implements XRPL binary serialization and deserialization for all field types.
 package types
 
 import (
@@ -9,6 +10,7 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/defs"
 )
 
+// TODOError is returned for types that are not yet implemented.
 type TODOError struct {
 	xt defs.XType
 }
@@ -17,6 +19,7 @@ func (e *TODOError) Error() string {
 	return fmt.Sprintf("To be implemented %v", e.xt)
 }
 
+// UnsupportedError is returned for types that are not supported by this implementation.
 type UnsupportedError struct {
 	xt defs.XType
 }
@@ -25,6 +28,7 @@ func (e *UnsupportedError) Error() string {
 	return fmt.Sprintf("Unsupported type %v", e.xt)
 }
 
+// IllegalError is returned for types that must not appear in serialized data.
 type IllegalError struct {
 	xt defs.XType
 }
@@ -61,6 +65,7 @@ func Encode(value Object, signing bool) ([]byte, error) {
 	return outBuff.Bytes(), nil
 }
 
+// Coder defines the interface for encoding and decoding XRPL field values.
 type Coder interface {
 	ToBytes(value any, signing bool) ([]byte, error)
 	ToJSON(b *bytes.Buffer, length int) (any, error)
@@ -324,6 +329,7 @@ func decodeNext(b *bytes.Buffer) (string, any, error) {
 	return fName, value, nil
 }
 
+// Decode deserializes an XRPL binary blob into a map of field names to values.
 func Decode(blob []byte) (map[string]any, error) {
 	out := make(map[string]any)
 

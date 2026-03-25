@@ -1,3 +1,4 @@
+// Package ed25519 provides XRPL Ed25519 key management and transaction signing.
 package ed25519
 
 import (
@@ -47,6 +48,7 @@ const (
 // 	return signature, nil
 // }
 
+// SignTxMultisig signs a transaction for multi-signing using an Ed25519 private key.
 func SignTxMultisig(tx map[string]any, prv ed25519.PrivateKey) (*signer.Signer, error) {
 	tx["SigningPubKey"] = ""
 

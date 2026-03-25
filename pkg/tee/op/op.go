@@ -1,3 +1,4 @@
+// Package op defines operation types and commands used in TEE instruction processing.
 package op
 
 import (
@@ -5,6 +6,7 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/convert"
 )
 
+// Type represents an operation type in the TEE system.
 type Type string
 
 const (
@@ -17,6 +19,7 @@ const (
 	FDC2   Type = "F_FDC2"
 )
 
+// Command represents an operation command in the TEE system.
 type Command string
 
 const (
@@ -116,6 +119,7 @@ func (c Command) Hash() common.Hash {
 	return common.BytesToHash(common.RightPadBytes([]byte(c), 32))
 }
 
+// IsValid reports whether the command is valid for the given operation type.
 func IsValid(t Type, c Command) bool {
 	if t.IsSystem() {
 		return validSystemPairs[t][c]
@@ -124,6 +128,7 @@ func IsValid(t Type, c Command) bool {
 	return !t.isF()
 }
 
+// IsValidPair checks whether the hashed operation type and command form a valid pair.
 func IsValidPair(opType common.Hash, opCommand common.Hash) bool {
 	return IsValid(HashToOPType(opType), HashToOPCommand(opCommand))
 }

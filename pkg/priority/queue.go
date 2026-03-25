@@ -11,6 +11,7 @@ type weight[T any] interface {
 	Less(T) bool
 }
 
+// Item holds a value and its weight in the priority queue.
 type Item[T any, W weight[W]] struct {
 	value  T         // The value of the item.
 	weight weight[W] // The weight of the item in the queue.
@@ -21,6 +22,7 @@ type Item[T any, W weight[W]] struct {
 // A Queue implements heapt.Interface.
 type Queue[T any, W weight[W]] []*Item[T, W]
 
+// QueueMutex wraps a Queue with a read-write mutex and an empty signal channel.
 type QueueMutex[T any, W weight[W]] struct {
 	Queue[T, W]
 	empty chan bool
@@ -61,7 +63,7 @@ func (q *Queue[T, W]) Push(item *Item[T, W]) {
 
 // UpdateWeight updates the weight of an item and updates the queue accordingly.
 //
-// Does not effect the queue if the item is not in it.
+// Does not affect the queue if the item is not in it.
 func (q *Queue[T, W]) UpdateWeight(item *Item[T, W], weight W) {
 	item.weight = weight
 	heapt.Fix(q, item.index)

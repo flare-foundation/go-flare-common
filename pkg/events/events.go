@@ -1,3 +1,4 @@
+// Package events provides utilities for converting database event logs to chain event logs.
 package events
 
 import (

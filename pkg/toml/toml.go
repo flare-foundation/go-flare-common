@@ -1,3 +1,4 @@
+// Package toml provides utilities for reading and unmarshaling TOML configuration files.
 package toml
 
 import (

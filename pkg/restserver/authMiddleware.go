@@ -6,11 +6,13 @@ import (
 	"github.com/getkin/kin-openapi/openapi3"
 )
 
+// ExcludeEndpointStruct identifies a path/method pair to exclude from API key authentication.
 type ExcludeEndpointStruct struct {
 	PathPattern string
 	Method      string
 }
 
+// APIKeyAuthMiddleware enforces API key authentication on incoming HTTP requests.
 type APIKeyAuthMiddleware struct {
 	KeyName          string
 	Keys             []string
@@ -19,6 +21,7 @@ type APIKeyAuthMiddleware struct {
 	excludeMap       map[string]map[string]bool
 }
 
+// Init initializes internal lookup maps for API keys and excluded endpoints.
 func (keyMiddleware *APIKeyAuthMiddleware) Init() {
 	keyMiddleware.keyMap = make(map[string]bool)
 	keyMiddleware.excludeMap = make(map[string]map[string]bool)
@@ -35,7 +38,7 @@ func (keyMiddleware *APIKeyAuthMiddleware) Init() {
 	}
 }
 
-// Middleware function, which will be called for each request.
+// Middleware returns an HTTP middleware that validates the API key for each request.
 func (keyMiddleware *APIKeyAuthMiddleware) Middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Check if path and method combination are in exclude list
@@ -59,6 +62,7 @@ func (keyMiddleware *APIKeyAuthMiddleware) Middleware(next http.Handler) http.Ha
 	})
 }
 
+// SecuritySchemes returns the OpenAPI security scheme definition for API key authentication.
 func (keyMiddleware *APIKeyAuthMiddleware) SecuritySchemes() openapi3.SecuritySchemes {
 	return openapi3.SecuritySchemes{
 		keyMiddleware.KeyName: &openapi3.SecuritySchemeRef{

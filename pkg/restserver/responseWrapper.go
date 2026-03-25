@@ -30,12 +30,12 @@ func writeResponseError(w http.ResponseWriter, code int, message string) {
 	}
 }
 
-// Equivalent to WriteAPIResponse with status APIResponseStatusOk.
+// WriteAPIResponseOk writes a JSON response with the given value.
 func WriteAPIResponseOk[T any](w http.ResponseWriter, value T) {
 	writeResponse(w, value)
 }
 
-// Use for error responses.
+// WriteAPIResponseError writes a JSON error response with the given status code and message.
 func WriteAPIResponseError(
 	w http.ResponseWriter,
 	code int,
@@ -44,9 +44,8 @@ func WriteAPIResponseError(
 	writeResponseError(w, code, errorMessage)
 }
 
-// Decode body from the request into value.
-// Any error is written into the response and false is returned.
-// (It is enough to just return from the request handler on false value).
+// DecodeBody decodes and validates the JSON request body into value.
+// On error, it writes an error response and returns false.
 func DecodeBody(w http.ResponseWriter, r *http.Request, value any) bool {
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&value)
@@ -70,6 +69,8 @@ func DecodeBody(w http.ResponseWriter, r *http.Request, value any) bool {
 	return true
 }
 
+// DecodeQueryParams decodes and validates URL query parameters into value.
+// On error, it writes an error response and returns false.
 func DecodeQueryParams(w http.ResponseWriter, r *http.Request, value any) bool {
 	decoder := schema.NewDecoder()
 	err := decoder.Decode(value, r.URL.Query())
@@ -93,6 +94,7 @@ func DecodeQueryParams(w http.ResponseWriter, r *http.Request, value any) bool {
 	return true
 }
 
+// BadParamsErrorHandler returns an ErrorHandler for bad request parameters, or nil for not-found errors.
 func BadParamsErrorHandler(err error) *ErrorHandler {
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil
@@ -108,6 +110,7 @@ func BadParamsErrorHandler(err error) *ErrorHandler {
 	}
 }
 
+// InternalServerErrorHandler returns an ErrorHandler for internal server errors.
 func InternalServerErrorHandler(err error) *ErrorHandler {
 	return &ErrorHandler{
 		Handler: func(w http.ResponseWriter) {
@@ -116,6 +119,7 @@ func InternalServerErrorHandler(err error) *ErrorHandler {
 	}
 }
 
+// ToEarlyErrorHandler returns an ErrorHandler indicating the request was made too early.
 func ToEarlyErrorHandler(err error) *ErrorHandler {
 	return &ErrorHandler{
 		Handler: func(w http.ResponseWriter) {
@@ -124,6 +128,7 @@ func ToEarlyErrorHandler(err error) *ErrorHandler {
 	}
 }
 
+// NotAvailableErrorHandler returns an ErrorHandler indicating the data is not available yet.
 func NotAvailableErrorHandler(err error) *ErrorHandler {
 	return &ErrorHandler{
 		Handler: func(w http.ResponseWriter) {

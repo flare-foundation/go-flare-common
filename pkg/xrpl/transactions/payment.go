@@ -8,6 +8,7 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/types"
 )
 
+// CheckAndEncodePayment validates and serializes a payment transaction.
 func CheckAndEncodePayment(tx map[string]any, native bool) ([]byte, error) {
 	encoded, err := types.Encode(tx, true)
 	if err != nil {

@@ -1,3 +1,4 @@
+// Package aggregator collects and validates XRPL multi-signatures for quorum-based transaction finalization.
 package aggregator
 
 import (
@@ -28,9 +29,9 @@ type transaction struct {
 	id            common.Hash
 }
 
-// AddSignatures accepts encoded transaction with Signers fields.
-// If the transaction's "Account" field matches the account, Signers are extracted checked and stored.
-// The boolean indicator is return as true, the first time the quorum is reached.
+// AddSignatures accepts an encoded transaction with a Signers field.
+// If the transaction's "Account" field matches the account, signers are extracted, validated, and stored.
+// The boolean is true the first time the quorum is reached.
 func (a *Account) AddSignatures(blob []byte) (*transaction, bool, error) {
 	txJSON, err := encoding.Decode(blob)
 	if err != nil {

@@ -7,22 +7,21 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// RouteHandler combines an HTTP handler with its OpenAPI definitions and HTTP method.
 type RouteHandler struct {
 	Handler            func(w http.ResponseWriter, r *http.Request)
 	SwaggerDefinitions swagger.Definitions
 	Method             string // Take from net/http package (MethodGet, MethodPost, etc)
 }
 
+// ErrorHandler wraps a function that writes an error response.
 type ErrorHandler struct {
 	Handler func(w http.ResponseWriter)
 }
 
-// Route handler factory
-// The value passed to handler are the path parameters parsed to a map of string, the query parameters parsed to a struct
-// of type Q and the request body parsed to a struct of type B. The response of handler is wrapped to an
-// APIResponseWrapper object and returned as json. OpenAPI definitions for the path parameters are generated from the
-// paramDescriptions map, definitions for the query parameters are generated from the queryObject and definitions for the
-// request body are generated from the bodyObject.
+// GeneralRouteHandler creates a RouteHandler that parses path parameters, query parameters of type Q,
+// and a request body of type B, then delegates to the handler function and returns a JSON response of type R.
+// OpenAPI definitions are generated from paramDescriptions, queryObject, bodyObject, and respObject.
 func GeneralRouteHandler[Q any, B any, R any](
 	handler func(map[string]string, Q, B) (R, *ErrorHandler),
 	method string,

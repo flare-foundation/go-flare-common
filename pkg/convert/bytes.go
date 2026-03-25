@@ -7,6 +7,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
+// SliceTooLongError is returned when a byte slice exceeds the expected maximum length.
 type SliceTooLongError struct {
 	maxLen int
 }
@@ -17,7 +18,7 @@ func (e SliceTooLongError) Error() string {
 
 // BytesToUint64 converts a byte slice to uint64 with big-endian encoding.
 // Nil or zero length slice is converted to 0.
-// The returns error if the slice is longer than 8 bytes.
+// It returns an error if the slice is longer than 8 bytes.
 func BytesToUint64(b []byte) (uint64, error) {
 	if len(b) > 8 {
 		return 0, SliceTooLongError{8}
@@ -33,7 +34,7 @@ func BytesToUint64(b []byte) (uint64, error) {
 
 // BytesToUint32 converts a byte slice to uint32 with big-endian encoding.
 // Nil or zero length slice is converted to 0.
-// The returns error if the slice is longer than 4 bytes.
+// It returns an error if the slice is longer than 4 bytes.
 func BytesToUint32(b []byte) (uint32, error) {
 	if len(b) > 4 {
 		return 0, SliceTooLongError{4}
@@ -49,7 +50,7 @@ func BytesToUint32(b []byte) (uint32, error) {
 
 // BytesToUint16 converts a byte slice to uint16 with big-endian encoding.
 // Nil or zero length slice is converted to 0.
-// The returns error if the slice is longer than 2 bytes.
+// It returns an error if the slice is longer than 2 bytes.
 func BytesToUint16(b []byte) (uint16, error) {
 	if len(b) > 2 {
 		return 0, SliceTooLongError{2}

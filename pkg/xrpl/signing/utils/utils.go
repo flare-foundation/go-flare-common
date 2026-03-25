@@ -1,3 +1,4 @@
+// Package utils provides utilities for preparing XRPL transaction messages for signing.
 package utils
 
 import (

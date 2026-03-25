@@ -1,3 +1,4 @@
+// Package logger provides a structured logging framework built on top of zap with console and file output support.
 package logger
 
 import (
@@ -21,6 +22,7 @@ func init() {
 	sugaredLogger = createSugared(DefaultConfig())
 }
 
+// Config holds logger configuration for output level, file, and console settings.
 type Config struct {
 	Level       string `toml:"level"` // valid values are: DEBUG, INFO, WARN, ERROR, DPANIC, PANIC, FATAL (zap)
 	File        string `toml:"file"`
@@ -39,6 +41,7 @@ func DefaultConfig() Config {
 	}
 }
 
+// GetLogger returns the global sugared logger instance.
 func GetLogger() *zap.SugaredLogger {
 	return sugaredLogger
 }

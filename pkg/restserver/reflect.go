@@ -2,7 +2,7 @@ package restserver
 
 import "reflect"
 
-// Return list of all fields in a struct, recursively by embedded structs.
+// StructFields returns all fields in a struct, recursively expanding embedded structs.
 func StructFields(s any) []reflect.StructField {
 	var fields []reflect.StructField
 	structFieldsRec(s, &fields)
@@ -26,6 +26,7 @@ func structFieldsRec(s any, fields *[]reflect.StructField) {
 	}
 }
 
+// IsNil reports whether the given value is nil, including nil pointers, channels, maps, and slices.
 func IsNil(i any) bool {
 	if i == nil {
 		return true
