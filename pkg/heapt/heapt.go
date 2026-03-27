@@ -78,7 +78,7 @@ func Remove[T any](h Interface[T], i int) T {
 // but less expensive than, calling [Remove](h, i) followed by a Push of the new value.
 // The complexity is O(log n) where n = h.Len().
 func Fix[T any](h Interface[T], i int) {
-	// do nothing if index our of bounds and avoid panic
+	// do nothing if index out of bounds and avoid panic
 	if i < 0 || i >= h.Len() {
 		return
 	}
