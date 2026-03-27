@@ -12,42 +12,32 @@ func TestCyclicSimple(t *testing.T) {
 
 	stg := storage.NewCyclic[int, uint64](size)
 
-	if stg.Size() != size {
-		t.Error("wrong size")
-	}
+	require.Equal(t, size, stg.Size())
 
 	getEmpty, exists := stg.Get(123)
-	if exists || getEmpty != 0 {
-		t.Error("unset but exists")
-	}
+	require.False(t, exists)
+	require.Equal(t, uint64(0), getEmpty)
 
 	stg.Store(1, 1)
 
 	getOne, exists := stg.Get(1)
-	if !exists || getOne != 1 {
-		t.Error("not stored")
-	}
+	require.True(t, exists)
+	require.Equal(t, uint64(1), getOne)
 
 	getOneWithFive, exists := stg.Get(5)
-
-	if exists || getOneWithFive != 0 {
-		t.Error("returned with wrong key")
-	}
+	require.False(t, exists)
+	require.Equal(t, uint64(0), getOneWithFive)
 
 	// overwrite
 	stg.Store(5, 5)
 
 	getOneWithFive, exists = stg.Get(5)
-
-	if !exists || getOneWithFive != 5 {
-		t.Error("not overwritten")
-	}
+	require.True(t, exists)
+	require.Equal(t, uint64(5), getOneWithFive)
 
 	getOne, exists = stg.Get(1)
-
-	if exists || getOne != 0 {
-		t.Error("not overwritten with larger")
-	}
+	require.False(t, exists)
+	require.Equal(t, uint64(0), getOne)
 }
 
 func TestCyclicArray(t *testing.T) {
@@ -56,37 +46,29 @@ func TestCyclicArray(t *testing.T) {
 	stg := storage.NewCyclic[int, []uint64](size)
 
 	_, exists := stg.Get(123)
-
-	if exists {
-		t.Error("unset but exists")
-	}
+	require.False(t, exists)
 
 	ar := []uint64{1}
 
 	stg.Store(1, ar)
 
 	getOne, exists := stg.Get(1)
-	if !exists || len(getOne) != 1 {
-		t.Error("not stored")
-	}
+	require.True(t, exists)
+	require.Len(t, getOne, 1)
 
 	ar = append(ar, 1)
 
 	getOne, exists = stg.Get(1)
-	if !exists || len(getOne) != 1 || len(ar) != 2 {
-		t.Error("copy not made 1")
-	}
+	require.True(t, exists)
+	require.Len(t, getOne, 1)
+	require.Len(t, ar, 2)
 
 	getOne = append(getOne, 1)
-	if len(getOne) != 2 {
-		t.Error("element no added")
-	}
+	require.Len(t, getOne, 2)
 
 	getOne, exists = stg.Get(1)
-
-	if !exists || len(getOne) != 1 {
-		t.Error("copy not made 2")
-	}
+	require.True(t, exists)
+	require.Len(t, getOne, 1)
 }
 
 func TestCyclicArrayPointer(t *testing.T) {
@@ -95,36 +77,28 @@ func TestCyclicArrayPointer(t *testing.T) {
 	stg := storage.NewCyclic[int, *[]uint64](size)
 
 	_, exists := stg.Get(123)
-
-	if exists {
-		t.Error("unset but exists")
-	}
+	require.False(t, exists)
 
 	ar := []uint64{1}
 
 	stg.Store(1, &ar)
 
 	getOne, exists := stg.Get(1)
-
-	if !exists || len(*getOne) != 1 {
-		t.Error("not stored")
-	}
+	require.True(t, exists)
+	require.Len(t, *getOne, 1)
 
 	ar = append(ar, 1)
 
 	getOne, exists = stg.Get(1)
-
-	if !exists || len(*getOne) != 2 || len(ar) != 2 {
-		t.Error("copy made")
-	}
+	require.True(t, exists)
+	require.Len(t, *getOne, 2)
+	require.Len(t, ar, 2)
 
 	*getOne = append(*getOne, 1)
 
 	getOne, exists = stg.Get(1)
-
-	if !exists || len(*getOne) != 3 {
-		t.Error("copy not made 2")
-	}
+	require.True(t, exists)
+	require.Len(t, *getOne, 3)
 }
 
 func TestCyclicMap(t *testing.T) {
@@ -133,25 +107,20 @@ func TestCyclicMap(t *testing.T) {
 	stg := storage.NewCyclic[int, map[uint64]uint64](size)
 
 	_, exists := stg.Get(123)
-	if exists {
-		t.Error("unset but exists")
-	}
+	require.False(t, exists)
 
 	mp := map[uint64]uint64{1: 1}
 
 	stg.Store(1, mp)
 
 	_, exists = stg.Get(1)
-	if !exists {
-		t.Error("not stored")
-	}
+	require.True(t, exists)
 
 	mp[2] = 3
 
 	getOne, exists := stg.Get(1)
-	if !exists || getOne[2] != 3 {
-		t.Error("map not modified")
-	}
+	require.True(t, exists)
+	require.Equal(t, uint64(3), getOne[2])
 }
 
 func TestCyclicNegative(t *testing.T) {

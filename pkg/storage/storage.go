@@ -30,7 +30,7 @@ func (s Cyclic[K, T]) Size() K {
 func (s Cyclic[K, T]) Store(key K, value T) {
 	keyMod := key % s.Size()
 
-	// make sure  0 <= keyMod < Size
+	// make sure 0 <= keyMod < Size
 	if keyMod < 0 {
 		keyMod += s.Size()
 	}
@@ -42,12 +42,12 @@ func (s Cyclic[K, T]) Store(key K, value T) {
 	s.values[keyMod] = storedItem
 }
 
-// Get retrieves element from key (mod size) if the stored element has key key.
+// Get retrieves element from key (mod size) if the stored element has the matching key.
 func (s Cyclic[K, T]) Get(key K) (T, bool) {
-	var k T
+	var v T
 	keyMod := key % s.Size()
 
-	// make sure  0 <= keyMod < Size
+	// make sure 0 <= keyMod < Size
 	if keyMod < 0 {
 		keyMod += s.Size()
 	}
@@ -57,18 +57,18 @@ func (s Cyclic[K, T]) Get(key K) (T, bool) {
 	storedItem := s.values[keyMod]
 
 	if storedItem == nil {
-		return k, false
+		return v, false
 	}
 
 	storedKey := storedItem.key
 
 	if storedKey != key {
-		return k, false
+		return v, false
 	}
 
-	k = storedItem.value
+	v = storedItem.value
 
-	return k, true
+	return v, true
 }
 
 // Deprecated: NewCyclic initializes a Cyclic storage with size.
@@ -79,7 +79,7 @@ func NewCyclic[K constraints.Integer, T any](size int) Cyclic[K, T] {
 }
 
 // New initializes a Cyclic storage with size.
-// If size is not positive, nil pointer is returned.
+// If size is not positive, nil is returned.
 func New[K constraints.Integer, T any](size int) *Cyclic[K, T] {
 	if size <= 0 {
 		return nil
