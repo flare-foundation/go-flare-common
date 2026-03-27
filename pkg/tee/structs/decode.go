@@ -19,9 +19,9 @@ func DecodeTo[T any](arg abi.Argument, data []byte, dest *T) (err error) {
 		if r := recover(); r != nil {
 			e, ok := r.(error)
 			if ok {
-				err = fmt.Errorf("recovered: %v", e)
+				err = fmt.Errorf("recovered: %w", e)
 			} else {
-				err = fmt.Errorf("recovered non error: %v", e)
+				err = fmt.Errorf("recovered non error: %v", r)
 			}
 		}
 	}()
@@ -69,7 +69,7 @@ func DecodeTo2[T any](arg abi.Argument, data []byte, dest *T) (err error) {
 			if ok {
 				err = fmt.Errorf("recovered panic: %w", e)
 			} else {
-				err = fmt.Errorf("recovered panic non error: %w", e)
+				err = fmt.Errorf("recovered panic non error: %v", r)
 			}
 		}
 	}()
@@ -110,7 +110,7 @@ func Decode[T any](arg abi.Argument, data []byte) (t T, err error) {
 			if ok {
 				err = fmt.Errorf("recovered panic: %w", e)
 			} else {
-				err = fmt.Errorf("recovered panic non error: %w", e)
+				err = fmt.Errorf("recovered panic non error: %v", r)
 			}
 		}
 	}()

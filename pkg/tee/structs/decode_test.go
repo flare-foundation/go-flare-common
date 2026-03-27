@@ -63,37 +63,42 @@ func TestDecodeFail(t *testing.T) {
 	}
 
 	tests := []struct {
+		name       string
 		inputType  abi.Argument
 		input      any
 		outputType abi.Argument
 	}{
 		{
+			name:       "uint8 decoded as string",
 			inputType:  argUint8,
 			input:      uint8(8),
 			outputType: argStr,
 		},
 		{
+			name:       "string decoded as uint8",
 			inputType:  argStr,
 			input:      "osem",
 			outputType: argUint8,
 		},
 	}
 
-	for j, test := range tests {
-		packed, err := abi.Arguments{test.inputType}.Pack(test.input)
-		require.NoError(t, err)
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			packed, err := abi.Arguments{test.inputType}.Pack(test.input)
+			require.NoError(t, err)
 
-		var unpacked0 any
-		var unpacked1 any
+			var unpacked0 any
+			var unpacked1 any
 
-		_, err = Decode[any](test.outputType, packed)
-		require.Error(t, err, j)
+			_, err = Decode[any](test.outputType, packed)
+			require.Error(t, err)
 
-		err = DecodeTo(test.outputType, packed, &unpacked0)
-		require.Error(t, err, j)
+			err = DecodeTo(test.outputType, packed, &unpacked0)
+			require.Error(t, err)
 
-		err = DecodeTo2(test.outputType, packed, &unpacked1)
-		require.Error(t, err, j)
+			err = DecodeTo2(test.outputType, packed, &unpacked1)
+			require.Error(t, err)
+		})
 	}
 }
 
@@ -332,7 +337,7 @@ func TestDecodeInstructionMessage(t *testing.T) {
 	require.Equal(t, pre, unpacked3)
 }
 
-func TestMissMatchedStructs(t *testing.T) {
+func TestMismatchedStructs(t *testing.T) {
 	abiJSON0 := `{
           "components": [
             {
