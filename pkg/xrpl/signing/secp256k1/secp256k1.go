@@ -21,37 +21,6 @@ const (
 	pubKeyOddPrefix  = 0x03
 )
 
-// // SignTx signs and encodes a transaction with prv as a master key of the account.
-// func SignTx(tx map[string]any, prv *ecdsa.PrivateKey) ([]byte, error) {
-// 	pub := PrvToPub(prv)
-// 	tx["SigningPubKey"] = pub
-
-// 	addr := PrvToAddress(prv)
-// 	tx["Account"] = addr
-
-// 	encoded, err := types.Encode(tx, true)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("cannot encode tx: %v", err)
-// 	}
-
-// 	id := PrvToID(prv)
-
-// 	msg := signing.MessageToSign(encoded, false, id)
-// 	signature, err := Sign(msg, prv)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("signing %v,", err)
-// 	}
-
-// 	tx["TxnSignature"] = hex.EncodeToString(signature)
-
-// 	signed, err := types.Encode(tx, false)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("cannot encode signed tx: %v", err)
-// 	}
-
-// 	return signed, nil
-// }
-
 // SignTxMultisig signs a transaction for multi-signing using a secp256k1 private key.
 func SignTxMultisig(tx map[string]any, prv *ecdsa.PrivateKey) (*signer.Signer, error) {
 	tx["SigningPubKey"] = ""

@@ -138,14 +138,14 @@ func CheckNativePayment(tx map[string]any) error {
 	}
 	amountStr, ok := amount.(string)
 	if !ok {
-		return fmt.Errorf("invalid fee type %v: %v", fee, reflect.TypeOf(fee))
+		return fmt.Errorf("invalid Amount type %v: %v", amount, reflect.TypeOf(amount))
 	}
 	amountBig, ok := new(big.Int).SetString(amountStr, 10)
 	if !ok {
-		return fmt.Errorf("unparsable integer for Amount: %v: %w", fee, err)
+		return fmt.Errorf("unparsable integer for Amount: %v", amountStr)
 	}
 	if amountBig.Cmp(big.NewInt(0)) != 1 {
-		return fmt.Errorf("non positive integer for Amount: %v: %w", fee, err)
+		return fmt.Errorf("non positive integer for Amount: %v", amountStr)
 	}
 
 	// Sequence
@@ -160,12 +160,12 @@ func CheckNativePayment(tx map[string]any) error {
 		return errors.New("missing 'empty' SigningPubKey")
 	}
 
-	SigningPubKeyStr, ok := signingPubKey.(string)
+	signingPubKeyStr, ok := signingPubKey.(string)
 	if !ok {
 		return fmt.Errorf("invalid type of signingPubKey %v: %v", signingPubKey, reflect.TypeOf(signingPubKey))
 	}
 
-	if SigningPubKeyStr != "" {
+	if signingPubKeyStr != "" {
 		return errors.New("signingPubKey must be empty string")
 	}
 

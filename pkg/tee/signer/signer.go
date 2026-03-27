@@ -175,7 +175,7 @@ func signHandler(prv *ecdsa.PrivateKey, maxReqBodySize int64) http.HandlerFunc {
 
 		r.Body = http.MaxBytesReader(w, r.Body, maxReqBodySize)
 
-		defer r.Body.Close() //nolint:errcheck
+		defer r.Body.Close() //nolint:errcheck // closing request body, error not actionable
 
 		rb := SignBody{}
 		decoder := json.NewDecoder(r.Body)
@@ -184,7 +184,7 @@ func signHandler(prv *ecdsa.PrivateKey, maxReqBodySize int64) http.HandlerFunc {
 		err := decoder.Decode(&rb)
 		if err != nil {
 			if err.Error() == "http: request body too large" {
-				msg := "request to large"
+				msg := "request too large"
 				http.Error(w, msg, http.StatusRequestEntityTooLarge)
 				return
 			}
@@ -302,7 +302,7 @@ func decryptHandler(prv *ecdsa.PrivateKey, maxReqBodySize int64) http.HandlerFun
 	return func(w http.ResponseWriter, r *http.Request) {
 		r.Body = http.MaxBytesReader(w, r.Body, maxReqBodySize)
 
-		defer r.Body.Close() //nolint:errcheck
+		defer r.Body.Close() //nolint:errcheck // closing request body, error not actionable
 
 		eb := EncryptedBody{}
 		decoder := json.NewDecoder(r.Body)
@@ -311,7 +311,7 @@ func decryptHandler(prv *ecdsa.PrivateKey, maxReqBodySize int64) http.HandlerFun
 		err := decoder.Decode(&eb)
 		if err != nil {
 			if err.Error() == "http: request body too large" {
-				msg := "request to large"
+				msg := "request too large"
 				http.Error(w, msg, http.StatusRequestEntityTooLarge)
 				return
 			}
@@ -326,6 +326,7 @@ func decryptHandler(prv *ecdsa.PrivateKey, maxReqBodySize int64) http.HandlerFun
 		if err != nil {
 			msg := "cannot decrypt"
 			http.Error(w, msg, http.StatusBadRequest)
+			return
 		}
 
 		response := DecryptedBody{

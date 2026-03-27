@@ -71,7 +71,7 @@ func CheckAndEncodePayment(tx map[string]any, native bool) ([]byte, error) {
 		}
 		amount, err := strconv.ParseUint(amountStr, 10, 0)
 		if err != nil {
-			return nil, fmt.Errorf("invalid amount %s: %w", feeStr, err) // should never happen
+			return nil, fmt.Errorf("invalid amount %s: %w", amountStr, err) // should never happen
 		}
 		if amount == 0 {
 			return nil, errors.New("zero amount")
