@@ -236,7 +236,7 @@ func TestExecuteAttempt(t *testing.T) {
 				maxAttempts = limit + 1
 			}
 
-			require.Len(t, attempts, min(maxAttempts, 4)) // test.p.MaxAttempts should not be 0 in test.
+			require.Len(t, attempts, min(maxAttempts, 4))
 
 			for _, value := range attempts {
 				require.Equal(t, 1, value)

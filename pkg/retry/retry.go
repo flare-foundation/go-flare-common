@@ -17,7 +17,7 @@ type ExecuteStatus[T any] struct {
 
 // Params configures retry behavior for Execute.
 type Params struct {
-	MaxAttempts int           // if non positive, number of attempts is not limited.
+	MaxAttempts int           // if non-positive, number of attempts is not limited.
 	Delay       time.Duration // minimal delay between attempts
 	Timeout     time.Duration // total maximal duration of the execution. If zero, there is no Timeout. For a single execution, the function should handle timeout.
 }
@@ -83,17 +83,17 @@ func ExecuteAttempt[T any](ctx context.Context, f func(j int) (T, error), params
 	return Execute(ctx, h, params)
 }
 
-// ingrainAttempt takes a function f that takes an integer for the param and returns a function that on the j-th call returns f(j-1).
+// ingrainAttempt takes a function f that takes an integer and returns a function that on call number j (starting from 0) returns f(j).
 //
 // The returned function should be used with caution in a concurrent scenario.
 func ingrainAttempt[T any](f func(int) (T, error)) func() (T, error) {
-	x := &sync.Mutex{}
+	mu := &sync.Mutex{}
 	j := -1
 	return func() (T, error) {
-		x.Lock()
+		mu.Lock()
 		j++
 		i := j
-		x.Unlock()
+		mu.Unlock()
 		return f(i)
 	}
 }
