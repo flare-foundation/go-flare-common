@@ -70,10 +70,9 @@ func PostRaw[T any](ctx context.Context, url string, apiKey APIKey, body io.Read
 	}
 
 	respLimited := &io.LimitedReader{R: resp.Body, N: p.MaxResponseSize}
-	defer resp.Body.Close() //nolint:errcheck
+	defer resp.Body.Close() //nolint:errcheck // closing response body, error not actionable
 
 	decoder := json.NewDecoder(respLimited)
-	// decoder.DisallowUnknownFields() // todo make this optional maybe
 
 	response := new(T)
 	err = decoder.Decode(response)

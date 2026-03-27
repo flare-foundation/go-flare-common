@@ -239,7 +239,7 @@ func (c *PKICertificates) Verify(expectedRoot *x509.Certificate, leafCRL, interm
 	}
 
 	if !expectedRoot.Equal(c.Root) {
-		return errors.New(("unexpected root certificate"))
+		return errors.New("unexpected root certificate")
 	}
 
 	err := c.verifyLifetime()

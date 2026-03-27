@@ -35,6 +35,7 @@ func Execute[T any](ctx context.Context, f func() (T, error), params Params) Exe
 
 	if params.Delay > 0 {
 		ticker = time.NewTicker(params.Delay)
+		defer ticker.Stop()
 	}
 	var result ExecuteStatus[T]
 

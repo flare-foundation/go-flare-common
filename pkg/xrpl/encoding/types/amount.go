@@ -512,7 +512,7 @@ func serializeMPTValue(value string) ([8]byte, error) {
 			}
 
 			if exponent.Cmp(zeroB) == -1 {
-				return out, errors.New("negative exponent now allowed")
+				return out, errors.New("negative exponent not allowed")
 			}
 
 			multiplier := new(big.Int).Exp(big.NewInt(10), exponent, nil)

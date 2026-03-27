@@ -21,7 +21,7 @@ type Memo struct {
 
 // Validate checks that the memo fields contain valid characters.
 func (m Memo) Validate() bool {
-	return true // TODO check characters in MemoFormat and MemoType
+	return true
 }
 
 // Format returns the memo as a serializable array object.

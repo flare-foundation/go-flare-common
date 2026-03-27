@@ -21,33 +21,6 @@ const (
 	ed25519Prefix = 0xed
 )
 
-// func SignTx(tx map[string]any, sequence uint32, prv ed25519.PrivateKey) ([]byte, error) {
-// 	tx["Sequence"] = sequence
-
-// 	pub, err := PrvToPub(prv)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("invalid private key: %v", err)
-// 	}
-// 	tx["SigningPubKey"] = pub
-
-// 	addr, err := PrvToAddress(prv)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("invalid private key: %v", err)
-// 	}
-// 	tx["Account"] = addr
-
-// 	encoded, err := types.Encode(tx, true)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("cannot encode tx: %v", err)
-// 	}
-
-// 	msg := signing.MessageToSign(encoded, false, nil)
-
-// 	signature := ed25519.Sign(prv, msg)
-
-// 	return signature, nil
-// }
-
 // SignTxMultisig signs a transaction for multi-signing using an Ed25519 private key.
 func SignTxMultisig(tx map[string]any, prv ed25519.PrivateKey) (*signer.Signer, error) {
 	tx["SigningPubKey"] = ""

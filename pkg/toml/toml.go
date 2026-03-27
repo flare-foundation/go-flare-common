@@ -22,12 +22,12 @@ func Read[T any](filePath string, allowUnknownFields bool) (T, error) {
 func ReadTo[T any](filePath string, dest *T, allowUnknownFields bool) error {
 	md, err := toml.DecodeFile(filePath, dest)
 
-	if !allowUnknownFields && len(md.Undecoded()) > 0 {
-		return fmt.Errorf("unknown field in toml %v", md.Undecoded()[0].String())
-	}
-
 	if err != nil {
 		return fmt.Errorf("decoding file %s: %w", filePath, err)
+	}
+
+	if !allowUnknownFields && len(md.Undecoded()) > 0 {
+		return fmt.Errorf("unknown field in toml %v", md.Undecoded()[0].String())
 	}
 
 	return nil
