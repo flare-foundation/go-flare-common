@@ -69,7 +69,7 @@ func TestCheckDelay(t *testing.T) {
 			// Close the db connection after the test
 			sqlDB, err := db.DB()
 			require.NoError(t, err)
-			defer sqlDB.Close() //nolint:errcheck
+			defer sqlDB.Close() //nolint:errcheck // closing test database
 
 			err = CheckDelay(t.Context(), db, tolerance)
 
