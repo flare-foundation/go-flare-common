@@ -91,7 +91,7 @@ func Fix[T any](h Interface[T], i int) {
 func up[T any](h Interface[T], j int) {
 	for {
 		i := (j - 1) / 2 // parent
-		if i == j || !h.Less(j, i) {
+		if i == j || i < 0 || !h.Less(j, i) {
 			break
 		}
 		h.Swap(i, j)
