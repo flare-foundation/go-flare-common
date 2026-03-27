@@ -14,49 +14,40 @@ import (
 func TestEmptyTree(t *testing.T) {
 	tree := merkle.Tree{}
 	_, err := tree.Root()
-	assert.Equal(t, err, merkle.ErrEmptyTree)
+	assert.Equal(t, merkle.ErrEmptyTree, err)
 
 	treeSlice := tree
-	assert.Empty(t, treeSlice, 0)
+	assert.Empty(t, treeSlice)
 
 	numLeaves := tree.LeavesCount()
-	assert.Equal(t, numLeaves, 0)
+	assert.Equal(t, 0, numLeaves)
 
 	sortedHashes := tree.Leaves()
 	assert.Empty(t, sortedHashes)
 
-	_, err = tree.GetLeaf(0)
-	assert.Equal(t, err, merkle.ErrInvalidIndex)
+	_, err = tree.Leaf(0)
+	assert.Equal(t, merkle.ErrInvalidIndex, err)
 
-	_, err = tree.GetProof(0)
-	assert.Equal(t, err, merkle.ErrInvalidIndex)
+	_, err = tree.Proof(0)
+	assert.Equal(t, merkle.ErrInvalidIndex, err)
 
-	_, err = tree.GetProofFromHash(common.HexToHash("0x01"))
-	assert.Equal(t, err, merkle.ErrHashNotFound)
+	_, err = tree.ProofFromHash(common.HexToHash("0x01"))
+	assert.Equal(t, merkle.ErrHashNotFound, err)
 }
 
 func TestBuildEmpty(t *testing.T) {
 	hashes := []common.Hash{}
 	tree := merkle.Build(hashes, false)
-
-	if len(tree) > 0 {
-		t.Error("not empty tree")
-	}
+	require.Empty(t, tree)
 
 	treeHashed := merkle.Build(hashes, true)
-
-	if len(treeHashed) > 0 {
-		t.Error("not empty tree")
-	}
+	require.Empty(t, treeHashed)
 }
 
 func TestBuildOne(t *testing.T) {
 	hashes := []common.Hash{common.HexToHash("0x01")}
 	tree := merkle.Build(hashes, false)
-
-	if len(tree) != 1 {
-		t.Error("tree too big")
-	}
+	require.Len(t, tree, 1)
 }
 
 func TestSingleLeafTree(t *testing.T) {
@@ -65,31 +56,31 @@ func TestSingleLeafTree(t *testing.T) {
 
 	root, err := tree.Root()
 	require.NoError(t, err)
-	assert.Equal(t, root, val)
+	assert.Equal(t, val, root)
 
 	treeSlice := tree
 	assert.Len(t, treeSlice, 1)
-	assert.Equal(t, treeSlice[0], val)
+	assert.Equal(t, val, treeSlice[0])
 
 	numLeaves := tree.LeavesCount()
-	assert.Equal(t, numLeaves, 1)
+	assert.Equal(t, 1, numLeaves)
 
 	sortedHashes := tree.Leaves()
 	assert.Len(t, sortedHashes, 1)
-	assert.Equal(t, sortedHashes[0], val)
+	assert.Equal(t, val, sortedHashes[0])
 
-	hash, err := tree.GetLeaf(0)
+	hash, err := tree.Leaf(0)
 	require.NoError(t, err)
-	assert.Equal(t, hash, val)
+	assert.Equal(t, val, hash)
 
-	proof, err := tree.GetProof(0)
+	proof, err := tree.Proof(0)
 	require.NoError(t, err)
 	require.Empty(t, proof)
 
 	verified := merkle.VerifyProof(val, proof, root)
 	assert.True(t, verified)
 
-	proof, err = tree.GetProofFromHash(val)
+	proof, err = tree.ProofFromHash(val)
 	require.NoError(t, err)
 	require.Empty(t, proof)
 
@@ -115,7 +106,7 @@ func TestMultiLeafTree(t *testing.T) {
 	})
 
 	numLeaves := tree.LeavesCount()
-	assert.Equal(t, numLeaves, 5)
+	assert.Equal(t, 5, numLeaves)
 
 	sortedHashes := tree.Leaves()
 	t.Run("SortedHashes", func(t *testing.T) {
@@ -124,14 +115,14 @@ func TestMultiLeafTree(t *testing.T) {
 	})
 
 	for i := range sortedHashes {
-		hash, err := tree.GetLeaf(i)
+		hash, err := tree.Leaf(i)
 		require.NoError(t, err)
-		assert.Equal(t, hash, sortedHashes[i])
+		assert.Equal(t, sortedHashes[i], hash)
 	}
 
 	for i, hash := range sortedHashes {
 		t.Run(fmt.Sprintf("Proof_%d", i), func(t *testing.T) {
-			proof, err := tree.GetProof(i)
+			proof, err := tree.Proof(i)
 			require.NoError(t, err)
 			cupaloy.SnapshotT(t, proof)
 
@@ -140,7 +131,7 @@ func TestMultiLeafTree(t *testing.T) {
 		})
 
 		t.Run(fmt.Sprintf("ProofFromHash_%d", i), func(t *testing.T) {
-			proof, err := tree.GetProofFromHash(hash)
+			proof, err := tree.ProofFromHash(hash)
 			require.NoError(t, err)
 			cupaloy.SnapshotT(t, proof)
 

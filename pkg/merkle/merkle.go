@@ -2,6 +2,7 @@
 package merkle
 
 import (
+	"bytes"
 	"errors"
 	"sort"
 
@@ -27,7 +28,7 @@ func Build(hashes []common.Hash, initialHash bool) Tree {
 
 	n := len(hashes)
 
-	if len(hashes) == 0 {
+	if n == 0 {
 		return Tree{}
 	}
 
@@ -35,7 +36,7 @@ func Build(hashes []common.Hash, initialHash bool) Tree {
 	sortedHashes := make([]common.Hash, n)
 	copy(sortedHashes, hashes)
 	sort.Slice(sortedHashes, func(i, j int) bool {
-		return sortedHashes[i].Hex() < sortedHashes[j].Hex()
+		return bytes.Compare(sortedHashes[i][:], sortedHashes[j][:]) < 0
 	})
 
 	sortedHashes = removeDuplicates(sortedHashes)
@@ -52,8 +53,7 @@ func Build(hashes []common.Hash, initialHash bool) Tree {
 }
 
 // removeDuplicates removes duplicated hashes from an ordered slice.
-//
-// The function will work properly if the slice is not sorted.
+// The slice must be sorted; the function does not work correctly otherwise.
 func removeDuplicates(hashes []common.Hash) []common.Hash {
 	output := make([]common.Hash, 0, len(hashes))
 	for i := range hashes {
@@ -88,7 +88,7 @@ func mapSingleHash(hashes []common.Hash) []common.Hash {
 
 // SortedHashPair returns a sorted hash of two hashes.
 func SortedHashPair(x, y common.Hash) common.Hash {
-	if x.Hex() <= y.Hex() {
+	if bytes.Compare(x[:], y[:]) <= 0 {
 		return crypto.Keccak256Hash(x.Bytes(), y.Bytes())
 	}
 
@@ -123,8 +123,8 @@ func (t Tree) Leaves() []common.Hash {
 	return t[numLeaves-1:]
 }
 
-// GetLeaf returns the `i`th leaf.
-func (t Tree) GetLeaf(i int) (common.Hash, error) {
+// Leaf returns the i-th leaf.
+func (t Tree) Leaf(i int) (common.Hash, error) {
 	numLeaves := t.LeavesCount()
 	if numLeaves == 0 || i < 0 || i >= numLeaves {
 		return common.Hash{}, ErrInvalidIndex
@@ -134,8 +134,8 @@ func (t Tree) GetLeaf(i int) (common.Hash, error) {
 	return t[pos], nil
 }
 
-// GetProof returns the Merkle proof for the `i`th leaf.
-func (t Tree) GetProof(i int) ([]common.Hash, error) {
+// Proof returns the Merkle proof for the i-th leaf.
+func (t Tree) Proof(i int) ([]common.Hash, error) {
 	numLeaves := t.LeavesCount()
 	if numLeaves == 0 || i < 0 || i >= numLeaves {
 		return nil, ErrInvalidIndex
@@ -156,21 +156,21 @@ func parent(i int) int {
 	return (i - 1) / 2
 }
 
-// GetProofFromHash returns the proof that hash is stored in a leaf of the tree.
-// Returns nil if hash is not stored in the tree.
-func (t Tree) GetProofFromHash(hash common.Hash) ([]common.Hash, error) {
+// ProofFromHash returns the proof that hash is stored in a leaf of the tree.
+// Returns ErrHashNotFound if hash is not stored in the tree.
+func (t Tree) ProofFromHash(hash common.Hash) ([]common.Hash, error) {
 	i, err := t.binarySearch(hash)
 	if err != nil {
 		return nil, err
 	}
 
-	return t.GetProof(i)
+	return t.Proof(i)
 }
 
 func (t Tree) binarySearch(hash common.Hash) (int, error) {
 	leaves := t.Leaves()
 	i := sort.Search(len(leaves), func(i int) bool {
-		return leaves[i].Hex() >= hash.Hex()
+		return bytes.Compare(leaves[i][:], hash[:]) >= 0
 	})
 
 	if i < len(leaves) && leaves[i] == hash {
