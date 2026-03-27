@@ -1,7 +1,13 @@
 // Package transactions provides XRPL transaction construction and validation utilities.
 package transactions
 
-import "github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/types"
+import (
+	"strings"
+
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/types"
+)
+
+const memoAllowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=%"
 
 // CommonFields holds fields shared across XRPL transaction types.
 type CommonFields struct {
@@ -20,12 +26,21 @@ type Memo struct {
 }
 
 // Validate checks that the memo fields contain valid characters.
-func (m Memo) Validate() bool {
-	return true
+// The MemoType and MemoFormat fields should only consist of the following characters:
+// ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=%
+func (m *Memo) Validate() bool {
+	return validMemoField(m.MemoType) && validMemoField(m.MemoFormat)
+}
+
+// validMemoField reports whether all characters in s are in memoAllowedChars.
+func validMemoField(s string) bool {
+	return strings.IndexFunc(s, func(r rune) bool {
+		return !strings.ContainsRune(memoAllowedChars, r)
+	}) == -1
 }
 
 // Format returns the memo as a serializable array object.
-func (m Memo) Format() types.ArrayObject {
+func (m *Memo) Format() types.ArrayObject {
 	inner := make(types.Object)
 
 	if len(m.MemoData) > 0 {
