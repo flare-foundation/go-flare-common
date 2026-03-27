@@ -13,7 +13,7 @@ import (
 
 const errorMsg = "still error"
 
-var errRetry error = errors.New(errorMsg)
+var errRetry = errors.New(errorMsg)
 
 // testFunction returns a function that returns err until it is called k+1 times.
 func testFunction(k int) func() (int, error) {
@@ -27,7 +27,7 @@ func testFunction(k int) func() (int, error) {
 	}
 }
 
-// testFunction returns a function that returns err until the duration d has passed from its creation.
+// testFunction2 returns a function that returns err until the duration d has passed from its creation.
 func testFunction2(d time.Duration) func() (int, error) {
 	start := time.Now()
 
@@ -42,12 +42,14 @@ func testFunction2(d time.Duration) func() (int, error) {
 
 func TestExecuteWithRetry(t *testing.T) {
 	tests := []struct {
+		name     string
 		f        func() (int, error)
 		params   Params
 		expected ExecuteStatus[int]
 	}{
 		{
-			f: testFunction(3),
+			name: "success within max attempts",
+			f:    testFunction(3),
 			params: Params{
 				MaxAttempts: 4,
 				Delay:       0,
@@ -60,7 +62,8 @@ func TestExecuteWithRetry(t *testing.T) {
 			},
 		},
 		{
-			f: testFunction(3),
+			name: "success with unlimited attempts",
+			f:    testFunction(3),
 			params: Params{
 				MaxAttempts: 0,
 				Delay:       0,
@@ -73,7 +76,8 @@ func TestExecuteWithRetry(t *testing.T) {
 			},
 		},
 		{
-			f: testFunction(3),
+			name: "failure when attempts exhausted",
+			f:    testFunction(3),
 			params: Params{
 				MaxAttempts: 2,
 				Delay:       0,
@@ -81,12 +85,13 @@ func TestExecuteWithRetry(t *testing.T) {
 			},
 			expected: ExecuteStatus[int]{
 				Success: false,
-				Err:     fmt.Errorf("max retries reached. Last error: %w", errRetry),
+				Err:     fmt.Errorf("all attempts failed. Last error: %w", errRetry),
 				Value:   0,
 			},
 		},
 		{
-			f: testFunction2(5 * time.Millisecond),
+			name: "success before timeout",
+			f:    testFunction2(5 * time.Millisecond),
 			params: Params{
 				MaxAttempts: 0,
 				Delay:       3 * time.Millisecond,
@@ -99,7 +104,8 @@ func TestExecuteWithRetry(t *testing.T) {
 			},
 		},
 		{
-			f: testFunction2(20 * time.Millisecond),
+			name: "context deadline exceeded",
+			f:    testFunction2(20 * time.Millisecond),
 			params: Params{
 				MaxAttempts: 0,
 				Delay:       2 * time.Millisecond,
@@ -113,11 +119,12 @@ func TestExecuteWithRetry(t *testing.T) {
 		},
 	}
 
-	for j, test := range tests {
-		ctx := context.Background()
-
-		outcome := Execute(ctx, test.f, test.params)
-		require.Equal(t, test.expected, outcome, j)
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			ctx := context.Background()
+			outcome := Execute(ctx, test.f, test.params)
+			require.Equal(t, test.expected, outcome)
+		})
 	}
 }
 
@@ -173,26 +180,15 @@ func TestIngrainAttemptConcurrent(t *testing.T) {
 }
 
 func TestExecuteAttempt(t *testing.T) {
-	attempts := make(map[int]int)
-
 	limit := 3
 
-	testFunc := func(i int) (bool, error) {
-		attempts[i]++
-		if i < limit {
-			return false, errRetry
-		}
-
-		return true, nil
-	}
-
-	ctx := context.Background()
-
 	tests := []struct {
-		p Params
-		e ExecuteStatus[bool]
+		name string
+		p    Params
+		e    ExecuteStatus[bool]
 	}{
 		{
+			name: "failure when attempts exhausted",
 			p: Params{
 				MaxAttempts: 2,
 				Delay:       0,
@@ -200,11 +196,12 @@ func TestExecuteAttempt(t *testing.T) {
 			},
 			e: ExecuteStatus[bool]{
 				Success: false,
-				Err:     fmt.Errorf("max retries reached. Last error: %w", errRetry),
+				Err:     fmt.Errorf("all attempts failed. Last error: %w", errRetry),
 				Value:   false,
 			},
 		},
 		{
+			name: "success within max attempts",
 			p: Params{
 				MaxAttempts: 5,
 				Delay:       0,
@@ -218,21 +215,32 @@ func TestExecuteAttempt(t *testing.T) {
 		},
 	}
 
-	for j, test := range tests {
-		attempts = make(map[int]int)
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			attempts := make(map[int]int)
 
-		res := ExecuteAttempt(ctx, testFunc, test.p)
-		require.Equal(t, test.e, res, j)
+			testFunc := func(i int) (bool, error) {
+				attempts[i]++
+				if i < limit {
+					return false, errRetry
+				}
+				return true, nil
+			}
 
-		maxAttempts := test.p.MaxAttempts
-		if maxAttempts == 0 {
-			maxAttempts = limit + 1
-		}
+			ctx := context.Background()
+			res := ExecuteAttempt(ctx, testFunc, test.p)
+			require.Equal(t, test.e, res)
 
-		require.Len(t, attempts, min(maxAttempts, 4)) // test.p.MaxAttempts should not be 0 in test.
+			maxAttempts := test.p.MaxAttempts
+			if maxAttempts == 0 {
+				maxAttempts = limit + 1
+			}
 
-		for _, value := range attempts {
-			require.Equal(t, value, 1)
-		}
+			require.Len(t, attempts, min(maxAttempts, 4)) // test.p.MaxAttempts should not be 0 in test.
+
+			for _, value := range attempts {
+				require.Equal(t, 1, value)
+			}
+		})
 	}
 }

@@ -18,7 +18,7 @@ type ExecuteStatus[T any] struct {
 // Params configures retry behavior for Execute.
 type Params struct {
 	MaxAttempts int           // if non positive, number of attempts is not limited.
-	Delay       time.Duration // minimal delay between each attempts
+	Delay       time.Duration // minimal delay between attempts
 	Timeout     time.Duration // total maximal duration of the execution. If zero, there is no Timeout. For a single execution, the function should handle timeout.
 }
 
@@ -64,12 +64,15 @@ func Execute[T any](ctx context.Context, f func() (T, error), params Params) Exe
 			return result
 		}
 
-		if params.Delay > 0 {
-			<-ticker.C
+		if params.Delay > 0 && cond(j+1, params.MaxAttempts) {
+			select {
+			case <-ticker.C:
+			case <-ctx.Done():
+			}
 		}
 	}
 
-	result.Err = fmt.Errorf("max retries reached. Last error: %w", err)
+	result.Err = fmt.Errorf("all attempts failed. Last error: %w", err)
 
 	return result
 }
