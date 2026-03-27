@@ -13,7 +13,7 @@ import (
 // String s can be at most 32 characters long, otherwise an error is returned.
 func StringToCommonHash(s string) (common.Hash, error) {
 	if len(s) > 32 {
-		return common.Hash{}, errors.New("string too long. At most 32 characters allowed")
+		return common.Hash{}, errors.New("string too long: at most 32 characters allowed")
 	}
 	x := [32]byte{}
 	copy(x[:], s)

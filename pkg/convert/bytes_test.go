@@ -264,7 +264,7 @@ func TestUint64ToHash(t *testing.T) {
 			want: common.HexToHash("0x0000000000000000000000000000000012345678"),
 		},
 		{
-			name: "value2",
+			name: "value3",
 			n:    uint64(0x1234567890123456),
 			want: common.HexToHash("0x0000000000000000000000001234567890123456"),
 		},

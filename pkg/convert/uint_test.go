@@ -66,7 +66,7 @@ func TestBigToUint64(t *testing.T) {
 	}
 }
 
-func TestTestBigToUint32(t *testing.T) {
+func TestBigToUint32(t *testing.T) {
 	tests := []struct {
 		name      string
 		input     *big.Int
