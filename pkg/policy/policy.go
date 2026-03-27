@@ -42,7 +42,7 @@ func (sp *SigningPolicy) Hash() []byte {
 	return Hash(sp.rawBytes)
 }
 
-// NewSigningPolicy creates a SigningPolicy from an SigningPolicyInitialized event.
+// NewSigningPolicy creates a SigningPolicy from a SigningPolicyInitialized event.
 //
 // Mapping from submitAddress to signingPolicyAddress can be added if needed.
 func NewSigningPolicy(r *relay.RelaySigningPolicyInitialized, submitToSigning map[common.Address]common.Address) *SigningPolicy {
@@ -88,31 +88,31 @@ func (sp *SigningPolicy) Equals(other *SigningPolicy) bool {
 // Total 43 + size * (20 + 2) bytes.
 func FromRawBytes(b []byte) (*SigningPolicy, int, error) {
 	if len(b) < 2 {
-		return nil, 0, errors.New("message to short for decoding signing policy")
+		return nil, 0, errors.New("message too short for decoding signing policy")
 	}
 
 	p := 0
 	size32, err := convert.BytesToUint32(b[p : p+2])
 	if err != nil {
-		return nil, p, fmt.Errorf("reading size %w", err)
+		return nil, p, fmt.Errorf("reading size: %w", err)
 	}
 	size := int(size32)
 	p += 2
 
 	expectedLength := 43 + size*(common.AddressLength+2)
 	if len(b) < expectedLength {
-		return nil, p, fmt.Errorf("message to short for decoding signing policy: expected >=%d, got %d", expectedLength, len(b))
+		return nil, p, fmt.Errorf("message too short for decoding signing policy: expected >=%d, got %d", expectedLength, len(b))
 	}
 
 	epoch, err := convert.BytesToUint32(b[p : p+3])
 	if err != nil {
-		return nil, p, fmt.Errorf("reading epoch %w", err)
+		return nil, p, fmt.Errorf("reading epoch: %w", err)
 	}
 	p += 3
 
 	startingRound, err := convert.BytesToUint32(b[p : p+4])
 	if err != nil {
-		return nil, p, fmt.Errorf("reading starting round %w", err)
+		return nil, p, fmt.Errorf("reading starting round: %w", err)
 	}
 	p += 4
 
@@ -153,7 +153,9 @@ func FromRawBytes(b []byte) (*SigningPolicy, int, error) {
 // Hash computes hash of a signing policy from signingPolicyBytes.
 func Hash(b []byte) []byte {
 	if len(b)%32 != 0 {
-		b = append(b, make([]byte, 32-len(b)%32)...)
+		padded := make([]byte, len(b)+32-len(b)%32)
+		copy(padded, b)
+		b = padded
 	}
 	hash := crypto.Keccak256(b[:32], b[32:64])
 	for i := 2; i < len(b)/32; i++ {
