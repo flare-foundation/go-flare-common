@@ -7,8 +7,8 @@ package convert
 func MapToValueSlice[T comparable, S any](m map[T]S) []S {
 	s := make([]S, 0, len(m))
 
-	for k := range m {
-		s = append(s, m[k])
+	for _, v := range m {
+		s = append(s, v)
 	}
 
 	return s
@@ -30,8 +30,8 @@ func MapToKeySlice[T comparable, S any](m map[T]S) []T {
 // SliceToSet creates a set from slice.
 func SliceToSet[T comparable](s []T) map[T]bool {
 	m := make(map[T]bool, len(s))
-	for k := range s {
-		m[s[k]] = true
+	for _, v := range s {
+		m[v] = true
 	}
 	return m
 }

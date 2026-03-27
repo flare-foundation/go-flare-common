@@ -51,7 +51,7 @@ func TestMapToValueSlice(t *testing.T) {
 			}
 
 			for _, v := range resultMap {
-				require.Equal(t, 0, v, "expected multiplicity for %d does not match")
+				require.Equal(t, 0, v, "expected multiplicity for %d does not match", v)
 			}
 		})
 	}
