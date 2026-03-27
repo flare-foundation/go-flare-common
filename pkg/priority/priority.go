@@ -30,7 +30,7 @@ func (noLogger) Panic(...any)          {}
 type Params struct {
 	MaxDequeuesPerSecond int           `toml:"max_dequeues_per_second"` // Set to 0 to disable rate-limiting.
 	MaxWorkers           int           `toml:"max_workers"`             // Set to 0 for unlimited workers.
-	MaxAttempts          int           `toml:"max_attempts"`            // If not positive or unset, it defaults to one attempt.
+	MaxAttempts          int           `toml:"max_attempts"`            // Number of retries after the first attempt. If not positive, no retries are made.
 	TimeOff              time.Duration `toml:"time_off"`                // TimeOff between attempts
 	ErrorChan            bool          `toml:"error_chan"`              // If true, errors on final attempts are pushed to the channel
 
@@ -68,38 +68,7 @@ type PriorityQueue[T any, W weight[W]] struct {
 
 // New returns new Priority from params.
 func New[T any, W weight[W]](params Params, name string) PriorityQueue[T, W] {
-	var limiter *rate.Limiter
-
-	if params.MaxDequeuesPerSecond > 0 {
-		limiter = rate.NewLimiter(rate.Limit(params.MaxDequeuesPerSecond), bucketSize)
-	} else {
-		limiter = rate.NewLimiter(rate.Inf, 0)
-	}
-
-	var workers chan bool
-	if params.MaxWorkers > 0 {
-		workers = make(chan bool, params.MaxWorkers)
-	}
-
-	var errors chan error
-	if params.ErrorChan {
-		errors = make(chan error, 10)
-	}
-
-	return PriorityQueue[T, W]{
-		name:    name,
-		regular: QueueMutex[Wrapped[T], W]{},
-		fast:    QueueMutex[Wrapped[T], W]{},
-		workers: workers,
-		Errors:  errors,
-
-		maxAttempts: params.MaxAttempts,
-		timeOff:     params.TimeOff,
-
-		limiter: limiter,
-
-		logger: noLogger{},
-	}
+	return NewWithLogger[T, W](params, name, noLogger{})
 }
 
 // NewWithLogger returns new Priority from params with logger.
@@ -236,28 +205,26 @@ func (p *PriorityQueue[T, W]) next() *Item[Wrapped[T], W] {
 		item, _ := heapt.Pop(&p.fast)
 		p.fast.Unlock()
 		return item
-	} else {
-		// vacate the channel wait for the signal (just to be safe)
-		select {
-		case <-p.fast.empty:
-		default:
-		}
-		p.fast.Unlock()
 	}
+	// vacate the channel wait for the signal (just to be safe)
+	select {
+	case <-p.fast.empty:
+	default:
+	}
+	p.fast.Unlock()
 
 	p.regular.Lock()
 	if p.regular.Len() > 0 {
 		item, _ := heapt.Pop(&p.regular)
 		p.regular.Unlock()
 		return item
-	} else {
-		// vacate the channel wait for the signal
-		select {
-		case <-p.regular.empty:
-		default:
-		}
-		p.regular.Unlock()
 	}
+	// vacate the channel wait for the signal
+	select {
+	case <-p.regular.empty:
+	default:
+	}
+	p.regular.Unlock()
 
 	select {
 	case <-p.fast.empty:
@@ -307,7 +274,7 @@ func (p *PriorityQueue[T, W]) Dequeue(ctx context.Context, handler func(context.
 		}
 
 		if err != nil {
-			p.handleRetry(wItem, err)
+			p.handleRetry(ctx, wItem, err)
 		}
 	}()
 }
@@ -342,7 +309,7 @@ func (p *PriorityQueue[T, W]) decrementWorkers() {
 }
 
 // handleRetry re-enqueues an item from the regular lane after timeOff if maxAttempts has not been reached.
-func (p *PriorityQueue[T, W]) handleRetry(item *Item[Wrapped[T], W], err error) {
+func (p *PriorityQueue[T, W]) handleRetry(ctx context.Context, item *Item[Wrapped[T], W], err error) {
 	item.value.attemptsLeft--
 	if item.value.attemptsLeft <= 0 || item.value.fast {
 		p.addError(err)
@@ -351,7 +318,11 @@ func (p *PriorityQueue[T, W]) handleRetry(item *Item[Wrapped[T], W], err error) 
 
 	go func() {
 		to := p.backOff(p.maxAttempts - item.value.attemptsLeft)
-		time.Sleep(to)
+		select {
+		case <-time.After(to):
+		case <-ctx.Done():
+			return
+		}
 		p.regular.Lock()
 		heapt.Push(&p.regular.Queue, item)
 		select {
@@ -375,7 +346,7 @@ func (p *PriorityQueue[T, W]) addError(err error) {
 	}
 }
 
-// decrementWorkers indicates a worker is not taken anymore.
+// backOff returns the backoff duration for the j-th retry attempt.
 func (p *PriorityQueue[T, W]) backOff(j int) time.Duration {
 	if p.bo != nil {
 		return p.bo(j)

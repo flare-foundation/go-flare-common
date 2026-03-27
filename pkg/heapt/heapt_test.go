@@ -41,7 +41,7 @@ func (h myHeap) verify(t *testing.T, i int) {
 		h.verify(t, j1)
 	}
 	if j2 < n {
-		require.Truef(t, !h.Less(j1, i), "heap invariant invalidated [%d] = %d > [%d] = %d", i, h[i], j2, h[j2])
+		require.Truef(t, !h.Less(j2, i), "heap invariant invalidated [%d] = %d > [%d] = %d", i, h[i], j2, h[j2])
 		h.verify(t, j2)
 	}
 }
@@ -138,7 +138,7 @@ func TestRemove1(t *testing.T) {
 
 	for i := 0; h.Len() > 0; i++ {
 		x := heapt.Remove(h, 0)
-		require.Equalf(t, i, x, "Remove(0) got %d; want %d", i)
+		require.Equalf(t, i, x, "Remove(0) got %d; want %d", x, i)
 		h.verify(t, 0)
 	}
 }
