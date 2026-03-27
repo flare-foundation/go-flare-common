@@ -30,7 +30,7 @@ type Config struct {
 	Console     bool   `toml:"console"`
 }
 
-// DefaultConfig is:
+// DefaultConfig returns the default logger configuration.
 //
 //	Level: "DEBUG"
 //	Console: true
@@ -41,8 +41,8 @@ func DefaultConfig() Config {
 	}
 }
 
-// GetLogger returns the global sugared logger instance.
-func GetLogger() *zap.SugaredLogger {
+// Logger returns the global sugared logger instance.
+func Logger() *zap.SugaredLogger {
 	return sugaredLogger
 }
 
@@ -199,7 +199,7 @@ func Panic(args ...any) {
 	sugaredLogger.Panic(args...)
 }
 
-// Fatal logs arguments at FATAL level  and calls os.Exit.
+// Fatal logs arguments at FATAL level and calls os.Exit.
 //
 // Defers will not be executed.
 func Fatal(args ...any) {
