@@ -94,11 +94,10 @@ func TestDequeue(t *testing.T) {
 
 	wg.Wait()
 
-	// require
-	var deviationTotal time.Duration = 0
+	var deviationTotal time.Duration
 	for j := 1; j < len(times.list)-1; j++ {
 		difference := times.list[j+1].Sub(times.list[j]) - (time.Second / time.Duration(perSecond))
-		deviationTotal = +difference.Abs()
+		deviationTotal += difference.Abs()
 	}
 
 	deviationMean := deviationTotal / time.Duration(len(times.list)-2)
@@ -149,11 +148,10 @@ func TestDequeue2(t *testing.T) {
 
 	wg.Wait()
 
-	// require
-	var deviationTotal time.Duration = 0
+	var deviationTotal time.Duration
 	for j := 1; j < len(times.list)-1; j++ {
 		difference := times.list[j+1].Sub(times.list[j]) - (time.Second / time.Duration(perSecond))
-		deviationTotal = +difference.Abs()
+		deviationTotal += difference.Abs()
 	}
 
 	deviationMean := deviationTotal / time.Duration(len(times.list)-2)
@@ -313,9 +311,11 @@ func TestMaxWorkers(t *testing.T) {
 
 	time.Sleep(30 * time.Millisecond)
 
+	stats.Lock()
 	require.Equal(t, 1, stats.attempts[0])
 	require.Equal(t, 1, stats.attempts[1])
 	require.Equal(t, 1, stats.attempts[2])
+	stats.Unlock()
 
 	cancel()
 }

@@ -19,7 +19,7 @@ type logger interface {
 	Panic(...any)
 }
 
-// noLogger is a empty logger that implements the logger interface.
+// noLogger is an empty logger that implements the logger interface.
 type noLogger struct{}
 
 func (noLogger) Infof(string, ...any)  {}
@@ -106,7 +106,7 @@ func NewWithLogger[T any, W weight[W]](params Params, name string, logger logger
 	}
 }
 
-// SetBackOff sets backOff functions for the queue.
+// SetBackOff sets the backOff function for the queue.
 func (p *PriorityQueue[T, W]) SetBackOff(bo backOff) {
 	p.bo = bo
 }
@@ -242,7 +242,7 @@ func (p *PriorityQueue[T, W]) next() *Item[Wrapped[T], W] {
 
 // Dequeue gets next item and processes it with discard and handler function.
 // Items that are discarded do not affect rate limit.
-// If handler returns an error, item (from regular late) is retried until success or maxAttempts is reached.
+// If handler returns an error, item (from regular lane) is retried until success or maxAttempts is reached.
 func (p *PriorityQueue[T, W]) Dequeue(ctx context.Context, handler func(context.Context, T) error, discard func(context.Context, T) bool) {
 	wItem := p.next()
 
@@ -267,7 +267,7 @@ func (p *PriorityQueue[T, W]) Dequeue(ctx context.Context, handler func(context.
 	}
 
 	go func() {
-		err = handler(ctx, wItem.value.item)
+		err := handler(ctx, wItem.value.item)
 
 		if p.workers != nil {
 			p.decrementWorkers()
@@ -279,7 +279,7 @@ func (p *PriorityQueue[T, W]) Dequeue(ctx context.Context, handler func(context.
 	}()
 }
 
-// Name of the PriorityQueue. "Unnamed" if not set.
+// Name of the PriorityQueue. Returns "unnamed" if not set.
 func (p *PriorityQueue[T, W]) Name() string {
 	if len(p.name) > 0 {
 		return p.name
