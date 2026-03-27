@@ -47,7 +47,7 @@ func Connect(cfg *Config) (*gorm.DB, error) {
 
 // SyncParams configures the retry behavior for waiting on C-chain indexer synchronization.
 type SyncParams struct {
-	Retries            int           // Maximal number of retires
+	Retries            int           // Maximal number of retries
 	OutOfSyncTolerance time.Duration // Delay that is tolerable
 	MaxSleepTime       time.Duration // Maximal duration of sleep between retries
 	MinSleepTime       time.Duration // Minimal duration of sleep between retries
@@ -56,7 +56,7 @@ type SyncParams struct {
 // WaitCIndexerToSync waits for C-chain indexer DB to sync.
 //
 // If db is not up to date, the check is performed again after 1/20 of the delay (bound by MaxSleepTime and MinSleepTime).
-// Reties specifies at most how many times is the check done.
+// Retries specifies at most how many times the check is done.
 // If the check does not succeed by then, error is returned.
 //
 // Logger for logging can be provided. If it is nil, no logging is done.
@@ -88,7 +88,11 @@ func WaitCIndexerToSync(ctx context.Context, db *gorm.DB, params SyncParams, log
 		sleepTime = max(sleepTime, params.MinSleepTime)
 		logger.Warnf("Sleeping for %v", sleepTime)
 		k++
-		time.Sleep(sleepTime)
+		select {
+		case <-time.After(sleepTime):
+		case <-ctx.Done():
+			return ctx.Err()
+		}
 	}
 
 	logger.Warnf("Checking database for the final time")

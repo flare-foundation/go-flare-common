@@ -53,7 +53,7 @@ func fetchLatestBlock(
 	}
 
 	if len(blocks) == 0 {
-		return Block{}, errors.New("no states in database")
+		return Block{}, errors.New("no blocks in database")
 	}
 
 	return blocks[0], nil
