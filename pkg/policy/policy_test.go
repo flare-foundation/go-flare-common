@@ -67,7 +67,7 @@ func TestParseDatabaseLog(t *testing.T) {
 	}
 }
 
-func TestNewSiginigPolicyLogs(t *testing.T) {
+func TestNewSigningPolicyLogs(t *testing.T) {
 	tests := []struct {
 		log         database.Log
 		noOfVoters  int
@@ -105,7 +105,7 @@ func TestNewSiginigPolicyLogs(t *testing.T) {
 		voterData, ok := siginingPolicy.Voters.VoterDataMap[common.HexToAddress(test.voter)]
 		require.Truef(t, ok, "error missing voter in test %d", i)
 		require.Equalf(t, test.voterWeight, voterData.Weight, "error wrong weight test %d", i)
-		require.Equalf(t, test.voterWeight, voterData.Weight, "error wrong index test %d", i)
+		require.Equalf(t, test.index, voterData.Index, "error wrong index test %d", i)
 
 		fromBytes, j, err := policy.FromRawBytes(siginingPolicy.RawBytes())
 
