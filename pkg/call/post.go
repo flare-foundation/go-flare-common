@@ -1,3 +1,4 @@
+// Package call provides HTTP POST request utilities with retry support.
 package call
 
 import (
@@ -14,18 +15,22 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/retry"
 )
 
+// APIKey holds an HTTP header name-value pair for API authentication.
 type APIKey struct {
 	Name string
 	Key  string
 }
 
+// Params configures HTTP request behavior.
 type Params struct {
 	Timeout         time.Duration // maximal time to wait for a response
 	MaxResponseSize int64         // maximal response size in bytes
 }
 
+// NoAPIKey is an empty APIKey that skips adding an authentication header.
 var NoAPIKey = APIKey{"", ""}
 
+// Response holds the HTTP status code and the unmarshaled response body.
 type Response[T any] struct {
 	Status  int
 	Message *T
@@ -52,6 +57,7 @@ func PostRaw[T any](ctx context.Context, url string, apiKey APIKey, body io.Read
 	if err != nil {
 		return resOut, err
 	}
+	defer resp.Body.Close() //nolint:errcheck // closing response body, error not actionable
 
 	resOut.Status = resp.StatusCode
 
@@ -60,7 +66,6 @@ func PostRaw[T any](ctx context.Context, url string, apiKey APIKey, body io.Read
 			respLimited := &io.LimitedReader{R: resp.Body, N: p.MaxResponseSize}
 			buf := new(strings.Builder)
 			_, err := io.Copy(buf, respLimited)
-			// check errors
 			if err == nil {
 				return resOut, fmt.Errorf("request responded with code %d, reason: %s", resp.StatusCode, buf.String())
 			}
@@ -70,7 +75,6 @@ func PostRaw[T any](ctx context.Context, url string, apiKey APIKey, body io.Read
 	}
 
 	respLimited := &io.LimitedReader{R: resp.Body, N: p.MaxResponseSize}
-	defer resp.Body.Close() //nolint:errcheck // closing response body, error not actionable
 
 	decoder := json.NewDecoder(respLimited)
 
@@ -86,8 +90,13 @@ func PostRaw[T any](ctx context.Context, url string, apiKey APIKey, body io.Read
 
 // PostRawWithRetry sends a post request and retries on unsuccessful attempts according to retry parameters.
 func PostRawWithRetry[T any](ctx context.Context, url string, apiKey APIKey, body io.Reader, p Params, acceptableFail []int, rp retry.Params) (Response[T], error) {
+	bodyBytes, err := io.ReadAll(body)
+	if err != nil {
+		return Response[T]{}, fmt.Errorf("reading request body: %w", err)
+	}
+
 	fn := func() (Response[T], error) {
-		r, err := PostRaw[T](ctx, url, apiKey, body, p)
+		r, err := PostRaw[T](ctx, url, apiKey, bytes.NewReader(bodyBytes), p)
 		if err != nil && !slices.Contains(acceptableFail, r.Status) {
 			return r, err
 		}

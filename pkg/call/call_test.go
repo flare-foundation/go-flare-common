@@ -33,7 +33,7 @@ func TestPOST(t *testing.T) {
 		in := req{}
 		err := decoder.Decode(&in)
 		require.NoError(t, err)
-		defer r.Body.Close() //nolint:errcheck
+		defer r.Body.Close() //nolint:errcheck // closing request body in test handler
 
 		var b uint
 		if in.A < 0 {
