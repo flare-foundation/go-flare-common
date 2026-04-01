@@ -316,10 +316,10 @@ func (c *PKICertificates) verifyCRL(leafCRL, intermediateCRL *x509.RevocationLis
 func checkCRL(name string, cert *x509.Certificate, crl *x509.RevocationList, issuer *x509.Certificate) error {
 	if crl == nil {
 		if len(cert.CRLDistributionPoints) == 0 {
-			logger.Warnf("%s certificate has no CRL distribution points, skipping CRL check", name)
-		} else {
-			logger.Warnf("%s certificate has CRL distribution points but no CRL was provided, skipping CRL check", name)
+			// No CRL distribution points — expected for some certs (e.g. Google Confidential Space leaf certs).
+			return nil
 		}
+		logger.Warnf("%s certificate CRL was not provided despite CRL distribution points being present, skipping CRL check", name)
 		return nil
 	}
 
