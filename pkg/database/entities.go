@@ -2,12 +2,11 @@ package database
 
 import "time"
 
-// Abstract entity, all other entities should be derived from it.
+// BaseEntity is an abstract entity, all other entities should be derived from it.
 type BaseEntity struct {
-	ID uint64 `gorm:"primaryKey"`
+	ID uint64 `gorm:"primaryKey;unique"`
 }
 
-// Should be synchronized with the the c-chain indexer.
 type State struct {
 	BaseEntity
 	Name           string `gorm:"type:varchar(50);index"` // first_database_block", “last_database_block”, or “last_chain_block”
@@ -16,13 +15,12 @@ type State struct {
 	Updated        time.Time
 }
 
-// Should be synchronized with the c-chain indexer.
 type Transaction struct {
 	BaseEntity
 	Hash             string `gorm:"type:varchar(64);index;unique"`
 	FunctionSig      string `gorm:"type:varchar(50);index"` // function selector
 	Input            string `gorm:"type:string"`
-	BlockNumber      uint64
+	BlockNumber      uint64 `gorm:"index"`
 	BlockHash        string `gorm:"type:varchar(64)"`
 	TransactionIndex uint64
 	FromAddress      string `gorm:"type:varchar(40);index"`
@@ -35,11 +33,10 @@ type Transaction struct {
 	Signature        *string `gorm:"type:varchar(130)"`
 }
 
-// Should be synchronized with the the c-chain indexer.
 type Log struct {
 	BaseEntity
 	TransactionID   uint64       `gorm:"default:null"` // database ID of the transaction, should not be confused with the hash of the transaction
-	Transaction     *Transaction `gorm:"foreignKey:TransactionID;references:ID;constraint:OnUpdate:CASCADE"`
+	Transaction     *Transaction `gorm:"foreignKey:TransactionID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	Address         string       `gorm:"type:varchar(40);index"`
 	Data            string       `gorm:"type:string"`
 	Topic0          string       `gorm:"type:varchar(64);index"`
@@ -52,7 +49,6 @@ type Log struct {
 	BlockNumber     uint64       `gorm:"index"`
 }
 
-// Should be synchronized with the the c-chain indexer.
 type Block struct {
 	BaseEntity
 	Hash      string `gorm:"type:varchar(64);index;unique"`
