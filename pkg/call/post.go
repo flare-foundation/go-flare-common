@@ -23,8 +23,9 @@ type APIKey struct {
 
 // Params configures HTTP request behavior.
 type Params struct {
-	Timeout         time.Duration // maximal time to wait for a response
-	MaxResponseSize int64         // maximal response size in bytes
+	Timeout         time.Duration     // maximal time to wait for a response
+	MaxResponseSize int64             // maximal response size in bytes
+	Transport       http.RoundTripper // if non-nil, used as the HTTP client transport
 }
 
 // NoAPIKey is an empty APIKey that skips adding an authentication header.
@@ -40,7 +41,7 @@ type Response[T any] struct {
 func PostRaw[T any](ctx context.Context, url string, apiKey APIKey, body io.Reader, p Params) (Response[T], error) {
 	resOut := Response[T]{}
 
-	client := &http.Client{Timeout: p.Timeout}
+	client := &http.Client{Timeout: p.Timeout, Transport: p.Transport}
 
 	request, err := http.NewRequestWithContext(ctx, http.MethodPost, url, body)
 	if err != nil {
