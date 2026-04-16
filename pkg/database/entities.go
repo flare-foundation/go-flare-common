@@ -1,7 +1,13 @@
 // Package database provides database connection, query utilities, and entity definitions for the C-chain indexer.
 package database
 
-import "time"
+import (
+	"encoding/hex"
+	"time"
+
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
+)
 
 // BaseEntity is an abstract entity. All other entities should be derived from it.
 type BaseEntity struct {
@@ -53,6 +59,23 @@ type Log struct {
 	LogIndex        uint64       `gorm:"uniqueIndex:hash_index_unique"`
 	Timestamp       uint64       `gorm:"index"`
 	BlockNumber     uint64       `gorm:"index"`
+}
+
+// ToEthLog converts l to a go-ethereum types.Log for use with abigen parsers.
+// Only Topics and Data are populated; other fields are not used by the log decoder.
+func (l Log) ToEthLog() (types.Log, error) {
+	data, err := hex.DecodeString(l.Data)
+	if err != nil {
+		return types.Log{}, err
+	}
+
+	var topics []common.Hash
+	for _, t := range []string{l.Topic0, l.Topic1, l.Topic2, l.Topic3} {
+		if t != "" && t != "NULL" {
+			topics = append(topics, common.HexToHash(t))
+		}
+	}
+	return types.Log{Topics: topics, Data: data}, nil
 }
 
 // Block represents a C-chain block.
