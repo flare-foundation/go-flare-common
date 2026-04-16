@@ -36,6 +36,7 @@ const (
 	VRF                        Command = "VRF"
 
 	KeyInfo   Command = "KEY_INFO"
+	KeyProof  Command = "KEY_PROOF"
 	TEEBackup Command = "TEE_BACKUP"
 	TEEInfo   Command = "TEE_INFO"
 
@@ -65,6 +66,7 @@ var validSystemPairs = map[Type]map[Command]bool{
 	},
 	Get: {
 		KeyInfo:   true,
+		KeyProof:  true,
 		TEEBackup: true,
 		TEEInfo:   true,
 	},
