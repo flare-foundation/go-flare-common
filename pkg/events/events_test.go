@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/flare-foundation/go-flare-common/pkg/contracts/relay"
 	"github.com/flare-foundation/go-flare-common/pkg/database"
 	"github.com/stretchr/testify/require"
 )
@@ -48,4 +49,45 @@ func TestConvertDatabaseLogToChainLogFail(t *testing.T) {
 
 	_, err := ConvertDatabaseLogToChainLog(dbLog)
 	require.Error(t, err)
+}
+
+func TestSelectorFromMetadata(t *testing.T) {
+	id, err := SelectorFromMetadata(relay.RelayMetaData, "SigningPolicyInitialized")
+	require.NoError(t, err)
+	require.NotEqual(t, common.Hash{}, id)
+}
+
+func TestSelectorFromMetadataNotFound(t *testing.T) {
+	_, err := SelectorFromMetadata(relay.RelayMetaData, "NonexistentEvent")
+	require.Error(t, err)
+}
+
+func TestSelectorFromABI(t *testing.T) {
+	a, err := relay.RelayMetaData.GetAbi()
+	require.NoError(t, err)
+
+	id, err := SelectorFromABI(a, "SigningPolicyInitialized")
+	require.NoError(t, err)
+	require.NotEqual(t, common.Hash{}, id)
+}
+
+func TestSelectorFromABINotFound(t *testing.T) {
+	a, err := relay.RelayMetaData.GetAbi()
+	require.NoError(t, err)
+
+	_, err = SelectorFromABI(a, "NonexistentEvent")
+	require.Error(t, err)
+}
+
+func TestSelectorFromMetadataAndABIConsistent(t *testing.T) {
+	fromMeta, err := SelectorFromMetadata(relay.RelayMetaData, "ProtocolMessageRelayed")
+	require.NoError(t, err)
+
+	a, err := relay.RelayMetaData.GetAbi()
+	require.NoError(t, err)
+
+	fromABI, err := SelectorFromABI(a, "ProtocolMessageRelayed")
+	require.NoError(t, err)
+
+	require.Equal(t, fromMeta, fromABI)
 }
