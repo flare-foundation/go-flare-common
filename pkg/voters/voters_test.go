@@ -5,8 +5,8 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/bradleyjkemp/cupaloy"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	"github.com/flare-foundation/go-flare-common/pkg/voters"
@@ -49,7 +49,7 @@ func TestBinarySearch(t *testing.T) {
 		for i := 0; i <= 3; i++ {
 			testResults[i] = vs.BinarySearch(testPairs[i])
 		}
-		cupaloy.SnapshotT(t, testResults)
+		assert.Equal(t, []int{0, 0, 0, 0}, testResults)
 	})
 
 	t.Run("test2", func(t *testing.T) {
@@ -58,7 +58,7 @@ func TestBinarySearch(t *testing.T) {
 		for i := range testPairs {
 			test2Results[i] = vs.BinarySearch(testPairs[i])
 		}
-		cupaloy.SnapshotT(t, test2Results)
+		assert.Equal(t, []int{0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4}, test2Results)
 	})
 }
 
@@ -66,13 +66,16 @@ func TestSelectVoters(t *testing.T) {
 	vs := voters.NewSet(testVoters, testWeights, nil)
 	seed := voters.InitialHashSeed(big.NewInt(1), 1, 1)
 	voterSet, err := vs.RandomSelectThresholdWeightVoters(seed, 3000)
+	require.NoError(t, err)
 
-	voterSetHex := make([]string, 0)
+	voterSetHex := make([]string, 0, len(voterSet))
 	for key := range voterSet {
 		voterSetHex = append(voterSetHex, key.Hex())
 	}
 
 	slices.Sort(voterSetHex)
-	require.NoError(t, err)
-	cupaloy.SnapshotT(t, voterSetHex)
+	assert.Equal(t, []string{
+		"0x92561F28Ec438Ee9831D00D1D59fbDC981b762b2",
+		"0xE5904695748fe4A84b40b3fc79De2277660BD1D3",
+	}, voterSetHex)
 }
