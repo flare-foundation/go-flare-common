@@ -9,6 +9,7 @@ import (
 
 	"github.com/cenkalti/backoff/v4"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/flare-foundation/go-flare-common/pkg/logger"
 
 	"gorm.io/gorm"
 )
@@ -18,22 +19,13 @@ const maxQueryDuration = 15 * time.Second
 // SetErrorLogger sets logger used to log errors on queries.
 //
 // Default is without logging.
-func SetErrorLogger(logger errorer) {
-	if logger != nil {
-		errorLogger = logger
+func SetErrorLogger(l Logger) {
+	if l != nil {
+		errorLogger = l
 	}
 }
 
-var errorLogger errorer = &noErrorer{}
-
-type errorer interface {
-	Errorf(string, ...any)
-}
-
-type noErrorer struct {
-}
-
-func (*noErrorer) Errorf(_ string, _ ...any) {}
+var errorLogger Logger = logger.Nop{}
 
 // FetchLatestBlock returns the latest block in the database.
 func FetchLatestBlock(

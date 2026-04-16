@@ -60,15 +60,15 @@ type SyncParams struct {
 // If the check does not succeed by then, error is returned.
 //
 // Logger for logging can be provided. If it is nil, no logging is done.
-func WaitCIndexerToSync(ctx context.Context, db *gorm.DB, params SyncParams, logger logger) error {
-	if logger == nil {
-		logger = &noLogger{}
+func WaitCIndexerToSync(ctx context.Context, db *gorm.DB, params SyncParams, l syncLogger) error {
+	if l == nil {
+		l = &noLogger{}
 	}
 
 	k := 0
 	for k < params.Retries {
 		if k > 0 {
-			logger.Debugf("Checking database for %v/%v time", k, params.Retries+1)
+			l.Debugf("Checking database for %v/%v time", k, params.Retries+1)
 		}
 		state, err := FetchState(ctx, db, nil)
 		if err != nil {
@@ -79,14 +79,14 @@ func WaitCIndexerToSync(ctx context.Context, db *gorm.DB, params SyncParams, log
 
 		outOfSync := time.Since(dbTime)
 		if outOfSync < params.OutOfSyncTolerance {
-			logger.Debug("Database in sync")
+			l.Debug("Database in sync")
 			return nil
 		}
 
-		logger.Warnf("Database out of sync. Delayed for %v", outOfSync)
+		l.Warnf("Database out of sync. Delayed for %v", outOfSync)
 		sleepTime := min(params.MaxSleepTime, outOfSync/20)
 		sleepTime = max(sleepTime, params.MinSleepTime)
-		logger.Warnf("Sleeping for %v", sleepTime)
+		l.Warnf("Sleeping for %v", sleepTime)
 		k++
 		select {
 		case <-time.After(sleepTime):
@@ -95,7 +95,7 @@ func WaitCIndexerToSync(ctx context.Context, db *gorm.DB, params SyncParams, log
 		}
 	}
 
-	logger.Warnf("Checking database for the final time")
+	l.Warnf("Checking database for the final time")
 	state, err := FetchState(ctx, db, nil)
 	if err != nil {
 		return fmt.Errorf("database error: %w", err)
@@ -106,12 +106,12 @@ func WaitCIndexerToSync(ctx context.Context, db *gorm.DB, params SyncParams, log
 	if outOfSync > params.OutOfSyncTolerance {
 		return fmt.Errorf("database out of sync after %v retries. Delayed for %v", params.Retries, outOfSync)
 	}
-	logger.Debug("Database in sync")
+	l.Debug("Database in sync")
 	return nil
 }
 
-// logger is an interface for logging.
-type logger interface {
+// syncLogger is an interface for logging used by WaitCIndexerToSync.
+type syncLogger interface {
 	Debug(...any)
 	Debugf(string, ...any)
 	Warnf(string, ...any)
