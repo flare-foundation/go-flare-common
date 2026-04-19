@@ -29,15 +29,8 @@ var (
 	_ = abi.ConvertType
 )
 
-// IITeeSystemStateVerifierTeeSystemState is an auto generated low-level Go binding around an user-defined struct.
-type IITeeSystemStateVerifierTeeSystemState struct {
-	Status            uint8
-	InitialTeeId      common.Address
-	TeeGovernanceHash [32]byte
-}
-
-// ITeeMachineRegistryTeeMachineWithAttestationData is an auto generated low-level Go binding around an user-defined struct.
-type ITeeMachineRegistryTeeMachineWithAttestationData struct {
+// IMachineManagerFacetTeeMachineWithAttestationData is an auto generated low-level Go binding around an user-defined struct.
+type IMachineManagerFacetTeeMachineWithAttestationData struct {
 	TeeId        common.Address
 	InitialTeeId common.Address
 	Url          string
@@ -45,15 +38,22 @@ type ITeeMachineRegistryTeeMachineWithAttestationData struct {
 	Platform     [32]byte
 }
 
-// ITeeVerificationTeeAttestation is an auto generated low-level Go binding around an user-defined struct.
-type ITeeVerificationTeeAttestation struct {
-	TeeMachine ITeeMachineRegistryTeeMachineWithAttestationData
+// ISystemStateVerifierFacetTeeSystemState is an auto generated low-level Go binding around an user-defined struct.
+type ISystemStateVerifierFacetTeeSystemState struct {
+	Status            uint8
+	InitialTeeId      common.Address
+	TeeGovernanceHash [32]byte
+}
+
+// IVerificationFacetTeeAttestation is an auto generated low-level Go binding around an user-defined struct.
+type IVerificationFacetTeeAttestation struct {
+	TeeMachine IMachineManagerFacetTeeMachineWithAttestationData
 	Challenge  [32]byte
 }
 
 // VerificationMetaData contains all meta data concerning the Verification contract.
 var VerificationMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"initialTeeId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeMachineRegistry.TeeMachineWithAttestationData\",\"name\":\"teeMachine\",\"type\":\"tuple\"},{\"internalType\":\"bytes32\",\"name\":\"challenge\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeVerification.TeeAttestation\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"teeAttestationStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"enumIITeeSystemStateVerifier.TeeMachineStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"address\",\"name\":\"initialTeeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"teeGovernanceHash\",\"type\":\"bytes32\"}],\"internalType\":\"structIITeeSystemStateVerifier.TeeSystemState\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"teeSystemStateStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"initialTeeId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structIMachineManagerFacet.TeeMachineWithAttestationData\",\"name\":\"teeMachine\",\"type\":\"tuple\"},{\"internalType\":\"bytes32\",\"name\":\"challenge\",\"type\":\"bytes32\"}],\"internalType\":\"structIVerificationFacet.TeeAttestation\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"teeAttestationStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"enumISystemStateVerifierFacet.TeeMachineStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"address\",\"name\":\"initialTeeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"teeGovernanceHash\",\"type\":\"bytes32\"}],\"internalType\":\"structISystemStateVerifierFacet.TeeSystemState\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"teeSystemStateStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // VerificationABI is the input ABI used to generate the binding from.
@@ -205,41 +205,41 @@ func (_Verification *VerificationTransactorRaw) Transact(opts *bind.TransactOpts
 // TeeAttestationStruct is a paid mutator transaction binding the contract method 0x050d0fc8.
 //
 // Solidity: function teeAttestationStruct(((address,address,string,bytes32,bytes32),bytes32) ) returns()
-func (_Verification *VerificationTransactor) TeeAttestationStruct(opts *bind.TransactOpts, arg0 ITeeVerificationTeeAttestation) (*types.Transaction, error) {
+func (_Verification *VerificationTransactor) TeeAttestationStruct(opts *bind.TransactOpts, arg0 IVerificationFacetTeeAttestation) (*types.Transaction, error) {
 	return _Verification.contract.Transact(opts, "teeAttestationStruct", arg0)
 }
 
 // TeeAttestationStruct is a paid mutator transaction binding the contract method 0x050d0fc8.
 //
 // Solidity: function teeAttestationStruct(((address,address,string,bytes32,bytes32),bytes32) ) returns()
-func (_Verification *VerificationSession) TeeAttestationStruct(arg0 ITeeVerificationTeeAttestation) (*types.Transaction, error) {
+func (_Verification *VerificationSession) TeeAttestationStruct(arg0 IVerificationFacetTeeAttestation) (*types.Transaction, error) {
 	return _Verification.Contract.TeeAttestationStruct(&_Verification.TransactOpts, arg0)
 }
 
 // TeeAttestationStruct is a paid mutator transaction binding the contract method 0x050d0fc8.
 //
 // Solidity: function teeAttestationStruct(((address,address,string,bytes32,bytes32),bytes32) ) returns()
-func (_Verification *VerificationTransactorSession) TeeAttestationStruct(arg0 ITeeVerificationTeeAttestation) (*types.Transaction, error) {
+func (_Verification *VerificationTransactorSession) TeeAttestationStruct(arg0 IVerificationFacetTeeAttestation) (*types.Transaction, error) {
 	return _Verification.Contract.TeeAttestationStruct(&_Verification.TransactOpts, arg0)
 }
 
 // TeeSystemStateStruct is a paid mutator transaction binding the contract method 0xc7115680.
 //
 // Solidity: function teeSystemStateStruct((uint8,address,bytes32) ) returns()
-func (_Verification *VerificationTransactor) TeeSystemStateStruct(opts *bind.TransactOpts, arg0 IITeeSystemStateVerifierTeeSystemState) (*types.Transaction, error) {
+func (_Verification *VerificationTransactor) TeeSystemStateStruct(opts *bind.TransactOpts, arg0 ISystemStateVerifierFacetTeeSystemState) (*types.Transaction, error) {
 	return _Verification.contract.Transact(opts, "teeSystemStateStruct", arg0)
 }
 
 // TeeSystemStateStruct is a paid mutator transaction binding the contract method 0xc7115680.
 //
 // Solidity: function teeSystemStateStruct((uint8,address,bytes32) ) returns()
-func (_Verification *VerificationSession) TeeSystemStateStruct(arg0 IITeeSystemStateVerifierTeeSystemState) (*types.Transaction, error) {
+func (_Verification *VerificationSession) TeeSystemStateStruct(arg0 ISystemStateVerifierFacetTeeSystemState) (*types.Transaction, error) {
 	return _Verification.Contract.TeeSystemStateStruct(&_Verification.TransactOpts, arg0)
 }
 
 // TeeSystemStateStruct is a paid mutator transaction binding the contract method 0xc7115680.
 //
 // Solidity: function teeSystemStateStruct((uint8,address,bytes32) ) returns()
-func (_Verification *VerificationTransactorSession) TeeSystemStateStruct(arg0 IITeeSystemStateVerifierTeeSystemState) (*types.Transaction, error) {
+func (_Verification *VerificationTransactorSession) TeeSystemStateStruct(arg0 ISystemStateVerifierFacetTeeSystemState) (*types.Transaction, error) {
 	return _Verification.Contract.TeeSystemStateStruct(&_Verification.TransactOpts, arg0)
 }

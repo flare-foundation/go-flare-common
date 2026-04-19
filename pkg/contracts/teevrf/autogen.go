@@ -29,9 +29,16 @@ var (
 	_ = abi.ConvertType
 )
 
+// IMachineManagerFacetTeeMachine is an auto generated low-level Go binding around an user-defined struct.
+type IMachineManagerFacetTeeMachine struct {
+	TeeId      common.Address
+	TeeProxyId common.Address
+	Url        string
+}
+
 // TeeVRFMetaData contains all meta data concerning the TeeVRF contract.
 var TeeVRFMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"}],\"name\":\"AddressEmptyCode\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"ERC1967InvalidImplementation\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC1967NonPayable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FailedCall\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoTeesForKey\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NonceEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyAuthorizationAddress\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyWalletOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UUPSUnauthorizedCallContext\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"slot\",\"type\":\"bytes32\"}],\"name\":\"UUPSUnsupportedProxiableUUID\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"WalletNotInProduction\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"name\":\"GovernanceCallTimelocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"initialGovernance\",\"type\":\"address\"}],\"name\":\"GovernanceInitialised\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"governanceSettings\",\"type\":\"address\"}],\"name\":\"GovernedProductionModeEntered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallCanceled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallExecuted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"Upgraded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"authorizationAddress\",\"type\":\"address\"}],\"name\":\"VrfAuthorizationAddressSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"}],\"name\":\"VrfRequested\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"UPGRADE_INTERFACE_VERSION\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VRF\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"WALLET_OP_TYPE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"cancelGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"executeGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAddressUpdater\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"getVrfAuthorizationAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governance\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governanceSettings\",\"outputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"implementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"}],\"name\":\"initialise\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"isExecutor\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"productionMode\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"proxiableUUID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"},{\"internalType\":\"bytes\",\"name\":\"_nonce\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"_claimBackAddress\",\"type\":\"address\"}],\"name\":\"requestVrf\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"_instructionId\",\"type\":\"bytes32\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"_authorizationAddress\",\"type\":\"address\"}],\"name\":\"setVrfAuthorizationAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"switchToProductionMode\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeExtensionRegistry\",\"outputs\":[{\"internalType\":\"contractIITeeExtensionRegistry\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeMachineRegistry\",\"outputs\":[{\"internalType\":\"contractITeeMachineRegistry\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeWalletKeyManager\",\"outputs\":[{\"internalType\":\"contractITeeWalletKeyManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeWalletManager\",\"outputs\":[{\"internalType\":\"contractITeeWalletManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeWalletProjectManager\",\"outputs\":[{\"internalType\":\"contractITeeWalletProjectManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"}],\"name\":\"timelockedCalls\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_contractNameHashes\",\"type\":\"bytes32[]\"},{\"internalType\":\"address[]\",\"name\":\"_contractAddresses\",\"type\":\"address[]\"}],\"name\":\"updateContractAddresses\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newImplementation\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"upgradeToAndCall\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"name\":\"CosignersThresholdTooHigh\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ExtensionIdMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FeeTooLow\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"MessageEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoTeeMachinesSpecified\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoTeesForKey\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NonceEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyAuthorizationAddress\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyWalletOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OperationCommandEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OperationTypeEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TeeMachineNotAvailable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TeeNotFound\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"WalletNotInProduction\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"uint32\",\"name\":\"rewardEpochId\",\"type\":\"uint32\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"teeProxyId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"}],\"indexed\":false,\"internalType\":\"structIMachineManagerFacet.TeeMachine[]\",\"name\":\"teeMachines\",\"type\":\"tuple[]\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"opCommand\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"message\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"claimBackAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"}],\"name\":\"TeeInstructionsSent\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"authorizationAddress\",\"type\":\"address\"}],\"name\":\"VrfAuthorizationAddressSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"}],\"name\":\"VrfRequested\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"getVrfAuthorizationAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_keyId\",\"type\":\"uint64\"},{\"internalType\":\"bytes\",\"name\":\"_nonce\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"_claimBackAddress\",\"type\":\"address\"}],\"name\":\"requestVrf\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"_instructionId\",\"type\":\"bytes32\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"_authorizationAddress\",\"type\":\"address\"}],\"name\":\"setVrfAuthorizationAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // TeeVRFABI is the input ABI used to generate the binding from.
@@ -180,130 +187,6 @@ func (_TeeVRF *TeeVRFTransactorRaw) Transact(opts *bind.TransactOpts, method str
 	return _TeeVRF.Contract.contract.Transact(opts, method, params...)
 }
 
-// UPGRADEINTERFACEVERSION is a free data retrieval call binding the contract method 0xad3cb1cc.
-//
-// Solidity: function UPGRADE_INTERFACE_VERSION() view returns(string)
-func (_TeeVRF *TeeVRFCaller) UPGRADEINTERFACEVERSION(opts *bind.CallOpts) (string, error) {
-	var out []interface{}
-	err := _TeeVRF.contract.Call(opts, &out, "UPGRADE_INTERFACE_VERSION")
-
-	if err != nil {
-		return *new(string), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(string)).(*string)
-
-	return out0, err
-
-}
-
-// UPGRADEINTERFACEVERSION is a free data retrieval call binding the contract method 0xad3cb1cc.
-//
-// Solidity: function UPGRADE_INTERFACE_VERSION() view returns(string)
-func (_TeeVRF *TeeVRFSession) UPGRADEINTERFACEVERSION() (string, error) {
-	return _TeeVRF.Contract.UPGRADEINTERFACEVERSION(&_TeeVRF.CallOpts)
-}
-
-// UPGRADEINTERFACEVERSION is a free data retrieval call binding the contract method 0xad3cb1cc.
-//
-// Solidity: function UPGRADE_INTERFACE_VERSION() view returns(string)
-func (_TeeVRF *TeeVRFCallerSession) UPGRADEINTERFACEVERSION() (string, error) {
-	return _TeeVRF.Contract.UPGRADEINTERFACEVERSION(&_TeeVRF.CallOpts)
-}
-
-// VRF is a free data retrieval call binding the contract method 0xa126285b.
-//
-// Solidity: function VRF() view returns(bytes32)
-func (_TeeVRF *TeeVRFCaller) VRF(opts *bind.CallOpts) ([32]byte, error) {
-	var out []interface{}
-	err := _TeeVRF.contract.Call(opts, &out, "VRF")
-
-	if err != nil {
-		return *new([32]byte), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
-
-	return out0, err
-
-}
-
-// VRF is a free data retrieval call binding the contract method 0xa126285b.
-//
-// Solidity: function VRF() view returns(bytes32)
-func (_TeeVRF *TeeVRFSession) VRF() ([32]byte, error) {
-	return _TeeVRF.Contract.VRF(&_TeeVRF.CallOpts)
-}
-
-// VRF is a free data retrieval call binding the contract method 0xa126285b.
-//
-// Solidity: function VRF() view returns(bytes32)
-func (_TeeVRF *TeeVRFCallerSession) VRF() ([32]byte, error) {
-	return _TeeVRF.Contract.VRF(&_TeeVRF.CallOpts)
-}
-
-// WALLETOPTYPE is a free data retrieval call binding the contract method 0xc3500300.
-//
-// Solidity: function WALLET_OP_TYPE() view returns(bytes32)
-func (_TeeVRF *TeeVRFCaller) WALLETOPTYPE(opts *bind.CallOpts) ([32]byte, error) {
-	var out []interface{}
-	err := _TeeVRF.contract.Call(opts, &out, "WALLET_OP_TYPE")
-
-	if err != nil {
-		return *new([32]byte), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
-
-	return out0, err
-
-}
-
-// WALLETOPTYPE is a free data retrieval call binding the contract method 0xc3500300.
-//
-// Solidity: function WALLET_OP_TYPE() view returns(bytes32)
-func (_TeeVRF *TeeVRFSession) WALLETOPTYPE() ([32]byte, error) {
-	return _TeeVRF.Contract.WALLETOPTYPE(&_TeeVRF.CallOpts)
-}
-
-// WALLETOPTYPE is a free data retrieval call binding the contract method 0xc3500300.
-//
-// Solidity: function WALLET_OP_TYPE() view returns(bytes32)
-func (_TeeVRF *TeeVRFCallerSession) WALLETOPTYPE() ([32]byte, error) {
-	return _TeeVRF.Contract.WALLETOPTYPE(&_TeeVRF.CallOpts)
-}
-
-// GetAddressUpdater is a free data retrieval call binding the contract method 0x5267a15d.
-//
-// Solidity: function getAddressUpdater() view returns(address _addressUpdater)
-func (_TeeVRF *TeeVRFCaller) GetAddressUpdater(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _TeeVRF.contract.Call(opts, &out, "getAddressUpdater")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// GetAddressUpdater is a free data retrieval call binding the contract method 0x5267a15d.
-//
-// Solidity: function getAddressUpdater() view returns(address _addressUpdater)
-func (_TeeVRF *TeeVRFSession) GetAddressUpdater() (common.Address, error) {
-	return _TeeVRF.Contract.GetAddressUpdater(&_TeeVRF.CallOpts)
-}
-
-// GetAddressUpdater is a free data retrieval call binding the contract method 0x5267a15d.
-//
-// Solidity: function getAddressUpdater() view returns(address _addressUpdater)
-func (_TeeVRF *TeeVRFCallerSession) GetAddressUpdater() (common.Address, error) {
-	return _TeeVRF.Contract.GetAddressUpdater(&_TeeVRF.CallOpts)
-}
-
 // GetVrfAuthorizationAddress is a free data retrieval call binding the contract method 0x918945a0.
 //
 // Solidity: function getVrfAuthorizationAddress(bytes32 _walletId) view returns(address)
@@ -333,476 +216,6 @@ func (_TeeVRF *TeeVRFSession) GetVrfAuthorizationAddress(_walletId [32]byte) (co
 // Solidity: function getVrfAuthorizationAddress(bytes32 _walletId) view returns(address)
 func (_TeeVRF *TeeVRFCallerSession) GetVrfAuthorizationAddress(_walletId [32]byte) (common.Address, error) {
 	return _TeeVRF.Contract.GetVrfAuthorizationAddress(&_TeeVRF.CallOpts, _walletId)
-}
-
-// Governance is a free data retrieval call binding the contract method 0x5aa6e675.
-//
-// Solidity: function governance() view returns(address)
-func (_TeeVRF *TeeVRFCaller) Governance(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _TeeVRF.contract.Call(opts, &out, "governance")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// Governance is a free data retrieval call binding the contract method 0x5aa6e675.
-//
-// Solidity: function governance() view returns(address)
-func (_TeeVRF *TeeVRFSession) Governance() (common.Address, error) {
-	return _TeeVRF.Contract.Governance(&_TeeVRF.CallOpts)
-}
-
-// Governance is a free data retrieval call binding the contract method 0x5aa6e675.
-//
-// Solidity: function governance() view returns(address)
-func (_TeeVRF *TeeVRFCallerSession) Governance() (common.Address, error) {
-	return _TeeVRF.Contract.Governance(&_TeeVRF.CallOpts)
-}
-
-// GovernanceSettings is a free data retrieval call binding the contract method 0x62354e03.
-//
-// Solidity: function governanceSettings() view returns(address)
-func (_TeeVRF *TeeVRFCaller) GovernanceSettings(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _TeeVRF.contract.Call(opts, &out, "governanceSettings")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// GovernanceSettings is a free data retrieval call binding the contract method 0x62354e03.
-//
-// Solidity: function governanceSettings() view returns(address)
-func (_TeeVRF *TeeVRFSession) GovernanceSettings() (common.Address, error) {
-	return _TeeVRF.Contract.GovernanceSettings(&_TeeVRF.CallOpts)
-}
-
-// GovernanceSettings is a free data retrieval call binding the contract method 0x62354e03.
-//
-// Solidity: function governanceSettings() view returns(address)
-func (_TeeVRF *TeeVRFCallerSession) GovernanceSettings() (common.Address, error) {
-	return _TeeVRF.Contract.GovernanceSettings(&_TeeVRF.CallOpts)
-}
-
-// Implementation is a free data retrieval call binding the contract method 0x5c60da1b.
-//
-// Solidity: function implementation() view returns(address)
-func (_TeeVRF *TeeVRFCaller) Implementation(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _TeeVRF.contract.Call(opts, &out, "implementation")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// Implementation is a free data retrieval call binding the contract method 0x5c60da1b.
-//
-// Solidity: function implementation() view returns(address)
-func (_TeeVRF *TeeVRFSession) Implementation() (common.Address, error) {
-	return _TeeVRF.Contract.Implementation(&_TeeVRF.CallOpts)
-}
-
-// Implementation is a free data retrieval call binding the contract method 0x5c60da1b.
-//
-// Solidity: function implementation() view returns(address)
-func (_TeeVRF *TeeVRFCallerSession) Implementation() (common.Address, error) {
-	return _TeeVRF.Contract.Implementation(&_TeeVRF.CallOpts)
-}
-
-// IsExecutor is a free data retrieval call binding the contract method 0xdebfda30.
-//
-// Solidity: function isExecutor(address _address) view returns(bool)
-func (_TeeVRF *TeeVRFCaller) IsExecutor(opts *bind.CallOpts, _address common.Address) (bool, error) {
-	var out []interface{}
-	err := _TeeVRF.contract.Call(opts, &out, "isExecutor", _address)
-
-	if err != nil {
-		return *new(bool), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
-
-	return out0, err
-
-}
-
-// IsExecutor is a free data retrieval call binding the contract method 0xdebfda30.
-//
-// Solidity: function isExecutor(address _address) view returns(bool)
-func (_TeeVRF *TeeVRFSession) IsExecutor(_address common.Address) (bool, error) {
-	return _TeeVRF.Contract.IsExecutor(&_TeeVRF.CallOpts, _address)
-}
-
-// IsExecutor is a free data retrieval call binding the contract method 0xdebfda30.
-//
-// Solidity: function isExecutor(address _address) view returns(bool)
-func (_TeeVRF *TeeVRFCallerSession) IsExecutor(_address common.Address) (bool, error) {
-	return _TeeVRF.Contract.IsExecutor(&_TeeVRF.CallOpts, _address)
-}
-
-// ProductionMode is a free data retrieval call binding the contract method 0xe17f212e.
-//
-// Solidity: function productionMode() view returns(bool)
-func (_TeeVRF *TeeVRFCaller) ProductionMode(opts *bind.CallOpts) (bool, error) {
-	var out []interface{}
-	err := _TeeVRF.contract.Call(opts, &out, "productionMode")
-
-	if err != nil {
-		return *new(bool), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
-
-	return out0, err
-
-}
-
-// ProductionMode is a free data retrieval call binding the contract method 0xe17f212e.
-//
-// Solidity: function productionMode() view returns(bool)
-func (_TeeVRF *TeeVRFSession) ProductionMode() (bool, error) {
-	return _TeeVRF.Contract.ProductionMode(&_TeeVRF.CallOpts)
-}
-
-// ProductionMode is a free data retrieval call binding the contract method 0xe17f212e.
-//
-// Solidity: function productionMode() view returns(bool)
-func (_TeeVRF *TeeVRFCallerSession) ProductionMode() (bool, error) {
-	return _TeeVRF.Contract.ProductionMode(&_TeeVRF.CallOpts)
-}
-
-// ProxiableUUID is a free data retrieval call binding the contract method 0x52d1902d.
-//
-// Solidity: function proxiableUUID() view returns(bytes32)
-func (_TeeVRF *TeeVRFCaller) ProxiableUUID(opts *bind.CallOpts) ([32]byte, error) {
-	var out []interface{}
-	err := _TeeVRF.contract.Call(opts, &out, "proxiableUUID")
-
-	if err != nil {
-		return *new([32]byte), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
-
-	return out0, err
-
-}
-
-// ProxiableUUID is a free data retrieval call binding the contract method 0x52d1902d.
-//
-// Solidity: function proxiableUUID() view returns(bytes32)
-func (_TeeVRF *TeeVRFSession) ProxiableUUID() ([32]byte, error) {
-	return _TeeVRF.Contract.ProxiableUUID(&_TeeVRF.CallOpts)
-}
-
-// ProxiableUUID is a free data retrieval call binding the contract method 0x52d1902d.
-//
-// Solidity: function proxiableUUID() view returns(bytes32)
-func (_TeeVRF *TeeVRFCallerSession) ProxiableUUID() ([32]byte, error) {
-	return _TeeVRF.Contract.ProxiableUUID(&_TeeVRF.CallOpts)
-}
-
-// TeeExtensionRegistry is a free data retrieval call binding the contract method 0xa435d58a.
-//
-// Solidity: function teeExtensionRegistry() view returns(address)
-func (_TeeVRF *TeeVRFCaller) TeeExtensionRegistry(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _TeeVRF.contract.Call(opts, &out, "teeExtensionRegistry")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// TeeExtensionRegistry is a free data retrieval call binding the contract method 0xa435d58a.
-//
-// Solidity: function teeExtensionRegistry() view returns(address)
-func (_TeeVRF *TeeVRFSession) TeeExtensionRegistry() (common.Address, error) {
-	return _TeeVRF.Contract.TeeExtensionRegistry(&_TeeVRF.CallOpts)
-}
-
-// TeeExtensionRegistry is a free data retrieval call binding the contract method 0xa435d58a.
-//
-// Solidity: function teeExtensionRegistry() view returns(address)
-func (_TeeVRF *TeeVRFCallerSession) TeeExtensionRegistry() (common.Address, error) {
-	return _TeeVRF.Contract.TeeExtensionRegistry(&_TeeVRF.CallOpts)
-}
-
-// TeeMachineRegistry is a free data retrieval call binding the contract method 0x524967d7.
-//
-// Solidity: function teeMachineRegistry() view returns(address)
-func (_TeeVRF *TeeVRFCaller) TeeMachineRegistry(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _TeeVRF.contract.Call(opts, &out, "teeMachineRegistry")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// TeeMachineRegistry is a free data retrieval call binding the contract method 0x524967d7.
-//
-// Solidity: function teeMachineRegistry() view returns(address)
-func (_TeeVRF *TeeVRFSession) TeeMachineRegistry() (common.Address, error) {
-	return _TeeVRF.Contract.TeeMachineRegistry(&_TeeVRF.CallOpts)
-}
-
-// TeeMachineRegistry is a free data retrieval call binding the contract method 0x524967d7.
-//
-// Solidity: function teeMachineRegistry() view returns(address)
-func (_TeeVRF *TeeVRFCallerSession) TeeMachineRegistry() (common.Address, error) {
-	return _TeeVRF.Contract.TeeMachineRegistry(&_TeeVRF.CallOpts)
-}
-
-// TeeWalletKeyManager is a free data retrieval call binding the contract method 0x6b03b74d.
-//
-// Solidity: function teeWalletKeyManager() view returns(address)
-func (_TeeVRF *TeeVRFCaller) TeeWalletKeyManager(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _TeeVRF.contract.Call(opts, &out, "teeWalletKeyManager")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// TeeWalletKeyManager is a free data retrieval call binding the contract method 0x6b03b74d.
-//
-// Solidity: function teeWalletKeyManager() view returns(address)
-func (_TeeVRF *TeeVRFSession) TeeWalletKeyManager() (common.Address, error) {
-	return _TeeVRF.Contract.TeeWalletKeyManager(&_TeeVRF.CallOpts)
-}
-
-// TeeWalletKeyManager is a free data retrieval call binding the contract method 0x6b03b74d.
-//
-// Solidity: function teeWalletKeyManager() view returns(address)
-func (_TeeVRF *TeeVRFCallerSession) TeeWalletKeyManager() (common.Address, error) {
-	return _TeeVRF.Contract.TeeWalletKeyManager(&_TeeVRF.CallOpts)
-}
-
-// TeeWalletManager is a free data retrieval call binding the contract method 0x9ce03893.
-//
-// Solidity: function teeWalletManager() view returns(address)
-func (_TeeVRF *TeeVRFCaller) TeeWalletManager(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _TeeVRF.contract.Call(opts, &out, "teeWalletManager")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// TeeWalletManager is a free data retrieval call binding the contract method 0x9ce03893.
-//
-// Solidity: function teeWalletManager() view returns(address)
-func (_TeeVRF *TeeVRFSession) TeeWalletManager() (common.Address, error) {
-	return _TeeVRF.Contract.TeeWalletManager(&_TeeVRF.CallOpts)
-}
-
-// TeeWalletManager is a free data retrieval call binding the contract method 0x9ce03893.
-//
-// Solidity: function teeWalletManager() view returns(address)
-func (_TeeVRF *TeeVRFCallerSession) TeeWalletManager() (common.Address, error) {
-	return _TeeVRF.Contract.TeeWalletManager(&_TeeVRF.CallOpts)
-}
-
-// TeeWalletProjectManager is a free data retrieval call binding the contract method 0x1e915a85.
-//
-// Solidity: function teeWalletProjectManager() view returns(address)
-func (_TeeVRF *TeeVRFCaller) TeeWalletProjectManager(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _TeeVRF.contract.Call(opts, &out, "teeWalletProjectManager")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// TeeWalletProjectManager is a free data retrieval call binding the contract method 0x1e915a85.
-//
-// Solidity: function teeWalletProjectManager() view returns(address)
-func (_TeeVRF *TeeVRFSession) TeeWalletProjectManager() (common.Address, error) {
-	return _TeeVRF.Contract.TeeWalletProjectManager(&_TeeVRF.CallOpts)
-}
-
-// TeeWalletProjectManager is a free data retrieval call binding the contract method 0x1e915a85.
-//
-// Solidity: function teeWalletProjectManager() view returns(address)
-func (_TeeVRF *TeeVRFCallerSession) TeeWalletProjectManager() (common.Address, error) {
-	return _TeeVRF.Contract.TeeWalletProjectManager(&_TeeVRF.CallOpts)
-}
-
-// TimelockedCalls is a free data retrieval call binding the contract method 0x74e6310e.
-//
-// Solidity: function timelockedCalls(bytes4 selector) view returns(uint256 allowedAfterTimestamp, bytes encodedCall)
-func (_TeeVRF *TeeVRFCaller) TimelockedCalls(opts *bind.CallOpts, selector [4]byte) (struct {
-	AllowedAfterTimestamp *big.Int
-	EncodedCall           []byte
-}, error) {
-	var out []interface{}
-	err := _TeeVRF.contract.Call(opts, &out, "timelockedCalls", selector)
-
-	outstruct := new(struct {
-		AllowedAfterTimestamp *big.Int
-		EncodedCall           []byte
-	})
-	if err != nil {
-		return *outstruct, err
-	}
-
-	outstruct.AllowedAfterTimestamp = *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-	outstruct.EncodedCall = *abi.ConvertType(out[1], new([]byte)).(*[]byte)
-
-	return *outstruct, err
-
-}
-
-// TimelockedCalls is a free data retrieval call binding the contract method 0x74e6310e.
-//
-// Solidity: function timelockedCalls(bytes4 selector) view returns(uint256 allowedAfterTimestamp, bytes encodedCall)
-func (_TeeVRF *TeeVRFSession) TimelockedCalls(selector [4]byte) (struct {
-	AllowedAfterTimestamp *big.Int
-	EncodedCall           []byte
-}, error) {
-	return _TeeVRF.Contract.TimelockedCalls(&_TeeVRF.CallOpts, selector)
-}
-
-// TimelockedCalls is a free data retrieval call binding the contract method 0x74e6310e.
-//
-// Solidity: function timelockedCalls(bytes4 selector) view returns(uint256 allowedAfterTimestamp, bytes encodedCall)
-func (_TeeVRF *TeeVRFCallerSession) TimelockedCalls(selector [4]byte) (struct {
-	AllowedAfterTimestamp *big.Int
-	EncodedCall           []byte
-}, error) {
-	return _TeeVRF.Contract.TimelockedCalls(&_TeeVRF.CallOpts, selector)
-}
-
-// CancelGovernanceCall is a paid mutator transaction binding the contract method 0x67fc4029.
-//
-// Solidity: function cancelGovernanceCall(bytes4 _selector) returns()
-func (_TeeVRF *TeeVRFTransactor) CancelGovernanceCall(opts *bind.TransactOpts, _selector [4]byte) (*types.Transaction, error) {
-	return _TeeVRF.contract.Transact(opts, "cancelGovernanceCall", _selector)
-}
-
-// CancelGovernanceCall is a paid mutator transaction binding the contract method 0x67fc4029.
-//
-// Solidity: function cancelGovernanceCall(bytes4 _selector) returns()
-func (_TeeVRF *TeeVRFSession) CancelGovernanceCall(_selector [4]byte) (*types.Transaction, error) {
-	return _TeeVRF.Contract.CancelGovernanceCall(&_TeeVRF.TransactOpts, _selector)
-}
-
-// CancelGovernanceCall is a paid mutator transaction binding the contract method 0x67fc4029.
-//
-// Solidity: function cancelGovernanceCall(bytes4 _selector) returns()
-func (_TeeVRF *TeeVRFTransactorSession) CancelGovernanceCall(_selector [4]byte) (*types.Transaction, error) {
-	return _TeeVRF.Contract.CancelGovernanceCall(&_TeeVRF.TransactOpts, _selector)
-}
-
-// ExecuteGovernanceCall is a paid mutator transaction binding the contract method 0x5ff27079.
-//
-// Solidity: function executeGovernanceCall(bytes4 _selector) returns()
-func (_TeeVRF *TeeVRFTransactor) ExecuteGovernanceCall(opts *bind.TransactOpts, _selector [4]byte) (*types.Transaction, error) {
-	return _TeeVRF.contract.Transact(opts, "executeGovernanceCall", _selector)
-}
-
-// ExecuteGovernanceCall is a paid mutator transaction binding the contract method 0x5ff27079.
-//
-// Solidity: function executeGovernanceCall(bytes4 _selector) returns()
-func (_TeeVRF *TeeVRFSession) ExecuteGovernanceCall(_selector [4]byte) (*types.Transaction, error) {
-	return _TeeVRF.Contract.ExecuteGovernanceCall(&_TeeVRF.TransactOpts, _selector)
-}
-
-// ExecuteGovernanceCall is a paid mutator transaction binding the contract method 0x5ff27079.
-//
-// Solidity: function executeGovernanceCall(bytes4 _selector) returns()
-func (_TeeVRF *TeeVRFTransactorSession) ExecuteGovernanceCall(_selector [4]byte) (*types.Transaction, error) {
-	return _TeeVRF.Contract.ExecuteGovernanceCall(&_TeeVRF.TransactOpts, _selector)
-}
-
-// Initialise is a paid mutator transaction binding the contract method 0xef88bf13.
-//
-// Solidity: function initialise(address _governanceSettings, address _initialGovernance) returns()
-func (_TeeVRF *TeeVRFTransactor) Initialise(opts *bind.TransactOpts, _governanceSettings common.Address, _initialGovernance common.Address) (*types.Transaction, error) {
-	return _TeeVRF.contract.Transact(opts, "initialise", _governanceSettings, _initialGovernance)
-}
-
-// Initialise is a paid mutator transaction binding the contract method 0xef88bf13.
-//
-// Solidity: function initialise(address _governanceSettings, address _initialGovernance) returns()
-func (_TeeVRF *TeeVRFSession) Initialise(_governanceSettings common.Address, _initialGovernance common.Address) (*types.Transaction, error) {
-	return _TeeVRF.Contract.Initialise(&_TeeVRF.TransactOpts, _governanceSettings, _initialGovernance)
-}
-
-// Initialise is a paid mutator transaction binding the contract method 0xef88bf13.
-//
-// Solidity: function initialise(address _governanceSettings, address _initialGovernance) returns()
-func (_TeeVRF *TeeVRFTransactorSession) Initialise(_governanceSettings common.Address, _initialGovernance common.Address) (*types.Transaction, error) {
-	return _TeeVRF.Contract.Initialise(&_TeeVRF.TransactOpts, _governanceSettings, _initialGovernance)
-}
-
-// Initialize is a paid mutator transaction binding the contract method 0xc0c53b8b.
-//
-// Solidity: function initialize(address _governanceSettings, address _initialGovernance, address _addressUpdater) returns()
-func (_TeeVRF *TeeVRFTransactor) Initialize(opts *bind.TransactOpts, _governanceSettings common.Address, _initialGovernance common.Address, _addressUpdater common.Address) (*types.Transaction, error) {
-	return _TeeVRF.contract.Transact(opts, "initialize", _governanceSettings, _initialGovernance, _addressUpdater)
-}
-
-// Initialize is a paid mutator transaction binding the contract method 0xc0c53b8b.
-//
-// Solidity: function initialize(address _governanceSettings, address _initialGovernance, address _addressUpdater) returns()
-func (_TeeVRF *TeeVRFSession) Initialize(_governanceSettings common.Address, _initialGovernance common.Address, _addressUpdater common.Address) (*types.Transaction, error) {
-	return _TeeVRF.Contract.Initialize(&_TeeVRF.TransactOpts, _governanceSettings, _initialGovernance, _addressUpdater)
-}
-
-// Initialize is a paid mutator transaction binding the contract method 0xc0c53b8b.
-//
-// Solidity: function initialize(address _governanceSettings, address _initialGovernance, address _addressUpdater) returns()
-func (_TeeVRF *TeeVRFTransactorSession) Initialize(_governanceSettings common.Address, _initialGovernance common.Address, _addressUpdater common.Address) (*types.Transaction, error) {
-	return _TeeVRF.Contract.Initialize(&_TeeVRF.TransactOpts, _governanceSettings, _initialGovernance, _addressUpdater)
 }
 
 // RequestVrf is a paid mutator transaction binding the contract method 0xd7896b11.
@@ -847,72 +260,9 @@ func (_TeeVRF *TeeVRFTransactorSession) SetVrfAuthorizationAddress(_walletId [32
 	return _TeeVRF.Contract.SetVrfAuthorizationAddress(&_TeeVRF.TransactOpts, _walletId, _authorizationAddress)
 }
 
-// SwitchToProductionMode is a paid mutator transaction binding the contract method 0xf5a98383.
-//
-// Solidity: function switchToProductionMode() returns()
-func (_TeeVRF *TeeVRFTransactor) SwitchToProductionMode(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _TeeVRF.contract.Transact(opts, "switchToProductionMode")
-}
-
-// SwitchToProductionMode is a paid mutator transaction binding the contract method 0xf5a98383.
-//
-// Solidity: function switchToProductionMode() returns()
-func (_TeeVRF *TeeVRFSession) SwitchToProductionMode() (*types.Transaction, error) {
-	return _TeeVRF.Contract.SwitchToProductionMode(&_TeeVRF.TransactOpts)
-}
-
-// SwitchToProductionMode is a paid mutator transaction binding the contract method 0xf5a98383.
-//
-// Solidity: function switchToProductionMode() returns()
-func (_TeeVRF *TeeVRFTransactorSession) SwitchToProductionMode() (*types.Transaction, error) {
-	return _TeeVRF.Contract.SwitchToProductionMode(&_TeeVRF.TransactOpts)
-}
-
-// UpdateContractAddresses is a paid mutator transaction binding the contract method 0xb00c0b76.
-//
-// Solidity: function updateContractAddresses(bytes32[] _contractNameHashes, address[] _contractAddresses) returns()
-func (_TeeVRF *TeeVRFTransactor) UpdateContractAddresses(opts *bind.TransactOpts, _contractNameHashes [][32]byte, _contractAddresses []common.Address) (*types.Transaction, error) {
-	return _TeeVRF.contract.Transact(opts, "updateContractAddresses", _contractNameHashes, _contractAddresses)
-}
-
-// UpdateContractAddresses is a paid mutator transaction binding the contract method 0xb00c0b76.
-//
-// Solidity: function updateContractAddresses(bytes32[] _contractNameHashes, address[] _contractAddresses) returns()
-func (_TeeVRF *TeeVRFSession) UpdateContractAddresses(_contractNameHashes [][32]byte, _contractAddresses []common.Address) (*types.Transaction, error) {
-	return _TeeVRF.Contract.UpdateContractAddresses(&_TeeVRF.TransactOpts, _contractNameHashes, _contractAddresses)
-}
-
-// UpdateContractAddresses is a paid mutator transaction binding the contract method 0xb00c0b76.
-//
-// Solidity: function updateContractAddresses(bytes32[] _contractNameHashes, address[] _contractAddresses) returns()
-func (_TeeVRF *TeeVRFTransactorSession) UpdateContractAddresses(_contractNameHashes [][32]byte, _contractAddresses []common.Address) (*types.Transaction, error) {
-	return _TeeVRF.Contract.UpdateContractAddresses(&_TeeVRF.TransactOpts, _contractNameHashes, _contractAddresses)
-}
-
-// UpgradeToAndCall is a paid mutator transaction binding the contract method 0x4f1ef286.
-//
-// Solidity: function upgradeToAndCall(address _newImplementation, bytes _data) payable returns()
-func (_TeeVRF *TeeVRFTransactor) UpgradeToAndCall(opts *bind.TransactOpts, _newImplementation common.Address, _data []byte) (*types.Transaction, error) {
-	return _TeeVRF.contract.Transact(opts, "upgradeToAndCall", _newImplementation, _data)
-}
-
-// UpgradeToAndCall is a paid mutator transaction binding the contract method 0x4f1ef286.
-//
-// Solidity: function upgradeToAndCall(address _newImplementation, bytes _data) payable returns()
-func (_TeeVRF *TeeVRFSession) UpgradeToAndCall(_newImplementation common.Address, _data []byte) (*types.Transaction, error) {
-	return _TeeVRF.Contract.UpgradeToAndCall(&_TeeVRF.TransactOpts, _newImplementation, _data)
-}
-
-// UpgradeToAndCall is a paid mutator transaction binding the contract method 0x4f1ef286.
-//
-// Solidity: function upgradeToAndCall(address _newImplementation, bytes _data) payable returns()
-func (_TeeVRF *TeeVRFTransactorSession) UpgradeToAndCall(_newImplementation common.Address, _data []byte) (*types.Transaction, error) {
-	return _TeeVRF.Contract.UpgradeToAndCall(&_TeeVRF.TransactOpts, _newImplementation, _data)
-}
-
-// TeeVRFGovernanceCallTimelockedIterator is returned from FilterGovernanceCallTimelocked and is used to iterate over the raw logs and unpacked data for GovernanceCallTimelocked events raised by the TeeVRF contract.
-type TeeVRFGovernanceCallTimelockedIterator struct {
-	Event *TeeVRFGovernanceCallTimelocked // Event containing the contract specifics and raw log
+// TeeVRFTeeInstructionsSentIterator is returned from FilterTeeInstructionsSent and is used to iterate over the raw logs and unpacked data for TeeInstructionsSent events raised by the TeeVRF contract.
+type TeeVRFTeeInstructionsSentIterator struct {
+	Event *TeeVRFTeeInstructionsSent // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -926,7 +276,7 @@ type TeeVRFGovernanceCallTimelockedIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *TeeVRFGovernanceCallTimelockedIterator) Next() bool {
+func (it *TeeVRFTeeInstructionsSentIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -935,7 +285,7 @@ func (it *TeeVRFGovernanceCallTimelockedIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(TeeVRFGovernanceCallTimelocked)
+			it.Event = new(TeeVRFTeeInstructionsSent)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -950,7 +300,7 @@ func (it *TeeVRFGovernanceCallTimelockedIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(TeeVRFGovernanceCallTimelocked)
+		it.Event = new(TeeVRFTeeInstructionsSent)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -966,311 +316,77 @@ func (it *TeeVRFGovernanceCallTimelockedIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *TeeVRFGovernanceCallTimelockedIterator) Error() error {
+func (it *TeeVRFTeeInstructionsSentIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *TeeVRFGovernanceCallTimelockedIterator) Close() error {
+func (it *TeeVRFTeeInstructionsSentIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// TeeVRFGovernanceCallTimelocked represents a GovernanceCallTimelocked event raised by the TeeVRF contract.
-type TeeVRFGovernanceCallTimelocked struct {
-	Selector              [4]byte
-	AllowedAfterTimestamp *big.Int
-	EncodedCall           []byte
-	Raw                   types.Log // Blockchain specific contextual infos
-}
-
-// FilterGovernanceCallTimelocked is a free log retrieval operation binding the contract event 0xed948300a3694aa01d4a6b258bfd664350193d770c0b51f8387277f6d83ea3b6.
-//
-// Solidity: event GovernanceCallTimelocked(bytes4 selector, uint256 allowedAfterTimestamp, bytes encodedCall)
-func (_TeeVRF *TeeVRFFilterer) FilterGovernanceCallTimelocked(opts *bind.FilterOpts) (*TeeVRFGovernanceCallTimelockedIterator, error) {
-
-	logs, sub, err := _TeeVRF.contract.FilterLogs(opts, "GovernanceCallTimelocked")
-	if err != nil {
-		return nil, err
-	}
-	return &TeeVRFGovernanceCallTimelockedIterator{contract: _TeeVRF.contract, event: "GovernanceCallTimelocked", logs: logs, sub: sub}, nil
-}
-
-// WatchGovernanceCallTimelocked is a free log subscription operation binding the contract event 0xed948300a3694aa01d4a6b258bfd664350193d770c0b51f8387277f6d83ea3b6.
-//
-// Solidity: event GovernanceCallTimelocked(bytes4 selector, uint256 allowedAfterTimestamp, bytes encodedCall)
-func (_TeeVRF *TeeVRFFilterer) WatchGovernanceCallTimelocked(opts *bind.WatchOpts, sink chan<- *TeeVRFGovernanceCallTimelocked) (event.Subscription, error) {
-
-	logs, sub, err := _TeeVRF.contract.WatchLogs(opts, "GovernanceCallTimelocked")
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(TeeVRFGovernanceCallTimelocked)
-				if err := _TeeVRF.contract.UnpackLog(event, "GovernanceCallTimelocked", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseGovernanceCallTimelocked is a log parse operation binding the contract event 0xed948300a3694aa01d4a6b258bfd664350193d770c0b51f8387277f6d83ea3b6.
-//
-// Solidity: event GovernanceCallTimelocked(bytes4 selector, uint256 allowedAfterTimestamp, bytes encodedCall)
-func (_TeeVRF *TeeVRFFilterer) ParseGovernanceCallTimelocked(log types.Log) (*TeeVRFGovernanceCallTimelocked, error) {
-	event := new(TeeVRFGovernanceCallTimelocked)
-	if err := _TeeVRF.contract.UnpackLog(event, "GovernanceCallTimelocked", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
-// TeeVRFGovernanceInitialisedIterator is returned from FilterGovernanceInitialised and is used to iterate over the raw logs and unpacked data for GovernanceInitialised events raised by the TeeVRF contract.
-type TeeVRFGovernanceInitialisedIterator struct {
-	Event *TeeVRFGovernanceInitialised // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *TeeVRFGovernanceInitialisedIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(TeeVRFGovernanceInitialised)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(TeeVRFGovernanceInitialised)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *TeeVRFGovernanceInitialisedIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *TeeVRFGovernanceInitialisedIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// TeeVRFGovernanceInitialised represents a GovernanceInitialised event raised by the TeeVRF contract.
-type TeeVRFGovernanceInitialised struct {
-	InitialGovernance common.Address
-	Raw               types.Log // Blockchain specific contextual infos
-}
-
-// FilterGovernanceInitialised is a free log retrieval operation binding the contract event 0x9789733827840833afc031fb2ef9ab6894271f77bad2085687cf4ae5c7bee4db.
-//
-// Solidity: event GovernanceInitialised(address initialGovernance)
-func (_TeeVRF *TeeVRFFilterer) FilterGovernanceInitialised(opts *bind.FilterOpts) (*TeeVRFGovernanceInitialisedIterator, error) {
-
-	logs, sub, err := _TeeVRF.contract.FilterLogs(opts, "GovernanceInitialised")
-	if err != nil {
-		return nil, err
-	}
-	return &TeeVRFGovernanceInitialisedIterator{contract: _TeeVRF.contract, event: "GovernanceInitialised", logs: logs, sub: sub}, nil
-}
-
-// WatchGovernanceInitialised is a free log subscription operation binding the contract event 0x9789733827840833afc031fb2ef9ab6894271f77bad2085687cf4ae5c7bee4db.
-//
-// Solidity: event GovernanceInitialised(address initialGovernance)
-func (_TeeVRF *TeeVRFFilterer) WatchGovernanceInitialised(opts *bind.WatchOpts, sink chan<- *TeeVRFGovernanceInitialised) (event.Subscription, error) {
-
-	logs, sub, err := _TeeVRF.contract.WatchLogs(opts, "GovernanceInitialised")
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(TeeVRFGovernanceInitialised)
-				if err := _TeeVRF.contract.UnpackLog(event, "GovernanceInitialised", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseGovernanceInitialised is a log parse operation binding the contract event 0x9789733827840833afc031fb2ef9ab6894271f77bad2085687cf4ae5c7bee4db.
-//
-// Solidity: event GovernanceInitialised(address initialGovernance)
-func (_TeeVRF *TeeVRFFilterer) ParseGovernanceInitialised(log types.Log) (*TeeVRFGovernanceInitialised, error) {
-	event := new(TeeVRFGovernanceInitialised)
-	if err := _TeeVRF.contract.UnpackLog(event, "GovernanceInitialised", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
-// TeeVRFGovernedProductionModeEnteredIterator is returned from FilterGovernedProductionModeEntered and is used to iterate over the raw logs and unpacked data for GovernedProductionModeEntered events raised by the TeeVRF contract.
-type TeeVRFGovernedProductionModeEnteredIterator struct {
-	Event *TeeVRFGovernedProductionModeEntered // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *TeeVRFGovernedProductionModeEnteredIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(TeeVRFGovernedProductionModeEntered)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(TeeVRFGovernedProductionModeEntered)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *TeeVRFGovernedProductionModeEnteredIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *TeeVRFGovernedProductionModeEnteredIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// TeeVRFGovernedProductionModeEntered represents a GovernedProductionModeEntered event raised by the TeeVRF contract.
-type TeeVRFGovernedProductionModeEntered struct {
-	GovernanceSettings common.Address
+// TeeVRFTeeInstructionsSent represents a TeeInstructionsSent event raised by the TeeVRF contract.
+type TeeVRFTeeInstructionsSent struct {
+	ExtensionId        *big.Int
+	InstructionId      [32]byte
+	RewardEpochId      uint32
+	TeeMachines        []IMachineManagerFacetTeeMachine
+	OpType             [32]byte
+	OpCommand          [32]byte
+	Message            []byte
+	Cosigners          []common.Address
+	CosignersThreshold uint64
+	ClaimBackAddress   common.Address
+	Fee                *big.Int
 	Raw                types.Log // Blockchain specific contextual infos
 }
 
-// FilterGovernedProductionModeEntered is a free log retrieval operation binding the contract event 0x83af113638b5422f9e977cebc0aaf0eaf2188eb9a8baae7f9d46c42b33a1560c.
+// FilterTeeInstructionsSent is a free log retrieval operation binding the contract event 0xf770e69a9fc05b7180797556ec4cedb6108ce2c56ffa76c84aa087efeb5e6963.
 //
-// Solidity: event GovernedProductionModeEntered(address governanceSettings)
-func (_TeeVRF *TeeVRFFilterer) FilterGovernedProductionModeEntered(opts *bind.FilterOpts) (*TeeVRFGovernedProductionModeEnteredIterator, error) {
+// Solidity: event TeeInstructionsSent(uint256 indexed extensionId, bytes32 indexed instructionId, uint32 indexed rewardEpochId, (address,address,string)[] teeMachines, bytes32 opType, bytes32 opCommand, bytes message, address[] cosigners, uint64 cosignersThreshold, address claimBackAddress, uint256 fee)
+func (_TeeVRF *TeeVRFFilterer) FilterTeeInstructionsSent(opts *bind.FilterOpts, extensionId []*big.Int, instructionId [][32]byte, rewardEpochId []uint32) (*TeeVRFTeeInstructionsSentIterator, error) {
 
-	logs, sub, err := _TeeVRF.contract.FilterLogs(opts, "GovernedProductionModeEntered")
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+	var instructionIdRule []interface{}
+	for _, instructionIdItem := range instructionId {
+		instructionIdRule = append(instructionIdRule, instructionIdItem)
+	}
+	var rewardEpochIdRule []interface{}
+	for _, rewardEpochIdItem := range rewardEpochId {
+		rewardEpochIdRule = append(rewardEpochIdRule, rewardEpochIdItem)
+	}
+
+	logs, sub, err := _TeeVRF.contract.FilterLogs(opts, "TeeInstructionsSent", extensionIdRule, instructionIdRule, rewardEpochIdRule)
 	if err != nil {
 		return nil, err
 	}
-	return &TeeVRFGovernedProductionModeEnteredIterator{contract: _TeeVRF.contract, event: "GovernedProductionModeEntered", logs: logs, sub: sub}, nil
+	return &TeeVRFTeeInstructionsSentIterator{contract: _TeeVRF.contract, event: "TeeInstructionsSent", logs: logs, sub: sub}, nil
 }
 
-// WatchGovernedProductionModeEntered is a free log subscription operation binding the contract event 0x83af113638b5422f9e977cebc0aaf0eaf2188eb9a8baae7f9d46c42b33a1560c.
+// WatchTeeInstructionsSent is a free log subscription operation binding the contract event 0xf770e69a9fc05b7180797556ec4cedb6108ce2c56ffa76c84aa087efeb5e6963.
 //
-// Solidity: event GovernedProductionModeEntered(address governanceSettings)
-func (_TeeVRF *TeeVRFFilterer) WatchGovernedProductionModeEntered(opts *bind.WatchOpts, sink chan<- *TeeVRFGovernedProductionModeEntered) (event.Subscription, error) {
+// Solidity: event TeeInstructionsSent(uint256 indexed extensionId, bytes32 indexed instructionId, uint32 indexed rewardEpochId, (address,address,string)[] teeMachines, bytes32 opType, bytes32 opCommand, bytes message, address[] cosigners, uint64 cosignersThreshold, address claimBackAddress, uint256 fee)
+func (_TeeVRF *TeeVRFFilterer) WatchTeeInstructionsSent(opts *bind.WatchOpts, sink chan<- *TeeVRFTeeInstructionsSent, extensionId []*big.Int, instructionId [][32]byte, rewardEpochId []uint32) (event.Subscription, error) {
 
-	logs, sub, err := _TeeVRF.contract.WatchLogs(opts, "GovernedProductionModeEntered")
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+	var instructionIdRule []interface{}
+	for _, instructionIdItem := range instructionId {
+		instructionIdRule = append(instructionIdRule, instructionIdItem)
+	}
+	var rewardEpochIdRule []interface{}
+	for _, rewardEpochIdItem := range rewardEpochId {
+		rewardEpochIdRule = append(rewardEpochIdRule, rewardEpochIdItem)
+	}
+
+	logs, sub, err := _TeeVRF.contract.WatchLogs(opts, "TeeInstructionsSent", extensionIdRule, instructionIdRule, rewardEpochIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -1280,8 +396,8 @@ func (_TeeVRF *TeeVRFFilterer) WatchGovernedProductionModeEntered(opts *bind.Wat
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(TeeVRFGovernedProductionModeEntered)
-				if err := _TeeVRF.contract.UnpackLog(event, "GovernedProductionModeEntered", log); err != nil {
+				event := new(TeeVRFTeeInstructionsSent)
+				if err := _TeeVRF.contract.UnpackLog(event, "TeeInstructionsSent", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -1302,426 +418,12 @@ func (_TeeVRF *TeeVRFFilterer) WatchGovernedProductionModeEntered(opts *bind.Wat
 	}), nil
 }
 
-// ParseGovernedProductionModeEntered is a log parse operation binding the contract event 0x83af113638b5422f9e977cebc0aaf0eaf2188eb9a8baae7f9d46c42b33a1560c.
+// ParseTeeInstructionsSent is a log parse operation binding the contract event 0xf770e69a9fc05b7180797556ec4cedb6108ce2c56ffa76c84aa087efeb5e6963.
 //
-// Solidity: event GovernedProductionModeEntered(address governanceSettings)
-func (_TeeVRF *TeeVRFFilterer) ParseGovernedProductionModeEntered(log types.Log) (*TeeVRFGovernedProductionModeEntered, error) {
-	event := new(TeeVRFGovernedProductionModeEntered)
-	if err := _TeeVRF.contract.UnpackLog(event, "GovernedProductionModeEntered", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
-// TeeVRFTimelockedGovernanceCallCanceledIterator is returned from FilterTimelockedGovernanceCallCanceled and is used to iterate over the raw logs and unpacked data for TimelockedGovernanceCallCanceled events raised by the TeeVRF contract.
-type TeeVRFTimelockedGovernanceCallCanceledIterator struct {
-	Event *TeeVRFTimelockedGovernanceCallCanceled // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *TeeVRFTimelockedGovernanceCallCanceledIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(TeeVRFTimelockedGovernanceCallCanceled)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(TeeVRFTimelockedGovernanceCallCanceled)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *TeeVRFTimelockedGovernanceCallCanceledIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *TeeVRFTimelockedGovernanceCallCanceledIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// TeeVRFTimelockedGovernanceCallCanceled represents a TimelockedGovernanceCallCanceled event raised by the TeeVRF contract.
-type TeeVRFTimelockedGovernanceCallCanceled struct {
-	Selector  [4]byte
-	Timestamp *big.Int
-	Raw       types.Log // Blockchain specific contextual infos
-}
-
-// FilterTimelockedGovernanceCallCanceled is a free log retrieval operation binding the contract event 0x7735b2391c38a81419c513e30ca578db7158eadd7101511b23e221c654d19cf8.
-//
-// Solidity: event TimelockedGovernanceCallCanceled(bytes4 selector, uint256 timestamp)
-func (_TeeVRF *TeeVRFFilterer) FilterTimelockedGovernanceCallCanceled(opts *bind.FilterOpts) (*TeeVRFTimelockedGovernanceCallCanceledIterator, error) {
-
-	logs, sub, err := _TeeVRF.contract.FilterLogs(opts, "TimelockedGovernanceCallCanceled")
-	if err != nil {
-		return nil, err
-	}
-	return &TeeVRFTimelockedGovernanceCallCanceledIterator{contract: _TeeVRF.contract, event: "TimelockedGovernanceCallCanceled", logs: logs, sub: sub}, nil
-}
-
-// WatchTimelockedGovernanceCallCanceled is a free log subscription operation binding the contract event 0x7735b2391c38a81419c513e30ca578db7158eadd7101511b23e221c654d19cf8.
-//
-// Solidity: event TimelockedGovernanceCallCanceled(bytes4 selector, uint256 timestamp)
-func (_TeeVRF *TeeVRFFilterer) WatchTimelockedGovernanceCallCanceled(opts *bind.WatchOpts, sink chan<- *TeeVRFTimelockedGovernanceCallCanceled) (event.Subscription, error) {
-
-	logs, sub, err := _TeeVRF.contract.WatchLogs(opts, "TimelockedGovernanceCallCanceled")
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(TeeVRFTimelockedGovernanceCallCanceled)
-				if err := _TeeVRF.contract.UnpackLog(event, "TimelockedGovernanceCallCanceled", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseTimelockedGovernanceCallCanceled is a log parse operation binding the contract event 0x7735b2391c38a81419c513e30ca578db7158eadd7101511b23e221c654d19cf8.
-//
-// Solidity: event TimelockedGovernanceCallCanceled(bytes4 selector, uint256 timestamp)
-func (_TeeVRF *TeeVRFFilterer) ParseTimelockedGovernanceCallCanceled(log types.Log) (*TeeVRFTimelockedGovernanceCallCanceled, error) {
-	event := new(TeeVRFTimelockedGovernanceCallCanceled)
-	if err := _TeeVRF.contract.UnpackLog(event, "TimelockedGovernanceCallCanceled", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
-// TeeVRFTimelockedGovernanceCallExecutedIterator is returned from FilterTimelockedGovernanceCallExecuted and is used to iterate over the raw logs and unpacked data for TimelockedGovernanceCallExecuted events raised by the TeeVRF contract.
-type TeeVRFTimelockedGovernanceCallExecutedIterator struct {
-	Event *TeeVRFTimelockedGovernanceCallExecuted // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *TeeVRFTimelockedGovernanceCallExecutedIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(TeeVRFTimelockedGovernanceCallExecuted)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(TeeVRFTimelockedGovernanceCallExecuted)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *TeeVRFTimelockedGovernanceCallExecutedIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *TeeVRFTimelockedGovernanceCallExecutedIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// TeeVRFTimelockedGovernanceCallExecuted represents a TimelockedGovernanceCallExecuted event raised by the TeeVRF contract.
-type TeeVRFTimelockedGovernanceCallExecuted struct {
-	Selector  [4]byte
-	Timestamp *big.Int
-	Raw       types.Log // Blockchain specific contextual infos
-}
-
-// FilterTimelockedGovernanceCallExecuted is a free log retrieval operation binding the contract event 0xa7326b57fc9cfe267aaea5e7f0b01757154d265620a0585819416ee9ddd2c438.
-//
-// Solidity: event TimelockedGovernanceCallExecuted(bytes4 selector, uint256 timestamp)
-func (_TeeVRF *TeeVRFFilterer) FilterTimelockedGovernanceCallExecuted(opts *bind.FilterOpts) (*TeeVRFTimelockedGovernanceCallExecutedIterator, error) {
-
-	logs, sub, err := _TeeVRF.contract.FilterLogs(opts, "TimelockedGovernanceCallExecuted")
-	if err != nil {
-		return nil, err
-	}
-	return &TeeVRFTimelockedGovernanceCallExecutedIterator{contract: _TeeVRF.contract, event: "TimelockedGovernanceCallExecuted", logs: logs, sub: sub}, nil
-}
-
-// WatchTimelockedGovernanceCallExecuted is a free log subscription operation binding the contract event 0xa7326b57fc9cfe267aaea5e7f0b01757154d265620a0585819416ee9ddd2c438.
-//
-// Solidity: event TimelockedGovernanceCallExecuted(bytes4 selector, uint256 timestamp)
-func (_TeeVRF *TeeVRFFilterer) WatchTimelockedGovernanceCallExecuted(opts *bind.WatchOpts, sink chan<- *TeeVRFTimelockedGovernanceCallExecuted) (event.Subscription, error) {
-
-	logs, sub, err := _TeeVRF.contract.WatchLogs(opts, "TimelockedGovernanceCallExecuted")
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(TeeVRFTimelockedGovernanceCallExecuted)
-				if err := _TeeVRF.contract.UnpackLog(event, "TimelockedGovernanceCallExecuted", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseTimelockedGovernanceCallExecuted is a log parse operation binding the contract event 0xa7326b57fc9cfe267aaea5e7f0b01757154d265620a0585819416ee9ddd2c438.
-//
-// Solidity: event TimelockedGovernanceCallExecuted(bytes4 selector, uint256 timestamp)
-func (_TeeVRF *TeeVRFFilterer) ParseTimelockedGovernanceCallExecuted(log types.Log) (*TeeVRFTimelockedGovernanceCallExecuted, error) {
-	event := new(TeeVRFTimelockedGovernanceCallExecuted)
-	if err := _TeeVRF.contract.UnpackLog(event, "TimelockedGovernanceCallExecuted", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
-// TeeVRFUpgradedIterator is returned from FilterUpgraded and is used to iterate over the raw logs and unpacked data for Upgraded events raised by the TeeVRF contract.
-type TeeVRFUpgradedIterator struct {
-	Event *TeeVRFUpgraded // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *TeeVRFUpgradedIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(TeeVRFUpgraded)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(TeeVRFUpgraded)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *TeeVRFUpgradedIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *TeeVRFUpgradedIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// TeeVRFUpgraded represents a Upgraded event raised by the TeeVRF contract.
-type TeeVRFUpgraded struct {
-	Implementation common.Address
-	Raw            types.Log // Blockchain specific contextual infos
-}
-
-// FilterUpgraded is a free log retrieval operation binding the contract event 0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b.
-//
-// Solidity: event Upgraded(address indexed implementation)
-func (_TeeVRF *TeeVRFFilterer) FilterUpgraded(opts *bind.FilterOpts, implementation []common.Address) (*TeeVRFUpgradedIterator, error) {
-
-	var implementationRule []interface{}
-	for _, implementationItem := range implementation {
-		implementationRule = append(implementationRule, implementationItem)
-	}
-
-	logs, sub, err := _TeeVRF.contract.FilterLogs(opts, "Upgraded", implementationRule)
-	if err != nil {
-		return nil, err
-	}
-	return &TeeVRFUpgradedIterator{contract: _TeeVRF.contract, event: "Upgraded", logs: logs, sub: sub}, nil
-}
-
-// WatchUpgraded is a free log subscription operation binding the contract event 0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b.
-//
-// Solidity: event Upgraded(address indexed implementation)
-func (_TeeVRF *TeeVRFFilterer) WatchUpgraded(opts *bind.WatchOpts, sink chan<- *TeeVRFUpgraded, implementation []common.Address) (event.Subscription, error) {
-
-	var implementationRule []interface{}
-	for _, implementationItem := range implementation {
-		implementationRule = append(implementationRule, implementationItem)
-	}
-
-	logs, sub, err := _TeeVRF.contract.WatchLogs(opts, "Upgraded", implementationRule)
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(TeeVRFUpgraded)
-				if err := _TeeVRF.contract.UnpackLog(event, "Upgraded", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseUpgraded is a log parse operation binding the contract event 0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b.
-//
-// Solidity: event Upgraded(address indexed implementation)
-func (_TeeVRF *TeeVRFFilterer) ParseUpgraded(log types.Log) (*TeeVRFUpgraded, error) {
-	event := new(TeeVRFUpgraded)
-	if err := _TeeVRF.contract.UnpackLog(event, "Upgraded", log); err != nil {
+// Solidity: event TeeInstructionsSent(uint256 indexed extensionId, bytes32 indexed instructionId, uint32 indexed rewardEpochId, (address,address,string)[] teeMachines, bytes32 opType, bytes32 opCommand, bytes message, address[] cosigners, uint64 cosignersThreshold, address claimBackAddress, uint256 fee)
+func (_TeeVRF *TeeVRFFilterer) ParseTeeInstructionsSent(log types.Log) (*TeeVRFTeeInstructionsSent, error) {
+	event := new(TeeVRFTeeInstructionsSent)
+	if err := _TeeVRF.contract.UnpackLog(event, "TeeInstructionsSent", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

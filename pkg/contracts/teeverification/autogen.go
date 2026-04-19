@@ -47,6 +47,13 @@ type IFdc2VerificationFdc2Signatures struct {
 	CosignerSignatures      []Signature
 }
 
+// IMachineManagerFacetTeeMachine is an auto generated low-level Go binding around an user-defined struct.
+type IMachineManagerFacetTeeMachine struct {
+	TeeId      common.Address
+	TeeProxyId common.Address
+	Url        string
+}
+
 // IPMWMultisigAccountConfiguredProof is an auto generated low-level Go binding around an user-defined struct.
 type IPMWMultisigAccountConfiguredProof struct {
 	Signatures   IFdc2VerificationFdc2Signatures
@@ -113,7 +120,7 @@ type Signature struct {
 
 // TeeVerificationMetaData contains all meta data concerning the TeeVerification contract.
 var TeeVerificationMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"AccountAddressZero\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"}],\"name\":\"AddressEmptyCode\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"challengeTs\",\"type\":\"uint256\"}],\"name\":\"AvailabilityCheckTimestampInvalid\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"challengeTs\",\"type\":\"uint256\"}],\"name\":\"ChallengeExpired\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CosignersThresholdNotMet\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"cosigner\",\"type\":\"address\"}],\"name\":\"DuplicatedCosigner\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"ERC1967InvalidImplementation\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC1967NonPayable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FailedCall\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAttestation\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAvailabilityCheckStatus\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"cosigner\",\"type\":\"address\"}],\"name\":\"InvalidCosigner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidDuration\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidRequestBody\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidResponseData\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidSigningPolicy\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidThreshold\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProductionOrPausedStatus\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TeeMachineNotAvailable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UUPSUnauthorizedCallContext\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"slot\",\"type\":\"bytes32\"}],\"name\":\"UUPSUnsupportedProxiableUUID\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"VersionNotSupported\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"endTs\",\"type\":\"uint256\"}],\"name\":\"AvailabilityCheckValidityExtended\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"}],\"name\":\"CosignersSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"name\":\"GovernanceCallTimelocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"initialGovernance\",\"type\":\"address\"}],\"name\":\"GovernanceInitialised\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"governanceSettings\",\"type\":\"address\"}],\"name\":\"GovernedProductionModeEntered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"availabilityCheckValidityDurationSeconds\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint24\",\"name\":\"signingPolicyValidityDurationInRewardEpochs\",\"type\":\"uint24\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"challengeValidityDurationSeconds\",\"type\":\"uint64\"}],\"name\":\"SettingsUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"challenge\",\"type\":\"bytes32\"}],\"name\":\"TeeAttestationRequested\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallCanceled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallExecuted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"Upgraded\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"REG_OP_TYPE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"TEE_ATTESTATION\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"TEE_SOURCE_ID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"UPGRADE_INTERFACE_VERSION\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"cancelGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"signingPolicySignatures\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"}],\"internalType\":\"structIFdc2Verification.Fdc2Signatures\",\"name\":\"signatures\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFdc2Hub.Fdc2ResponseHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"teeProxyId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"challenge\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeAvailabilityCheck.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumITeeAvailabilityCheck.AvailabilityCheckStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"uint64\",\"name\":\"teeTimestamp\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"initialSigningPolicyId\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"lastSigningPolicyId\",\"type\":\"uint32\"},{\"components\":[{\"internalType\":\"bytes\",\"name\":\"systemState\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"systemStateVersion\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"state\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"stateVersion\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeAvailabilityCheck.TeeState\",\"name\":\"state\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Proof\",\"name\":\"_proof\",\"type\":\"tuple\"}],\"name\":\"confirmAvailability\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"executeGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"fdc2Hub\",\"outputs\":[{\"internalType\":\"contractIFdc2Hub\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"fdc2Verification\",\"outputs\":[{\"internalType\":\"contractIFdc2Verification\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"flareSystemsManager\",\"outputs\":[{\"internalType\":\"contractIFlareSystemsManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAddressUpdater\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"}],\"name\":\"getAvailabilityCheckValidity\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"_endTs\",\"type\":\"uint64\"},{\"internalType\":\"uint32\",\"name\":\"_lastSigningPolicyId\",\"type\":\"uint32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getCosigners\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"_cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"_cosignersThreshold\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSettings\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_availabilityCheckValidityDurationSeconds\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_challengeValidityDurationSeconds\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governance\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governanceSettings\",\"outputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"implementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"}],\"name\":\"initialise\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"_availabilityCheckValidityDurationSeconds\",\"type\":\"uint64\"},{\"internalType\":\"uint24\",\"name\":\"_signingPolicyValidityDurationInRewardEpochs\",\"type\":\"uint24\"},{\"internalType\":\"uint64\",\"name\":\"_challengeValidityDurationSeconds\",\"type\":\"uint64\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"isExecutor\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"productionMode\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"proxiableUUID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"relay\",\"outputs\":[{\"internalType\":\"contractIRelay\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_instructionId\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"_testOnTeeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_proofOwner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_claimBackAddress\",\"type\":\"address\"}],\"name\":\"requestAvailabilityCheckAttestation\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"_accountAddress\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"_testOnTeeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_proofOwner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_claimBackAddress\",\"type\":\"address\"}],\"name\":\"requestPMWMultisigAccountConfiguredAttestation\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_claimBackAddress\",\"type\":\"address\"}],\"name\":\"requestTeeAttestation\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"_cosignersThreshold\",\"type\":\"uint64\"}],\"name\":\"setCosigners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"switchToProductionMode\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeExtensionRegistry\",\"outputs\":[{\"internalType\":\"contractIITeeExtensionRegistry\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeMachineRegistry\",\"outputs\":[{\"internalType\":\"contractITeeMachineRegistry\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeReplication\",\"outputs\":[{\"internalType\":\"contractITeeReplication\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeSystemStateVerifier\",\"outputs\":[{\"internalType\":\"contractIITeeSystemStateVerifier\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeWalletKeyManager\",\"outputs\":[{\"internalType\":\"contractITeeWalletKeyManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeWalletManager\",\"outputs\":[{\"internalType\":\"contractITeeWalletManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teeWalletProjectManager\",\"outputs\":[{\"internalType\":\"contractITeeWalletProjectManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"}],\"name\":\"timelockedCalls\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_contractNameHashes\",\"type\":\"bytes32[]\"},{\"internalType\":\"address[]\",\"name\":\"_contractAddresses\",\"type\":\"address[]\"}],\"name\":\"updateContractAddresses\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint64\",\"name\":\"_availabilityCheckValidityDurationSeconds\",\"type\":\"uint64\"},{\"internalType\":\"uint24\",\"name\":\"_signingPolicyValidityDurationInRewardEpochs\",\"type\":\"uint24\"},{\"internalType\":\"uint64\",\"name\":\"_challengeValidityDurationSeconds\",\"type\":\"uint64\"}],\"name\":\"updateSettings\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newImplementation\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"upgradeToAndCall\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"signingPolicySignatures\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"}],\"internalType\":\"structIFdc2Verification.Fdc2Signatures\",\"name\":\"signatures\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFdc2Hub.Fdc2ResponseHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"teeProxyId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"challenge\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeAvailabilityCheck.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumITeeAvailabilityCheck.AvailabilityCheckStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"uint64\",\"name\":\"teeTimestamp\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"initialSigningPolicyId\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"lastSigningPolicyId\",\"type\":\"uint32\"},{\"components\":[{\"internalType\":\"bytes\",\"name\":\"systemState\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"systemStateVersion\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"state\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"stateVersion\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeAvailabilityCheck.TeeState\",\"name\":\"state\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Proof\",\"name\":\"_proof\",\"type\":\"tuple\"}],\"name\":\"verifyAvailabilityCheckProof\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"components\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"signingPolicySignatures\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"}],\"internalType\":\"structIFdc2Verification.Fdc2Signatures\",\"name\":\"signatures\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFdc2Hub.Fdc2ResponseHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"},{\"internalType\":\"bytes[]\",\"name\":\"publicKeys\",\"type\":\"bytes[]\"},{\"internalType\":\"uint64\",\"name\":\"threshold\",\"type\":\"uint64\"}],\"internalType\":\"structIPMWMultisigAccountConfigured.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumIPMWMultisigAccountConfigured.PMWMultisigAccountStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"uint64\",\"name\":\"sequence\",\"type\":\"uint64\"}],\"internalType\":\"structIPMWMultisigAccountConfigured.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structIPMWMultisigAccountConfigured.Proof\",\"name\":\"_proof\",\"type\":\"tuple\"}],\"name\":\"verifyPMWMultisigAccountConfiguredProof\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"name\":\"AccountAddressZero\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AvailabilityCheckTimestampInvalid\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"challengeTs\",\"type\":\"uint256\"}],\"name\":\"ChallengeExpired\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CosignersThresholdNotMet\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CosignersThresholdTooHigh\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"cosigner\",\"type\":\"address\"}],\"name\":\"DuplicatedCosigner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ExtensionIdMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FeeTooLow\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"GovernedAddressZero\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"GovernedAlreadyInitialized\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAttestation\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAvailabilityCheckStatus\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"cosigner\",\"type\":\"address\"}],\"name\":\"InvalidCosigner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidDuration\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidGovernanceHash\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidKeyType\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidNonce\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPublicKey\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidRequestBody\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidResponseData\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidSigningAlgo\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidSigningPolicy\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidThreshold\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidWalletStatus\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"}],\"name\":\"KeyTypeNotSupported\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LengthsMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"MessageEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoTeeMachinesSpecified\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExtensionOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyGovernance\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwnerOrBackupManager\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProductionOrPausedStatus\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProposedOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OperationCommandEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OperationTypeEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OwnerNotAllowed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TeeMachineNotAvailable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TeeNotFound\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"VersionNotSupported\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"endTs\",\"type\":\"uint256\"}],\"name\":\"AvailabilityCheckValidityExtended\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"}],\"name\":\"CosignersSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"encodedCallHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"}],\"name\":\"GovernanceCallTimelocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"initialGovernance\",\"type\":\"address\"}],\"name\":\"GovernanceInitialised\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"availabilityCheckValidityDurationSeconds\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"signingPolicyValidityDurationInRewardEpochs\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"challengeValidityDurationSeconds\",\"type\":\"uint64\"}],\"name\":\"SettingsUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"challenge\",\"type\":\"bytes32\"}],\"name\":\"TeeAttestationRequested\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"uint32\",\"name\":\"rewardEpochId\",\"type\":\"uint32\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"teeProxyId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"}],\"indexed\":false,\"internalType\":\"structIMachineManagerFacet.TeeMachine[]\",\"name\":\"teeMachines\",\"type\":\"tuple[]\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"opCommand\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"message\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"claimBackAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"}],\"name\":\"TeeInstructionsSent\",\"type\":\"event\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"signingPolicySignatures\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"}],\"internalType\":\"structIFdc2Verification.Fdc2Signatures\",\"name\":\"signatures\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFdc2Hub.Fdc2ResponseHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"teeProxyId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"challenge\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeAvailabilityCheck.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumITeeAvailabilityCheck.AvailabilityCheckStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"uint64\",\"name\":\"teeTimestamp\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"initialSigningPolicyId\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"lastSigningPolicyId\",\"type\":\"uint32\"},{\"components\":[{\"internalType\":\"bytes\",\"name\":\"systemState\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"systemStateVersion\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"state\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"stateVersion\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeAvailabilityCheck.TeeState\",\"name\":\"state\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Proof\",\"name\":\"_proof\",\"type\":\"tuple\"}],\"name\":\"confirmAvailability\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"}],\"name\":\"getAvailabilityCheckValidity\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"_endTs\",\"type\":\"uint64\"},{\"internalType\":\"uint32\",\"name\":\"_lastSigningPolicyId\",\"type\":\"uint32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getCosigners\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"_cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"_cosignersThreshold\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSettings\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_availabilityCheckValidityDurationSeconds\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_challengeValidityDurationSeconds\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_instructionId\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"_testOnTeeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_proofOwner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_claimBackAddress\",\"type\":\"address\"}],\"name\":\"requestAvailabilityCheckAttestation\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"_accountAddress\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"_testOnTeeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_proofOwner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_claimBackAddress\",\"type\":\"address\"}],\"name\":\"requestPMWMultisigAccountConfiguredAttestation\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_claimBackAddress\",\"type\":\"address\"}],\"name\":\"requestTeeAttestation\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"_cosignersThreshold\",\"type\":\"uint64\"}],\"name\":\"setCosigners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint64\",\"name\":\"_availabilityCheckValidityDurationSeconds\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"_signingPolicyValidityDurationInRewardEpochs\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"_challengeValidityDurationSeconds\",\"type\":\"uint64\"}],\"name\":\"updateSettings\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"signingPolicySignatures\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"}],\"internalType\":\"structIFdc2Verification.Fdc2Signatures\",\"name\":\"signatures\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFdc2Hub.Fdc2ResponseHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"teeProxyId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"challenge\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeAvailabilityCheck.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumITeeAvailabilityCheck.AvailabilityCheckStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"uint64\",\"name\":\"teeTimestamp\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"initialSigningPolicyId\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"lastSigningPolicyId\",\"type\":\"uint32\"},{\"components\":[{\"internalType\":\"bytes\",\"name\":\"systemState\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"systemStateVersion\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"state\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"stateVersion\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeAvailabilityCheck.TeeState\",\"name\":\"state\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Proof\",\"name\":\"_proof\",\"type\":\"tuple\"}],\"name\":\"verifyAvailabilityCheckProof\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"components\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"signingPolicySignatures\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"}],\"internalType\":\"structIFdc2Verification.Fdc2Signatures\",\"name\":\"signatures\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFdc2Hub.Fdc2ResponseHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"},{\"internalType\":\"bytes[]\",\"name\":\"publicKeys\",\"type\":\"bytes[]\"},{\"internalType\":\"uint64\",\"name\":\"threshold\",\"type\":\"uint64\"}],\"internalType\":\"structIPMWMultisigAccountConfigured.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumIPMWMultisigAccountConfigured.PMWMultisigAccountStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"uint64\",\"name\":\"sequence\",\"type\":\"uint64\"}],\"internalType\":\"structIPMWMultisigAccountConfigured.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structIPMWMultisigAccountConfigured.Proof\",\"name\":\"_proof\",\"type\":\"tuple\"}],\"name\":\"verifyPMWMultisigAccountConfiguredProof\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // TeeVerificationABI is the input ABI used to generate the binding from.
@@ -262,254 +269,6 @@ func (_TeeVerification *TeeVerificationTransactorRaw) Transact(opts *bind.Transa
 	return _TeeVerification.Contract.contract.Transact(opts, method, params...)
 }
 
-// REGOPTYPE is a free data retrieval call binding the contract method 0xf468b2eb.
-//
-// Solidity: function REG_OP_TYPE() view returns(bytes32)
-func (_TeeVerification *TeeVerificationCaller) REGOPTYPE(opts *bind.CallOpts) ([32]byte, error) {
-	var out []interface{}
-	err := _TeeVerification.contract.Call(opts, &out, "REG_OP_TYPE")
-
-	if err != nil {
-		return *new([32]byte), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
-
-	return out0, err
-
-}
-
-// REGOPTYPE is a free data retrieval call binding the contract method 0xf468b2eb.
-//
-// Solidity: function REG_OP_TYPE() view returns(bytes32)
-func (_TeeVerification *TeeVerificationSession) REGOPTYPE() ([32]byte, error) {
-	return _TeeVerification.Contract.REGOPTYPE(&_TeeVerification.CallOpts)
-}
-
-// REGOPTYPE is a free data retrieval call binding the contract method 0xf468b2eb.
-//
-// Solidity: function REG_OP_TYPE() view returns(bytes32)
-func (_TeeVerification *TeeVerificationCallerSession) REGOPTYPE() ([32]byte, error) {
-	return _TeeVerification.Contract.REGOPTYPE(&_TeeVerification.CallOpts)
-}
-
-// TEEATTESTATION is a free data retrieval call binding the contract method 0x9a72a205.
-//
-// Solidity: function TEE_ATTESTATION() view returns(bytes32)
-func (_TeeVerification *TeeVerificationCaller) TEEATTESTATION(opts *bind.CallOpts) ([32]byte, error) {
-	var out []interface{}
-	err := _TeeVerification.contract.Call(opts, &out, "TEE_ATTESTATION")
-
-	if err != nil {
-		return *new([32]byte), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
-
-	return out0, err
-
-}
-
-// TEEATTESTATION is a free data retrieval call binding the contract method 0x9a72a205.
-//
-// Solidity: function TEE_ATTESTATION() view returns(bytes32)
-func (_TeeVerification *TeeVerificationSession) TEEATTESTATION() ([32]byte, error) {
-	return _TeeVerification.Contract.TEEATTESTATION(&_TeeVerification.CallOpts)
-}
-
-// TEEATTESTATION is a free data retrieval call binding the contract method 0x9a72a205.
-//
-// Solidity: function TEE_ATTESTATION() view returns(bytes32)
-func (_TeeVerification *TeeVerificationCallerSession) TEEATTESTATION() ([32]byte, error) {
-	return _TeeVerification.Contract.TEEATTESTATION(&_TeeVerification.CallOpts)
-}
-
-// TEESOURCEID is a free data retrieval call binding the contract method 0x319e1139.
-//
-// Solidity: function TEE_SOURCE_ID() view returns(bytes32)
-func (_TeeVerification *TeeVerificationCaller) TEESOURCEID(opts *bind.CallOpts) ([32]byte, error) {
-	var out []interface{}
-	err := _TeeVerification.contract.Call(opts, &out, "TEE_SOURCE_ID")
-
-	if err != nil {
-		return *new([32]byte), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
-
-	return out0, err
-
-}
-
-// TEESOURCEID is a free data retrieval call binding the contract method 0x319e1139.
-//
-// Solidity: function TEE_SOURCE_ID() view returns(bytes32)
-func (_TeeVerification *TeeVerificationSession) TEESOURCEID() ([32]byte, error) {
-	return _TeeVerification.Contract.TEESOURCEID(&_TeeVerification.CallOpts)
-}
-
-// TEESOURCEID is a free data retrieval call binding the contract method 0x319e1139.
-//
-// Solidity: function TEE_SOURCE_ID() view returns(bytes32)
-func (_TeeVerification *TeeVerificationCallerSession) TEESOURCEID() ([32]byte, error) {
-	return _TeeVerification.Contract.TEESOURCEID(&_TeeVerification.CallOpts)
-}
-
-// UPGRADEINTERFACEVERSION is a free data retrieval call binding the contract method 0xad3cb1cc.
-//
-// Solidity: function UPGRADE_INTERFACE_VERSION() view returns(string)
-func (_TeeVerification *TeeVerificationCaller) UPGRADEINTERFACEVERSION(opts *bind.CallOpts) (string, error) {
-	var out []interface{}
-	err := _TeeVerification.contract.Call(opts, &out, "UPGRADE_INTERFACE_VERSION")
-
-	if err != nil {
-		return *new(string), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(string)).(*string)
-
-	return out0, err
-
-}
-
-// UPGRADEINTERFACEVERSION is a free data retrieval call binding the contract method 0xad3cb1cc.
-//
-// Solidity: function UPGRADE_INTERFACE_VERSION() view returns(string)
-func (_TeeVerification *TeeVerificationSession) UPGRADEINTERFACEVERSION() (string, error) {
-	return _TeeVerification.Contract.UPGRADEINTERFACEVERSION(&_TeeVerification.CallOpts)
-}
-
-// UPGRADEINTERFACEVERSION is a free data retrieval call binding the contract method 0xad3cb1cc.
-//
-// Solidity: function UPGRADE_INTERFACE_VERSION() view returns(string)
-func (_TeeVerification *TeeVerificationCallerSession) UPGRADEINTERFACEVERSION() (string, error) {
-	return _TeeVerification.Contract.UPGRADEINTERFACEVERSION(&_TeeVerification.CallOpts)
-}
-
-// Fdc2Hub is a free data retrieval call binding the contract method 0xa7566ff3.
-//
-// Solidity: function fdc2Hub() view returns(address)
-func (_TeeVerification *TeeVerificationCaller) Fdc2Hub(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _TeeVerification.contract.Call(opts, &out, "fdc2Hub")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// Fdc2Hub is a free data retrieval call binding the contract method 0xa7566ff3.
-//
-// Solidity: function fdc2Hub() view returns(address)
-func (_TeeVerification *TeeVerificationSession) Fdc2Hub() (common.Address, error) {
-	return _TeeVerification.Contract.Fdc2Hub(&_TeeVerification.CallOpts)
-}
-
-// Fdc2Hub is a free data retrieval call binding the contract method 0xa7566ff3.
-//
-// Solidity: function fdc2Hub() view returns(address)
-func (_TeeVerification *TeeVerificationCallerSession) Fdc2Hub() (common.Address, error) {
-	return _TeeVerification.Contract.Fdc2Hub(&_TeeVerification.CallOpts)
-}
-
-// Fdc2Verification is a free data retrieval call binding the contract method 0xbf2e9839.
-//
-// Solidity: function fdc2Verification() view returns(address)
-func (_TeeVerification *TeeVerificationCaller) Fdc2Verification(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _TeeVerification.contract.Call(opts, &out, "fdc2Verification")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// Fdc2Verification is a free data retrieval call binding the contract method 0xbf2e9839.
-//
-// Solidity: function fdc2Verification() view returns(address)
-func (_TeeVerification *TeeVerificationSession) Fdc2Verification() (common.Address, error) {
-	return _TeeVerification.Contract.Fdc2Verification(&_TeeVerification.CallOpts)
-}
-
-// Fdc2Verification is a free data retrieval call binding the contract method 0xbf2e9839.
-//
-// Solidity: function fdc2Verification() view returns(address)
-func (_TeeVerification *TeeVerificationCallerSession) Fdc2Verification() (common.Address, error) {
-	return _TeeVerification.Contract.Fdc2Verification(&_TeeVerification.CallOpts)
-}
-
-// FlareSystemsManager is a free data retrieval call binding the contract method 0xfaae7fc9.
-//
-// Solidity: function flareSystemsManager() view returns(address)
-func (_TeeVerification *TeeVerificationCaller) FlareSystemsManager(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _TeeVerification.contract.Call(opts, &out, "flareSystemsManager")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// FlareSystemsManager is a free data retrieval call binding the contract method 0xfaae7fc9.
-//
-// Solidity: function flareSystemsManager() view returns(address)
-func (_TeeVerification *TeeVerificationSession) FlareSystemsManager() (common.Address, error) {
-	return _TeeVerification.Contract.FlareSystemsManager(&_TeeVerification.CallOpts)
-}
-
-// FlareSystemsManager is a free data retrieval call binding the contract method 0xfaae7fc9.
-//
-// Solidity: function flareSystemsManager() view returns(address)
-func (_TeeVerification *TeeVerificationCallerSession) FlareSystemsManager() (common.Address, error) {
-	return _TeeVerification.Contract.FlareSystemsManager(&_TeeVerification.CallOpts)
-}
-
-// GetAddressUpdater is a free data retrieval call binding the contract method 0x5267a15d.
-//
-// Solidity: function getAddressUpdater() view returns(address _addressUpdater)
-func (_TeeVerification *TeeVerificationCaller) GetAddressUpdater(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _TeeVerification.contract.Call(opts, &out, "getAddressUpdater")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// GetAddressUpdater is a free data retrieval call binding the contract method 0x5267a15d.
-//
-// Solidity: function getAddressUpdater() view returns(address _addressUpdater)
-func (_TeeVerification *TeeVerificationSession) GetAddressUpdater() (common.Address, error) {
-	return _TeeVerification.Contract.GetAddressUpdater(&_TeeVerification.CallOpts)
-}
-
-// GetAddressUpdater is a free data retrieval call binding the contract method 0x5267a15d.
-//
-// Solidity: function getAddressUpdater() view returns(address _addressUpdater)
-func (_TeeVerification *TeeVerificationCallerSession) GetAddressUpdater() (common.Address, error) {
-	return _TeeVerification.Contract.GetAddressUpdater(&_TeeVerification.CallOpts)
-}
-
 // GetAvailabilityCheckValidity is a free data retrieval call binding the contract method 0x3e1f22f5.
 //
 // Solidity: function getAvailabilityCheckValidity(address _teeId) view returns(uint64 _endTs, uint32 _lastSigningPolicyId)
@@ -645,506 +404,6 @@ func (_TeeVerification *TeeVerificationCallerSession) GetSettings() (struct {
 	return _TeeVerification.Contract.GetSettings(&_TeeVerification.CallOpts)
 }
 
-// Governance is a free data retrieval call binding the contract method 0x5aa6e675.
-//
-// Solidity: function governance() view returns(address)
-func (_TeeVerification *TeeVerificationCaller) Governance(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _TeeVerification.contract.Call(opts, &out, "governance")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// Governance is a free data retrieval call binding the contract method 0x5aa6e675.
-//
-// Solidity: function governance() view returns(address)
-func (_TeeVerification *TeeVerificationSession) Governance() (common.Address, error) {
-	return _TeeVerification.Contract.Governance(&_TeeVerification.CallOpts)
-}
-
-// Governance is a free data retrieval call binding the contract method 0x5aa6e675.
-//
-// Solidity: function governance() view returns(address)
-func (_TeeVerification *TeeVerificationCallerSession) Governance() (common.Address, error) {
-	return _TeeVerification.Contract.Governance(&_TeeVerification.CallOpts)
-}
-
-// GovernanceSettings is a free data retrieval call binding the contract method 0x62354e03.
-//
-// Solidity: function governanceSettings() view returns(address)
-func (_TeeVerification *TeeVerificationCaller) GovernanceSettings(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _TeeVerification.contract.Call(opts, &out, "governanceSettings")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// GovernanceSettings is a free data retrieval call binding the contract method 0x62354e03.
-//
-// Solidity: function governanceSettings() view returns(address)
-func (_TeeVerification *TeeVerificationSession) GovernanceSettings() (common.Address, error) {
-	return _TeeVerification.Contract.GovernanceSettings(&_TeeVerification.CallOpts)
-}
-
-// GovernanceSettings is a free data retrieval call binding the contract method 0x62354e03.
-//
-// Solidity: function governanceSettings() view returns(address)
-func (_TeeVerification *TeeVerificationCallerSession) GovernanceSettings() (common.Address, error) {
-	return _TeeVerification.Contract.GovernanceSettings(&_TeeVerification.CallOpts)
-}
-
-// Implementation is a free data retrieval call binding the contract method 0x5c60da1b.
-//
-// Solidity: function implementation() view returns(address)
-func (_TeeVerification *TeeVerificationCaller) Implementation(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _TeeVerification.contract.Call(opts, &out, "implementation")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// Implementation is a free data retrieval call binding the contract method 0x5c60da1b.
-//
-// Solidity: function implementation() view returns(address)
-func (_TeeVerification *TeeVerificationSession) Implementation() (common.Address, error) {
-	return _TeeVerification.Contract.Implementation(&_TeeVerification.CallOpts)
-}
-
-// Implementation is a free data retrieval call binding the contract method 0x5c60da1b.
-//
-// Solidity: function implementation() view returns(address)
-func (_TeeVerification *TeeVerificationCallerSession) Implementation() (common.Address, error) {
-	return _TeeVerification.Contract.Implementation(&_TeeVerification.CallOpts)
-}
-
-// IsExecutor is a free data retrieval call binding the contract method 0xdebfda30.
-//
-// Solidity: function isExecutor(address _address) view returns(bool)
-func (_TeeVerification *TeeVerificationCaller) IsExecutor(opts *bind.CallOpts, _address common.Address) (bool, error) {
-	var out []interface{}
-	err := _TeeVerification.contract.Call(opts, &out, "isExecutor", _address)
-
-	if err != nil {
-		return *new(bool), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
-
-	return out0, err
-
-}
-
-// IsExecutor is a free data retrieval call binding the contract method 0xdebfda30.
-//
-// Solidity: function isExecutor(address _address) view returns(bool)
-func (_TeeVerification *TeeVerificationSession) IsExecutor(_address common.Address) (bool, error) {
-	return _TeeVerification.Contract.IsExecutor(&_TeeVerification.CallOpts, _address)
-}
-
-// IsExecutor is a free data retrieval call binding the contract method 0xdebfda30.
-//
-// Solidity: function isExecutor(address _address) view returns(bool)
-func (_TeeVerification *TeeVerificationCallerSession) IsExecutor(_address common.Address) (bool, error) {
-	return _TeeVerification.Contract.IsExecutor(&_TeeVerification.CallOpts, _address)
-}
-
-// ProductionMode is a free data retrieval call binding the contract method 0xe17f212e.
-//
-// Solidity: function productionMode() view returns(bool)
-func (_TeeVerification *TeeVerificationCaller) ProductionMode(opts *bind.CallOpts) (bool, error) {
-	var out []interface{}
-	err := _TeeVerification.contract.Call(opts, &out, "productionMode")
-
-	if err != nil {
-		return *new(bool), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
-
-	return out0, err
-
-}
-
-// ProductionMode is a free data retrieval call binding the contract method 0xe17f212e.
-//
-// Solidity: function productionMode() view returns(bool)
-func (_TeeVerification *TeeVerificationSession) ProductionMode() (bool, error) {
-	return _TeeVerification.Contract.ProductionMode(&_TeeVerification.CallOpts)
-}
-
-// ProductionMode is a free data retrieval call binding the contract method 0xe17f212e.
-//
-// Solidity: function productionMode() view returns(bool)
-func (_TeeVerification *TeeVerificationCallerSession) ProductionMode() (bool, error) {
-	return _TeeVerification.Contract.ProductionMode(&_TeeVerification.CallOpts)
-}
-
-// ProxiableUUID is a free data retrieval call binding the contract method 0x52d1902d.
-//
-// Solidity: function proxiableUUID() view returns(bytes32)
-func (_TeeVerification *TeeVerificationCaller) ProxiableUUID(opts *bind.CallOpts) ([32]byte, error) {
-	var out []interface{}
-	err := _TeeVerification.contract.Call(opts, &out, "proxiableUUID")
-
-	if err != nil {
-		return *new([32]byte), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
-
-	return out0, err
-
-}
-
-// ProxiableUUID is a free data retrieval call binding the contract method 0x52d1902d.
-//
-// Solidity: function proxiableUUID() view returns(bytes32)
-func (_TeeVerification *TeeVerificationSession) ProxiableUUID() ([32]byte, error) {
-	return _TeeVerification.Contract.ProxiableUUID(&_TeeVerification.CallOpts)
-}
-
-// ProxiableUUID is a free data retrieval call binding the contract method 0x52d1902d.
-//
-// Solidity: function proxiableUUID() view returns(bytes32)
-func (_TeeVerification *TeeVerificationCallerSession) ProxiableUUID() ([32]byte, error) {
-	return _TeeVerification.Contract.ProxiableUUID(&_TeeVerification.CallOpts)
-}
-
-// Relay is a free data retrieval call binding the contract method 0xb59589d1.
-//
-// Solidity: function relay() view returns(address)
-func (_TeeVerification *TeeVerificationCaller) Relay(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _TeeVerification.contract.Call(opts, &out, "relay")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// Relay is a free data retrieval call binding the contract method 0xb59589d1.
-//
-// Solidity: function relay() view returns(address)
-func (_TeeVerification *TeeVerificationSession) Relay() (common.Address, error) {
-	return _TeeVerification.Contract.Relay(&_TeeVerification.CallOpts)
-}
-
-// Relay is a free data retrieval call binding the contract method 0xb59589d1.
-//
-// Solidity: function relay() view returns(address)
-func (_TeeVerification *TeeVerificationCallerSession) Relay() (common.Address, error) {
-	return _TeeVerification.Contract.Relay(&_TeeVerification.CallOpts)
-}
-
-// TeeExtensionRegistry is a free data retrieval call binding the contract method 0xa435d58a.
-//
-// Solidity: function teeExtensionRegistry() view returns(address)
-func (_TeeVerification *TeeVerificationCaller) TeeExtensionRegistry(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _TeeVerification.contract.Call(opts, &out, "teeExtensionRegistry")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// TeeExtensionRegistry is a free data retrieval call binding the contract method 0xa435d58a.
-//
-// Solidity: function teeExtensionRegistry() view returns(address)
-func (_TeeVerification *TeeVerificationSession) TeeExtensionRegistry() (common.Address, error) {
-	return _TeeVerification.Contract.TeeExtensionRegistry(&_TeeVerification.CallOpts)
-}
-
-// TeeExtensionRegistry is a free data retrieval call binding the contract method 0xa435d58a.
-//
-// Solidity: function teeExtensionRegistry() view returns(address)
-func (_TeeVerification *TeeVerificationCallerSession) TeeExtensionRegistry() (common.Address, error) {
-	return _TeeVerification.Contract.TeeExtensionRegistry(&_TeeVerification.CallOpts)
-}
-
-// TeeMachineRegistry is a free data retrieval call binding the contract method 0x524967d7.
-//
-// Solidity: function teeMachineRegistry() view returns(address)
-func (_TeeVerification *TeeVerificationCaller) TeeMachineRegistry(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _TeeVerification.contract.Call(opts, &out, "teeMachineRegistry")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// TeeMachineRegistry is a free data retrieval call binding the contract method 0x524967d7.
-//
-// Solidity: function teeMachineRegistry() view returns(address)
-func (_TeeVerification *TeeVerificationSession) TeeMachineRegistry() (common.Address, error) {
-	return _TeeVerification.Contract.TeeMachineRegistry(&_TeeVerification.CallOpts)
-}
-
-// TeeMachineRegistry is a free data retrieval call binding the contract method 0x524967d7.
-//
-// Solidity: function teeMachineRegistry() view returns(address)
-func (_TeeVerification *TeeVerificationCallerSession) TeeMachineRegistry() (common.Address, error) {
-	return _TeeVerification.Contract.TeeMachineRegistry(&_TeeVerification.CallOpts)
-}
-
-// TeeReplication is a free data retrieval call binding the contract method 0x0f10ad79.
-//
-// Solidity: function teeReplication() view returns(address)
-func (_TeeVerification *TeeVerificationCaller) TeeReplication(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _TeeVerification.contract.Call(opts, &out, "teeReplication")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// TeeReplication is a free data retrieval call binding the contract method 0x0f10ad79.
-//
-// Solidity: function teeReplication() view returns(address)
-func (_TeeVerification *TeeVerificationSession) TeeReplication() (common.Address, error) {
-	return _TeeVerification.Contract.TeeReplication(&_TeeVerification.CallOpts)
-}
-
-// TeeReplication is a free data retrieval call binding the contract method 0x0f10ad79.
-//
-// Solidity: function teeReplication() view returns(address)
-func (_TeeVerification *TeeVerificationCallerSession) TeeReplication() (common.Address, error) {
-	return _TeeVerification.Contract.TeeReplication(&_TeeVerification.CallOpts)
-}
-
-// TeeSystemStateVerifier is a free data retrieval call binding the contract method 0xb3e8e44d.
-//
-// Solidity: function teeSystemStateVerifier() view returns(address)
-func (_TeeVerification *TeeVerificationCaller) TeeSystemStateVerifier(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _TeeVerification.contract.Call(opts, &out, "teeSystemStateVerifier")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// TeeSystemStateVerifier is a free data retrieval call binding the contract method 0xb3e8e44d.
-//
-// Solidity: function teeSystemStateVerifier() view returns(address)
-func (_TeeVerification *TeeVerificationSession) TeeSystemStateVerifier() (common.Address, error) {
-	return _TeeVerification.Contract.TeeSystemStateVerifier(&_TeeVerification.CallOpts)
-}
-
-// TeeSystemStateVerifier is a free data retrieval call binding the contract method 0xb3e8e44d.
-//
-// Solidity: function teeSystemStateVerifier() view returns(address)
-func (_TeeVerification *TeeVerificationCallerSession) TeeSystemStateVerifier() (common.Address, error) {
-	return _TeeVerification.Contract.TeeSystemStateVerifier(&_TeeVerification.CallOpts)
-}
-
-// TeeWalletKeyManager is a free data retrieval call binding the contract method 0x6b03b74d.
-//
-// Solidity: function teeWalletKeyManager() view returns(address)
-func (_TeeVerification *TeeVerificationCaller) TeeWalletKeyManager(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _TeeVerification.contract.Call(opts, &out, "teeWalletKeyManager")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// TeeWalletKeyManager is a free data retrieval call binding the contract method 0x6b03b74d.
-//
-// Solidity: function teeWalletKeyManager() view returns(address)
-func (_TeeVerification *TeeVerificationSession) TeeWalletKeyManager() (common.Address, error) {
-	return _TeeVerification.Contract.TeeWalletKeyManager(&_TeeVerification.CallOpts)
-}
-
-// TeeWalletKeyManager is a free data retrieval call binding the contract method 0x6b03b74d.
-//
-// Solidity: function teeWalletKeyManager() view returns(address)
-func (_TeeVerification *TeeVerificationCallerSession) TeeWalletKeyManager() (common.Address, error) {
-	return _TeeVerification.Contract.TeeWalletKeyManager(&_TeeVerification.CallOpts)
-}
-
-// TeeWalletManager is a free data retrieval call binding the contract method 0x9ce03893.
-//
-// Solidity: function teeWalletManager() view returns(address)
-func (_TeeVerification *TeeVerificationCaller) TeeWalletManager(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _TeeVerification.contract.Call(opts, &out, "teeWalletManager")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// TeeWalletManager is a free data retrieval call binding the contract method 0x9ce03893.
-//
-// Solidity: function teeWalletManager() view returns(address)
-func (_TeeVerification *TeeVerificationSession) TeeWalletManager() (common.Address, error) {
-	return _TeeVerification.Contract.TeeWalletManager(&_TeeVerification.CallOpts)
-}
-
-// TeeWalletManager is a free data retrieval call binding the contract method 0x9ce03893.
-//
-// Solidity: function teeWalletManager() view returns(address)
-func (_TeeVerification *TeeVerificationCallerSession) TeeWalletManager() (common.Address, error) {
-	return _TeeVerification.Contract.TeeWalletManager(&_TeeVerification.CallOpts)
-}
-
-// TeeWalletProjectManager is a free data retrieval call binding the contract method 0x1e915a85.
-//
-// Solidity: function teeWalletProjectManager() view returns(address)
-func (_TeeVerification *TeeVerificationCaller) TeeWalletProjectManager(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _TeeVerification.contract.Call(opts, &out, "teeWalletProjectManager")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// TeeWalletProjectManager is a free data retrieval call binding the contract method 0x1e915a85.
-//
-// Solidity: function teeWalletProjectManager() view returns(address)
-func (_TeeVerification *TeeVerificationSession) TeeWalletProjectManager() (common.Address, error) {
-	return _TeeVerification.Contract.TeeWalletProjectManager(&_TeeVerification.CallOpts)
-}
-
-// TeeWalletProjectManager is a free data retrieval call binding the contract method 0x1e915a85.
-//
-// Solidity: function teeWalletProjectManager() view returns(address)
-func (_TeeVerification *TeeVerificationCallerSession) TeeWalletProjectManager() (common.Address, error) {
-	return _TeeVerification.Contract.TeeWalletProjectManager(&_TeeVerification.CallOpts)
-}
-
-// TimelockedCalls is a free data retrieval call binding the contract method 0x74e6310e.
-//
-// Solidity: function timelockedCalls(bytes4 selector) view returns(uint256 allowedAfterTimestamp, bytes encodedCall)
-func (_TeeVerification *TeeVerificationCaller) TimelockedCalls(opts *bind.CallOpts, selector [4]byte) (struct {
-	AllowedAfterTimestamp *big.Int
-	EncodedCall           []byte
-}, error) {
-	var out []interface{}
-	err := _TeeVerification.contract.Call(opts, &out, "timelockedCalls", selector)
-
-	outstruct := new(struct {
-		AllowedAfterTimestamp *big.Int
-		EncodedCall           []byte
-	})
-	if err != nil {
-		return *outstruct, err
-	}
-
-	outstruct.AllowedAfterTimestamp = *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-	outstruct.EncodedCall = *abi.ConvertType(out[1], new([]byte)).(*[]byte)
-
-	return *outstruct, err
-
-}
-
-// TimelockedCalls is a free data retrieval call binding the contract method 0x74e6310e.
-//
-// Solidity: function timelockedCalls(bytes4 selector) view returns(uint256 allowedAfterTimestamp, bytes encodedCall)
-func (_TeeVerification *TeeVerificationSession) TimelockedCalls(selector [4]byte) (struct {
-	AllowedAfterTimestamp *big.Int
-	EncodedCall           []byte
-}, error) {
-	return _TeeVerification.Contract.TimelockedCalls(&_TeeVerification.CallOpts, selector)
-}
-
-// TimelockedCalls is a free data retrieval call binding the contract method 0x74e6310e.
-//
-// Solidity: function timelockedCalls(bytes4 selector) view returns(uint256 allowedAfterTimestamp, bytes encodedCall)
-func (_TeeVerification *TeeVerificationCallerSession) TimelockedCalls(selector [4]byte) (struct {
-	AllowedAfterTimestamp *big.Int
-	EncodedCall           []byte
-}, error) {
-	return _TeeVerification.Contract.TimelockedCalls(&_TeeVerification.CallOpts, selector)
-}
-
-// CancelGovernanceCall is a paid mutator transaction binding the contract method 0x67fc4029.
-//
-// Solidity: function cancelGovernanceCall(bytes4 _selector) returns()
-func (_TeeVerification *TeeVerificationTransactor) CancelGovernanceCall(opts *bind.TransactOpts, _selector [4]byte) (*types.Transaction, error) {
-	return _TeeVerification.contract.Transact(opts, "cancelGovernanceCall", _selector)
-}
-
-// CancelGovernanceCall is a paid mutator transaction binding the contract method 0x67fc4029.
-//
-// Solidity: function cancelGovernanceCall(bytes4 _selector) returns()
-func (_TeeVerification *TeeVerificationSession) CancelGovernanceCall(_selector [4]byte) (*types.Transaction, error) {
-	return _TeeVerification.Contract.CancelGovernanceCall(&_TeeVerification.TransactOpts, _selector)
-}
-
-// CancelGovernanceCall is a paid mutator transaction binding the contract method 0x67fc4029.
-//
-// Solidity: function cancelGovernanceCall(bytes4 _selector) returns()
-func (_TeeVerification *TeeVerificationTransactorSession) CancelGovernanceCall(_selector [4]byte) (*types.Transaction, error) {
-	return _TeeVerification.Contract.CancelGovernanceCall(&_TeeVerification.TransactOpts, _selector)
-}
-
 // ConfirmAvailability is a paid mutator transaction binding the contract method 0x1f78297f.
 //
 // Solidity: function confirmAvailability(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(address,address,string,bytes32,bytes32),(uint8,uint64,bytes32,bytes32,uint32,uint32,(bytes,bytes32,bytes,bytes32))) _proof) returns()
@@ -1164,69 +423,6 @@ func (_TeeVerification *TeeVerificationSession) ConfirmAvailability(_proof ITeeA
 // Solidity: function confirmAvailability(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(address,address,string,bytes32,bytes32),(uint8,uint64,bytes32,bytes32,uint32,uint32,(bytes,bytes32,bytes,bytes32))) _proof) returns()
 func (_TeeVerification *TeeVerificationTransactorSession) ConfirmAvailability(_proof ITeeAvailabilityCheckProof) (*types.Transaction, error) {
 	return _TeeVerification.Contract.ConfirmAvailability(&_TeeVerification.TransactOpts, _proof)
-}
-
-// ExecuteGovernanceCall is a paid mutator transaction binding the contract method 0x5ff27079.
-//
-// Solidity: function executeGovernanceCall(bytes4 _selector) returns()
-func (_TeeVerification *TeeVerificationTransactor) ExecuteGovernanceCall(opts *bind.TransactOpts, _selector [4]byte) (*types.Transaction, error) {
-	return _TeeVerification.contract.Transact(opts, "executeGovernanceCall", _selector)
-}
-
-// ExecuteGovernanceCall is a paid mutator transaction binding the contract method 0x5ff27079.
-//
-// Solidity: function executeGovernanceCall(bytes4 _selector) returns()
-func (_TeeVerification *TeeVerificationSession) ExecuteGovernanceCall(_selector [4]byte) (*types.Transaction, error) {
-	return _TeeVerification.Contract.ExecuteGovernanceCall(&_TeeVerification.TransactOpts, _selector)
-}
-
-// ExecuteGovernanceCall is a paid mutator transaction binding the contract method 0x5ff27079.
-//
-// Solidity: function executeGovernanceCall(bytes4 _selector) returns()
-func (_TeeVerification *TeeVerificationTransactorSession) ExecuteGovernanceCall(_selector [4]byte) (*types.Transaction, error) {
-	return _TeeVerification.Contract.ExecuteGovernanceCall(&_TeeVerification.TransactOpts, _selector)
-}
-
-// Initialise is a paid mutator transaction binding the contract method 0xef88bf13.
-//
-// Solidity: function initialise(address _governanceSettings, address _initialGovernance) returns()
-func (_TeeVerification *TeeVerificationTransactor) Initialise(opts *bind.TransactOpts, _governanceSettings common.Address, _initialGovernance common.Address) (*types.Transaction, error) {
-	return _TeeVerification.contract.Transact(opts, "initialise", _governanceSettings, _initialGovernance)
-}
-
-// Initialise is a paid mutator transaction binding the contract method 0xef88bf13.
-//
-// Solidity: function initialise(address _governanceSettings, address _initialGovernance) returns()
-func (_TeeVerification *TeeVerificationSession) Initialise(_governanceSettings common.Address, _initialGovernance common.Address) (*types.Transaction, error) {
-	return _TeeVerification.Contract.Initialise(&_TeeVerification.TransactOpts, _governanceSettings, _initialGovernance)
-}
-
-// Initialise is a paid mutator transaction binding the contract method 0xef88bf13.
-//
-// Solidity: function initialise(address _governanceSettings, address _initialGovernance) returns()
-func (_TeeVerification *TeeVerificationTransactorSession) Initialise(_governanceSettings common.Address, _initialGovernance common.Address) (*types.Transaction, error) {
-	return _TeeVerification.Contract.Initialise(&_TeeVerification.TransactOpts, _governanceSettings, _initialGovernance)
-}
-
-// Initialize is a paid mutator transaction binding the contract method 0xc7e1903d.
-//
-// Solidity: function initialize(address _governanceSettings, address _initialGovernance, address _addressUpdater, uint64 _availabilityCheckValidityDurationSeconds, uint24 _signingPolicyValidityDurationInRewardEpochs, uint64 _challengeValidityDurationSeconds) returns()
-func (_TeeVerification *TeeVerificationTransactor) Initialize(opts *bind.TransactOpts, _governanceSettings common.Address, _initialGovernance common.Address, _addressUpdater common.Address, _availabilityCheckValidityDurationSeconds uint64, _signingPolicyValidityDurationInRewardEpochs *big.Int, _challengeValidityDurationSeconds uint64) (*types.Transaction, error) {
-	return _TeeVerification.contract.Transact(opts, "initialize", _governanceSettings, _initialGovernance, _addressUpdater, _availabilityCheckValidityDurationSeconds, _signingPolicyValidityDurationInRewardEpochs, _challengeValidityDurationSeconds)
-}
-
-// Initialize is a paid mutator transaction binding the contract method 0xc7e1903d.
-//
-// Solidity: function initialize(address _governanceSettings, address _initialGovernance, address _addressUpdater, uint64 _availabilityCheckValidityDurationSeconds, uint24 _signingPolicyValidityDurationInRewardEpochs, uint64 _challengeValidityDurationSeconds) returns()
-func (_TeeVerification *TeeVerificationSession) Initialize(_governanceSettings common.Address, _initialGovernance common.Address, _addressUpdater common.Address, _availabilityCheckValidityDurationSeconds uint64, _signingPolicyValidityDurationInRewardEpochs *big.Int, _challengeValidityDurationSeconds uint64) (*types.Transaction, error) {
-	return _TeeVerification.Contract.Initialize(&_TeeVerification.TransactOpts, _governanceSettings, _initialGovernance, _addressUpdater, _availabilityCheckValidityDurationSeconds, _signingPolicyValidityDurationInRewardEpochs, _challengeValidityDurationSeconds)
-}
-
-// Initialize is a paid mutator transaction binding the contract method 0xc7e1903d.
-//
-// Solidity: function initialize(address _governanceSettings, address _initialGovernance, address _addressUpdater, uint64 _availabilityCheckValidityDurationSeconds, uint24 _signingPolicyValidityDurationInRewardEpochs, uint64 _challengeValidityDurationSeconds) returns()
-func (_TeeVerification *TeeVerificationTransactorSession) Initialize(_governanceSettings common.Address, _initialGovernance common.Address, _addressUpdater common.Address, _availabilityCheckValidityDurationSeconds uint64, _signingPolicyValidityDurationInRewardEpochs *big.Int, _challengeValidityDurationSeconds uint64) (*types.Transaction, error) {
-	return _TeeVerification.Contract.Initialize(&_TeeVerification.TransactOpts, _governanceSettings, _initialGovernance, _addressUpdater, _availabilityCheckValidityDurationSeconds, _signingPolicyValidityDurationInRewardEpochs, _challengeValidityDurationSeconds)
 }
 
 // RequestAvailabilityCheckAttestation is a paid mutator transaction binding the contract method 0xa3d60348.
@@ -1313,88 +509,25 @@ func (_TeeVerification *TeeVerificationTransactorSession) SetCosigners(_cosigner
 	return _TeeVerification.Contract.SetCosigners(&_TeeVerification.TransactOpts, _cosigners, _cosignersThreshold)
 }
 
-// SwitchToProductionMode is a paid mutator transaction binding the contract method 0xf5a98383.
+// UpdateSettings is a paid mutator transaction binding the contract method 0x34ef6f09.
 //
-// Solidity: function switchToProductionMode() returns()
-func (_TeeVerification *TeeVerificationTransactor) SwitchToProductionMode(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _TeeVerification.contract.Transact(opts, "switchToProductionMode")
-}
-
-// SwitchToProductionMode is a paid mutator transaction binding the contract method 0xf5a98383.
-//
-// Solidity: function switchToProductionMode() returns()
-func (_TeeVerification *TeeVerificationSession) SwitchToProductionMode() (*types.Transaction, error) {
-	return _TeeVerification.Contract.SwitchToProductionMode(&_TeeVerification.TransactOpts)
-}
-
-// SwitchToProductionMode is a paid mutator transaction binding the contract method 0xf5a98383.
-//
-// Solidity: function switchToProductionMode() returns()
-func (_TeeVerification *TeeVerificationTransactorSession) SwitchToProductionMode() (*types.Transaction, error) {
-	return _TeeVerification.Contract.SwitchToProductionMode(&_TeeVerification.TransactOpts)
-}
-
-// UpdateContractAddresses is a paid mutator transaction binding the contract method 0xb00c0b76.
-//
-// Solidity: function updateContractAddresses(bytes32[] _contractNameHashes, address[] _contractAddresses) returns()
-func (_TeeVerification *TeeVerificationTransactor) UpdateContractAddresses(opts *bind.TransactOpts, _contractNameHashes [][32]byte, _contractAddresses []common.Address) (*types.Transaction, error) {
-	return _TeeVerification.contract.Transact(opts, "updateContractAddresses", _contractNameHashes, _contractAddresses)
-}
-
-// UpdateContractAddresses is a paid mutator transaction binding the contract method 0xb00c0b76.
-//
-// Solidity: function updateContractAddresses(bytes32[] _contractNameHashes, address[] _contractAddresses) returns()
-func (_TeeVerification *TeeVerificationSession) UpdateContractAddresses(_contractNameHashes [][32]byte, _contractAddresses []common.Address) (*types.Transaction, error) {
-	return _TeeVerification.Contract.UpdateContractAddresses(&_TeeVerification.TransactOpts, _contractNameHashes, _contractAddresses)
-}
-
-// UpdateContractAddresses is a paid mutator transaction binding the contract method 0xb00c0b76.
-//
-// Solidity: function updateContractAddresses(bytes32[] _contractNameHashes, address[] _contractAddresses) returns()
-func (_TeeVerification *TeeVerificationTransactorSession) UpdateContractAddresses(_contractNameHashes [][32]byte, _contractAddresses []common.Address) (*types.Transaction, error) {
-	return _TeeVerification.Contract.UpdateContractAddresses(&_TeeVerification.TransactOpts, _contractNameHashes, _contractAddresses)
-}
-
-// UpdateSettings is a paid mutator transaction binding the contract method 0xc9f9d906.
-//
-// Solidity: function updateSettings(uint64 _availabilityCheckValidityDurationSeconds, uint24 _signingPolicyValidityDurationInRewardEpochs, uint64 _challengeValidityDurationSeconds) returns()
-func (_TeeVerification *TeeVerificationTransactor) UpdateSettings(opts *bind.TransactOpts, _availabilityCheckValidityDurationSeconds uint64, _signingPolicyValidityDurationInRewardEpochs *big.Int, _challengeValidityDurationSeconds uint64) (*types.Transaction, error) {
+// Solidity: function updateSettings(uint64 _availabilityCheckValidityDurationSeconds, uint64 _signingPolicyValidityDurationInRewardEpochs, uint64 _challengeValidityDurationSeconds) returns()
+func (_TeeVerification *TeeVerificationTransactor) UpdateSettings(opts *bind.TransactOpts, _availabilityCheckValidityDurationSeconds uint64, _signingPolicyValidityDurationInRewardEpochs uint64, _challengeValidityDurationSeconds uint64) (*types.Transaction, error) {
 	return _TeeVerification.contract.Transact(opts, "updateSettings", _availabilityCheckValidityDurationSeconds, _signingPolicyValidityDurationInRewardEpochs, _challengeValidityDurationSeconds)
 }
 
-// UpdateSettings is a paid mutator transaction binding the contract method 0xc9f9d906.
+// UpdateSettings is a paid mutator transaction binding the contract method 0x34ef6f09.
 //
-// Solidity: function updateSettings(uint64 _availabilityCheckValidityDurationSeconds, uint24 _signingPolicyValidityDurationInRewardEpochs, uint64 _challengeValidityDurationSeconds) returns()
-func (_TeeVerification *TeeVerificationSession) UpdateSettings(_availabilityCheckValidityDurationSeconds uint64, _signingPolicyValidityDurationInRewardEpochs *big.Int, _challengeValidityDurationSeconds uint64) (*types.Transaction, error) {
+// Solidity: function updateSettings(uint64 _availabilityCheckValidityDurationSeconds, uint64 _signingPolicyValidityDurationInRewardEpochs, uint64 _challengeValidityDurationSeconds) returns()
+func (_TeeVerification *TeeVerificationSession) UpdateSettings(_availabilityCheckValidityDurationSeconds uint64, _signingPolicyValidityDurationInRewardEpochs uint64, _challengeValidityDurationSeconds uint64) (*types.Transaction, error) {
 	return _TeeVerification.Contract.UpdateSettings(&_TeeVerification.TransactOpts, _availabilityCheckValidityDurationSeconds, _signingPolicyValidityDurationInRewardEpochs, _challengeValidityDurationSeconds)
 }
 
-// UpdateSettings is a paid mutator transaction binding the contract method 0xc9f9d906.
+// UpdateSettings is a paid mutator transaction binding the contract method 0x34ef6f09.
 //
-// Solidity: function updateSettings(uint64 _availabilityCheckValidityDurationSeconds, uint24 _signingPolicyValidityDurationInRewardEpochs, uint64 _challengeValidityDurationSeconds) returns()
-func (_TeeVerification *TeeVerificationTransactorSession) UpdateSettings(_availabilityCheckValidityDurationSeconds uint64, _signingPolicyValidityDurationInRewardEpochs *big.Int, _challengeValidityDurationSeconds uint64) (*types.Transaction, error) {
+// Solidity: function updateSettings(uint64 _availabilityCheckValidityDurationSeconds, uint64 _signingPolicyValidityDurationInRewardEpochs, uint64 _challengeValidityDurationSeconds) returns()
+func (_TeeVerification *TeeVerificationTransactorSession) UpdateSettings(_availabilityCheckValidityDurationSeconds uint64, _signingPolicyValidityDurationInRewardEpochs uint64, _challengeValidityDurationSeconds uint64) (*types.Transaction, error) {
 	return _TeeVerification.Contract.UpdateSettings(&_TeeVerification.TransactOpts, _availabilityCheckValidityDurationSeconds, _signingPolicyValidityDurationInRewardEpochs, _challengeValidityDurationSeconds)
-}
-
-// UpgradeToAndCall is a paid mutator transaction binding the contract method 0x4f1ef286.
-//
-// Solidity: function upgradeToAndCall(address _newImplementation, bytes _data) payable returns()
-func (_TeeVerification *TeeVerificationTransactor) UpgradeToAndCall(opts *bind.TransactOpts, _newImplementation common.Address, _data []byte) (*types.Transaction, error) {
-	return _TeeVerification.contract.Transact(opts, "upgradeToAndCall", _newImplementation, _data)
-}
-
-// UpgradeToAndCall is a paid mutator transaction binding the contract method 0x4f1ef286.
-//
-// Solidity: function upgradeToAndCall(address _newImplementation, bytes _data) payable returns()
-func (_TeeVerification *TeeVerificationSession) UpgradeToAndCall(_newImplementation common.Address, _data []byte) (*types.Transaction, error) {
-	return _TeeVerification.Contract.UpgradeToAndCall(&_TeeVerification.TransactOpts, _newImplementation, _data)
-}
-
-// UpgradeToAndCall is a paid mutator transaction binding the contract method 0x4f1ef286.
-//
-// Solidity: function upgradeToAndCall(address _newImplementation, bytes _data) payable returns()
-func (_TeeVerification *TeeVerificationTransactorSession) UpgradeToAndCall(_newImplementation common.Address, _data []byte) (*types.Transaction, error) {
-	return _TeeVerification.Contract.UpgradeToAndCall(&_TeeVerification.TransactOpts, _newImplementation, _data)
 }
 
 // VerifyAvailabilityCheckProof is a paid mutator transaction binding the contract method 0xd35056ba.
@@ -1797,15 +930,15 @@ func (it *TeeVerificationGovernanceCallTimelockedIterator) Close() error {
 
 // TeeVerificationGovernanceCallTimelocked represents a GovernanceCallTimelocked event raised by the TeeVerification contract.
 type TeeVerificationGovernanceCallTimelocked struct {
-	Selector              [4]byte
-	AllowedAfterTimestamp *big.Int
 	EncodedCall           []byte
+	EncodedCallHash       [32]byte
+	AllowedAfterTimestamp *big.Int
 	Raw                   types.Log // Blockchain specific contextual infos
 }
 
-// FilterGovernanceCallTimelocked is a free log retrieval operation binding the contract event 0xed948300a3694aa01d4a6b258bfd664350193d770c0b51f8387277f6d83ea3b6.
+// FilterGovernanceCallTimelocked is a free log retrieval operation binding the contract event 0x8c02104dfc280f713854f25297de671710c544c58de69dbde8fb66974ce1ab9e.
 //
-// Solidity: event GovernanceCallTimelocked(bytes4 selector, uint256 allowedAfterTimestamp, bytes encodedCall)
+// Solidity: event GovernanceCallTimelocked(bytes encodedCall, bytes32 encodedCallHash, uint256 allowedAfterTimestamp)
 func (_TeeVerification *TeeVerificationFilterer) FilterGovernanceCallTimelocked(opts *bind.FilterOpts) (*TeeVerificationGovernanceCallTimelockedIterator, error) {
 
 	logs, sub, err := _TeeVerification.contract.FilterLogs(opts, "GovernanceCallTimelocked")
@@ -1815,9 +948,9 @@ func (_TeeVerification *TeeVerificationFilterer) FilterGovernanceCallTimelocked(
 	return &TeeVerificationGovernanceCallTimelockedIterator{contract: _TeeVerification.contract, event: "GovernanceCallTimelocked", logs: logs, sub: sub}, nil
 }
 
-// WatchGovernanceCallTimelocked is a free log subscription operation binding the contract event 0xed948300a3694aa01d4a6b258bfd664350193d770c0b51f8387277f6d83ea3b6.
+// WatchGovernanceCallTimelocked is a free log subscription operation binding the contract event 0x8c02104dfc280f713854f25297de671710c544c58de69dbde8fb66974ce1ab9e.
 //
-// Solidity: event GovernanceCallTimelocked(bytes4 selector, uint256 allowedAfterTimestamp, bytes encodedCall)
+// Solidity: event GovernanceCallTimelocked(bytes encodedCall, bytes32 encodedCallHash, uint256 allowedAfterTimestamp)
 func (_TeeVerification *TeeVerificationFilterer) WatchGovernanceCallTimelocked(opts *bind.WatchOpts, sink chan<- *TeeVerificationGovernanceCallTimelocked) (event.Subscription, error) {
 
 	logs, sub, err := _TeeVerification.contract.WatchLogs(opts, "GovernanceCallTimelocked")
@@ -1852,9 +985,9 @@ func (_TeeVerification *TeeVerificationFilterer) WatchGovernanceCallTimelocked(o
 	}), nil
 }
 
-// ParseGovernanceCallTimelocked is a log parse operation binding the contract event 0xed948300a3694aa01d4a6b258bfd664350193d770c0b51f8387277f6d83ea3b6.
+// ParseGovernanceCallTimelocked is a log parse operation binding the contract event 0x8c02104dfc280f713854f25297de671710c544c58de69dbde8fb66974ce1ab9e.
 //
-// Solidity: event GovernanceCallTimelocked(bytes4 selector, uint256 allowedAfterTimestamp, bytes encodedCall)
+// Solidity: event GovernanceCallTimelocked(bytes encodedCall, bytes32 encodedCallHash, uint256 allowedAfterTimestamp)
 func (_TeeVerification *TeeVerificationFilterer) ParseGovernanceCallTimelocked(log types.Log) (*TeeVerificationGovernanceCallTimelocked, error) {
 	event := new(TeeVerificationGovernanceCallTimelocked)
 	if err := _TeeVerification.contract.UnpackLog(event, "GovernanceCallTimelocked", log); err != nil {
@@ -1998,140 +1131,6 @@ func (_TeeVerification *TeeVerificationFilterer) ParseGovernanceInitialised(log 
 	return event, nil
 }
 
-// TeeVerificationGovernedProductionModeEnteredIterator is returned from FilterGovernedProductionModeEntered and is used to iterate over the raw logs and unpacked data for GovernedProductionModeEntered events raised by the TeeVerification contract.
-type TeeVerificationGovernedProductionModeEnteredIterator struct {
-	Event *TeeVerificationGovernedProductionModeEntered // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *TeeVerificationGovernedProductionModeEnteredIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(TeeVerificationGovernedProductionModeEntered)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(TeeVerificationGovernedProductionModeEntered)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *TeeVerificationGovernedProductionModeEnteredIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *TeeVerificationGovernedProductionModeEnteredIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// TeeVerificationGovernedProductionModeEntered represents a GovernedProductionModeEntered event raised by the TeeVerification contract.
-type TeeVerificationGovernedProductionModeEntered struct {
-	GovernanceSettings common.Address
-	Raw                types.Log // Blockchain specific contextual infos
-}
-
-// FilterGovernedProductionModeEntered is a free log retrieval operation binding the contract event 0x83af113638b5422f9e977cebc0aaf0eaf2188eb9a8baae7f9d46c42b33a1560c.
-//
-// Solidity: event GovernedProductionModeEntered(address governanceSettings)
-func (_TeeVerification *TeeVerificationFilterer) FilterGovernedProductionModeEntered(opts *bind.FilterOpts) (*TeeVerificationGovernedProductionModeEnteredIterator, error) {
-
-	logs, sub, err := _TeeVerification.contract.FilterLogs(opts, "GovernedProductionModeEntered")
-	if err != nil {
-		return nil, err
-	}
-	return &TeeVerificationGovernedProductionModeEnteredIterator{contract: _TeeVerification.contract, event: "GovernedProductionModeEntered", logs: logs, sub: sub}, nil
-}
-
-// WatchGovernedProductionModeEntered is a free log subscription operation binding the contract event 0x83af113638b5422f9e977cebc0aaf0eaf2188eb9a8baae7f9d46c42b33a1560c.
-//
-// Solidity: event GovernedProductionModeEntered(address governanceSettings)
-func (_TeeVerification *TeeVerificationFilterer) WatchGovernedProductionModeEntered(opts *bind.WatchOpts, sink chan<- *TeeVerificationGovernedProductionModeEntered) (event.Subscription, error) {
-
-	logs, sub, err := _TeeVerification.contract.WatchLogs(opts, "GovernedProductionModeEntered")
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(TeeVerificationGovernedProductionModeEntered)
-				if err := _TeeVerification.contract.UnpackLog(event, "GovernedProductionModeEntered", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseGovernedProductionModeEntered is a log parse operation binding the contract event 0x83af113638b5422f9e977cebc0aaf0eaf2188eb9a8baae7f9d46c42b33a1560c.
-//
-// Solidity: event GovernedProductionModeEntered(address governanceSettings)
-func (_TeeVerification *TeeVerificationFilterer) ParseGovernedProductionModeEntered(log types.Log) (*TeeVerificationGovernedProductionModeEntered, error) {
-	event := new(TeeVerificationGovernedProductionModeEntered)
-	if err := _TeeVerification.contract.UnpackLog(event, "GovernedProductionModeEntered", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
 // TeeVerificationSettingsUpdatedIterator is returned from FilterSettingsUpdated and is used to iterate over the raw logs and unpacked data for SettingsUpdated events raised by the TeeVerification contract.
 type TeeVerificationSettingsUpdatedIterator struct {
 	Event *TeeVerificationSettingsUpdated // Event containing the contract specifics and raw log
@@ -2202,14 +1201,14 @@ func (it *TeeVerificationSettingsUpdatedIterator) Close() error {
 // TeeVerificationSettingsUpdated represents a SettingsUpdated event raised by the TeeVerification contract.
 type TeeVerificationSettingsUpdated struct {
 	AvailabilityCheckValidityDurationSeconds    uint64
-	SigningPolicyValidityDurationInRewardEpochs *big.Int
+	SigningPolicyValidityDurationInRewardEpochs uint64
 	ChallengeValidityDurationSeconds            uint64
 	Raw                                         types.Log // Blockchain specific contextual infos
 }
 
-// FilterSettingsUpdated is a free log retrieval operation binding the contract event 0x27f607220ff59c6102bb2da2cfa5debe408ec0a6046f7039b77defb3f137a346.
+// FilterSettingsUpdated is a free log retrieval operation binding the contract event 0x61d24ae6ba3e0c2182628db244b31540bc1b1ffdc9f16fd32ffa52caeb9868b9.
 //
-// Solidity: event SettingsUpdated(uint64 availabilityCheckValidityDurationSeconds, uint24 signingPolicyValidityDurationInRewardEpochs, uint64 challengeValidityDurationSeconds)
+// Solidity: event SettingsUpdated(uint64 availabilityCheckValidityDurationSeconds, uint64 signingPolicyValidityDurationInRewardEpochs, uint64 challengeValidityDurationSeconds)
 func (_TeeVerification *TeeVerificationFilterer) FilterSettingsUpdated(opts *bind.FilterOpts) (*TeeVerificationSettingsUpdatedIterator, error) {
 
 	logs, sub, err := _TeeVerification.contract.FilterLogs(opts, "SettingsUpdated")
@@ -2219,9 +1218,9 @@ func (_TeeVerification *TeeVerificationFilterer) FilterSettingsUpdated(opts *bin
 	return &TeeVerificationSettingsUpdatedIterator{contract: _TeeVerification.contract, event: "SettingsUpdated", logs: logs, sub: sub}, nil
 }
 
-// WatchSettingsUpdated is a free log subscription operation binding the contract event 0x27f607220ff59c6102bb2da2cfa5debe408ec0a6046f7039b77defb3f137a346.
+// WatchSettingsUpdated is a free log subscription operation binding the contract event 0x61d24ae6ba3e0c2182628db244b31540bc1b1ffdc9f16fd32ffa52caeb9868b9.
 //
-// Solidity: event SettingsUpdated(uint64 availabilityCheckValidityDurationSeconds, uint24 signingPolicyValidityDurationInRewardEpochs, uint64 challengeValidityDurationSeconds)
+// Solidity: event SettingsUpdated(uint64 availabilityCheckValidityDurationSeconds, uint64 signingPolicyValidityDurationInRewardEpochs, uint64 challengeValidityDurationSeconds)
 func (_TeeVerification *TeeVerificationFilterer) WatchSettingsUpdated(opts *bind.WatchOpts, sink chan<- *TeeVerificationSettingsUpdated) (event.Subscription, error) {
 
 	logs, sub, err := _TeeVerification.contract.WatchLogs(opts, "SettingsUpdated")
@@ -2256,9 +1255,9 @@ func (_TeeVerification *TeeVerificationFilterer) WatchSettingsUpdated(opts *bind
 	}), nil
 }
 
-// ParseSettingsUpdated is a log parse operation binding the contract event 0x27f607220ff59c6102bb2da2cfa5debe408ec0a6046f7039b77defb3f137a346.
+// ParseSettingsUpdated is a log parse operation binding the contract event 0x61d24ae6ba3e0c2182628db244b31540bc1b1ffdc9f16fd32ffa52caeb9868b9.
 //
-// Solidity: event SettingsUpdated(uint64 availabilityCheckValidityDurationSeconds, uint24 signingPolicyValidityDurationInRewardEpochs, uint64 challengeValidityDurationSeconds)
+// Solidity: event SettingsUpdated(uint64 availabilityCheckValidityDurationSeconds, uint64 signingPolicyValidityDurationInRewardEpochs, uint64 challengeValidityDurationSeconds)
 func (_TeeVerification *TeeVerificationFilterer) ParseSettingsUpdated(log types.Log) (*TeeVerificationSettingsUpdated, error) {
 	event := new(TeeVerificationSettingsUpdated)
 	if err := _TeeVerification.contract.UnpackLog(event, "SettingsUpdated", log); err != nil {
@@ -2413,9 +1412,9 @@ func (_TeeVerification *TeeVerificationFilterer) ParseTeeAttestationRequested(lo
 	return event, nil
 }
 
-// TeeVerificationTimelockedGovernanceCallCanceledIterator is returned from FilterTimelockedGovernanceCallCanceled and is used to iterate over the raw logs and unpacked data for TimelockedGovernanceCallCanceled events raised by the TeeVerification contract.
-type TeeVerificationTimelockedGovernanceCallCanceledIterator struct {
-	Event *TeeVerificationTimelockedGovernanceCallCanceled // Event containing the contract specifics and raw log
+// TeeVerificationTeeInstructionsSentIterator is returned from FilterTeeInstructionsSent and is used to iterate over the raw logs and unpacked data for TeeInstructionsSent events raised by the TeeVerification contract.
+type TeeVerificationTeeInstructionsSentIterator struct {
+	Event *TeeVerificationTeeInstructionsSent // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -2429,7 +1428,7 @@ type TeeVerificationTimelockedGovernanceCallCanceledIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *TeeVerificationTimelockedGovernanceCallCanceledIterator) Next() bool {
+func (it *TeeVerificationTeeInstructionsSentIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -2438,7 +1437,7 @@ func (it *TeeVerificationTimelockedGovernanceCallCanceledIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(TeeVerificationTimelockedGovernanceCallCanceled)
+			it.Event = new(TeeVerificationTeeInstructionsSent)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -2453,7 +1452,7 @@ func (it *TeeVerificationTimelockedGovernanceCallCanceledIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(TeeVerificationTimelockedGovernanceCallCanceled)
+		it.Event = new(TeeVerificationTeeInstructionsSent)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -2469,42 +1468,77 @@ func (it *TeeVerificationTimelockedGovernanceCallCanceledIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *TeeVerificationTimelockedGovernanceCallCanceledIterator) Error() error {
+func (it *TeeVerificationTeeInstructionsSentIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *TeeVerificationTimelockedGovernanceCallCanceledIterator) Close() error {
+func (it *TeeVerificationTeeInstructionsSentIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// TeeVerificationTimelockedGovernanceCallCanceled represents a TimelockedGovernanceCallCanceled event raised by the TeeVerification contract.
-type TeeVerificationTimelockedGovernanceCallCanceled struct {
-	Selector  [4]byte
-	Timestamp *big.Int
-	Raw       types.Log // Blockchain specific contextual infos
+// TeeVerificationTeeInstructionsSent represents a TeeInstructionsSent event raised by the TeeVerification contract.
+type TeeVerificationTeeInstructionsSent struct {
+	ExtensionId        *big.Int
+	InstructionId      [32]byte
+	RewardEpochId      uint32
+	TeeMachines        []IMachineManagerFacetTeeMachine
+	OpType             [32]byte
+	OpCommand          [32]byte
+	Message            []byte
+	Cosigners          []common.Address
+	CosignersThreshold uint64
+	ClaimBackAddress   common.Address
+	Fee                *big.Int
+	Raw                types.Log // Blockchain specific contextual infos
 }
 
-// FilterTimelockedGovernanceCallCanceled is a free log retrieval operation binding the contract event 0x7735b2391c38a81419c513e30ca578db7158eadd7101511b23e221c654d19cf8.
+// FilterTeeInstructionsSent is a free log retrieval operation binding the contract event 0xf770e69a9fc05b7180797556ec4cedb6108ce2c56ffa76c84aa087efeb5e6963.
 //
-// Solidity: event TimelockedGovernanceCallCanceled(bytes4 selector, uint256 timestamp)
-func (_TeeVerification *TeeVerificationFilterer) FilterTimelockedGovernanceCallCanceled(opts *bind.FilterOpts) (*TeeVerificationTimelockedGovernanceCallCanceledIterator, error) {
+// Solidity: event TeeInstructionsSent(uint256 indexed extensionId, bytes32 indexed instructionId, uint32 indexed rewardEpochId, (address,address,string)[] teeMachines, bytes32 opType, bytes32 opCommand, bytes message, address[] cosigners, uint64 cosignersThreshold, address claimBackAddress, uint256 fee)
+func (_TeeVerification *TeeVerificationFilterer) FilterTeeInstructionsSent(opts *bind.FilterOpts, extensionId []*big.Int, instructionId [][32]byte, rewardEpochId []uint32) (*TeeVerificationTeeInstructionsSentIterator, error) {
 
-	logs, sub, err := _TeeVerification.contract.FilterLogs(opts, "TimelockedGovernanceCallCanceled")
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+	var instructionIdRule []interface{}
+	for _, instructionIdItem := range instructionId {
+		instructionIdRule = append(instructionIdRule, instructionIdItem)
+	}
+	var rewardEpochIdRule []interface{}
+	for _, rewardEpochIdItem := range rewardEpochId {
+		rewardEpochIdRule = append(rewardEpochIdRule, rewardEpochIdItem)
+	}
+
+	logs, sub, err := _TeeVerification.contract.FilterLogs(opts, "TeeInstructionsSent", extensionIdRule, instructionIdRule, rewardEpochIdRule)
 	if err != nil {
 		return nil, err
 	}
-	return &TeeVerificationTimelockedGovernanceCallCanceledIterator{contract: _TeeVerification.contract, event: "TimelockedGovernanceCallCanceled", logs: logs, sub: sub}, nil
+	return &TeeVerificationTeeInstructionsSentIterator{contract: _TeeVerification.contract, event: "TeeInstructionsSent", logs: logs, sub: sub}, nil
 }
 
-// WatchTimelockedGovernanceCallCanceled is a free log subscription operation binding the contract event 0x7735b2391c38a81419c513e30ca578db7158eadd7101511b23e221c654d19cf8.
+// WatchTeeInstructionsSent is a free log subscription operation binding the contract event 0xf770e69a9fc05b7180797556ec4cedb6108ce2c56ffa76c84aa087efeb5e6963.
 //
-// Solidity: event TimelockedGovernanceCallCanceled(bytes4 selector, uint256 timestamp)
-func (_TeeVerification *TeeVerificationFilterer) WatchTimelockedGovernanceCallCanceled(opts *bind.WatchOpts, sink chan<- *TeeVerificationTimelockedGovernanceCallCanceled) (event.Subscription, error) {
+// Solidity: event TeeInstructionsSent(uint256 indexed extensionId, bytes32 indexed instructionId, uint32 indexed rewardEpochId, (address,address,string)[] teeMachines, bytes32 opType, bytes32 opCommand, bytes message, address[] cosigners, uint64 cosignersThreshold, address claimBackAddress, uint256 fee)
+func (_TeeVerification *TeeVerificationFilterer) WatchTeeInstructionsSent(opts *bind.WatchOpts, sink chan<- *TeeVerificationTeeInstructionsSent, extensionId []*big.Int, instructionId [][32]byte, rewardEpochId []uint32) (event.Subscription, error) {
 
-	logs, sub, err := _TeeVerification.contract.WatchLogs(opts, "TimelockedGovernanceCallCanceled")
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+	var instructionIdRule []interface{}
+	for _, instructionIdItem := range instructionId {
+		instructionIdRule = append(instructionIdRule, instructionIdItem)
+	}
+	var rewardEpochIdRule []interface{}
+	for _, rewardEpochIdItem := range rewardEpochId {
+		rewardEpochIdRule = append(rewardEpochIdRule, rewardEpochIdItem)
+	}
+
+	logs, sub, err := _TeeVerification.contract.WatchLogs(opts, "TeeInstructionsSent", extensionIdRule, instructionIdRule, rewardEpochIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2514,8 +1548,8 @@ func (_TeeVerification *TeeVerificationFilterer) WatchTimelockedGovernanceCallCa
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(TeeVerificationTimelockedGovernanceCallCanceled)
-				if err := _TeeVerification.contract.UnpackLog(event, "TimelockedGovernanceCallCanceled", log); err != nil {
+				event := new(TeeVerificationTeeInstructionsSent)
+				if err := _TeeVerification.contract.UnpackLog(event, "TeeInstructionsSent", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -2536,291 +1570,12 @@ func (_TeeVerification *TeeVerificationFilterer) WatchTimelockedGovernanceCallCa
 	}), nil
 }
 
-// ParseTimelockedGovernanceCallCanceled is a log parse operation binding the contract event 0x7735b2391c38a81419c513e30ca578db7158eadd7101511b23e221c654d19cf8.
+// ParseTeeInstructionsSent is a log parse operation binding the contract event 0xf770e69a9fc05b7180797556ec4cedb6108ce2c56ffa76c84aa087efeb5e6963.
 //
-// Solidity: event TimelockedGovernanceCallCanceled(bytes4 selector, uint256 timestamp)
-func (_TeeVerification *TeeVerificationFilterer) ParseTimelockedGovernanceCallCanceled(log types.Log) (*TeeVerificationTimelockedGovernanceCallCanceled, error) {
-	event := new(TeeVerificationTimelockedGovernanceCallCanceled)
-	if err := _TeeVerification.contract.UnpackLog(event, "TimelockedGovernanceCallCanceled", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
-// TeeVerificationTimelockedGovernanceCallExecutedIterator is returned from FilterTimelockedGovernanceCallExecuted and is used to iterate over the raw logs and unpacked data for TimelockedGovernanceCallExecuted events raised by the TeeVerification contract.
-type TeeVerificationTimelockedGovernanceCallExecutedIterator struct {
-	Event *TeeVerificationTimelockedGovernanceCallExecuted // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *TeeVerificationTimelockedGovernanceCallExecutedIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(TeeVerificationTimelockedGovernanceCallExecuted)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(TeeVerificationTimelockedGovernanceCallExecuted)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *TeeVerificationTimelockedGovernanceCallExecutedIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *TeeVerificationTimelockedGovernanceCallExecutedIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// TeeVerificationTimelockedGovernanceCallExecuted represents a TimelockedGovernanceCallExecuted event raised by the TeeVerification contract.
-type TeeVerificationTimelockedGovernanceCallExecuted struct {
-	Selector  [4]byte
-	Timestamp *big.Int
-	Raw       types.Log // Blockchain specific contextual infos
-}
-
-// FilterTimelockedGovernanceCallExecuted is a free log retrieval operation binding the contract event 0xa7326b57fc9cfe267aaea5e7f0b01757154d265620a0585819416ee9ddd2c438.
-//
-// Solidity: event TimelockedGovernanceCallExecuted(bytes4 selector, uint256 timestamp)
-func (_TeeVerification *TeeVerificationFilterer) FilterTimelockedGovernanceCallExecuted(opts *bind.FilterOpts) (*TeeVerificationTimelockedGovernanceCallExecutedIterator, error) {
-
-	logs, sub, err := _TeeVerification.contract.FilterLogs(opts, "TimelockedGovernanceCallExecuted")
-	if err != nil {
-		return nil, err
-	}
-	return &TeeVerificationTimelockedGovernanceCallExecutedIterator{contract: _TeeVerification.contract, event: "TimelockedGovernanceCallExecuted", logs: logs, sub: sub}, nil
-}
-
-// WatchTimelockedGovernanceCallExecuted is a free log subscription operation binding the contract event 0xa7326b57fc9cfe267aaea5e7f0b01757154d265620a0585819416ee9ddd2c438.
-//
-// Solidity: event TimelockedGovernanceCallExecuted(bytes4 selector, uint256 timestamp)
-func (_TeeVerification *TeeVerificationFilterer) WatchTimelockedGovernanceCallExecuted(opts *bind.WatchOpts, sink chan<- *TeeVerificationTimelockedGovernanceCallExecuted) (event.Subscription, error) {
-
-	logs, sub, err := _TeeVerification.contract.WatchLogs(opts, "TimelockedGovernanceCallExecuted")
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(TeeVerificationTimelockedGovernanceCallExecuted)
-				if err := _TeeVerification.contract.UnpackLog(event, "TimelockedGovernanceCallExecuted", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseTimelockedGovernanceCallExecuted is a log parse operation binding the contract event 0xa7326b57fc9cfe267aaea5e7f0b01757154d265620a0585819416ee9ddd2c438.
-//
-// Solidity: event TimelockedGovernanceCallExecuted(bytes4 selector, uint256 timestamp)
-func (_TeeVerification *TeeVerificationFilterer) ParseTimelockedGovernanceCallExecuted(log types.Log) (*TeeVerificationTimelockedGovernanceCallExecuted, error) {
-	event := new(TeeVerificationTimelockedGovernanceCallExecuted)
-	if err := _TeeVerification.contract.UnpackLog(event, "TimelockedGovernanceCallExecuted", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
-// TeeVerificationUpgradedIterator is returned from FilterUpgraded and is used to iterate over the raw logs and unpacked data for Upgraded events raised by the TeeVerification contract.
-type TeeVerificationUpgradedIterator struct {
-	Event *TeeVerificationUpgraded // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *TeeVerificationUpgradedIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(TeeVerificationUpgraded)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(TeeVerificationUpgraded)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *TeeVerificationUpgradedIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *TeeVerificationUpgradedIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// TeeVerificationUpgraded represents a Upgraded event raised by the TeeVerification contract.
-type TeeVerificationUpgraded struct {
-	Implementation common.Address
-	Raw            types.Log // Blockchain specific contextual infos
-}
-
-// FilterUpgraded is a free log retrieval operation binding the contract event 0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b.
-//
-// Solidity: event Upgraded(address indexed implementation)
-func (_TeeVerification *TeeVerificationFilterer) FilterUpgraded(opts *bind.FilterOpts, implementation []common.Address) (*TeeVerificationUpgradedIterator, error) {
-
-	var implementationRule []interface{}
-	for _, implementationItem := range implementation {
-		implementationRule = append(implementationRule, implementationItem)
-	}
-
-	logs, sub, err := _TeeVerification.contract.FilterLogs(opts, "Upgraded", implementationRule)
-	if err != nil {
-		return nil, err
-	}
-	return &TeeVerificationUpgradedIterator{contract: _TeeVerification.contract, event: "Upgraded", logs: logs, sub: sub}, nil
-}
-
-// WatchUpgraded is a free log subscription operation binding the contract event 0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b.
-//
-// Solidity: event Upgraded(address indexed implementation)
-func (_TeeVerification *TeeVerificationFilterer) WatchUpgraded(opts *bind.WatchOpts, sink chan<- *TeeVerificationUpgraded, implementation []common.Address) (event.Subscription, error) {
-
-	var implementationRule []interface{}
-	for _, implementationItem := range implementation {
-		implementationRule = append(implementationRule, implementationItem)
-	}
-
-	logs, sub, err := _TeeVerification.contract.WatchLogs(opts, "Upgraded", implementationRule)
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(TeeVerificationUpgraded)
-				if err := _TeeVerification.contract.UnpackLog(event, "Upgraded", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseUpgraded is a log parse operation binding the contract event 0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b.
-//
-// Solidity: event Upgraded(address indexed implementation)
-func (_TeeVerification *TeeVerificationFilterer) ParseUpgraded(log types.Log) (*TeeVerificationUpgraded, error) {
-	event := new(TeeVerificationUpgraded)
-	if err := _TeeVerification.contract.UnpackLog(event, "Upgraded", log); err != nil {
+// Solidity: event TeeInstructionsSent(uint256 indexed extensionId, bytes32 indexed instructionId, uint32 indexed rewardEpochId, (address,address,string)[] teeMachines, bytes32 opType, bytes32 opCommand, bytes message, address[] cosigners, uint64 cosignersThreshold, address claimBackAddress, uint256 fee)
+func (_TeeVerification *TeeVerificationFilterer) ParseTeeInstructionsSent(log types.Log) (*TeeVerificationTeeInstructionsSent, error) {
+	event := new(TeeVerificationTeeInstructionsSent)
+	if err := _TeeVerification.contract.UnpackLog(event, "TeeInstructionsSent", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

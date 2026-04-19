@@ -41,7 +41,7 @@
             "type": "tuple"
           }
         ],
-        "internalType": "struct ITeeMachineRegistry.TeeMachineData",
+        "internalType": "struct IMachineManagerFacet.TeeMachineData",
         "name": "",
         "type": "tuple"
       }
@@ -71,7 +71,7 @@
             "type": "string"
           }
         ],
-        "internalType": "struct ITeeMachineRegistry.TeeMachine",
+        "internalType": "struct IMachineManagerFacet.TeeMachine",
         "name": "",
         "type": "tuple"
       }
@@ -111,7 +111,7 @@
             "type": "bytes32"
           }
         ],
-        "internalType": "struct ITeeMachineRegistry.TeeMachineWithAttestationData",
+        "internalType": "struct IMachineManagerFacet.TeeMachineWithAttestationData",
         "name": "",
         "type": "tuple"
       }

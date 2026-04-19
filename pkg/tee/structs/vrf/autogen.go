@@ -29,8 +29,8 @@ var (
 	_ = abi.ConvertType
 )
 
-// ITeeVrfVrfInstructionMessage is an auto generated low-level Go binding around an user-defined struct.
-type ITeeVrfVrfInstructionMessage struct {
+// IVrfFacetVrfInstructionMessage is an auto generated low-level Go binding around an user-defined struct.
+type IVrfFacetVrfInstructionMessage struct {
 	WalletId [32]byte
 	KeyId    uint64
 	Nonce    []byte
@@ -38,7 +38,7 @@ type ITeeVrfVrfInstructionMessage struct {
 
 // VrfMetaData contains all meta data concerning the Vrf contract.
 var VrfMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"},{\"internalType\":\"bytes\",\"name\":\"nonce\",\"type\":\"bytes\"}],\"internalType\":\"structITeeVrf.VrfInstructionMessage\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"vrfInstructionMessageStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"},{\"internalType\":\"bytes\",\"name\":\"nonce\",\"type\":\"bytes\"}],\"internalType\":\"structIVrfFacet.VrfInstructionMessage\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"vrfInstructionMessageStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // VrfABI is the input ABI used to generate the binding from.
@@ -190,20 +190,20 @@ func (_Vrf *VrfTransactorRaw) Transact(opts *bind.TransactOpts, method string, p
 // VrfInstructionMessageStruct is a paid mutator transaction binding the contract method 0x9a320128.
 //
 // Solidity: function vrfInstructionMessageStruct((bytes32,uint64,bytes) ) returns()
-func (_Vrf *VrfTransactor) VrfInstructionMessageStruct(opts *bind.TransactOpts, arg0 ITeeVrfVrfInstructionMessage) (*types.Transaction, error) {
+func (_Vrf *VrfTransactor) VrfInstructionMessageStruct(opts *bind.TransactOpts, arg0 IVrfFacetVrfInstructionMessage) (*types.Transaction, error) {
 	return _Vrf.contract.Transact(opts, "vrfInstructionMessageStruct", arg0)
 }
 
 // VrfInstructionMessageStruct is a paid mutator transaction binding the contract method 0x9a320128.
 //
 // Solidity: function vrfInstructionMessageStruct((bytes32,uint64,bytes) ) returns()
-func (_Vrf *VrfSession) VrfInstructionMessageStruct(arg0 ITeeVrfVrfInstructionMessage) (*types.Transaction, error) {
+func (_Vrf *VrfSession) VrfInstructionMessageStruct(arg0 IVrfFacetVrfInstructionMessage) (*types.Transaction, error) {
 	return _Vrf.Contract.VrfInstructionMessageStruct(&_Vrf.TransactOpts, arg0)
 }
 
 // VrfInstructionMessageStruct is a paid mutator transaction binding the contract method 0x9a320128.
 //
 // Solidity: function vrfInstructionMessageStruct((bytes32,uint64,bytes) ) returns()
-func (_Vrf *VrfTransactorSession) VrfInstructionMessageStruct(arg0 ITeeVrfVrfInstructionMessage) (*types.Transaction, error) {
+func (_Vrf *VrfTransactorSession) VrfInstructionMessageStruct(arg0 IVrfFacetVrfInstructionMessage) (*types.Transaction, error) {
 	return _Vrf.Contract.VrfInstructionMessageStruct(&_Vrf.TransactOpts, arg0)
 }

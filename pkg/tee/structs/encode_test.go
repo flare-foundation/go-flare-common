@@ -138,7 +138,7 @@ func TestEncodeString(t *testing.T) {
 }
 
 func TestKeyExistenceStruct(t *testing.T) {
-	s := wallet.ITeeWalletKeyManagerKeyExistence{
+	s := wallet.IWalletKeyManagerFacetKeyExistence{
 		TeeId:       common.HexToAddress("dead"),
 		WalletId:    crypto.Keccak256Hash([]byte("dead")),
 		KeyId:       0,
@@ -147,7 +147,7 @@ func TestKeyExistenceStruct(t *testing.T) {
 		PublicKey:   []byte{},
 		Nonce:       big.NewInt(10),
 		Restored:    false,
-		ConfigConstants: wallet.ITeeWalletKeyManagerKeyConfigConstants{
+		ConfigConstants: wallet.IWalletKeyManagerFacetKeyConfigConstants{
 			AdminsPublicKeys:   []wallet.PublicKey{},
 			AdminsThreshold:    1,
 			Cosigners:          []common.Address{},
@@ -160,7 +160,7 @@ func TestKeyExistenceStruct(t *testing.T) {
 	encoded, err := Encode(wallet.KeyExistenceStructArg, s)
 	require.NoError(t, err)
 
-	decoded, err := Decode[wallet.ITeeWalletKeyManagerKeyExistence](wallet.KeyExistenceStructArg, encoded)
+	decoded, err := Decode[wallet.IWalletKeyManagerFacetKeyExistence](wallet.KeyExistenceStructArg, encoded)
 	require.NoError(t, err)
 
 	require.Equal(t, s, decoded)

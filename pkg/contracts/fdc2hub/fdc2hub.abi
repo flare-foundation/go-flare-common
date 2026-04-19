@@ -287,32 +287,6 @@
   },
   {
     "inputs": [],
-    "name": "FDC2_OP_TYPE",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "PROVE",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "UPGRADE_INTERFACE_VERSION",
     "outputs": [
       {
@@ -382,6 +356,19 @@
     "outputs": [
       {
         "internalType": "contract IFlareSystemsManager",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "flareTeeManager",
+    "outputs": [
+      {
+        "internalType": "contract IIFlareTeeManager",
         "name": "",
         "type": "address"
       }
@@ -666,45 +653,6 @@
     "name": "switchToProductionMode",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "teeExtensionRegistry",
-    "outputs": [
-      {
-        "internalType": "contract IITeeExtensionRegistry",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "teeMachineRegistry",
-    "outputs": [
-      {
-        "internalType": "contract ITeeMachineRegistry",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "teeReplication",
-    "outputs": [
-      {
-        "internalType": "contract ITeeReplication",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {

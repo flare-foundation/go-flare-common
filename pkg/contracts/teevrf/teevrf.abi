@@ -1,39 +1,27 @@
 [
   {
     "inputs": [],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "target",
-        "type": "address"
-      }
-    ],
-    "name": "AddressEmptyCode",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "implementation",
-        "type": "address"
-      }
-    ],
-    "name": "ERC1967InvalidImplementation",
+    "name": "CosignersThresholdTooHigh",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "ERC1967NonPayable",
+    "name": "ExtensionIdMismatch",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "FailedCall",
+    "name": "FeeTooLow",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "MessageEmpty",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NoTeeMachinesSpecified",
     "type": "error"
   },
   {
@@ -58,18 +46,22 @@
   },
   {
     "inputs": [],
-    "name": "UUPSUnauthorizedCallContext",
+    "name": "OperationCommandEmpty",
     "type": "error"
   },
   {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "slot",
-        "type": "bytes32"
-      }
-    ],
-    "name": "UUPSUnsupportedProxiableUUID",
+    "inputs": [],
+    "name": "OperationTypeEmpty",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TeeMachineNotAvailable",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TeeNotFound",
     "type": "error"
   },
   {
@@ -81,102 +73,90 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "extensionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "instructionId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint32",
+        "name": "rewardEpochId",
+        "type": "uint32"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "teeId",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "teeProxyId",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "url",
+            "type": "string"
+          }
+        ],
         "indexed": false,
-        "internalType": "bytes4",
-        "name": "selector",
-        "type": "bytes4"
+        "internalType": "struct IMachineManagerFacet.TeeMachine[]",
+        "name": "teeMachines",
+        "type": "tuple[]"
       },
       {
         "indexed": false,
-        "internalType": "uint256",
-        "name": "allowedAfterTimestamp",
-        "type": "uint256"
+        "internalType": "bytes32",
+        "name": "opType",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "opCommand",
+        "type": "bytes32"
       },
       {
         "indexed": false,
         "internalType": "bytes",
-        "name": "encodedCall",
+        "name": "message",
         "type": "bytes"
-      }
-    ],
-    "name": "GovernanceCallTimelocked",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
+      },
+      {
+        "indexed": false,
+        "internalType": "address[]",
+        "name": "cosigners",
+        "type": "address[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "cosignersThreshold",
+        "type": "uint64"
+      },
       {
         "indexed": false,
         "internalType": "address",
-        "name": "initialGovernance",
+        "name": "claimBackAddress",
         "type": "address"
-      }
-    ],
-    "name": "GovernanceInitialised",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "governanceSettings",
-        "type": "address"
-      }
-    ],
-    "name": "GovernedProductionModeEntered",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "bytes4",
-        "name": "selector",
-        "type": "bytes4"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "timestamp",
+        "name": "fee",
         "type": "uint256"
       }
     ],
-    "name": "TimelockedGovernanceCallCanceled",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "bytes4",
-        "name": "selector",
-        "type": "bytes4"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
-      }
-    ],
-    "name": "TimelockedGovernanceCallExecuted",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "implementation",
-        "type": "address"
-      }
-    ],
-    "name": "Upgraded",
+    "name": "TeeInstructionsSent",
     "type": "event"
   },
   {
@@ -224,84 +204,6 @@
     "type": "event"
   },
   {
-    "inputs": [],
-    "name": "UPGRADE_INTERFACE_VERSION",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "VRF",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "WALLET_OP_TYPE",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes4",
-        "name": "_selector",
-        "type": "bytes4"
-      }
-    ],
-    "name": "cancelGovernanceCall",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes4",
-        "name": "_selector",
-        "type": "bytes4"
-      }
-    ],
-    "name": "executeGovernanceCall",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getAddressUpdater",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "_addressUpdater",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "bytes32",
@@ -315,131 +217,6 @@
         "internalType": "address",
         "name": "",
         "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "governance",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "governanceSettings",
-    "outputs": [
-      {
-        "internalType": "contract IGovernanceSettings",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "implementation",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract IGovernanceSettings",
-        "name": "_governanceSettings",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_initialGovernance",
-        "type": "address"
-      }
-    ],
-    "name": "initialise",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract IGovernanceSettings",
-        "name": "_governanceSettings",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_initialGovernance",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_addressUpdater",
-        "type": "address"
-      }
-    ],
-    "name": "initialize",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_address",
-        "type": "address"
-      }
-    ],
-    "name": "isExecutor",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "productionMode",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "proxiableUUID",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
       }
     ],
     "stateMutability": "view",
@@ -495,138 +272,6 @@
     "name": "setVrfAuthorizationAddress",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "switchToProductionMode",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "teeExtensionRegistry",
-    "outputs": [
-      {
-        "internalType": "contract IITeeExtensionRegistry",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "teeMachineRegistry",
-    "outputs": [
-      {
-        "internalType": "contract ITeeMachineRegistry",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "teeWalletKeyManager",
-    "outputs": [
-      {
-        "internalType": "contract ITeeWalletKeyManager",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "teeWalletManager",
-    "outputs": [
-      {
-        "internalType": "contract ITeeWalletManager",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "teeWalletProjectManager",
-    "outputs": [
-      {
-        "internalType": "contract ITeeWalletProjectManager",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes4",
-        "name": "selector",
-        "type": "bytes4"
-      }
-    ],
-    "name": "timelockedCalls",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "allowedAfterTimestamp",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes",
-        "name": "encodedCall",
-        "type": "bytes"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32[]",
-        "name": "_contractNameHashes",
-        "type": "bytes32[]"
-      },
-      {
-        "internalType": "address[]",
-        "name": "_contractAddresses",
-        "type": "address[]"
-      }
-    ],
-    "name": "updateContractAddresses",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_newImplementation",
-        "type": "address"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_data",
-        "type": "bytes"
-      }
-    ],
-    "name": "upgradeToAndCall",
-    "outputs": [],
-    "stateMutability": "payable",
     "type": "function"
   }
 ]

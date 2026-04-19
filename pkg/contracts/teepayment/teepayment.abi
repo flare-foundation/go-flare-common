@@ -516,45 +516,6 @@
   },
   {
     "inputs": [],
-    "name": "PAY",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "REISSUE",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "SET_PAYMENT_LIMITS",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "UPGRADE_INTERFACE_VERSION",
     "outputs": [
       {
@@ -773,6 +734,19 @@
     "outputs": [
       {
         "internalType": "contract IFlareSystemsManager",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "flareTeeManager",
+    "outputs": [
+      {
+        "internalType": "contract IIFlareTeeManager",
         "name": "",
         "type": "address"
       }
@@ -1474,71 +1448,6 @@
     "name": "switchToProductionMode",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "teeExtensionRegistry",
-    "outputs": [
-      {
-        "internalType": "contract IITeeExtensionRegistry",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "teeVerification",
-    "outputs": [
-      {
-        "internalType": "contract ITeeVerification",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "teeWalletKeyManager",
-    "outputs": [
-      {
-        "internalType": "contract ITeeWalletKeyManager",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "teeWalletManager",
-    "outputs": [
-      {
-        "internalType": "contract ITeeWalletManager",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "teeWalletProjectManager",
-    "outputs": [
-      {
-        "internalType": "contract ITeeWalletProjectManager",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {

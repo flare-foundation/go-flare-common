@@ -1,33 +1,11 @@
 [
   {
     "inputs": [],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
-    "inputs": [],
     "name": "AccountAddressZero",
     "type": "error"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "target",
-        "type": "address"
-      }
-    ],
-    "name": "AddressEmptyCode",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "challengeTs",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [],
     "name": "AvailabilityCheckTimestampInvalid",
     "type": "error"
   },
@@ -48,6 +26,11 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "CosignersThresholdTooHigh",
+    "type": "error"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -59,24 +42,23 @@
     "type": "error"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "implementation",
-        "type": "address"
-      }
-    ],
-    "name": "ERC1967InvalidImplementation",
+    "inputs": [],
+    "name": "ExtensionIdMismatch",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "ERC1967NonPayable",
+    "name": "FeeTooLow",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "FailedCall",
+    "name": "GovernedAddressZero",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "GovernedAlreadyInitialized",
     "type": "error"
   },
   {
@@ -107,12 +89,37 @@
   },
   {
     "inputs": [],
+    "name": "InvalidGovernanceHash",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidKeyType",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidNonce",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidPublicKey",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "InvalidRequestBody",
     "type": "error"
   },
   {
     "inputs": [],
     "name": "InvalidResponseData",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidSigningAlgo",
     "type": "error"
   },
   {
@@ -127,7 +134,78 @@
   },
   {
     "inputs": [],
+    "name": "InvalidWalletStatus",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "keyType",
+        "type": "bytes32"
+      }
+    ],
+    "name": "KeyTypeNotSupported",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "LengthsMismatch",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "MessageEmpty",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NoTeeMachinesSpecified",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OnlyExtensionOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OnlyGovernance",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OnlyOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OnlyOwnerOrBackupManager",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "OnlyProductionOrPausedStatus",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OnlyProposedOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OperationCommandEmpty",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OperationTypeEmpty",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OwnerNotAllowed",
     "type": "error"
   },
   {
@@ -137,18 +215,7 @@
   },
   {
     "inputs": [],
-    "name": "UUPSUnauthorizedCallContext",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "slot",
-        "type": "bytes32"
-      }
-    ],
-    "name": "UUPSUnsupportedProxiableUUID",
+    "name": "TeeNotFound",
     "type": "error"
   },
   {
@@ -205,21 +272,21 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "bytes4",
-        "name": "selector",
-        "type": "bytes4"
+        "internalType": "bytes",
+        "name": "encodedCall",
+        "type": "bytes"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "encodedCallHash",
+        "type": "bytes32"
       },
       {
         "indexed": false,
         "internalType": "uint256",
         "name": "allowedAfterTimestamp",
         "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes",
-        "name": "encodedCall",
-        "type": "bytes"
       }
     ],
     "name": "GovernanceCallTimelocked",
@@ -243,28 +310,15 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "address",
-        "name": "governanceSettings",
-        "type": "address"
-      }
-    ],
-    "name": "GovernedProductionModeEntered",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
         "internalType": "uint64",
         "name": "availabilityCheckValidityDurationSeconds",
         "type": "uint64"
       },
       {
         "indexed": false,
-        "internalType": "uint24",
+        "internalType": "uint64",
         "name": "signingPolicyValidityDurationInRewardEpochs",
-        "type": "uint24"
+        "type": "uint64"
       },
       {
         "indexed": false,
@@ -299,117 +353,91 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
-        "internalType": "bytes4",
-        "name": "selector",
-        "type": "bytes4"
-      },
-      {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256",
-        "name": "timestamp",
+        "name": "extensionId",
         "type": "uint256"
-      }
-    ],
-    "name": "TimelockedGovernanceCallCanceled",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "bytes4",
-        "name": "selector",
-        "type": "bytes4"
       },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
-      }
-    ],
-    "name": "TimelockedGovernanceCallExecuted",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
       {
         "indexed": true,
+        "internalType": "bytes32",
+        "name": "instructionId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint32",
+        "name": "rewardEpochId",
+        "type": "uint32"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "teeId",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "teeProxyId",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "url",
+            "type": "string"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct IMachineManagerFacet.TeeMachine[]",
+        "name": "teeMachines",
+        "type": "tuple[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "opType",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "opCommand",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "message",
+        "type": "bytes"
+      },
+      {
+        "indexed": false,
+        "internalType": "address[]",
+        "name": "cosigners",
+        "type": "address[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "cosignersThreshold",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
         "internalType": "address",
-        "name": "implementation",
+        "name": "claimBackAddress",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "fee",
+        "type": "uint256"
       }
     ],
-    "name": "Upgraded",
+    "name": "TeeInstructionsSent",
     "type": "event"
-  },
-  {
-    "inputs": [],
-    "name": "REG_OP_TYPE",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "TEE_ATTESTATION",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "TEE_SOURCE_ID",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "UPGRADE_INTERFACE_VERSION",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes4",
-        "name": "_selector",
-        "type": "bytes4"
-      }
-    ],
-    "name": "cancelGovernanceCall",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
   },
   {
     "inputs": [
@@ -623,71 +651,6 @@
   {
     "inputs": [
       {
-        "internalType": "bytes4",
-        "name": "_selector",
-        "type": "bytes4"
-      }
-    ],
-    "name": "executeGovernanceCall",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "fdc2Hub",
-    "outputs": [
-      {
-        "internalType": "contract IFdc2Hub",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "fdc2Verification",
-    "outputs": [
-      {
-        "internalType": "contract IFdc2Verification",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "flareSystemsManager",
-    "outputs": [
-      {
-        "internalType": "contract IFlareSystemsManager",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getAddressUpdater",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "_addressUpdater",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "address",
         "name": "_teeId",
         "type": "address"
@@ -740,159 +703,6 @@
         "internalType": "uint256",
         "name": "_challengeValidityDurationSeconds",
         "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "governance",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "governanceSettings",
-    "outputs": [
-      {
-        "internalType": "contract IGovernanceSettings",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "implementation",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract IGovernanceSettings",
-        "name": "_governanceSettings",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_initialGovernance",
-        "type": "address"
-      }
-    ],
-    "name": "initialise",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract IGovernanceSettings",
-        "name": "_governanceSettings",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_initialGovernance",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_addressUpdater",
-        "type": "address"
-      },
-      {
-        "internalType": "uint64",
-        "name": "_availabilityCheckValidityDurationSeconds",
-        "type": "uint64"
-      },
-      {
-        "internalType": "uint24",
-        "name": "_signingPolicyValidityDurationInRewardEpochs",
-        "type": "uint24"
-      },
-      {
-        "internalType": "uint64",
-        "name": "_challengeValidityDurationSeconds",
-        "type": "uint64"
-      }
-    ],
-    "name": "initialize",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_address",
-        "type": "address"
-      }
-    ],
-    "name": "isExecutor",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "productionMode",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "proxiableUUID",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "relay",
-    "outputs": [
-      {
-        "internalType": "contract IRelay",
-        "name": "",
-        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -1006,146 +816,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "switchToProductionMode",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "teeExtensionRegistry",
-    "outputs": [
-      {
-        "internalType": "contract IITeeExtensionRegistry",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "teeMachineRegistry",
-    "outputs": [
-      {
-        "internalType": "contract ITeeMachineRegistry",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "teeReplication",
-    "outputs": [
-      {
-        "internalType": "contract ITeeReplication",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "teeSystemStateVerifier",
-    "outputs": [
-      {
-        "internalType": "contract IITeeSystemStateVerifier",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "teeWalletKeyManager",
-    "outputs": [
-      {
-        "internalType": "contract ITeeWalletKeyManager",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "teeWalletManager",
-    "outputs": [
-      {
-        "internalType": "contract ITeeWalletManager",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "teeWalletProjectManager",
-    "outputs": [
-      {
-        "internalType": "contract ITeeWalletProjectManager",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes4",
-        "name": "selector",
-        "type": "bytes4"
-      }
-    ],
-    "name": "timelockedCalls",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "allowedAfterTimestamp",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes",
-        "name": "encodedCall",
-        "type": "bytes"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32[]",
-        "name": "_contractNameHashes",
-        "type": "bytes32[]"
-      },
-      {
-        "internalType": "address[]",
-        "name": "_contractAddresses",
-        "type": "address[]"
-      }
-    ],
-    "name": "updateContractAddresses",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint64",
@@ -1153,9 +823,9 @@
         "type": "uint64"
       },
       {
-        "internalType": "uint24",
+        "internalType": "uint64",
         "name": "_signingPolicyValidityDurationInRewardEpochs",
-        "type": "uint24"
+        "type": "uint64"
       },
       {
         "internalType": "uint64",
@@ -1166,24 +836,6 @@
     "name": "updateSettings",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_newImplementation",
-        "type": "address"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_data",
-        "type": "bytes"
-      }
-    ],
-    "name": "upgradeToAndCall",
-    "outputs": [],
-    "stateMutability": "payable",
     "type": "function"
   },
   {

@@ -44,7 +44,7 @@
             "type": "bytes32"
           }
         ],
-        "internalType": "struct ITeeWalletBackupManager.BackupId",
+        "internalType": "struct IWalletBackupManagerFacet.BackupId",
         "name": "",
         "type": "tuple"
       }
@@ -91,7 +91,7 @@
             "type": "uint64"
           }
         ],
-        "internalType": "struct ITeeWalletKeyManager.KeyConfigConstants",
+        "internalType": "struct IWalletKeyManagerFacet.KeyConfigConstants",
         "name": "",
         "type": "tuple"
       }
@@ -165,7 +165,7 @@
                 "type": "bytes32"
               }
             ],
-            "internalType": "struct ITeeWalletBackupManager.BackupId",
+            "internalType": "struct IWalletBackupManagerFacet.BackupId",
             "name": "backupId",
             "type": "tuple"
           },
@@ -180,7 +180,7 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct ITeeWalletBackupManager.KeyDataProviderRestore",
+        "internalType": "struct IWalletBackupManagerFacet.KeyDataProviderRestore",
         "name": "",
         "type": "tuple"
       }
@@ -215,7 +215,7 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct ITeeWalletKeyManager.KeyDelete",
+        "internalType": "struct IWalletKeyManagerFacet.KeyDelete",
         "name": "",
         "type": "tuple"
       }
@@ -304,7 +304,7 @@
                 "type": "uint64"
               }
             ],
-            "internalType": "struct ITeeWalletKeyManager.KeyConfigConstants",
+            "internalType": "struct IWalletKeyManagerFacet.KeyConfigConstants",
             "name": "configConstants",
             "type": "tuple"
           },
@@ -319,7 +319,7 @@
             "type": "bytes"
           }
         ],
-        "internalType": "struct ITeeWalletKeyManager.KeyExistence",
+        "internalType": "struct IWalletKeyManagerFacet.KeyExistence",
         "name": "",
         "type": "tuple"
       }
@@ -393,12 +393,12 @@
                 "type": "uint64"
               }
             ],
-            "internalType": "struct ITeeWalletKeyManager.KeyConfigConstants",
+            "internalType": "struct IWalletKeyManagerFacet.KeyConfigConstants",
             "name": "configConstants",
             "type": "tuple"
           }
         ],
-        "internalType": "struct ITeeWalletKeyManager.KeyGenerate",
+        "internalType": "struct IWalletKeyManagerFacet.KeyGenerate",
         "name": "",
         "type": "tuple"
       }
@@ -435,12 +435,12 @@
                 "type": "uint256"
               }
             ],
-            "internalType": "struct ITeeWalletManager.ResumeKeyData[]",
+            "internalType": "struct IWalletResumeFacet.ResumeKeyData[]",
             "name": "keysData",
             "type": "tuple[]"
           }
         ],
-        "internalType": "struct ITeeWalletManager.Resume",
+        "internalType": "struct IWalletResumeFacet.Resume",
         "name": "",
         "type": "tuple"
       }
@@ -487,7 +487,7 @@
             "type": "address[]"
           }
         ],
-        "internalType": "struct ITeeWalletManager.SetPausingAddresses",
+        "internalType": "struct IWalletResumeFacet.SetPausingAddresses",
         "name": "",
         "type": "tuple"
       }
