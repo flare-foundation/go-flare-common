@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/flare-foundation/go-flare-common/pkg/logger"
 	"github.com/go-sql-driver/mysql"
 	gormMysql "gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -62,7 +63,7 @@ type SyncParams struct {
 // Logger for logging can be provided. If it is nil, no logging is done.
 func WaitCIndexerToSync(ctx context.Context, db *gorm.DB, params SyncParams, l syncLogger) error {
 	if l == nil {
-		l = &noLogger{}
+		l = logger.Nop{}
 	}
 
 	k := 0
@@ -115,15 +116,6 @@ type syncLogger interface {
 	Debug(...any)
 	Debugf(string, ...any)
 	Warnf(string, ...any)
-}
-
-type noLogger struct{}
-
-func (*noLogger) Debug(...any) {
-}
-func (*noLogger) Debugf(string, ...any) {
-}
-func (*noLogger) Warnf(string, ...any) {
 }
 
 // DoInTransaction executes operations within a single database transaction, rolling back on any error.
