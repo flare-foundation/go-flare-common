@@ -1,9 +1,13 @@
 package signing
 
 import (
+	"crypto/ed25519"
 	"encoding/hex"
+	"maps"
 	"testing"
 
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/hash"
+	xed25519 "github.com/flare-foundation/go-flare-common/pkg/xrpl/signing/ed25519"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/signing/signer"
 	"github.com/stretchr/testify/require"
 )
@@ -46,4 +50,51 @@ func TestJoinMultisig(t *testing.T) {
 	require.NoError(t, err)
 
 	require.Equal(t, expectedBlobByte, blob)
+}
+
+// End-to-end: sign with an Ed25519 key derived from rippled's ed25519TestVectors[0]
+// (src/test/protocol/SecretKey_test.cpp: seed AF41..1C97 -> addr rVAEQBhWT6nZ4woEifdN3TMMdUZaxeXnR)
+// via SignTxMultisig, then confirm ValidateMultiSig accepts the produced signer.
+// Covers: utils.Prepare (multi) -> ed25519.Sign -> ed25519.Validate chain using a
+// rippled-provenance key whose pubkey prefix is 0xED and whose accountID path is
+// RIPEMD160(SHA256(pub)) per rippled src/libxrpl/protocol/AccountID.cpp calcAccountID.
+func TestValidateMultiSigRoundTripED(t *testing.T) {
+	seed16, err := hex.DecodeString("AF41FF66F75EBD3A6B18FB7A1DF61C97")
+	require.NoError(t, err)
+
+	rawPriv := hash.Sha512Half(seed16)
+	priv := ed25519.NewKeyFromSeed(rawPriv)
+
+	tx := map[string]any{
+		"TransactionType": "TrustSet",
+		"Account":         "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
+		"Fee":             "30000",
+		"Flags":           262144,
+		"LimitAmount": map[string]any{
+			"currency": "USD",
+			"issuer":   "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
+			"value":    "100",
+		},
+		"Sequence":      2,
+		"SigningPubKey": "",
+	}
+
+	s, err := xed25519.SignTxMultisig(tx, priv)
+	require.NoError(t, err)
+	require.Equal(t, "rVAEQBhWT6nZ4woEifdN3TMMdUZaxeXnR", s.Account)
+
+	ok, err := ValidateMultiSig(tx, s)
+	require.NoError(t, err)
+	require.True(t, ok)
+
+	tampered := &signer.Signer{
+		Account:       s.Account,
+		TxnSignature:  s.TxnSignature,
+		SigningPubKey: s.SigningPubKey,
+	}
+	txTampered := maps.Clone(tx)
+	txTampered["Sequence"] = 3
+	ok, err = ValidateMultiSig(txTampered, tampered)
+	require.NoError(t, err)
+	require.False(t, ok)
 }

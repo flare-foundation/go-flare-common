@@ -89,3 +89,88 @@ func TestMarshaling(t *testing.T) {
 		require.NoError(t, err, j)
 	}
 }
+
+// Vectors ported from rippled src/test/protocol/SecretKey_test.cpp secp256k1TestVectors.
+// Go does not implement rippled's Generator-class seed derivation, so only the raw
+// 32-byte secret keys are used; pub-key prefix (0x02 even / 0x03 odd) and
+// calcAccountID = RIPEMD160(SHA256(pub)) are checked against rippled's expected values.
+func TestKeyDerivationVectors(t *testing.T) {
+	tests := []struct {
+		secKey string
+		pubKey string
+		addr   string
+	}{
+		{
+			secKey: "1ACAAEDECE405B2A958212629E16F2EB46B153EEE94CDD350FDEFF52795525B7",
+			pubKey: "0330E7FC9D56BB25D6893BA3F317AE5BCF33B3291BD63DB32654A313222F7FD020",
+			addr:   "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
+		},
+		{
+			secKey: "E36928EE1260088D4790B399254779F79BDD48A9ECADC13BF4597B69ADE16F3E",
+			pubKey: "020965CE5C65510CC6D7AA6498FD0CE1D8E9ADCD720012A51D366494B197F6B99E",
+			addr:   "rfZCLUjvKSNmg5xMufb6fgq9VfP5biBDfU",
+		},
+		{
+			secKey: "B4B6AB76337598E2BF430792EF140436E25C43ADA06BED8CA1CC807FEA3BA526",
+			pubKey: "0395E97A55CE552EC0E3C000F60553632A3EEAF94734640BABD1543AD0A69005CD",
+			addr:   "rpyTz8db86bWHi8E43GGexhRsLDwwMRta3",
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.addr, func(t *testing.T) {
+			priv, err := crypto.HexToECDSA(tc.secKey)
+			require.NoError(t, err)
+
+			require.Equal(t, tc.pubKey, PrvToPub(priv))
+			require.Equal(t, tc.addr, PrvToAddress(priv))
+		})
+	}
+}
+
+// Canonicality vector from rippled src/test/protocol/SecretKey_test.cpp testCanonicality.
+// pubKey 02 5096EB12... verifies digest 34C19028... against the fully-canonical DER signature.
+func TestCanonicalityVerify(t *testing.T) {
+	pub := "025096EB12D3E924234E7162369C11D8BF877EDA238778E7A31FF0AAC5D0DBCF37"
+
+	sig, err := hex.DecodeString("3045022100B49D07F0E934BA468C0EFC78117791408D1FB8B63A6492AD395AC2F360F2466002205087" +
+		"39DB0A2EF81676E39F459C8BBB07A09C3E9F9BEB696294D524D479D62740")
+	require.NoError(t, err)
+
+	digest, err := hex.DecodeString("34C19028C80D21F3F48C9354895F8D5BF0D5EE7FF457647CF655F5530A3022A7")
+	require.NoError(t, err)
+
+	sigP, err := MarshalDER(sig)
+	require.NoError(t, err)
+
+	pubBytes, err := hex.DecodeString(pub)
+	require.NoError(t, err)
+
+	require.True(t, sigP.VerifyHex(digest, pubBytes))
+}
+
+// rippled SecretKey.cpp sign(KeyType::secp256k1, ...): the signature is over sha512half(message),
+// produced by secp256k1_ecdsa_sign with RFC6979 deterministic nonce, then DER-serialized.
+// Here we verify Go's deterministic output matches btcec's (which also uses RFC6979).
+func TestDeterministicSigningRFC6979(t *testing.T) {
+	priv, err := crypto.HexToECDSA("1ACAAEDECE405B2A958212629E16F2EB46B153EEE94CDD350FDEFF52795525B7")
+	require.NoError(t, err)
+
+	msg := []byte("http://www.xrpl.org")
+
+	sigGo, err := SignXRPL(msg, priv)
+	require.NoError(t, err)
+
+	sigBtc := SignT(msg, priv)
+	require.Equal(t, sigBtc, sigGo)
+
+	for range 5 {
+		sigAgain, err := SignXRPL(msg, priv)
+		require.NoError(t, err)
+		require.Equal(t, sigGo, sigAgain)
+	}
+
+	ok, err := Validate(msg, sigGo, PrvToPub(priv))
+	require.NoError(t, err)
+	require.True(t, ok)
+}
