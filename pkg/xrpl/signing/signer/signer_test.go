@@ -1,8 +1,10 @@
 package signer
 
 import (
+	"bytes"
 	"testing"
 
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/address"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/types"
 	"github.com/stretchr/testify/require"
 )
@@ -165,5 +167,44 @@ func TestParseFail(t *testing.T) {
 	for _, test := range tests {
 		_, err := Parse(test)
 		require.Error(t, err)
+	}
+}
+
+// rippled src/libxrpl/tx/Transactor.cpp checkMultiSign:
+// "Both the multiSigners and accountSigners are sorted by account."
+// Rippled compares AccountIDs as 160-bit big-endian integers. This test checks
+// that Sort produces an ordering consistent with big.Int over the raw 20-byte
+// accountID and verifies that ordering against a known rippled-derived set
+// (addresses are from rippled src/test/protocol/SecretKey_test.cpp secp256k1TestVectors).
+func TestSortMatchesAccountIDOrder(t *testing.T) {
+	addrs := []string{
+		"rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
+		"rfZCLUjvKSNmg5xMufb6fgq9VfP5biBDfU",
+		"rpyTz8db86bWHi8E43GGexhRsLDwwMRta3",
+		"rfwGiMcsffk9TcwQu1KMYYvkPq4cdHdMik",
+		"rNYp97qFzBZ5SLfXRtRMwFNxHrGR9cQyGL",
+	}
+
+	signers := make([]*Signer, len(addrs))
+	for i, a := range addrs {
+		signers[i] = &Signer{
+			Account:       a,
+			TxnSignature:  "DEAD",
+			SigningPubKey: "02BEEF",
+		}
+	}
+
+	in, out := Sort(signers)
+	require.Len(t, out, 0)
+	require.Len(t, in, len(addrs))
+
+	for i := 1; i < len(in); i++ {
+		prev, err := address.ID(in[i-1].Account)
+		require.NoError(t, err)
+		curr, err := address.ID(in[i].Account)
+		require.NoError(t, err)
+		require.Lessf(t, bytes.Compare(prev, curr), 0,
+			"sort should produce ascending accountID order: %s vs %s",
+			in[i-1].Account, in[i].Account)
 	}
 }
