@@ -62,6 +62,11 @@ func SignTxMultisig(tx map[string]any, prv ed25519.PrivateKey) (*signer.Signer, 
 // PrivKeyFromSecret converts a xrpl secret string to an Ed25519 private key.
 // The secret should be a base58-encoded XRPL secret starting with 'sEd'.
 func PrivKeyFromSecret(secret string) (ed25519.PrivateKey, error) {
+	// xrpl.js Ed25519 seed is 23 decoded bytes → at most ~32 chars encoded; cap at 40 with slack.
+	const encodedSecretCap = 40
+	if len(secret) > encodedSecretCap {
+		return nil, fmt.Errorf("secret too long, got %d chars", len(secret))
+	}
 	secretBytes, err := base58.XRPLCoder.Decode(secret)
 	if err != nil {
 		return nil, fmt.Errorf("decoding secret: %w", err)

@@ -27,6 +27,11 @@ func (s *Signer) Value() (*big.Int, error) {
 		return s.value, nil
 	}
 
+	// rippled tokens.cpp caps decoded tokens at 64 bytes; an XRPL address is 25 bytes → ~35 chars encoded.
+	const encodedAddrCap = 40
+	if len(s.Account) > encodedAddrCap {
+		return nil, fmt.Errorf("account too long, got %d chars", len(s.Account))
+	}
 	value, err := base58.XRPLCoder.Decode(s.Account)
 	if err != nil {
 		return nil, fmt.Errorf("decoding account %s: %w", s.Account, err)
