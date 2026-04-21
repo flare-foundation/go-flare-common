@@ -11,7 +11,7 @@ import (
 
 type testStructHappy struct {
 	A     int            `toml:"a"`
-	B     uint           `tom:"b"`
+	B     uint           `toml:"b"`
 	C     uint8          `toml:"c"`
 	Addr1 common.Address `toml:"addr1"`
 	BN    *big.Int       `toml:"bn"`
