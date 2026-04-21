@@ -3,105 +3,116 @@
 package defs
 
 const (
-	Hash256      XType = 5
-	UInt16       XType = 1
-	UInt32       XType = 2
-	Vector256    XType = 19
-	XChainBridge XType = 25
 	Hash192      XType = 21
-	NotPresent   XType = 0
+	Hash256      XType = 5
+	LedgerEntry  XType = 10002
 	Unknown      XType = -2
 	Validation   XType = 10003
-	Amount       XType = 6
+	Vector256    XType = 19
+	AccountID    XType = 8
+	UInt96       XType = 20
+	Int32        XType = 10
 	Issue        XType = 24
 	Transaction  XType = 10001
-	Blob         XType = 7
+	Int64        XType = 11
+	NotPresent   XType = 0
+	XChainBridge XType = 25
 	Currency     XType = 26
+	Metadata     XType = 10004
+	UInt16       XType = 1
+	UInt64       XType = 3
+	UInt8        XType = 16
+	Amount       XType = 6
+	Blob         XType = 7
+	STArray      XType = 15
+	UInt32       XType = 2
+	UInt384      XType = 22
 	Done         XType = -1
+	Hash128      XType = 4
 	Hash160      XType = 17
 	Number       XType = 9
-	UInt8        XType = 16
-	AccountID    XType = 8
-	LedgerEntry  XType = 10002
-	STObject     XType = 14
-	UInt64       XType = 3
-	Hash128      XType = 4
-	PathSet      XType = 18
-	STArray      XType = 15
-	UInt384      XType = 22
 	UInt512      XType = 23
-	Metadata     XType = 10004
-	UInt96       XType = 20
+	PathSet      XType = 18
+	STObject     XType = 14
 )
 
 var TxTypeToValue = map[string]int32{
-	"NFTokenBurn":                       26,
-	"OfferCancel":                       8,
-	"PermissionedDomainDelete":          63,
-	"XChainCommit":                      42,
-	"CheckCash":                         17,
-	"OracleDelete":                      52,
-	"XChainCreateClaimID":               41,
-	"XChainModifyBridge":                47,
-	"AMMVote":                           38,
-	"AMMCreate":                         35,
-	"Batch":                             71,
-	"LedgerStateFix":                    53,
-	"NFTokenCreateOffer":                27,
-	"SetFee":                            101,
-	"VaultDeposit":                      68,
-	"XChainAccountCreateCommit":         44,
-	"XChainAddAccountCreateAttestation": 46,
-	"CheckCancel":                       18,
-	"MPTokenIssuanceCreate":             54,
-	"MPTokenIssuanceSet":                56,
-	"VaultWithdraw":                     69,
-	"AMMDeposit":                        36,
-	"MPTokenAuthorize":                  57,
-	"PaymentChannelClaim":               15,
-	"PermissionedDomainSet":             62,
-	"SetRegularKey":                     5,
-	"UNLModify":                         102,
-	"VaultCreate":                       65,
-	"NFTokenModify":                     61,
-	"Payment":                           0,
-	"PaymentChannelFund":                14,
-	"AMMClawback":                       31,
-	"CredentialDelete":                  60,
-	"DIDSet":                            49,
-	"MPTokenIssuanceDestroy":            55,
-	"VaultClawback":                     70,
+	"VaultDelete":                       67,
 	"XChainAddClaimAttestation":         45,
-	"CredentialCreate":                  58,
-	"SignerListSet":                     12,
-	"AMMBid":                            39,
-	"EscrowFinish":                      2,
+	"CheckCreate":                       16,
+	"EscrowCancel":                      4,
+	"OracleSet":                         51,
 	"TrustSet":                          20,
-	"AMMWithdraw":                       37,
-	"AccountSet":                        3,
+	"CredentialCreate":                  58,
+	"NFTokenAcceptOffer":                29,
+	"OfferCreate":                       7,
+	"Payment":                           0,
+	"TicketCreate":                      10,
+	"XChainCreateClaimID":               41,
+	"VaultSet":                          66,
+	"LoanBrokerCoverWithdraw":           77,
+	"LoanBrokerDelete":                  75,
+	"LoanManage":                        82,
+	"NFTokenBurn":                       26,
+	"NFTokenModify":                     61,
+	"VaultCreate":                       65,
+	"AccountDelete":                     21,
+	"CheckCash":                         17,
 	"Clawback":                          30,
-	"EscrowCreate":                      1,
-	"NFTokenMint":                       25,
+	"EscrowFinish":                      2,
+	"MPTokenIssuanceSet":                56,
+	"SetFee":                            101,
 	"XChainCreateBridge":                48,
+	"PermissionedDomainSet":             62,
+	"AMMDeposit":                        36,
+	"DIDSet":                            49,
+	"EnableAmendment":                   100,
+	"Invalid":                           -1,
+	"XChainAccountCreateCommit":         44,
+	"AMMDelete":                         40,
 	"DIDDelete":                         50,
 	"DepositPreauth":                    19,
-	"Invalid":                           -1,
-	"OfferCreate":                       7,
-	"PaymentChannelCreate":              13,
-	"AccountDelete":                     21,
-	"CheckCreate":                       16,
-	"EnableAmendment":                   100,
+	"LedgerStateFix":                    53,
+	"LoanBrokerSet":                     74,
 	"NFTokenCancelOffer":                28,
-	"TicketCreate":                      10,
-	"OracleSet":                         51,
-	"VaultDelete":                       67,
-	"XChainClaim":                       43,
-	"CredentialAccept":                  59,
+	"PaymentChannelClaim":               15,
+	"AMMVote":                           38,
 	"DelegateSet":                       64,
-	"NFTokenAcceptOffer":                29,
-	"VaultSet":                          66,
-	"AMMDelete":                         40,
-	"EscrowCancel":                      4,
+	"MPTokenIssuanceCreate":             54,
+	"NFTokenMint":                       25,
+	"XChainAddAccountCreateAttestation": 46,
+	"AMMWithdraw":                       37,
+	"LoanBrokerCoverDeposit":            76,
+	"MPTokenIssuanceDestroy":            55,
+	"PaymentChannelFund":                14,
+	"PermissionedDomainDelete":          63,
+	"XChainCommit":                      42,
+	"XChainModifyBridge":                47,
+	"CheckCancel":                       18,
+	"CredentialAccept":                  59,
+	"OfferCancel":                       8,
+	"UNLModify":                         102,
+	"VaultDeposit":                      68,
+	"Batch":                             71,
+	"LoanBrokerCoverClawback":           78,
+	"PaymentChannelCreate":              13,
+	"SetRegularKey":                     5,
+	"SignerListSet":                     12,
+	"AMMCreate":                         35,
+	"LoanDelete":                        81,
+	"MPTokenAuthorize":                  57,
+	"NFTokenCreateOffer":                27,
+	"OracleDelete":                      52,
+	"CredentialDelete":                  60,
+	"LoanPay":                           84,
+	"LoanSet":                           80,
+	"VaultClawback":                     70,
+	"VaultWithdraw":                     69,
+	"XChainClaim":                       43,
+	"AMMBid":                            39,
+	"AMMClawback":                       31,
+	"AccountSet":                        3,
+	"EscrowCreate":                      1,
 }
 
 var NameToField = map[string]Field{
@@ -229,6 +240,13 @@ var NameToField = map[string]Field{
 		IsSigningField: true,
 		IsVLEncoded:    false,
 		Nth:            21,
+		Type:           UInt16,
+	},
+	"ManagementFeeRate": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            22,
 		Type:           UInt16,
 	},
 	"NetworkID": {
@@ -581,6 +599,118 @@ var NameToField = map[string]Field{
 		Nth:            52,
 		Type:           UInt32,
 	},
+	"MutableFlags": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            53,
+		Type:           UInt32,
+	},
+	"StartDate": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            54,
+		Type:           UInt32,
+	},
+	"PaymentInterval": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            55,
+		Type:           UInt32,
+	},
+	"GracePeriod": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            56,
+		Type:           UInt32,
+	},
+	"PreviousPaymentDueDate": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            57,
+		Type:           UInt32,
+	},
+	"NextPaymentDueDate": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            58,
+		Type:           UInt32,
+	},
+	"PaymentRemaining": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            59,
+		Type:           UInt32,
+	},
+	"PaymentTotal": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            60,
+		Type:           UInt32,
+	},
+	"LoanSequence": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            61,
+		Type:           UInt32,
+	},
+	"CoverRateMinimum": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            62,
+		Type:           UInt32,
+	},
+	"CoverRateLiquidation": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            63,
+		Type:           UInt32,
+	},
+	"OverpaymentFee": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            64,
+		Type:           UInt32,
+	},
+	"InterestRate": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            65,
+		Type:           UInt32,
+	},
+	"LateInterestRate": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            66,
+		Type:           UInt32,
+	},
+	"CloseInterestRate": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            67,
+		Type:           UInt32,
+	},
+	"OverpaymentInterestRate": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            68,
+		Type:           UInt32,
+	},
 	"IndexNext": {
 		IsSerialized:   true,
 		IsSigningField: true,
@@ -768,6 +898,20 @@ var NameToField = map[string]Field{
 		IsSigningField: true,
 		IsVLEncoded:    false,
 		Nth:            29,
+		Type:           UInt64,
+	},
+	"VaultNode": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            30,
+		Type:           UInt64,
+	},
+	"LoanBrokerNode": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            31,
 		Type:           UInt64,
 	},
 	"EmailHash": {
@@ -1013,6 +1157,20 @@ var NameToField = map[string]Field{
 		IsSigningField: true,
 		IsVLEncoded:    false,
 		Nth:            36,
+		Type:           Hash256,
+	},
+	"LoanBrokerID": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            37,
+		Type:           Hash256,
+	},
+	"LoanID": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            38,
 		Type:           Hash256,
 	},
 	"hash": {
@@ -1561,6 +1719,20 @@ var NameToField = map[string]Field{
 		Nth:            24,
 		Type:           AccountID,
 	},
+	"Borrower": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    true,
+		Nth:            25,
+		Type:           AccountID,
+	},
+	"Counterparty": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    true,
+		Nth:            26,
+		Type:           AccountID,
+	},
 	"Number": {
 		IsSerialized:   true,
 		IsSigningField: true,
@@ -1595,6 +1767,97 @@ var NameToField = map[string]Field{
 		IsVLEncoded:    false,
 		Nth:            5,
 		Type:           Number,
+	},
+	"DebtTotal": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            6,
+		Type:           Number,
+	},
+	"DebtMaximum": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            7,
+		Type:           Number,
+	},
+	"CoverAvailable": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            8,
+		Type:           Number,
+	},
+	"LoanOriginationFee": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            9,
+		Type:           Number,
+	},
+	"LoanServiceFee": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            10,
+		Type:           Number,
+	},
+	"LatePaymentFee": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            11,
+		Type:           Number,
+	},
+	"ClosePaymentFee": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            12,
+		Type:           Number,
+	},
+	"PrincipalOutstanding": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            13,
+		Type:           Number,
+	},
+	"PrincipalRequested": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            14,
+		Type:           Number,
+	},
+	"TotalValueOutstanding": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            15,
+		Type:           Number,
+	},
+	"PeriodicPayment": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            16,
+		Type:           Number,
+	},
+	"ManagementFeeOutstanding": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            17,
+		Type:           Number,
+	},
+	"LoanScale": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            1,
+		Type:           Int32,
 	},
 	"TransactionMetaData": {
 		IsSerialized:   true,
@@ -1832,6 +2095,13 @@ var NameToField = map[string]Field{
 		IsSigningField: true,
 		IsVLEncoded:    false,
 		Nth:            36,
+		Type:           STObject,
+	},
+	"CounterpartySignature": {
+		IsSerialized:   true,
+		IsSigningField: false,
+		IsVLEncoded:    false,
+		Nth:            37,
 		Type:           STObject,
 	},
 	"Signers": {
