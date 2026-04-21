@@ -1,6 +1,7 @@
 package storage_test
 
 import (
+	"sync"
 	"testing"
 
 	"github.com/flare-foundation/go-flare-common/pkg/storage"
@@ -139,6 +140,47 @@ func TestCyclicNegative(t *testing.T) {
 		require.True(t, ok)
 		require.Equal(t, in, out)
 	}
+}
+
+// TestCyclicConcurrent exercises parallel Store/Get to catch races and
+// verify that any successful Get observes the value paired with the queried key.
+func TestCyclicConcurrent(t *testing.T) {
+	const (
+		ringSize   = 16
+		keySpace   = 1024
+		goroutines = 32
+		opsEach    = 2000
+	)
+
+	stg := storage.New[int, int](ringSize)
+	require.NotNil(t, stg)
+
+	value := func(k int) int { return k*31 + 7 }
+
+	var wg sync.WaitGroup
+	wg.Add(2 * goroutines)
+
+	for i := range goroutines {
+		seed := i
+		go func() {
+			defer wg.Done()
+			for j := range opsEach {
+				k := (seed*opsEach + j) % keySpace
+				stg.Store(k, value(k))
+			}
+		}()
+		go func() {
+			defer wg.Done()
+			for j := range opsEach {
+				k := (seed*opsEach + j) % keySpace
+				if v, ok := stg.Get(k); ok {
+					require.Equal(t, value(k), v)
+				}
+			}
+		}()
+	}
+
+	wg.Wait()
 }
 
 func TestNew(t *testing.T) {

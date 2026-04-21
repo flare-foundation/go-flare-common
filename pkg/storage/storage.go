@@ -19,20 +19,17 @@ type Cyclic[K constraints.Integer, T any] struct {
 }
 
 // Size is the size of cyclic storage.
-func (s Cyclic[K, T]) Size() K {
-	s.mu.RLock()
-	defer s.mu.RUnlock()
-
+func (s *Cyclic[K, T]) Size() K {
 	return K(len(s.values))
 }
 
 // Store stores value with key to key (mod size).
-func (s Cyclic[K, T]) Store(key K, value T) {
-	keyMod := key % s.Size()
+func (s *Cyclic[K, T]) Store(key K, value T) {
+	keyMod := key % K(len(s.values))
 
 	// make sure 0 <= keyMod < Size
 	if keyMod < 0 {
-		keyMod += s.Size()
+		keyMod += K(len(s.values))
 	}
 
 	storedItem := &cyclicItem[K, T]{key: key, value: value}
@@ -43,13 +40,13 @@ func (s Cyclic[K, T]) Store(key K, value T) {
 }
 
 // Get retrieves element from key (mod size) if the stored element has the matching key.
-func (s Cyclic[K, T]) Get(key K) (T, bool) {
+func (s *Cyclic[K, T]) Get(key K) (T, bool) {
 	var v T
-	keyMod := key % s.Size()
+	keyMod := key % K(len(s.values))
 
 	// make sure 0 <= keyMod < Size
 	if keyMod < 0 {
-		keyMod += s.Size()
+		keyMod += K(len(s.values))
 	}
 
 	s.mu.RLock()
@@ -60,15 +57,11 @@ func (s Cyclic[K, T]) Get(key K) (T, bool) {
 		return v, false
 	}
 
-	storedKey := storedItem.key
-
-	if storedKey != key {
+	if storedItem.key != key {
 		return v, false
 	}
 
-	v = storedItem.value
-
-	return v, true
+	return storedItem.value, true
 }
 
 // Deprecated: NewCyclic initializes a Cyclic storage with size.
