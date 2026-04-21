@@ -112,3 +112,80 @@ func TestCurrency(t *testing.T) {
 		require.Error(t, err)
 	})
 }
+
+// TestCurrencyStandardLayout pins the ISO-4217 layout:
+//
+//	12 zero bytes | 3 ASCII bytes | 5 zero bytes.
+//
+// source: rippled src/libxrpl/protocol/UintTypes.cpp (to_currency ISO code layout)
+// source: xrpl.js ripple-binary-codec/src/types/currency.ts isIsoCode zeros
+func TestCurrencyStandardLayout(t *testing.T) {
+	cases := []string{"USD", "EUR", "CNY", "BTC"}
+	for _, code := range cases {
+		t.Run(code, func(t *testing.T) {
+			got, err := serializeCurrency(code, disallowedCodes)
+			require.NoError(t, err)
+			require.Len(t, got, 20)
+			for i := range 12 {
+				require.Equal(t, byte(0), got[i], "leading byte %d must be zero", i)
+			}
+			require.Equal(t, []byte(code), got[12:15])
+			for i := 15; i < 20; i++ {
+				require.Equal(t, byte(0), got[i], "trailing byte %d must be zero", i)
+			}
+		})
+	}
+}
+
+// TestCurrencyDisallowedCodes asserts that the two reserved hex codes and the
+// literal "XRP" ISO alphabetic code are refused.
+//
+// source: rippled src/libxrpl/protocol/UintTypes.cpp badCurrency / noCurrency
+// source: xrpl.js ripple-binary-codec/src/types/currency.ts XRP / badCurrency checks
+func TestCurrencyDisallowedCodes(t *testing.T) {
+	forbidden := []string{
+		"XRP",
+		"0000000000000000000000005852500000000000", // reserved
+		"0000000000000000000000000000000000000000", // noCurrency
+		"0x0000000000000000000000005852500000000000",
+	}
+	for _, c := range forbidden {
+		_, err := serializeCurrency(c, disallowedCodes)
+		require.Error(t, err, c)
+	}
+}
+
+// TestCurrencyNonstandardHex asserts a 40-char nonstandard hex code is
+// preserved on the wire and also accepts the 0x prefix form.
+//
+// source: xrpl.js ripple-binary-codec/src/types/currency.ts 40-char hex handling
+func TestCurrencyNonstandardHex(t *testing.T) {
+	cases := []struct {
+		in       string
+		wantHex  string
+		wantJSON string
+	}{
+		{
+			in:       "436152526F747300000000000000000000000000",
+			wantHex:  "436152526F747300000000000000000000000000",
+			wantJSON: "436152526F747300000000000000000000000000",
+		},
+		{
+			in:       "0x584A4F5900000000000000000000000000000000",
+			wantHex:  "584A4F5900000000000000000000000000000000",
+			wantJSON: "584A4F5900000000000000000000000000000000",
+		},
+	}
+	for _, c := range cases {
+		encoded, err := serializeCurrency(c.in, disallowedCodes)
+		require.NoError(t, err)
+
+		want, err := hex.DecodeString(c.wantHex)
+		require.NoError(t, err)
+		require.Equal(t, want, encoded)
+
+		got, err := deserializeCurrency(encoded)
+		require.NoError(t, err)
+		require.Equal(t, c.wantJSON, got)
+	}
+}
