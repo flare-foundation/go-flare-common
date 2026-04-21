@@ -96,15 +96,7 @@ func (*XChainBridge) ToBytes(value any, _ bool) ([]byte, error) {
 func (*XChainBridge) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	out := make(map[string]any)
 
-	l, err := b.ReadByte()
-	if err != nil {
-		return nil, fmt.Errorf("reading length byte: %w", err)
-	}
-	if l != 20 {
-		return nil, fmt.Errorf("invalid length byte expected %x is %x", 20, l)
-	}
-
-	lockingChainDoor, err := AccountID.ToJSON(b, 0)
+	lockingChainDoor, err := readLengthPrefixedAccount(b)
 	if err != nil {
 		return nil, fmt.Errorf("reading LockingChainDoor: %w", err)
 	}
@@ -116,7 +108,7 @@ func (*XChainBridge) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	}
 	out["LockingChainIssue"] = lockingChainIssue
 
-	issuingChainDoor, err := AccountID.ToJSON(b, 0)
+	issuingChainDoor, err := readLengthPrefixedAccount(b)
 	if err != nil {
 		return nil, fmt.Errorf("reading IssuingChainDoor: %w", err)
 	}
@@ -129,4 +121,16 @@ func (*XChainBridge) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	out["IssuingChainIssue"] = issuingChainIssue
 
 	return out, nil
+}
+
+func readLengthPrefixedAccount(b *bytes.Buffer) (any, error) {
+	l, err := b.ReadByte()
+	if err != nil {
+		return nil, fmt.Errorf("reading length byte: %w", err)
+	}
+	if l != 20 {
+		return nil, fmt.Errorf("invalid length byte expected %x is %x", 20, l)
+	}
+
+	return AccountID.ToJSON(b, 0)
 }
