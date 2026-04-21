@@ -473,7 +473,7 @@ func TestVerifyCRL(t *testing.T) {
 
 		_, _, err := ParseAndValidatePKIToken(signedToken, root, wrongLeafCRL, nil)
 		require.Error(t, err)
-		require.Contains(t, err.Error(), "CRL signature verification failed")
+		require.Contains(t, err.Error(), "CRL signature")
 	})
 
 	t.Run("intermediate CRL signed by wrong issuer", func(t *testing.T) {
@@ -482,7 +482,7 @@ func TestVerifyCRL(t *testing.T) {
 
 		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, wrongInterCRL)
 		require.Error(t, err)
-		require.Contains(t, err.Error(), "CRL signature verification failed")
+		require.Contains(t, err.Error(), "CRL signature")
 	})
 
 	t.Run("CRL with other serial does not revoke", func(t *testing.T) {

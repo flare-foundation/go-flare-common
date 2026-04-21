@@ -73,7 +73,7 @@ func WaitCIndexerToSync(ctx context.Context, db *gorm.DB, params SyncParams, l s
 		}
 		state, err := FetchState(ctx, db, nil)
 		if err != nil {
-			return fmt.Errorf("database error: %w", err)
+			return fmt.Errorf("fetching state: %w", err)
 		}
 
 		dbTime := time.Unix(int64(state.BlockTimestamp), 0)
@@ -99,7 +99,7 @@ func WaitCIndexerToSync(ctx context.Context, db *gorm.DB, params SyncParams, l s
 	l.Warnf("Checking database for the final time")
 	state, err := FetchState(ctx, db, nil)
 	if err != nil {
-		return fmt.Errorf("database error: %w", err)
+		return fmt.Errorf("fetching state: %w", err)
 	}
 
 	dbTime := time.Unix(int64(state.BlockTimestamp), 0)
@@ -140,7 +140,7 @@ func DoInTransaction(db *gorm.DB, operations ...func(db *gorm.DB) error) error {
 func CheckDelay(ctx context.Context, db *gorm.DB, tolerance time.Duration) error {
 	state, err := FetchState(ctx, db, nil)
 	if err != nil {
-		return fmt.Errorf("database error: %w", err)
+		return fmt.Errorf("fetching state: %w", err)
 	}
 
 	dbTime := time.Unix(int64(state.BlockTimestamp), 0)

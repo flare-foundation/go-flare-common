@@ -34,7 +34,7 @@ func (*accountID) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 
 	n, err := b.Read(value)
 	if err != nil {
-		return nil, fmt.Errorf("cannot read account id from buffer: %w", err)
+		return nil, fmt.Errorf("reading account id from buffer: %w", err)
 	}
 	if n != l {
 		return nil, outOfBytes("account id", l, n)
