@@ -4,6 +4,7 @@ package transactions
 import (
 	"encoding/hex"
 
+	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/types"
 )
 
@@ -28,15 +29,15 @@ type CommonFields struct {
 	Memos           []Memo
 }
 
-// Memo represents an XRPL transaction memo. MemoData, MemoFormat and MemoType hold hex-encoded bytes.
+// Memo represents an XRPL transaction memo. The XRPL binary codec and JSON wire format carry each field as a hex string; in Go we keep them as bytes.
 type Memo struct {
-	MemoData   string
-	MemoFormat string
-	MemoType   string
+	MemoData   hexutil.Bytes
+	MemoFormat hexutil.Bytes
+	MemoType   hexutil.Bytes
 }
 
 // ValidateMemo reports whether every byte in b is a URL character allowed in MemoType / MemoFormat per RFC 3986.
-// Mirrors rippled isMemoOkay (src/libxrpl/protocol/STTx.cpp:655-679): the check runs on the hex-decoded bytes.
+// Mirrors rippled isMemoOkay (src/libxrpl/protocol/STTx.cpp:655-679).
 func ValidateMemo(b []byte) bool {
 	for _, c := range b {
 		if !memoAllowedBytes[c] {
@@ -46,36 +47,23 @@ func ValidateMemo(b []byte) bool {
 	return true
 }
 
-// Validate reports whether the memo fields are well-formed per rippled isMemoOkay:
-// every field must be valid hex, and the hex-decoded MemoType / MemoFormat must contain only RFC 3986 URL characters.
-// MemoData is only required to be valid hex.
+// Validate reports whether MemoType and MemoFormat contain only RFC 3986 URL characters. MemoData is unconstrained.
 func (m *Memo) Validate() bool {
-	if _, err := hex.DecodeString(m.MemoData); err != nil {
-		return false
-	}
-	typeBytes, err := hex.DecodeString(m.MemoType)
-	if err != nil {
-		return false
-	}
-	formatBytes, err := hex.DecodeString(m.MemoFormat)
-	if err != nil {
-		return false
-	}
-	return ValidateMemo(typeBytes) && ValidateMemo(formatBytes)
+	return ValidateMemo(m.MemoType) && ValidateMemo(m.MemoFormat)
 }
 
-// Format returns the memo as a serializable array object.
+// Format returns the memo as a serializable array object with fields hex-encoded as XRPL JSON expects.
 func (m *Memo) Format() types.ArrayObject {
 	inner := make(types.Object)
 
 	if len(m.MemoData) > 0 {
-		inner["MemoData"] = m.MemoData
+		inner["MemoData"] = hex.EncodeToString(m.MemoData)
 	}
 	if len(m.MemoFormat) > 0 {
-		inner["MemoFormat"] = m.MemoFormat
+		inner["MemoFormat"] = hex.EncodeToString(m.MemoFormat)
 	}
 	if len(m.MemoType) > 0 {
-		inner["MemoType"] = m.MemoType
+		inner["MemoType"] = hex.EncodeToString(m.MemoType)
 	}
 
 	return types.ArrayObject{
