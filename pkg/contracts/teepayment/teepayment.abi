@@ -51,11 +51,6 @@
     "type": "error"
   },
   {
-    "inputs": [],
-    "name": "DailyLimitBelowTransactionLimit",
-    "type": "error"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -74,28 +69,6 @@
   {
     "inputs": [],
     "name": "FailedCall",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-      }
-    ],
-    "name": "InvalidFeeDelay",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-      }
-    ],
-    "name": "InvalidFeeFactor",
     "type": "error"
   },
   {
@@ -169,33 +142,6 @@
     "type": "error"
   },
   {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "sourceId",
-        "type": "bytes32"
-      }
-    ],
-    "name": "SourceIdAlreadyExists",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-      }
-    ],
-    "name": "SourceIdZero",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "SupportedSourceIdsLengthZero",
-    "type": "error"
-  },
-  {
     "inputs": [],
     "name": "UUPSUnauthorizedCallContext",
     "type": "error"
@@ -261,43 +207,6 @@
       }
     ],
     "name": "BatchSettingsSet",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "walletId",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes32",
-        "name": "sourceId",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "accountAddress",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "int16[]",
-        "name": "factorsBIPS",
-        "type": "int16[]"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint16[]",
-        "name": "delaysSeconds",
-        "type": "uint16[]"
-      }
-    ],
-    "name": "FeeScheduleSet",
     "type": "event"
   },
   {
@@ -404,56 +313,6 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "walletId",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes32",
-        "name": "sourceId",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "accountAddress",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "transactionLimit",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "dailyLimit",
-        "type": "uint256"
-      }
-    ],
-    "name": "PaymentLimitsSet",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "bytes32[]",
-        "name": "sourceIds",
-        "type": "bytes32[]"
-      }
-    ],
-    "name": "SupportedSourceIdsAdded",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
         "indexed": false,
         "internalType": "bytes4",
         "name": "selector",
@@ -500,19 +359,6 @@
     ],
     "name": "Upgraded",
     "type": "event"
-  },
-  {
-    "inputs": [],
-    "name": "DEFAULT_FEE_SCHEDULE",
-    "outputs": [
-      {
-        "internalType": "bytes",
-        "name": "",
-        "type": "bytes"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
   },
   {
     "inputs": [],
@@ -692,19 +538,6 @@
   {
     "inputs": [
       {
-        "internalType": "bytes32[]",
-        "name": "_sourceIds",
-        "type": "bytes32[]"
-      }
-    ],
-    "name": "addSupportedSourceIds",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "bytes4",
         "name": "_selector",
         "type": "bytes4"
@@ -835,42 +668,6 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "bytes32",
-            "name": "sourceId",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "string",
-            "name": "accountAddress",
-            "type": "string"
-          }
-        ],
-        "internalType": "struct ITeePayments.PMWMultisigAccount",
-        "name": "_account",
-        "type": "tuple"
-      }
-    ],
-    "name": "getFeeSchedule",
-    "outputs": [
-      {
-        "internalType": "int16[]",
-        "name": "_factorsBIPS",
-        "type": "int16[]"
-      },
-      {
-        "internalType": "uint16[]",
-        "name": "_delaysSeconds",
-        "type": "uint16[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "getKeyType",
     "outputs": [
@@ -891,19 +688,6 @@
         "internalType": "bytes32",
         "name": "",
         "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getSupportedSourceIds",
-    "outputs": [
-      {
-        "internalType": "bytes32[]",
-        "name": "",
-        "type": "bytes32[]"
       }
     ],
     "stateMutability": "view",
@@ -1064,11 +848,6 @@
         "internalType": "bytes32",
         "name": "_keyType",
         "type": "bytes32"
-      },
-      {
-        "internalType": "bytes32[]",
-        "name": "_supportedSourceIds",
-        "type": "bytes32[]"
       }
     ],
     "name": "initialize",
@@ -1085,25 +864,6 @@
       }
     ],
     "name": "isExecutor",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_sourceId",
-        "type": "bytes32"
-      }
-    ],
-    "name": "isSourceIdSupported",
     "outputs": [
       {
         "internalType": "bool",
@@ -1304,17 +1064,17 @@
         "components": [
           {
             "internalType": "uint256[]",
-            "name": "maxFees",
+            "name": "maxFeePerPayment",
             "type": "uint256[]"
           },
           {
             "internalType": "int16[][]",
-            "name": "feeFactorScheduleBIPS",
+            "name": "factorsBIPSPerPayment",
             "type": "int16[][]"
           },
           {
             "internalType": "uint16[]",
-            "name": "feeDelayScheduleSeconds",
+            "name": "delaysSeconds",
             "type": "uint16[]"
           }
         ],
@@ -1369,85 +1129,36 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "bytes32",
-            "name": "sourceId",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "string",
-            "name": "accountAddress",
-            "type": "string"
-          }
-        ],
-        "internalType": "struct ITeePayments.PMWMultisigAccount",
-        "name": "_account",
-        "type": "tuple"
-      },
-      {
-        "internalType": "int16[]",
-        "name": "_factorsBIPS",
-        "type": "int16[]"
-      },
-      {
-        "internalType": "uint16[]",
-        "name": "_delaysSeconds",
-        "type": "uint16[]"
-      }
-    ],
-    "name": "setFeeSchedule",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "bytes32",
-            "name": "sourceId",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "string",
-            "name": "accountAddress",
-            "type": "string"
-          }
-        ],
-        "internalType": "struct ITeePayments.PMWMultisigAccount",
-        "name": "_account",
-        "type": "tuple"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_transactionLimit",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_dailyLimit",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "_claimBackAddress",
-        "type": "address"
-      }
-    ],
-    "name": "setPaymentLimits",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "switchToProductionMode",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "teePaymentsFeeScheduleManager",
+    "outputs": [
+      {
+        "internalType": "contract ITeePaymentsFeeScheduleManager",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "teePaymentsRegistry",
+    "outputs": [
+      {
+        "internalType": "contract ITeePaymentsRegistry",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {

@@ -2,6 +2,9 @@
 
 # List of input/output pairs:
 FILES=(
+  "tee/implementation/TeePaymentsFeeScheduleManager.sol/TeePaymentsFeeScheduleManager.json:contracts/teepaymentsfeeschedulemanager/teepaymentsfeeschedulemanager.abi"
+  "tee/implementation/TeePaymentsRegistry.sol/TeePaymentsRegistry.json:contracts/teepaymentsregistry/teepaymentsregistry.abi"
+  "tee/implementation/TeePaymentsLimitsManager.sol/TeePaymentsLimitsManager.json:contracts/teepaymentslimitsmanager/teepaymentslimitsmanager.abi"
   "tee/facets/ExtensionManagerFacet.sol/ExtensionManagerFacet.json:contracts/teeextensionregistry/teeextensionregistry.abi"
   "tee/facets/InstructionsFacet.sol/InstructionsFacet.json:contracts/teeinstructions/teeinstructions.abi"
   "tee/facets/MachineManagerFacet.sol/MachineManagerFacet.json:contracts/teemachineregistry/teemachineregistry.abi"
