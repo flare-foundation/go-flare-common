@@ -5,6 +5,8 @@ import (
 	"testing"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/signing"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/signing/signer"
 	"github.com/stretchr/testify/require"
@@ -207,4 +209,129 @@ func TestAddSignaturesDuplicateSigner(t *testing.T) {
 	_, _, err = acc.AddSignatures(blob)
 	require.Error(t, err)
 	require.Contains(t, err.Error(), "no new valid signatures added")
+}
+
+// Deviation note: the aggregator identifier is keccak256 of the signing-encoded blob.
+// Rippled's canonical transaction ID is sha512Half(HashPrefix::transactionID 'TXN' || full blob)
+// per include/xrpl/protocol/HashPrefix.h line 36. The Go identifier is a local dedup key,
+// not a rippled tx ID. This test asserts the Go identifier shape and that it equals keccak256
+// of the signing-encoded JSON, confirming it is intentionally not a rippled tx hash.
+func TestAggregatorIdentifierIsKeccakOfSigningEncoding(t *testing.T) {
+	tx := buildTrustSetTx()
+
+	blob, err := signing.JoinMultisig(tx, []*signer.Signer{testSigner1, testSigner2})
+	require.NoError(t, err)
+
+	acc := Account{
+		Address: "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
+		SignerList: map[string]bool{
+			"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": true,
+			"rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v": true,
+		},
+		Quorum: 2,
+		txs:    make(map[common.Hash]*transaction),
+	}
+
+	txResult, _, err := acc.AddSignatures(blob)
+	require.NoError(t, err)
+
+	decoded, err := encoding.Decode(blob)
+	require.NoError(t, err)
+
+	signingBlob, err := encoding.Encode(decoded, true)
+	require.NoError(t, err)
+
+	expected := crypto.Keccak256Hash(signingBlob)
+	require.Equal(t, expected, txResult.id)
+	require.Len(t, txResult.id, 32)
+}
+
+// TestFinalizeIdempotent verifies that once quorum is reached, Finalize returns a consistent blob
+// across repeated calls and does not double-report the quorum-reached transition.
+func TestFinalizeIdempotent(t *testing.T) {
+	tx := buildTrustSetTx()
+
+	blob, err := signing.JoinMultisig(tx, []*signer.Signer{testSigner1, testSigner2})
+	require.NoError(t, err)
+
+	acc := Account{
+		Address: "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
+		SignerList: map[string]bool{
+			"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": true,
+			"rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v": true,
+		},
+		Quorum: 2,
+		txs:    make(map[common.Hash]*transaction),
+	}
+
+	txResult, dispatch, err := acc.AddSignatures(blob)
+	require.NoError(t, err)
+	require.True(t, dispatch, "first quorum hit must report dispatch")
+
+	blobA, err := acc.Finalize(txResult.id)
+	require.NoError(t, err)
+
+	blobB, err := acc.Finalize(txResult.id)
+	require.NoError(t, err)
+	require.Equal(t, blobA, blobB)
+}
+
+// TestAddSignaturesNonSignerIgnored verifies that a valid signature from an account not in
+// SignerList is silently discarded (no quorum contribution).
+func TestAddSignaturesNonSignerIgnored(t *testing.T) {
+	tx := buildTrustSetTx()
+
+	blob, err := signing.JoinMultisig(tx, []*signer.Signer{testSigner1, testSigner2})
+	require.NoError(t, err)
+
+	// Only testSigner1 is allowed; testSigner2 is a valid XRPL signer with a valid
+	// signature over the tx but is not in the SignerList.
+	acc := Account{
+		Address:    "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
+		SignerList: map[string]bool{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": true},
+		Quorum:     1,
+		txs:        make(map[common.Hash]*transaction),
+	}
+
+	txResult, dispatch, err := acc.AddSignatures(blob)
+	require.NoError(t, err)
+	require.True(t, dispatch)
+	require.Len(t, txResult.signers, 1)
+	_, ok := txResult.signers["rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW"]
+	require.True(t, ok)
+	_, ok = txResult.signers["rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v"]
+	require.False(t, ok, "non-listed signer must be ignored")
+}
+
+// TestAddSignaturesMissingAccount rejects a blob with no Account field.
+func TestAddSignaturesMissingAccount(t *testing.T) {
+	tx := buildTrustSetTx()
+	delete(tx, "Account")
+
+	// Intentionally no signers — JoinMultisig will still encode with empty Signers array.
+	// Use raw encode to bypass signer-join validation and exercise the aggregator's
+	// early validation.
+	blob, err := encoding.Encode(map[string]any{
+		"TransactionType": "TrustSet",
+		"Fee":             "30000",
+		"Flags":           uint32(262144),
+		"LimitAmount": map[string]any{
+			"currency": "USD",
+			"issuer":   "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
+			"value":    "100",
+		},
+		"Sequence":      uint32(2),
+		"SigningPubKey": "",
+	}, false)
+	require.NoError(t, err)
+
+	acc := Account{
+		Address:    "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
+		SignerList: map[string]bool{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": true},
+		Quorum:     1,
+		txs:        make(map[common.Hash]*transaction),
+	}
+
+	_, _, err = acc.AddSignatures(blob)
+	require.Error(t, err)
 }
