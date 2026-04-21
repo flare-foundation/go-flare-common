@@ -1,8 +1,14 @@
 package check
 
 import (
+	"encoding/json"
+	"fmt"
+	"io"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -212,6 +218,136 @@ func TestCheck(t *testing.T) {
 		}
 		require.Error(t, info.Check(1, []string{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW"}))
 	})
+}
+
+// Source: rippled include/xrpl/protocol/LedgerFormats.h lines 125-132 (AccountRoot LSF_FLAG macros).
+func TestAccountRootFlagConstants(t *testing.T) {
+	assert.Equal(t, uint64(0x00020000), lsfRequireDestTag, "lsfRequireDestTag")
+	assert.Equal(t, uint64(0x00080000), lsfDisallowXRP, "lsfDisallowXRP")
+	assert.Equal(t, uint64(0x00100000), lsfDisableMaster, "lsfDisableMaster")
+	assert.Equal(t, uint64(0x01000000), lsfDepositAuth, "lsfDepositAuth")
+}
+
+// Source: xrpl.js packages/ripple-binary-codec/test/fixtures/signerlistset-tx.json
+// meta.AffectedNodes[1].ModifiedNode.FinalFields (the SignerList ledger entry).
+// Verifies that the Go SignerList JSON shape matches the rippled SignerList ledger-entry layout.
+func TestSignerListFromXrplFixture(t *testing.T) {
+	raw := `{
+		"Flags": 0,
+		"OwnerNode": "0000000000000000",
+		"SignerEntries": [
+			{"SignerEntry": {"Account": "rH7KDR67MZR7LDV7gesmEMXtaqU3FaK7Lr", "SignerWeight": 1}},
+			{"SignerEntry": {"Account": "r4PQv7BCpp4SAJx3isNpQM8T2BuGrMQs5U", "SignerWeight": 1}},
+			{"SignerEntry": {"Account": "rPqHsX34XApKSfE4UxKbqVXb3WRmmgMY2u", "SignerWeight": 1}}
+		],
+		"SignerListID": 0,
+		"SignerQuorum": 3
+	}`
+
+	var sl SignerList
+	require.NoError(t, json.Unmarshal([]byte(raw), &sl))
+
+	require.EqualValues(t, 3, sl.SignerQuorum)
+	require.Len(t, sl.SignerEntries, 3)
+
+	signers := []string{
+		"rH7KDR67MZR7LDV7gesmEMXtaqU3FaK7Lr",
+		"r4PQv7BCpp4SAJx3isNpQM8T2BuGrMQs5U",
+		"rPqHsX34XApKSfE4UxKbqVXb3WRmmgMY2u",
+	}
+
+	require.NoError(t, checkSigners(sl, 3, signers))
+
+	// Wrong quorum expectation.
+	require.Error(t, checkSigners(sl, 2, signers))
+
+	// Missing one signer in the expected set.
+	require.Error(t, checkSigners(sl, 3, signers[:2]))
+}
+
+// Deviation note: rippled's SignerList ledger entry includes sfOwner, sfOwnerNode,
+// sfSignerListID, sfPreviousTxnID, sfPreviousTxnLgrSeq as additional required/optional
+// fields (ledger_entries.macro lines 103-111). The Go SignerList struct only tracks the
+// fields needed for the narrow "check multisig configuration" use case. This test pins
+// the Go struct to the fields it currently exposes.
+func TestSignerListStructFields(t *testing.T) {
+	sl := SignerList{
+		LedgerEntryType: "SignerList",
+		Flags:           0,
+		SignerEntries: []SignerEntryWrapped{
+			{SignerEntry: SignerEntry{Account: "rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW", SignerWeight: 1}},
+		},
+		SignerQuorum: 1,
+	}
+	require.Equal(t, "SignerList", sl.LedgerEntryType)
+	require.EqualValues(t, 1, sl.SignerQuorum)
+}
+
+// TestInfoHTTPStub exercises Info against an in-process JSON-RPC stub so the code path
+// (request marshaling, response unmarshaling) is covered without hitting the network.
+func TestInfoHTTPStub(t *testing.T) {
+	expected := AccountInfoResponseWrapped{
+		Result: AccountInfoResponse{
+			AccountData: AccountData{
+				Account:         "rpo6E7mHvQ4xzeEBy8ViVzbG8q251ztKB8",
+				Balance:         "1000000000",
+				Flags:           lsfDisableMaster,
+				LedgerEntryType: "AccountRoot",
+				Sequence:        42,
+				SignersLists: []SignerList{{
+					LedgerEntryType: "SignerList",
+					Flags:           0,
+					SignerEntries: []SignerEntryWrapped{
+						{SignerEntry: SignerEntry{Account: "rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW", SignerWeight: 1}},
+					},
+					SignerQuorum: 1,
+				}},
+			},
+			Validated: true,
+		},
+	}
+
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		require.Equal(t, http.MethodPost, r.Method)
+		require.Equal(t, "application/json", r.Header.Get("Content-Type"))
+
+		body, err := io.ReadAll(r.Body)
+		require.NoError(t, err)
+
+		var req AccountInfoRequest
+		require.NoError(t, json.Unmarshal(body, &req))
+		require.Equal(t, accountInfoMethod, req.Method)
+		require.Len(t, req.Params, 1)
+		require.Equal(t, "rpo6E7mHvQ4xzeEBy8ViVzbG8q251ztKB8", req.Params[0].Account)
+		require.True(t, req.Params[0].SignerList)
+
+		w.Header().Set("Content-Type", "application/json")
+		require.NoError(t, json.NewEncoder(w).Encode(expected))
+	}))
+	defer srv.Close()
+
+	rpc := JSONRPC{URL: srv.URL}
+	resp, err := rpc.Info("rpo6E7mHvQ4xzeEBy8ViVzbG8q251ztKB8")
+	require.NoError(t, err)
+
+	require.Equal(t, expected.Result.AccountData.Account, resp.AccountData.Account)
+	require.EqualValues(t, 42, resp.Sequence())
+	require.Len(t, resp.AccountData.SignersLists, 1)
+	require.NoError(t, resp.Check(1, []string{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW"}))
+}
+
+// TestInfoHTTPStubRejectsBadStatus covers the non-200 error branch.
+func TestInfoHTTPStubRejectsBadStatus(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+		w.WriteHeader(http.StatusBadGateway)
+		_, _ = fmt.Fprint(w, "upstream unavailable")
+	}))
+	defer srv.Close()
+
+	rpc := JSONRPC{URL: srv.URL}
+	_, err := rpc.Info("rpo6E7mHvQ4xzeEBy8ViVzbG8q251ztKB8")
+	require.Error(t, err)
 }
 
 func TestInfo(t *testing.T) {
