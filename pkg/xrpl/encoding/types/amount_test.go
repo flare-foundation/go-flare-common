@@ -534,6 +534,350 @@ func TestMPTValueExotic(t *testing.T) {
 	}
 }
 
+func TestAmountEncodingXRPL(t *testing.T) {
+	tests := []struct {
+		name        string
+		jsonValue   string
+		expectedHex string
+	}{
+		// xrpl.js data-driven-tests.json values_tests: USD 1.111111111111111 mantissa 0003F28CB71571C7 exp -15
+		{
+			name:        "Token 1.111111111111111 exp -15",
+			jsonValue:   `{"currency":"USD","value":"1.111111111111111","issuer":"rrrrrrrrrrrrrrrrrrrrBZbvji"}`,
+			expectedHex: "d483f28cb71571c700000000000000000000000055534400000000000000000000000000000000000000000000000001",
+		},
+		// xrpl.js data-driven-tests.json values_tests: USD 11.11111111111111 exp -14
+		{
+			name:        "Token 11.11111111111111 exp -14",
+			jsonValue:   `{"currency":"USD","value":"11.11111111111111","issuer":"rrrrrrrrrrrrrrrrrrrrBZbvji"}`,
+			expectedHex: "d4c3f28cb71571c700000000000000000000000055534400000000000000000000000000000000000000000000000001",
+		},
+		// xrpl.js data-driven-tests.json values_tests: USD 111.1111111111111 exp -13
+		{
+			name:        "Token 111.1111111111111 exp -13",
+			jsonValue:   `{"currency":"USD","value":"111.1111111111111","issuer":"rrrrrrrrrrrrrrrrrrrrBZbvji"}`,
+			expectedHex: "d503f28cb71571c700000000000000000000000055534400000000000000000000000000000000000000000000000001",
+		},
+		// xrpl.js data-driven-tests.json values_tests: USD 1111.111111111111 exp -12
+		{
+			name:        "Token 1111.111111111111 exp -12",
+			jsonValue:   `{"currency":"USD","value":"1111.111111111111","issuer":"rrrrrrrrrrrrrrrrrrrrBZbvji"}`,
+			expectedHex: "d543f28cb71571c700000000000000000000000055534400000000000000000000000000000000000000000000000001",
+		},
+		// xrpl.js data-driven-tests.json values_tests: USD 11111.11111111111 exp -11
+		{
+			name:        "Token 11111.11111111111 exp -11",
+			jsonValue:   `{"currency":"USD","value":"11111.11111111111","issuer":"rrrrrrrrrrrrrrrrrrrrBZbvji"}`,
+			expectedHex: "d583f28cb71571c700000000000000000000000055534400000000000000000000000000000000000000000000000001",
+		},
+		// xrpl.js data-driven-tests.json values_tests: USD 111111.1111111111 exp -10
+		{
+			name:        "Token 111111.1111111111 exp -10",
+			jsonValue:   `{"currency":"USD","value":"111111.1111111111","issuer":"rrrrrrrrrrrrrrrrrrrrBZbvji"}`,
+			expectedHex: "d5c3f28cb71571c700000000000000000000000055534400000000000000000000000000000000000000000000000001",
+		},
+		// xrpl.js data-driven-tests.json values_tests: USD 1111111.111111111 exp -9
+		{
+			name:        "Token 1111111.111111111 exp -9",
+			jsonValue:   `{"currency":"USD","value":"1111111.111111111","issuer":"rrrrrrrrrrrrrrrrrrrrBZbvji"}`,
+			expectedHex: "d603f28cb71571c700000000000000000000000055534400000000000000000000000000000000000000000000000001",
+		},
+		// xrpl.js data-driven-tests.json values_tests: USD 11111111.11111111 exp -8
+		{
+			name:        "Token 11111111.11111111 exp -8",
+			jsonValue:   `{"currency":"USD","value":"11111111.11111111","issuer":"rrrrrrrrrrrrrrrrrrrrBZbvji"}`,
+			expectedHex: "d643f28cb71571c700000000000000000000000055534400000000000000000000000000000000000000000000000001",
+		},
+		// xrpl.js data-driven-tests.json values_tests: USD 111111111.1111111 exp -7
+		{
+			name:        "Token 111111111.1111111 exp -7",
+			jsonValue:   `{"currency":"USD","value":"111111111.1111111","issuer":"rrrrrrrrrrrrrrrrrrrrBZbvji"}`,
+			expectedHex: "d683f28cb71571c700000000000000000000000055534400000000000000000000000000000000000000000000000001",
+		},
+		// xrpl.js data-driven-tests.json values_tests: USD 1111111111.111111 exp -6
+		{
+			name:        "Token 1111111111.111111 exp -6",
+			jsonValue:   `{"currency":"USD","value":"1111111111.111111","issuer":"rrrrrrrrrrrrrrrrrrrrBZbvji"}`,
+			expectedHex: "d6c3f28cb71571c700000000000000000000000055534400000000000000000000000000000000000000000000000001",
+		},
+		// xrpl.js data-driven-tests.json values_tests: USD 11111111111.11111 exp -5
+		{
+			name:        "Token 11111111111.11111 exp -5",
+			jsonValue:   `{"currency":"USD","value":"11111111111.11111","issuer":"rrrrrrrrrrrrrrrrrrrrBZbvji"}`,
+			expectedHex: "d703f28cb71571c700000000000000000000000055534400000000000000000000000000000000000000000000000001",
+		},
+		// xrpl.js data-driven-tests.json values_tests: USD 111111111111.1111 exp -4
+		{
+			name:        "Token 111111111111.1111 exp -4",
+			jsonValue:   `{"currency":"USD","value":"111111111111.1111","issuer":"rrrrrrrrrrrrrrrrrrrrBZbvji"}`,
+			expectedHex: "d743f28cb71571c700000000000000000000000055534400000000000000000000000000000000000000000000000001",
+		},
+		// xrpl.js data-driven-tests.json values_tests: USD 1111111111111.111 exp -3
+		{
+			name:        "Token 1111111111111.111 exp -3",
+			jsonValue:   `{"currency":"USD","value":"1111111111111.111","issuer":"rrrrrrrrrrrrrrrrrrrrBZbvji"}`,
+			expectedHex: "d783f28cb71571c700000000000000000000000055534400000000000000000000000000000000000000000000000001",
+		},
+		// xrpl.js data-driven-tests.json values_tests: USD 11111111111111.11 exp -2
+		{
+			name:        "Token 11111111111111.11 exp -2",
+			jsonValue:   `{"currency":"USD","value":"11111111111111.11","issuer":"rrrrrrrrrrrrrrrrrrrrBZbvji"}`,
+			expectedHex: "d7c3f28cb71571c700000000000000000000000055534400000000000000000000000000000000000000000000000001",
+		},
+		// xrpl.js data-driven-tests.json values_tests: USD 111111111111111.1 exp -1
+		{
+			name:        "Token 111111111111111.1 exp -1",
+			jsonValue:   `{"currency":"USD","value":"111111111111111.1","issuer":"rrrrrrrrrrrrrrrrrrrrBZbvji"}`,
+			expectedHex: "d803f28cb71571c700000000000000000000000055534400000000000000000000000000000000000000000000000001",
+		},
+		// xrpl.js data-driven-tests.json values_tests: USD 11111000.00000001 mantissa 0003F28A20CF5801 exp -8
+		{
+			name:        "Token 11111000.00000001 rare mantissa",
+			jsonValue:   `{"currency":"USD","value":"11111000.00000001","issuer":"rrrrrrrrrrrrrrrrrrrrBZbvji"}`,
+			expectedHex: "d643f28a20cf580100000000000000000000000055534400000000000000000000000000000000000000000000000001",
+		},
+		// xrpl.js data-driven-tests.json values_tests: USD 1e77 mantissa 0003F28CB71571C7 exp 62
+		{
+			name:        "Token 1e77 upper exponent",
+			jsonValue:   `{"currency":"USD","value":"100000000000000000000000000000000000000000000000000000000000000000000000000000","issuer":"rrrrrrrrrrrrrrrrrrrrBZbvji"}`,
+			expectedHex: "e7c38d7ea4c6800000000000000000000000000055534400000000000000000000000000000000000000000000000001",
+		},
+		// rippled STAmount.cpp:796 native positive encode with cPositive=0x4000000000000000
+		{
+			name:        "XRP 10 drops",
+			jsonValue:   `"10"`,
+			expectedHex: "400000000000000a",
+		},
+		// rippled STAmount.cpp:796 native positive encode; 10^6 drops = 1 XRP
+		{
+			name:        "XRP 1000000 drops 1 XRP",
+			jsonValue:   `"1000000"`,
+			expectedHex: "40000000000f4240",
+		},
+		// rippled Protocol.h cMaxNativeN = 100'000'000'000'000'000 drops
+		{
+			name:        "XRP max native 10^17",
+			jsonValue:   `"100000000000000000"`,
+			expectedHex: "416345785d8a0000",
+		},
+		// xrpl.js data-driven-tests.json values_tests: MPT 100 indicator 0x60
+		{
+			name:        "MPT value 100",
+			jsonValue:   `{"value":"100","mpt_issuance_id":"00002403C84A0A28E0190E208E982C352BBD5006600555CF"}`,
+			expectedHex: "60000000000000006400002403c84a0a28e0190e208e982c352bbd5006600555cf",
+		},
+		// xrpl.js data-driven-tests.json values_tests: MPT 0xa indicator 0x60
+		{
+			name:        "MPT hex 0xa",
+			jsonValue:   `{"value":"0xa","mpt_issuance_id":"00002403C84A0A28E0190E208E982C352BBD5006600555CF"}`,
+			expectedHex: "60000000000000000a00002403c84a0a28e0190e208e982c352bbd5006600555cf",
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			var value any
+			err := json.Unmarshal([]byte(test.jsonValue), &value)
+			require.NoError(t, err)
+
+			encoded, err := Amount.ToBytes(value, false)
+			require.NoError(t, err)
+
+			expectedBytes, err := hex.DecodeString(test.expectedHex)
+			require.NoError(t, err)
+			require.Equal(t, expectedBytes, encoded)
+		})
+	}
+}
+
+func TestAmountEncodingXRPLErrors(t *testing.T) {
+	tests := []struct {
+		name      string
+		jsonValue string
+	}{
+		// xrpl.js data-driven-tests.json values_tests: "1000000000000000000" XRP rejected (> cMaxNativeN)
+		{
+			name:      "XRP overflow 10^18",
+			jsonValue: `"1000000000000000000"`,
+		},
+		// xrpl.js data-driven-tests.json values_tests: "-10000000000000000000000000" XRP rejected (negative)
+		{
+			name:      "XRP negative overflow",
+			jsonValue: `"-10000000000000000000000000"`,
+		},
+		// xrpl.js data-driven-tests.json values_tests: USD 1111111111111111.1 rejected (precision 17 > max 16)
+		{
+			name:      "Token precision 17 digits",
+			jsonValue: `{"currency":"USD","value":"1111111111111111.1","issuer":"rrrrrrrrrrrrrrrrrrrrBZbvji"}`,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			var value any
+			err := json.Unmarshal([]byte(test.jsonValue), &value)
+			require.NoError(t, err)
+
+			_, err = Amount.ToBytes(value, false)
+			require.Error(t, err)
+		})
+	}
+}
+
+func TestAmountBitLayout(t *testing.T) {
+	tests := []struct {
+		name         string
+		hexInput     string
+		expectNotXRP bool
+		expectMPT    bool
+		expectSign   byte
+	}{
+		// rippled STAmount.h: cIssuedCurrency=0x8000...<<56, cPositive=0x4000...<<56; XRP positive 1 drop
+		{
+			name:         "XRP positive 1 drop bit63 clear",
+			hexInput:     "4000000000000001",
+			expectNotXRP: false,
+			expectMPT:    false,
+			expectSign:   0x40,
+		},
+		// rippled STAmount.cpp:815 IOU positive sets offset+512+256+97 -> top bits 11
+		{
+			name:         "IOU positive bit63 bit62 set",
+			hexInput:     "d4838d7ea4c6800000000000000000000000000055534400000000000000000000000000000000000000000000000001",
+			expectNotXRP: true,
+			expectMPT:    false,
+			expectSign:   0x40,
+		},
+		// rippled STAmount.cpp:811 IOU negative sets offset+512+97 -> top bits 10
+		{
+			name:         "IOU negative bit63 set bit62 clear",
+			hexInput:     "94838d7ea4c6800000000000000000000000000055534400000000000000000000000000000000000000000000000001",
+			expectNotXRP: true,
+			expectMPT:    false,
+			expectSign:   0x00,
+		},
+		// rippled STAmount.cpp:807 IOU zero special form = cIssuedCurrency = 0x8000000000000000
+		{
+			name:         "IOU zero special form 0x80",
+			hexInput:     "800000000000000000000000000000000000000055534400000000000000000000000000000000000000000000000001",
+			expectNotXRP: true,
+			expectMPT:    false,
+			expectSign:   0x00,
+		},
+		// rippled STAmount.cpp:782-784 MPT positive indicator = cMPToken|cPositive = 0x60
+		{
+			name:         "MPT positive indicator 0x60",
+			hexInput:     "607fffffffffffffff00002403c84a0a28e0190e208e982c352bbd5006600555cf",
+			expectNotXRP: false,
+			expectMPT:    true,
+			expectSign:   0x40,
+		},
+		// rippled STAmount.cpp:782-784 MPT negative indicator = cMPToken only = 0x20
+		{
+			name:         "MPT negative indicator 0x20",
+			hexInput:     "20000000000000000100002403c84a0a28e0190e208e982c352bbd5006600555cf",
+			expectNotXRP: false,
+			expectMPT:    true,
+			expectSign:   0x00,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			inputBytes, err := hex.DecodeString(test.hexInput)
+			require.NoError(t, err)
+
+			first := inputBytes[0]
+			require.Equal(t, test.expectNotXRP, first&0x80 != 0, "not-XRP bit")
+			require.Equal(t, test.expectMPT, first&0x20 != 0, "MPT bit")
+			require.Equal(t, test.expectSign, first&0x40, "sign bit (rippled convention: 1 = positive)")
+
+			buffer := bytes.NewBuffer(inputBytes)
+			_, err = Amount.ToJSON(buffer, 0)
+			require.NoError(t, err)
+			require.Zero(t, buffer.Len())
+		})
+	}
+}
+
+func TestAmountDecodingXRPL(t *testing.T) {
+	tests := []struct {
+		name       string
+		hexInput   string
+		expectJSON string
+	}{
+		// rippled STAmount.cpp:138-139 negative zero (no cPositive bit, value==0) must throw; Go also rejects negative XRP
+		{
+			name:       "XRP positive zero decodes as 0",
+			hexInput:   "4000000000000000",
+			expectJSON: `"0"`,
+		},
+		// rippled STAmount.cpp:807 IOU zero special form = cIssuedCurrency with zero mantissa
+		{
+			name:       "IOU zero special form decodes with value 0",
+			hexInput:   "800000000000000000000000000000000000000055534400000000000000000000000000000000000000000000000001",
+			expectJSON: `{"currency":"USD","issuer":"rrrrrrrrrrrrrrrrrrrrBZbvji","value":"0"}`,
+		},
+		// rippled STAmount.cpp:782 MPT positive indicator = cMPToken|cPositive = 0x60; zero value
+		{
+			name:       "MPT zero positive indicator decodes as 0",
+			hexInput:   "60000000000000000000002403c84a0a28e0190e208e982c352bbd5006600555cf",
+			expectJSON: `{"mpt_issuance_id":"00002403C84A0A28E0190E208E982C352BBD5006600555CF","value":"0"}`,
+		},
+		// rippled STAmount.cpp:782 MPT indicator cMPToken alone = 0x20 with zero mantissa (rippled writes 0x60 for -0 but Go decodes any 0x20/0x60 zero as "0")
+		{
+			name:       "MPT zero negative indicator decodes as 0",
+			hexInput:   "20000000000000000000002403c84a0a28e0190e208e982c352bbd5006600555cf",
+			expectJSON: `{"mpt_issuance_id":"00002403C84A0A28E0190E208E982C352BBD5006600555CF","value":"0"}`,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			raw, err := hex.DecodeString(test.hexInput)
+			require.NoError(t, err)
+
+			buffer := bytes.NewBuffer(raw)
+			decoded, err := Amount.ToJSON(buffer, 0)
+			require.NoError(t, err)
+			require.Zero(t, buffer.Len())
+
+			got, err := json.Marshal(decoded)
+			require.NoError(t, err)
+
+			var expectedObj any
+			require.NoError(t, json.Unmarshal([]byte(test.expectJSON), &expectedObj))
+			want, err := json.Marshal(expectedObj)
+			require.NoError(t, err)
+
+			require.JSONEq(t, string(want), string(got))
+		})
+	}
+}
+
+func TestAmountDecodingXRPLErrors(t *testing.T) {
+	tests := []struct {
+		name     string
+		hexInput string
+	}{
+		// rippled STAmount.cpp:137-139 negative zero is not canonical; a bare XRP negative must be rejected
+		{
+			name:     "XRP negative rejected",
+			hexInput: "0000000000000001",
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			raw, err := hex.DecodeString(test.hexInput)
+			require.NoError(t, err)
+			buffer := bytes.NewBuffer(raw)
+			_, err = Amount.ToJSON(buffer, 0)
+			require.Error(t, err)
+		})
+	}
+}
+
 func TestNormalizeValue(t *testing.T) {
 	tests := []struct {
 		input  string
