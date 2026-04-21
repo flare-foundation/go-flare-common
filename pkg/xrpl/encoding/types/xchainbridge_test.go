@@ -1,6 +1,7 @@
 package types
 
 import (
+	"bytes"
 	"encoding/hex"
 	"encoding/json"
 	"strings"
@@ -72,6 +73,30 @@ func TestXChainBridgeFieldOrdering(t *testing.T) {
 	require.Equal(t, byte(0x14), got[41])
 	const issuingDoorID = "550FC62003E785DC231A1058A05E56E3F09CF4E6"
 	require.Equal(t, issuingDoorID, strings.ToUpper(hex.EncodeToString(got[42:62])))
+}
+
+// TestXChainBridgeRoundTrip pins the decoder fix: both ChainDoors are length-prefixed on the wire, so ToJSON must read a length byte before each AccountID.
+// source: xrpl.js ripple-binary-codec/test/fixtures/codec-fixtures.json transactions[1]
+func TestXChainBridgeRoundTrip(t *testing.T) {
+	const expected = "14AF80285F637EE4AF3C20378F9DFB12511ACB8D27" +
+		"0000000000000000000000000000000000000000" +
+		"14550FC62003E785DC231A1058A05E56E3F09CF4E6" +
+		"0000000000000000000000000000000000000000"
+
+	raw, err := hex.DecodeString(expected)
+	require.NoError(t, err)
+
+	decoded, err := (&XChainBridge{}).ToJSON(bytes.NewBuffer(raw), 0)
+	require.NoError(t, err)
+
+	m, ok := decoded.(map[string]any)
+	require.True(t, ok)
+	require.Equal(t, "rGzx83BVoqTYbGn7tiVAnFw7cbxjin13jL", m["LockingChainDoor"])
+	require.Equal(t, "r3kmLJN5D28dHuH8vZNUZpMC43pEHpaocV", m["IssuingChainDoor"])
+
+	reEncoded, err := (&XChainBridge{}).ToBytes(m, false)
+	require.NoError(t, err)
+	require.Equal(t, raw, reEncoded)
 }
 
 // TestXChainBridgeErrors exercises the structural guards in the encoder.
