@@ -1,8 +1,10 @@
 package address
 
 import (
+	"encoding/hex"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -82,6 +84,92 @@ func TestPubToAddress(t *testing.T) {
 
 		require.Equal(t, test.add, addFromPub)
 	}
+}
+
+// TestAccountIDPrimaryVectors round-trips known <address, hex-account-id> pairs
+// from xrpl.js primary-source fixtures.
+func TestAccountIDPrimaryVectors(t *testing.T) {
+	tests := []struct {
+		name    string
+		address string
+		idHex   string
+	}{
+		{
+			// source: xrpl.js packages/ripple-address-codec/test/xrp-codec.test.ts:48
+			name:    "xrpCodecAccountID",
+			address: "rJrRMgiRgrU6hDF4pgu5DXQdWyPbY35ErN",
+			idHex:   "BA8E78626EE42C41B46D46C3048DF3A1C3C87072",
+		},
+		{
+			// source: rippled src/test/protocol/Seed_test.cpp:203 (masterpassphrase, secp256k1)
+			name:    "masterPassphraseSecp256k1",
+			address: "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
+			idHex:   "B5F762798A53D543A014CAF8B297CFF8F2F937E8",
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			want, err := hex.DecodeString(test.idHex)
+			require.NoError(t, err)
+
+			id, err := ID(test.address)
+			require.NoError(t, err)
+			assert.Equal(t, want, id)
+
+			addr, err := Address(id)
+			require.NoError(t, err)
+			assert.Equal(t, test.address, addr)
+		})
+	}
+}
+
+// TestPubToAddressRippledVectors derives canonical XRPL addresses from public
+// keys emitted by xrpl.js primary-source fixtures.
+func TestPubToAddressRippledVectors(t *testing.T) {
+	tests := []struct {
+		name    string
+		pub     string
+		address string
+	}{
+		{
+			// source: xrpl.js packages/ripple-keypairs/test/fixtures/api.json (secp256k1)
+			name:    "apiSecp256k1",
+			pub:     "030D58EB48B4420B1F7B9DF55087E0E29FEF0E8468F9A6825B01CA2C361042D435",
+			address: "rU6K7V3Po4snVhBBaU29sesqs2qTQJWDw1",
+		},
+		{
+			// source: xrpl.js packages/ripple-keypairs/test/fixtures/api.json (ed25519)
+			name:    "apiEd25519",
+			pub:     "ED01FA53FA5A7E77798F882ECE20B1ABC00BB358A9E55A202D0D0676BD0CE37A63",
+			address: "rLUEXYuLiQptky37CqLcm9USQpPiz5rkpD",
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			addr, err := PubToAddress(test.pub)
+			require.NoError(t, err)
+			assert.Equal(t, test.address, addr)
+		})
+	}
+}
+
+// TestClassicAddressValidity mirrors xrpl.js isValidClassicAddress behaviour:
+// ID must succeed on a canonical address and must reject the tampered variant.
+func TestClassicAddressValidity(t *testing.T) {
+	// source: xrpl.js packages/ripple-address-codec/test/xrp-codec.test.ts:86
+	_, err := ID("rU6K7V3Po4snVhBBaU29sesqs2qTQJWDw1")
+	require.NoError(t, err)
+
+	// source: xrpl.js packages/ripple-address-codec/test/xrp-codec.test.ts:90
+	_, err = ID("rLUEXYuLiQptky37CqLcm9USQpPiz5rkpD")
+	require.NoError(t, err)
+
+	// source: xrpl.js packages/ripple-address-codec/test/xrp-codec.test.ts:94
+	// Last character flipped: checksum must fail.
+	_, err = ID("rU6K7V3Po4snVhBBaU29sesqs2qTQJWDw2")
+	assert.Error(t, err)
 }
 
 func TestPubToAddressFail(t *testing.T) {
