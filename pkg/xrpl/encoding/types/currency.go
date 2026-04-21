@@ -26,7 +26,7 @@ func (c *currency) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	code := make([]byte, l)
 	n, err := b.Read(code)
 	if err != nil {
-		return nil, fmt.Errorf("cannot read currency value: %w", err)
+		return nil, fmt.Errorf("reading currency value: %w", err)
 	}
 	if n != l {
 		return nil, outOfBytes("currency value", l, n)

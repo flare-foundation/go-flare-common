@@ -77,7 +77,7 @@ func (f Field) ID() ([]byte, error) {
 func ReadID(b *bytes.Buffer) (IDPair, error) {
 	byte1, err := b.ReadByte()
 	if err != nil {
-		return IDPair{-1, NotPresent}, fmt.Errorf("cannot read first byte %w", err)
+		return IDPair{-1, NotPresent}, fmt.Errorf("reading first byte: %w", err)
 	}
 
 	tCode := byte1 & 0xf0
@@ -88,7 +88,7 @@ func ReadID(b *bytes.Buffer) (IDPair, error) {
 	if tCode == 0 {
 		tCode, err = b.ReadByte()
 		if err != nil {
-			return IDPair{-1, NotPresent}, fmt.Errorf("cannot read type code byte %w", err)
+			return IDPair{-1, NotPresent}, fmt.Errorf("reading type code byte: %w", err)
 		}
 		if tCode < 16 {
 			return IDPair{-1, NotPresent}, fmt.Errorf("invalid encoding type code %v", []byte{byte1, tCode})
@@ -98,7 +98,7 @@ func ReadID(b *bytes.Buffer) (IDPair, error) {
 	if fCode == 0 {
 		fCode, err = b.ReadByte()
 		if err != nil {
-			return IDPair{-1, NotPresent}, fmt.Errorf("cannot read field code byte %w", err)
+			return IDPair{-1, NotPresent}, fmt.Errorf("reading field code byte: %w", err)
 		}
 		if fCode < 16 {
 			return IDPair{-1, NotPresent}, fmt.Errorf("invalid encoding field code %v", []byte{byte1, fCode})

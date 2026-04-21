@@ -115,7 +115,7 @@ func ParsePKITokenUnverified(attestationToken string) (*jwt.Token, *GoogleTeeCla
 func ParsePKITokenUnverifiedClaims[T jwt.Claims](jwtToken string, claims T) (*jwt.Token, T, error) {
 	token, _, err := jwt.NewParser().ParseUnverified(jwtToken, claims)
 	if err != nil {
-		return nil, claims, fmt.Errorf("could not parse token, %w", err)
+		return nil, claims, fmt.Errorf("parsing token: %w", err)
 	}
 	return token, claims, nil
 }
@@ -175,7 +175,7 @@ func ExtractCertificatesFromX5CHeader(x5cHeaders []any) (PKICertificates, error)
 
 		cert, err := ParseDERCertificate(h)
 		if err != nil {
-			return PKICertificates{}, fmt.Errorf("cannot parse certificate at index %d: %w", j, err)
+			return PKICertificates{}, fmt.Errorf("parsing certificate at index %d: %w", j, err)
 		}
 
 		parsedHeaders[j] = cert
@@ -193,12 +193,12 @@ func ExtractCertificatesFromX5CHeader(x5cHeaders []any) (PKICertificates, error)
 func ParseDERCertificate(certificate string) (*x509.Certificate, error) {
 	bytes, err := base64.StdEncoding.DecodeString(certificate)
 	if err != nil {
-		return nil, fmt.Errorf("cannot decode certificate %w", err)
+		return nil, fmt.Errorf("decoding certificate: %w", err)
 	}
 
 	cert, err := x509.ParseCertificate(bytes)
 	if err != nil {
-		return nil, fmt.Errorf("cannot parse certificate: %w", err)
+		return nil, fmt.Errorf("parsing certificate: %w", err)
 	}
 
 	return cert, nil
@@ -208,12 +208,12 @@ func ParseDERCertificate(certificate string) (*x509.Certificate, error) {
 func ParsePEMCertificate(certificate string) (*x509.Certificate, error) {
 	block, _ := pem.Decode([]byte(certificate))
 	if block == nil {
-		return nil, fmt.Errorf("cannot decode certificate")
+		return nil, errors.New("cannot decode certificate")
 	}
 
 	cert, err := x509.ParseCertificate(block.Bytes)
 	if err != nil {
-		return nil, fmt.Errorf("cannot parse certificate: %w", err)
+		return nil, fmt.Errorf("parsing certificate: %w", err)
 	}
 
 	return cert, nil
@@ -290,7 +290,7 @@ func (c *PKICertificates) verifyChain() error {
 		KeyUsages:     []x509.ExtKeyUsage{x509.ExtKeyUsageAny},
 	})
 	if err != nil {
-		return fmt.Errorf("failed to verify certificate chain: %w", err)
+		return fmt.Errorf("verifying certificate chain: %w", err)
 	}
 
 	return nil
@@ -331,7 +331,7 @@ func checkCRL(name string, cert *x509.Certificate, crl *x509.RevocationList, iss
 	}
 
 	if err := crl.CheckSignatureFrom(issuer); err != nil {
-		return fmt.Errorf("%s CRL signature verification failed: %w", name, err)
+		return fmt.Errorf("verifying %s CRL signature: %w", name, err)
 	}
 
 	for _, entry := range crl.RevokedCertificateEntries {

@@ -48,7 +48,7 @@ func Encode(value Object, signing bool) ([]byte, error) {
 	names := keys(value)
 	sortedNames, err := sortFields(names)
 	if err != nil {
-		return nil, fmt.Errorf("cannot sort: %w", err)
+		return nil, fmt.Errorf("sorting: %w", err)
 	}
 
 	for _, name := range sortedNames {
@@ -58,7 +58,7 @@ func Encode(value Object, signing bool) ([]byte, error) {
 		}
 		_, err = outBuff.Write(bytes)
 		if err != nil {
-			return nil, fmt.Errorf("cannot add %s to buffer: %w", name, err)
+			return nil, fmt.Errorf("adding %s to buffer: %w", name, err)
 		}
 	}
 
@@ -159,7 +159,7 @@ func lengthEncode(n int) ([]byte, error) {
 func lengthDecode(b *bytes.Buffer) (int, error) {
 	byte1, err := b.ReadByte()
 	if err != nil {
-		return -1, fmt.Errorf("cannot read first byte %w", err)
+		return -1, fmt.Errorf("reading first byte: %w", err)
 	}
 
 	switch {
@@ -168,7 +168,7 @@ func lengthDecode(b *bytes.Buffer) (int, error) {
 	case byte1 < 241:
 		byte2, err := b.ReadByte()
 		if err != nil {
-			return -1, fmt.Errorf("cannot read second byte %w", err)
+			return -1, fmt.Errorf("reading second byte: %w", err)
 		}
 
 		return 193 + ((int(byte1) - 193) * 256) + int(byte2), nil
@@ -176,7 +176,7 @@ func lengthDecode(b *bytes.Buffer) (int, error) {
 		bytes := make([]byte, 2)
 		n, err := b.Read(bytes)
 		if n != 2 || err != nil {
-			return -1, fmt.Errorf("cannot read second and third byte %w", err)
+			return -1, fmt.Errorf("reading second and third byte: %w", err)
 		}
 
 		out := 12481 + ((int(byte1) - 241) * 65536) + (int(bytes[0]) * 256) + int(bytes[1])

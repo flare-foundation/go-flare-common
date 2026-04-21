@@ -151,7 +151,7 @@ func stepToBytes(step map[string]any) ([]byte, error) {
 		case false:
 			currencyBytes, err := serializeCurrency(curr, disallowedCodes)
 			if err != nil {
-				return nil, fmt.Errorf("invalid path %v, invalid issuer %w", step, err)
+				return nil, fmt.Errorf("invalid path %v, invalid issuer: %w", step, err)
 			}
 
 			out = append(out, currencyBytes...)

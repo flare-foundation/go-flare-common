@@ -89,7 +89,7 @@ func (*amount) ToBytes(value any, _ bool) ([]byte, error) {
 func (a *amount) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	firstByte, err := b.ReadByte()
 	if err != nil {
-		return nil, fmt.Errorf("cannot read first byte: %w", err)
+		return nil, fmt.Errorf("reading first byte: %w", err)
 	}
 
 	amountType := firstByte & typeBitMask
@@ -110,7 +110,7 @@ func (a *amount) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 func xrpToBytes(amount string) ([]byte, error) {
 	val, err := strconv.ParseUint(amount, 10, 62)
 	if err != nil {
-		return nil, fmt.Errorf("xrp amount %w", err)
+		return nil, fmt.Errorf("xrp amount: %w", err)
 	}
 	if val > maxXRPAmount {
 		return nil, fmt.Errorf("amount too large %v", val)
@@ -354,7 +354,7 @@ func xrpToJSON(firstByte byte, b *bytes.Buffer) (string, error) {
 
 	n, err := b.Read(v[1:])
 	if err != nil {
-		return "", fmt.Errorf("cannot read xrp amount: %w", err)
+		return "", fmt.Errorf("reading xrp amount: %w", err)
 	}
 	if n != l-1 {
 		return "", outOfBytes("xrp amount", l, n+1)
@@ -384,7 +384,7 @@ func tokenToJSON(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
 
 	n, err := b.Read(a[1:])
 	if err != nil {
-		return nil, fmt.Errorf("cannot read token amount: %w", err)
+		return nil, fmt.Errorf("reading token amount: %w", err)
 	}
 	if n != l-1 {
 		return nil, outOfBytes("token amount", l, n+1)
@@ -401,7 +401,7 @@ func tokenToJSON(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
 	c := make([]byte, l)
 	n, err = b.Read(c)
 	if err != nil {
-		return nil, fmt.Errorf("cannot read token currency: %w", err)
+		return nil, fmt.Errorf("reading token currency: %w", err)
 	}
 	if n != l {
 		return nil, outOfBytes("token currency", l, n)
@@ -418,7 +418,7 @@ func tokenToJSON(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
 	i := make([]byte, l)
 	n, err = b.Read(i)
 	if err != nil {
-		return nil, fmt.Errorf("cannot read token issuer: %w", err)
+		return nil, fmt.Errorf("reading token issuer: %w", err)
 	}
 	if n != l {
 		return nil, outOfBytes("token issuer", l, n)
@@ -441,7 +441,7 @@ func mptToJSON(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
 	v := make([]byte, l)
 	n, err := b.Read(v)
 	if err != nil {
-		return nil, fmt.Errorf("cannot read mpt value: %w", err)
+		return nil, fmt.Errorf("reading mpt value: %w", err)
 	}
 	if n != l {
 		return nil, outOfBytes("mpt value", l, n)
@@ -463,7 +463,7 @@ func mptToJSON(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
 	mii := make([]byte, l)
 	n, err = b.Read(mii)
 	if err != nil {
-		return nil, fmt.Errorf("cannot read mpt issuance id: %w", err)
+		return nil, fmt.Errorf("reading mpt issuance id: %w", err)
 	}
 	if n != l {
 		return nil, outOfBytes("mpt issuance id", l, n)
