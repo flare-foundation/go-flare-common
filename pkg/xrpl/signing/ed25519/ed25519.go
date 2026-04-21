@@ -13,6 +13,7 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/base58"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/hash"
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/signing/seed"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/signing/signer"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/signing/utils"
 )
@@ -92,6 +93,24 @@ func PrivKeyFromSecret(secret string) (ed25519.PrivateKey, error) {
 	prv := ed25519.NewKeyFromSeed(rawPriv)
 
 	return prv, nil
+}
+
+// PrivKeyFromSeed derives an Ed25519 private key from a 16-byte rippled family seed.
+// Mirrors rippled generateSecretKey(KeyType::ed25519, seed) in SecretKey.cpp:283-289: key = sha512Half(seed).
+func PrivKeyFromSeed(familySeed []byte) (ed25519.PrivateKey, error) {
+	if len(familySeed) != seed.Length {
+		return nil, fmt.Errorf("invalid seed length %d, want %d", len(familySeed), seed.Length)
+	}
+	return ed25519.NewKeyFromSeed(hash.Sha512Half(familySeed)), nil
+}
+
+// PrivKeyFromFamilySeed derives an Ed25519 private key from a rippled-native base58 family seed string (TokenType::FamilySeed, prefix 0x21).
+func PrivKeyFromFamilySeed(s string) (ed25519.PrivateKey, error) {
+	payload, err := seed.DecodeFamilySeed(s)
+	if err != nil {
+		return nil, fmt.Errorf("decoding family seed: %w", err)
+	}
+	return PrivKeyFromSeed(payload)
 }
 
 // PrvToAddress calculates xrpl address for Ed25519 private key.
