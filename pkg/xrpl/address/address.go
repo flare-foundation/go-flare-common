@@ -13,11 +13,15 @@ import (
 )
 
 const (
-	accountPrefix = 0x00
+	accountPrefix  = 0x00
+	encodedAddrCap = 40 // rippled tokens.cpp caps decoded tokens at 64 bytes; address is 25 bytes → 35 chars max encoded
 )
 
 // ID returns accountID of an address. If the address has an invalid checksum, an error is returned.
 func ID(address string) ([]byte, error) {
+	if len(address) > encodedAddrCap {
+		return nil, fmt.Errorf("address too long, got %d chars", len(address))
+	}
 	addressBytes, err := base58.XRPLCoder.Decode(address)
 	if err != nil {
 		return nil, fmt.Errorf("decoding: %w", err)
