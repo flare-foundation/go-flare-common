@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -248,4 +249,59 @@ func TestUint16ToTxType(t *testing.T) {
 		_, err := Uint16ToTxType(fail)
 		require.Error(t, err)
 	}
+}
+
+// TestUInt16TxTypeMapping asserts TransactionType string values encode to the
+// exact numeric transaction type codes enumerated by xrpl.js binary-codec.
+// The canonical list lives in
+// xrpl.js ripple-binary-codec/src/enums/definitions.json (TRANSACTION_TYPES)
+// and is sourced from rippled include/xrpl/protocol/TxFormats.h.
+//
+// source: xrpl.js ripple-binary-codec/src/enums/definitions.json TRANSACTION_TYPES
+func TestUInt16TxTypeMapping(t *testing.T) {
+	tests := []struct {
+		name    string
+		code    uint16
+		wantHex string
+	}{
+		{"Payment", 0, "0000"},
+		{"EscrowCreate", 1, "0001"},
+		{"EscrowFinish", 2, "0002"},
+		{"AccountSet", 3, "0003"},
+		{"EscrowCancel", 4, "0004"},
+		{"OfferCreate", 7, "0007"},
+		{"OfferCancel", 8, "0008"},
+		{"TicketCreate", 10, "000A"},
+		{"SignerListSet", 12, "000C"},
+		{"NFTokenMint", 25, "0019"},
+		{"NFTokenBurn", 26, "001A"},
+		{"Clawback", 30, "001E"},
+		{"AMMCreate", 35, "0023"},
+		{"OracleDelete", 52, "0034"},
+		{"Batch", 71, "0047"},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			got, err := (&UInt16{}).ToBytes(tc.name, false)
+			require.NoError(t, err)
+			require.Equal(t, tc.wantHex, strings.ToUpper(hex.EncodeToString(got)))
+
+			// Round-trip: decode back to uint16 then to name.
+			decoded, err := (&UInt16{}).ToJSON(bytes.NewBuffer(got), 0)
+			require.NoError(t, err)
+			require.Equal(t, tc.code, decoded)
+
+			name, err := Uint16ToTxType(decoded)
+			require.NoError(t, err)
+			require.Equal(t, tc.name, name)
+		})
+	}
+}
+
+// TestUInt16UnknownTxTypeString asserts that an unknown transaction-type
+// string is rejected rather than silently mapped.
+func TestUInt16UnknownTxTypeString(t *testing.T) {
+	_, err := (&UInt16{}).ToBytes("NotARealTransactionType", false)
+	require.Error(t, err)
 }
