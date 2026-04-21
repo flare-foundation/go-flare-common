@@ -2,12 +2,22 @@
 package transactions
 
 import (
-	"strings"
+	"encoding/hex"
 
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/types"
 )
 
-const memoAllowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=%"
+var memoAllowedBytes = func() [256]bool {
+	var a [256]bool
+	const symbols = "0123456789" +
+		"-._~:/?#[]@!$&'()*+,;=%" +
+		"ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+		"abcdefghijklmnopqrstuvwxyz"
+	for i := range len(symbols) {
+		a[symbols[i]] = true
+	}
+	return a
+}()
 
 // CommonFields holds fields shared across XRPL transaction types.
 type CommonFields struct {
@@ -18,25 +28,40 @@ type CommonFields struct {
 	Memos           []Memo
 }
 
-// Memo represents an XRPL transaction memo with optional data, format, and type fields.
+// Memo represents an XRPL transaction memo. MemoData, MemoFormat and MemoType hold hex-encoded bytes.
 type Memo struct {
 	MemoData   string
 	MemoFormat string
 	MemoType   string
 }
 
-// Validate checks that the memo fields contain valid characters.
-// The MemoType and MemoFormat fields should only consist of the following characters:
-// ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=%
-func (m *Memo) Validate() bool {
-	return validMemoField(m.MemoType) && validMemoField(m.MemoFormat)
+// ValidateMemo reports whether every byte in b is a URL character allowed in MemoType / MemoFormat per RFC 3986.
+// Mirrors rippled isMemoOkay (src/libxrpl/protocol/STTx.cpp:655-679): the check runs on the hex-decoded bytes.
+func ValidateMemo(b []byte) bool {
+	for _, c := range b {
+		if !memoAllowedBytes[c] {
+			return false
+		}
+	}
+	return true
 }
 
-// validMemoField reports whether all characters in s are in memoAllowedChars.
-func validMemoField(s string) bool {
-	return strings.IndexFunc(s, func(r rune) bool {
-		return !strings.ContainsRune(memoAllowedChars, r)
-	}) == -1
+// Validate reports whether the memo fields are well-formed per rippled isMemoOkay:
+// every field must be valid hex, and the hex-decoded MemoType / MemoFormat must contain only RFC 3986 URL characters.
+// MemoData is only required to be valid hex.
+func (m *Memo) Validate() bool {
+	if _, err := hex.DecodeString(m.MemoData); err != nil {
+		return false
+	}
+	typeBytes, err := hex.DecodeString(m.MemoType)
+	if err != nil {
+		return false
+	}
+	formatBytes, err := hex.DecodeString(m.MemoFormat)
+	if err != nil {
+		return false
+	}
+	return ValidateMemo(typeBytes) && ValidateMemo(formatBytes)
 }
 
 // Format returns the memo as a serializable array object.

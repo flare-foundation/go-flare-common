@@ -1,11 +1,16 @@
 package transactions
 
 import (
+	"encoding/hex"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
+
+func hexOf(s string) string {
+	return hex.EncodeToString([]byte(s))
+}
 
 func TestMemoValidate(t *testing.T) {
 	tests := []struct {
@@ -13,71 +18,20 @@ func TestMemoValidate(t *testing.T) {
 		memo  Memo
 		valid bool
 	}{
-		{
-			name:  "empty fields",
-			memo:  Memo{},
-			valid: true,
-		},
-		{
-			name:  "all allowed characters",
-			memo:  Memo{MemoType: memoAllowedChars},
-			valid: true,
-		},
-		{
-			name:  "alphanumeric MemoType",
-			memo:  Memo{MemoType: "application/json"},
-			valid: true,
-		},
-		{
-			name:  "alphanumeric MemoFormat",
-			memo:  Memo{MemoFormat: "text/plain"},
-			valid: true,
-		},
-		{
-			name:  "both fields valid",
-			memo:  Memo{MemoType: "application/json", MemoFormat: "utf-8"},
-			valid: true,
-		},
-		{
-			name:  "MemoData not checked",
-			memo:  Memo{MemoData: "\x00\xff"},
-			valid: true,
-		},
-		{
-			name:  "space in MemoType",
-			memo:  Memo{MemoType: "hello world"},
-			valid: false,
-		},
-		{
-			name:  "space in MemoFormat",
-			memo:  Memo{MemoFormat: "hello world"},
-			valid: false,
-		},
-		{
-			name:  "newline in MemoType",
-			memo:  Memo{MemoType: "foo\nbar"},
-			valid: false,
-		},
-		{
-			name:  "null byte in MemoFormat",
-			memo:  Memo{MemoFormat: "foo\x00bar"},
-			valid: false,
-		},
-		{
-			name:  "non-ASCII in MemoType",
-			memo:  Memo{MemoType: "héllo"},
-			valid: false,
-		},
-		{
-			name:  "MemoType valid but MemoFormat invalid",
-			memo:  Memo{MemoType: "valid", MemoFormat: "invalid char \x01"},
-			valid: false,
-		},
-		{
-			name:  "MemoType invalid but MemoFormat valid",
-			memo:  Memo{MemoType: "bad char \x01", MemoFormat: "valid"},
-			valid: false,
-		},
+		{name: "empty fields", memo: Memo{}, valid: true},
+		{name: "alphanumeric MemoType", memo: Memo{MemoType: hexOf("application/json")}, valid: true},
+		{name: "alphanumeric MemoFormat", memo: Memo{MemoFormat: hexOf("text/plain")}, valid: true},
+		{name: "both fields valid", memo: Memo{MemoType: hexOf("application/json"), MemoFormat: hexOf("utf-8")}, valid: true},
+		{name: "MemoData arbitrary bytes", memo: Memo{MemoData: "00ff"}, valid: true},
+		{name: "space in MemoType", memo: Memo{MemoType: hexOf("hello world")}, valid: false},
+		{name: "space in MemoFormat", memo: Memo{MemoFormat: hexOf("hello world")}, valid: false},
+		{name: "newline in MemoType", memo: Memo{MemoType: hexOf("foo\nbar")}, valid: false},
+		{name: "null byte in MemoFormat", memo: Memo{MemoFormat: hexOf("foo\x00bar")}, valid: false},
+		{name: "non-ASCII in MemoType", memo: Memo{MemoType: hexOf("héllo")}, valid: false},
+		{name: "MemoType valid, MemoFormat invalid", memo: Memo{MemoType: hexOf("valid"), MemoFormat: hexOf("invalid char \x01")}, valid: false},
+		{name: "MemoType invalid, MemoFormat valid", memo: Memo{MemoType: hexOf("bad char \x01"), MemoFormat: hexOf("valid")}, valid: false},
+		{name: "MemoType not valid hex", memo: Memo{MemoType: "zz"}, valid: false},
+		{name: "MemoData not valid hex", memo: Memo{MemoData: "xx"}, valid: false},
 	}
 
 	for _, tt := range tests {
@@ -87,33 +41,20 @@ func TestMemoValidate(t *testing.T) {
 	}
 }
 
-// Source: rippled src/libxrpl/protocol/STTx.cpp isMemoOkay allowed symbols (lines 655-667).
-// Verifies that the Go memoAllowedChars constant matches the rippled RFC 3986 URL-safe subset exactly.
-func TestMemoAllowedCharsMatchesRippled(t *testing.T) {
-	rippledSymbols := "0123456789" +
+// source: rippled src/libxrpl/protocol/STTx.cpp:655-679 isMemoOkay allowed-symbols
+func TestValidateMemoAllowedSet(t *testing.T) {
+	allowed := "0123456789" +
 		"-._~:/?#[]@!$&'()*+,;=%" +
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
 		"abcdefghijklmnopqrstuvwxyz"
 
-	for _, c := range rippledSymbols {
-		assert.Contains(t, memoAllowedChars, string(c), "rippled allowed char %q missing from Go set", c)
+	assert.True(t, ValidateMemo([]byte(allowed)))
+	assert.True(t, ValidateMemo(nil))
+	assert.True(t, ValidateMemo([]byte{}))
+
+	for _, bad := range []byte{0x00, 0x01, ' ', '\n', '\t', 0x7f, 0x80, 0xff, '"', '<', '>', '\\', '^', '`', '{', '}'} {
+		assert.False(t, ValidateMemo([]byte{bad}), "byte %#x should be rejected", bad)
 	}
-	require.Equal(t, len(rippledSymbols), len(memoAllowedChars))
-}
-
-// Deviation note (not a failure): rippled's isMemoOkay validates the *hex-decoded* bytes
-// of MemoType / MemoFormat against allowedSymbols (STTx.cpp lines 669-679), while Go's
-// validMemoField validates the raw Go string before any hex decoding. The character *set*
-// is identical but the validation domain differs.
-func TestMemoValidateOperatesOnRawString(t *testing.T) {
-	// "deadbeef" is valid hex but contains only letters a-f which are in memoAllowedChars.
-	m := Memo{MemoType: "deadbeef"}
-	assert.True(t, m.Validate())
-
-	// "hi there" decoded would fail in rippled too, but here we show Go rejects
-	// due to the space regardless of hex-decode semantics.
-	m2 := Memo{MemoType: "hi there"}
-	assert.False(t, m2.Validate())
 }
 
 func TestMemoFormat(t *testing.T) {
