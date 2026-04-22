@@ -63,8 +63,7 @@ type ConfidentialSpaceInfo struct {
 }
 
 type Container struct {
-	ImageDigest string `json:"image_digest"`
-	ImageID     string `json:"image_id"`
+	ImageID string `json:"image_id"`
 }
 
 // Platform is the utf-8 encoded hwmodel (hardware module) on which the confidential computing workload is running.
@@ -77,11 +76,11 @@ func (c *GoogleTeeClaims) Platform() (common.Hash, error) {
 	return p, nil
 }
 
-// CodeHash is the image digest of the workload container.
+// CodeHash is the image ID of the workload container.
 func (c *GoogleTeeClaims) CodeHash() (common.Hash, error) {
-	ch, err := convert.Hex32StringToCommonHash(strings.TrimPrefix(c.SubMods.Container.ImageDigest, "sha256:"))
+	ch, err := convert.Hex32StringToCommonHash(strings.TrimPrefix(c.SubMods.Container.ImageID, "sha256:"))
 	if err != nil {
-		return common.Hash{}, fmt.Errorf("unparsable ImageDigest: %w", err)
+		return common.Hash{}, fmt.Errorf("unparsable ImageID: %w", err)
 	}
 
 	return ch, nil
