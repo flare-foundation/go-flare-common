@@ -90,7 +90,7 @@
                 "type": "uint256"
               }
             ],
-            "internalType": "struct VrfVerifier.Point",
+            "internalType": "struct IVrfVerifier.Point",
             "name": "gamma",
             "type": "tuple"
           },
@@ -117,7 +117,7 @@
                 "type": "uint256"
               }
             ],
-            "internalType": "struct VrfVerifier.Point",
+            "internalType": "struct IVrfVerifier.Point",
             "name": "u",
             "type": "tuple"
           },
@@ -134,7 +134,7 @@
                 "type": "uint256"
               }
             ],
-            "internalType": "struct VrfVerifier.Point",
+            "internalType": "struct IVrfVerifier.Point",
             "name": "cGamma",
             "type": "tuple"
           },
@@ -151,7 +151,7 @@
                 "type": "uint256"
               }
             ],
-            "internalType": "struct VrfVerifier.Point",
+            "internalType": "struct IVrfVerifier.Point",
             "name": "v",
             "type": "tuple"
           },
@@ -161,7 +161,7 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct VrfVerifier.Proof",
+        "internalType": "struct IVrfVerifier.Proof",
         "name": "_proof",
         "type": "tuple"
       },
