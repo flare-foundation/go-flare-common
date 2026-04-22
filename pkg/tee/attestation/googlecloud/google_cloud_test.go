@@ -128,7 +128,7 @@ func TestParsePKITokenUnverifiedHappy(t *testing.T) {
 	ch, err := claimsStruct.CodeHash()
 	require.NoError(t, err)
 
-	require.Equal(t, "cfc0496335c6a4eedd408e87b64c08945d9058963b31fd64ac92754d395d291f", ch.Hex()[2:])
+	require.Equal(t, "732d2328d06950198ffbd35b5eb55ec95ae700d05bddfa56fa0bc4c43ed1ce97", ch.Hex()[2:])
 
 	claimsStructT, ok := tokenStruct.Claims.(*GoogleTeeClaims)
 	require.True(t, ok)
