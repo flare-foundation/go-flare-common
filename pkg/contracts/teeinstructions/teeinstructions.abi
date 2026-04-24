@@ -339,7 +339,7 @@
           }
         ],
         "indexed": false,
-        "internalType": "struct IMachineManagerFacet.TeeMachine[]",
+        "internalType": "struct IMachineManager.TeeMachine[]",
         "name": "teeMachines",
         "type": "tuple[]"
       },
@@ -455,7 +455,7 @@
             "type": "address"
           }
         ],
-        "internalType": "struct IInstructionsFacet.TeeInstructionParams",
+        "internalType": "struct IInstructions.TeeInstructionParams",
         "name": "_instructionParams",
         "type": "tuple"
       }
@@ -516,7 +516,7 @@
             "type": "address"
           }
         ],
-        "internalType": "struct IInstructionsFacet.TeeInstructionParams",
+        "internalType": "struct IInstructions.TeeInstructionParams",
         "name": "_instructionParams",
         "type": "tuple"
       }
@@ -557,7 +557,7 @@
             "type": "string"
           }
         ],
-        "internalType": "struct IMachineManagerFacet.TeeMachine[]",
+        "internalType": "struct IMachineManager.TeeMachine[]",
         "name": "_teeMachines",
         "type": "tuple[]"
       },
@@ -594,7 +594,7 @@
             "type": "address"
           }
         ],
-        "internalType": "struct IInstructionsFacet.TeeInstructionParams",
+        "internalType": "struct IInstructions.TeeInstructionParams",
         "name": "_instructionParams",
         "type": "tuple"
       }

@@ -19,7 +19,7 @@
             "type": "bytes"
           }
         ],
-        "internalType": "struct IVrfFacet.VrfInstructionMessage",
+        "internalType": "struct IVrf.VrfInstructionMessage",
         "name": "",
         "type": "tuple"
       }

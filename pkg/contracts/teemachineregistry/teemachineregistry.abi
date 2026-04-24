@@ -418,7 +418,7 @@
           }
         ],
         "indexed": false,
-        "internalType": "struct IMachineManagerFacet.TeeMachine[]",
+        "internalType": "struct IMachineManager.TeeMachine[]",
         "name": "teeMachines",
         "type": "tuple[]"
       },
@@ -553,7 +553,7 @@
       },
       {
         "indexed": true,
-        "internalType": "enum IMachineManagerFacet.TeeStatus",
+        "internalType": "enum IMachineManager.TeeStatus",
         "name": "newStatus",
         "type": "uint8"
       }
@@ -785,7 +785,7 @@
             "type": "string"
           }
         ],
-        "internalType": "struct IMachineManagerFacet.TeeMachine",
+        "internalType": "struct IMachineManager.TeeMachine",
         "name": "",
         "type": "tuple"
       }
@@ -823,7 +823,7 @@
     "name": "getTeeMachineStatus",
     "outputs": [
       {
-        "internalType": "enum IMachineManagerFacet.TeeStatus",
+        "internalType": "enum IMachineManager.TeeStatus",
         "name": "",
         "type": "uint8"
       }
@@ -869,7 +869,7 @@
             "type": "bytes32"
           }
         ],
-        "internalType": "struct IMachineManagerFacet.TeeMachineWithAttestationData",
+        "internalType": "struct IMachineManager.TeeMachineWithAttestationData",
         "name": "",
         "type": "tuple"
       }
@@ -1159,7 +1159,7 @@
             "type": "tuple"
           }
         ],
-        "internalType": "struct IMachineManagerFacet.TeeMachineData",
+        "internalType": "struct IMachineManager.TeeMachineData",
         "name": "_teeMachineData",
         "type": "tuple"
       },

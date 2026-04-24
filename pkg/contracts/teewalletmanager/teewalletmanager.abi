@@ -602,7 +602,7 @@
     "name": "getWalletStatus",
     "outputs": [
       {
-        "internalType": "enum IWalletManagerFacet.WalletStatus",
+        "internalType": "enum IWalletManager.WalletStatus",
         "name": "_status",
         "type": "uint8"
       }

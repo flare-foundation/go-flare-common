@@ -273,7 +273,7 @@
           }
         ],
         "indexed": false,
-        "internalType": "struct IMachineManagerFacet.TeeMachine[]",
+        "internalType": "struct IMachineManager.TeeMachine[]",
         "name": "teeMachines",
         "type": "tuple[]"
       },
@@ -373,7 +373,7 @@
             "type": "bytes32"
           }
         ],
-        "internalType": "struct IWalletBackupManagerFacet.BackupId",
+        "internalType": "struct IWalletBackupManager.BackupId",
         "name": "_backupId",
         "type": "tuple"
       },

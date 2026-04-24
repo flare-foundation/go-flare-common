@@ -279,7 +279,7 @@
           }
         ],
         "indexed": false,
-        "internalType": "struct IMachineManagerFacet.TeeMachine[]",
+        "internalType": "struct IMachineManager.TeeMachine[]",
         "name": "teeMachines",
         "type": "tuple[]"
       },
@@ -574,7 +574,7 @@
                 "type": "uint64"
               }
             ],
-            "internalType": "struct IWalletKeyManagerFacet.KeyConfigConstants",
+            "internalType": "struct IWalletKeyManager.KeyConfigConstants",
             "name": "configConstants",
             "type": "tuple"
           },
@@ -589,7 +589,7 @@
             "type": "bytes"
           }
         ],
-        "internalType": "struct IWalletKeyManagerFacet.KeyExistence",
+        "internalType": "struct IWalletKeyManager.KeyExistence",
         "name": "_proof",
         "type": "tuple"
       },

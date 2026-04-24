@@ -389,7 +389,7 @@
           }
         ],
         "indexed": false,
-        "internalType": "struct IMachineManagerFacet.TeeMachine[]",
+        "internalType": "struct IMachineManager.TeeMachine[]",
         "name": "teeMachines",
         "type": "tuple[]"
       },

@@ -29,8 +29,8 @@ var (
 	_ = abi.ConvertType
 )
 
-// IWalletBackupManagerFacetBackupId is an auto generated low-level Go binding around an user-defined struct.
-type IWalletBackupManagerFacetBackupId struct {
+// IWalletBackupManagerBackupId is an auto generated low-level Go binding around an user-defined struct.
+type IWalletBackupManagerBackupId struct {
 	TeeId         common.Address
 	WalletId      [32]byte
 	KeyId         uint64
@@ -41,32 +41,32 @@ type IWalletBackupManagerFacetBackupId struct {
 	RandomNonce   [32]byte
 }
 
-// IWalletBackupManagerFacetKeyDataProviderRestore is an auto generated low-level Go binding around an user-defined struct.
-type IWalletBackupManagerFacetKeyDataProviderRestore struct {
+// IWalletBackupManagerKeyDataProviderRestore is an auto generated low-level Go binding around an user-defined struct.
+type IWalletBackupManagerKeyDataProviderRestore struct {
 	TeePublicKey PublicKey
-	BackupId     IWalletBackupManagerFacetBackupId
+	BackupId     IWalletBackupManagerBackupId
 	BackupUrl    string
 	Nonce        *big.Int
 }
 
-// IWalletKeyManagerFacetKeyConfigConstants is an auto generated low-level Go binding around an user-defined struct.
-type IWalletKeyManagerFacetKeyConfigConstants struct {
+// IWalletKeyManagerKeyConfigConstants is an auto generated low-level Go binding around an user-defined struct.
+type IWalletKeyManagerKeyConfigConstants struct {
 	AdminsPublicKeys   []PublicKey
 	AdminsThreshold    uint64
 	Cosigners          []common.Address
 	CosignersThreshold uint64
 }
 
-// IWalletKeyManagerFacetKeyDelete is an auto generated low-level Go binding around an user-defined struct.
-type IWalletKeyManagerFacetKeyDelete struct {
+// IWalletKeyManagerKeyDelete is an auto generated low-level Go binding around an user-defined struct.
+type IWalletKeyManagerKeyDelete struct {
 	TeeId    common.Address
 	WalletId [32]byte
 	KeyId    uint64
 	Nonce    *big.Int
 }
 
-// IWalletKeyManagerFacetKeyExistence is an auto generated low-level Go binding around an user-defined struct.
-type IWalletKeyManagerFacetKeyExistence struct {
+// IWalletKeyManagerKeyExistence is an auto generated low-level Go binding around an user-defined struct.
+type IWalletKeyManagerKeyExistence struct {
 	TeeId           common.Address
 	WalletId        [32]byte
 	KeyId           uint64
@@ -75,36 +75,36 @@ type IWalletKeyManagerFacetKeyExistence struct {
 	PublicKey       []byte
 	Nonce           *big.Int
 	Restored        bool
-	ConfigConstants IWalletKeyManagerFacetKeyConfigConstants
+	ConfigConstants IWalletKeyManagerKeyConfigConstants
 	SettingsVersion [32]byte
 	Settings        []byte
 }
 
-// IWalletKeyManagerFacetKeyGenerate is an auto generated low-level Go binding around an user-defined struct.
-type IWalletKeyManagerFacetKeyGenerate struct {
+// IWalletKeyManagerKeyGenerate is an auto generated low-level Go binding around an user-defined struct.
+type IWalletKeyManagerKeyGenerate struct {
 	TeeId           common.Address
 	WalletId        [32]byte
 	KeyId           uint64
 	KeyType         [32]byte
 	SigningAlgo     [32]byte
-	ConfigConstants IWalletKeyManagerFacetKeyConfigConstants
+	ConfigConstants IWalletKeyManagerKeyConfigConstants
 }
 
-// IWalletResumeFacetResume is an auto generated low-level Go binding around an user-defined struct.
-type IWalletResumeFacetResume struct {
+// IWalletResumeResume is an auto generated low-level Go binding around an user-defined struct.
+type IWalletResumeResume struct {
 	WalletId [32]byte
-	KeysData []IWalletResumeFacetResumeKeyData
+	KeysData []IWalletResumeResumeKeyData
 }
 
-// IWalletResumeFacetResumeKeyData is an auto generated low-level Go binding around an user-defined struct.
-type IWalletResumeFacetResumeKeyData struct {
+// IWalletResumeResumeKeyData is an auto generated low-level Go binding around an user-defined struct.
+type IWalletResumeResumeKeyData struct {
 	KeyId uint64
 	TeeId common.Address
 	Nonce *big.Int
 }
 
-// IWalletResumeFacetSetPausingAddresses is an auto generated low-level Go binding around an user-defined struct.
-type IWalletResumeFacetSetPausingAddresses struct {
+// IWalletResumeSetPausingAddresses is an auto generated low-level Go binding around an user-defined struct.
+type IWalletResumeSetPausingAddresses struct {
 	WalletId         [32]byte
 	Nonce            *big.Int
 	TeeIdKeyIdPairs  []TeeIdKeyIdPair
@@ -125,7 +125,7 @@ type TeeIdKeyIdPair struct {
 
 // WalletMetaData contains all meta data concerning the Wallet contract.
 var WalletMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"signingAlgo\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"publicKey\",\"type\":\"bytes\"},{\"internalType\":\"uint32\",\"name\":\"rewardEpochId\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"randomNonce\",\"type\":\"bytes32\"}],\"internalType\":\"structIWalletBackupManagerFacet.BackupId\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"backupIdStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"x\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"y\",\"type\":\"bytes32\"}],\"internalType\":\"structPublicKey[]\",\"name\":\"adminsPublicKeys\",\"type\":\"tuple[]\"},{\"internalType\":\"uint64\",\"name\":\"adminsThreshold\",\"type\":\"uint64\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"}],\"internalType\":\"structIWalletKeyManagerFacet.KeyConfigConstants\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"keyConfigConstantsStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"x\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"y\",\"type\":\"bytes32\"}],\"internalType\":\"structPublicKey\",\"name\":\"teePublicKey\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"signingAlgo\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"publicKey\",\"type\":\"bytes\"},{\"internalType\":\"uint32\",\"name\":\"rewardEpochId\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"randomNonce\",\"type\":\"bytes32\"}],\"internalType\":\"structIWalletBackupManagerFacet.BackupId\",\"name\":\"backupId\",\"type\":\"tuple\"},{\"internalType\":\"string\",\"name\":\"backupUrl\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"}],\"internalType\":\"structIWalletBackupManagerFacet.KeyDataProviderRestore\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"keyDataProviderRestoreStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"},{\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"}],\"internalType\":\"structIWalletKeyManagerFacet.KeyDelete\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"keyDeleteStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"signingAlgo\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"publicKey\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"restored\",\"type\":\"bool\"},{\"components\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"x\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"y\",\"type\":\"bytes32\"}],\"internalType\":\"structPublicKey[]\",\"name\":\"adminsPublicKeys\",\"type\":\"tuple[]\"},{\"internalType\":\"uint64\",\"name\":\"adminsThreshold\",\"type\":\"uint64\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"}],\"internalType\":\"structIWalletKeyManagerFacet.KeyConfigConstants\",\"name\":\"configConstants\",\"type\":\"tuple\"},{\"internalType\":\"bytes32\",\"name\":\"settingsVersion\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"settings\",\"type\":\"bytes\"}],\"internalType\":\"structIWalletKeyManagerFacet.KeyExistence\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"keyExistenceStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"signingAlgo\",\"type\":\"bytes32\"},{\"components\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"x\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"y\",\"type\":\"bytes32\"}],\"internalType\":\"structPublicKey[]\",\"name\":\"adminsPublicKeys\",\"type\":\"tuple[]\"},{\"internalType\":\"uint64\",\"name\":\"adminsThreshold\",\"type\":\"uint64\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"}],\"internalType\":\"structIWalletKeyManagerFacet.KeyConfigConstants\",\"name\":\"configConstants\",\"type\":\"tuple\"}],\"internalType\":\"structIWalletKeyManagerFacet.KeyGenerate\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"keyGenerateStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"},{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"}],\"internalType\":\"structIWalletResumeFacet.ResumeKeyData[]\",\"name\":\"keysData\",\"type\":\"tuple[]\"}],\"internalType\":\"structIWalletResumeFacet.Resume\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"resumeStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"}],\"internalType\":\"structTeeIdKeyIdPair[]\",\"name\":\"teeIdKeyIdPairs\",\"type\":\"tuple[]\"},{\"internalType\":\"address[]\",\"name\":\"pausingAddresses\",\"type\":\"address[]\"}],\"internalType\":\"structIWalletResumeFacet.SetPausingAddresses\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"setPausingAddressesStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"signingAlgo\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"publicKey\",\"type\":\"bytes\"},{\"internalType\":\"uint32\",\"name\":\"rewardEpochId\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"randomNonce\",\"type\":\"bytes32\"}],\"internalType\":\"structIWalletBackupManager.BackupId\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"backupIdStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"x\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"y\",\"type\":\"bytes32\"}],\"internalType\":\"structPublicKey[]\",\"name\":\"adminsPublicKeys\",\"type\":\"tuple[]\"},{\"internalType\":\"uint64\",\"name\":\"adminsThreshold\",\"type\":\"uint64\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"}],\"internalType\":\"structIWalletKeyManager.KeyConfigConstants\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"keyConfigConstantsStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"x\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"y\",\"type\":\"bytes32\"}],\"internalType\":\"structPublicKey\",\"name\":\"teePublicKey\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"signingAlgo\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"publicKey\",\"type\":\"bytes\"},{\"internalType\":\"uint32\",\"name\":\"rewardEpochId\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"randomNonce\",\"type\":\"bytes32\"}],\"internalType\":\"structIWalletBackupManager.BackupId\",\"name\":\"backupId\",\"type\":\"tuple\"},{\"internalType\":\"string\",\"name\":\"backupUrl\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"}],\"internalType\":\"structIWalletBackupManager.KeyDataProviderRestore\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"keyDataProviderRestoreStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"},{\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"}],\"internalType\":\"structIWalletKeyManager.KeyDelete\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"keyDeleteStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"signingAlgo\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"publicKey\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"restored\",\"type\":\"bool\"},{\"components\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"x\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"y\",\"type\":\"bytes32\"}],\"internalType\":\"structPublicKey[]\",\"name\":\"adminsPublicKeys\",\"type\":\"tuple[]\"},{\"internalType\":\"uint64\",\"name\":\"adminsThreshold\",\"type\":\"uint64\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"}],\"internalType\":\"structIWalletKeyManager.KeyConfigConstants\",\"name\":\"configConstants\",\"type\":\"tuple\"},{\"internalType\":\"bytes32\",\"name\":\"settingsVersion\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"settings\",\"type\":\"bytes\"}],\"internalType\":\"structIWalletKeyManager.KeyExistence\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"keyExistenceStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"signingAlgo\",\"type\":\"bytes32\"},{\"components\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"x\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"y\",\"type\":\"bytes32\"}],\"internalType\":\"structPublicKey[]\",\"name\":\"adminsPublicKeys\",\"type\":\"tuple[]\"},{\"internalType\":\"uint64\",\"name\":\"adminsThreshold\",\"type\":\"uint64\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"}],\"internalType\":\"structIWalletKeyManager.KeyConfigConstants\",\"name\":\"configConstants\",\"type\":\"tuple\"}],\"internalType\":\"structIWalletKeyManager.KeyGenerate\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"keyGenerateStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"},{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"}],\"internalType\":\"structIWalletResume.ResumeKeyData[]\",\"name\":\"keysData\",\"type\":\"tuple[]\"}],\"internalType\":\"structIWalletResume.Resume\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"resumeStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"}],\"internalType\":\"structTeeIdKeyIdPair[]\",\"name\":\"teeIdKeyIdPairs\",\"type\":\"tuple[]\"},{\"internalType\":\"address[]\",\"name\":\"pausingAddresses\",\"type\":\"address[]\"}],\"internalType\":\"structIWalletResume.SetPausingAddresses\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"setPausingAddressesStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // WalletABI is the input ABI used to generate the binding from.
@@ -277,167 +277,167 @@ func (_Wallet *WalletTransactorRaw) Transact(opts *bind.TransactOpts, method str
 // BackupIdStruct is a paid mutator transaction binding the contract method 0x61331536.
 //
 // Solidity: function backupIdStruct((address,bytes32,uint64,bytes32,bytes32,bytes,uint32,bytes32) ) returns()
-func (_Wallet *WalletTransactor) BackupIdStruct(opts *bind.TransactOpts, arg0 IWalletBackupManagerFacetBackupId) (*types.Transaction, error) {
+func (_Wallet *WalletTransactor) BackupIdStruct(opts *bind.TransactOpts, arg0 IWalletBackupManagerBackupId) (*types.Transaction, error) {
 	return _Wallet.contract.Transact(opts, "backupIdStruct", arg0)
 }
 
 // BackupIdStruct is a paid mutator transaction binding the contract method 0x61331536.
 //
 // Solidity: function backupIdStruct((address,bytes32,uint64,bytes32,bytes32,bytes,uint32,bytes32) ) returns()
-func (_Wallet *WalletSession) BackupIdStruct(arg0 IWalletBackupManagerFacetBackupId) (*types.Transaction, error) {
+func (_Wallet *WalletSession) BackupIdStruct(arg0 IWalletBackupManagerBackupId) (*types.Transaction, error) {
 	return _Wallet.Contract.BackupIdStruct(&_Wallet.TransactOpts, arg0)
 }
 
 // BackupIdStruct is a paid mutator transaction binding the contract method 0x61331536.
 //
 // Solidity: function backupIdStruct((address,bytes32,uint64,bytes32,bytes32,bytes,uint32,bytes32) ) returns()
-func (_Wallet *WalletTransactorSession) BackupIdStruct(arg0 IWalletBackupManagerFacetBackupId) (*types.Transaction, error) {
+func (_Wallet *WalletTransactorSession) BackupIdStruct(arg0 IWalletBackupManagerBackupId) (*types.Transaction, error) {
 	return _Wallet.Contract.BackupIdStruct(&_Wallet.TransactOpts, arg0)
 }
 
 // KeyConfigConstantsStruct is a paid mutator transaction binding the contract method 0x979cc96b.
 //
 // Solidity: function keyConfigConstantsStruct(((bytes32,bytes32)[],uint64,address[],uint64) ) returns()
-func (_Wallet *WalletTransactor) KeyConfigConstantsStruct(opts *bind.TransactOpts, arg0 IWalletKeyManagerFacetKeyConfigConstants) (*types.Transaction, error) {
+func (_Wallet *WalletTransactor) KeyConfigConstantsStruct(opts *bind.TransactOpts, arg0 IWalletKeyManagerKeyConfigConstants) (*types.Transaction, error) {
 	return _Wallet.contract.Transact(opts, "keyConfigConstantsStruct", arg0)
 }
 
 // KeyConfigConstantsStruct is a paid mutator transaction binding the contract method 0x979cc96b.
 //
 // Solidity: function keyConfigConstantsStruct(((bytes32,bytes32)[],uint64,address[],uint64) ) returns()
-func (_Wallet *WalletSession) KeyConfigConstantsStruct(arg0 IWalletKeyManagerFacetKeyConfigConstants) (*types.Transaction, error) {
+func (_Wallet *WalletSession) KeyConfigConstantsStruct(arg0 IWalletKeyManagerKeyConfigConstants) (*types.Transaction, error) {
 	return _Wallet.Contract.KeyConfigConstantsStruct(&_Wallet.TransactOpts, arg0)
 }
 
 // KeyConfigConstantsStruct is a paid mutator transaction binding the contract method 0x979cc96b.
 //
 // Solidity: function keyConfigConstantsStruct(((bytes32,bytes32)[],uint64,address[],uint64) ) returns()
-func (_Wallet *WalletTransactorSession) KeyConfigConstantsStruct(arg0 IWalletKeyManagerFacetKeyConfigConstants) (*types.Transaction, error) {
+func (_Wallet *WalletTransactorSession) KeyConfigConstantsStruct(arg0 IWalletKeyManagerKeyConfigConstants) (*types.Transaction, error) {
 	return _Wallet.Contract.KeyConfigConstantsStruct(&_Wallet.TransactOpts, arg0)
 }
 
 // KeyDataProviderRestoreStruct is a paid mutator transaction binding the contract method 0xf3a00746.
 //
 // Solidity: function keyDataProviderRestoreStruct(((bytes32,bytes32),(address,bytes32,uint64,bytes32,bytes32,bytes,uint32,bytes32),string,uint256) ) returns()
-func (_Wallet *WalletTransactor) KeyDataProviderRestoreStruct(opts *bind.TransactOpts, arg0 IWalletBackupManagerFacetKeyDataProviderRestore) (*types.Transaction, error) {
+func (_Wallet *WalletTransactor) KeyDataProviderRestoreStruct(opts *bind.TransactOpts, arg0 IWalletBackupManagerKeyDataProviderRestore) (*types.Transaction, error) {
 	return _Wallet.contract.Transact(opts, "keyDataProviderRestoreStruct", arg0)
 }
 
 // KeyDataProviderRestoreStruct is a paid mutator transaction binding the contract method 0xf3a00746.
 //
 // Solidity: function keyDataProviderRestoreStruct(((bytes32,bytes32),(address,bytes32,uint64,bytes32,bytes32,bytes,uint32,bytes32),string,uint256) ) returns()
-func (_Wallet *WalletSession) KeyDataProviderRestoreStruct(arg0 IWalletBackupManagerFacetKeyDataProviderRestore) (*types.Transaction, error) {
+func (_Wallet *WalletSession) KeyDataProviderRestoreStruct(arg0 IWalletBackupManagerKeyDataProviderRestore) (*types.Transaction, error) {
 	return _Wallet.Contract.KeyDataProviderRestoreStruct(&_Wallet.TransactOpts, arg0)
 }
 
 // KeyDataProviderRestoreStruct is a paid mutator transaction binding the contract method 0xf3a00746.
 //
 // Solidity: function keyDataProviderRestoreStruct(((bytes32,bytes32),(address,bytes32,uint64,bytes32,bytes32,bytes,uint32,bytes32),string,uint256) ) returns()
-func (_Wallet *WalletTransactorSession) KeyDataProviderRestoreStruct(arg0 IWalletBackupManagerFacetKeyDataProviderRestore) (*types.Transaction, error) {
+func (_Wallet *WalletTransactorSession) KeyDataProviderRestoreStruct(arg0 IWalletBackupManagerKeyDataProviderRestore) (*types.Transaction, error) {
 	return _Wallet.Contract.KeyDataProviderRestoreStruct(&_Wallet.TransactOpts, arg0)
 }
 
 // KeyDeleteStruct is a paid mutator transaction binding the contract method 0x1dd54316.
 //
 // Solidity: function keyDeleteStruct((address,bytes32,uint64,uint256) ) returns()
-func (_Wallet *WalletTransactor) KeyDeleteStruct(opts *bind.TransactOpts, arg0 IWalletKeyManagerFacetKeyDelete) (*types.Transaction, error) {
+func (_Wallet *WalletTransactor) KeyDeleteStruct(opts *bind.TransactOpts, arg0 IWalletKeyManagerKeyDelete) (*types.Transaction, error) {
 	return _Wallet.contract.Transact(opts, "keyDeleteStruct", arg0)
 }
 
 // KeyDeleteStruct is a paid mutator transaction binding the contract method 0x1dd54316.
 //
 // Solidity: function keyDeleteStruct((address,bytes32,uint64,uint256) ) returns()
-func (_Wallet *WalletSession) KeyDeleteStruct(arg0 IWalletKeyManagerFacetKeyDelete) (*types.Transaction, error) {
+func (_Wallet *WalletSession) KeyDeleteStruct(arg0 IWalletKeyManagerKeyDelete) (*types.Transaction, error) {
 	return _Wallet.Contract.KeyDeleteStruct(&_Wallet.TransactOpts, arg0)
 }
 
 // KeyDeleteStruct is a paid mutator transaction binding the contract method 0x1dd54316.
 //
 // Solidity: function keyDeleteStruct((address,bytes32,uint64,uint256) ) returns()
-func (_Wallet *WalletTransactorSession) KeyDeleteStruct(arg0 IWalletKeyManagerFacetKeyDelete) (*types.Transaction, error) {
+func (_Wallet *WalletTransactorSession) KeyDeleteStruct(arg0 IWalletKeyManagerKeyDelete) (*types.Transaction, error) {
 	return _Wallet.Contract.KeyDeleteStruct(&_Wallet.TransactOpts, arg0)
 }
 
 // KeyExistenceStruct is a paid mutator transaction binding the contract method 0x641ca408.
 //
 // Solidity: function keyExistenceStruct((address,bytes32,uint64,bytes32,bytes32,bytes,uint256,bool,((bytes32,bytes32)[],uint64,address[],uint64),bytes32,bytes) ) returns()
-func (_Wallet *WalletTransactor) KeyExistenceStruct(opts *bind.TransactOpts, arg0 IWalletKeyManagerFacetKeyExistence) (*types.Transaction, error) {
+func (_Wallet *WalletTransactor) KeyExistenceStruct(opts *bind.TransactOpts, arg0 IWalletKeyManagerKeyExistence) (*types.Transaction, error) {
 	return _Wallet.contract.Transact(opts, "keyExistenceStruct", arg0)
 }
 
 // KeyExistenceStruct is a paid mutator transaction binding the contract method 0x641ca408.
 //
 // Solidity: function keyExistenceStruct((address,bytes32,uint64,bytes32,bytes32,bytes,uint256,bool,((bytes32,bytes32)[],uint64,address[],uint64),bytes32,bytes) ) returns()
-func (_Wallet *WalletSession) KeyExistenceStruct(arg0 IWalletKeyManagerFacetKeyExistence) (*types.Transaction, error) {
+func (_Wallet *WalletSession) KeyExistenceStruct(arg0 IWalletKeyManagerKeyExistence) (*types.Transaction, error) {
 	return _Wallet.Contract.KeyExistenceStruct(&_Wallet.TransactOpts, arg0)
 }
 
 // KeyExistenceStruct is a paid mutator transaction binding the contract method 0x641ca408.
 //
 // Solidity: function keyExistenceStruct((address,bytes32,uint64,bytes32,bytes32,bytes,uint256,bool,((bytes32,bytes32)[],uint64,address[],uint64),bytes32,bytes) ) returns()
-func (_Wallet *WalletTransactorSession) KeyExistenceStruct(arg0 IWalletKeyManagerFacetKeyExistence) (*types.Transaction, error) {
+func (_Wallet *WalletTransactorSession) KeyExistenceStruct(arg0 IWalletKeyManagerKeyExistence) (*types.Transaction, error) {
 	return _Wallet.Contract.KeyExistenceStruct(&_Wallet.TransactOpts, arg0)
 }
 
 // KeyGenerateStruct is a paid mutator transaction binding the contract method 0x88cfe3a4.
 //
 // Solidity: function keyGenerateStruct((address,bytes32,uint64,bytes32,bytes32,((bytes32,bytes32)[],uint64,address[],uint64)) ) returns()
-func (_Wallet *WalletTransactor) KeyGenerateStruct(opts *bind.TransactOpts, arg0 IWalletKeyManagerFacetKeyGenerate) (*types.Transaction, error) {
+func (_Wallet *WalletTransactor) KeyGenerateStruct(opts *bind.TransactOpts, arg0 IWalletKeyManagerKeyGenerate) (*types.Transaction, error) {
 	return _Wallet.contract.Transact(opts, "keyGenerateStruct", arg0)
 }
 
 // KeyGenerateStruct is a paid mutator transaction binding the contract method 0x88cfe3a4.
 //
 // Solidity: function keyGenerateStruct((address,bytes32,uint64,bytes32,bytes32,((bytes32,bytes32)[],uint64,address[],uint64)) ) returns()
-func (_Wallet *WalletSession) KeyGenerateStruct(arg0 IWalletKeyManagerFacetKeyGenerate) (*types.Transaction, error) {
+func (_Wallet *WalletSession) KeyGenerateStruct(arg0 IWalletKeyManagerKeyGenerate) (*types.Transaction, error) {
 	return _Wallet.Contract.KeyGenerateStruct(&_Wallet.TransactOpts, arg0)
 }
 
 // KeyGenerateStruct is a paid mutator transaction binding the contract method 0x88cfe3a4.
 //
 // Solidity: function keyGenerateStruct((address,bytes32,uint64,bytes32,bytes32,((bytes32,bytes32)[],uint64,address[],uint64)) ) returns()
-func (_Wallet *WalletTransactorSession) KeyGenerateStruct(arg0 IWalletKeyManagerFacetKeyGenerate) (*types.Transaction, error) {
+func (_Wallet *WalletTransactorSession) KeyGenerateStruct(arg0 IWalletKeyManagerKeyGenerate) (*types.Transaction, error) {
 	return _Wallet.Contract.KeyGenerateStruct(&_Wallet.TransactOpts, arg0)
 }
 
 // ResumeStruct is a paid mutator transaction binding the contract method 0x996da6d5.
 //
 // Solidity: function resumeStruct((bytes32,(uint64,address,uint256)[]) ) returns()
-func (_Wallet *WalletTransactor) ResumeStruct(opts *bind.TransactOpts, arg0 IWalletResumeFacetResume) (*types.Transaction, error) {
+func (_Wallet *WalletTransactor) ResumeStruct(opts *bind.TransactOpts, arg0 IWalletResumeResume) (*types.Transaction, error) {
 	return _Wallet.contract.Transact(opts, "resumeStruct", arg0)
 }
 
 // ResumeStruct is a paid mutator transaction binding the contract method 0x996da6d5.
 //
 // Solidity: function resumeStruct((bytes32,(uint64,address,uint256)[]) ) returns()
-func (_Wallet *WalletSession) ResumeStruct(arg0 IWalletResumeFacetResume) (*types.Transaction, error) {
+func (_Wallet *WalletSession) ResumeStruct(arg0 IWalletResumeResume) (*types.Transaction, error) {
 	return _Wallet.Contract.ResumeStruct(&_Wallet.TransactOpts, arg0)
 }
 
 // ResumeStruct is a paid mutator transaction binding the contract method 0x996da6d5.
 //
 // Solidity: function resumeStruct((bytes32,(uint64,address,uint256)[]) ) returns()
-func (_Wallet *WalletTransactorSession) ResumeStruct(arg0 IWalletResumeFacetResume) (*types.Transaction, error) {
+func (_Wallet *WalletTransactorSession) ResumeStruct(arg0 IWalletResumeResume) (*types.Transaction, error) {
 	return _Wallet.Contract.ResumeStruct(&_Wallet.TransactOpts, arg0)
 }
 
 // SetPausingAddressesStruct is a paid mutator transaction binding the contract method 0xb1a9cdac.
 //
 // Solidity: function setPausingAddressesStruct((bytes32,uint256,(address,uint64)[],address[]) ) returns()
-func (_Wallet *WalletTransactor) SetPausingAddressesStruct(opts *bind.TransactOpts, arg0 IWalletResumeFacetSetPausingAddresses) (*types.Transaction, error) {
+func (_Wallet *WalletTransactor) SetPausingAddressesStruct(opts *bind.TransactOpts, arg0 IWalletResumeSetPausingAddresses) (*types.Transaction, error) {
 	return _Wallet.contract.Transact(opts, "setPausingAddressesStruct", arg0)
 }
 
 // SetPausingAddressesStruct is a paid mutator transaction binding the contract method 0xb1a9cdac.
 //
 // Solidity: function setPausingAddressesStruct((bytes32,uint256,(address,uint64)[],address[]) ) returns()
-func (_Wallet *WalletSession) SetPausingAddressesStruct(arg0 IWalletResumeFacetSetPausingAddresses) (*types.Transaction, error) {
+func (_Wallet *WalletSession) SetPausingAddressesStruct(arg0 IWalletResumeSetPausingAddresses) (*types.Transaction, error) {
 	return _Wallet.Contract.SetPausingAddressesStruct(&_Wallet.TransactOpts, arg0)
 }
 
 // SetPausingAddressesStruct is a paid mutator transaction binding the contract method 0xb1a9cdac.
 //
 // Solidity: function setPausingAddressesStruct((bytes32,uint256,(address,uint64)[],address[]) ) returns()
-func (_Wallet *WalletTransactorSession) SetPausingAddressesStruct(arg0 IWalletResumeFacetSetPausingAddresses) (*types.Transaction, error) {
+func (_Wallet *WalletTransactorSession) SetPausingAddressesStruct(arg0 IWalletResumeSetPausingAddresses) (*types.Transaction, error) {
 	return _Wallet.Contract.SetPausingAddressesStruct(&_Wallet.TransactOpts, arg0)
 }
