@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/payment"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/payments"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/types"
 	"github.com/stretchr/testify/require"
 )
@@ -17,9 +17,9 @@ func TestPaymentTransactionMultisig(t *testing.T) {
 	expectedBlob, err := hex.DecodeString(expectedBlobStr)
 	require.NoError(t, err)
 
-	instruction := payment.ITeePaymentsPaymentInstructionMessage{
+	instruction := payments.ITeePaymentsPaymentInstructionMessage{
 		WalletId:         [32]byte{1},
-		TeeIdKeyIdPairs:  []payment.TeeIdKeyIdPair{},
+		TeeIdKeyIdPairs:  []payments.TeeIdKeyIdPair{},
 		SenderAddress:    "rGYYWKxT1XgNipUJouCq4cKiyAdq8xBoE9",
 		RecipientAddress: "rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe",
 		Amount:           big.NewInt(10),

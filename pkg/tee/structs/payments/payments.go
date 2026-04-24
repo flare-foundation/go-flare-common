@@ -1,5 +1,5 @@
-//go:generate  abigen --abi=vrf.abi --pkg=vrf --type=TeeVRF --out=autogen.go
-package vrf
+//go:generate  abigen --abi=payments.abi --pkg=payments --type=TeePayments --out=autogen.go
+package payments
 
 import (
 	"fmt"
@@ -9,21 +9,23 @@ import (
 )
 
 var opCommands = []op.Command{
-	op.VRF,
+	op.Pay,
+	op.Reissue,
 }
 
-// i-th method correspond to a method in TeeVrfStruct interface whose
+// i-th method correspond to a method in TeePaymentStruct interface whose
 // input is the type of message emitted with i-th opCommands.
 var methods = []string{
-	"vrfInstructionMessageStruct",
+	"paymentInstructionMessageStruct",
+	"paymentInstructionMessageStruct",
 }
 
 var MessageArguments map[op.Command]abi.Argument
 
 func init() {
-	vrfABI, err := TeeVRFMetaData.GetAbi()
+	paymentsABI, err := TeePaymentsMetaData.GetAbi()
 	if err != nil {
-		panic(fmt.Sprintf("error getting vrf abi: %v", err))
+		panic(fmt.Sprintf("error getting payment abi: %v", err))
 	}
 
 	if len(methods) != len(opCommands) {
@@ -32,7 +34,7 @@ func init() {
 
 	MessageArguments = make(map[op.Command]abi.Argument)
 	for j := range opCommands {
-		method, ok := vrfABI.Methods[methods[j]]
+		method, ok := paymentsABI.Methods[methods[j]]
 		if !ok {
 			panic(fmt.Sprintf("missing method %s", methods[j]))
 		}

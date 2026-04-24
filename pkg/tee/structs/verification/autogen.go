@@ -51,113 +51,113 @@ type IVerificationTeeAttestation struct {
 	Challenge  [32]byte
 }
 
-// VerificationMetaData contains all meta data concerning the Verification contract.
-var VerificationMetaData = &bind.MetaData{
+// TeeVerificationMetaData contains all meta data concerning the TeeVerification contract.
+var TeeVerificationMetaData = &bind.MetaData{
 	ABI: "[{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"initialTeeId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structIMachineManager.TeeMachineWithAttestationData\",\"name\":\"teeMachine\",\"type\":\"tuple\"},{\"internalType\":\"bytes32\",\"name\":\"challenge\",\"type\":\"bytes32\"}],\"internalType\":\"structIVerification.TeeAttestation\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"teeAttestationStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"enumISystemStateVerifier.TeeMachineStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"address\",\"name\":\"initialTeeId\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"teeGovernanceHash\",\"type\":\"bytes32\"}],\"internalType\":\"structISystemStateVerifier.TeeSystemState\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"teeSystemStateStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
-// VerificationABI is the input ABI used to generate the binding from.
-// Deprecated: Use VerificationMetaData.ABI instead.
-var VerificationABI = VerificationMetaData.ABI
+// TeeVerificationABI is the input ABI used to generate the binding from.
+// Deprecated: Use TeeVerificationMetaData.ABI instead.
+var TeeVerificationABI = TeeVerificationMetaData.ABI
 
-// Verification is an auto generated Go binding around an Ethereum contract.
-type Verification struct {
-	VerificationCaller     // Read-only binding to the contract
-	VerificationTransactor // Write-only binding to the contract
-	VerificationFilterer   // Log filterer for contract events
+// TeeVerification is an auto generated Go binding around an Ethereum contract.
+type TeeVerification struct {
+	TeeVerificationCaller     // Read-only binding to the contract
+	TeeVerificationTransactor // Write-only binding to the contract
+	TeeVerificationFilterer   // Log filterer for contract events
 }
 
-// VerificationCaller is an auto generated read-only Go binding around an Ethereum contract.
-type VerificationCaller struct {
+// TeeVerificationCaller is an auto generated read-only Go binding around an Ethereum contract.
+type TeeVerificationCaller struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// VerificationTransactor is an auto generated write-only Go binding around an Ethereum contract.
-type VerificationTransactor struct {
+// TeeVerificationTransactor is an auto generated write-only Go binding around an Ethereum contract.
+type TeeVerificationTransactor struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// VerificationFilterer is an auto generated log filtering Go binding around an Ethereum contract events.
-type VerificationFilterer struct {
+// TeeVerificationFilterer is an auto generated log filtering Go binding around an Ethereum contract events.
+type TeeVerificationFilterer struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// VerificationSession is an auto generated Go binding around an Ethereum contract,
+// TeeVerificationSession is an auto generated Go binding around an Ethereum contract,
 // with pre-set call and transact options.
-type VerificationSession struct {
-	Contract     *Verification     // Generic contract binding to set the session for
+type TeeVerificationSession struct {
+	Contract     *TeeVerification  // Generic contract binding to set the session for
 	CallOpts     bind.CallOpts     // Call options to use throughout this session
 	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
 }
 
-// VerificationCallerSession is an auto generated read-only Go binding around an Ethereum contract,
+// TeeVerificationCallerSession is an auto generated read-only Go binding around an Ethereum contract,
 // with pre-set call options.
-type VerificationCallerSession struct {
-	Contract *VerificationCaller // Generic contract caller binding to set the session for
-	CallOpts bind.CallOpts       // Call options to use throughout this session
+type TeeVerificationCallerSession struct {
+	Contract *TeeVerificationCaller // Generic contract caller binding to set the session for
+	CallOpts bind.CallOpts          // Call options to use throughout this session
 }
 
-// VerificationTransactorSession is an auto generated write-only Go binding around an Ethereum contract,
+// TeeVerificationTransactorSession is an auto generated write-only Go binding around an Ethereum contract,
 // with pre-set transact options.
-type VerificationTransactorSession struct {
-	Contract     *VerificationTransactor // Generic contract transactor binding to set the session for
-	TransactOpts bind.TransactOpts       // Transaction auth options to use throughout this session
+type TeeVerificationTransactorSession struct {
+	Contract     *TeeVerificationTransactor // Generic contract transactor binding to set the session for
+	TransactOpts bind.TransactOpts          // Transaction auth options to use throughout this session
 }
 
-// VerificationRaw is an auto generated low-level Go binding around an Ethereum contract.
-type VerificationRaw struct {
-	Contract *Verification // Generic contract binding to access the raw methods on
+// TeeVerificationRaw is an auto generated low-level Go binding around an Ethereum contract.
+type TeeVerificationRaw struct {
+	Contract *TeeVerification // Generic contract binding to access the raw methods on
 }
 
-// VerificationCallerRaw is an auto generated low-level read-only Go binding around an Ethereum contract.
-type VerificationCallerRaw struct {
-	Contract *VerificationCaller // Generic read-only contract binding to access the raw methods on
+// TeeVerificationCallerRaw is an auto generated low-level read-only Go binding around an Ethereum contract.
+type TeeVerificationCallerRaw struct {
+	Contract *TeeVerificationCaller // Generic read-only contract binding to access the raw methods on
 }
 
-// VerificationTransactorRaw is an auto generated low-level write-only Go binding around an Ethereum contract.
-type VerificationTransactorRaw struct {
-	Contract *VerificationTransactor // Generic write-only contract binding to access the raw methods on
+// TeeVerificationTransactorRaw is an auto generated low-level write-only Go binding around an Ethereum contract.
+type TeeVerificationTransactorRaw struct {
+	Contract *TeeVerificationTransactor // Generic write-only contract binding to access the raw methods on
 }
 
-// NewVerification creates a new instance of Verification, bound to a specific deployed contract.
-func NewVerification(address common.Address, backend bind.ContractBackend) (*Verification, error) {
-	contract, err := bindVerification(address, backend, backend, backend)
+// NewTeeVerification creates a new instance of TeeVerification, bound to a specific deployed contract.
+func NewTeeVerification(address common.Address, backend bind.ContractBackend) (*TeeVerification, error) {
+	contract, err := bindTeeVerification(address, backend, backend, backend)
 	if err != nil {
 		return nil, err
 	}
-	return &Verification{VerificationCaller: VerificationCaller{contract: contract}, VerificationTransactor: VerificationTransactor{contract: contract}, VerificationFilterer: VerificationFilterer{contract: contract}}, nil
+	return &TeeVerification{TeeVerificationCaller: TeeVerificationCaller{contract: contract}, TeeVerificationTransactor: TeeVerificationTransactor{contract: contract}, TeeVerificationFilterer: TeeVerificationFilterer{contract: contract}}, nil
 }
 
-// NewVerificationCaller creates a new read-only instance of Verification, bound to a specific deployed contract.
-func NewVerificationCaller(address common.Address, caller bind.ContractCaller) (*VerificationCaller, error) {
-	contract, err := bindVerification(address, caller, nil, nil)
+// NewTeeVerificationCaller creates a new read-only instance of TeeVerification, bound to a specific deployed contract.
+func NewTeeVerificationCaller(address common.Address, caller bind.ContractCaller) (*TeeVerificationCaller, error) {
+	contract, err := bindTeeVerification(address, caller, nil, nil)
 	if err != nil {
 		return nil, err
 	}
-	return &VerificationCaller{contract: contract}, nil
+	return &TeeVerificationCaller{contract: contract}, nil
 }
 
-// NewVerificationTransactor creates a new write-only instance of Verification, bound to a specific deployed contract.
-func NewVerificationTransactor(address common.Address, transactor bind.ContractTransactor) (*VerificationTransactor, error) {
-	contract, err := bindVerification(address, nil, transactor, nil)
+// NewTeeVerificationTransactor creates a new write-only instance of TeeVerification, bound to a specific deployed contract.
+func NewTeeVerificationTransactor(address common.Address, transactor bind.ContractTransactor) (*TeeVerificationTransactor, error) {
+	contract, err := bindTeeVerification(address, nil, transactor, nil)
 	if err != nil {
 		return nil, err
 	}
-	return &VerificationTransactor{contract: contract}, nil
+	return &TeeVerificationTransactor{contract: contract}, nil
 }
 
-// NewVerificationFilterer creates a new log filterer instance of Verification, bound to a specific deployed contract.
-func NewVerificationFilterer(address common.Address, filterer bind.ContractFilterer) (*VerificationFilterer, error) {
-	contract, err := bindVerification(address, nil, nil, filterer)
+// NewTeeVerificationFilterer creates a new log filterer instance of TeeVerification, bound to a specific deployed contract.
+func NewTeeVerificationFilterer(address common.Address, filterer bind.ContractFilterer) (*TeeVerificationFilterer, error) {
+	contract, err := bindTeeVerification(address, nil, nil, filterer)
 	if err != nil {
 		return nil, err
 	}
-	return &VerificationFilterer{contract: contract}, nil
+	return &TeeVerificationFilterer{contract: contract}, nil
 }
 
-// bindVerification binds a generic wrapper to an already deployed contract.
-func bindVerification(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
-	parsed, err := VerificationMetaData.GetAbi()
+// bindTeeVerification binds a generic wrapper to an already deployed contract.
+func bindTeeVerification(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
+	parsed, err := TeeVerificationMetaData.GetAbi()
 	if err != nil {
 		return nil, err
 	}
@@ -168,78 +168,78 @@ func bindVerification(address common.Address, caller bind.ContractCaller, transa
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Verification *VerificationRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
-	return _Verification.Contract.VerificationCaller.contract.Call(opts, result, method, params...)
+func (_TeeVerification *TeeVerificationRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+	return _TeeVerification.Contract.TeeVerificationCaller.contract.Call(opts, result, method, params...)
 }
 
 // Transfer initiates a plain transaction to move funds to the contract, calling
 // its default method if one is available.
-func (_Verification *VerificationRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _Verification.Contract.VerificationTransactor.contract.Transfer(opts)
+func (_TeeVerification *TeeVerificationRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _TeeVerification.Contract.TeeVerificationTransactor.contract.Transfer(opts)
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Verification *VerificationRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
-	return _Verification.Contract.VerificationTransactor.contract.Transact(opts, method, params...)
+func (_TeeVerification *TeeVerificationRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+	return _TeeVerification.Contract.TeeVerificationTransactor.contract.Transact(opts, method, params...)
 }
 
 // Call invokes the (constant) contract method with params as input values and
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Verification *VerificationCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
-	return _Verification.Contract.contract.Call(opts, result, method, params...)
+func (_TeeVerification *TeeVerificationCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+	return _TeeVerification.Contract.contract.Call(opts, result, method, params...)
 }
 
 // Transfer initiates a plain transaction to move funds to the contract, calling
 // its default method if one is available.
-func (_Verification *VerificationTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _Verification.Contract.contract.Transfer(opts)
+func (_TeeVerification *TeeVerificationTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _TeeVerification.Contract.contract.Transfer(opts)
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Verification *VerificationTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
-	return _Verification.Contract.contract.Transact(opts, method, params...)
+func (_TeeVerification *TeeVerificationTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+	return _TeeVerification.Contract.contract.Transact(opts, method, params...)
 }
 
 // TeeAttestationStruct is a paid mutator transaction binding the contract method 0x050d0fc8.
 //
 // Solidity: function teeAttestationStruct(((address,address,string,bytes32,bytes32),bytes32) ) returns()
-func (_Verification *VerificationTransactor) TeeAttestationStruct(opts *bind.TransactOpts, arg0 IVerificationTeeAttestation) (*types.Transaction, error) {
-	return _Verification.contract.Transact(opts, "teeAttestationStruct", arg0)
+func (_TeeVerification *TeeVerificationTransactor) TeeAttestationStruct(opts *bind.TransactOpts, arg0 IVerificationTeeAttestation) (*types.Transaction, error) {
+	return _TeeVerification.contract.Transact(opts, "teeAttestationStruct", arg0)
 }
 
 // TeeAttestationStruct is a paid mutator transaction binding the contract method 0x050d0fc8.
 //
 // Solidity: function teeAttestationStruct(((address,address,string,bytes32,bytes32),bytes32) ) returns()
-func (_Verification *VerificationSession) TeeAttestationStruct(arg0 IVerificationTeeAttestation) (*types.Transaction, error) {
-	return _Verification.Contract.TeeAttestationStruct(&_Verification.TransactOpts, arg0)
+func (_TeeVerification *TeeVerificationSession) TeeAttestationStruct(arg0 IVerificationTeeAttestation) (*types.Transaction, error) {
+	return _TeeVerification.Contract.TeeAttestationStruct(&_TeeVerification.TransactOpts, arg0)
 }
 
 // TeeAttestationStruct is a paid mutator transaction binding the contract method 0x050d0fc8.
 //
 // Solidity: function teeAttestationStruct(((address,address,string,bytes32,bytes32),bytes32) ) returns()
-func (_Verification *VerificationTransactorSession) TeeAttestationStruct(arg0 IVerificationTeeAttestation) (*types.Transaction, error) {
-	return _Verification.Contract.TeeAttestationStruct(&_Verification.TransactOpts, arg0)
+func (_TeeVerification *TeeVerificationTransactorSession) TeeAttestationStruct(arg0 IVerificationTeeAttestation) (*types.Transaction, error) {
+	return _TeeVerification.Contract.TeeAttestationStruct(&_TeeVerification.TransactOpts, arg0)
 }
 
 // TeeSystemStateStruct is a paid mutator transaction binding the contract method 0xc7115680.
 //
 // Solidity: function teeSystemStateStruct((uint8,address,bytes32) ) returns()
-func (_Verification *VerificationTransactor) TeeSystemStateStruct(opts *bind.TransactOpts, arg0 ISystemStateVerifierTeeSystemState) (*types.Transaction, error) {
-	return _Verification.contract.Transact(opts, "teeSystemStateStruct", arg0)
+func (_TeeVerification *TeeVerificationTransactor) TeeSystemStateStruct(opts *bind.TransactOpts, arg0 ISystemStateVerifierTeeSystemState) (*types.Transaction, error) {
+	return _TeeVerification.contract.Transact(opts, "teeSystemStateStruct", arg0)
 }
 
 // TeeSystemStateStruct is a paid mutator transaction binding the contract method 0xc7115680.
 //
 // Solidity: function teeSystemStateStruct((uint8,address,bytes32) ) returns()
-func (_Verification *VerificationSession) TeeSystemStateStruct(arg0 ISystemStateVerifierTeeSystemState) (*types.Transaction, error) {
-	return _Verification.Contract.TeeSystemStateStruct(&_Verification.TransactOpts, arg0)
+func (_TeeVerification *TeeVerificationSession) TeeSystemStateStruct(arg0 ISystemStateVerifierTeeSystemState) (*types.Transaction, error) {
+	return _TeeVerification.Contract.TeeSystemStateStruct(&_TeeVerification.TransactOpts, arg0)
 }
 
 // TeeSystemStateStruct is a paid mutator transaction binding the contract method 0xc7115680.
 //
 // Solidity: function teeSystemStateStruct((uint8,address,bytes32) ) returns()
-func (_Verification *VerificationTransactorSession) TeeSystemStateStruct(arg0 ISystemStateVerifierTeeSystemState) (*types.Transaction, error) {
-	return _Verification.Contract.TeeSystemStateStruct(&_Verification.TransactOpts, arg0)
+func (_TeeVerification *TeeVerificationTransactorSession) TeeSystemStateStruct(arg0 ISystemStateVerifierTeeSystemState) (*types.Transaction, error) {
+	return _TeeVerification.Contract.TeeSystemStateStruct(&_TeeVerification.TransactOpts, arg0)
 }

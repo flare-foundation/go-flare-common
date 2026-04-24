@@ -1,4 +1,4 @@
-//go:generate  abigen --abi=verification.abi --pkg=verification --type=Verification --out=autogen.go
+//go:generate  abigen --abi=verification.abi --pkg=verification --type=TeeVerification --out=autogen.go
 package verification
 
 import (
@@ -21,7 +21,7 @@ var methods = []string{
 var MessageArguments map[op.Command]abi.Argument
 
 func init() {
-	verificationAbi, err := VerificationMetaData.GetAbi()
+	verificationABI, err := TeeVerificationMetaData.GetAbi()
 	if err != nil {
 		panic(fmt.Sprintf("error getting verification abi: %v", err))
 	}
@@ -32,7 +32,7 @@ func init() {
 
 	MessageArguments = make(map[op.Command]abi.Argument)
 	for j := range opCommands {
-		method, ok := verificationAbi.Methods[methods[j]]
+		method, ok := verificationABI.Methods[methods[j]]
 		if !ok {
 			panic(fmt.Sprintf("missing method %s", methods[j]))
 		}
