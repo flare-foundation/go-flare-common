@@ -306,8 +306,8 @@ func TestDecodeInstructionMessage(t *testing.T) {
 
 	x := common.HexToHash("0x1234")
 
-	pre := verification.ITeeVerificationTeeAttestation{
-		TeeMachine: verification.ITeeMachineRegistryTeeMachineWithAttestationData{
+	pre := verification.IVerificationTeeAttestation{
+		TeeMachine: verification.IMachineManagerTeeMachineWithAttestationData{
 			TeeId:        id,
 			InitialTeeId: id,
 			Url:          "moj.com",
@@ -320,8 +320,8 @@ func TestDecodeInstructionMessage(t *testing.T) {
 	encoded, err := abi.Arguments{arg}.Pack(pre)
 	require.NoError(t, err)
 
-	var unpacked1 verification.ITeeVerificationTeeAttestation
-	var unpacked2 verification.ITeeVerificationTeeAttestation
+	var unpacked1 verification.IVerificationTeeAttestation
+	var unpacked2 verification.IVerificationTeeAttestation
 
 	err = DecodeTo(arg, encoded, &unpacked1)
 	require.NoError(t, err)
@@ -331,7 +331,7 @@ func TestDecodeInstructionMessage(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, pre, unpacked2)
 
-	unpacked3, err := Decode[verification.ITeeVerificationTeeAttestation](arg, encoded)
+	unpacked3, err := Decode[verification.IVerificationTeeAttestation](arg, encoded)
 	require.NoError(t, err)
 
 	require.Equal(t, pre, unpacked3)

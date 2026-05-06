@@ -1,0 +1,396 @@
+[
+  {
+    "inputs": [],
+    "name": "AvailabilityCheckTimestampInvalid",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "CosignersThresholdTooHigh",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "cosigner",
+        "type": "address"
+      }
+    ],
+    "name": "DuplicatedCosigner",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ExtensionIdMismatch",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "FeeTooLow",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidAvailabilityCheckStatus",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "cosigner",
+        "type": "address"
+      }
+    ],
+    "name": "InvalidCosigner",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidDuration",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidGovernanceHash",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidKeyId",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidKeyType",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidNonce",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidPublicKey",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidResponseData",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidRewardEpochId",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidSigningAlgo",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidTeeMachine",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidThreshold",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidWalletStatus",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "KeyAlreadyAvailable",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "KeyNotConfirmed",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "keyType",
+        "type": "bytes32"
+      }
+    ],
+    "name": "KeyTypeNotSupported",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "LengthsMismatch",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "MessageEmpty",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NoTeeMachinesSpecified",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OnlyExtensionOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OnlyOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OnlyOwnerOrBackupManager",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OnlyProductionOrPausedStatus",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OnlyProposedOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OperationCommandEmpty",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OperationTypeEmpty",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OwnerNotAllowed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TeeMachineNotAvailable",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TeeNotFound",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "UnsupportedRewardEpochId",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "VersionNotSupported",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "teeId",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "walletId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint64",
+        "name": "keyId",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "nonce",
+        "type": "uint256"
+      }
+    ],
+    "name": "BackupRestoreTriggered",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "extensionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "instructionId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint32",
+        "name": "rewardEpochId",
+        "type": "uint32"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "teeId",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "teeProxyId",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "url",
+            "type": "string"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct IMachineManager.TeeMachine[]",
+        "name": "teeMachines",
+        "type": "tuple[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "opType",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "opCommand",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "message",
+        "type": "bytes"
+      },
+      {
+        "indexed": false,
+        "internalType": "address[]",
+        "name": "cosigners",
+        "type": "address[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "cosignersThreshold",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "claimBackAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "fee",
+        "type": "uint256"
+      }
+    ],
+    "name": "TeeInstructionsSent",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_teeId",
+        "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "teeId",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "walletId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint64",
+            "name": "keyId",
+            "type": "uint64"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "keyType",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "signingAlgo",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "publicKey",
+            "type": "bytes"
+          },
+          {
+            "internalType": "uint32",
+            "name": "rewardEpochId",
+            "type": "uint32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "randomNonce",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct IWalletBackupManager.BackupId",
+        "name": "_backupId",
+        "type": "tuple"
+      },
+      {
+        "internalType": "string",
+        "name": "_backupUrl",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "_claimBackAddress",
+        "type": "address"
+      }
+    ],
+    "name": "backupRestore",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  }
+]

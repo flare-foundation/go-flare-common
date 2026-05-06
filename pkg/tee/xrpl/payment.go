@@ -11,11 +11,11 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/payment"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/payments"
 )
 
 // PaymentTxFromInstruction prepares a transaction from the Payment Instruction Message.
-func PaymentTxFromInstruction(i payment.ITeePaymentsPaymentInstructionMessage, try int) (map[string]any, error) {
+func PaymentTxFromInstruction(i payments.ITeePaymentsPaymentInstructionMessage, try int) (map[string]any, error) {
 	tx := make(map[string]any)
 
 	tx["TransactionType"] = "Payment"
@@ -58,7 +58,7 @@ func PaymentTxFromInstruction(i payment.ITeePaymentsPaymentInstructionMessage, t
 
 // Nullify prepares a transaction that nullifies the transaction prepared for the the Payment Instruction Message.
 // Cannot be used as a replacement as the fee is not raised.
-func Nullify(i payment.ITeePaymentsPaymentInstructionMessage, fee string) map[string]any {
+func Nullify(i payments.ITeePaymentsPaymentInstructionMessage, fee string) map[string]any {
 	tx := make(map[string]any)
 
 	tx["TransactionType"] = "AccountSet"

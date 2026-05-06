@@ -1,4 +1,4 @@
-//go:generate  abigen --abi=wallet.abi --pkg=wallet --type=Wallet --out=autogen.go
+//go:generate  abigen --abi=wallet.abi --pkg=wallet --type=TeeWallet --out=autogen.go
 package wallet
 
 import (
@@ -29,7 +29,7 @@ var KeyExistenceStructArg abi.Argument
 var BackupIdStructArg abi.Argument
 
 func init() {
-	walletmanagerAbi, err := WalletMetaData.GetAbi()
+	walletABI, err := TeeWalletMetaData.GetAbi()
 	if err != nil {
 		panic(fmt.Sprintf("error getting registry abi: %v", err))
 	}
@@ -40,21 +40,21 @@ func init() {
 
 	MessageArguments = make(map[op.Command]abi.Argument)
 	for j := range opCommands {
-		method, ok := walletmanagerAbi.Methods[methods[j]]
+		method, ok := walletABI.Methods[methods[j]]
 		if !ok {
 			panic(fmt.Sprintf("missing method %s", methods[j]))
 		}
 		MessageArguments[opCommands[j]] = method.Inputs[0]
 	}
 
-	method, ok := walletmanagerAbi.Methods["keyExistenceStruct"]
+	method, ok := walletABI.Methods["keyExistenceStruct"]
 	if !ok {
 		panic(fmt.Sprintf("missing method %s", "keyExistenceStruct"))
 	}
 
 	KeyExistenceStructArg = method.Inputs[0]
 
-	method, ok = walletmanagerAbi.Methods["backupIdStruct"]
+	method, ok = walletABI.Methods["backupIdStruct"]
 	if !ok {
 		panic(fmt.Sprintf("missing method %s", "backupIdStruct"))
 	}
