@@ -50,9 +50,9 @@ func TestPaymentTransactionMultisig(t *testing.T) {
 // Verifies the nullify branch encodes into a valid signing-mode AccountSet blob that round-trips.
 func TestPaymentTxFromInstructionNullify(t *testing.T) {
 	// feeBIPS = -0x2710 = -10000 → Nullify path (parseScheduledFee).
-	instruction := payment.ITeePaymentsPaymentInstructionMessage{
+	instruction := payments.ITeePaymentsPaymentInstructionMessage{
 		WalletId:         [32]byte{2},
-		TeeIdKeyIdPairs:  []payment.TeeIdKeyIdPair{},
+		TeeIdKeyIdPairs:  []payments.TeeIdKeyIdPair{},
 		SenderAddress:    "rGYYWKxT1XgNipUJouCq4cKiyAdq8xBoE9",
 		RecipientAddress: "rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe",
 		Amount:           big.NewInt(1000),
