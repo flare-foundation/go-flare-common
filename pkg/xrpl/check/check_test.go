@@ -8,6 +8,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/flare-foundation/go-flare-common/pkg/safeurl"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -334,6 +335,21 @@ func TestInfoHTTPStub(t *testing.T) {
 	require.EqualValues(t, 42, resp.Sequence())
 	require.Len(t, resp.AccountData.SignersLists, 1)
 	require.NoError(t, resp.Check(1, []string{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW"}))
+}
+
+// TestInfoSafeurlBlocksLoopback verifies that callers wanting SSRF
+// protection can wire safeurl explicitly via the Transport field; when
+// they do, an httptest server on loopback is rejected.
+func TestInfoSafeurlBlocksLoopback(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+	defer srv.Close()
+
+	rpc := JSONRPC{URL: srv.URL, Transport: safeurl.NewTransport()}
+	_, err := rpc.Info("rpo6E7mHvQ4xzeEBy8ViVzbG8q251ztKB8")
+	require.Error(t, err)
+	require.Contains(t, err.Error(), "non-public")
 }
 
 // TestInfoHTTPStubRejectsBadStatus covers the non-200 error branch.
