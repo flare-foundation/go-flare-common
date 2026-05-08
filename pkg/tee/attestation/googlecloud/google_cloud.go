@@ -8,6 +8,7 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
+	"slices"
 	"strings"
 	"time"
 
@@ -16,6 +17,73 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/logger"
 	"github.com/golang-jwt/jwt/v5"
 )
+
+// ConfidentialSpaceIssuer is the iss claim Google Confidential Space sets on attestation tokens.
+const ConfidentialSpaceIssuer = "https://confidentialcomputing.googleapis.com"
+
+// productionDebugStatus is the dbgstat value Confidential Space sets when the VM
+// has had debugging disabled since boot. Any other value indicates a debug-mode VM
+// with reduced isolation guarantees.
+const productionDebugStatus = "disabled-since-boot"
+
+const defaultLeeway = 30 * time.Second
+
+// Policy carries the per-deployment configuration the verifier supplies to
+// ParseAndValidatePKIToken. The library performs the comparisons; the consumer
+// only supplies the values it alone knows.
+type Policy struct {
+	// Audience is the expected aud claim of the token. Required.
+	// The TEE workload requests an attestation token with this audience from the
+	// Google metadata server; the verifier must require the same value back.
+	Audience string
+
+	// AllowedImageIDs is the allowlist of acceptable workload container image IDs
+	// (the sha256 hash from submods.container.image_id). Required.
+	AllowedImageIDs map[common.Hash]struct{}
+
+	// AllowedHWModels optionally restricts to specific hardware models (hwmodel claim).
+	// nil/empty accepts any hwmodel.
+	AllowedHWModels map[string]struct{}
+
+	// EATNonce is the per-request challenge to bind. If non-empty, the token's
+	// eat_nonce list must contain this value.
+	EATNonce string
+
+	// Leeway is the clock skew tolerance for exp/iat/nbf. Zero means defaultLeeway.
+	Leeway time.Duration
+
+	// AllowDebug permits dbgstat != "disabled-since-boot" or secboot=false.
+	// Default false; flip only for non-production verification paths.
+	AllowDebug bool
+
+	// Issuer overrides the expected iss claim. Zero defaults to ConfidentialSpaceIssuer.
+	// Override is intended for test environments.
+	Issuer string
+}
+
+func (p Policy) validate() error {
+	if p.Audience == "" {
+		return errors.New("Policy.Audience is required")
+	}
+	if len(p.AllowedImageIDs) == 0 {
+		return errors.New("Policy.AllowedImageIDs is required")
+	}
+	return nil
+}
+
+func (p Policy) issuer() string {
+	if p.Issuer != "" {
+		return p.Issuer
+	}
+	return ConfidentialSpaceIssuer
+}
+
+func (p Policy) leeway() time.Duration {
+	if p.Leeway == 0 {
+		return defaultLeeway
+	}
+	return p.Leeway
+}
 
 // EATNonce allows the EAT nonce to be serialized both from a string or an array of strings.
 type EATNonce []string
@@ -89,19 +157,88 @@ func (c *GoogleTeeClaims) CodeHash() (common.Hash, error) {
 // ParseAndValidatePKIToken validates the PKI token returned from the Google cloud confidential compute is valid.
 // Returns a valid jwt.Token and GoogleTeeClaims or returns an error if invalid.
 // leafCRL and intermediateCRL are optional pre-fetched CRLs for revocation checking.
-func ParseAndValidatePKIToken(attestationToken string, storedRootCertificate *x509.Certificate, leafCRL, intermediateCRL *x509.RevocationList) (*jwt.Token, *GoogleTeeClaims, error) {
+//
+// The library enforces the full check chain against policy: x5c chain to root, RS256-only,
+// iss/aud/exp claims, leeway, secboot, dbgstat, image_id allowlist, and optional eat_nonce.
+// The consumer supplies the per-deployment values; comparison is done here.
+func ParseAndValidatePKIToken(attestationToken string, storedRootCertificate *x509.Certificate, leafCRL, intermediateCRL *x509.RevocationList, policy Policy) (*jwt.Token, *GoogleTeeClaims, error) {
+	if err := policy.validate(); err != nil {
+		return nil, nil, err
+	}
 	claims := &GoogleTeeClaims{}
-	return ParseAndValidatePKITokenClaims(attestationToken, storedRootCertificate, leafCRL, intermediateCRL, claims)
+	parsed, claims, err := parseAndVerifyJWT(attestationToken, storedRootCertificate, leafCRL, intermediateCRL, policy, claims)
+	if err != nil {
+		return nil, claims, err
+	}
+	if err := claims.Apply(policy); err != nil {
+		return nil, claims, fmt.Errorf("applying policy: %w", err)
+	}
+	return parsed, claims, nil
 }
 
-func ParseAndValidatePKITokenClaims[T jwt.Claims](attestationToken string, storedRootCertificate *x509.Certificate, leafCRL, intermediateCRL *x509.RevocationList, claims T) (*jwt.Token, T, error) {
+// ParseAndValidatePKITokenClaims is the generic-claims variant of ParseAndValidatePKIToken.
+// JWT-level checks (signature, iss, aud, exp, leeway) are performed by this function.
+// Confidential-Space-specific claim checks (secboot, dbgstat, image_id, hwmodel, eat_nonce)
+// are NOT applied — the caller is responsible for asserting them on the custom claims type.
+// Use ParseAndValidatePKIToken when consuming GoogleTeeClaims to get the full check chain.
+func ParseAndValidatePKITokenClaims[T jwt.Claims](attestationToken string, storedRootCertificate *x509.Certificate, leafCRL, intermediateCRL *x509.RevocationList, policy Policy, claims T) (*jwt.Token, T, error) {
+	if err := policy.validate(); err != nil {
+		return nil, claims, err
+	}
+	return parseAndVerifyJWT(attestationToken, storedRootCertificate, leafCRL, intermediateCRL, policy, claims)
+}
+
+func parseAndVerifyJWT[T jwt.Claims](attestationToken string, storedRootCertificate *x509.Certificate, leafCRL, intermediateCRL *x509.RevocationList, policy Policy, claims T) (*jwt.Token, T, error) {
 	keyFunc := extractAndValidateKey(storedRootCertificate, leafCRL, intermediateCRL)
 
-	verifiedJWT, err := jwt.ParseWithClaims(attestationToken, claims, keyFunc, jwt.WithValidMethods([]string{"RS256"}))
+	opts := []jwt.ParserOption{
+		jwt.WithValidMethods([]string{"RS256"}),
+		jwt.WithIssuer(policy.issuer()),
+		jwt.WithAudience(policy.Audience),
+		jwt.WithExpirationRequired(),
+		jwt.WithLeeway(policy.leeway()),
+	}
+
+	verifiedJWT, err := jwt.ParseWithClaims(attestationToken, claims, keyFunc, opts...)
 	if err != nil {
 		return nil, claims, fmt.Errorf("parsing and verifying: %w", err)
 	}
-	return verifiedJWT, claims, err
+	return verifiedJWT, claims, nil
+}
+
+// Apply asserts the Confidential-Space-specific claim values on c against the policy.
+// Returns nil if all required checks pass.
+//
+// Called automatically by ParseAndValidatePKIToken; callers using
+// ParseAndValidatePKITokenClaims with a custom claim type are responsible for their own
+// equivalent checks.
+func (c *GoogleTeeClaims) Apply(p Policy) error {
+	if !p.AllowDebug {
+		if !c.SecBoot {
+			return errors.New("secboot not enabled")
+		}
+		if c.DebugStatus != productionDebugStatus {
+			return fmt.Errorf("dbgstat: got %q, want %q", c.DebugStatus, productionDebugStatus)
+		}
+	}
+	if len(p.AllowedHWModels) > 0 {
+		if _, ok := p.AllowedHWModels[c.HWModel]; !ok {
+			return fmt.Errorf("hwmodel %q not in allowlist", c.HWModel)
+		}
+	}
+	ch, err := c.CodeHash()
+	if err != nil {
+		return fmt.Errorf("decoding image_id: %w", err)
+	}
+	if _, ok := p.AllowedImageIDs[ch]; !ok {
+		return fmt.Errorf("image_id %s not in allowlist", ch.Hex())
+	}
+	if p.EATNonce != "" {
+		if !slices.Contains([]string(c.EATNonce), p.EATNonce) {
+			return errors.New("eat_nonce does not contain expected challenge")
+		}
+	}
+	return nil
 }
 
 // ParsePKITokenUnverified parses a Google Cloud TEE attestation JWT without verifying the signature.
