@@ -73,8 +73,13 @@ func PrivKeyFromSecret(secret string) (ed25519.PrivateKey, error) {
 		return nil, fmt.Errorf("decoding secret: %w", err)
 	}
 
-	if len(secretBytes) < 7 { // 3 prefix bytes + at least 4 checksum bytes
-		return nil, errors.New("invalid secret length")
+	// xrpl.js encodes Ed25519 secrets as: 3 prefix bytes (01 E1 4B) + 16 seed
+	// bytes + 4 checksum bytes. Other lengths still produce a valid Ed25519
+	// key but are non-canonical and would not interoperate with rippled or
+	// xrpl.js, so reject them.
+	const expectedLen = 3 + 16 + 4
+	if len(secretBytes) != expectedLen {
+		return nil, fmt.Errorf("invalid secret length %d, want %d", len(secretBytes), expectedLen)
 	}
 
 	cs := hash.Checksum(secretBytes[:len(secretBytes)-4])
