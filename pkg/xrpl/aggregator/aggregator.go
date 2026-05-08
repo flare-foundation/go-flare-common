@@ -15,9 +15,15 @@ import (
 )
 
 // Account represents XRPL multisig account.
+//
+// SignerList maps each authorized signer's account to its SignerWeight, mirroring
+// rippled's on-ledger SignerEntries (Account, SignerWeight). Quorum is the threshold
+// against the SUMMED weight of submitted signers — not their count — per
+// rippled STTx::checkMultiSign. The same model degenerates to "N of M with weight 1"
+// when every weight is set to 1.
 type Account struct {
 	Address    string
-	SignerList map[string]bool
+	SignerList map[string]uint16
 	Quorum     uint
 	txs        map[common.Hash]*transaction
 }
@@ -136,12 +142,22 @@ func (a *Account) AddSignatures(blob []byte) (*transaction, bool, error) {
 
 	a.txs[identifier] = tx // add transaction if not yet added
 
-	qr := len(tx.signers) >= int(a.Quorum)
+	qr := a.collectedWeight(tx) >= a.Quorum
 	if qr {
 		defer func() { tx.quorumReached = true }()
 	}
 
 	return tx, qr && !tx.quorumReached, nil
+}
+
+// collectedWeight sums the SignerWeights of every signer that has submitted a
+// valid signature for tx. Mirrors the weighted check in rippled STTx::checkMultiSign.
+func (a *Account) collectedWeight(tx *transaction) uint {
+	var sum uint
+	for acct := range tx.signers {
+		sum += uint(a.SignerList[acct])
+	}
+	return sum
 }
 
 // Finalize checks that enough signatures are collected for a transaction with id and returns an encoded transaction ready to be submitted.
