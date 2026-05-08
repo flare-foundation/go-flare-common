@@ -50,6 +50,9 @@ func MarshalDER(sig []byte) (Signature, error) {
 	}
 
 	rLen := int(sig[3])
+	if rLen < 1 || rLen > 33 {
+		return sigOut, errInvalidLength
+	}
 	rStart := 4
 	rEnd := rStart + rLen
 	if len(sig) < rEnd+2 {
@@ -60,6 +63,9 @@ func MarshalDER(sig []byte) (Signature, error) {
 		rStart++
 		rLen--
 	}
+	if rLen < 1 || rLen > 32 {
+		return sigOut, errInvalidLength
+	}
 
 	copy(sigOut.r[32-rLen:], sig[rStart:rEnd])
 
@@ -68,6 +74,9 @@ func MarshalDER(sig []byte) (Signature, error) {
 	}
 
 	sLen := int(sig[rEnd+1])
+	if sLen < 1 || sLen > 33 {
+		return sigOut, errInvalidLength
+	}
 	sStart := rEnd + 2
 	sEnd := sStart + sLen
 	if len(sig) < sEnd {
@@ -77,6 +86,9 @@ func MarshalDER(sig []byte) (Signature, error) {
 	if sig[sStart] == 0 {
 		sStart++
 		sLen--
+	}
+	if sLen < 1 || sLen > 32 {
+		return sigOut, errInvalidLength
 	}
 
 	copy(sigOut.s[32-sLen:], sig[sStart:sEnd])

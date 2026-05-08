@@ -175,3 +175,21 @@ func TestValidateRejectsWrongPrefix(t *testing.T) {
 	_, err = Validate(msg, sig[:len(sig)-1], pub)
 	require.Error(t, err)
 }
+
+// TestValidateEmptyPubKey covers audit finding H4: an empty hex-decoded
+// pubkey previously panicked at pubBytes[0] before the length check fired.
+func TestValidateEmptyPubKey(t *testing.T) {
+	_, priv, err := ed25519.GenerateKey(nil)
+	require.NoError(t, err)
+
+	msg := []byte("payload")
+	sig := ed25519.Sign(priv, msg)
+
+	for _, pub := range []string{"", "ED"} {
+		require.NotPanics(t, func() {
+			ok, err := Validate(msg, sig, pub)
+			require.Error(t, err)
+			require.False(t, ok)
+		})
+	}
+}
