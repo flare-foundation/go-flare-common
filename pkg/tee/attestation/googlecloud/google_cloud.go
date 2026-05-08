@@ -241,14 +241,28 @@ func (c *GoogleTeeClaims) Apply(p Policy) error {
 	return nil
 }
 
-// ParsePKITokenUnverified parses a Google Cloud TEE attestation JWT without verifying the signature.
+// ParsePKITokenUnverified parses a Google Cloud TEE attestation JWT WITHOUT
+// verifying the signature, certificate chain, or any claim. An attacker can
+// produce a JWT with arbitrary header and claims, and a missing or junk
+// signature; this function will return those claims without complaint.
+//
+// Safe only when the token comes from a trusted local source — typically the
+// VM's own attestation token fetched from the Google Confidential Space
+// metadata server (metadata.google.internal), where the VM boundary already
+// authenticates the source. Reading self-claims (e.g. the VM's own image_id
+// for self-reporting) is the intended use.
+//
+// For any token received from another party or over the wire, use
+// ParseAndValidatePKIToken with a Policy instead.
 func ParsePKITokenUnverified(attestationToken string) (*jwt.Token, *GoogleTeeClaims, error) {
 	claims := &GoogleTeeClaims{}
 
 	return ParsePKITokenUnverifiedClaims(attestationToken, claims)
 }
 
-// ParsePKITokenUnverifiedClaims parses a jwt token with custom provided claims.
+// ParsePKITokenUnverifiedClaims is the generic-claims variant of
+// ParsePKITokenUnverified; the same safety contract applies — see that
+// function's documentation.
 func ParsePKITokenUnverifiedClaims[T jwt.Claims](jwtToken string, claims T) (*jwt.Token, T, error) {
 	token, _, err := jwt.NewParser().ParseUnverified(jwtToken, claims)
 	if err != nil {
