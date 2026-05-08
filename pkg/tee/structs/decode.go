@@ -11,58 +11,13 @@ import (
 
 var errNonPointer = errors.New("dest is not a non nil pointer")
 
-// DecodeTo decodes abi encoded data and writes it to destination.
+// DecodeTo decodes ABI-encoded data and writes it to dest.
 //
-// dest has to be a pointer to a struct that is structured as arg describes.
+// dest must be a non-nil pointer to a value of type T whose shape matches the
+// ABI argument. Shape verification is strict: abi.ConvertType panics if the
+// destination's field set or types diverge from arg, which the deferred
+// recover surfaces as an error.
 func DecodeTo[T any](arg abi.Argument, data []byte, dest *T) (err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			e, ok := r.(error)
-			if ok {
-				err = fmt.Errorf("recovered: %w", e)
-			} else {
-				err = fmt.Errorf("recovered non error: %v", r)
-			}
-		}
-	}()
-
-	rv := reflect.ValueOf(dest)
-	if rv.Kind() != reflect.Pointer || rv.IsNil() {
-		return errNonPointer
-	}
-
-	var wDest any
-
-	if rv.Elem().Kind() == reflect.Struct {
-		wDest = &struct{ X any }{dest}
-	} else {
-		wDest = dest
-	}
-
-	args := abi.Arguments{arg}
-
-	decodedSlice, err := args.Unpack(data)
-	if err != nil {
-		return err
-	}
-
-	err = checkEncodeDecode(&args, data, decodedSlice)
-	if err != nil {
-		return err
-	}
-
-	err = args.Copy(wDest, decodedSlice)
-	if err != nil {
-		return err
-	}
-
-	return
-}
-
-// DecodeTo2 decodes abi encoded data and writes it to destination.
-//
-// dest has to be a pointer to a struct that is structured as arg describes.
-func DecodeTo2[T any](arg abi.Argument, data []byte, dest *T) (err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			e, ok := r.(error)
