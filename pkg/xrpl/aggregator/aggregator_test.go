@@ -49,7 +49,7 @@ func TestAddSignatures(t *testing.T) {
 
 	acc := Account{
 		Address:    "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
-		SignerList: map[string]bool{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": true},
+		SignerList: map[string]uint16{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": 1},
 		Quorum:     2,
 		txs:        make(map[common.Hash]*transaction),
 	}
@@ -70,9 +70,9 @@ func TestAddSignaturesFull(t *testing.T) {
 
 	acc := Account{
 		Address: "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
-		SignerList: map[string]bool{
-			"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": true,
-			"rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v": true,
+		SignerList: map[string]uint16{
+			"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": 1,
+			"rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v": 1,
 		},
 		Quorum: 2,
 		txs:    make(map[common.Hash]*transaction),
@@ -112,7 +112,7 @@ func TestAddSignaturesInvalidSignature(t *testing.T) {
 
 	acc := Account{
 		Address:    "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
-		SignerList: map[string]bool{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": true},
+		SignerList: map[string]uint16{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": 1},
 		Quorum:     1,
 		txs:        make(map[common.Hash]*transaction),
 	}
@@ -132,7 +132,7 @@ func TestAddSignaturesWrongAccount(t *testing.T) {
 	// Aggregator expects a different address than what is in the blob.
 	acc := Account{
 		Address:    "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
-		SignerList: map[string]bool{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": true},
+		SignerList: map[string]uint16{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": 1},
 		Quorum:     1,
 		txs:        make(map[common.Hash]*transaction),
 	}
@@ -152,9 +152,9 @@ func TestFinalizeWithoutQuorum(t *testing.T) {
 
 	acc := Account{
 		Address: "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
-		SignerList: map[string]bool{
-			"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": true,
-			"rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v": true,
+		SignerList: map[string]uint16{
+			"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": 1,
+			"rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v": 1,
 		},
 		Quorum: 2,
 		txs:    make(map[common.Hash]*transaction),
@@ -173,7 +173,7 @@ func TestFinalizeWithoutQuorum(t *testing.T) {
 func TestFinalizeNonexistent(t *testing.T) {
 	acc := Account{
 		Address:    "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
-		SignerList: map[string]bool{},
+		SignerList: map[string]uint16{},
 		Quorum:     1,
 		txs:        make(map[common.Hash]*transaction),
 	}
@@ -191,9 +191,9 @@ func TestAddSignaturesDuplicateSigner(t *testing.T) {
 
 	acc := Account{
 		Address: "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
-		SignerList: map[string]bool{
-			"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": true,
-			"rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v": true,
+		SignerList: map[string]uint16{
+			"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": 1,
+			"rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v": 1,
 		},
 		Quorum: 2,
 		txs:    make(map[common.Hash]*transaction),
@@ -224,9 +224,9 @@ func TestAggregatorIdentifierIsKeccakOfSigningEncoding(t *testing.T) {
 
 	acc := Account{
 		Address: "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
-		SignerList: map[string]bool{
-			"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": true,
-			"rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v": true,
+		SignerList: map[string]uint16{
+			"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": 1,
+			"rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v": 1,
 		},
 		Quorum: 2,
 		txs:    make(map[common.Hash]*transaction),
@@ -256,9 +256,9 @@ func TestFinalizeIdempotent(t *testing.T) {
 
 	acc := Account{
 		Address: "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
-		SignerList: map[string]bool{
-			"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": true,
-			"rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v": true,
+		SignerList: map[string]uint16{
+			"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": 1,
+			"rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v": 1,
 		},
 		Quorum: 2,
 		txs:    make(map[common.Hash]*transaction),
@@ -288,7 +288,7 @@ func TestAddSignaturesNonSignerIgnored(t *testing.T) {
 	// signature over the tx but is not in the SignerList.
 	acc := Account{
 		Address:    "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
-		SignerList: map[string]bool{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": true},
+		SignerList: map[string]uint16{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": 1},
 		Quorum:     1,
 		txs:        make(map[common.Hash]*transaction),
 	}
@@ -327,11 +327,77 @@ func TestAddSignaturesMissingAccount(t *testing.T) {
 
 	acc := Account{
 		Address:    "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
-		SignerList: map[string]bool{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": true},
+		SignerList: map[string]uint16{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": 1},
 		Quorum:     1,
 		txs:        make(map[common.Hash]*transaction),
 	}
 
 	_, _, err = acc.AddSignatures(blob)
 	require.Error(t, err)
+}
+
+// TestAddSignaturesWeightedQuorum covers audit finding H9: the quorum check
+// must sum SignerWeights, not count signers. Configure signer1 with weight 2
+// and signer2 with weight 1, quorum 2. signer1 alone reaches quorum;
+// signer2 alone does not.
+func TestAddSignaturesWeightedQuorum(t *testing.T) {
+	t.Run("heavy signer alone reaches quorum", func(t *testing.T) {
+		tx := buildTrustSetTx()
+		blob, err := signing.JoinMultisig(tx, []*signer.Signer{testSigner1})
+		require.NoError(t, err)
+
+		acc := Account{
+			Address: "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
+			SignerList: map[string]uint16{
+				testSigner1.Account: 2,
+				testSigner2.Account: 1,
+			},
+			Quorum: 2,
+			txs:    make(map[common.Hash]*transaction),
+		}
+
+		_, dispatch, err := acc.AddSignatures(blob)
+		require.NoError(t, err)
+		require.True(t, dispatch, "weight 2 alone should reach quorum 2")
+	})
+
+	t.Run("light signer alone does not reach quorum", func(t *testing.T) {
+		tx := buildTrustSetTx()
+		blob, err := signing.JoinMultisig(tx, []*signer.Signer{testSigner2})
+		require.NoError(t, err)
+
+		acc := Account{
+			Address: "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
+			SignerList: map[string]uint16{
+				testSigner1.Account: 2,
+				testSigner2.Account: 1,
+			},
+			Quorum: 2,
+			txs:    make(map[common.Hash]*transaction),
+		}
+
+		_, dispatch, err := acc.AddSignatures(blob)
+		require.NoError(t, err)
+		require.False(t, dispatch, "weight 1 alone must not reach quorum 2")
+	})
+
+	t.Run("two light signers sum to quorum", func(t *testing.T) {
+		tx := buildTrustSetTx()
+		blob, err := signing.JoinMultisig(tx, []*signer.Signer{testSigner1, testSigner2})
+		require.NoError(t, err)
+
+		acc := Account{
+			Address: "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
+			SignerList: map[string]uint16{
+				testSigner1.Account: 1,
+				testSigner2.Account: 1,
+			},
+			Quorum: 2,
+			txs:    make(map[common.Hash]*transaction),
+		}
+
+		_, dispatch, err := acc.AddSignatures(blob)
+		require.NoError(t, err)
+		require.True(t, dispatch, "1+1 must reach quorum 2")
+	})
 }
