@@ -17,6 +17,8 @@ func TestCheckAndEncodePayment(t *testing.T) {
 		"Destination":     "rfNgpzQecR231M6d9rRZKsMCmrykK5bYLB",
 		"Fee":             "1",
 		"Amount":          "1",
+		"Sequence":        uint32(1),
+		"SigningPubKey":   "",
 	}
 
 	_, err := CheckAndEncodePayment(tx, true)
@@ -35,6 +37,8 @@ func TestCheckAndEncodePaymentNonNative(t *testing.T) {
 			"value":    "10",
 			"issuer":   "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
 		},
+		"Sequence":      uint32(1),
+		"SigningPubKey": "",
 	}
 
 	_, err := CheckAndEncodePayment(tx, false)
@@ -243,17 +247,18 @@ func TestCheckAndEncodePaymentOptionalFields(t *testing.T) {
 	}
 }
 
-// Deviation: rippled TxFormats.cpp common fields mark Sequence and SigningPubKey as soeREQUIRED (lines 19, 27),
-// but CheckAndEncodePayment does not enforce their presence on the decoded tx.
-// This test documents that current behavior (passes without these fields when types.Encode tolerates omission).
+// TestCheckAndEncodePaymentMissingCommonRequiredFields covers audit finding M4:
+// rippled TxFormats.cpp marks Sequence and SigningPubKey as soeREQUIRED;
+// CheckAndEncodePayment now enforces presence so a structurally incomplete
+// transaction cannot survive validation. SigningPubKey == "" is acceptable
+// (multi-sig flow) — the key still has to be present.
 func TestCheckAndEncodePaymentMissingCommonRequiredFields(t *testing.T) {
 	cases := []struct {
-		name   string
-		omit   string
-		accept bool
+		name string
+		omit string
 	}{
-		{name: "missing Sequence", omit: "Sequence", accept: true},
-		{name: "missing SigningPubKey", omit: "SigningPubKey", accept: true},
+		{name: "missing Sequence", omit: "Sequence"},
+		{name: "missing SigningPubKey", omit: "SigningPubKey"},
 	}
 
 	base := map[string]any{
@@ -272,11 +277,90 @@ func TestCheckAndEncodePaymentMissingCommonRequiredFields(t *testing.T) {
 			maps.Copy(tx, base)
 			delete(tx, c.omit)
 			_, err := CheckAndEncodePayment(tx, true)
-			if c.accept {
-				require.NoError(t, err, "documents deviation from rippled TxFormats.cpp required fields")
-			} else {
-				require.Error(t, err)
+			require.Error(t, err)
+			require.Contains(t, err.Error(), c.omit)
+		})
+	}
+}
+
+// TestCheckAndEncodePaymentRejectsOversizeMemos covers the rippled
+// STTx::isMemoOkay 1024-byte serialized-array cap. A large MemoData blob
+// must be rejected by CheckAndEncodePayment, not just by rippled at submit.
+func TestCheckAndEncodePaymentRejectsOversizeMemos(t *testing.T) {
+	base := map[string]any{
+		"TransactionType": "Payment",
+		"Account":         "rw16SLQGtfnjQJxgp1RCfkxsMCk8G7PaCJ",
+		"Destination":     "rfNgpzQecR231M6d9rRZKsMCmrykK5bYLB",
+		"Fee":             "10",
+		"Amount":          "1",
+		"Sequence":        uint32(1),
+		"SigningPubKey":   "",
+	}
+
+	huge := make([]byte, 1500)
+	tx := make(map[string]any, len(base)+1)
+	maps.Copy(tx, base)
+	tx["Memos"] = []any{
+		map[string]any{"Memo": map[string]any{
+			"MemoData": hex.EncodeToString(huge),
+		}},
+	}
+
+	_, err := CheckAndEncodePayment(tx, true)
+	require.Error(t, err)
+	require.Contains(t, err.Error(), "memos exceed")
+}
+
+// TestCheckAndEncodePaymentRejectsMalformedMemo covers audit finding H6:
+// the recently-aligned ValidateMemo (rippled's isMemoOkay) must fire from
+// the entrypoint. Previously the entrypoint never walked Memos, so a memo
+// with MemoType bytes outside the RFC 3986 URL set encoded successfully and
+// would only be rejected later by rippled.
+func TestCheckAndEncodePaymentRejectsMalformedMemo(t *testing.T) {
+	base := map[string]any{
+		"TransactionType": "Payment",
+		"Account":         "rw16SLQGtfnjQJxgp1RCfkxsMCk8G7PaCJ",
+		"Destination":     "rfNgpzQecR231M6d9rRZKsMCmrykK5bYLB",
+		"Fee":             "10",
+		"Amount":          "1",
+		"Sequence":        uint32(1),
+		"SigningPubKey":   "",
+	}
+
+	cases := []struct {
+		name      string
+		memoType  []byte
+		wantError string
+	}{
+		{
+			name:      "control byte",
+			memoType:  []byte{0x01},
+			wantError: "MemoType",
+		},
+		{
+			name:      "high byte",
+			memoType:  []byte{0xff},
+			wantError: "MemoType",
+		},
+		{
+			name:      "space (not in RFC 3986 url set)",
+			memoType:  []byte(" "),
+			wantError: "MemoType",
+		},
+	}
+
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			tx := make(map[string]any, len(base)+1)
+			maps.Copy(tx, base)
+			tx["Memos"] = []any{
+				map[string]any{"Memo": map[string]any{
+					"MemoType": hex.EncodeToString(c.memoType),
+				}},
 			}
+			_, err := CheckAndEncodePayment(tx, true)
+			require.Error(t, err)
+			require.Contains(t, err.Error(), c.wantError)
 		})
 	}
 }
