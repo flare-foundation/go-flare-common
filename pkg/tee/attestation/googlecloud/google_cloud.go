@@ -161,6 +161,12 @@ func (c *GoogleTeeClaims) CodeHash() (common.Hash, error) {
 // The library enforces the full check chain against policy: x5c chain to root, RS256-only,
 // iss/aud/exp claims, leeway, secboot, dbgstat, image_id allowlist, and optional eat_nonce.
 // The consumer supplies the per-deployment values; comparison is done here.
+//
+// storedRootCertificate is compared against the chain's root via x509.Certificate.Equal,
+// so the caller is responsible for sourcing it from a trusted external location (e.g.
+// Google's published Confidential Space Root CA) and verifying it out-of-band — typically
+// by SHA-256 fingerprint — before passing it in. The library does NOT embed the root,
+// to avoid making this repo a supply-chain target for cert substitution.
 func ParseAndValidatePKIToken(attestationToken string, storedRootCertificate *x509.Certificate, leafCRL, intermediateCRL *x509.RevocationList, policy Policy) (*jwt.Token, *GoogleTeeClaims, error) {
 	if err := policy.validate(); err != nil {
 		return nil, nil, err
