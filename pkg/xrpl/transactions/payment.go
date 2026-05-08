@@ -1,6 +1,7 @@
 package transactions
 
 import (
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"strconv"
@@ -9,6 +10,14 @@ import (
 )
 
 // CheckAndEncodePayment validates and serializes a payment transaction.
+//
+// The returned bytes are the for-signing canonical form produced by
+// types.Encode(tx, true): non-signing fields (TxnSignature, Signers, …) are
+// omitted, and the STX\0 prefix is NOT included. The caller is expected to
+// hash this with SHA-512-Half (after prepending STX\0) to obtain the digest
+// to sign, then assemble the wire-form blob separately by re-encoding the tx
+// with the signature attached. Do NOT submit the returned bytes to rippled
+// directly — they are not a valid wire transaction.
 func CheckAndEncodePayment(tx map[string]any, native bool) ([]byte, error) {
 	encoded, err := types.Encode(tx, true)
 	if err != nil {
@@ -42,6 +51,10 @@ func CheckAndEncodePayment(tx map[string]any, native bool) ([]byte, error) {
 
 	if account == destination {
 		return nil, errors.New("destination should not be equal to the account")
+	}
+
+	if err := validatePaymentMemos(decoded); err != nil {
+		return nil, err
 	}
 
 	feeAny, ok := decoded["Fee"] // format is checked during encoding
@@ -79,4 +92,67 @@ func CheckAndEncodePayment(tx map[string]any, native bool) ([]byte, error) {
 	}
 
 	return encoded, nil
+}
+
+// rippledMemoSerializedLimit mirrors the cap in rippled STTx::isMemoOkay
+// (libxrpl/protocol/STTx.cpp): the serialized Memos array (each Memo object
+// with its field tags plus the array-end marker) must not exceed 1024 bytes.
+const rippledMemoSerializedLimit = 1024
+
+// validatePaymentMemos enforces rippled's isMemoOkay (STTx.cpp) on every memo
+// in the decoded payment:
+//   - the serialized Memos array fits within rippledMemoSerializedLimit;
+//   - MemoType and MemoFormat hex-decode and contain only RFC 3986 URL
+//     characters. MemoData is unconstrained beyond being valid hex (already
+//     enforced by the codec on the Encode/Decode round-trip).
+func validatePaymentMemos(decoded map[string]any) error {
+	memosAny, ok := decoded["Memos"]
+	if !ok {
+		return nil
+	}
+	memos, ok := memosAny.([]any)
+	if !ok {
+		return fmt.Errorf("invalid Memos shape: %T", memosAny)
+	}
+
+	serialized, err := types.STArray.ToBytes(memos, true)
+	if err != nil {
+		return fmt.Errorf("re-serializing Memos: %w", err)
+	}
+	if len(serialized) > rippledMemoSerializedLimit {
+		return fmt.Errorf("memos exceed rippled %d-byte serialized limit (got %d)", rippledMemoSerializedLimit, len(serialized))
+	}
+
+	for i, entry := range memos {
+		wrapper, ok := entry.(map[string]any)
+		if !ok {
+			return fmt.Errorf("memo %d: not an object", i)
+		}
+		memoAny, ok := wrapper["Memo"]
+		if !ok {
+			return fmt.Errorf("memo %d: missing Memo wrapper", i)
+		}
+		memo, ok := memoAny.(map[string]any)
+		if !ok {
+			return fmt.Errorf("memo %d: invalid Memo shape: %T", i, memoAny)
+		}
+		for _, field := range [...]string{"MemoType", "MemoFormat"} {
+			v, present := memo[field]
+			if !present {
+				continue
+			}
+			s, ok := v.(string)
+			if !ok {
+				return fmt.Errorf("memo %d: %s not a string", i, field)
+			}
+			b, err := hex.DecodeString(s)
+			if err != nil {
+				return fmt.Errorf("memo %d: %s invalid hex: %w", i, field, err)
+			}
+			if !ValidateMemo(b) {
+				return fmt.Errorf("memo %d: %s contains disallowed bytes per rippled isMemoOkay", i, field)
+			}
+		}
+	}
+	return nil
 }
