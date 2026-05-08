@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/btcsuite/btcd/btcec/v2"
@@ -87,6 +88,63 @@ func TestMarshaling(t *testing.T) {
 
 		_, err = MarshalDER(b)
 		require.NoError(t, err, j)
+	}
+}
+
+// TestMarshalDERRejectsMalformed exercises the panic surfaces fixed in
+// audit findings H1 (oversize rLen/sLen → negative slice index) and
+// H2 (zero sLen → out-of-bounds index read). Each case must error,
+// not panic.
+func TestMarshalDERRejectsMalformed(t *testing.T) {
+	cases := []struct {
+		name string
+		// hex encoding of a DER signature byte string
+		hex string
+	}{
+		{
+			// H1: rLen=33 with non-zero leading byte. After leading-zero
+			// strip is skipped, rLen stays 33 and copy(r[32-33:], ...) panics.
+			name: "rLen 33 without leading zero",
+			hex:  "3026" + "0221" + strings.Repeat("AA", 33) + "020101",
+		},
+		{
+			// H1: rLen=200. copy(r[32-200:], ...) panics.
+			name: "rLen 200",
+			hex:  "30CD" + "02C8" + strings.Repeat("AA", 200) + "020101",
+		},
+		{
+			// H1 mirrored to s: sLen=200.
+			name: "sLen 200",
+			hex:  "30CD" + "020101" + "02C8" + strings.Repeat("BB", 200),
+		},
+		{
+			// H2: sLen=0. The outer length checks pass, but
+			// `if sig[sStart] == 0` reads one byte past end.
+			name: "sLen 0",
+			hex:  "3005" + "020101" + "0200",
+		},
+		{
+			// rLen=0 (degenerate zero r) — defensive: rejected.
+			name: "rLen 0",
+			hex:  "3004" + "0200" + "020101",
+		},
+		{
+			// rLen=1 with leading zero strips to 0 — degenerate.
+			name: "rLen strips to 0",
+			hex:  "3005" + "020100" + "020101",
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			b, err := hex.DecodeString(tc.hex)
+			require.NoError(t, err)
+
+			require.NotPanics(t, func() {
+				_, err := MarshalDER(b)
+				require.Error(t, err)
+			})
+		})
 	}
 }
 

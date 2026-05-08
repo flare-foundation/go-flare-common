@@ -30,6 +30,9 @@ func ValidateMultiSig(tx map[string]any, s *signer.Signer) (bool, error) {
 		return false, fmt.Errorf("preparing message: %w", err)
 	}
 
+	if len(s.SigningPubKey) < 2 {
+		return false, fmt.Errorf("signing pub key too short: %d chars", len(s.SigningPubKey))
+	}
 	pubPrefix := s.SigningPubKey[0:2]
 
 	sigBytes, err := hex.DecodeString(s.TxnSignature)

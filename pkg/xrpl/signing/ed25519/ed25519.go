@@ -163,12 +163,12 @@ func Validate(msg, sig []byte, pub string) (bool, error) {
 		return false, fmt.Errorf("reading pub: %w", err)
 	}
 
-	if pubBytes[0] != 0xed {
-		return false, errors.New("pub key should ED (or ed) prefixed")
-	}
-
 	if len(pubBytes) != ed25519.PublicKeySize+1 {
 		return false, fmt.Errorf("invalid pubKey length (require %d bytes)", ed25519.PublicKeySize+1)
+	}
+
+	if pubBytes[0] != 0xed {
+		return false, errors.New("pub key should ED (or ed) prefixed")
 	}
 
 	if len(sig) != ed25519.SignatureSize {
