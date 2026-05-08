@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/http"
 	"slices"
 
 	"github.com/flare-foundation/go-flare-common/pkg/call"
@@ -77,6 +78,13 @@ type AccountInfoParams struct {
 
 type JSONRPC struct {
 	URL string
+	// Transport sets the HTTP transport used by Info. Nil falls back to
+	// http.DefaultTransport, which permits any reachable address (including
+	// private VPC ranges where a co-located rippled typically lives).
+	// Callers expecting a public-only URL should pass safeurl.NewTransport()
+	// to enable SSRF protection at dial time; callers happy with the default
+	// take responsibility for trusting the URL.
+	Transport http.RoundTripper
 }
 
 // Info gets account info for the XRPL address.
@@ -94,6 +102,7 @@ func (jr JSONRPC) Info(address string) (AccountInfoResponse, error) {
 	res, err := call.Post[AccountInfoRequest, AccountInfoResponseWrapped](ctx, jr.URL, call.NoAPIKey, request, call.Params{
 		Timeout:         0,
 		MaxResponseSize: 10000,
+		Transport:       jr.Transport,
 	})
 	if err != nil {
 		return AccountInfoResponse{}, fmt.Errorf("calling %s: %w", jr.URL, err)
