@@ -27,6 +27,51 @@ The audit surfaced **6 Critical**, **~20 High**, and **~25 Medium** findings acr
 
 ---
 
+## Closure status as of 2026-05-08
+
+Annotates the original findings below with what landed on branch `xrpl`,
+what was deferred and why, and what remains. Section bodies further down
+this document are the as-found analysis and remain unchanged.
+
+### Closed
+
+| Finding | Commit | Notes |
+|---|---|---|
+| C1, C2, H10, H11 | `cc29f9e` | `Policy` struct + `iss`/`aud`/`exp`/leeway/`secboot`/`dbgstat`/`image_id`/`hwmodel`/`eat_nonce` enforced by the library; required policy fields fail-closed at parse time. 16 new policy-enforcement subtests. |
+| C3 | `8d5e4eb` | `ParsePKITokenUnverified*` doc expanded to spell out the safety contract (only safe for self-fetched tokens from the local metadata server). Function name kept; correct usage at `tee-node` is a separate-repo concern. |
+| H1, H2, H3, H4 | `305de56` | Bound checks on `secp256k1.MarshalDER` `rLen`/`sLen` (`[1,33]` pre-strip, `[1,32]` post-strip); length guards on `signing.ValidateMultiSig` `SigningPubKey[0:2]` and `ed25519.Validate` `pubBytes[0]`. Each fix has a NotPanics+Error regression case using the original panic-trigger input. |
+| H5 | `bf07f8d` | `PrivKeyFromSecret` requires the canonical 23-byte xrpl.js shape (`3+16+4`). Non-canonical secrets that previously produced non-interoperable keys are now rejected. |
+| H6, H7 | `83b9fbe` | H6: `CheckAndEncodePayment` now walks `decoded["Memos"]`, hex-decodes `MemoType`/`MemoFormat`, runs `ValidateMemo`, and enforces rippled's 1024-byte serialized cap (`STTx.cpp`). H7: function name kept; doc expanded to spell out the for-signing canonical form contract. |
+| H9 | `087aacb` | `Account.SignerList` is now `map[string]uint16` carrying `SignerWeight`. Quorum check sums weights instead of counting signers, mirroring rippled `STTx::checkMultiSign`. Today every weight is 1 (enforced in `pkg/xrpl/check`), so this is a no-op for current deployments — but the cross-package safety dependency is gone. |
+| H13 | `9dd9563` | Documented that the caller must source the Confidential Space Root CA from a trusted external location and verify it out-of-band by fingerprint. Not embedded in the repo by design — embedding would create a single supply-chain target. |
+| H14 | `639d8d6` | Unsafe `DecodeTo` body removed; `DecodeTo2`'s `abi.ConvertType` strict-shape implementation now lives under the `DecodeTo` name. The 9 production callers across `tee-node`/`tee-proxy` automatically gain strict-shape verification at next bump — no migration required. |
+| H16 | `7174393` | `JSONRPC` gained an `http.RoundTripper` field. Default behavior unchanged (works for VPC-internal rippled). Callers expecting public-only URLs can pass `safeurl.NewTransport()`; the audit's "default to safeurl" framing didn't fit the deployment model where rippled lives on the VPC. |
+| govulncheck | `d7ab0dc` | `go-ethereum` bumped from v1.16.7 to v1.17.2; the five p2p/RLPx CVEs (`GO-2026-4314/4315/4507/4508/4511`) cleared. Two remaining advisories are stdlib (fixed in `go1.26.3`), unrelated to this dep. |
+
+### Deferred by design
+
+| Finding | Reason |
+|---|---|
+| C4, C5, C6 | TEE signer is loopback-only inside the host trust boundary. The audit's threat model (compromised remote orchestrator hitting `/sign`/`/decrypt`) doesn't apply. Anyone who reaches the host already wins. |
+| H8 | `Finalize`'s non-deterministic signer subset has the same on-chain effect for current deployments. Byte-determinism of the finalized blob isn't relied on. |
+| H12 | Variable-length x5c chain — pure future-proofing; not exploitable today, would only matter if Google rotates to a different chain depth. |
+| H15 | `op.IsValid` default-allowing non-`F_`-prefixed types is the documented extension namespace contract. Validation of consumer-defined types is the consumer's job. |
+
+### Outstanding (priority order)
+
+#### High — before next release
+- **H17** — `safeurl.Validate` is a TOCTOU helper masquerading as the authoritative check. Doc/rename only; tee-relay already uses `NewTransport`.
+- **H18** — default `http.Client` redirect policy follows up to 10 redirects without re-validating the target.
+- **H19** — `voters.NewSet` accepts duplicate voters in raw bytes; slices retain duplicates while `VoterDataMap` dedupes. Every consumer iterating slices double-counts weight.
+- **H20** — `database.DoInTransaction` `recover()` swallows panic without re-panicking and has no named return; caller treats panicked-and-rolled-back transaction as `nil` error / committed. Real correctness bug, broad blast radius.
+- **H21** — Static API key compared via map lookup; non-constant-time. Cheap defense even with loopback signer.
+- **H22** — Signer plaintext `ListenAndServe`, `cfg.Addr` accepts any address. Partly mooted by the loopback-only assumption; cheap to add a loopback default at `New()`.
+
+#### Medium — backlog
+M1–M3 (XRPL codec alloc bounds — DoS via huge length prefix), M14 (Instruction field validation), M22/M23 (payload framing). Plus the rest of the Medium/Low tiers below — see per-finding sections.
+
+---
+
 ## Critical (P0 — fix immediately)
 
 ### C1. TEE attestation: `iss`/`aud` never validated
