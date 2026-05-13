@@ -112,11 +112,21 @@ func (jr JSONRPC) Info(address string) (AccountInfoResponse, error) {
 }
 
 // Check checks account info:
+//   - response is from a validated ledger
 //   - illegal Flags
 //   - required Flags
 //   - signers list setting
 //   - no regular key
+//
+// Audit M11: a SignerList read from a non-validated ledger can be rolled
+// back; trusting it for quorum decisions risks issuing transactions against
+// stale or speculative state. Reject responses where rippled has not yet
+// committed the read.
 func (ai AccountInfoResponse) Check(quorum uint64, signers []string) error {
+	if !ai.Validated {
+		return errors.New("account_info response is from a non-validated ledger")
+	}
+
 	if err := checkFlags(ai.AccountData.Flags); err != nil {
 		return fmt.Errorf("flags: %w", err)
 	}
