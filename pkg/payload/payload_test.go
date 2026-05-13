@@ -1,6 +1,8 @@
 package payload_test
 
 import (
+	"bytes"
+	"encoding/binary"
 	"encoding/hex"
 	"strings"
 
@@ -173,6 +175,112 @@ func TestExtractPayloadsError(t *testing.T) {
 	for i, tx := range txs {
 		_, err := payload.ExtractPayloads(tx)
 		require.Error(t, err, fmt.Sprintf("error in test %d", i))
+	}
+}
+
+// TestExtractPayloadsDeclaredLength varies the on-wire length field
+// independently of the bytes that follow.
+func TestExtractPayloadsDeclaredLength(t *testing.T) {
+	const selector = "6c532fae"
+
+	frame := func(proto uint8, round uint32, declaredLen uint16, payload []byte) []byte {
+		var buf bytes.Buffer
+		buf.WriteByte(proto)
+		_ = binary.Write(&buf, binary.BigEndian, round)
+		_ = binary.Write(&buf, binary.BigEndian, declaredLen)
+		buf.Write(payload)
+		return buf.Bytes()
+	}
+
+	mkInput := func(frames ...[]byte) string {
+		out := selector
+		for _, f := range frames {
+			out += hex.EncodeToString(f)
+		}
+		return out
+	}
+
+	p32 := bytes.Repeat([]byte{0xaa}, 32)
+	pMax := bytes.Repeat([]byte{0xbb}, 0xFFFF)
+
+	tests := []struct {
+		name    string
+		input   string
+		wantErr bool
+		wantLen int
+		wantPID map[uint8]int
+	}{
+		{
+			name:    "declared matches payload",
+			input:   mkInput(frame(100, 1, 32, p32)),
+			wantLen: 1,
+			wantPID: map[uint8]int{100: 32},
+		},
+		{
+			name:    "declared zero with no trailing bytes",
+			input:   mkInput(frame(50, 7, 0, nil)),
+			wantLen: 1,
+			wantPID: map[uint8]int{50: 0},
+		},
+		{
+			name:    "two frames, both declared correctly",
+			input:   mkInput(frame(100, 1, 1, []byte{0x11}), frame(101, 2, 1, []byte{0x22})),
+			wantLen: 2,
+			wantPID: map[uint8]int{100: 1, 101: 1},
+		},
+		{
+			name:    "declared exceeds remaining",
+			input:   mkInput(frame(100, 1, 64, p32)),
+			wantErr: true,
+		},
+		{
+			// cb61c39 regression: 7 + 0xFFFF overflowed uint16 to 6.
+			name:    "declared max uint16 with insufficient data",
+			input:   mkInput(frame(100, 1, 0xFFFF, p32)),
+			wantErr: true,
+		},
+		{
+			name:    "declared 0xFFFE with insufficient data",
+			input:   mkInput(frame(100, 1, 0xFFFE, p32)),
+			wantErr: true,
+		},
+		{
+			// Positive side of cb61c39: 65535 bytes must round-trip.
+			name:    "declared max uint16 with exact data",
+			input:   mkInput(frame(100, 1, 0xFFFF, pMax)),
+			wantLen: 1,
+			wantPID: map[uint8]int{100: 0xFFFF},
+		},
+		{
+			// Under-claim: tail re-parsed as a new frame, decodes garbage -> error.
+			name:    "declared under-claims, tail mis-frames into error",
+			input:   mkInput(frame(100, 1, 7, p32)),
+			wantErr: true,
+		},
+		{
+			// Declared 0 with trailing bytes: parser re-enters and mis-frames the tail.
+			name:    "declared zero with trailing bytes mis-frames",
+			input:   mkInput(frame(100, 1, 0, p32)),
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tx := &database.Transaction{Hash: "h", FunctionSig: "f", Input: tt.input}
+			msgs, err := payload.ExtractPayloads(tx)
+			if tt.wantErr {
+				require.Error(t, err)
+				return
+			}
+			require.NoError(t, err)
+			require.Equal(t, tt.wantLen, len(msgs))
+			for pid, n := range tt.wantPID {
+				m, ok := msgs[pid]
+				require.True(t, ok, "missing protocolID %d", pid)
+				require.Equal(t, n, len(m.Payload), "payload length for protocolID %d", pid)
+			}
+		})
 	}
 }
 
