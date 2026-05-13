@@ -59,6 +59,21 @@ type Policy struct {
 	// Issuer overrides the expected iss claim. Zero defaults to ConfidentialSpaceIssuer.
 	// Override is intended for test environments.
 	Issuer string
+
+	// RequireCRL causes verification to fail closed when a certificate
+	// declares CRLDistributionPoints but the caller did not supply the
+	// corresponding x509.RevocationList. The default false keeps the
+	// pre-audit behavior (warn + skip), which is appropriate when CRLs are
+	// fetched out-of-band or when the leaf has no DPs (Confidential Space
+	// leaves typically don't). Audit finding M12.
+	RequireCRL bool
+
+	// AllowedLeafEKUs is the set of Extended Key Usage values the chain
+	// must authorize for the leaf certificate. Nil or empty falls back to
+	// the leaf's own declared ExtKeyUsage, which at least prevents the
+	// chain validator from accepting any EKU via ExtKeyUsageAny. Audit
+	// finding M13.
+	AllowedLeafEKUs []x509.ExtKeyUsage
 }
 
 func (p Policy) validate() error {
@@ -195,7 +210,7 @@ func ParseAndValidatePKITokenClaims[T jwt.Claims](attestationToken string, store
 }
 
 func parseAndVerifyJWT[T jwt.Claims](attestationToken string, storedRootCertificate *x509.Certificate, leafCRL, intermediateCRL *x509.RevocationList, policy Policy, claims T) (*jwt.Token, T, error) {
-	keyFunc := extractAndValidateKey(storedRootCertificate, leafCRL, intermediateCRL)
+	keyFunc := extractAndValidateKey(storedRootCertificate, leafCRL, intermediateCRL, policy)
 
 	opts := []jwt.ParserOption{
 		jwt.WithValidMethods([]string{"RS256"}),
@@ -279,7 +294,7 @@ func ParsePKITokenUnverifiedClaims[T jwt.Claims](jwtToken string, claims T) (*jw
 
 // extractAndValidateKey returns a jwt.KeyFunc that extracts and validates the public key used for verification from a JWT token's x5c header chain.
 // It verifies the certificate chain against the expected root certificate and returns the leaf certificate's public key.
-func extractAndValidateKey(expectedRoot *x509.Certificate, leafCRL, intermediateCRL *x509.RevocationList) jwt.Keyfunc {
+func extractAndValidateKey(expectedRoot *x509.Certificate, leafCRL, intermediateCRL *x509.RevocationList, policy Policy) jwt.Keyfunc {
 	return func(token *jwt.Token) (any, error) {
 		x5cs, ok := token.Header["x5c"]
 		if !ok {
@@ -296,7 +311,7 @@ func extractAndValidateKey(expectedRoot *x509.Certificate, leafCRL, intermediate
 			return nil, fmt.Errorf("extracting certificates from x5c headers: %w", err)
 		}
 
-		err = certificates.Verify(expectedRoot, leafCRL, intermediateCRL)
+		err = certificates.VerifyWithPolicy(expectedRoot, leafCRL, intermediateCRL, policy)
 		if err != nil {
 			return nil, fmt.Errorf("verifying certificates: %w", err)
 		}
@@ -383,7 +398,19 @@ func ParsePEMCertificate(certificate string) (*x509.Certificate, error) {
 //   - All certificates have valid lifetimes,
 //   - Certificate chain is valid from leaf to root,
 //   - Leaf and intermediate certificates are not revoked (if CRLs are provided).
+//
+// Equivalent to VerifyWithPolicy(..., Policy{}). New code should call
+// VerifyWithPolicy and supply the per-deployment hardening knobs added in
+// audit M12/M13.
 func (c *PKICertificates) Verify(expectedRoot *x509.Certificate, leafCRL, intermediateCRL *x509.RevocationList) error {
+	return c.VerifyWithPolicy(expectedRoot, leafCRL, intermediateCRL, Policy{})
+}
+
+// VerifyWithPolicy is the policy-aware variant of Verify. Policy.RequireCRL
+// fails closed when a certificate declares DPs but no CRL was supplied
+// (M12); Policy.AllowedLeafEKUs constrains chain validation to specific
+// Extended Key Usage values rather than ExtKeyUsageAny (M13).
+func (c *PKICertificates) VerifyWithPolicy(expectedRoot *x509.Certificate, leafCRL, intermediateCRL *x509.RevocationList, policy Policy) error {
 	// Verify the leaf certificate signature algorithm is an RSA key
 	if c.Leaf.SignatureAlgorithm != x509.SHA256WithRSA {
 		return errors.New("leaf certificate signature algorithm is not SHA256WithRSA")
@@ -403,12 +430,12 @@ func (c *PKICertificates) Verify(expectedRoot *x509.Certificate, leafCRL, interm
 		return fmt.Errorf("lifetime: %w", err)
 	}
 
-	err = c.verifyChain()
+	err = c.verifyChain(policy)
 	if err != nil {
 		return err
 	}
 
-	err = c.verifyCRL(leafCRL, intermediateCRL)
+	err = c.verifyCRL(leafCRL, intermediateCRL, policy.RequireCRL)
 	if err != nil {
 		return err
 	}
@@ -434,17 +461,31 @@ func (c *PKICertificates) verifyLifetime() error {
 }
 
 // verifyChain verifies the certificate chain from leaf to root.
-func (c *PKICertificates) verifyChain() error {
+//
+// Audit M13: KeyUsages is pinned to policy.AllowedLeafEKUs when set;
+// otherwise it falls back to the leaf's own declared ExtKeyUsage so the
+// chain validator does not accept any EKU via ExtKeyUsageAny. If the leaf
+// declares no EKU we keep ExtKeyUsageAny — there is nothing stricter to
+// pin to without a deployment-specific Policy.AllowedLeafEKUs value.
+func (c *PKICertificates) verifyChain(policy Policy) error {
 	interPool := x509.NewCertPool()
 	interPool.AddCert(c.Intermediate)
 
 	rootPool := x509.NewCertPool()
 	rootPool.AddCert(c.Root)
 
+	keyUsages := policy.AllowedLeafEKUs
+	if len(keyUsages) == 0 {
+		keyUsages = c.Leaf.ExtKeyUsage
+	}
+	if len(keyUsages) == 0 {
+		keyUsages = []x509.ExtKeyUsage{x509.ExtKeyUsageAny}
+	}
+
 	_, err := c.Leaf.Verify(x509.VerifyOptions{
 		Intermediates: interPool,
 		Roots:         rootPool,
-		KeyUsages:     []x509.ExtKeyUsage{x509.ExtKeyUsageAny},
+		KeyUsages:     keyUsages,
 	})
 	if err != nil {
 		return fmt.Errorf("verifying certificate chain: %w", err)
@@ -454,13 +495,15 @@ func (c *PKICertificates) verifyChain() error {
 }
 
 // verifyCRL checks whether the leaf or intermediate certificates have been revoked
-// according to the provided CRLs. If a CRL is nil, a warning is logged and the check is skipped.
-func (c *PKICertificates) verifyCRL(leafCRL, intermediateCRL *x509.RevocationList) error {
-	if err := checkCRL("leaf", c.Leaf, leafCRL, c.Intermediate); err != nil {
+// according to the provided CRLs. If a CRL is nil and requireCRL is false,
+// a warning is logged and the check is skipped; if requireCRL is true, the
+// function fails closed (audit M12).
+func (c *PKICertificates) verifyCRL(leafCRL, intermediateCRL *x509.RevocationList, requireCRL bool) error {
+	if err := checkCRL("leaf", c.Leaf, leafCRL, c.Intermediate, requireCRL); err != nil {
 		return err
 	}
 
-	if err := checkCRL("intermediate", c.Intermediate, intermediateCRL, c.Root); err != nil {
+	if err := checkCRL("intermediate", c.Intermediate, intermediateCRL, c.Root, requireCRL); err != nil {
 		return err
 	}
 
@@ -469,11 +512,14 @@ func (c *PKICertificates) verifyCRL(leafCRL, intermediateCRL *x509.RevocationLis
 
 // checkCRL verifies a single certificate against its CRL. The issuer is the certificate
 // that should have signed the CRL.
-func checkCRL(name string, cert *x509.Certificate, crl *x509.RevocationList, issuer *x509.Certificate) error {
+func checkCRL(name string, cert *x509.Certificate, crl *x509.RevocationList, issuer *x509.Certificate, requireCRL bool) error {
 	if crl == nil {
 		if len(cert.CRLDistributionPoints) == 0 {
 			// No CRL distribution points — expected for some certs (e.g. Google Confidential Space leaf certs).
 			return nil
+		}
+		if requireCRL {
+			return fmt.Errorf("%s certificate declares CRL distribution points but no CRL was provided (Policy.RequireCRL is set)", name)
 		}
 		logger.Warnf("%s certificate CRL was not provided despite CRL distribution points being present, skipping CRL check", name)
 		return nil

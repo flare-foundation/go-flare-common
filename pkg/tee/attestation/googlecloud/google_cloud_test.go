@@ -672,6 +672,135 @@ func TestVerifyCRL(t *testing.T) {
 	})
 }
 
+// TestRequireCRLFailsClosed covers audit finding M12: when a certificate
+// declares CRLDistributionPoints and the caller did not provide a CRL,
+// Policy.RequireCRL forces verification to fail instead of warn-and-skip.
+func TestRequireCRLFailsClosed(t *testing.T) {
+	now := time.Now()
+
+	root, rootKey := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), true, nil, nil)
+	// Intermediate carries a CRL distribution point but no CRL is supplied.
+	inter, interKey := generateTestCertificateWithDP(t, now.Add(-time.Hour), now.Add(time.Hour), true, root, rootKey, []string{"http://example.invalid/crl"})
+	leaf, leafKey := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), false, inter, interKey)
+
+	signedToken := assembleSignedToken(t, validTestClaims(now), convertToHeaderEntry([]*x509.Certificate{leaf, inter, root}), leafKey)
+
+	t.Run("RequireCRL false accepts (warn-and-skip)", func(t *testing.T) {
+		p := validTestPolicy(t)
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, p)
+		require.NoError(t, err)
+	})
+
+	t.Run("RequireCRL true rejects when CRL missing", func(t *testing.T) {
+		p := validTestPolicy(t)
+		p.RequireCRL = true
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, p)
+		require.Error(t, err)
+		require.Contains(t, err.Error(), "RequireCRL")
+	})
+}
+
+// TestAllowedLeafEKUs covers audit finding M13: chain validation honors a
+// caller-supplied AllowedLeafEKUs list instead of falling back to
+// ExtKeyUsageAny when the policy is unset and the leaf has no EKU.
+func TestAllowedLeafEKUs(t *testing.T) {
+	now := time.Now()
+
+	root, rootKey := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), true, nil, nil)
+	inter, interKey := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), true, root, rootKey)
+	leaf, leafKey := generateTestCertificateWithEKU(t, now.Add(-time.Hour), now.Add(time.Hour), inter, interKey, []x509.ExtKeyUsage{x509.ExtKeyUsageCodeSigning})
+
+	signedToken := assembleSignedToken(t, validTestClaims(now), convertToHeaderEntry([]*x509.Certificate{leaf, inter, root}), leafKey)
+
+	t.Run("matching policy accepts", func(t *testing.T) {
+		p := validTestPolicy(t)
+		p.AllowedLeafEKUs = []x509.ExtKeyUsage{x509.ExtKeyUsageCodeSigning}
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, p)
+		require.NoError(t, err)
+	})
+
+	t.Run("mismatched policy rejects", func(t *testing.T) {
+		p := validTestPolicy(t)
+		p.AllowedLeafEKUs = []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth}
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, p)
+		require.Error(t, err)
+	})
+
+	t.Run("nil policy falls back to leaf EKU", func(t *testing.T) {
+		p := validTestPolicy(t)
+		// AllowedLeafEKUs left unset; falls back to leaf.ExtKeyUsage = CodeSigning.
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, p)
+		require.NoError(t, err)
+	})
+}
+
+func generateTestCertificateWithDP(
+	t *testing.T,
+	notBefore, notAfter time.Time,
+	isCA bool,
+	parent *x509.Certificate,
+	parentKey crypto.Signer,
+	dps []string,
+) (*x509.Certificate, *rsa.PrivateKey) {
+	t.Helper()
+	priv, err := rsa.GenerateKey(rand.Reader, 2048)
+	require.NoError(t, err)
+
+	template := &x509.Certificate{
+		SerialNumber:          big.NewInt(time.Now().UnixNano()),
+		NotBefore:             notBefore,
+		NotAfter:              notAfter,
+		SignatureAlgorithm:    x509.SHA256WithRSA,
+		PublicKeyAlgorithm:    x509.RSA,
+		IsCA:                  isCA,
+		BasicConstraintsValid: true,
+		CRLDistributionPoints: dps,
+	}
+	if isCA {
+		template.KeyUsage = x509.KeyUsageCertSign | x509.KeyUsageCRLSign
+	} else {
+		template.KeyUsage = x509.KeyUsageDigitalSignature
+	}
+	if parent == nil {
+		parent = template
+		parentKey = priv
+	}
+	certDER, err := x509.CreateCertificate(rand.Reader, template, parent, &priv.PublicKey, parentKey)
+	require.NoError(t, err)
+	cert, err := x509.ParseCertificate(certDER)
+	require.NoError(t, err)
+	return cert, priv
+}
+
+func generateTestCertificateWithEKU(
+	t *testing.T,
+	notBefore, notAfter time.Time,
+	parent *x509.Certificate,
+	parentKey crypto.Signer,
+	ekus []x509.ExtKeyUsage,
+) (*x509.Certificate, *rsa.PrivateKey) {
+	t.Helper()
+	priv, err := rsa.GenerateKey(rand.Reader, 2048)
+	require.NoError(t, err)
+
+	template := &x509.Certificate{
+		SerialNumber:          big.NewInt(time.Now().UnixNano()),
+		NotBefore:             notBefore,
+		NotAfter:              notAfter,
+		SignatureAlgorithm:    x509.SHA256WithRSA,
+		PublicKeyAlgorithm:    x509.RSA,
+		IsCA:                  false,
+		BasicConstraintsValid: true,
+		KeyUsage:              x509.KeyUsageDigitalSignature,
+		ExtKeyUsage:           ekus,
+	}
+	certDER, err := x509.CreateCertificate(rand.Reader, template, parent, &priv.PublicKey, parentKey)
+	require.NoError(t, err)
+	cert, err := x509.ParseCertificate(certDER)
+	require.NoError(t, err)
+	return cert, priv
+}
+
 func generateTestCRL(
 	t *testing.T,
 	issuer *x509.Certificate,
