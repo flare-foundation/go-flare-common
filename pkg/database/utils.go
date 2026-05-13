@@ -118,12 +118,16 @@ type syncLogger interface {
 	Warnf(string, ...any)
 }
 
-// DoInTransaction executes operations within a single database transaction, rolling back on any error.
-func DoInTransaction(db *gorm.DB, operations ...func(db *gorm.DB) error) error {
+// DoInTransaction executes operations within a single database transaction,
+// rolling back on any returned error or panic. A panic from inside an
+// operation is converted into a returned error so the caller does not treat
+// a panicked-and-rolled-back transaction as committed.
+func DoInTransaction(db *gorm.DB, operations ...func(db *gorm.DB) error) (err error) {
 	tx := db.Begin()
 	defer func() {
 		if r := recover(); r != nil {
 			tx.Rollback()
+			err = fmt.Errorf("panic in transaction: %v", r)
 		}
 	}()
 
