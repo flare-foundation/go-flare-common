@@ -42,7 +42,7 @@ func prepareServer(t *testing.T) (*Signer, *ecdsa.PrivateKey) {
 	require.NoError(t, err)
 
 	cfg := Config{
-		Addr:       fmt.Sprintf(":%d", port),
+		Addr:       fmt.Sprintf("127.0.0.1:%d", port),
 		APIKeyName: "X-API-KEY",
 		APIKeys:    []string{apiKey},
 	}
@@ -364,7 +364,7 @@ func TestConfigs(t *testing.T) {
 	})
 
 	cfg := Config{
-		Addr:       fmt.Sprintf(":%d", port),
+		Addr:       fmt.Sprintf("127.0.0.1:%d", port),
 		APIKeyName: "X-API-KEY",
 		APIKeys:    []string{apiKey},
 		Limits:     lts,
@@ -501,6 +501,61 @@ func TestAPIKeyHMACCompare(t *testing.T) {
 	require.False(t, ak.authorize(mk("delta")))
 	require.False(t, ak.authorize(mk("alpha1")))
 	require.False(t, ak.authorize(mk("alph")))
+}
+
+// TestAssertLoopbackAddr covers audit finding H22: New() must reject any
+// configuration that would bind the signer outside loopback, because the
+// deferred C4/C5/C6 unbound-oracle findings rely on the signer being
+// reachable only from inside the host trust boundary.
+func TestAssertLoopbackAddr(t *testing.T) {
+	good := []string{
+		"127.0.0.1:0",
+		"127.0.0.1:8080",
+		"127.1.2.3:8080",
+		"[::1]:8080",
+	}
+	for _, a := range good {
+		t.Run("accept "+a, func(t *testing.T) {
+			require.NoError(t, assertLoopbackAddr(a))
+		})
+	}
+
+	bad := []struct {
+		addr string
+		want string
+	}{
+		{"", "must be specified"},
+		{":8080", "empty host"},
+		{"0.0.0.0:8080", "not a loopback"},
+		{"192.168.1.5:8080", "not a loopback"},
+		{"10.0.0.1:8080", "not a loopback"},
+		{"localhost:8080", "not a literal IP"},
+		{"example.com:8080", "not a literal IP"},
+		{"127.0.0.1", "parsing"},
+		{"::1:8080", "parsing"},
+	}
+	for _, tc := range bad {
+		t.Run("reject "+tc.addr, func(t *testing.T) {
+			err := assertLoopbackAddr(tc.addr)
+			require.Error(t, err)
+			require.Contains(t, err.Error(), tc.want)
+		})
+	}
+}
+
+func TestNewRejectsNonLoopbackAddr(t *testing.T) {
+	prv, err := crypto.GenerateKey()
+	require.NoError(t, err)
+
+	cfg := Config{
+		Addr:       ":8080",
+		APIKeyName: "X-API-KEY",
+		APIKeys:    []string{"k"},
+	}
+	s, err := New(cfg, prv)
+	require.Error(t, err)
+	require.Nil(t, s)
+	require.Contains(t, err.Error(), "signer address")
 }
 
 func TestAPIKeyHMACSecretsAreDistinct(t *testing.T) {
