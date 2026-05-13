@@ -11,6 +11,12 @@ import (
 
 // CheckAndEncodePayment validates and serializes a payment transaction.
 //
+// Scope: plain native or single-currency-IOU payments. Self-payments
+// (Account == Destination) are rejected unconditionally because the only
+// rippled-meaningful self-payment is a cross-currency conversion via
+// Paths/SendMax, which this function does not support. Callers that need
+// conversion paths must build and sign their transaction by another route.
+//
 // The returned bytes are the for-signing canonical form produced by
 // types.Encode(tx, true): non-signing fields (TxnSignature, Signers, …) are
 // omitted, and the STX\0 prefix is NOT included. The caller is expected to
@@ -51,6 +57,18 @@ func CheckAndEncodePayment(tx map[string]any, native bool) ([]byte, error) {
 
 	if account == destination {
 		return nil, errors.New("destination should not be equal to the account")
+	}
+
+	// Sequence and SigningPubKey are soeREQUIRED in rippled TxFormats.cpp
+	// (lines 19, 27). Audit finding M4: omitting either could let the codec
+	// accept a structurally incomplete transaction. SigningPubKey is the
+	// empty string in the multi-sig flow; that's still presence, so we only
+	// check that the key exists.
+	if _, ok := decoded["Sequence"]; !ok {
+		return nil, errors.New("missing Sequence")
+	}
+	if _, ok := decoded["SigningPubKey"]; !ok {
+		return nil, errors.New("missing SigningPubKey")
 	}
 
 	if err := validatePaymentMemos(decoded); err != nil {
