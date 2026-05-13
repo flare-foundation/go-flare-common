@@ -45,7 +45,14 @@ func (sp *SigningPolicy) Hash() []byte {
 // NewSigningPolicy creates a SigningPolicy from a SigningPolicyInitialized event.
 //
 // Mapping from submitAddress to signingPolicyAddress can be added if needed.
-func NewSigningPolicy(r *relay.RelaySigningPolicyInitialized, submitToSigning map[common.Address]common.Address) *SigningPolicy {
+// Returns an error if the event's voters/weights are malformed (length mismatch
+// or duplicate address). The smart contract guarantees both, so an error here
+// indicates upstream corruption.
+func NewSigningPolicy(r *relay.RelaySigningPolicyInitialized, submitToSigning map[common.Address]common.Address) (*SigningPolicy, error) {
+	vs, err := voters.NewSet(r.Voters, r.Weights, submitToSigning)
+	if err != nil {
+		return nil, fmt.Errorf("building voter set: %w", err)
+	}
 	return &SigningPolicy{
 		RewardEpochID:      uint32(r.RewardEpochId.Uint64()), //nolint:gosec // r.RewardEpochId is uint24 in the event
 		StartVotingRoundID: r.StartVotingRoundId,
@@ -53,8 +60,8 @@ func NewSigningPolicy(r *relay.RelaySigningPolicyInitialized, submitToSigning ma
 		Seed:               r.Seed,
 		rawBytes:           r.SigningPolicyBytes,
 		blockTimestamp:     r.Timestamp,
-		Voters:             voters.NewSet(r.Voters, r.Weights, submitToSigning),
-	}
+		Voters:             vs,
+	}, nil
 }
 
 // Equals compares two SigningPolicy objects based on their rawBytes.
@@ -140,13 +147,18 @@ func FromRawBytes(b []byte) (*SigningPolicy, int, error) {
 		return nil, p, errors.New("total weight exceeds maximum uint16 value")
 	}
 
+	vs, err := voters.NewSet(signers, weights, nil)
+	if err != nil {
+		return nil, p, fmt.Errorf("building voter set: %w", err)
+	}
+
 	return &SigningPolicy{
 		RewardEpochID:      epoch,
 		StartVotingRoundID: startingRound,
 		Threshold:          threshold,
 		Seed:               new(big.Int).SetBytes(seed[:]),
 		rawBytes:           slices.Clone(b[:p]),
-		Voters:             voters.NewSet(signers, weights, nil),
+		Voters:             vs,
 	}, p, nil
 }
 

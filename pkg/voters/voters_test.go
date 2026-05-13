@@ -32,19 +32,44 @@ func TestInitialHashSeed(t *testing.T) {
 }
 
 func TestVoterSetInitialization(t *testing.T) {
-	vs := voters.NewSet(testVoters, testWeights, nil)
-	if vs == nil {
-		t.Errorf("voter set is nil")
-	} else if vs.TotalWeight != 1500 {
+	vs, err := voters.NewSet(testVoters, testWeights, nil)
+	require.NoError(t, err)
+	require.NotNil(t, vs)
+	if vs.TotalWeight != 1500 {
 		t.Errorf("total weight is not correct")
 	}
+}
+
+// TestNewSetRejectsDuplicate covers audit finding H19: NewSet must error
+// when the voters slice contains the same address twice. The signing policy
+// emitted by the smart contract is guaranteed not to contain duplicates, so
+// any duplicate here is corrupt input.
+func TestNewSetRejectsDuplicate(t *testing.T) {
+	dup := []common.Address{
+		common.HexToAddress("0xc783df8a850f42e7f7e57013759c285caa701eb6"),
+		common.HexToAddress("0xead9c93b79ae7c1591b1fb5323bd777e86e150d4"),
+		common.HexToAddress("0xc783df8a850f42e7f7e57013759c285caa701eb6"),
+	}
+	weights := []uint16{100, 200, 300}
+
+	vs, err := voters.NewSet(dup, weights, nil)
+	require.Error(t, err)
+	require.Nil(t, vs)
+	require.Contains(t, err.Error(), "duplicate voter address")
+}
+
+func TestNewSetRejectsLengthMismatch(t *testing.T) {
+	vs, err := voters.NewSet(testVoters, testWeights[:2], nil)
+	require.Error(t, err)
+	require.Nil(t, vs)
 }
 
 func TestBinarySearch(t *testing.T) {
 	testPairs := []uint16{0, 1, 99, 100, 101, 105, 299, 300, 301, 305, 599, 600, 601, 605, 999, 1000, 1001, 1005}
 
 	t.Run("test1", func(t *testing.T) {
-		vs := voters.NewSet([]common.Address{common.HexToAddress("0xc783df8a850f42e7f7e57013759c285caa701eb6")}, []uint16{100}, nil)
+		vs, err := voters.NewSet([]common.Address{common.HexToAddress("0xc783df8a850f42e7f7e57013759c285caa701eb6")}, []uint16{100}, nil)
+		require.NoError(t, err)
 		testResults := make([]int, 4)
 		for i := 0; i <= 3; i++ {
 			testResults[i] = vs.BinarySearch(testPairs[i])
@@ -53,7 +78,8 @@ func TestBinarySearch(t *testing.T) {
 	})
 
 	t.Run("test2", func(t *testing.T) {
-		vs := voters.NewSet(testVoters, testWeights, nil)
+		vs, err := voters.NewSet(testVoters, testWeights, nil)
+		require.NoError(t, err)
 		test2Results := make([]int, len(testPairs))
 		for i := range testPairs {
 			test2Results[i] = vs.BinarySearch(testPairs[i])
@@ -63,7 +89,8 @@ func TestBinarySearch(t *testing.T) {
 }
 
 func TestSelectVoters(t *testing.T) {
-	vs := voters.NewSet(testVoters, testWeights, nil)
+	vs, err := voters.NewSet(testVoters, testWeights, nil)
+	require.NoError(t, err)
 	seed := voters.InitialHashSeed(big.NewInt(1), 1, 1)
 	voterSet, err := vs.RandomSelectThresholdWeightVoters(seed, 3000)
 	require.NoError(t, err)
