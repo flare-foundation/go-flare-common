@@ -47,7 +47,9 @@ func prepareServer(t *testing.T) (*Signer, *ecdsa.PrivateKey) {
 		APIKeys:    []string{apiKey},
 	}
 
-	return New(cfg, prv), prv
+	s, err := New(cfg, prv)
+	require.NoError(t, err)
+	return s, prv
 }
 
 func prepareSignBody(n uint64) SignBody {
@@ -373,7 +375,8 @@ func TestConfigs(t *testing.T) {
 	prv, err := crypto.GenerateKey()
 	require.NoError(t, err)
 
-	s := New(cfg, prv)
+	s, err := New(cfg, prv)
+	require.NoError(t, err)
 
 	var wg sync.WaitGroup
 
@@ -467,4 +470,45 @@ func TestConfigs(t *testing.T) {
 		cancel()
 		wg.Wait()
 	})
+}
+
+// TestAPIKeyHMACCompare covers audit finding H21: API-key comparison runs
+// against HMAC digests with subtle.ConstantTimeCompare. The test exercises
+// the behavioural contract — correct keys accepted, wrong/empty keys
+// rejected, multiple configured keys all accepted — independent of timing.
+func TestAPIKeyHMACCompare(t *testing.T) {
+	cfg := Config{
+		APIKeyName: "X-API-KEY",
+		APIKeys:    []string{"alpha", "beta", "gamma"},
+	}
+	ak, err := newAPIKeys(cfg)
+	require.NoError(t, err)
+	require.Len(t, ak.digests, 3)
+	require.Len(t, ak.secret, 32)
+
+	mk := func(v string) *http.Header {
+		h := http.Header{}
+		if v != "" {
+			h.Set(cfg.APIKeyName, v)
+		}
+		return &h
+	}
+
+	for _, valid := range cfg.APIKeys {
+		require.Truef(t, ak.authorize(mk(valid)), "valid key %q should authorize", valid)
+	}
+	require.False(t, ak.authorize(mk("")))
+	require.False(t, ak.authorize(mk("delta")))
+	require.False(t, ak.authorize(mk("alpha1")))
+	require.False(t, ak.authorize(mk("alph")))
+}
+
+func TestAPIKeyHMACSecretsAreDistinct(t *testing.T) {
+	cfg := Config{APIKeyName: "X-API-KEY", APIKeys: []string{"k"}}
+	a, err := newAPIKeys(cfg)
+	require.NoError(t, err)
+	b, err := newAPIKeys(cfg)
+	require.NoError(t, err)
+	require.NotEqual(t, a.secret, b.secret, "each New() must use a fresh HMAC secret")
+	require.NotEqual(t, a.digests[0], b.digests[0], "digest under different secret must differ")
 }
