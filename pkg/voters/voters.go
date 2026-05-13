@@ -4,6 +4,7 @@ package voters
 import (
 	"encoding/binary"
 	"errors"
+	"fmt"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -30,10 +31,14 @@ type Set struct {
 // NewSet creates Set from voters' addresses and their weights.
 // Optionally, a map from submitAddresses to signingAddress can be added.
 //
-// There has to be the same number of voters and weights otherwise a nil pointer is returned.
-func NewSet(voters []common.Address, weights []uint16, submitToSigningAddress map[common.Address]common.Address) *Set {
+// Returns an error if voters and weights differ in length or if voters contains
+// a duplicate address. The signing policy emitted by the Flare smart contracts
+// is guaranteed to be free of duplicates, so a duplicate here indicates a
+// caller-side bug or corrupt input that would otherwise silently double-count
+// weight in the slice-indexed selection path while VoterDataMap dedupes.
+func NewSet(voters []common.Address, weights []uint16, submitToSigningAddress map[common.Address]common.Address) (*Set, error) {
 	if len(voters) != len(weights) {
-		return nil
+		return nil, fmt.Errorf("voters/weights length mismatch: %d vs %d", len(voters), len(weights))
 	}
 
 	vs := Set{
@@ -47,19 +52,20 @@ func NewSet(voters []common.Address, weights []uint16, submitToSigningAddress ma
 		vs.TotalWeight += w
 	}
 
-	vMap := make(map[common.Address]VoterData)
+	vMap := make(map[common.Address]VoterData, len(voters))
 	for i, voter := range vs.voters {
-		if _, ok := vMap[voter]; !ok {
-			vMap[voter] = VoterData{
-				Index:  i,
-				Weight: vs.weights[i],
-			}
+		if _, ok := vMap[voter]; ok {
+			return nil, fmt.Errorf("duplicate voter address at index %d: %s", i, voter.Hex())
+		}
+		vMap[voter] = VoterData{
+			Index:  i,
+			Weight: vs.weights[i],
 		}
 	}
 	vs.VoterDataMap = vMap
 	vs.SubmitToSigningAddress = submitToSigningAddress
 
-	return &vs
+	return &vs, nil
 }
 
 // InitialHashSeed returns initial seed for voter selection.
