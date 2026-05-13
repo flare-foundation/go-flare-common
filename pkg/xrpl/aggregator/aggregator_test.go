@@ -54,11 +54,11 @@ func TestAddSignatures(t *testing.T) {
 		txs:        make(map[common.Hash]*transaction),
 	}
 
-	txResult, dispatch, err := acc.AddSignatures(blob)
+	txID, dispatch, err := acc.AddSignatures(blob)
 	require.NoError(t, err)
 	require.False(t, dispatch)
 
-	require.Len(t, txResult.signers, 1, "signatures")
+	require.Len(t, acc.txs[txID].signers, 1, "signatures")
 	require.Len(t, acc.txs, 1, "transactions")
 }
 
@@ -78,14 +78,14 @@ func TestAddSignaturesFull(t *testing.T) {
 		txs:    make(map[common.Hash]*transaction),
 	}
 
-	txResult, dispatch, err := acc.AddSignatures(blob)
+	txID, dispatch, err := acc.AddSignatures(blob)
 	require.NoError(t, err)
 	require.True(t, dispatch)
 
-	require.Len(t, txResult.signers, 2, "signatures")
+	require.Len(t, acc.txs[txID].signers, 2, "signatures")
 	require.Len(t, acc.txs, 1, "transactions")
 
-	txBlob, err := acc.Finalize(txResult.id)
+	txBlob, err := acc.Finalize(txID)
 	require.NoError(t, err)
 
 	const expectedBlob = "1200142200040000240000000263D5038D7EA4C680000000000000000000000000005553440000000000B5F762798A53D543A014CAF8B297CFF8F2F937E868400000000000753073008114A3780F5CB5A44D366520FC44055E8ED44D9A2270F3E010732102B3EC4E5DD96029A647CFA20DA07FE1F85296505552CCAC114087E66B46BD77DF744730450221009C195DBBF7967E223D8626CA19CF02073667F2B22E206727BFE848FF42BEAC8A022048C323B0BED19A988BDBEFA974B6DE8AA9DCAE250AA82BBD1221787032A864E58114204288D2E47F8EF6C99BCC457966320D12409711E1E0107321028FFB276505F9AC3F57E8D5242B386A597EF6C40A7999F37F1948636FD484E25B744630440220680BBD745004E9CFB6B13A137F505FB92298AD309071D16C7B982825188FD1AE022004200B1F7E4A6A84BB0E4FC09E1E3BA2B66EBD32F0E6D121A34BA3B04AD99BC181147908A7F0EDD48EA896C3580A399F0EE78611C8E3E1F1"
@@ -164,11 +164,11 @@ func TestFinalizeWithoutQuorum(t *testing.T) {
 		txs:    make(map[common.Hash]*transaction),
 	}
 
-	txResult, dispatch, err := acc.AddSignatures(blob)
+	txID, dispatch, err := acc.AddSignatures(blob)
 	require.NoError(t, err)
 	require.False(t, dispatch)
 
-	_, err = acc.Finalize(txResult.id)
+	_, err = acc.Finalize(txID)
 	require.Error(t, err)
 	require.Contains(t, err.Error(), "quorum not yet reached")
 }
@@ -204,10 +204,10 @@ func TestAddSignaturesDuplicateSigner(t *testing.T) {
 	}
 
 	// First submission: both valid signers are accepted.
-	txResult, dispatch, err := acc.AddSignatures(blob)
+	txID, dispatch, err := acc.AddSignatures(blob)
 	require.NoError(t, err)
 	require.True(t, dispatch)
-	require.Len(t, txResult.signers, 2)
+	require.Len(t, acc.txs[txID].signers, 2)
 
 	// Second submission of the same blob: no new valid signatures.
 	_, _, err = acc.AddSignatures(blob)
@@ -236,7 +236,7 @@ func TestAggregatorIdentifierIsKeccakOfSigningEncoding(t *testing.T) {
 		txs:    make(map[common.Hash]*transaction),
 	}
 
-	txResult, _, err := acc.AddSignatures(blob)
+	txID, _, err := acc.AddSignatures(blob)
 	require.NoError(t, err)
 
 	decoded, err := encoding.Decode(blob)
@@ -246,8 +246,8 @@ func TestAggregatorIdentifierIsKeccakOfSigningEncoding(t *testing.T) {
 	require.NoError(t, err)
 
 	expected := crypto.Keccak256Hash(signingBlob)
-	require.Equal(t, expected, txResult.id)
-	require.Len(t, txResult.id, 32)
+	require.Equal(t, expected, txID)
+	require.Len(t, txID, 32)
 }
 
 // TestFinalizeIdempotent verifies that once quorum is reached, Finalize returns a consistent blob
@@ -268,14 +268,14 @@ func TestFinalizeIdempotent(t *testing.T) {
 		txs:    make(map[common.Hash]*transaction),
 	}
 
-	txResult, dispatch, err := acc.AddSignatures(blob)
+	txID, dispatch, err := acc.AddSignatures(blob)
 	require.NoError(t, err)
 	require.True(t, dispatch, "first quorum hit must report dispatch")
 
-	blobA, err := acc.Finalize(txResult.id)
+	blobA, err := acc.Finalize(txID)
 	require.NoError(t, err)
 
-	blobB, err := acc.Finalize(txResult.id)
+	blobB, err := acc.Finalize(txID)
 	require.NoError(t, err)
 	require.Equal(t, blobA, blobB)
 }
@@ -297,13 +297,13 @@ func TestAddSignaturesNonSignerIgnored(t *testing.T) {
 		txs:        make(map[common.Hash]*transaction),
 	}
 
-	txResult, dispatch, err := acc.AddSignatures(blob)
+	txID, dispatch, err := acc.AddSignatures(blob)
 	require.NoError(t, err)
 	require.True(t, dispatch)
-	require.Len(t, txResult.signers, 1)
-	_, ok := txResult.signers["rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW"]
+	require.Len(t, acc.txs[txID].signers, 1)
+	_, ok := acc.txs[txID].signers["rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW"]
 	require.True(t, ok)
-	_, ok = txResult.signers["rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v"]
+	_, ok = acc.txs[txID].signers["rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v"]
 	require.False(t, ok, "non-listed signer must be ignored")
 }
 
