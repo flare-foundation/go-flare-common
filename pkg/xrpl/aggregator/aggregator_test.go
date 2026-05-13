@@ -96,6 +96,9 @@ func TestAddSignaturesFull(t *testing.T) {
 }
 
 // TestAddSignaturesInvalidSignature verifies that a signer with a tampered signature is rejected.
+// JoinMultisig itself now refuses to assemble blobs with invalid signers
+// (audit M6), so we bypass it and encode the bad blob directly to exercise
+// the receiver-side reject path in AddSignatures.
 func TestAddSignaturesInvalidSignature(t *testing.T) {
 	tx := buildTrustSetTx()
 
@@ -107,7 +110,8 @@ func TestAddSignaturesInvalidSignature(t *testing.T) {
 		SigningPubKey: testSigner1.SigningPubKey,
 	}
 
-	blob, err := signing.JoinMultisig(tx, []*signer.Signer{s1WithWrongSig})
+	tx["Signers"] = []any{s1WithWrongSig.Format()}
+	blob, err := encoding.Encode(tx, false)
 	require.NoError(t, err)
 
 	acc := Account{

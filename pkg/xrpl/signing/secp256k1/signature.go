@@ -59,9 +59,17 @@ func MarshalDER(sig []byte) (Signature, error) {
 		return sigOut, errInvalidLength
 	}
 
+	// Strict DER for the r integer: ASN.1 INTEGER is signed in two's complement,
+	// so positive numbers with the high bit set must be prefixed with 0x00; any
+	// other leading-zero is non-minimal and disallowed.
+	if rLen >= 2 && sig[rStart] == 0 && sig[rStart+1]&0x80 == 0 {
+		return sigOut, errInvalidLength
+	}
 	if sig[rStart] == 0 {
 		rStart++
 		rLen--
+	} else if sig[rStart]&0x80 != 0 {
+		return sigOut, errInvalidLength
 	}
 	if rLen < 1 || rLen > 32 {
 		return sigOut, errInvalidLength
@@ -83,15 +91,27 @@ func MarshalDER(sig []byte) (Signature, error) {
 		return sigOut, errInvalidLength
 	}
 
+	// Strict DER for the s integer: same rules as r.
+	if sLen >= 2 && sig[sStart] == 0 && sig[sStart+1]&0x80 == 0 {
+		return sigOut, errInvalidLength
+	}
 	if sig[sStart] == 0 {
 		sStart++
 		sLen--
+	} else if sig[sStart]&0x80 != 0 {
+		return sigOut, errInvalidLength
 	}
 	if sLen < 1 || sLen > 32 {
 		return sigOut, errInvalidLength
 	}
 
 	copy(sigOut.s[32-sLen:], sig[sStart:sEnd])
+
+	// Outer length must equal exactly the rest of the buffer (sEnd reached
+	// the end). Defense against trailing-byte injection forms.
+	if sEnd != len(sig) {
+		return sigOut, errInvalidLength
+	}
 
 	return sigOut, nil
 }
