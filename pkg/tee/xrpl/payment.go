@@ -14,8 +14,30 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/payments"
 )
 
-// PaymentTxFromInstruction prepares a transaction from the Payment Instruction Message.
+// PaymentTxFromInstruction prepares a transaction from the Payment Instruction
+// Message. Scope: native XRP payments only — TokenId must be empty, which is
+// how the on-chain side signals "no issued token; use the chain's native
+// asset." Audit M15 hardening:
+//
+//   - i.Amount must be non-nil (the on-chain decoder allows nil through);
+//   - SenderAddress and RecipientAddress must differ (self-payment is
+//     meaningful only via Paths/SendMax cross-currency conversion, which
+//     this entrypoint does not support);
+//   - TokenId must be empty so an issued-token payment cannot accidentally
+//     produce a native-XRP transaction;
+//   - the resulting tx is run through CheckNativePayment so the caller
+//     never gets back a structurally invalid blob.
 func PaymentTxFromInstruction(i payments.ITeePaymentsPaymentInstructionMessage, try int) (map[string]any, error) {
+	if i.Amount == nil {
+		return nil, errors.New("nil Amount")
+	}
+	if i.SenderAddress == i.RecipientAddress {
+		return nil, errors.New("sender equals recipient")
+	}
+	if len(i.TokenId) != 0 {
+		return nil, fmt.Errorf("non-empty TokenId %s; this entrypoint only builds native XRP payments", hex.EncodeToString(i.TokenId))
+	}
+
 	tx := make(map[string]any)
 
 	tx["TransactionType"] = "Payment"
@@ -52,6 +74,10 @@ func PaymentTxFromInstruction(i payments.ITeePaymentsPaymentInstructionMessage, 
 	}
 
 	tx["Fee"] = feeFixture.Fee(i.MaxFee)
+
+	if err := CheckNativePayment(tx); err != nil {
+		return nil, fmt.Errorf("native payment validation: %w", err)
+	}
 
 	return tx, nil
 }
