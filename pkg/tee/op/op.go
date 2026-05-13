@@ -35,7 +35,14 @@ const (
 	KeyGenerate                Command = "KEY_GENERATE"
 	VRF                        Command = "VRF"
 
-	KeyInfo   Command = "KEY_INFO"
+	KeyInfo Command = "KEY_INFO"
+	// KeyProof is recognized as a valid Get-class command but has no
+	// payload binding in this repo. Audit M16: without a struct that ties
+	// the proof to an instructionId, attestation hash, and freshness
+	// nonce, a signed KeyProof from one context can be replayed against
+	// another. A payload binding must be defined (in pkg/tee/structs)
+	// and the producing/consuming code wired through before KeyProof is
+	// used in production paths.
 	KeyProof  Command = "KEY_PROOF"
 	TEEBackup Command = "TEE_BACKUP"
 	TEEInfo   Command = "TEE_INFO"

@@ -149,29 +149,40 @@ func New(cfg Config, prv *ecdsa.PrivateKey) (*Signer, error) {
 	return &Signer{Server: &server}, nil
 }
 
-// Run starts the HTTP server and listens for requests until the context is cancelled.
+// Run starts the HTTP server and listens for requests until the context is
+// cancelled or ListenAndServe returns. On either path, the ListenAndServe
+// result is propagated back to the caller (http.ErrServerClosed on graceful
+// shutdown, or the real listener error).
+//
+// Audit M17: the channel that carries the ListenAndServe result is buffered
+// so the goroutine never blocks if Run already returned via ctx.Done; and
+// Shutdown is called with a fresh, bounded context so a cancelled parent
+// does not turn Shutdown into a no-op.
 func (s *Signer) Run(ctx context.Context) error {
 	if s == nil {
 		return errors.New("no signer")
 	}
 
-	c := make(chan error)
+	c := make(chan error, 1)
 
 	go func() {
-		err := s.ListenAndServe()
-		c <- err
+		c <- s.ListenAndServe()
 	}()
-
-	var err error
 
 	select {
 	case <-ctx.Done():
-		err = s.Shutdown(ctx)
-		err = fmt.Errorf("server shut down: %w", err)
-	case err = <-c:
+		shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+		if err := s.Shutdown(shutdownCtx); err != nil {
+			return fmt.Errorf("server shut down: %w", err)
+		}
+		// Drain the ListenAndServe goroutine; it returns http.ErrServerClosed
+		// after Shutdown completes. Propagate that as the Run result so the
+		// caller sees the conventional sentinel.
+		return <-c
+	case err := <-c:
+		return err
 	}
-
-	return err
 }
 
 // apiKeys hold API key digests for authorization of incoming requests.
