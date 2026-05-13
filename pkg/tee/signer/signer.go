@@ -12,6 +12,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net"
 	"net/http"
 	"time"
 
@@ -78,12 +79,47 @@ type Signer struct {
 	*http.Server
 }
 
+// assertLoopbackAddr returns nil iff addr is a host:port whose host portion
+// is a literal loopback IP. The check is intentionally strict: hostnames are
+// rejected because their resolution can change between New() and Listen(); the
+// safety invariant must hold at construction time, not at dial time.
+func assertLoopbackAddr(addr string) error {
+	if addr == "" {
+		return errors.New("address must be specified; an unset address binds to all interfaces, breaking the signer's loopback-only invariant")
+	}
+	host, _, err := net.SplitHostPort(addr)
+	if err != nil {
+		return fmt.Errorf("parsing %q: %w", addr, err)
+	}
+	if host == "" {
+		return fmt.Errorf("address %q has empty host; signer must bind a loopback address explicitly (127.0.0.1 or ::1)", addr)
+	}
+	ip := net.ParseIP(host)
+	if ip == nil {
+		return fmt.Errorf("address host %q is not a literal IP; signer must bind a loopback IP (127.0.0.1 or ::1), not a hostname whose resolution can change", host)
+	}
+	if !ip.IsLoopback() {
+		return fmt.Errorf("address host %q is not a loopback IP; signer must bind 127.0.0.1 or ::1", host)
+	}
+	return nil
+}
+
 // New creates a new Signer from the given config and ECDSA private key.
 //
 // The Signer listens to POST requests on /sign and /decrypt, and GET requests on /id.
-// API key validation is performed for each request. Returns an error if the
-// HMAC secret for API-key authorization cannot be generated from crypto/rand.
+// API key validation is performed for each request.
+//
+// cfg.Addr must be a host:port whose host portion resolves to a loopback
+// address (127.0.0.0/8 or ::1). This enforces the audit's H22 boundary: the
+// signer is a local-only oracle, so a remote attacker who would otherwise
+// hold the deferred C4/C5/C6 unbound-oracle threat model cannot reach it.
+// Empty or non-loopback Addr values are rejected at New() time, before any
+// listener opens.
 func New(cfg Config, prv *ecdsa.PrivateKey) (*Signer, error) {
+	if err := assertLoopbackAddr(cfg.Addr); err != nil {
+		return nil, fmt.Errorf("signer address: %w", err)
+	}
+
 	apiKeys, err := newAPIKeys(cfg)
 	if err != nil {
 		return nil, fmt.Errorf("initializing API keys: %w", err)
