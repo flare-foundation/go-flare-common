@@ -5,6 +5,10 @@ package signer
 import (
 	"context"
 	"crypto/ecdsa"
+	"crypto/hmac"
+	"crypto/rand"
+	"crypto/sha256"
+	"crypto/subtle"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -77,9 +81,13 @@ type Signer struct {
 // New creates a new Signer from the given config and ECDSA private key.
 //
 // The Signer listens to POST requests on /sign and /decrypt, and GET requests on /id.
-// API key validation is performed for each request.
-func New(cfg Config, prv *ecdsa.PrivateKey) *Signer {
-	apiKeys := newAPIKeys(cfg)
+// API key validation is performed for each request. Returns an error if the
+// HMAC secret for API-key authorization cannot be generated from crypto/rand.
+func New(cfg Config, prv *ecdsa.PrivateKey) (*Signer, error) {
+	apiKeys, err := newAPIKeys(cfg)
+	if err != nil {
+		return nil, fmt.Errorf("initializing API keys: %w", err)
+	}
 
 	cfg.Limits.setDefaults()
 
@@ -102,7 +110,7 @@ func New(cfg Config, prv *ecdsa.PrivateKey) *Signer {
 		MaxHeaderBytes:               cfg.Limits.maxHeaderBytes,
 	}
 
-	return &Signer{Server: &server}
+	return &Signer{Server: &server}, nil
 }
 
 // Run starts the HTTP server and listens for requests until the context is cancelled.
@@ -130,29 +138,55 @@ func (s *Signer) Run(ctx context.Context) error {
 	return err
 }
 
-// apiKeys hold API keys for authorization of incoming requests.
+// apiKeys hold API key digests for authorization of incoming requests.
+//
+// Each configured API key is stored as HMAC-SHA256(secret, key), where secret
+// is a startup-random 32-byte value. On every request, the provided header
+// value is HMAC'd under the same secret and compared with subtle.ConstantTimeCompare
+// against each stored digest. This makes the comparison length- and content-
+// independent in time and avoids storing raw keys in memory.
 type apiKeys struct {
-	name string
-	keys map[string]bool
+	name    string
+	secret  []byte
+	digests [][]byte
 }
 
 // newAPIKeys builds an apiKeys struct from Config.
-func newAPIKeys(cfg Config) apiKeys {
-	keys := make(map[string]bool)
-	for j := range cfg.APIKeys {
-		keys[cfg.APIKeys[j]] = true
+func newAPIKeys(cfg Config) (apiKeys, error) {
+	secret := make([]byte, 32)
+	if _, err := rand.Read(secret); err != nil {
+		return apiKeys{}, fmt.Errorf("generating HMAC secret: %w", err)
+	}
+
+	digests := make([][]byte, len(cfg.APIKeys))
+	for j, k := range cfg.APIKeys {
+		digests[j] = hmacKey(secret, k)
 	}
 
 	return apiKeys{
-		name: cfg.APIKeyName,
-		keys: keys,
-	}
+		name:    cfg.APIKeyName,
+		secret:  secret,
+		digests: digests,
+	}, nil
+}
+
+// hmacKey returns HMAC-SHA256(secret, key).
+func hmacKey(secret []byte, key string) []byte {
+	h := hmac.New(sha256.New, secret)
+	h.Write([]byte(key))
+	return h.Sum(nil)
 }
 
 // authorize checks whether the request header contains a valid API key.
+// Comparison is constant-time and runs against every configured digest so
+// match position does not leak through timing.
 func (ak *apiKeys) authorize(h *http.Header) bool {
-	providedKey := h.Get(ak.name)
-	return ak.keys[providedKey]
+	provided := hmacKey(ak.secret, h.Get(ak.name))
+	var ok byte
+	for _, d := range ak.digests {
+		ok |= byte(subtle.ConstantTimeCompare(provided, d))
+	}
+	return ok == 1
 }
 
 // SignBody is the request body format for the /sign endpoint.
