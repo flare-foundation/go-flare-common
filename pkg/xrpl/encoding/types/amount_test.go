@@ -91,6 +91,35 @@ func TestAmountDecodeEncode(t *testing.T) {
 	}
 }
 
+// TestMPTReservedBitsRejected covers audit finding M3: rippled rejects any
+// MPT indicator byte with a reserved bit set. The decoder must too, or it
+// silently accepts blobs that wouldn't be valid on the ledger.
+func TestMPTReservedBitsRejected(t *testing.T) {
+	// 32-byte body: 8 bytes value + 24 bytes mpt_issuance_id.
+	body := make([]byte, 32)
+
+	t.Run("0x20 negative MPT valid", func(t *testing.T) {
+		blob := append([]byte{0x20}, body...)
+		_, err := Amount.ToJSON(bytes.NewBuffer(blob), 0)
+		require.NoError(t, err)
+	})
+
+	t.Run("0x60 positive MPT valid", func(t *testing.T) {
+		blob := append([]byte{0x60}, body...)
+		_, err := Amount.ToJSON(bytes.NewBuffer(blob), 0)
+		require.NoError(t, err)
+	})
+
+	for _, b := range []byte{0x21, 0x22, 0x24, 0x28, 0x30, 0x3F, 0x61, 0x7F} {
+		t.Run("reserved bit set", func(t *testing.T) {
+			blob := append([]byte{b}, body...)
+			_, err := Amount.ToJSON(bytes.NewBuffer(blob), 0)
+			require.Error(t, err, "byte 0x%02x must be rejected", b)
+			require.Contains(t, err.Error(), "reserved bits")
+		})
+	}
+}
+
 func TestAmountEncoding(t *testing.T) {
 	tests := []struct {
 		name        string

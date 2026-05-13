@@ -71,6 +71,19 @@ type Coder interface {
 	ToJSON(b *bytes.Buffer, length int) (any, error)
 }
 
+// maxDecodeDepth bounds nested STObject/STArray recursion during Decode.
+// Mirrors rippled SerialIter::depth limit; values above this are practically
+// never seen in legitimate XRPL traffic and the bound keeps a nested-marker
+// bomb from amplifying CPU/alloc churn through the buffer.
+const maxDecodeDepth = 64
+
+// depthAware is implemented by coders that recurse through decodeNext
+// (STObject, STArray). decodeNext threads the running depth through this
+// method so the recursion is bounded.
+type depthAware interface {
+	ToJSONDepth(b *bytes.Buffer, length int, depth int) (any, error)
+}
+
 func typeCoder(xt defs.XType) (Coder, error) {
 	switch xt {
 	case defs.Hash160:
@@ -285,7 +298,11 @@ func keys[K comparable, V any](m map[K]V) []K {
 	return keys
 }
 
-func decodeNext(b *bytes.Buffer) (string, any, error) {
+func decodeNext(b *bytes.Buffer, depth int) (string, any, error) {
+	if depth > maxDecodeDepth {
+		return "", nil, fmt.Errorf("max decode depth %d exceeded", maxDecodeDepth)
+	}
+
 	idPair, err := defs.ReadID(b)
 	if err != nil {
 		return "", nil, fmt.Errorf("reading id: %w", err)
@@ -314,7 +331,12 @@ func decodeNext(b *bytes.Buffer) (string, any, error) {
 		}
 	}
 
-	value, err := coder.ToJSON(b, length)
+	var value any
+	if da, ok := coder.(depthAware); ok {
+		value, err = da.ToJSONDepth(b, length, depth+1)
+	} else {
+		value, err = coder.ToJSON(b, length)
+	}
 	if err != nil {
 		return "", nil, fmt.Errorf("decoding %v: %w", fName, err)
 	}
@@ -336,7 +358,7 @@ func Decode(blob []byte) (map[string]any, error) {
 	b := bytes.NewBuffer(blob)
 
 	for b.Len() > 0 {
-		name, value, err := decodeNext(b)
+		name, value, err := decodeNext(b, 0)
 		if err != nil {
 			return nil, fmt.Errorf("decoding next: %w", err)
 		}

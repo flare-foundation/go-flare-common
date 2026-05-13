@@ -435,6 +435,14 @@ func tokenToJSON(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
 }
 
 func mptToJSON(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
+	// rippled STAmount construction rejects any MPT indicator byte with a
+	// reserved bit set. Valid bytes are exactly 0x20 (negative MPT) and
+	// 0x60 (positive MPT). Audit finding M3: accepting unspecified bit
+	// patterns drifts from rippled and risks consensus mismatch on decode.
+	if firstByte&^(typeBitMask|signBitMask) != 0 {
+		return nil, fmt.Errorf("mpt indicator byte 0x%02x has reserved bits set", firstByte)
+	}
+
 	out := make(map[string]any, 2)
 
 	l := 8

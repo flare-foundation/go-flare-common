@@ -55,6 +55,13 @@ func (h *hash) ToJSON(b *bytes.Buffer, length int) (any, error) {
 		}
 	}
 
+	// Guard against length-prefix amplification: a 3-byte VL prefix can claim
+	// up to 918744 bytes; if the buffer is shorter, reject before make() so
+	// a malicious blob cannot churn ~230 000x its own size in allocations.
+	if l > b.Len() {
+		return nil, outOfBytes("hash", l, b.Len())
+	}
+
 	value := make([]byte, l)
 
 	n, err := b.Read(value)
