@@ -36,17 +36,23 @@ type transaction struct {
 }
 
 // AddSignatures accepts an encoded transaction with a Signers field.
-// If the transaction's "Account" field matches the account, signers are extracted, validated, and stored.
-// The boolean is true the first time the quorum is reached.
-func (a *Account) AddSignatures(blob []byte) (*transaction, bool, error) {
+// If the transaction's "Account" field matches the account, signers are
+// extracted, validated, and stored. The returned common.Hash identifies the
+// transaction and can be passed to Finalize once quorum is reached. The
+// boolean is true the first time the quorum is reached.
+//
+// Audit M10: previously this returned *transaction whose useful field was
+// unexported, so external callers could not finalize. The id is the public
+// handle.
+func (a *Account) AddSignatures(blob []byte) (common.Hash, bool, error) {
 	txJSON, err := encoding.Decode(blob)
 	if err != nil {
-		return nil, false, fmt.Errorf("invalid tx blob: %w", err)
+		return common.Hash{}, false, fmt.Errorf("invalid tx blob: %w", err)
 	}
 
 	en, err := encoding.Encode(txJSON, true)
 	if err != nil {
-		return nil, false, fmt.Errorf("encoding: %w", err)
+		return common.Hash{}, false, fmt.Errorf("encoding: %w", err)
 	}
 
 	identifier := crypto.Keccak256Hash(en)
@@ -57,23 +63,23 @@ func (a *Account) AddSignatures(blob []byte) (*transaction, bool, error) {
 	if !txExists {
 		add, exists := txJSON["Account"]
 		if !exists {
-			return nil, false, errors.New("missing Account field")
+			return common.Hash{}, false, errors.New("missing Account field")
 		}
 		addStr, ok := add.(string)
 		if !ok {
-			return nil, false, fmt.Errorf("invalid Account, %v", add)
+			return common.Hash{}, false, fmt.Errorf("invalid Account, %v", add)
 		}
 
 		if a.Address != addStr {
-			return nil, false, fmt.Errorf("expected address %s got %s", a.Address, addStr)
+			return common.Hash{}, false, fmt.Errorf("expected address %s got %s", a.Address, addStr)
 		}
 
 		signingKey, exists := txJSON["SigningPubKey"]
 		if !exists {
-			return nil, false, errors.New("missing SigningPubKey field")
+			return common.Hash{}, false, errors.New("missing SigningPubKey field")
 		}
 		if signingKey != "" {
-			return nil, false, errors.New("signingPubKey should be empty string")
+			return common.Hash{}, false, errors.New("signingPubKey should be empty string")
 		}
 
 		tx = new(transaction)
@@ -82,19 +88,19 @@ func (a *Account) AddSignatures(blob []byte) (*transaction, bool, error) {
 
 		decoded, err := encoding.Decode(en)
 		if err != nil {
-			return nil, false, fmt.Errorf("decoding: %w", err)
+			return common.Hash{}, false, fmt.Errorf("decoding: %w", err)
 		}
 		tx.transaction = decoded
 	}
 
 	s, exists := txJSON["Signers"]
 	if !exists {
-		return nil, false, errors.New("missing Signers field")
+		return common.Hash{}, false, errors.New("missing Signers field")
 	}
 
 	si, ok := s.([]any)
 	if !ok {
-		return nil, false, fmt.Errorf("invalid Signers, %v", s)
+		return common.Hash{}, false, fmt.Errorf("invalid Signers, %v", s)
 	}
 
 	somethingAdded := false
@@ -137,7 +143,7 @@ func (a *Account) AddSignatures(blob []byte) (*transaction, bool, error) {
 	}
 
 	if !somethingAdded {
-		return nil, false, errors.New("no new valid signatures added")
+		return common.Hash{}, false, errors.New("no new valid signatures added")
 	}
 
 	a.txs[identifier] = tx // add transaction if not yet added
@@ -147,7 +153,7 @@ func (a *Account) AddSignatures(blob []byte) (*transaction, bool, error) {
 		defer func() { tx.quorumReached = true }()
 	}
 
-	return tx, qr && !tx.quorumReached, nil
+	return identifier, qr && !tx.quorumReached, nil
 }
 
 // collectedWeight sums the SignerWeights of every signer that has submitted a
