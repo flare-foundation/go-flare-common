@@ -227,11 +227,12 @@ func TestExtractPayloadsDeclaredLength(t *testing.T) {
 	}
 
 	mkInput := func(frames ...[]byte) string {
-		out := selector
+		var out strings.Builder
+		out.WriteString(selector)
 		for _, f := range frames {
-			out += hex.EncodeToString(f)
+			out.WriteString(hex.EncodeToString(f))
 		}
-		return out
+		return out.String()
 	}
 
 	p32 := bytes.Repeat([]byte{0xaa}, 32)
