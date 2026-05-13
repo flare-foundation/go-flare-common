@@ -176,8 +176,24 @@ func TestCheck(t *testing.T) {
 				Flags:        lsfDisableMaster,
 				SignersLists: validSignerList,
 			},
+			Validated: true,
 		}
 		require.NoError(t, info.Check(1, []string{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW"}))
+	})
+
+	// M11: non-validated responses must be rejected so a rolled-back signer
+	// list cannot drive a quorum decision.
+	t.Run("non-validated response rejected", func(t *testing.T) {
+		info := AccountInfoResponse{
+			AccountData: AccountData{
+				Flags:        lsfDisableMaster,
+				SignersLists: validSignerList,
+			},
+			Validated: false,
+		}
+		err := info.Check(1, []string{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW"})
+		require.Error(t, err)
+		require.Contains(t, err.Error(), "non-validated ledger")
 	})
 
 	t.Run("regular key set", func(t *testing.T) {
@@ -187,6 +203,7 @@ func TestCheck(t *testing.T) {
 				RegularKey:   "rSomeOtherKey",
 				SignersLists: validSignerList,
 			},
+			Validated: true,
 		}
 		require.Error(t, info.Check(1, []string{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW"}))
 	})
@@ -196,6 +213,7 @@ func TestCheck(t *testing.T) {
 			AccountData: AccountData{
 				Flags: lsfDisableMaster,
 			},
+			Validated: true,
 		}
 		require.Error(t, info.Check(1, []string{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW"}))
 	})
@@ -206,6 +224,7 @@ func TestCheck(t *testing.T) {
 				Flags:        lsfDisableMaster,
 				SignersLists: []SignerList{validSignerList[0], validSignerList[0]},
 			},
+			Validated: true,
 		}
 		require.Error(t, info.Check(1, []string{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW"}))
 	})
@@ -216,6 +235,7 @@ func TestCheck(t *testing.T) {
 				Flags:        lsfDisableMaster | lsfRequireDestTag,
 				SignersLists: validSignerList,
 			},
+			Validated: true,
 		}
 		require.Error(t, info.Check(1, []string{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW"}))
 	})
