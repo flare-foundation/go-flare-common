@@ -1,4 +1,13 @@
 // Package ed25519 provides XRPL Ed25519 key management and transaction signing.
+//
+// Secret-material zeroization (audit M8) is not implemented. Go's GC may
+// relocate objects, and crypto/ed25519, crypto/sha512, and math/big.Int
+// internals all retain copies of secret bytes that are not reachable from
+// this package. A partial zero-out of the visible buffers would mislead
+// callers into believing key material is gone when copies persist; the
+// honest position is that secret-in-memory hygiene requires a
+// platform-level mitigation (mlocked pages, hardware-backed key storage)
+// outside this library's scope.
 package ed25519
 
 import (

@@ -91,6 +91,50 @@ func TestMarshaling(t *testing.T) {
 	}
 }
 
+// TestMarshalDERStrictCanonical covers audit finding M7: the parser must
+// enforce strict DER per BIP-66 so non-canonical encodings of an otherwise
+// valid signature are rejected. r/s must be minimal-encoded positive
+// integers, and the outer length must match the buffer exactly.
+func TestMarshalDERStrictCanonical(t *testing.T) {
+	cases := []struct {
+		name string
+		hex  string
+	}{
+		{
+			// rLen=2 with leading zero but next byte high bit clear:
+			// the zero is non-minimal padding.
+			name: "non-minimal leading zero in r",
+			hex:  "3008" + "0202" + "0001" + "020101",
+		},
+		{
+			// rLen=1 with high-bit-set byte: would parse as negative.
+			name: "negative r",
+			hex:  "3006" + "0201" + "80" + "020101",
+		},
+		{
+			name: "non-minimal leading zero in s",
+			hex:  "3008" + "020101" + "0202" + "0001",
+		},
+		{
+			name: "negative s",
+			hex:  "3006" + "020101" + "0201" + "80",
+		},
+		{
+			// Trailing bytes beyond outer length.
+			name: "trailing bytes",
+			hex:  "3006" + "020101" + "020101" + "AAAA",
+		},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			b, err := hex.DecodeString(tc.hex)
+			require.NoError(t, err)
+			_, err = MarshalDER(b)
+			require.Error(t, err)
+		})
+	}
+}
+
 // TestMarshalDERRejectsMalformed exercises the panic surfaces fixed in
 // audit findings H1 (oversize rLen/sLen → negative slice index) and
 // H2 (zero sLen → out-of-bounds index read). Each case must error,
