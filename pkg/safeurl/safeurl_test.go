@@ -109,6 +109,15 @@ func TestIsPublicIP(t *testing.T) {
 		{"unspecified v4", "0.0.0.0", false},
 		{"unspecified v6", "::", false},
 		{"multicast", "224.0.0.1", false},
+		// Audit M18 additions.
+		{"CGNAT 100.64", "100.64.0.1", false},
+		{"CGNAT 100.127", "100.127.255.254", false},
+		{"this-network 0.1.2.3", "0.1.2.3", false},
+		{"TEST-NET-1", "192.0.2.42", false},
+		{"TEST-NET-2", "198.51.100.42", false},
+		{"TEST-NET-3", "203.0.113.42", false},
+		{"benchmarking 198.18", "198.18.0.1", false},
+		{"reserved 240", "240.0.0.1", false},
 		{"public v4", "93.184.216.34", true},
 		{"public v6", "2606:2800:220:1:248:1893:25c8:1946", true},
 	}
