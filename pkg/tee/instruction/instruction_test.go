@@ -1,14 +1,86 @@
 package instruction
 
 import (
+	"bytes"
 	"testing"
 	"time"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/op"
 	"github.com/stretchr/testify/require"
 )
+
+// TestValidate covers audit M14: parsed instruction Data must reject
+// oversize message bytes, broken cosigner threshold/uniqueness, and
+// unrecognized op type/command pairs before the values flow into a hash
+// or dispatch path.
+func TestValidate(t *testing.T) {
+	good := Data{
+		DataFixed: DataFixed{
+			OPType:             op.Wallet.Hash(),
+			OPCommand:          op.KeyGenerate.Hash(),
+			Cosigners:          []common.Address{{0x01}, {0x02}, {0x03}},
+			CosignersThreshold: 2,
+			OriginalMessage:    hexutil.Bytes{1, 2, 3},
+		},
+	}
+
+	t.Run("good", func(t *testing.T) {
+		require.NoError(t, good.Validate())
+	})
+
+	t.Run("oversize OriginalMessage", func(t *testing.T) {
+		d := good
+		d.OriginalMessage = bytes.Repeat([]byte{0xAA}, MaxMessageSize+1)
+		require.Error(t, d.Validate())
+	})
+
+	t.Run("oversize AdditionalFixedMessage", func(t *testing.T) {
+		d := good
+		d.AdditionalFixedMessage = bytes.Repeat([]byte{0xAA}, MaxMessageSize+1)
+		require.Error(t, d.Validate())
+	})
+
+	t.Run("oversize AdditionalVariableMessage", func(t *testing.T) {
+		d := good
+		d.AdditionalVariableMessage = bytes.Repeat([]byte{0xAA}, MaxMessageSize+1)
+		require.Error(t, d.Validate())
+	})
+
+	t.Run("too many cosigners", func(t *testing.T) {
+		d := good
+		d.Cosigners = make([]common.Address, MaxCosigners+1)
+		d.CosignersThreshold = 1
+		require.Error(t, d.Validate())
+	})
+
+	t.Run("threshold zero", func(t *testing.T) {
+		d := good
+		d.CosignersThreshold = 0
+		require.Error(t, d.Validate())
+	})
+
+	t.Run("threshold exceeds cosigner count", func(t *testing.T) {
+		d := good
+		d.CosignersThreshold = uint64(len(good.Cosigners)) + 1
+		require.Error(t, d.Validate())
+	})
+
+	t.Run("duplicate cosigner", func(t *testing.T) {
+		d := good
+		d.Cosigners = []common.Address{{0x01}, {0x01}}
+		d.CosignersThreshold = 1
+		require.Error(t, d.Validate())
+	})
+
+	t.Run("invalid op pair (F-prefixed unknown command)", func(t *testing.T) {
+		d := good
+		d.OPCommand = op.Command("F_BOGUS").Hash()
+		require.Error(t, d.Validate())
+	})
+}
 
 func TestHashForSigning(t *testing.T) {
 	var data Data
