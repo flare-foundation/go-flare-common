@@ -64,3 +64,28 @@ func TestVLLengthOverflow(t *testing.T) {
 	_, err = lengthDecode(bytes.NewBuffer([]byte{0xFE, 0xD4, 0x18}))
 	require.Error(t, err)
 }
+
+// TestLengthPrefixAmplificationGuard covers audit finding M2: a VL prefix
+// claiming far more bytes than the buffer actually holds must error before
+// allocating, so a malicious blob cannot churn ~230 000x its own size in
+// allocations (a 3-byte prefix can claim up to 918744 bytes).
+func TestLengthPrefixAmplificationGuard(t *testing.T) {
+	t.Run("Blob.ToJSON rejects oversized length", func(t *testing.T) {
+		// Buffer holds 1 byte; ask for 918744.
+		b := bytes.NewBuffer([]byte{0xAA})
+		_, err := Blob.ToJSON(b, 918744)
+		require.Error(t, err)
+	})
+
+	t.Run("Blob.ToJSON allows length up to remaining", func(t *testing.T) {
+		b := bytes.NewBuffer([]byte{0xAA, 0xBB})
+		_, err := Blob.ToJSON(b, 2)
+		require.NoError(t, err)
+	})
+
+	t.Run("Vector256.ToJSON rejects oversized length", func(t *testing.T) {
+		b := bytes.NewBuffer([]byte{0xAA})
+		_, err := Vector256.ToJSON(b, 32*1000)
+		require.Error(t, err)
+	})
+}

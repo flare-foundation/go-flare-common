@@ -33,6 +33,12 @@ func (*vector256) ToJSON(b *bytes.Buffer, l int) (any, error) {
 		return nil, fmt.Errorf("invalid length of encoded vector256 %d", l)
 	}
 
+	// Guard against length-prefix amplification: l comes from a VL prefix
+	// that can claim up to 918744 bytes regardless of actual buffer contents.
+	if l > b.Len() {
+		return nil, outOfBytes("vector256", l, b.Len())
+	}
+
 	arrayLen := l / 32
 
 	out := make([]any, arrayLen)

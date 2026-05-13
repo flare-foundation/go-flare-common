@@ -4,10 +4,58 @@ import (
 	"bytes"
 	"encoding/hex"
 	"encoding/json"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 )
+
+// TestDecodeDepthBomb covers audit finding M1: nested STObject/STArray
+// recursion must be bounded so a malicious blob cannot amplify CPU/alloc
+// churn by chaining open-object markers indefinitely.
+//
+// The bomb is a Memos array whose entries each open a fresh Memo object
+// without ever emitting an object-end marker, then a single trailing
+// array-end. Each opened Memo is a recursion entry; a chain longer than
+// maxDecodeDepth must error before going further.
+func TestDecodeDepthBomb(t *testing.T) {
+	// Build: <Memos field id> <repeat N: Memo field id, type byte> 0xe1*K 0xf1
+	// We don't need a valid Memo body; the inner decodeNext call hits the
+	// depth check before reading any content.
+	t.Run("decodeNext rejects above maxDecodeDepth", func(t *testing.T) {
+		b := bytes.NewBuffer(nil)
+		_, _, err := decodeNext(b, maxDecodeDepth+1)
+		require.Error(t, err)
+		require.Contains(t, err.Error(), "max decode depth")
+	})
+
+	t.Run("decodeNext accepts up to maxDecodeDepth", func(t *testing.T) {
+		// At depth==maxDecodeDepth the check still passes; the failure
+		// here comes from the empty buffer, proving the depth check did
+		// not pre-empt.
+		b := bytes.NewBuffer(nil)
+		_, _, err := decodeNext(b, maxDecodeDepth)
+		require.Error(t, err)
+		require.NotContains(t, err.Error(), "max decode depth")
+	})
+
+	// A more realistic case: feed Decode a synthetic blob that nests STArray
+	// inside STArray repeatedly. We don't need to fully serialize valid XRPL
+	// fields — the recursion fires through STArray.ToJSONDepth before any
+	// inner content is required.
+	t.Run("Decode rejects deep nesting via STArray", func(t *testing.T) {
+		// Memos (STArray) field id, derived from the test fixtures elsewhere.
+		// Reuse a known-valid prefix that opens an STArray.
+		const memosFieldHex = "F9" // single-byte id for Memos
+		// Each nested STArray needs a field whose ID maps to an STArray type.
+		// Construct: <memos_open> <memos_open> ... <maxDecodeDepth+5 deep>
+		blob := strings.Repeat(memosFieldHex, maxDecodeDepth+5)
+		raw, err := hex.DecodeString(blob)
+		require.NoError(t, err)
+		_, err = Decode(raw)
+		require.Error(t, err)
+	})
+}
 
 func TestEncodeNotSigning(t *testing.T) {
 	tests := []struct {

@@ -56,8 +56,15 @@ func (*stArray) ToBytes(value any, signing bool) ([]byte, error) {
 	return outBuff.Bytes(), nil
 }
 
-// ToJSON decodes an encoded array.
-func (*stArray) ToJSON(b *bytes.Buffer, _ int) (any, error) {
+// ToJSON decodes an encoded array. Equivalent to ToJSONDepth at depth 0;
+// prefer ToJSONDepth in a recursive context so the codec can bound nesting.
+func (s *stArray) ToJSON(b *bytes.Buffer, length int) (any, error) {
+	return s.ToJSONDepth(b, length, 0)
+}
+
+// ToJSONDepth is the depth-tracked variant of ToJSON; decodeNext calls this
+// to enforce the maxDecodeDepth bound on nested STObject/STArray.
+func (*stArray) ToJSONDepth(b *bytes.Buffer, _ int, depth int) (any, error) {
 	out := make([]any, 0, 2)
 
 	for {
@@ -74,7 +81,7 @@ func (*stArray) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 			return nil, fmt.Errorf("unreading next byte: %w", err)
 		}
 
-		name, value, err := decodeNext(b)
+		name, value, err := decodeNext(b, depth)
 		if err != nil {
 			return nil, fmt.Errorf("decoding next: %w", err)
 		}
