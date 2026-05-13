@@ -58,11 +58,25 @@ func Validate(rawURL string) error {
 	return nil
 }
 
+// Default transport timeouts (audit M21). The defaults bound slowloris-style
+// attacks where a malicious endpoint trickles bytes to keep a goroutine and
+// connection pinned indefinitely.
+const (
+	defaultConnectTimeout      = 10 * time.Second
+	defaultTLSHandshakeTimeout = 10 * time.Second
+	defaultResponseHeaderTime  = 30 * time.Second
+	defaultExpectContinueTime  = 1 * time.Second
+	defaultIdleConnTimeout     = 90 * time.Second
+)
+
 // NewTransport returns an http.Transport whose dialer resolves DNS and validates
 // every resolved IP before opening a connection. This eliminates the TOCTOU
-// window that exists when validation and dialing are separate steps.
+// window that exists when validation and dialing are separate steps. The
+// transport carries connect, TLS-handshake, response-header, expect-continue,
+// and idle-connection timeouts so a slow or malicious remote cannot pin
+// resources indefinitely (audit M21).
 func NewTransport() *http.Transport {
-	d := &net.Dialer{}
+	d := &net.Dialer{Timeout: defaultConnectTimeout}
 	return &http.Transport{
 		DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
 			host, port, err := net.SplitHostPort(addr)
@@ -98,6 +112,10 @@ func NewTransport() *http.Transport {
 			}
 			return nil, fmt.Errorf("connecting to host %q: %w", host, lastErr)
 		},
+		TLSHandshakeTimeout:   defaultTLSHandshakeTimeout,
+		ResponseHeaderTimeout: defaultResponseHeaderTime,
+		ExpectContinueTimeout: defaultExpectContinueTime,
+		IdleConnTimeout:       defaultIdleConnTimeout,
 	}
 }
 
@@ -134,6 +152,43 @@ func checkRedirect(req *http.Request, via []*http.Request) error {
 	return nil
 }
 
+// nonPublicCIDRs holds extra address ranges that net.IP's built-in predicates
+// do not cover (audit M18):
+//   - 100.64.0.0/10: CGNAT (RFC 6598). Used by ISPs for shared address space;
+//     resolvable to a carrier's internal infrastructure.
+//   - 0.0.0.0/8: "this network" (RFC 1122). The all-zeros address is
+//     IsUnspecified, but any other 0.x.x.x is also reserved and not routable.
+//   - 192.0.0.0/24, 192.0.2.0/24, 198.18.0.0/15, 198.51.100.0/24,
+//     203.0.113.0/24, 240.0.0.0/4: IANA special-use ranges.
+//   - 64:ff9b::/96 (IPv4-IPv6 well-known prefix), 64:ff9b:1::/48: IPv4
+//     translation.
+var nonPublicCIDRs = func() []*net.IPNet {
+	specs := []string{
+		"100.64.0.0/10",   // CGNAT
+		"0.0.0.0/8",       // "this network"
+		"192.0.0.0/24",    // IETF protocol assignments
+		"192.0.2.0/24",    // TEST-NET-1
+		"198.18.0.0/15",   // benchmarking
+		"198.51.100.0/24", // TEST-NET-2
+		"203.0.113.0/24",  // TEST-NET-3
+		"240.0.0.0/4",     // Reserved (former Class E)
+		// Note: do not add "::ffff:0:0/96" — Go's net.IP represents all
+		// IPv4 addresses in that range internally, so it would match every
+		// public IPv4 host.
+		"64:ff9b::/96",   // IPv4-IPv6 well-known prefix
+		"64:ff9b:1::/48", // IPv4-IPv6 local-use prefix
+		"100::/64",       // Discard prefix
+	}
+	out := make([]*net.IPNet, 0, len(specs))
+	for _, s := range specs {
+		_, n, err := net.ParseCIDR(s)
+		if err == nil {
+			out = append(out, n)
+		}
+	}
+	return out
+}()
+
 // isPublicIP returns true if the IP is a globally routable unicast address.
 func isPublicIP(ip net.IP) bool {
 	if ip.IsLoopback() ||
@@ -144,6 +199,10 @@ func isPublicIP(ip net.IP) bool {
 		ip.IsMulticast() {
 		return false
 	}
-
+	for _, cidr := range nonPublicCIDRs {
+		if cidr.Contains(ip) {
+			return false
+		}
+	}
 	return true
 }
