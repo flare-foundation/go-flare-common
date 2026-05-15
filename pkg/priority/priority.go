@@ -193,13 +193,14 @@ func (p *PriorityQueue[T, W]) Add(value T, weight W) *Item[Wrapped[T], W] {
 	return item
 }
 
-// next returns the item that is next in line.
-func (p *PriorityQueue[T, W]) next() *Item[Wrapped[T], W] {
+// next returns the item that is next in line, or (nil, false) when ctx is
+// cancelled while both lanes are empty.
+func (p *PriorityQueue[T, W]) next(ctx context.Context) (*Item[Wrapped[T], W], bool) {
 	p.fast.Lock()
 	if p.fast.Len() > 0 {
 		item, _ := heapt.Pop(&p.fast)
 		p.fast.Unlock()
-		return item
+		return item, true
 	}
 	// vacate the channel wait for the signal (just to be safe)
 	select {
@@ -212,7 +213,7 @@ func (p *PriorityQueue[T, W]) next() *Item[Wrapped[T], W] {
 	if p.regular.Len() > 0 {
 		item, _ := heapt.Pop(&p.regular)
 		p.regular.Unlock()
-		return item
+		return item, true
 	}
 	// vacate the channel wait for the signal
 	select {
@@ -226,12 +227,14 @@ func (p *PriorityQueue[T, W]) next() *Item[Wrapped[T], W] {
 		p.fast.Lock()
 		item, _ := heapt.Pop(&p.fast)
 		p.fast.Unlock()
-		return item
+		return item, true
 	case <-p.regular.empty:
 		p.regular.Lock()
 		item, _ := heapt.Pop(&p.regular)
 		p.regular.Unlock()
-		return item
+		return item, true
+	case <-ctx.Done():
+		return nil, false
 	}
 }
 
@@ -239,7 +242,10 @@ func (p *PriorityQueue[T, W]) next() *Item[Wrapped[T], W] {
 // Items that are discarded do not affect rate limit.
 // If handler returns an error, item (from regular lane) is retried until success or maxAttempts is reached.
 func (p *PriorityQueue[T, W]) Dequeue(ctx context.Context, handler func(context.Context, T) error, discard func(context.Context, T) bool) {
-	wItem := p.next()
+	wItem, ok := p.next(ctx)
+	if !ok {
+		return
+	}
 
 	if handler == nil {
 		return

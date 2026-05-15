@@ -330,6 +330,28 @@ func (x wTup) Less(y wTup) bool {
 	return x[0] < y[0] || (x[0] == y[0] && x[1] < y[1])
 }
 
+// TestDequeueReturnsOnCtxCancel covers audit Low 11c: next() must honor ctx
+// when both lanes are empty, instead of blocking forever.
+func TestDequeueReturnsOnCtxCancel(t *testing.T) {
+	ctx, cancel := context.WithCancel(t.Context())
+	pQueue := New[int, wInt](Params{}, "test")
+	pQueue.InitiateAndRun(ctx)
+
+	done := make(chan struct{})
+	go func() {
+		pQueue.Dequeue(ctx, func(context.Context, int) error { return nil }, nil)
+		close(done)
+	}()
+
+	cancel()
+
+	select {
+	case <-done:
+	case <-time.After(2 * time.Second):
+		t.Fatal("Dequeue did not return after ctx cancel")
+	}
+}
+
 // TestAddBeforeInitiateAndRun covers audit finding M28: Add must not race
 // against (nor hang forever on) a not-yet-initialized channel. After the fix
 // the channels exist from construction, so Add blocks only until the
