@@ -34,7 +34,7 @@ func TestFull(t *testing.T) {
 
 	for i := range 100 {
 		wg.Add(1)
-		pQueue.Add(i, wInt(i))
+		_, _ = pQueue.Add(ctx, i, wInt(i))
 	}
 
 	go func() {
@@ -85,11 +85,11 @@ func TestDequeue(t *testing.T) {
 
 	for i := range 100 {
 		wg.Add(1)
-		pQueue.Add(i, wInt(i))
+		_, _ = pQueue.Add(ctx, i, wInt(i))
 	}
 	for i := range 20 {
 		wg.Add(1)
-		pQueue.AddFast(i, wInt(i))
+		_, _ = pQueue.AddFast(ctx, i, wInt(i))
 	}
 
 	wg.Wait()
@@ -143,7 +143,7 @@ func TestDequeue2(t *testing.T) {
 
 	for i := range 20 {
 		wg.Add(1)
-		pQueue.AddFast(i, wInt(i))
+		_, _ = pQueue.AddFast(ctx, i, wInt(i))
 	}
 
 	wg.Wait()
@@ -184,11 +184,11 @@ func TestDequeueDiscard(t *testing.T) {
 
 	for i := range 100 {
 		wg.Add(1)
-		pQueue.Add(i, wInt(i))
+		_, _ = pQueue.Add(ctx, i, wInt(i))
 	}
 	for i := range 20 {
 		wg.Add(1)
-		pQueue.AddFast(i, wInt(i))
+		_, _ = pQueue.AddFast(ctx, i, wInt(i))
 	}
 
 	discarded := make(map[int]bool)
@@ -253,7 +253,7 @@ func TestMaxAttempts(t *testing.T) {
 	}()
 
 	for i := range numOfItems {
-		pQueue.Add(i, wInt(i))
+		_, _ = pQueue.Add(ctx, i, wInt(i))
 	}
 
 	require.Eventually(t, func() bool {
@@ -298,7 +298,7 @@ func TestMaxWorkers(t *testing.T) {
 	}()
 
 	for i := range 3 {
-		pQueue.Add(i, wInt(3-i))
+		_, _ = pQueue.Add(ctx, i, wInt(3-i))
 	}
 
 	time.Sleep(20 * time.Millisecond)
@@ -330,6 +330,124 @@ func (x wTup) Less(y wTup) bool {
 	return x[0] < y[0] || (x[0] == y[0] && x[1] < y[1])
 }
 
+// TestDequeueReturnsOnCtxCancel covers audit Low 11c: next() must honor ctx
+// when both lanes are empty, instead of blocking forever.
+func TestDequeueReturnsOnCtxCancel(t *testing.T) {
+	ctx, cancel := context.WithCancel(t.Context())
+	pQueue := New[int, wInt](Params{}, "test")
+	pQueue.InitiateAndRun(ctx)
+
+	done := make(chan struct{})
+	go func() {
+		pQueue.Dequeue(ctx, func(context.Context, int) error { return nil }, nil)
+		close(done)
+	}()
+
+	cancel()
+
+	select {
+	case <-done:
+	case <-time.After(2 * time.Second):
+		t.Fatal("Dequeue did not return after ctx cancel")
+	}
+}
+
+// TestAddBeforeInitiateAndRun covers audit finding M28: Add must not race
+// against (nor hang forever on) a not-yet-initialized channel. After the fix
+// the channels exist from construction, so Add blocks only until the
+// processing goroutines start, then proceeds normally.
+func TestAddBeforeInitiateAndRun(t *testing.T) {
+	ctx, cancel := context.WithTimeout(t.Context(), 5*time.Second)
+	defer cancel()
+
+	pQueue := New[int, wInt](Params{}, "test")
+
+	added := make(chan struct{})
+	go func() {
+		_, _ = pQueue.Add(ctx, 42, wInt(42))
+		close(added)
+	}()
+
+	pQueue.InitiateAndRun(ctx)
+
+	handled := make(chan int, 1)
+	handle := func(_ context.Context, item int) error {
+		handled <- item
+		return nil
+	}
+	go func() {
+		for {
+			pQueue.Dequeue(ctx, handle, nil)
+		}
+	}()
+
+	select {
+	case <-added:
+	case <-ctx.Done():
+		t.Fatal("Add did not unblock after InitiateAndRun")
+	}
+
+	select {
+	case got := <-handled:
+		require.Equal(t, 42, got)
+	case <-ctx.Done():
+		t.Fatal("item never processed")
+	}
+}
+
+// TestSetBackOffConcurrent covers audit finding F-PRI-3: SetBackOff used to
+// write p.bo without synchronization while the retry goroutine in
+// handleRetry read it. With go test -race this must not flag a data race.
+func TestSetBackOffConcurrent(t *testing.T) {
+	pQueue := New[int, wInt](Params{MaxAttempts: 5, TimeOff: time.Millisecond}, "test")
+
+	done := make(chan struct{})
+	go func() {
+		defer close(done)
+		for range 1000 {
+			pQueue.SetBackOff(func(_ int) time.Duration { return time.Microsecond })
+		}
+	}()
+
+	// Read concurrently by exercising the unexported backOff() method.
+	for range 1000 {
+		_ = pQueue.backOff(1)
+	}
+	<-done
+}
+
+// TestAddReturnsAfterCtxCancel covers audit finding F-PRI-2: Add and
+// AddFast used to send unconditionally on the internal unbuffered
+// channels. Once InitiateAndRun's ctx was cancelled, the processIn /
+// processInFast goroutines had returned and a follow-up Add blocked
+// forever — a permanent goroutine leak. With the new signature, the
+// caller's ctx aborts the send.
+func TestAddReturnsAfterCtxCancel(t *testing.T) {
+	ctx, cancel := context.WithCancel(t.Context())
+
+	pQueue := New[int, wInt](Params{}, "test")
+	pQueue.InitiateAndRun(ctx)
+
+	cancel()
+	// Settle so processIn/processInFast observe ctx.Done() and exit;
+	// select is non-deterministic when both p.in and ctx.Done() are ready,
+	// so without a brief pause the producer goroutines may still consume
+	// one Add even after cancel().
+	time.Sleep(50 * time.Millisecond)
+
+	// Fresh ctx with a short deadline so the test fails fast if Add
+	// blocks: the producer goroutines are gone, so the only way Add can
+	// return is via the new ctx.Done() select branch.
+	addCtx, addCancel := context.WithTimeout(t.Context(), 2*time.Second)
+	defer addCancel()
+
+	_, err := pQueue.Add(addCtx, 1, wInt(1))
+	require.Error(t, err, "Add must return after the queue's ctx was cancelled")
+
+	_, err = pQueue.AddFast(addCtx, 1, wInt(1))
+	require.Error(t, err, "AddFast must return after the queue's ctx was cancelled")
+}
+
 func TestDoubleWeights(t *testing.T) {
 	ctx, cancel := context.WithTimeout(t.Context(), 15*time.Second)
 
@@ -354,7 +472,7 @@ func TestDoubleWeights(t *testing.T) {
 
 	for i := range 100 {
 		wg.Add(1)
-		pQueue.Add(i, wTup{-i, i})
+		_, _ = pQueue.Add(ctx, i, wTup{-i, i})
 	}
 
 	time.Sleep(100 * time.Millisecond)

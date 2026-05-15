@@ -3,6 +3,7 @@ package priority
 
 import (
 	"context"
+	"sync/atomic"
 	"time"
 
 	"github.com/flare-foundation/go-flare-common/pkg/heapt"
@@ -27,6 +28,12 @@ func (noLogger) Errorf(string, ...any) {}
 func (noLogger) Panic(...any)          {}
 
 // Params for the priority queue.
+//
+// WARNING: there is no size cap on the underlying heap. If producers
+// call Add/AddFast faster than Dequeue drains the queue, the heap slice
+// grows without bound and the process can OOM. Callers that ingest from
+// untrusted or burst sources are responsible for rate-limiting at the
+// producer side, or for using [pkg/queue] which exposes a Size knob.
 type Params struct {
 	MaxDequeuesPerSecond int           `toml:"max_dequeues_per_second"` // Set to 0 to disable rate-limiting.
 	MaxWorkers           int           `toml:"max_workers"`             // Set to 0 for unlimited workers.
@@ -59,7 +66,10 @@ type PriorityQueue[T any, W weight[W]] struct {
 
 	maxAttempts int
 	timeOff     time.Duration
-	bo          backOff
+	// bo is read by the retry goroutine in handleRetry and may be written
+	// by SetBackOff at any time, including after InitiateAndRun. Hold via
+	// atomic.Pointer so the read/write pair is race-free.
+	bo atomic.Pointer[backOff]
 
 	limiter *rate.Limiter
 
@@ -91,10 +101,19 @@ func NewWithLogger[T any, W weight[W]](params Params, name string, logger logger
 		errors = make(chan error, 10)
 	}
 
+	// The empty signal channels are capacity 1 (not unbuffered) so a
+	// producer's non-blocking signal after a push always lands in the
+	// channel buffer — surviving until the consumer arms its wait. With
+	// an unbuffered channel, a signal raced against an in-transition
+	// consumer (between draining the channel and entering the final
+	// select) fell through `default` and was lost, stranding the item
+	// in the heap.
 	return PriorityQueue[T, W]{
 		name:    name,
-		regular: QueueMutex[Wrapped[T], W]{},
-		fast:    QueueMutex[Wrapped[T], W]{},
+		regular: QueueMutex[Wrapped[T], W]{empty: make(chan bool, 1)},
+		fast:    QueueMutex[Wrapped[T], W]{empty: make(chan bool, 1)},
+		in:      make(chan *Item[Wrapped[T], W]),
+		inFast:  make(chan *Item[Wrapped[T], W]),
 		workers: workers,
 		Errors:  errors,
 
@@ -108,21 +127,14 @@ func NewWithLogger[T any, W weight[W]](params Params, name string, logger logger
 
 // SetBackOff sets the backOff function for the queue.
 func (p *PriorityQueue[T, W]) SetBackOff(bo backOff) {
-	p.bo = bo
+	p.bo.Store(&bo)
 }
 
-// InitiateAndRun starts accepting new items to priority queue.
+// InitiateAndRun starts the goroutines that move incoming items into the
+// regular and fast lanes. The underlying channels are created by New/NewWithLogger,
+// so Add/AddFast may be called before InitiateAndRun — the send will block until
+// the processing goroutines start. Call InitiateAndRun at most once per queue.
 func (p *PriorityQueue[T, W]) InitiateAndRun(ctx context.Context) {
-	in := make(chan *Item[Wrapped[T], W])
-	inFast := make(chan *Item[Wrapped[T], W])
-	emptyR := make(chan bool)
-	emptyF := make(chan bool)
-
-	p.in = in
-	p.inFast = inFast
-	p.regular.empty = emptyR
-	p.fast.empty = emptyF
-
 	go p.processIn(ctx)
 	go p.processInFast(ctx)
 }
@@ -166,7 +178,13 @@ func (p *PriorityQueue[T, W]) processInFast(ctx context.Context) {
 }
 
 // AddFast adds value with weight to inFast channel.
-func (p *PriorityQueue[T, W]) AddFast(value T, weight W) *Item[Wrapped[T], W] {
+//
+// Returns ctx.Err() if ctx is cancelled before the send completes. After
+// the queue's InitiateAndRun ctx is cancelled the producer goroutines have
+// already returned, so a send on the unbuffered inFast channel would block
+// forever; callers must pass a ctx whose cancellation matches the queue's
+// lifetime to avoid a goroutine leak.
+func (p *PriorityQueue[T, W]) AddFast(ctx context.Context, value T, weight W) (*Item[Wrapped[T], W], error) {
 	item := &Item[Wrapped[T], W]{
 		value: Wrapped[T]{
 			item:         value,
@@ -177,13 +195,19 @@ func (p *PriorityQueue[T, W]) AddFast(value T, weight W) *Item[Wrapped[T], W] {
 		index:  0,
 	}
 
-	p.inFast <- item
-
-	return item
+	select {
+	case p.inFast <- item:
+		return item, nil
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	}
 }
 
 // Add adds value with weight to in channel.
-func (p *PriorityQueue[T, W]) Add(value T, weight W) *Item[Wrapped[T], W] {
+//
+// Returns ctx.Err() if ctx is cancelled before the send completes; see
+// AddFast for the goroutine-leak hazard this prevents.
+func (p *PriorityQueue[T, W]) Add(ctx context.Context, value T, weight W) (*Item[Wrapped[T], W], error) {
 	item := &Item[Wrapped[T], W]{
 		value: Wrapped[T]{
 			item:         value,
@@ -193,58 +217,78 @@ func (p *PriorityQueue[T, W]) Add(value T, weight W) *Item[Wrapped[T], W] {
 		weight: weight,
 	}
 
-	p.in <- item
-
-	return item
+	select {
+	case p.in <- item:
+		return item, nil
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	}
 }
 
-// next returns the item that is next in line.
-func (p *PriorityQueue[T, W]) next() *Item[Wrapped[T], W] {
-	p.fast.Lock()
-	if p.fast.Len() > 0 {
-		item, _ := heapt.Pop(&p.fast)
-		p.fast.Unlock()
-		return item
-	}
-	// vacate the channel wait for the signal (just to be safe)
-	select {
-	case <-p.fast.empty:
-	default:
-	}
-	p.fast.Unlock()
-
-	p.regular.Lock()
-	if p.regular.Len() > 0 {
-		item, _ := heapt.Pop(&p.regular)
-		p.regular.Unlock()
-		return item
-	}
-	// vacate the channel wait for the signal
-	select {
-	case <-p.regular.empty:
-	default:
-	}
-	p.regular.Unlock()
-
-	select {
-	case <-p.fast.empty:
+// next returns the item that is next in line, or (nil, false) when ctx is
+// cancelled while both lanes are empty.
+//
+// The two empty channels are capacity 1 (see New); after draining stale
+// signals under the lane lock and releasing it, any concurrent push lands
+// its signal in the buffer where the subsequent select picks it up — so
+// no signal can be lost. Wakeups loop back to re-check under lock because
+// the signal may be stale (e.g., the producer pushed an item that we
+// already drained, or two pushes raced into a single buffered slot).
+func (p *PriorityQueue[T, W]) next(ctx context.Context) (*Item[Wrapped[T], W], bool) {
+	for {
 		p.fast.Lock()
-		item, _ := heapt.Pop(&p.fast)
+		if p.fast.Len() > 0 {
+			item, _ := heapt.Pop(&p.fast)
+			p.fast.Unlock()
+			return item, true
+		}
+		// Drain any stale signal so the upcoming wait only fires on a
+		// genuine push that happens AFTER this drain.
+		select {
+		case <-p.fast.empty:
+		default:
+		}
 		p.fast.Unlock()
-		return item
-	case <-p.regular.empty:
+
 		p.regular.Lock()
-		item, _ := heapt.Pop(&p.regular)
+		if p.regular.Len() > 0 {
+			item, _ := heapt.Pop(&p.regular)
+			p.regular.Unlock()
+			return item, true
+		}
+		select {
+		case <-p.regular.empty:
+		default:
+		}
 		p.regular.Unlock()
-		return item
+
+		select {
+		case <-p.fast.empty:
+		case <-p.regular.empty:
+		case <-ctx.Done():
+			return nil, false
+		}
+		// Wakeup: loop back to re-check under lock. The signal may be
+		// real (loop pops the item) or stale (loop arms a fresh wait).
 	}
 }
 
 // Dequeue gets next item and processes it with discard and handler function.
 // Items that are discarded do not affect rate limit.
 // If handler returns an error, item (from regular lane) is retried until success or maxAttempts is reached.
+//
+// Delivery is at-most-once. Once an item is popped from the heap, it is no
+// longer in the queue; if ctx is cancelled before the handler runs (between
+// pop and limiter.Wait / incrementWorkers / dispatch), the item is logged
+// and dropped. Callers that need at-least-once semantics across shutdown
+// must drain the queue before cancelling the ctx — for example by signalling
+// producers to stop, waiting for Length to reach zero, and only then
+// cancelling.
 func (p *PriorityQueue[T, W]) Dequeue(ctx context.Context, handler func(context.Context, T) error, discard func(context.Context, T) bool) {
-	wItem := p.next()
+	wItem, ok := p.next(ctx)
+	if !ok {
+		return
+	}
 
 	if handler == nil {
 		return
@@ -348,8 +392,8 @@ func (p *PriorityQueue[T, W]) addError(err error) {
 
 // backOff returns the backoff duration for the j-th retry attempt.
 func (p *PriorityQueue[T, W]) backOff(j int) time.Duration {
-	if p.bo != nil {
-		return p.bo(j)
+	if v := p.bo.Load(); v != nil {
+		return (*v)(j)
 	}
 	return p.timeOff
 }
