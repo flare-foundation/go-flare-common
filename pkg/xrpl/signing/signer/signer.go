@@ -6,25 +6,30 @@ import (
 	"fmt"
 	"math/big"
 	"slices"
+	"sync/atomic"
 
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/base58"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/types"
 )
 
 // Signer represents a single XRPL multi-signer with account, signature, and public key.
+//
+// value caches the numeric AccountID once computed; it is stored as an
+// atomic.Pointer so concurrent Value()/Compare callers cannot race on the
+// lazy initialization.
 type Signer struct {
 	Account       string
 	TxnSignature  string
 	SigningPubKey string
-	value         *big.Int
+	value         atomic.Pointer[big.Int]
 }
 
 // Value of a signer is the number represented bt the account ID.
 //
 // At the first call the value is computed, stored, and returned. At subsequent calls, the stored value is returned.
 func (s *Signer) Value() (*big.Int, error) {
-	if s.value != nil {
-		return s.value, nil
+	if v := s.value.Load(); v != nil {
+		return v, nil
 	}
 
 	// rippled tokens.cpp caps decoded tokens at 64 bytes; an XRPL address is 25 bytes → ~35 chars encoded.
@@ -37,9 +42,14 @@ func (s *Signer) Value() (*big.Int, error) {
 		return nil, fmt.Errorf("decoding account %s: %w", s.Account, err)
 	}
 
-	s.value = new(big.Int).SetBytes(value)
+	v := new(big.Int).SetBytes(value)
+	// CompareAndSwap so concurrent first-callers settle on the same *big.Int;
+	// losers discard their freshly-allocated copy and read the winner's.
+	if !s.value.CompareAndSwap(nil, v) {
+		v = s.value.Load()
+	}
 
-	return s.value, nil
+	return v, nil
 }
 
 // Sort sorts signers according to the numeric value of the account (accountID).
@@ -143,5 +153,5 @@ func Parse(arrayObject types.ArrayObject) (*Signer, error) {
 //   - s1 and s2 are non nil.
 //   - values of s1 and s2 are defined.
 func Compare(s1, s2 *Signer) int {
-	return s1.value.Cmp(s2.value)
+	return s1.value.Load().Cmp(s2.value.Load())
 }

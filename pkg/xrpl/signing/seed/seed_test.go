@@ -34,6 +34,18 @@ func TestDecodeFamilySeedMasterpassphrase(t *testing.T) {
 	assert.Equal(t, wantHex, hex.EncodeToString(got))
 }
 
+// TestDecodeFamilySeedErrorDoesNotLeakInput covers audit finding F-SIGN-1:
+// base58.Decode's error embeds its raw input, and a wrapped %w propagated
+// that input — which is private-key-equivalent — into caller logs. The
+// returned error must not contain the seed string in any form.
+func TestDecodeFamilySeedErrorDoesNotLeakInput(t *testing.T) {
+	// A clearly invalid base58 string with a distinctive sentinel substring.
+	const sentinel = "LEAK_SENTINEL_!!!"
+	_, err := DecodeFamilySeed(sentinel)
+	require.Error(t, err)
+	assert.NotContains(t, err.Error(), sentinel)
+}
+
 func TestDecodeFamilySeedRejectsBadInputs(t *testing.T) {
 	raw, err := hex.DecodeString("DEDCE9CE67B451D852FD4E846FCDE31C")
 	require.NoError(t, err)

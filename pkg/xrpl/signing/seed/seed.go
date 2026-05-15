@@ -32,7 +32,11 @@ func DecodeFamilySeed(s string) ([]byte, error) {
 	}
 	raw, err := base58.XRPLCoder.Decode(s)
 	if err != nil {
-		return nil, fmt.Errorf("decoding: %w", err)
+		// Deliberately do NOT wrap err: base58.Decode embeds its raw input
+		// in the error string, and the input here is private-key-equivalent
+		// seed material. Returning a static error keeps the seed out of
+		// caller logs / aggregators.
+		return nil, errors.New("decoding seed")
 	}
 	if len(raw) != 1+Length+4 {
 		return nil, fmt.Errorf("unexpected decoded length %d, want %d", len(raw), 1+Length+4)
