@@ -18,7 +18,33 @@ type Signature struct {
 	s [32]byte
 }
 
-var errInvalidLength = errors.New("invalid signature length")
+var (
+	errInvalidLength = errors.New("invalid signature length")
+	errHighS         = errors.New("non-canonical signature: high-S (s > N/2)")
+	errZeroScalar    = errors.New("invalid signature: r or s is zero")
+
+	// secp256k1HalfN is N/2 where N is the secp256k1 curve order. A
+	// canonical signature must have s in (0, N/2] (BIP-62 / rippled's
+	// fully-canonical-signature rule); accepting s > N/2 enables
+	// malleability: (r, N-s) is a second valid byte string for the
+	// same message and key.
+	secp256k1HalfN = new(big.Int).Rsh(crypto.S256().Params().N, 1)
+)
+
+// isLowS reports whether s is in the canonical low-S half of the curve order.
+func isLowS(s [32]byte) bool {
+	return new(big.Int).SetBytes(s[:]).Cmp(secp256k1HalfN) <= 0
+}
+
+// isZero reports whether b is all zeros.
+func isZero(b [32]byte) bool {
+	for _, x := range b {
+		if x != 0 {
+			return false
+		}
+	}
+	return true
+}
 
 // MarshalDER marshals DER formatted signature.
 //
@@ -113,6 +139,10 @@ func MarshalDER(sig []byte) (Signature, error) {
 		return sigOut, errInvalidLength
 	}
 
+	if !isLowS(sigOut.s) {
+		return sigOut, errHighS
+	}
+
 	return sigOut, nil
 }
 
@@ -126,11 +156,24 @@ func MarshalRS(sig []byte) (*Signature, error) {
 	copy(sigOut.r[:], sig[:32])
 	copy(sigOut.s[:], sig[32:64])
 
+	if isZero(sigOut.r) || isZero(sigOut.s) {
+		return nil, errZeroScalar
+	}
+	if !isLowS(sigOut.s) {
+		return nil, errHighS
+	}
+
 	return sigOut, nil
 }
 
 // DER returns DER formatted signature.
+// Returns nil if the Signature has a zero scalar; legitimate callers go through
+// MarshalRS/MarshalRecID which reject that state, so a nil here signals corrupt state.
 func (sig *Signature) DER() []byte {
+	if isZero(sig.r) || isZero(sig.s) {
+		return nil
+	}
+
 	r := new(big.Int).SetBytes(sig.r[:])
 	s := new(big.Int).SetBytes(sig.s[:])
 
@@ -219,8 +262,18 @@ func MarshalRecID(sig []byte) (*SignatureWithRecovery, error) {
 
 	copy(sigOut.r[:], sig[:32])
 	copy(sigOut.s[:], sig[32:64])
-
 	sigOut.v = sig[64]
+
+	if isZero(sigOut.r) || isZero(sigOut.s) {
+		return nil, errZeroScalar
+	}
+	if !isLowS(sigOut.s) {
+		return nil, errHighS
+	}
+	// Recovery ID is two bits (Y parity + high-x flag); anything else is malformed.
+	if sigOut.v > 3 {
+		return nil, fmt.Errorf("invalid recovery id %d", sigOut.v)
+	}
 
 	return sigOut, nil
 }
@@ -243,7 +296,13 @@ func (sig *SignatureWithRecovery) Recover(hash []byte) (*ecdsa.PublicKey, error)
 }
 
 // toBytesCompressed returns compressed public Key for ECDSA public key in byte slice.
+// Returns nil if pub.X is out of range (>32 bytes); on a valid secp256k1 point this cannot happen.
 func toBytesCompressed(pub *ecdsa.PublicKey) []byte {
+	b := pub.X.Bytes()
+	if len(b) > 32 {
+		return nil
+	}
+
 	xrpPub := make([]byte, 33)
 
 	if pub.Y.Bit(0) == 0 {
@@ -251,8 +310,6 @@ func toBytesCompressed(pub *ecdsa.PublicKey) []byte {
 	} else {
 		xrpPub[0] = pubKeyOddPrefix
 	}
-
-	b := pub.X.Bytes()
 
 	copy(xrpPub[33-len(b):33], b)
 

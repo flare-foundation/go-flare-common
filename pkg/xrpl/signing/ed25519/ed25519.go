@@ -1,6 +1,6 @@
 // Package ed25519 provides XRPL Ed25519 key management and transaction signing.
 //
-// Secret-material zeroization (audit M8) is not implemented. Go's GC may
+// Secret-material zeroization is not implemented. Go's GC may
 // relocate objects, and crypto/ed25519, crypto/sha512, and math/big.Int
 // internals all retain copies of secret bytes that are not reachable from
 // this package. A partial zero-out of the visible buffers would mislead
@@ -79,7 +79,7 @@ func PrivKeyFromSecret(secret string) (ed25519.PrivateKey, error) {
 	}
 	secretBytes, err := base58.XRPLCoder.Decode(secret)
 	if err != nil {
-		return nil, fmt.Errorf("decoding secret: %w", err)
+		return nil, errors.New("decoding secret")
 	}
 
 	// xrpl.js encodes Ed25519 secrets as: 3 prefix bytes (01 E1 4B) + 16 seed

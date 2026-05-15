@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 
 	"fmt"
+	"math/big"
 	"strings"
 	"testing"
 
@@ -198,6 +199,73 @@ func TestMarshalDERRejectsMalformed(t *testing.T) {
 			})
 		})
 	}
+}
+
+// TestMarshalDERRejectsHighS covers audit finding F-SIGNCURVE-1: the parser
+// must reject signatures whose s component is in the upper half of the curve
+// order. Accepting high-S enables malleability — for any valid (r, s) the
+// byte-distinct (r, N-s) is equally valid for the same message and key,
+// which rippled rejects via fully-canonical-signature.
+func TestMarshalDERRejectsHighS(t *testing.T) {
+	// secp256k1 curve order N.
+	N := crypto.S256().Params().N
+	halfN := new(big.Int).Rsh(N, 1)
+
+	// Craft (r=1, s = halfN+1). halfN+1 is the smallest high-S value.
+	r := big.NewInt(1)
+	s := new(big.Int).Add(halfN, big.NewInt(1))
+
+	// Pack as minimal-DER. Both r=1 and s have positive high-bit-clear MSB
+	// (halfN+1 starts with 0x7F so high bit is clear, no 0x00 padding needed).
+	rb := r.Bytes()
+	sb := s.Bytes()
+
+	der := []byte{0x30, byte(2 + len(rb) + 2 + len(sb)), 0x02, byte(len(rb))}
+	der = append(der, rb...)
+	der = append(der, 0x02, byte(len(sb)))
+	der = append(der, sb...)
+
+	_, err := MarshalDER(der)
+	require.Error(t, err, "high-S DER signature must be rejected")
+
+	// Same s also rejected by MarshalRS.
+	var rs [64]byte
+	copy(rs[32-len(rb):32], rb)
+	copy(rs[64-len(sb):64], sb)
+	_, err = MarshalRS(rs[:])
+	require.Error(t, err, "high-S compact signature must be rejected")
+
+	// Sanity: the low-S counterpart (s = halfN) is accepted.
+	sLow := new(big.Int).Set(halfN)
+	sbLow := sLow.Bytes()
+	// halfN's top byte is 0x7F so no 0x00 padding needed.
+	derLow := []byte{0x30, byte(2 + len(rb) + 2 + len(sbLow)), 0x02, byte(len(rb))}
+	derLow = append(derLow, rb...)
+	derLow = append(derLow, 0x02, byte(len(sbLow)))
+	derLow = append(derLow, sbLow...)
+	_, err = MarshalDER(derLow)
+	require.NoError(t, err, "low-S DER signature (s = N/2) must be accepted")
+}
+
+// TestMarshalRSRejectsZeroScalars covers audit finding F-SIGNCURVE-2:
+// big.Int.Bytes() returns an empty slice for zero, and DER() then panics
+// on rb[0]. A Signature with zero r or s must not be constructable.
+func TestMarshalRSRejectsZeroScalars(t *testing.T) {
+	// All-zero r||s.
+	_, err := MarshalRS(make([]byte, 64))
+	require.Error(t, err)
+
+	// Zero r, non-zero s.
+	rs := make([]byte, 64)
+	rs[63] = 1
+	_, err = MarshalRS(rs)
+	require.Error(t, err)
+
+	// Non-zero r, zero s.
+	rs = make([]byte, 64)
+	rs[31] = 1
+	_, err = MarshalRS(rs)
+	require.Error(t, err)
 }
 
 // Vectors ported from rippled src/test/protocol/SecretKey_test.cpp secp256k1TestVectors.

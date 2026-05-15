@@ -1,6 +1,6 @@
 // Package secp256k1 provides XRPL secp256k1 key management and transaction signing.
 //
-// Secret-material zeroization (audit M8) is not implemented. Go's GC may
+// Secret-material zeroization is not implemented. Go's GC may
 // relocate objects, and crypto/ecdsa, crypto/sha512, and math/big.Int
 // internals all retain copies of secret bytes that are not reachable from
 // this package. A partial zero-out of the visible buffers would mislead
