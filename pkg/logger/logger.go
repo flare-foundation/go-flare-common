@@ -76,7 +76,15 @@ func createSugared(config Config) *zap.SugaredLogger {
 
 	level, err := zapcore.ParseLevel(config.Level)
 	if err != nil {
-		sugared.Errorf("Wrong level %s", config.Level)
+		// Fall back to DEBUG (the DefaultConfig level) rather than the
+		// zero value of zapcore.Level (which is InfoLevel). Silently
+		// downgrading to INFO would drop messages the operator likely
+		// intended to see; DEBUG keeps everything visible — including
+		// this very Errorf, which the surrounding atom.SetLevel below
+		// must pass through. Reload-time Set() callers see the same
+		// fallback path.
+		level = zapcore.DebugLevel
+		sugared.Errorf("invalid logger level %q; falling back to DEBUG", config.Level)
 	}
 	atom.SetLevel(level)
 	return sugared
