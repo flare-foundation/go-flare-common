@@ -93,8 +93,10 @@ func NewWithLogger[T any, W weight[W]](params Params, name string, logger logger
 
 	return PriorityQueue[T, W]{
 		name:    name,
-		regular: QueueMutex[Wrapped[T], W]{},
-		fast:    QueueMutex[Wrapped[T], W]{},
+		regular: QueueMutex[Wrapped[T], W]{empty: make(chan bool)},
+		fast:    QueueMutex[Wrapped[T], W]{empty: make(chan bool)},
+		in:      make(chan *Item[Wrapped[T], W]),
+		inFast:  make(chan *Item[Wrapped[T], W]),
 		workers: workers,
 		Errors:  errors,
 
@@ -111,18 +113,11 @@ func (p *PriorityQueue[T, W]) SetBackOff(bo backOff) {
 	p.bo = bo
 }
 
-// InitiateAndRun starts accepting new items to priority queue.
+// InitiateAndRun starts the goroutines that move incoming items into the
+// regular and fast lanes. The underlying channels are created by New/NewWithLogger,
+// so Add/AddFast may be called before InitiateAndRun — the send will block until
+// the processing goroutines start. Call InitiateAndRun at most once per queue.
 func (p *PriorityQueue[T, W]) InitiateAndRun(ctx context.Context) {
-	in := make(chan *Item[Wrapped[T], W])
-	inFast := make(chan *Item[Wrapped[T], W])
-	emptyR := make(chan bool)
-	emptyF := make(chan bool)
-
-	p.in = in
-	p.inFast = inFast
-	p.regular.empty = emptyR
-	p.fast.empty = emptyF
-
 	go p.processIn(ctx)
 	go p.processInFast(ctx)
 }

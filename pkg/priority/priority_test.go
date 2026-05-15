@@ -330,6 +330,49 @@ func (x wTup) Less(y wTup) bool {
 	return x[0] < y[0] || (x[0] == y[0] && x[1] < y[1])
 }
 
+// TestAddBeforeInitiateAndRun covers audit finding M28: Add must not race
+// against (nor hang forever on) a not-yet-initialized channel. After the fix
+// the channels exist from construction, so Add blocks only until the
+// processing goroutines start, then proceeds normally.
+func TestAddBeforeInitiateAndRun(t *testing.T) {
+	ctx, cancel := context.WithTimeout(t.Context(), 5*time.Second)
+	defer cancel()
+
+	pQueue := New[int, wInt](Params{}, "test")
+
+	added := make(chan struct{})
+	go func() {
+		pQueue.Add(42, wInt(42))
+		close(added)
+	}()
+
+	pQueue.InitiateAndRun(ctx)
+
+	handled := make(chan int, 1)
+	handle := func(_ context.Context, item int) error {
+		handled <- item
+		return nil
+	}
+	go func() {
+		for {
+			pQueue.Dequeue(ctx, handle, nil)
+		}
+	}()
+
+	select {
+	case <-added:
+	case <-ctx.Done():
+		t.Fatal("Add did not unblock after InitiateAndRun")
+	}
+
+	select {
+	case got := <-handled:
+		require.Equal(t, 42, got)
+	case <-ctx.Done():
+		t.Fatal("item never processed")
+	}
+}
+
 func TestDoubleWeights(t *testing.T) {
 	ctx, cancel := context.WithTimeout(t.Context(), 15*time.Second)
 
