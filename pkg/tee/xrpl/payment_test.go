@@ -3,6 +3,7 @@ package xrpl
 import (
 	"encoding/hex"
 	"maps"
+	"math"
 	"math/big"
 	"testing"
 	"time"
@@ -278,6 +279,20 @@ func TestParseFeeEntriesMultiple(t *testing.T) {
 
 	_, err = ParseFeeEntries([]byte{0x00, 0x01, 0x00})
 	require.Error(t, err)
+}
+
+// TestParseFeeEntryRejectsOutOfRangeTry covers audit finding F-TEEX-1:
+// the original guard computed (try+1)*4 and compared against len(schedule),
+// which let a negative try (with non-positive RHS) and a near-MaxInt try
+// (with the multiplication wrapping negative) past the check — the
+// subsequent slice on a negative bound panicked.
+func TestParseFeeEntryRejectsOutOfRangeTry(t *testing.T) {
+	schedule := []byte{0x00, 0x01, 0x00, 0x00, 0xEC, 0x78, 0x00, 0x3C}
+
+	for _, try := range []int{-1, -100, math.MaxInt - 1, math.MaxInt} {
+		_, err := ParseFeeEntry(schedule, try)
+		require.Error(t, err, "try %d must be rejected", try)
+	}
 }
 
 func TestScheduledFeeComputation(t *testing.T) {
