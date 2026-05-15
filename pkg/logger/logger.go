@@ -4,6 +4,7 @@ package logger
 import (
 	"io"
 	"os"
+	"sync/atomic"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -14,12 +15,14 @@ const (
 	timeFormat = "[01-02|15:04:05.000]"
 )
 
-var (
-	sugaredLogger *zap.SugaredLogger
-)
+var loggerPtr atomic.Pointer[zap.SugaredLogger]
 
 func init() {
-	sugaredLogger = createSugared(DefaultConfig())
+	loggerPtr.Store(createSugared(DefaultConfig()))
+}
+
+func current() *zap.SugaredLogger {
+	return loggerPtr.Load()
 }
 
 // Config holds logger configuration for output level, file, and console settings.
@@ -43,12 +46,13 @@ func DefaultConfig() Config {
 
 // Logger returns the global sugared logger instance.
 func Logger() *zap.SugaredLogger {
-	return sugaredLogger
+	return current()
 }
 
-// Set configures logger according to Config.
+// Set configures logger according to Config. Safe to call concurrently
+// with logging calls.
 func Set(cfg Config) {
-	createSugared(cfg)
+	loggerPtr.Store(createSugared(cfg))
 }
 
 func createSugared(config Config) *zap.SugaredLogger {
@@ -68,24 +72,24 @@ func createSugared(config Config) *zap.SugaredLogger {
 		zap.AddCallerSkip(1),
 	)
 
-	sugaredLogger = logger.Sugar()
+	sugared := logger.Sugar()
 
 	level, err := zapcore.ParseLevel(config.Level)
 	if err != nil {
-		sugaredLogger.Errorf("Wrong level %s", config.Level)
+		sugared.Errorf("Wrong level %s", config.Level)
 	}
 	atom.SetLevel(level)
-	return sugaredLogger
+	return sugared
 }
 
 // SyncFileLogger synchronizes the file logger (but not the console logger). It is
 // automatically called during fatal or panic log events. If you need to manually
 // synchronize the logger at other points in your application, you can invoke this function as needed.
 func SyncFileLogger() {
-	sugaredLogger.Infof("Syncing file logger.")
-	err := sugaredLogger.Sync()
+	current().Infof("Syncing file logger.")
+	err := current().Sync()
 	if err != nil {
-		sugaredLogger.Infof("Failed to sync logger: %v", err)
+		current().Infof("Failed to sync logger: %v", err)
 	}
 }
 
@@ -137,22 +141,22 @@ func fileLevelEncoder(l zapcore.Level, enc zapcore.PrimitiveArrayEncoder) {
 
 // Debugf formats the message and logs it at DEBUG level.
 func Debugf(msg string, args ...any) {
-	sugaredLogger.Debugf(msg, args...)
+	current().Debugf(msg, args...)
 }
 
 // Infof formats the message and logs it at INFO level.
 func Infof(msg string, args ...any) {
-	sugaredLogger.Infof(msg, args...)
+	current().Infof(msg, args...)
 }
 
 // Warnf formats the message and logs it at WARN level.
 func Warnf(msg string, args ...any) {
-	sugaredLogger.Warnf(msg, args...)
+	current().Warnf(msg, args...)
 }
 
 // Errorf formats the message and logs it at ERROR level.
 func Errorf(msg string, args ...any) {
-	sugaredLogger.Errorf(msg, args...)
+	current().Errorf(msg, args...)
 }
 
 // Panicf formats the message and logs it at PANIC level and panics.
@@ -160,7 +164,7 @@ func Errorf(msg string, args ...any) {
 // Defers will be executed.
 func Panicf(msg string, args ...any) {
 	SyncFileLogger()
-	sugaredLogger.Panicf(msg, args...)
+	current().Panicf(msg, args...)
 }
 
 // Fatalf formats the message and logs it at FATAL level and calls os.Exit.
@@ -168,27 +172,27 @@ func Panicf(msg string, args ...any) {
 // Defers will not be executed.
 func Fatalf(msg string, args ...any) {
 	SyncFileLogger()
-	sugaredLogger.Fatalf(msg, args...)
+	current().Fatalf(msg, args...)
 }
 
 // Debug logs arguments at DEBUG level.
 func Debug(args ...any) {
-	sugaredLogger.Debug(args...)
+	current().Debug(args...)
 }
 
 // Info logs arguments at INFO level.
 func Info(args ...any) {
-	sugaredLogger.Info(args...)
+	current().Info(args...)
 }
 
 // Warn logs arguments at WARN level.
 func Warn(args ...any) {
-	sugaredLogger.Warn(args...)
+	current().Warn(args...)
 }
 
 // Error logs arguments at ERROR level.
 func Error(args ...any) {
-	sugaredLogger.Error(args...)
+	current().Error(args...)
 }
 
 // Panic logs arguments at PANIC level and panics.
@@ -196,7 +200,7 @@ func Error(args ...any) {
 // Defers will be executed.
 func Panic(args ...any) {
 	SyncFileLogger()
-	sugaredLogger.Panic(args...)
+	current().Panic(args...)
 }
 
 // Fatal logs arguments at FATAL level and calls os.Exit.
@@ -204,5 +208,5 @@ func Panic(args ...any) {
 // Defers will not be executed.
 func Fatal(args ...any) {
 	SyncFileLogger()
-	sugaredLogger.Fatal(args...)
+	current().Fatal(args...)
 }
