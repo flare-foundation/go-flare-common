@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"sync/atomic"
 	"time"
 
 	"github.com/cenkalti/backoff/v4"
@@ -18,14 +19,27 @@ const maxQueryDuration = 15 * time.Second
 
 // SetErrorLogger sets logger used to log errors on queries.
 //
-// Default is without logging.
+// Default is without logging. Safe to call concurrently with query execution.
 func SetErrorLogger(l Logger) {
 	if l != nil {
-		errorLogger = l
+		errorLoggerPtr.Store(&errorLoggerWrap{l: l})
 	}
 }
 
-var errorLogger Logger = logger.Nop{}
+type errorLoggerWrap struct{ l Logger }
+
+var errorLoggerPtr atomic.Pointer[errorLoggerWrap]
+
+func init() {
+	errorLoggerPtr.Store(&errorLoggerWrap{l: logger.Nop{}})
+}
+
+func currentErrorLogger() Logger {
+	if w := errorLoggerPtr.Load(); w != nil {
+		return w.l
+	}
+	return logger.Nop{}
+}
 
 // FetchLatestBlock returns the latest block in the database.
 func FetchLatestBlock(
@@ -55,7 +69,9 @@ func fetchLatestBlock(
 type LatestLogsParams struct {
 	Address common.Address
 	Topic0  common.Hash
-	Number  int
+	// Number bounds the number of logs returned, passed directly to gorm Limit.
+	// Use -1 for unlimited; 0 returns no rows (gorm convention).
+	Number int
 }
 
 // FetchLatestLogsByAddressAndTopic0 returns the last <Number> logs with Topic0 emitted by Address.
@@ -321,7 +337,7 @@ func RetryWrapper[F any, P any](query func(context.Context, *gorm.DB, P) (F, err
 			},
 			backoff.WithContext(backoff.NewExponentialBackOff(backoff.WithMaxElapsedTime(maxQueryDuration)), ctx),
 			func(err error, duration time.Duration) {
-				errorLogger.Errorf("error %s: %v, retrying after %v", errorMsg, err, duration)
+				currentErrorLogger().Errorf("error %s: %v, retrying after %v", errorMsg, err, duration)
 			},
 		)
 
