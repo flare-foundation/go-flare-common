@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"time"
 
@@ -12,14 +13,24 @@ import (
 	gormLogger "gorm.io/gorm/logger"
 )
 
+// PoolConfig tunes the underlying database/sql connection pool. Zero values
+// keep the stdlib defaults (unlimited open/idle, no lifetime/idletime cap).
+type PoolConfig struct {
+	MaxOpenConns    int           `toml:"max_open_conns" envconfig:"DB_MAX_OPEN_CONNS"`
+	MaxIdleConns    int           `toml:"max_idle_conns" envconfig:"DB_MAX_IDLE_CONNS"`
+	ConnMaxLifetime time.Duration `toml:"conn_max_lifetime" envconfig:"DB_CONN_MAX_LIFETIME"`
+	ConnMaxIdleTime time.Duration `toml:"conn_max_idle_time" envconfig:"DB_CONN_MAX_IDLE_TIME"`
+}
+
 // Config holds MySQL database connection parameters.
 type Config struct {
-	Host       string `toml:"host" envconfig:"DB_HOST"`
-	Port       int    `toml:"port" envconfig:"DB_PORT"`
-	Database   string `toml:"database" envconfig:"DB_DATABASE"`
-	Username   string `toml:"username" envconfig:"DB_USERNAME"`
-	Password   string `toml:"password" envconfig:"DB_PASSWORD"`
-	LogQueries bool   `toml:"log_queries"`
+	Host       string     `toml:"host" envconfig:"DB_HOST"`
+	Port       int        `toml:"port" envconfig:"DB_PORT"`
+	Database   string     `toml:"database" envconfig:"DB_DATABASE"`
+	Username   string     `toml:"username" envconfig:"DB_USERNAME"`
+	Password   string     `toml:"password" envconfig:"DB_PASSWORD"`
+	LogQueries bool       `toml:"log_queries"`
+	Pool       PoolConfig `toml:"pool"`
 }
 
 // Connect returns a gorm.DB specified in the config.
@@ -43,7 +54,34 @@ func Connect(cfg *Config) (*gorm.DB, error) {
 	gormConfig := gorm.Config{
 		Logger: gormLogger.Default.LogMode(gormLogLevel),
 	}
-	return gorm.Open(gormMysql.Open(dbConfig.FormatDSN()), &gormConfig)
+	db, err := gorm.Open(gormMysql.Open(dbConfig.FormatDSN()), &gormConfig)
+	if err != nil {
+		return nil, err
+	}
+
+	sqlDB, err := db.DB()
+	if err != nil {
+		return nil, fmt.Errorf("getting underlying sql.DB: %w", err)
+	}
+	applyPoolConfig(sqlDB, cfg.Pool)
+
+	return db, nil
+}
+
+// applyPoolConfig sets database/sql pool knobs from p. Zero values are left untouched.
+func applyPoolConfig(sqlDB *sql.DB, p PoolConfig) {
+	if p.MaxOpenConns > 0 {
+		sqlDB.SetMaxOpenConns(p.MaxOpenConns)
+	}
+	if p.MaxIdleConns > 0 {
+		sqlDB.SetMaxIdleConns(p.MaxIdleConns)
+	}
+	if p.ConnMaxLifetime > 0 {
+		sqlDB.SetConnMaxLifetime(p.ConnMaxLifetime)
+	}
+	if p.ConnMaxIdleTime > 0 {
+		sqlDB.SetConnMaxIdleTime(p.ConnMaxIdleTime)
+	}
 }
 
 // SyncParams configures the retry behavior for waiting on C-chain indexer synchronization.
@@ -121,20 +159,30 @@ type syncLogger interface {
 // DoInTransaction executes operations within a single database transaction,
 // rolling back on any returned error or panic. A panic from inside an
 // operation is converted into a returned error so the caller does not treat
-// a panicked-and-rolled-back transaction as committed.
+// a panicked-and-rolled-back transaction as committed. Begin and Rollback
+// errors are surfaced rather than silently dropped.
 func DoInTransaction(db *gorm.DB, operations ...func(db *gorm.DB) error) (err error) {
 	tx := db.Begin()
+	if tx.Error != nil {
+		return fmt.Errorf("beginning transaction: %w", tx.Error)
+	}
 	defer func() {
 		if r := recover(); r != nil {
-			tx.Rollback()
+			rerr := tx.Rollback().Error
+			if rerr != nil {
+				err = fmt.Errorf("panic in transaction: %v (rollback failed: %v)", r, rerr)
+				return
+			}
 			err = fmt.Errorf("panic in transaction: %v", r)
 		}
 	}()
 
 	for _, f := range operations {
-		if err := f(tx); err != nil {
-			tx.Rollback()
-			return err
+		if opErr := f(tx); opErr != nil {
+			if rerr := tx.Rollback().Error; rerr != nil {
+				return fmt.Errorf("%w (rollback failed: %v)", opErr, rerr)
+			}
+			return opErr
 		}
 	}
 	return tx.Commit().Error
