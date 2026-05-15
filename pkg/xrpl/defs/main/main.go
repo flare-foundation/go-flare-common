@@ -35,13 +35,22 @@ func parseField(r []any) (field, error) {
 		return field{}, fmt.Errorf("reading value %v", r[1])
 	}
 
+	// Validate Nth against int16 range before narrowing. An out-of-range
+	// value here would silently wrap and put the wrong field tag into the
+	// generated autogen.go — producing wrong XRPL serialization on every
+	// signed transaction with no compile- or run-time error.
+	nthRounded := math.Round(values["nth"].(float64)) //nolint:forcetypeassert
+	if nthRounded < math.MinInt16 || nthRounded > math.MaxInt16 {
+		return field{}, fmt.Errorf("nth %v out of int16 range for field %q", nthRounded, name)
+	}
+
 	//nolint:forcetypeassert
 	return field{
 		Name:           name,
 		IsSerialized:   values["isSerialized"].(bool),
 		IsSigningField: values["isSigningField"].(bool),
 		IsVLEncoded:    values["isVLEncoded"].(bool),
-		Nth:            int16(math.Round(values["nth"].(float64))),
+		Nth:            int16(nthRounded),
 		Type:           values["type"].(string),
 	}, nil
 }
@@ -111,21 +120,23 @@ func main() {
 	}
 	generatedFile = fmt.Appendf(generatedFile, "}")
 
-	auto, err := os.OpenFile("./pkg/xrpl/defs/autogen.go", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
-	if err != nil {
-		panic(fmt.Sprintf("opening write file: %v", err))
-	}
-
-	// format
+	// Format BEFORE opening the destination with O_TRUNC. The original
+	// order zeroed autogen.go first and only then ran format.Source; any
+	// formatter error left the committed file at zero bytes, breaking
+	// every downstream build until the generator was successfully rerun.
 	generatedFile, err = format.Source(generatedFile)
 	if err != nil {
 		panic(fmt.Sprintf("formatting: %v", err))
 	}
 
+	auto, err := os.OpenFile("./pkg/xrpl/defs/autogen.go", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+	if err != nil {
+		panic(fmt.Sprintf("opening write file: %v", err))
+	}
+	defer auto.Close() //nolint:errcheck
+
 	_, err = auto.Write(generatedFile)
 	if err != nil {
 		panic(fmt.Sprintf("writing to definitions.go file: %v", err))
 	}
-
-	defer auto.Close() //nolint:errcheck
 }
