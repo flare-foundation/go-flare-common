@@ -60,12 +60,16 @@ func (s *Storage) Add(sp *SigningPolicy) error {
 	defer s.mu.Unlock()
 
 	if len(s.spList) > 0 {
+		prev := s.spList[len(s.spList)-1]
 		// check consistency, previous epoch should be already added
-		if !s.notStrict && s.spList[len(s.spList)-1].RewardEpochID != sp.RewardEpochID-1 {
-			return fmt.Errorf("missing signing policy for reward epoch ID %d", sp.RewardEpochID-1)
+		if !s.notStrict {
+			// sp.RewardEpochID == 0 would underflow the message below.
+			if sp.RewardEpochID == 0 || prev.RewardEpochID != sp.RewardEpochID-1 {
+				return fmt.Errorf("expected reward epoch ID %d, got %d", prev.RewardEpochID+1, sp.RewardEpochID)
+			}
 		}
 		// should be sorted by voting round ID, should not happen
-		if sp.StartVotingRoundID < s.spList[len(s.spList)-1].StartVotingRoundID {
+		if sp.StartVotingRoundID < prev.StartVotingRoundID {
 			return fmt.Errorf("signing policy for reward epoch ID %d has lower start voting round ID than previous policy",
 				sp.RewardEpochID)
 		}

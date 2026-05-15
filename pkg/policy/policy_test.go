@@ -163,6 +163,22 @@ func TestStorage(t *testing.T) {
 	require.Len(t, removeOne, 1)
 }
 
+func TestStorageAddRejectsRewardEpochZeroAfterExisting(t *testing.T) {
+	storage := policy.NewStorage()
+
+	event, err := policy.ParseSigningPolicyInitializedEvent(log2)
+	require.NoError(t, err)
+	sp, err := policy.NewSigningPolicy(event, nil)
+	require.NoError(t, err)
+	require.NoError(t, storage.Add(sp))
+
+	// Synthesize a sibling policy with RewardEpochID==0; the strict-mode check
+	// must reject it without underflowing sp.RewardEpochID-1.
+	zero := *sp
+	zero.RewardEpochID = 0
+	require.Error(t, storage.Add(&zero))
+}
+
 func TestHash(t *testing.T) {
 	// flare epoch 309
 	// signingPolicyInitilized emitted in tx 0x86ffffab9fcadb3148b1e25dceecf3b37ad99d3b10008a53e527f7e4d6f73f36
