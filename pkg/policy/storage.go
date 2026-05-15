@@ -15,8 +15,7 @@ type Storage struct {
 	// notStrict allows gaps between consecutive reward epoch IDs when adding policies.
 	notStrict bool
 
-	// mutex
-	sync.Mutex
+	mu sync.Mutex
 }
 
 // NewStorage creates an empty Storage with strict sequential reward epoch ID enforcement.
@@ -57,8 +56,8 @@ func (s *Storage) findByVotingRoundID(votingRoundID uint32) *SigningPolicy {
 // Unless the storage was created with notStrict, the added signingPolicy must have a reward epoch ID
 // exactly one greater than the latest stored policy.
 func (s *Storage) Add(sp *SigningPolicy) error {
-	s.Lock()
-	defer s.Unlock()
+	s.mu.Lock()
+	defer s.mu.Unlock()
 
 	if len(s.spList) > 0 {
 		// check consistency, previous epoch should be already added
@@ -79,8 +78,8 @@ func (s *Storage) Add(sp *SigningPolicy) error {
 // ForVotingRound returns the signingPolicy for the voting round, or nil if not found.
 // Also returns true if the policy is the last one or false otherwise.
 func (s *Storage) ForVotingRound(votingRoundID uint32) (*SigningPolicy, bool) {
-	s.Lock()
-	defer s.Unlock()
+	s.mu.Lock()
+	defer s.mu.Unlock()
 	sp := s.findByVotingRoundID(votingRoundID)
 	if sp == nil {
 		return nil, false
@@ -91,8 +90,8 @@ func (s *Storage) ForVotingRound(votingRoundID uint32) (*SigningPolicy, bool) {
 // RemoveBefore removes all signingPolicies that ended strictly before votingRoundID.
 // Returns the list of removed reward epoch ids.
 func (s *Storage) RemoveBefore(votingRoundID uint32) []uint32 {
-	s.Lock()
-	defer s.Unlock()
+	s.mu.Lock()
+	defer s.mu.Unlock()
 
 	var removedRewardEpochIDs []uint32
 	for len(s.spList) > 1 && s.spList[1].StartVotingRoundID < votingRoundID {
@@ -105,8 +104,8 @@ func (s *Storage) RemoveBefore(votingRoundID uint32) []uint32 {
 
 // OldestStored returns the oldest signingPolicy that is in the storage or nil if the storage is empty.
 func (s *Storage) OldestStored() *SigningPolicy {
-	s.Lock()
-	defer s.Unlock()
+	s.mu.Lock()
+	defer s.mu.Unlock()
 
 	if len(s.spList) == 0 {
 		return nil
