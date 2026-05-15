@@ -17,6 +17,11 @@ import (
 // Paths/SendMax, which this function does not support. Callers that need
 // conversion paths must build and sign their transaction by another route.
 //
+// Amount validation: native amounts are explicitly rejected when zero.
+// Non-native (IOU) amount validation — including zero-value rejection — is
+// delegated to types.Encode (STAmount canonical form per rippled); the
+// entrypoint does not add an extra zero check on the IOU branch.
+//
 // The returned bytes are the for-signing canonical form produced by
 // types.Encode(tx, true): non-signing fields (TxnSignature, Signers, …) are
 // omitted, and the STX\0 prefix is NOT included. The caller is expected to
@@ -83,7 +88,7 @@ func CheckAndEncodePayment(tx map[string]any, native bool) ([]byte, error) {
 	if !ok {
 		return nil, fmt.Errorf("invalid fee %v", feeAny) // check that fee is xrp amount
 	}
-	fee, err := strconv.ParseUint(feeStr, 10, 0)
+	fee, err := strconv.ParseUint(feeStr, 10, 64)
 	if err != nil {
 		return nil, fmt.Errorf("invalid fee %s: %w", feeStr, err) // should never happen
 	}
@@ -100,7 +105,7 @@ func CheckAndEncodePayment(tx map[string]any, native bool) ([]byte, error) {
 		if !ok {
 			return nil, fmt.Errorf("invalid native amount %v", amountAny) // check that fee is xrp amount
 		}
-		amount, err := strconv.ParseUint(amountStr, 10, 0)
+		amount, err := strconv.ParseUint(amountStr, 10, 64)
 		if err != nil {
 			return nil, fmt.Errorf("invalid amount %s: %w", amountStr, err) // should never happen
 		}
