@@ -128,8 +128,26 @@ The 2026-05-08 "Outstanding" section above is superseded by the tables below.
 
 ### Outstanding
 
-None for Critical, High, or Medium tiers.
-Low/Info backlog (~25 items in the section below) remains unscheduled.
+None for Critical, High, Medium, or addressed Low tiers.
+Speculative Low items (e.g., HTTP/2 connection coalescing) and informational notes remain by design.
+
+### Closed (Low / Info, batched per package)
+
+| Finding(s)              | Commit    | Notes                                                                                                                                |
+| ----------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| 4a, 6a                  | `1799fb0` | xrpl/check.checkSigners rejects duplicate accounts; xrpl/hash.Sha256RipeMD160 doc-comment direction corrected.                       |
+| 3a, 3b                  | `8961506` | xrpl/transactions: ParseUint pinned to 64-bit; doc-added IOU amount validation boundary.                                             |
+| 2a, 2b, 2e              | `002ffbf` | pathset.readCurrency drops literal "nil" return; decode-side asymmetries documented for IOU exponent/significand and ISO charset.    |
+| 1a, 1c                  | `f4f493c` | SignXRPL enforces the XRPL signing-domain prefix; utils.HasXRPLSigningPrefix exported; seed package docs CSPRNG precondition.        |
+| 7e                      | `5bc18a3` | policy.Storage.Add guards against sp.RewardEpochID==0 underflow and reports a meaningful error.                                      |
+| 8b, 8d                  | `e38f188` | database SetErrorLogger backed by atomic.Pointer; LatestLogsParams.Number doc-added with gorm Limit semantics.                       |
+| 9a, 9b                  | `278f8ff` | TransformSignatureVRStoRSV/RSVtoVRS return (\[\]byte, error); length checked; V<27 rejected to prevent already-normalised underflow. |
+| 11c                     | `b478145` | priority.next() takes ctx; returns cleanly on cancellation instead of blocking when both lanes are empty.                            |
+| 11e                     | `d94d52f` | logger.Set and Logger() routed through atomic.Pointer; new test pins concurrent-access safety.                                       |
+| 1b, 1d, 2c, 2d          | —         | Already addressed during the Medium pass or correct as-is per audit precondition.                                                    |
+| 4b, 5a, 7a, 7d, 8a, 8c  | —         | Verified correct as-is or by design (deprecated APIs / matching rippled semantics).                                                  |
+| 10a, 11a, 11d           | —         | Behavior is correct (LimitedReader N=0 means unlimited; voters.NewSet returns error; events.HexToHash uses go-ethereum semantics).   |
+| 6b, 7b, 7c, 9c, 10c, 11b, 11f | — | Speculative or out-of-scope (centralization refactors, HTTP/2 coalescing, transform-not-validator, toml strictness).                  |
 
 ---
 
