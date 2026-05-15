@@ -12,8 +12,16 @@ import (
 	btcecdsa "github.com/btcsuite/btcd/btcec/v2/ecdsa"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/hash"
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/signing/utils"
 	"github.com/stretchr/testify/require"
 )
+
+func prefixed(t *testing.T, raw []byte) []byte {
+	t.Helper()
+	m, err := utils.Prepare(raw, false, nil)
+	require.NoError(t, err)
+	return m
+}
 
 func TestAddress(t *testing.T) {
 	priv, err := crypto.HexToECDSA("76C4FB30C5E1C68142495F367F08F7970783897300A8D29044E89044D6E7F872")
@@ -38,7 +46,7 @@ func TestSignatureMarshaling(t *testing.T) {
 
 	for range 500 {
 		for j := range 5 {
-			msg := fmt.Appendf(nil, "neki%d", j)
+			msg := prefixed(t, fmt.Appendf(nil, "neki%d", j))
 
 			sig, err := sign(hash.Sha512Half(msg), prv)
 			require.NoError(t, err, j)
@@ -258,7 +266,7 @@ func TestDeterministicSigningRFC6979(t *testing.T) {
 	priv, err := crypto.HexToECDSA("1ACAAEDECE405B2A958212629E16F2EB46B153EEE94CDD350FDEFF52795525B7")
 	require.NoError(t, err)
 
-	msg := []byte("http://www.xrpl.org")
+	msg := prefixed(t, []byte("http://www.xrpl.org"))
 
 	sigGo, err := SignXRPL(msg, priv)
 	require.NoError(t, err)
@@ -275,4 +283,18 @@ func TestDeterministicSigningRFC6979(t *testing.T) {
 	ok, err := Validate(msg, sigGo, PrvToPub(priv))
 	require.NoError(t, err)
 	require.True(t, ok)
+}
+
+func TestSignXRPLRejectsUnprefixedInput(t *testing.T) {
+	priv, err := crypto.HexToECDSA("1ACAAEDECE405B2A958212629E16F2EB46B153EEE94CDD350FDEFF52795525B7")
+	require.NoError(t, err)
+
+	_, err = SignXRPL([]byte("http://www.xrpl.org"), priv)
+	require.Error(t, err)
+
+	_, err = SignXRPL([]byte{}, priv)
+	require.Error(t, err)
+
+	_, err = SignXRPL([]byte{0x00, 0x00, 0x00}, priv)
+	require.Error(t, err)
 }

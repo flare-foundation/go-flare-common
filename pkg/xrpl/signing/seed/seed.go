@@ -1,4 +1,9 @@
 // Package seed decodes base58-encoded rippled-native XRPL family seeds.
+//
+// Decoded payloads are returned as-is; the package does not assess the seed's
+// entropy. Callers that generate seeds programmatically must source the 16
+// payload bytes from a cryptographically secure RNG (e.g., crypto/rand). A
+// low-entropy or attacker-controlled seed yields predictable derived keys.
 package seed
 
 import (
