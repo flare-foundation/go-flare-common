@@ -116,6 +116,13 @@ func assertLoopbackAddr(addr string) error {
 // Empty or non-loopback Addr values are rejected at New() time, before any
 // listener opens.
 func New(cfg Config, prv *ecdsa.PrivateKey) (*Signer, error) {
+	if prv == nil {
+		// All handlers dereference prv (PublicKey for /id, crypto.Sign for
+		// /sign, ECIES decrypt for /decrypt). A nil key passes New() only
+		// to crash the listener on the first authenticated request — by
+		// which point the network surface is already exposed.
+		return nil, errors.New("signer private key is nil")
+	}
 	if err := assertLoopbackAddr(cfg.Addr); err != nil {
 		return nil, fmt.Errorf("signer address: %w", err)
 	}
@@ -199,6 +206,14 @@ type apiKeys struct {
 }
 
 // newAPIKeys builds an apiKeys struct from Config.
+//
+// WARNING: empty APIKeyName, empty APIKeys list, or empty entries inside
+// APIKeys are NOT rejected here — some operators want them for
+// development/testing — but the resulting configuration authenticates
+// ANY request. http.Header.Get("") returns "" for every request, and
+// HMAC-SHA256(secret, "") equals the digest stored for an empty key, so
+// a header-less request matches. Production deployments must set both
+// APIKeyName and at least one non-empty APIKeys entry.
 func newAPIKeys(cfg Config) (apiKeys, error) {
 	secret := make([]byte, 32)
 	if _, err := rand.Read(secret); err != nil {

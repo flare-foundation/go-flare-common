@@ -558,6 +558,22 @@ func TestNewRejectsNonLoopbackAddr(t *testing.T) {
 	require.Contains(t, err.Error(), "signer address")
 }
 
+// TestNewRejectsNilPrivateKey covers audit finding F-TEE-2: a nil
+// *ecdsa.PrivateKey used to pass New() and surface as a deref panic on
+// the first /sign or /id request — exposing the listener before the
+// crash. New must reject up front.
+func TestNewRejectsNilPrivateKey(t *testing.T) {
+	cfg := Config{
+		Addr:       "127.0.0.1:0",
+		APIKeyName: "X-API-KEY",
+		APIKeys:    []string{"k"},
+	}
+	s, err := New(cfg, nil)
+	require.Error(t, err)
+	require.Nil(t, s)
+	require.Contains(t, err.Error(), "private key is nil")
+}
+
 func TestAPIKeyHMACSecretsAreDistinct(t *testing.T) {
 	cfg := Config{APIKeyName: "X-API-KEY", APIKeys: []string{"k"}}
 	a, err := newAPIKeys(cfg)
