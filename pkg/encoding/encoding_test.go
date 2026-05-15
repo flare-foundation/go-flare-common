@@ -18,10 +18,27 @@ func TestSignatureConversion(t *testing.T) {
 	sig, err := crypto.Sign(msg, prv)
 	require.NoError(t, err)
 
-	vrs := TransformSignatureRSVtoVRS(sig)
-	rsv := TransformSignatureVRStoRSV(vrs)
+	vrs, err := TransformSignatureRSVtoVRS(sig)
+	require.NoError(t, err)
+	rsv, err := TransformSignatureVRStoRSV(vrs)
+	require.NoError(t, err)
 
 	require.Equal(t, sig, rsv)
+}
+
+func TestTransformSignatureRejectsBadInput(t *testing.T) {
+	_, err := TransformSignatureVRStoRSV(make([]byte, 64))
+	require.Error(t, err)
+	_, err = TransformSignatureVRStoRSV(make([]byte, 66))
+	require.Error(t, err)
+
+	// V == 0 (already normalised) must not underflow.
+	v0 := make([]byte, 65)
+	_, err = TransformSignatureVRStoRSV(v0)
+	require.Error(t, err)
+
+	_, err = TransformSignatureRSVtoVRS(make([]byte, 64))
+	require.Error(t, err)
 }
 
 func TestEncodeSignature(t *testing.T) {

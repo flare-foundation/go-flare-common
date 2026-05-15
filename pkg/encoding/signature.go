@@ -37,7 +37,10 @@ func EncodeSignatures(signatures []IndexedSignature) ([]byte, error) {
 			return nil, errors.New("payloads not sorted by index")
 		}
 
-		sig := TransformSignatureRSVtoVRS(signature.Signature)
+		sig, err := TransformSignatureRSVtoVRS(signature.Signature)
+		if err != nil {
+			return nil, fmt.Errorf("transforming signature at index %d: %w", signature.Index, err)
+		}
 		buffer.Write(sig)
 
 		indexBytes := convert.Uint16ToBytes(uint16(signature.Index))
@@ -50,25 +53,36 @@ func EncodeSignatures(signatures []IndexedSignature) ([]byte, error) {
 }
 
 // TransformSignatureVRStoRSV transforms [V || R || S] to [R || S || V - 27].
-// No checks are performed, we assume that signature array has length 65.
-func TransformSignatureVRStoRSV(vrs []byte) (rsv []byte) {
-	rsv = make([]byte, 65)
+// vrs must be 65 bytes and vrs[0] (the V byte) must be at least 27; an
+// already-normalised V of 0 or 1 would underflow on subtraction and is
+// rejected with an error.
+func TransformSignatureVRStoRSV(vrs []byte) ([]byte, error) {
+	if len(vrs) != 65 {
+		return nil, fmt.Errorf("signature must be 65 bytes, got %d", len(vrs))
+	}
+	if vrs[0] < 27 {
+		return nil, fmt.Errorf("invalid V byte %d, expected >= 27 (input may already be normalised)", vrs[0])
+	}
 
+	rsv := make([]byte, 65)
 	copy(rsv, vrs[1:33])
 	copy(rsv[32:], vrs[33:65])
 	rsv[64] = vrs[0] - 27
 
-	return rsv
+	return rsv, nil
 }
 
 // TransformSignatureRSVtoVRS transforms [R || S || V - 27] to [V || R || S].
-// No checks are performed, we assume that signature array has length 65.
-func TransformSignatureRSVtoVRS(rsv []byte) (vrs []byte) {
-	vrs = make([]byte, 65)
+// rsv must be 65 bytes.
+func TransformSignatureRSVtoVRS(rsv []byte) ([]byte, error) {
+	if len(rsv) != 65 {
+		return nil, fmt.Errorf("signature must be 65 bytes, got %d", len(rsv))
+	}
 
+	vrs := make([]byte, 65)
 	vrs[0] = rsv[64] + 27
 	copy(vrs[1:], rsv[0:32])
 	copy(vrs[33:], rsv[32:64])
 
-	return vrs
+	return vrs, nil
 }
