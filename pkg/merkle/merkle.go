@@ -1,4 +1,10 @@
 // Package merkle provides a Merkle tree implementation with proof generation and verification.
+//
+// Internal nodes are keccak256(min(x,y) || max(x,y)) with no built-in
+// leaf/internal domain tag. Callers MUST therefore hash leaves of a fixed,
+// non-collidable structure (e.g., keccak256(abi.encode(...))) so a leaf hash
+// cannot equal the keccak256 of any 64-byte two-hash concatenation. All
+// in-tree callers (rewards, FDC, XRP) already do this.
 package merkle
 
 import (
@@ -21,6 +27,8 @@ type Tree []common.Hash
 
 // Build builds the Merkle tree from a slice of leaf hashes.
 // If initialHash is true, each leaf hash is hashed again before building the tree.
+// initialHash does NOT provide leaf/internal domain separation; see the package
+// doc on the precondition that callers must enforce.
 func Build(hashes []common.Hash, initialHash bool) Tree {
 	if initialHash {
 		hashes = mapSingleHash(hashes)
@@ -86,7 +94,8 @@ func mapSingleHash(hashes []common.Hash) []common.Hash {
 	return output
 }
 
-// SortedHashPair returns a sorted hash of two hashes.
+// SortedHashPair returns keccak256(min(x,y) || max(x,y)).
+// This is the internal-node hash; it has no domain tag (see package doc).
 func SortedHashPair(x, y common.Hash) common.Hash {
 	if bytes.Compare(x[:], y[:]) <= 0 {
 		return crypto.Keccak256Hash(x.Bytes(), y.Bytes())
@@ -181,6 +190,8 @@ func (t Tree) binarySearch(hash common.Hash) (int, error) {
 }
 
 // VerifyProof verifies a Merkle proof for a given leaf against the Merkle root.
+// leaf must come from the caller's leaf domain (see package doc): a leaf that
+// happens to equal an internal-node hash for some siblings would falsely verify.
 func VerifyProof(leaf common.Hash, proof []common.Hash, root common.Hash) bool {
 	hash := leaf
 	for _, pair := range proof {
