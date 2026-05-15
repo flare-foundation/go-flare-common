@@ -1,10 +1,17 @@
 // Package merkle provides a Merkle tree implementation with proof generation and verification.
 //
-// Internal nodes are keccak256(min(x,y) || max(x,y)) with no built-in
-// leaf/internal domain tag. Callers MUST therefore hash leaves of a fixed,
-// non-collidable structure (e.g., keccak256(abi.encode(...))) so a leaf hash
-// cannot equal the keccak256 of any 64-byte two-hash concatenation. All
-// in-tree callers (rewards, FDC, XRP) already do this.
+// SECURITY: leaf/internal domain separation is the caller's responsibility.
+// Internal nodes are keccak256(min(x,y) || max(x,y)) with no built-in domain
+// tag, and proofs bind only the multiset of sibling hashes (not left/right
+// position). A 32-byte value that equals any internal-node hash of the tree
+// can therefore be presented as a "leaf" and VerifyProof will accept a forged
+// inclusion proof — a second-preimage attack on the tree.
+//
+// To prevent this, callers MUST hash leaves of a fixed, non-collidable
+// structure (e.g., keccak256(abi.encode(...)) over a struct that cannot
+// collide with the 64-byte two-hash concatenation used at internal nodes).
+// All in-tree callers (rewards, FDC, XRP) already do this. Building a tree
+// directly from raw 32-byte values is unsafe.
 package merkle
 
 import (
@@ -18,6 +25,7 @@ import (
 
 var (
 	ErrEmptyTree    = errors.New("empty tree")
+	ErrInvalidTree  = errors.New("invalid tree layout")
 	ErrInvalidIndex = errors.New("invalid index")
 	ErrHashNotFound = errors.New("hash not found")
 )
@@ -26,9 +34,11 @@ var (
 type Tree []common.Hash
 
 // Build builds the Merkle tree from a slice of leaf hashes.
-// If initialHash is true, each leaf hash is hashed again before building the tree.
-// initialHash does NOT provide leaf/internal domain separation; see the package
-// doc on the precondition that callers must enforce.
+//
+// If initialHash is true, each leaf hash is hashed again before building the
+// tree. NOTE: this does NOT provide leaf/internal domain separation — both
+// the rehashed leaves and the internal nodes are plain keccak256 outputs.
+// Caller-side domain separation (see package doc) is still required.
 func Build(hashes []common.Hash, initialHash bool) Tree {
 	if initialHash {
 		hashes = mapSingleHash(hashes)
@@ -75,6 +85,10 @@ func removeDuplicates(hashes []common.Hash) []common.Hash {
 
 // BuildFromHex builds the Merkle tree from a slice of hex-encoded leaf hashes.
 // If initialHash is true, each leaf hash is hashed again before building the tree.
+//
+// The same leaf-domain-separation precondition applies; see the package doc.
+// Note also that common.HexToHash silently left-pads short inputs and
+// right-truncates long inputs, so callers should validate hex length upstream.
 func BuildFromHex(hexValues []string, initialHash bool) Tree {
 	hashes := make([]common.Hash, 0, len(hexValues))
 	for i := range hexValues {
@@ -94,8 +108,10 @@ func mapSingleHash(hashes []common.Hash) []common.Hash {
 	return output
 }
 
-// SortedHashPair returns keccak256(min(x,y) || max(x,y)).
-// This is the internal-node hash; it has no domain tag (see package doc).
+// SortedHashPair returns keccak256(min(x,y) || max(x,y)). This is the
+// internal-node hash; it has no domain tag distinguishing it from a leaf,
+// so the caller-side leaf-domain precondition (see package doc) is what
+// blocks second-preimage attacks.
 func SortedHashPair(x, y common.Hash) common.Hash {
 	if bytes.Compare(x[:], y[:]) <= 0 {
 		return crypto.Keccak256Hash(x.Bytes(), y.Bytes())
@@ -104,10 +120,23 @@ func SortedHashPair(x, y common.Hash) common.Hash {
 	return crypto.Keccak256Hash(y.Bytes(), x.Bytes())
 }
 
+// validate returns ErrInvalidTree if the tree's heap-layout invariant is
+// broken (non-empty tree with even length). A valid non-empty tree has
+// length 2n-1 (always odd). Callers handle the empty case separately.
+func (t Tree) validate() error {
+	if len(t) > 0 && len(t)%2 == 0 {
+		return ErrInvalidTree
+	}
+	return nil
+}
+
 // Root returns the Merkle root of the tree.
 func (t Tree) Root() (common.Hash, error) {
 	if len(t) == 0 {
 		return common.Hash{}, ErrEmptyTree
+	}
+	if err := t.validate(); err != nil {
+		return common.Hash{}, err
 	}
 
 	return t[0], nil
@@ -134,6 +163,9 @@ func (t Tree) Leaves() []common.Hash {
 
 // Leaf returns the i-th leaf.
 func (t Tree) Leaf(i int) (common.Hash, error) {
+	if err := t.validate(); err != nil {
+		return common.Hash{}, err
+	}
 	numLeaves := t.LeavesCount()
 	if numLeaves == 0 || i < 0 || i >= numLeaves {
 		return common.Hash{}, ErrInvalidIndex
@@ -145,6 +177,9 @@ func (t Tree) Leaf(i int) (common.Hash, error) {
 
 // Proof returns the Merkle proof for the i-th leaf.
 func (t Tree) Proof(i int) ([]common.Hash, error) {
+	if err := t.validate(); err != nil {
+		return nil, err
+	}
 	numLeaves := t.LeavesCount()
 	if numLeaves == 0 || i < 0 || i >= numLeaves {
 		return nil, ErrInvalidIndex
@@ -177,6 +212,9 @@ func (t Tree) ProofFromHash(hash common.Hash) ([]common.Hash, error) {
 }
 
 func (t Tree) binarySearch(hash common.Hash) (int, error) {
+	if err := t.validate(); err != nil {
+		return 0, err
+	}
 	leaves := t.Leaves()
 	i := sort.Search(len(leaves), func(i int) bool {
 		return bytes.Compare(leaves[i][:], hash[:]) >= 0
@@ -190,8 +228,12 @@ func (t Tree) binarySearch(hash common.Hash) (int, error) {
 }
 
 // VerifyProof verifies a Merkle proof for a given leaf against the Merkle root.
-// leaf must come from the caller's leaf domain (see package doc): a leaf that
-// happens to equal an internal-node hash for some siblings would falsely verify.
+//
+// leaf must come from the caller's leaf domain (see package doc). VerifyProof
+// binds only the multiset of sibling hashes along the path — not the position
+// of the leaf — so any 32-byte value that happens to equal an internal-node
+// hash will verify with the right proof. The caller's leaf encoding is the
+// only thing preventing this.
 func VerifyProof(leaf common.Hash, proof []common.Hash, root common.Hash) bool {
 	hash := leaf
 	for _, pair := range proof {

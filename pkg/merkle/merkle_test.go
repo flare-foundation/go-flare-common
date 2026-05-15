@@ -34,6 +34,32 @@ func TestEmptyTree(t *testing.T) {
 	assert.Equal(t, merkle.ErrHashNotFound, err)
 }
 
+func TestInvalidTreeLayout(t *testing.T) {
+	// A non-empty tree of even length cannot satisfy the heap invariant
+	// (which requires len == 2n-1, always odd). Such a Tree could exist
+	// only via manual construction or deserialization of an untrusted
+	// blob; Root/Leaf/Proof must reject it instead of panicking.
+	for _, tree := range []merkle.Tree{
+		{common.HexToHash("0x01"), common.HexToHash("0x02")},
+		{
+			common.HexToHash("0x01"), common.HexToHash("0x02"),
+			common.HexToHash("0x03"), common.HexToHash("0x04"),
+		},
+	} {
+		_, err := tree.Root()
+		assert.Equal(t, merkle.ErrInvalidTree, err)
+
+		_, err = tree.Leaf(0)
+		assert.Equal(t, merkle.ErrInvalidTree, err)
+
+		_, err = tree.Proof(0)
+		assert.Equal(t, merkle.ErrInvalidTree, err)
+
+		_, err = tree.ProofFromHash(common.HexToHash("0x01"))
+		assert.Equal(t, merkle.ErrInvalidTree, err)
+	}
+}
+
 func TestBuildEmpty(t *testing.T) {
 	hashes := []common.Hash{}
 	tree := merkle.Build(hashes, false)
