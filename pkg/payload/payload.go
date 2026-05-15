@@ -59,7 +59,11 @@ func ExtractPayloads(tx *database.Transaction) (map[uint8]Message, error) {
 
 		payload := data[msgHeaderLength:end]
 
-		message := Message{
+		if _, exists := messages[protocol]; exists {
+			return nil, fmt.Errorf("duplicate protocolID %d in tx %s", protocol, tx.Hash)
+		}
+
+		messages[protocol] = Message{
 			From:             common.HexToAddress(tx.FromAddress),
 			Selector:         tx.FunctionSig,
 			ProtocolID:       protocol,
@@ -69,8 +73,6 @@ func ExtractPayloads(tx *database.Transaction) (map[uint8]Message, error) {
 			TransactionIndex: tx.TransactionIndex,
 			Payload:          payload,
 		}
-
-		messages[protocol] = message
 
 		data = data[end:] // trim the extracted payload
 	}
