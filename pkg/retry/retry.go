@@ -4,6 +4,8 @@ package retry
 import (
 	"context"
 	"fmt"
+	"math"
+	"math/rand/v2"
 	"sync"
 	"time"
 )
@@ -17,9 +19,13 @@ type ExecuteStatus[T any] struct {
 
 // Params configures retry behavior for Execute.
 type Params struct {
-	MaxAttempts int           // if non-positive, number of attempts is not limited.
-	Delay       time.Duration // minimal delay between attempts
-	Timeout     time.Duration // total maximal duration of the execution. If zero, there is no Timeout. For a single execution, the function should handle timeout.
+	MaxAttempts int           // if non-positive, unlimited; caller must cancel ctx or set Timeout to stop.
+	Delay       time.Duration // initial delay between attempts
+	Timeout     time.Duration // total maximal duration. If zero, no timeout. Per-call timeout is the function's responsibility.
+
+	Multiplier float64       // if >1, the delay is multiplied by this factor each attempt. Default ≤1 keeps delay constant.
+	MaxDelay   time.Duration // optional cap on the computed delay. Zero means no cap.
+	Jitter     float64       // optional randomization in [0,1]; applies ±Jitter*delay wobble. Zero is deterministic.
 }
 
 // Execute executes function f and retries on error according to params.
@@ -31,12 +37,13 @@ func Execute[T any](ctx context.Context, f func() (T, error), params Params) Exe
 		defer cancel()
 	}
 
-	var ticker *time.Ticker
+	var timer *time.Timer
+	defer func() {
+		if timer != nil {
+			timer.Stop()
+		}
+	}()
 
-	if params.Delay > 0 {
-		ticker = time.NewTicker(params.Delay)
-		defer ticker.Stop()
-	}
 	var result ExecuteStatus[T]
 
 	var err error
@@ -65,8 +72,14 @@ func Execute[T any](ctx context.Context, f func() (T, error), params Params) Exe
 		}
 
 		if params.Delay > 0 && cond(j+1, params.MaxAttempts) {
+			d := nextDelay(params, j)
+			if timer == nil {
+				timer = time.NewTimer(d)
+			} else {
+				timer.Reset(d)
+			}
 			select {
-			case <-ticker.C:
+			case <-timer.C:
 			case <-ctx.Done():
 			}
 		}
@@ -75,6 +88,32 @@ func Execute[T any](ctx context.Context, f func() (T, error), params Params) Exe
 	result.Err = fmt.Errorf("all attempts failed. Last error: %w", err)
 
 	return result
+}
+
+// nextDelay computes the delay before the next attempt (after attempt index j, 0-based).
+// Applies Multiplier^j, then MaxDelay cap, then ±Jitter wobble. Saturates on overflow.
+func nextDelay(p Params, j int) time.Duration {
+	d := p.Delay
+	if p.Multiplier > 1 && j > 0 {
+		factor := math.Pow(p.Multiplier, float64(j))
+		if math.IsInf(factor, 0) || float64(d)*factor > float64(math.MaxInt64) {
+			d = math.MaxInt64
+		} else {
+			d = time.Duration(float64(d) * factor)
+		}
+	}
+	if p.MaxDelay > 0 && d > p.MaxDelay {
+		d = p.MaxDelay
+	}
+	if p.Jitter > 0 {
+		jitter := p.Jitter
+		if jitter > 1 {
+			jitter = 1
+		}
+		wobble := 1.0 + (rand.Float64()*2-1)*jitter
+		d = max(time.Duration(float64(d)*wobble), 0)
+	}
+	return d
 }
 
 // ExecuteAttempt executes function f that takes the index of the attempt as a parameter and retries on error according to params.
