@@ -64,6 +64,24 @@ func TestNewSetRejectsLengthMismatch(t *testing.T) {
 	require.Nil(t, vs)
 }
 
+// TestNewSetRejectsWeightOverflow covers audit finding F-POLICY-1: NewSet
+// previously summed weights into TotalWeight (uint16) with no overflow
+// check, relying on the "guaranteed by the smart contract" comment. A
+// non-FromRawBytes caller (tests, tooling, future internal use) could
+// silently wrap the sum, leaving thresholds non-monotonic and producing
+// voter selections that disagree with the on-chain protocol.
+func TestNewSetRejectsWeightOverflow(t *testing.T) {
+	// Two MaxUint16 weights sum to 2*65535 = 131070, well over uint16 range.
+	vs, err := voters.NewSet(testVoters[:2], []uint16{65535, 65535}, nil)
+	require.Error(t, err)
+	require.Nil(t, vs)
+
+	// Boundary: sum exactly at MaxUint16 must be accepted.
+	vs, err = voters.NewSet(testVoters[:2], []uint16{65000, 535}, nil)
+	require.NoError(t, err)
+	require.NotNil(t, vs)
+}
+
 func TestBinarySearch(t *testing.T) {
 	testPairs := []uint16{0, 1, 99, 100, 101, 105, 299, 300, 301, 305, 599, 600, 601, 605, 999, 1000, 1001, 1005}
 

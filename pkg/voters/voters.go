@@ -5,6 +5,7 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
+	"math"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -46,11 +47,21 @@ func NewSet(voters []common.Address, weights []uint16, submitToSigningAddress ma
 		weights:    weights,
 		thresholds: make([]uint16, len(weights)),
 	}
-	// sum does not exceed uint16 limit, guaranteed by the smart contract
+	// Accumulate into a wider type so we can detect overflow before it
+	// wraps TotalWeight and silently corrupts thresholds (non-monotonic
+	// after wrap). The smart-contract path enforces this at decode time
+	// (see policy.FromRawBytes); NewSet must enforce it for every caller
+	// — overflowing here would silently disagree with chain consensus on
+	// the selected voter.
+	var sum uint32
 	for i, w := range weights {
-		vs.thresholds[i] = vs.TotalWeight
-		vs.TotalWeight += w
+		vs.thresholds[i] = uint16(sum)
+		sum += uint32(w)
+		if sum > math.MaxUint16 {
+			return nil, fmt.Errorf("total weight exceeds uint16 max: %d", sum)
+		}
 	}
+	vs.TotalWeight = uint16(sum)
 
 	vMap := make(map[common.Address]VoterData, len(voters))
 	for i, voter := range vs.voters {
