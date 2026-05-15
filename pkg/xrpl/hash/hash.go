@@ -24,7 +24,7 @@ func DoubleSha256(b []byte) []byte {
 	return sha.Sum(nil)
 }
 
-// Sha256RipeMD160 computes sha256 hash of a RipeMD160 hash.
+// Sha256RipeMD160 computes RipeMD160(sha256(b)).
 //
 // ONLY FOR LEGACY PURPOSES.
 func Sha256RipeMD160(b []byte) []byte {

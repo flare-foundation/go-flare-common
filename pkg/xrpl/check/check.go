@@ -179,6 +179,8 @@ func checkFlags(f uint64) error {
 }
 
 // checkSigners checks that SignerList has the right quorum and exactly the specified signers all with weight 1.
+// Duplicate accounts in SignerEntries are rejected — without dedup, a malformed list could pass the length
+// equality check while missing an expected signer.
 func checkSigners(sl SignerList, quorum uint64, signers []string) error {
 	if sl.SignerQuorum != quorum {
 		return fmt.Errorf("wrong signer quorum. xrpl: %d, expected: %d", sl.SignerQuorum, quorum)
@@ -188,13 +190,18 @@ func checkSigners(sl SignerList, quorum uint64, signers []string) error {
 		return fmt.Errorf("wrong number of signers. xrpl: %d, expected: %d", len(sl.SignerEntries), len(signers))
 	}
 
+	seen := make(map[string]struct{}, len(sl.SignerEntries))
 	for j := range sl.SignerEntries {
+		account := sl.SignerEntries[j].SignerEntry.Account
 		if sl.SignerEntries[j].SignerEntry.SignerWeight != 1 {
-			return fmt.Errorf("signer %s has weight %d", sl.SignerEntries[j].SignerEntry.Account, sl.SignerEntries[j].SignerEntry.SignerWeight)
+			return fmt.Errorf("signer %s has weight %d", account, sl.SignerEntries[j].SignerEntry.SignerWeight)
 		}
-
-		if !slices.Contains(signers, sl.SignerEntries[j].SignerEntry.Account) {
-			return fmt.Errorf("signer on xrpl %s not among expected signers", sl.SignerEntries[j].SignerEntry.Account)
+		if _, dup := seen[account]; dup {
+			return fmt.Errorf("duplicate signer %s on xrpl", account)
+		}
+		seen[account] = struct{}{}
+		if !slices.Contains(signers, account) {
+			return fmt.Errorf("signer on xrpl %s not among expected signers", account)
 		}
 	}
 
