@@ -236,8 +236,15 @@ func ParseFeeEntry(schedule []byte, try int) (ScheduledFee, error) {
 	if len(schedule)%4 != 0 {
 		return ScheduledFee{}, errors.New("invalid schedule length")
 	}
-	if len(schedule) < (try+1)*4 {
-		return ScheduledFee{}, errors.New("try beyond schedule length")
+	// Check try against the entry count directly. The original guard
+	// computed (try+1)*4 and compared against len(schedule): for negative
+	// try the RHS becomes non-positive and the check passed, then the
+	// slice with a negative bound panicked; for try near math.MaxInt the
+	// (try+1)*4 multiplication wrapped to a large negative and the slice
+	// likewise panicked. Range-checking try directly avoids both edges.
+	entries := len(schedule) / 4
+	if try < 0 || try >= entries {
+		return ScheduledFee{}, fmt.Errorf("try %d out of range [0, %d)", try, entries)
 	}
 
 	entry := schedule[try*4 : (try+1)*4]
