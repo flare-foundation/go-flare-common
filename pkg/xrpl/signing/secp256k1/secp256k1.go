@@ -13,6 +13,7 @@ package secp256k1
 import (
 	"crypto/ecdsa"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -62,8 +63,14 @@ func SignTxMultisig(tx map[string]any, prv *ecdsa.PrivateKey) (*signer.Signer, e
 }
 
 // SignXRPL computes Secp256k1 signature of the message and returns it in DER format
-// as needed for signing of an XRPL transaction.
+// as needed for signing of an XRPL transaction. message must start with the XRPL
+// signing-domain prefix produced by utils.Prepare; raw bytes outside that domain
+// are rejected to prevent SignXRPL from being used as a generic signing oracle.
 func SignXRPL(message []byte, privKey *ecdsa.PrivateKey) ([]byte, error) {
+	if !utils.HasXRPLSigningPrefix(message) {
+		return nil, errors.New("message missing XRPL signing-domain prefix; use utils.Prepare to build it")
+	}
+
 	h := hash.Sha512Half(message)
 
 	sig, err := sign(h, privKey)

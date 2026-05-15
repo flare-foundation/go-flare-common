@@ -43,3 +43,16 @@ func Prepare(txBlob []byte, multiSig bool, accountID []byte) ([]byte, error) {
 
 	return forSigning, nil
 }
+
+// HasXRPLSigningPrefix reports whether b starts with one of the XRPL
+// signing-domain prefixes produced by Prepare (single-signing "STX\0" or
+// multi-signing "SMT\0"). Callers that hash arbitrary bytes for XRPL signing
+// should run them through Prepare first; HasXRPLSigningPrefix is the matching
+// precondition check.
+func HasXRPLSigningPrefix(b []byte) bool {
+	if len(b) < prefixLength {
+		return false
+	}
+	p := binary.BigEndian.Uint32(b[:prefixLength])
+	return p == singlePrefix || p == multiPrefix
+}
