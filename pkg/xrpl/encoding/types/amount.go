@@ -46,10 +46,15 @@ const (
 )
 
 const (
+	// typeBitMask covers the two high bits that disambiguate XRP / IOU / MPT
+	// amounts. The four possible values of (firstByte & typeBitMask) are:
+	//   0b00000000 → XRP (xrpType)
+	//   0b10000000 → IOU token (tokenType)
+	//   0b00100000 → MPT (mptType)
+	//   0b10100000 → reserved; rippled rejects, so do we.
 	typeBitMask uint8 = 0b10100000
 	xrpType     uint8 = 0b00000000
-	tokenType0  uint8 = 0b10000000
-	tokenType1  uint8 = 0b10100000
+	tokenType   uint8 = 0b10000000
 	mptType     uint8 = 0b00100000
 
 	signBitMask        uint8 = 0b01000000
@@ -97,12 +102,15 @@ func (a *amount) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	switch amountType {
 	case xrpType:
 		return xrpToJSON(firstByte, b)
-	case tokenType0, tokenType1:
+	case tokenType:
 		return tokenToJSON(firstByte, b)
 	case mptType:
 		return mptToJSON(firstByte, b)
 	default:
-		return nil, fmt.Errorf("impossible, unknown amount type: %v", amountType) // unreachable
+		// amountType == 0b10100000 — both token and MPT bits set. rippled
+		// treats this as reserved and rejects; mishandling it lets the stray
+		// 0x20 bit corrupt the IOU exponent in tokenToJSON.
+		return nil, fmt.Errorf("reserved amount type bits set: firstByte %#x", firstByte)
 	}
 }
 
@@ -319,9 +327,14 @@ const exponentMask = 0xff << 54
 const significantMask = (1 << 54) - 1
 
 // deserializeTokenAmount decodes the 8-byte IOU wire form to a decimal string.
-// It does NOT enforce rippled's IOU exponent/significand canonical ranges
-// (exponent in [-96, 80], significand in [10^15, 10^16) or zero); inputs
-// outside those bounds parse here but would be rejected by rippled.
+//
+// Enforces rippled's canonical-form rules: a non-zero IOU value must have
+// significand in [10^15, 10^16-1] and normalised exponent in [1, 177]
+// (real exponent in [-96, 80]); the canonical zero form is all-bits-zero
+// in the significand-and-exponent region (the high "not-XRP" bit is the
+// only bit that may be set). Non-canonical inputs would have been accepted
+// here but rejected by rippled, allowing two wire encodings to parse to
+// the same numeric value.
 func deserializeTokenAmount(a []byte) (string, error) {
 	if len(a) != 8 {
 		return "", fmt.Errorf("invalid token amount %v", a)
@@ -335,6 +348,21 @@ func deserializeTokenAmount(a []byte) (string, error) {
 	exponent := int64(exponentNormalized) - exponentNormalization
 
 	val := number & significantMask
+
+	if val == 0 {
+		// Canonical zero: significand and exponent bits both zero. rippled
+		// rejects "-0", non-zero-exponent zero, etc.
+		if exponentNormalized != 0 {
+			return "", fmt.Errorf("non-canonical IOU zero: exponent bits set (%d)", exponentNormalized)
+		}
+	} else {
+		if int64(exponentNormalized) < minNormalizedExponent || int64(exponentNormalized) > maxNormalizedExponent {
+			return "", fmt.Errorf("IOU exponent out of canonical range: real exponent %d", exponent)
+		}
+		if val < minSignificant || val > maxSignificant {
+			return "", fmt.Errorf("IOU significand out of canonical range: %d", val)
+		}
+	}
 
 	sign := ""
 	if firstByte&signBitMask == 0 && val != 0 {

@@ -894,6 +894,31 @@ func TestAmountDecodingXRPLErrors(t *testing.T) {
 			name:     "XRP negative rejected",
 			hexInput: "0000000000000001",
 		},
+		// rippled treats firstByte with both token and MPT bits set as reserved.
+		// Accepting this lets the stray 0x20 bit corrupt the IOU exponent in
+		// tokenToJSON (real exponent acquires +31 because 0x20 lands inside
+		// the exponent mask). The first byte must be rejected up front.
+		{
+			name:     "reserved token+MPT bit combination rejected",
+			hexInput: "a000000000000000d4c44364c5bb000000000000000000000000000055534400000000000000000000000000000000000000000000000001",
+		},
+		// IOU canonical-form rules (rippled STAmount): non-zero significand must be
+		// in [10^15, 10^16-1] and normalised exponent in [1, 177]. Below: a token
+		// amount whose significand is below 10^15 — non-canonical, must be rejected.
+		// firstByte=0xC0 (token + positive sign), exponent bits=0x61 (=97, real
+		// exponent 0), significand=1. Currency USD, issuer all-zero.
+		{
+			name:     "IOU significand below 10^15 rejected",
+			hexInput: "d840000000000001000000000000000000000000000000000000000055534400000000000000000000000000000000000000000000000001",
+		},
+		// Zero-mantissa with non-zero exponent bits — non-canonical zero.
+		// firstByte=0xC0 (token + positive sign), exponent bits=0x61 (=97),
+		// significand=0. The canonical zero is all-bits-zero in the
+		// significand-and-exponent region.
+		{
+			name:     "IOU non-canonical zero rejected",
+			hexInput: "d840000000000000000000000000000000000000000000000000000055534400000000000000000000000000000000000000000000000001",
+		},
 	}
 
 	for _, test := range tests {
