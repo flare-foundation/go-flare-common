@@ -59,6 +59,9 @@ func fetchLatestBlock(
 	}
 
 	if len(blocks) == 0 {
+		// Not Permanent: the indexer populates this table asynchronously,
+		// so an empty result on the first attempt can resolve within the
+		// retry window. Retrying is intentional.
 		return Block{}, errors.New("no blocks in database")
 	}
 
@@ -106,6 +109,12 @@ type LogsFullParams struct {
 //
 // If a topic or address has zero value, it is not included in conditions.
 // If the Number is -1, it attempts to return all logs matching the conditions.
+//
+// WARNING: passing both Number == -1 and all-zero Address/Topics issues an
+// unfiltered, unlimited SELECT against the logs table — i.e., a full table
+// scan loaded into a Go slice. On a populated indexer this can OOM the
+// process and pressure the database. Callers are responsible for picking
+// a finite Number or supplying at least one filter when the dataset is large.
 func FetchLogsFull(
 	ctx context.Context, db *gorm.DB, params LogsFullParams,
 ) ([]Log, error) {
@@ -140,6 +149,12 @@ func fetchLogsFull(
 }
 
 // LogsParams holds parameters for fetching logs within a range by address and topic.
+//
+// WARNING: every FetchLogsBy* helper that consumes this struct issues a
+// Find without a LIMIT. A wide (From, To] window or a noisy contract can
+// produce millions of rows accumulated into a Go slice, pressuring memory
+// and the database. Callers are responsible for choosing a window that
+// matches the volume they expect.
 type LogsParams struct {
 	Address  common.Address
 	Topic0   common.Hash
@@ -211,6 +226,10 @@ func fetchLogsByAddressAndTopic0BlockNumber(ctx context.Context, db *gorm.DB, pa
 }
 
 // TxParams holds parameters for fetching transactions within a range by address and function selector.
+//
+// WARNING: same unbounded-read caveat as LogsParams — the FetchTransactionsBy*
+// helpers issue a Find without a LIMIT, so a wide (From, To] window can
+// accumulate millions of rows. Pick a window that matches expected volume.
 type TxParams struct {
 	ToAddress   common.Address
 	FunctionSel [4]byte
@@ -318,6 +337,9 @@ func fetchState(ctx context.Context, db *gorm.DB, stateName string) (State, erro
 	}
 
 	if len(states) == 0 {
+		// Not Permanent: the indexer populates the state row asynchronously,
+		// so a missing row on the first attempt can resolve within the retry
+		// window. Retrying is intentional.
 		return State{}, errors.New("no states in database")
 	}
 
