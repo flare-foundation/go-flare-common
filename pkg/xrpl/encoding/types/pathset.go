@@ -294,7 +294,7 @@ func readCurrency(b *bytes.Buffer) (string, error) {
 		return "", fmt.Errorf("reading bytes: %w", err)
 	}
 	if n != l {
-		return "nil", outOfBytes("currency", l, n)
+		return "", outOfBytes("currency", l, n)
 	}
 
 	if bytes.Equal(c, make([]byte, l)) {

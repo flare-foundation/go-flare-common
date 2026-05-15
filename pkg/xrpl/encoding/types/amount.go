@@ -318,6 +318,10 @@ func format(f *big.Float, p int, bitSize int) (uint64, int64, error) {
 const exponentMask = 0xff << 54
 const significantMask = (1 << 54) - 1
 
+// deserializeTokenAmount decodes the 8-byte IOU wire form to a decimal string.
+// It does NOT enforce rippled's IOU exponent/significand canonical ranges
+// (exponent in [-96, 80], significand in [10^15, 10^16) or zero); inputs
+// outside those bounds parse here but would be rejected by rippled.
 func deserializeTokenAmount(a []byte) (string, error) {
 	if len(a) != 8 {
 		return "", fmt.Errorf("invalid token amount %v", a)
