@@ -190,3 +190,31 @@ func TestNew(t *testing.T) {
 	stg = storage.New[int, uint64](-10)
 	require.Nil(t, stg)
 }
+
+// TestNewRejectsKeyTypeOverflow covers audit finding F-UTIL-1: when K is
+// narrower than int and cannot represent size, K(size) wraps. For signed
+// K the resulting K(len) is negative; key % K(len) can then produce
+// out-of-range slice indices, and Store/Get panic on first access. New
+// must refuse the construction instead of returning a panic-on-use struct.
+func TestNewRejectsKeyTypeOverflow(t *testing.T) {
+	// int8 max is 127; size 200 wraps to -56.
+	require.Nil(t, storage.New[int8, uint64](200))
+
+	// uint8 max is 255; size 300 wraps to 44.
+	require.Nil(t, storage.New[uint8, uint64](300))
+
+	// int16 max is 32767; size 40000 wraps.
+	require.Nil(t, storage.New[int16, uint64](40000))
+
+	// Boundary: int8 size 127 is the max representable, must be accepted.
+	require.NotNil(t, storage.New[int8, uint64](127))
+}
+
+// TestNewCyclicPanicsOnInvalidSize covers audit finding F-UTIL-3: the
+// deprecated NewCyclic used to return a usable struct that panicked on
+// first key % K(0) — late panic. Now panics eagerly at construction.
+func TestNewCyclicPanicsOnInvalidSize(t *testing.T) {
+	require.Panics(t, func() { storage.NewCyclic[int, uint64](0) })
+	require.Panics(t, func() { storage.NewCyclic[int, uint64](-5) })
+	require.Panics(t, func() { storage.NewCyclic[int8, uint64](200) })
+}
