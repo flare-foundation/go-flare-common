@@ -72,6 +72,50 @@ M1–M3 (XRPL codec alloc bounds — DoS via huge length prefix), M14 (Instructi
 
 ---
 
+## Closure status update as of 2026-05-15
+
+Branch `fullAudit`. The post-2026-05-08 work closed the remaining Highs (H17–H22)
+and the full Medium tier (M1–M28). The 2026-05-08 "Outstanding" section above is
+superseded by the tables below.
+
+### Closed (Highs after 2026-05-08)
+
+| Finding | Commit | Notes |
+|---|---|---|
+| H17, H18 | `21ed254` | safeurl `Validate` doc-marked non-authoritative; default client `CheckRedirect` caps chain length, rejects https→http downgrade, re-validates each hop. |
+| H19 | `a351e13` | `voters.NewSet`/`FromRawBytes` rejects duplicate voter addresses; fixture added. |
+| H20 | `c2c6f03` | `DoInTransaction` named return + `err = fmt.Errorf("panic in transaction: %v", r)` after rollback; panic no longer treated as committed. |
+| H21 | `7430e74` | API-key compared via HMAC + `subtle.ConstantTimeCompare`. |
+| H22 | `4e9da0a` | tee/signer requires explicit loopback bind address. |
+
+### Closed (Mediums)
+
+| Finding | Commit | Notes |
+|---|---|---|
+| M1–M3 | `a1a22c1` | xrpl/encoding/types: depth-bound STObject/STArray; length-prefix amplification guard before alloc; MPT reserved-bit strictness. |
+| M4–M5 | `f16e049` | xrpl/transactions: Sequence/SigningPubKey required; self-payment reject doc-scoped to native payments. |
+| M6, M7, M9 (M8 doc-only) | `7d0e3b1` | xrpl/signing: JoinMultisig validates signers and strict order; strict-DER in secp256k1; M8 documented as doc-only (Go GC + math/big make true zeroization a lie). |
+| M10 | `03cf271` | aggregator.AddSignatures returns `common.Hash` (exported handle). SIG change. |
+| M11 | `49afd26` | xrpl/check rejects non-Validated ledger response. |
+| M12, M13 | `5a4ca21` | tee/attestation: `Policy.RequireCRL` fails closed; `Policy.AllowedLeafEKUs` pins chain EKUs; `Verify` kept as compat wrapper over `VerifyWithPolicy`. |
+| M14 | `acfd151` | tee/instruction `Data.Validate` enforces MaxMessageSize=64KiB, MaxCosigners=32, threshold/uniqueness, op.IsValidPair. |
+| M15 | `a6e72bd` | tee/xrpl native-only scope: nil Amount / sender==recipient / non-empty TokenId rejected; `CheckNativePayment` forced. |
+| M16, M17 | `70481d5` | M16 doc-only note (real binding owed in pkg/tee/structs); M17 signer.Run goroutine leak fixed via buffered chan + fresh shutdown ctx. |
+| M18, M21 | `244074d` | safeurl: CGNAT/0.0.0.0/8/TEST-NET CIDRs blocked; explicit transport timeouts. |
+| M19 | `674deb7` | retry.Params Multiplier/MaxDelay/Jitter; call.Params NoRetryStatuses; MaxAttempts≤0 kept as unlimited with doc note; transport-error gating deferred intentionally. |
+| M20 | `6c025a9` | retry.Execute returns directly from the select on ctx-done; same error format preserved. |
+| M22, M23 | `46dc10a` | BuildMessage returns `(string, error)` and bounds payload at MaxUint16 (SIG change); ExtractPayloads rejects duplicate protocolID. |
+| M24 | `3099253` | policy.Storage replaces embedded `sync.Mutex` with private `mu` field (drops public Lock/Unlock). |
+| M25, M26 | `98330f2` | database.Config gains `PoolConfig` (MaxOpen/Idle/Lifetime/IdleTime); `DoInTransaction` surfaces Begin and Rollback errors. |
+| M27 | `eaaaaf4` | doc-only: leaf/internal domain-separation precondition formalized on package doc and Build/SortedHashPair/VerifyProof. |
+| M28 | `89341f5` | priority queue channels allocated in `NewWithLogger`; `InitiateAndRun` only spawns goroutines. Add-before-Initiate is safe. |
+
+### Outstanding
+
+None for Critical, High, or Medium tiers. Low/Info backlog (~25 items in the section below) remains unscheduled.
+
+---
+
 ## Critical (P0 — fix immediately)
 
 ### C1. TEE attestation: `iss`/`aud` never validated
