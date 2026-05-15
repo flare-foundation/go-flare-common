@@ -33,6 +33,13 @@ func EncodeSignatures(signatures []IndexedSignature) ([]byte, error) {
 		if signature.Index < 0 {
 			return nil, errors.New("payload index not set")
 		}
+		// Index is encoded as uint16 below. Without this guard, an Index >
+		// math.MaxUint16 passes the monotonicity check (compared as int)
+		// and is then truncated to its low 16 bits — silently producing a
+		// non-monotonic, possibly-duplicate on-the-wire index sequence.
+		if signature.Index > math.MaxUint16 {
+			return nil, fmt.Errorf("payload index %d exceeds uint16 range", signature.Index)
+		}
 		if prevIndex >= signature.Index {
 			return nil, errors.New("payloads not sorted by index")
 		}
@@ -53,15 +60,17 @@ func EncodeSignatures(signatures []IndexedSignature) ([]byte, error) {
 }
 
 // TransformSignatureVRStoRSV transforms [V || R || S] to [R || S || V - 27].
-// vrs must be 65 bytes and vrs[0] (the V byte) must be at least 27; an
-// already-normalised V of 0 or 1 would underflow on subtraction and is
-// rejected with an error.
+// vrs must be 65 bytes and vrs[0] (the V byte) must be 27 or 28 — the only
+// Ethereum-style values that map to a valid secp256k1 recovery id (0 or 1).
+// An already-normalised V (0 or 1) underflows on subtraction; EIP-155
+// values (chainID*2 + 35 + {0,1}) and garbage bytes produce out-of-range
+// recids that downstream ecrecover would reject. Both are caught up front.
 func TransformSignatureVRStoRSV(vrs []byte) ([]byte, error) {
 	if len(vrs) != 65 {
 		return nil, fmt.Errorf("signature must be 65 bytes, got %d", len(vrs))
 	}
-	if vrs[0] < 27 {
-		return nil, fmt.Errorf("invalid V byte %d, expected >= 27 (input may already be normalised)", vrs[0])
+	if vrs[0] < 27 || vrs[0] > 28 {
+		return nil, fmt.Errorf("invalid V byte %d, expected 27 or 28", vrs[0])
 	}
 
 	rsv := make([]byte, 65)
@@ -73,10 +82,16 @@ func TransformSignatureVRStoRSV(vrs []byte) ([]byte, error) {
 }
 
 // TransformSignatureRSVtoVRS transforms [R || S || V - 27] to [V || R || S].
-// rsv must be 65 bytes.
+// rsv must be 65 bytes and rsv[64] (the recid) must be 0 or 1 — the canonical
+// secp256k1 recovery id values. Any other value would produce an out-of-spec
+// V byte (29-255) or, at the far edge, wrap to a low byte (e.g. recid 229 →
+// V 0) that masks the caller's input bug behind a "successful" transform.
 func TransformSignatureRSVtoVRS(rsv []byte) ([]byte, error) {
 	if len(rsv) != 65 {
 		return nil, fmt.Errorf("signature must be 65 bytes, got %d", len(rsv))
+	}
+	if rsv[64] > 1 {
+		return nil, fmt.Errorf("invalid recid %d, expected 0 or 1", rsv[64])
 	}
 
 	vrs := make([]byte, 65)
