@@ -77,6 +77,10 @@ func serializeNonstandardCode(code string) ([]byte, error) {
 	return out, nil
 }
 
+// deserializeCurrency decodes the 20-byte currency field. The 3-char ISO
+// path returns the raw 3 bytes without enforcing rippled's StandardCodeRegex
+// charset; encode is stricter and rejects non-conforming codes via
+// serializeStandardCode.
 func deserializeCurrency(c []byte) (string, error) {
 	if len(c) != 20 {
 		return "", fmt.Errorf("invalid currency length %v should be 20", len(c))
