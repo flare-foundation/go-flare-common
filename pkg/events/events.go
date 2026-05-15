@@ -41,18 +41,10 @@ func ConvertDatabaseLogToChainLog(dbLog database.Log) (*types.Log, error) {
 	}
 
 	var topics []common.Hash
-
-	if dbLog.Topic0 != null {
-		topics = append(topics, common.HexToHash(dbLog.Topic0))
-	}
-	if dbLog.Topic1 != null {
-		topics = append(topics, common.HexToHash(dbLog.Topic1))
-	}
-	if dbLog.Topic2 != null {
-		topics = append(topics, common.HexToHash(dbLog.Topic2))
-	}
-	if dbLog.Topic3 != null {
-		topics = append(topics, common.HexToHash(dbLog.Topic3))
+	for _, t := range []string{dbLog.Topic0, dbLog.Topic1, dbLog.Topic2, dbLog.Topic3} {
+		if t != "" && t != null {
+			topics = append(topics, common.HexToHash(t))
+		}
 	}
 	return &types.Log{
 		Topics:         topics,
