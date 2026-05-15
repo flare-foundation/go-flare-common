@@ -238,6 +238,29 @@ func TestNextDelayJitter(t *testing.T) {
 	}
 }
 
+func TestExecuteReturnsEarlyOnCtxCancelDuringDelay(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	delay := 100 * time.Millisecond
+	go func() {
+		time.Sleep(5 * time.Millisecond)
+		cancel()
+	}()
+
+	start := time.Now()
+	res := Execute(ctx, func() (int, error) { return 0, errRetry }, Params{
+		MaxAttempts: 10,
+		Delay:       delay,
+	})
+	elapsed := time.Since(start)
+
+	require.False(t, res.Success)
+	require.ErrorIs(t, res.Err, context.Canceled)
+	require.ErrorIs(t, res.Err, errRetry)
+	require.Less(t, elapsed, delay, "Execute must return before the next delay completes (elapsed=%s)", elapsed)
+}
+
 func TestExecuteBackoffDelays(t *testing.T) {
 	// 3 attempts with base 5ms, multiplier 2: delays before attempts 2 and 3 are 5ms and 10ms => >= 15ms.
 	start := time.Now()

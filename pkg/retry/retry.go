@@ -81,6 +81,8 @@ func Execute[T any](ctx context.Context, f func() (T, error), params Params) Exe
 			select {
 			case <-timer.C:
 			case <-ctx.Done():
+				result.Err = fmt.Errorf("context error mid retry: %w. Last error: %w", ctx.Err(), err)
+				return result
 			}
 		}
 	}
