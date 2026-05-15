@@ -75,7 +75,7 @@ github.com/flare-foundation/<name-of-the-repo>
   return fmt.Errorf("failed to fetch chain ID: %w", err) // avoid — "failed to" is redundant
   ```
 
-  For static (non-wrapped) errors a descriptive phrase is fine — gerund is not required.
+For static (non-wrapped) errors a descriptive phrase is fine — gerund is not required.
 
 - Always handle errors.
   If intentionally ignoring one, document it:
