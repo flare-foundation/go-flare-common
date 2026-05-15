@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"slices"
+	"sync"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -21,11 +22,30 @@ import (
 // against the SUMMED weight of submitted signers — not their count — per
 // rippled STTx::checkMultiSign. The same model degenerates to "N of M with weight 1"
 // when every weight is set to 1.
+//
+// AddSignatures and Finalize are safe to call concurrently from multiple
+// goroutines (mu serializes the internal state). The exported fields
+// (Address, SignerList, Quorum) must be set once at construction and not
+// mutated afterwards; the mutex does not cover them.
 type Account struct {
 	Address    string
 	SignerList map[string]uint16
 	Quorum     uint
-	txs        map[common.Hash]*transaction
+
+	mu  sync.Mutex
+	txs map[common.Hash]*transaction
+}
+
+// NewAccount constructs an Account ready for concurrent use. Prefer this
+// over struct-literal initialization: it initializes the internal tx map,
+// which AddSignatures otherwise lazy-allocates under the lock.
+func NewAccount(address string, signerList map[string]uint16, quorum uint) *Account {
+	return &Account{
+		Address:    address,
+		SignerList: signerList,
+		Quorum:     quorum,
+		txs:        make(map[common.Hash]*transaction),
+	}
 }
 
 type transaction struct {
@@ -56,6 +76,15 @@ func (a *Account) AddSignatures(blob []byte) (common.Hash, bool, error) {
 	}
 
 	identifier := crypto.Keccak256Hash(en)
+
+	a.mu.Lock()
+	defer a.mu.Unlock()
+
+	// Lazy-init for callers that used a struct literal without going through
+	// NewAccount; protected by the mutex so the check-and-init is race-free.
+	if a.txs == nil {
+		a.txs = make(map[common.Hash]*transaction)
+	}
 
 	var txExists bool
 	var tx *transaction
@@ -168,6 +197,9 @@ func (a *Account) collectedWeight(tx *transaction) uint {
 
 // Finalize checks that enough signatures are collected for a transaction with id and returns an encoded transaction ready to be submitted.
 func (a *Account) Finalize(id common.Hash) ([]byte, error) {
+	a.mu.Lock()
+	defer a.mu.Unlock()
+
 	tx, ok := a.txs[id]
 	if !ok {
 		return nil, fmt.Errorf("no transaction with id %v to finalize", id)
@@ -177,12 +209,11 @@ func (a *Account) Finalize(id common.Hash) ([]byte, error) {
 		return nil, fmt.Errorf("quorum not yet reached for %v", id)
 	}
 
-	s, err := sort(tx.signers, int(a.Quorum))
-	if err != nil {
-		return nil, fmt.Errorf("sorting signers: %w", err)
+	if len(tx.signers) == 0 {
+		return nil, fmt.Errorf("no signers collected for %v", id)
 	}
 
-	blob, err := signing.JoinMultisig(tx.transaction, s)
+	blob, err := signing.JoinMultisig(tx.transaction, sortSigners(tx.signers))
 	if err != nil {
 		return nil, fmt.Errorf("joining signatures: %w", err)
 	}
@@ -190,22 +221,22 @@ func (a *Account) Finalize(id common.Hash) ([]byte, error) {
 	return blob, nil
 }
 
-// sort takes quorum of Signers and sorts according to the numerical value of their addresses.
-func sort[T comparable](sig map[T]*signer.Signer, quorum int) ([]*signer.Signer, error) {
-	out := make([]*signer.Signer, quorum)
-	i := 0
-	for j := range sig {
-		out[i] = sig[j]
-		i++
-		if i == quorum {
-			break
-		}
+// sortSigners returns every collected signer ordered by the numeric value of
+// their address.
+//
+// XRPL accepts any subset of authorized signers whose summed weight meets the
+// account's Quorum (rippled STTx::checkMultiSign), so emitting all collected
+// valid signers is always correct. Doing so also makes the produced blob
+// deterministic: previously the helper truncated to int(Quorum) entries by
+// iterating a Go map, which silently broke for weighted multisig (Quorum is a
+// weight threshold, not a count — a single weight-2 signer satisfies Quorum=2
+// but len(signers) == 1) and picked a non-deterministic subset when more
+// signers had been collected than the count threshold demanded.
+func sortSigners[T comparable](sig map[T]*signer.Signer) []*signer.Signer {
+	out := make([]*signer.Signer, 0, len(sig))
+	for _, s := range sig {
+		out = append(out, s)
 	}
-	if i != quorum {
-		return nil, errors.New("quorum not reached")
-	}
-
 	slices.SortFunc(out, signer.Compare)
-
-	return out, nil
+	return out
 }

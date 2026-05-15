@@ -95,6 +95,114 @@ func TestAddSignaturesFull(t *testing.T) {
 	require.Equal(t, expectedBlobByte, txBlob)
 }
 
+// TestAddSignaturesConcurrent covers audit finding F-AGG-3: AddSignatures
+// and Finalize previously mutated Account.txs / tx.signers / tx.quorumReached
+// without any synchronization. With go test -race this must not flag a data
+// race and the final state must be consistent: the tx exists, holds both
+// signers, and dispatch fired exactly once (the first goroutine to push the
+// summed weight past Quorum).
+func TestAddSignaturesConcurrent(t *testing.T) {
+	tx := buildTrustSetTx()
+
+	blob1, err := signing.JoinMultisig(tx, []*signer.Signer{testSigner1})
+	require.NoError(t, err)
+	blob2, err := signing.JoinMultisig(tx, []*signer.Signer{testSigner2})
+	require.NoError(t, err)
+
+	acc := NewAccount(
+		"rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
+		map[string]uint16{
+			"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": 1,
+			"rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v": 1,
+		},
+		2,
+	)
+
+	type result struct {
+		id       common.Hash
+		dispatch bool
+		err      error
+	}
+	results := make(chan result, 2)
+	for _, blob := range [][]byte{blob1, blob2} {
+		go func(b []byte) {
+			id, dispatch, err := acc.AddSignatures(b)
+			results <- result{id, dispatch, err}
+		}(blob)
+	}
+
+	var dispatchCount int
+	var lastID common.Hash
+	for range 2 {
+		r := <-results
+		require.NoError(t, r.err)
+		if r.dispatch {
+			dispatchCount++
+		}
+		lastID = r.id
+	}
+	require.Equal(t, 1, dispatchCount, "dispatch must fire exactly once on first quorum")
+	require.Len(t, acc.txs[lastID].signers, 2)
+
+	finalBlob, err := acc.Finalize(lastID)
+	require.NoError(t, err)
+	require.NotEmpty(t, finalBlob)
+}
+
+// TestAddSignaturesLazyInit covers audit finding F-AGG-4: callers that built
+// an Account via struct literal (without setting the private txs field)
+// previously hit a nil-map write on the first AddSignatures call. The lazy
+// init under the mutex must keep that path safe.
+func TestAddSignaturesLazyInit(t *testing.T) {
+	tx := buildTrustSetTx()
+
+	blob, err := signing.JoinMultisig(tx, []*signer.Signer{testSigner1})
+	require.NoError(t, err)
+
+	// Note: no txs initialization, no NewAccount.
+	acc := Account{
+		Address:    "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
+		SignerList: map[string]uint16{testSigner1.Account: 1},
+		Quorum:     1,
+	}
+
+	_, dispatch, err := acc.AddSignatures(blob)
+	require.NoError(t, err)
+	require.True(t, dispatch)
+}
+
+// TestFinalizeWeightedQuorum covers audit finding F-AGG-1: Quorum is a
+// summed-weight threshold (rippled STTx::checkMultiSign), not a count.
+// Previously Finalize passed int(a.Quorum) to sort() as the required
+// signer count, so a weighted multisig where a single weight-2 signer
+// satisfied Quorum=2 by weight (but had len(signers) == 1) never
+// finalized.
+func TestFinalizeWeightedQuorum(t *testing.T) {
+	tx := buildTrustSetTx()
+
+	// Only testSigner1 signs.
+	blob, err := signing.JoinMultisig(tx, []*signer.Signer{testSigner1})
+	require.NoError(t, err)
+
+	// testSigner1 has weight 2; Quorum is 2 → weight threshold met with one signer.
+	acc := Account{
+		Address:    "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
+		SignerList: map[string]uint16{testSigner1.Account: 2},
+		Quorum:     2,
+		txs:        make(map[common.Hash]*transaction),
+	}
+
+	txID, dispatch, err := acc.AddSignatures(blob)
+	require.NoError(t, err)
+	require.True(t, dispatch, "single weight-2 signer must meet Quorum=2")
+	require.Len(t, acc.txs[txID].signers, 1)
+
+	// Finalize must succeed with len(signers) == 1 < int(Quorum) == 2.
+	finalBlob, err := acc.Finalize(txID)
+	require.NoError(t, err)
+	require.NotEmpty(t, finalBlob)
+}
+
 // TestAddSignaturesInvalidSignature verifies that a signer with a tampered signature is rejected.
 // JoinMultisig itself now refuses to assemble blobs with invalid signers
 // (audit M6), so we bypass it and encode the bad blob directly to exercise
