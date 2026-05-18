@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/flare-foundation/go-flare-common/pkg/heapt"
+	"github.com/flare-foundation/go-flare-common/pkg/logger"
 	"golang.org/x/time/rate"
 )
 
@@ -14,18 +15,14 @@ type backOff func(int) time.Duration // custom function defining timeOut after a
 
 const bucketSize = 2
 
-type logger interface {
+// Logger is the subset of logger.Logger used by PriorityQueue.
+// logger.Nop satisfies it directly (Panic and Panicf propagate as panics).
+type Logger interface {
 	Infof(string, ...any)
 	Errorf(string, ...any)
 	Panic(...any)
+	Panicf(string, ...any)
 }
-
-// noLogger is an empty logger that implements the logger interface.
-type noLogger struct{}
-
-func (noLogger) Infof(string, ...any)  {}
-func (noLogger) Errorf(string, ...any) {}
-func (noLogger) Panic(...any)          {}
 
 // Params for the priority queue.
 //
@@ -73,16 +70,16 @@ type PriorityQueue[T any, W weight[W]] struct {
 
 	limiter *rate.Limiter
 
-	logger logger
+	logger Logger
 }
 
 // New returns new Priority from params.
-func New[T any, W weight[W]](params Params, name string) PriorityQueue[T, W] {
-	return NewWithLogger[T, W](params, name, noLogger{})
+func New[T any, W weight[W]](params Params, name string) *PriorityQueue[T, W] {
+	return NewWithLogger[T, W](params, name, logger.Nop{})
 }
 
 // NewWithLogger returns new Priority from params with logger.
-func NewWithLogger[T any, W weight[W]](params Params, name string, logger logger) PriorityQueue[T, W] {
+func NewWithLogger[T any, W weight[W]](params Params, name string, l Logger) *PriorityQueue[T, W] {
 	var limiter *rate.Limiter
 
 	if params.MaxDequeuesPerSecond > 0 {
@@ -108,7 +105,7 @@ func NewWithLogger[T any, W weight[W]](params Params, name string, logger logger
 	// consumer (between draining the channel and entering the final
 	// select) fell through `default` and was lost, stranding the item
 	// in the heap.
-	return PriorityQueue[T, W]{
+	return &PriorityQueue[T, W]{
 		name:    name,
 		regular: QueueMutex[Wrapped[T], W]{empty: make(chan bool, 1)},
 		fast:    QueueMutex[Wrapped[T], W]{empty: make(chan bool, 1)},
@@ -121,7 +118,7 @@ func NewWithLogger[T any, W weight[W]](params Params, name string, logger logger
 		timeOff:     params.TimeOff,
 
 		limiter: limiter,
-		logger:  logger,
+		logger:  l,
 	}
 }
 
@@ -348,7 +345,7 @@ func (p *PriorityQueue[T, W]) decrementWorkers() {
 	case <-p.workers:
 		return
 	default:
-		p.logger.Panic("should never block")
+		p.logger.Panicf("queue %s: decrementWorkers called with no worker in flight", p.Name())
 	}
 }
 
