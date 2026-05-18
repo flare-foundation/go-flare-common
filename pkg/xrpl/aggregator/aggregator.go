@@ -52,7 +52,6 @@ type transaction struct {
 	transaction   map[string]any
 	signers       map[string]*signer.Signer
 	quorumReached bool
-	id            common.Hash
 }
 
 // AddSignatures accepts an encoded transaction with a Signers field.
@@ -113,7 +112,6 @@ func (a *Account) AddSignatures(blob []byte) (common.Hash, bool, error) {
 
 		tx = new(transaction)
 		tx.signers = make(map[string]*signer.Signer)
-		tx.id = identifier
 
 		decoded, err := encoding.Decode(en)
 		if err != nil {
