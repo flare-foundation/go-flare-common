@@ -16,8 +16,11 @@ package merkle
 
 import (
 	"bytes"
+	"encoding/hex"
 	"errors"
+	"fmt"
 	"sort"
+	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -39,6 +42,10 @@ type Tree []common.Hash
 // tree. NOTE: this does NOT provide leaf/internal domain separation — both
 // the rehashed leaves and the internal nodes are plain keccak256 outputs.
 // Caller-side domain separation (see package doc) is still required.
+//
+// Build sorts the input hashes and silently drops duplicates, so the leaf
+// position in the resulting tree has no relation to the caller's input order.
+// Use ProofFromHash to look proofs up by leaf value.
 func Build(hashes []common.Hash, initialHash bool) Tree {
 	if initialHash {
 		hashes = mapSingleHash(hashes)
@@ -59,6 +66,12 @@ func Build(hashes []common.Hash, initialHash bool) Tree {
 
 	sortedHashes = removeDuplicates(sortedHashes)
 	n = len(sortedHashes)
+
+	// 2*n-1 overflows int on 32-bit platforms when n > 2^30. The make below
+	// would then panic with a misleading "len out of range"; reject early.
+	if n > (int(^uint(0)>>1)-1)/2+1 {
+		return Tree{}
+	}
 
 	tree := make(Tree, 2*n-1)
 	copy(tree[n-1:], sortedHashes)
@@ -86,16 +99,25 @@ func removeDuplicates(hashes []common.Hash) []common.Hash {
 // BuildFromHex builds the Merkle tree from a slice of hex-encoded leaf hashes.
 // If initialHash is true, each leaf hash is hashed again before building the tree.
 //
-// The same leaf-domain-separation precondition applies; see the package doc.
-// Note also that common.HexToHash silently left-pads short inputs and
-// right-truncates long inputs, so callers should validate hex length upstream.
-func BuildFromHex(hexValues []string, initialHash bool) Tree {
+// Each hex value must decode to exactly 32 bytes (with or without a 0x prefix);
+// short / long inputs that common.HexToHash would silently pad or truncate are
+// rejected with an error. The same leaf-domain-separation precondition applies;
+// see the package doc.
+func BuildFromHex(hexValues []string, initialHash bool) (Tree, error) {
 	hashes := make([]common.Hash, 0, len(hexValues))
-	for i := range hexValues {
-		hashes = append(hashes, common.HexToHash(hexValues[i]))
+	for i, v := range hexValues {
+		s := strings.TrimPrefix(strings.TrimPrefix(v, "0x"), "0X")
+		if len(s) != 2*common.HashLength {
+			return nil, fmt.Errorf("hex leaf %d: expected %d hex chars, got %d", i, 2*common.HashLength, len(s))
+		}
+		b, err := hex.DecodeString(s)
+		if err != nil {
+			return nil, fmt.Errorf("hex leaf %d: %w", i, err)
+		}
+		hashes = append(hashes, common.BytesToHash(b))
 	}
 
-	return Build(hashes, initialHash)
+	return Build(hashes, initialHash), nil
 }
 
 func mapSingleHash(hashes []common.Hash) []common.Hash {
@@ -151,14 +173,17 @@ func (t Tree) LeavesCount() int {
 	return (len(t) + 1) / 2
 }
 
-// Leaves returns all leaves in a slice.
+// Leaves returns all leaves in a slice. The returned slice is a fresh copy;
+// mutating it does not affect the underlying tree.
 func (t Tree) Leaves() []common.Hash {
 	numLeaves := t.LeavesCount()
 	if numLeaves == 0 {
 		return nil
 	}
 
-	return t[numLeaves-1:]
+	out := make([]common.Hash, numLeaves)
+	copy(out, t[numLeaves-1:])
+	return out
 }
 
 // Leaf returns the i-th leaf.
