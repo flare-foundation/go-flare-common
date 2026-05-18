@@ -3,116 +3,116 @@
 package defs
 
 const (
-	Hash192      XType = 21
-	Hash256      XType = 5
-	LedgerEntry  XType = 10002
-	Unknown      XType = -2
-	Validation   XType = 10003
-	Vector256    XType = 19
 	AccountID    XType = 8
-	UInt96       XType = 20
-	Int32        XType = 10
-	Issue        XType = 24
-	Transaction  XType = 10001
-	Int64        XType = 11
-	NotPresent   XType = 0
-	XChainBridge XType = 25
-	Currency     XType = 26
-	Metadata     XType = 10004
-	UInt16       XType = 1
-	UInt64       XType = 3
-	UInt8        XType = 16
 	Amount       XType = 6
 	Blob         XType = 7
-	STArray      XType = 15
-	UInt32       XType = 2
-	UInt384      XType = 22
+	Currency     XType = 26
 	Done         XType = -1
 	Hash128      XType = 4
 	Hash160      XType = 17
+	Hash192      XType = 21
+	Hash256      XType = 5
+	Int32        XType = 10
+	Int64        XType = 11
+	Issue        XType = 24
+	LedgerEntry  XType = 10002
+	Metadata     XType = 10004
+	NotPresent   XType = 0
 	Number       XType = 9
-	UInt512      XType = 23
 	PathSet      XType = 18
+	STArray      XType = 15
 	STObject     XType = 14
+	Transaction  XType = 10001
+	UInt16       XType = 1
+	UInt32       XType = 2
+	UInt384      XType = 22
+	UInt512      XType = 23
+	UInt64       XType = 3
+	UInt8        XType = 16
+	UInt96       XType = 20
+	Unknown      XType = -2
+	Validation   XType = 10003
+	Vector256    XType = 19
+	XChainBridge XType = 25
 )
 
 var TxTypeToValue = map[string]int32{
-	"VaultDelete":                       67,
-	"XChainAddClaimAttestation":         45,
-	"CheckCreate":                       16,
-	"EscrowCancel":                      4,
-	"OracleSet":                         51,
-	"TrustSet":                          20,
-	"CredentialCreate":                  58,
-	"NFTokenAcceptOffer":                29,
-	"OfferCreate":                       7,
-	"Payment":                           0,
-	"TicketCreate":                      10,
-	"XChainCreateClaimID":               41,
-	"VaultSet":                          66,
-	"LoanBrokerCoverWithdraw":           77,
-	"LoanBrokerDelete":                  75,
-	"LoanManage":                        82,
-	"NFTokenBurn":                       26,
-	"NFTokenModify":                     61,
-	"VaultCreate":                       65,
-	"AccountDelete":                     21,
-	"CheckCash":                         17,
-	"Clawback":                          30,
-	"EscrowFinish":                      2,
-	"MPTokenIssuanceSet":                56,
-	"SetFee":                            101,
-	"XChainCreateBridge":                48,
-	"PermissionedDomainSet":             62,
-	"AMMDeposit":                        36,
-	"DIDSet":                            49,
-	"EnableAmendment":                   100,
-	"Invalid":                           -1,
-	"XChainAccountCreateCommit":         44,
-	"AMMDelete":                         40,
-	"DIDDelete":                         50,
-	"DepositPreauth":                    19,
-	"LedgerStateFix":                    53,
-	"LoanBrokerSet":                     74,
-	"NFTokenCancelOffer":                28,
-	"PaymentChannelClaim":               15,
-	"AMMVote":                           38,
-	"DelegateSet":                       64,
-	"MPTokenIssuanceCreate":             54,
-	"NFTokenMint":                       25,
-	"XChainAddAccountCreateAttestation": 46,
-	"AMMWithdraw":                       37,
-	"LoanBrokerCoverDeposit":            76,
-	"MPTokenIssuanceDestroy":            55,
-	"PaymentChannelFund":                14,
-	"PermissionedDomainDelete":          63,
-	"XChainCommit":                      42,
-	"XChainModifyBridge":                47,
-	"CheckCancel":                       18,
-	"CredentialAccept":                  59,
-	"OfferCancel":                       8,
-	"UNLModify":                         102,
-	"VaultDeposit":                      68,
-	"Batch":                             71,
-	"LoanBrokerCoverClawback":           78,
-	"PaymentChannelCreate":              13,
-	"SetRegularKey":                     5,
-	"SignerListSet":                     12,
-	"AMMCreate":                         35,
-	"LoanDelete":                        81,
-	"MPTokenAuthorize":                  57,
-	"NFTokenCreateOffer":                27,
-	"OracleDelete":                      52,
-	"CredentialDelete":                  60,
-	"LoanPay":                           84,
-	"LoanSet":                           80,
-	"VaultClawback":                     70,
-	"VaultWithdraw":                     69,
-	"XChainClaim":                       43,
 	"AMMBid":                            39,
 	"AMMClawback":                       31,
+	"AMMCreate":                         35,
+	"AMMDelete":                         40,
+	"AMMDeposit":                        36,
+	"AMMVote":                           38,
+	"AMMWithdraw":                       37,
+	"AccountDelete":                     21,
 	"AccountSet":                        3,
+	"Batch":                             71,
+	"CheckCancel":                       18,
+	"CheckCash":                         17,
+	"CheckCreate":                       16,
+	"Clawback":                          30,
+	"CredentialAccept":                  59,
+	"CredentialCreate":                  58,
+	"CredentialDelete":                  60,
+	"DIDDelete":                         50,
+	"DIDSet":                            49,
+	"DelegateSet":                       64,
+	"DepositPreauth":                    19,
+	"EnableAmendment":                   100,
+	"EscrowCancel":                      4,
 	"EscrowCreate":                      1,
+	"EscrowFinish":                      2,
+	"Invalid":                           -1,
+	"LedgerStateFix":                    53,
+	"LoanBrokerCoverClawback":           78,
+	"LoanBrokerCoverDeposit":            76,
+	"LoanBrokerCoverWithdraw":           77,
+	"LoanBrokerDelete":                  75,
+	"LoanBrokerSet":                     74,
+	"LoanDelete":                        81,
+	"LoanManage":                        82,
+	"LoanPay":                           84,
+	"LoanSet":                           80,
+	"MPTokenAuthorize":                  57,
+	"MPTokenIssuanceCreate":             54,
+	"MPTokenIssuanceDestroy":            55,
+	"MPTokenIssuanceSet":                56,
+	"NFTokenAcceptOffer":                29,
+	"NFTokenBurn":                       26,
+	"NFTokenCancelOffer":                28,
+	"NFTokenCreateOffer":                27,
+	"NFTokenMint":                       25,
+	"NFTokenModify":                     61,
+	"OfferCancel":                       8,
+	"OfferCreate":                       7,
+	"OracleDelete":                      52,
+	"OracleSet":                         51,
+	"Payment":                           0,
+	"PaymentChannelClaim":               15,
+	"PaymentChannelCreate":              13,
+	"PaymentChannelFund":                14,
+	"PermissionedDomainDelete":          63,
+	"PermissionedDomainSet":             62,
+	"SetFee":                            101,
+	"SetRegularKey":                     5,
+	"SignerListSet":                     12,
+	"TicketCreate":                      10,
+	"TrustSet":                          20,
+	"UNLModify":                         102,
+	"VaultClawback":                     70,
+	"VaultCreate":                       65,
+	"VaultDelete":                       67,
+	"VaultDeposit":                      68,
+	"VaultSet":                          66,
+	"VaultWithdraw":                     69,
+	"XChainAccountCreateCommit":         44,
+	"XChainAddAccountCreateAttestation": 46,
+	"XChainAddClaimAttestation":         45,
+	"XChainClaim":                       43,
+	"XChainCommit":                      42,
+	"XChainCreateBridge":                48,
+	"XChainCreateClaimID":               41,
+	"XChainModifyBridge":                47,
 }
 
 var NameToField = map[string]Field{

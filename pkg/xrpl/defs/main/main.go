@@ -6,6 +6,7 @@ import (
 	"go/format"
 	"math"
 	"os"
+	"sort"
 )
 
 type defFile struct {
@@ -24,6 +25,9 @@ type field struct {
 }
 
 func parseField(r []any) (field, error) {
+	if len(r) < 2 {
+		return field{}, fmt.Errorf("field entry needs >=2 elements, got %d", len(r))
+	}
 	name, ok := r[0].(string)
 	if !ok {
 		return field{}, fmt.Errorf("reading name %v", r[0])
@@ -79,6 +83,7 @@ func main() {
 	if err != nil {
 		panic(fmt.Sprintf("building xrpl definitions: %v", err))
 	}
+	defer file.Close() //nolint:errcheck
 
 	dc := json.NewDecoder(file)
 
@@ -94,17 +99,19 @@ func main() {
 
 	generatedFile = fmt.Appendf(generatedFile, "package defs\n\n")
 
-	// Types
+	// Types — sort keys so the generated output is byte-identical across runs.
 	generatedFile = fmt.Appendf(generatedFile, "const (\n")
-	for k, v := range df.Types {
-		generatedFile = fmt.Appendf(generatedFile, "%s XType = %d\n", k, v)
+	typeKeys := sortedKeys(df.Types)
+	for _, k := range typeKeys {
+		generatedFile = fmt.Appendf(generatedFile, "%s XType = %d\n", k, df.Types[k])
 	}
 	generatedFile = fmt.Appendf(generatedFile, ")\n\n")
 
 	// Transaction Types
 	generatedFile = fmt.Appendf(generatedFile, "var TxTypeToValue = map[string]int32{\n")
-	for k, v := range df.TransactionTypes {
-		generatedFile = fmt.Appendf(generatedFile, "\"%s\":%d,\n", k, v)
+	txKeys := sortedKeys(df.TransactionTypes)
+	for _, k := range txKeys {
+		generatedFile = fmt.Appendf(generatedFile, "\"%s\":%d,\n", k, df.TransactionTypes[k])
 	}
 	generatedFile = fmt.Appendf(generatedFile, "}\n\n")
 
@@ -139,4 +146,13 @@ func main() {
 	if err != nil {
 		panic(fmt.Sprintf("writing to definitions.go file: %v", err))
 	}
+}
+
+func sortedKeys[V any](m map[string]V) []string {
+	out := make([]string, 0, len(m))
+	for k := range m {
+		out = append(out, k)
+	}
+	sort.Strings(out)
+	return out
 }
