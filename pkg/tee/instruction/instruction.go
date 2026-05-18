@@ -5,6 +5,7 @@ import (
 	"crypto/ecdsa"
 	"errors"
 	"fmt"
+	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/common"
@@ -177,12 +178,26 @@ type Instruction struct {
 }
 
 // RecoverSignersPubKey recovers the signers public key from Data and Signature.
+// Rejects non-canonical (high-S) signatures so the recovered pubkey is unique
+// per (data, signature) — otherwise (r, s, v) and (r, N-s, v^1) recover the
+// same key, breaking replay protection when callers use the signature as a
+// uniqueness key.
 func (i Instruction) RecoverSignersPubKey() (*ecdsa.PublicKey, error) {
 	hash, err := i.Data.HashForSigning()
 	if err != nil {
 		return nil, err
 	}
 	signedHash := accounts.TextHash(hash[:])
+
+	if len(i.Signature) != 65 {
+		return nil, fmt.Errorf("signature must be 65 bytes, got %d", len(i.Signature))
+	}
+	r := new(big.Int).SetBytes(i.Signature[:32])
+	s := new(big.Int).SetBytes(i.Signature[32:64])
+	v := i.Signature[64]
+	if !crypto.ValidateSignatureValues(v, r, s, true) {
+		return nil, errors.New("non-canonical signature (high-S or zero scalar)")
+	}
 
 	return crypto.SigToPub(signedHash, i.Signature)
 }

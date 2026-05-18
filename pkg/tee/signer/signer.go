@@ -293,16 +293,15 @@ func signHandler(prv *ecdsa.PrivateKey, maxReqBodySize int64) http.HandlerFunc {
 
 		signatures, err := signHashes(rb.Hashes, prv)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "signing failed", http.StatusInternalServerError)
 			return
 		}
 		response := SignedBody{Signatures: signatures}
 
 		encoder := json.NewEncoder(w)
 
-		err = encoder.Encode(response)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+		if err := encoder.Encode(response); err != nil {
+			http.Error(w, "encoding response", http.StatusInternalServerError)
 			return
 		}
 	}
@@ -336,9 +335,8 @@ func idHandler(pubKey *ecdsa.PublicKey) http.HandlerFunc {
 		pk := pubKeyToStruct(pubKey)
 		encoder := json.NewEncoder(w)
 
-		err := encoder.Encode(pk)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+		if err := encoder.Encode(pk); err != nil {
+			http.Error(w, "encoding response", http.StatusInternalServerError)
 			return
 		}
 	}
@@ -353,7 +351,7 @@ func prepare(h http.Handler, ak apiKeys) http.Handler {
 			return
 		}
 
-		w.Header().Add("Content-Type", "application/json")
+		w.Header().Set("Content-Type", "application/json")
 		h.ServeHTTP(w, r)
 	})
 }
@@ -396,6 +394,11 @@ type DecryptedBody struct {
 // decryptHandler returns an HTTP handler that decrypts the cipher from the request body using the provided ECDSA private key.
 func decryptHandler(prv *ecdsa.PrivateKey, maxReqBodySize int64) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Header.Get("Content-Type") != "application/json" {
+			http.Error(w, "Content-Type must be application/json", http.StatusNotAcceptable)
+			return
+		}
+
 		r.Body = http.MaxBytesReader(w, r.Body, maxReqBodySize)
 
 		defer r.Body.Close() //nolint:errcheck // closing request body, error not actionable

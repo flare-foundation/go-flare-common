@@ -72,6 +72,7 @@ func preparePOSTRequest(t *testing.T, body any, endpoint string) *http.Request {
 
 	req, err := http.NewRequest(http.MethodPost, url+endpoint, bytes.NewBuffer(encodedBody))
 	require.NoError(t, err)
+	req.Header.Set("Content-Type", "application/json")
 
 	return req
 }
@@ -191,6 +192,7 @@ func TestSigner(t *testing.T) {
 
 		requestNoContentType := preparePOSTRequest(t, body, signEP)
 		requestNoContentType.Header.Set("X-API-KEY", apiKey)
+		requestNoContentType.Header.Del("Content-Type")
 
 		respFailNoContentType := sendRequest(t, requestNoContentType)
 		require.Equal(t, http.StatusNotAcceptable, respFailNoContentType.StatusCode)
