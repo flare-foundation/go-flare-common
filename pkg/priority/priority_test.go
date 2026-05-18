@@ -495,10 +495,7 @@ func TestDoubleWeights(t *testing.T) {
 		_, _ = pQueue.Add(ctx, i, wTup{-i, i})
 	}
 
-	time.Sleep(100 * time.Millisecond)
-
 	for range 100 {
-		time.Sleep(time.Millisecond)
 		pQueue.Dequeue(ctx, handle, nil)
 	}
 

@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net"
 	"net/http"
 	"net/http/httptest"
 	"sync"
@@ -15,6 +16,21 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/retry"
 	"github.com/stretchr/testify/require"
 )
+
+// waitForServerReady polls addr by TCP dial until the listener is up.
+func waitForServerReady(t *testing.T, addr string) {
+	t.Helper()
+	deadline := time.Now().Add(5 * time.Second)
+	for time.Now().Before(deadline) {
+		conn, err := net.DialTimeout("tcp", addr, 100*time.Millisecond)
+		if err == nil {
+			_ = conn.Close()
+			return
+		}
+		time.Sleep(5 * time.Millisecond)
+	}
+	t.Fatalf("server at %s not ready within deadline", addr)
+}
 
 func TestPOST(t *testing.T) {
 	port := 4912
@@ -88,7 +104,7 @@ func TestPOST(t *testing.T) {
 	url := fmt.Sprintf("http://localhost:%d/abs", port)
 
 	wg2.Wait()
-	time.Sleep(10 * time.Millisecond)
+	waitForServerReady(t, fmt.Sprintf("localhost:%d", port))
 	responseRaw, err := PostRawWithRetry[res](context.Background(), url, NoAPIKey, bytes.NewReader(reqMarshaled), Params{
 		Timeout:         3 * time.Second,
 		MaxResponseSize: 300,
