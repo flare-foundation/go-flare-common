@@ -18,8 +18,9 @@ type IndexedSignature struct {
 }
 
 // EncodeSignatures encodes indexed signature to be used in the finalization transaction input.
-// Signatures should be ordered by the indexes of their providers.
-// Signatures should be 65 bytes long, otherwise the function will panic.
+// Signatures must be ordered by strictly increasing Index in [0, math.MaxUint16].
+// Each Signature must be 65 bytes in [R || S || V-27] form; non-65-byte inputs
+// or invalid recids cause an error to be returned (no panic).
 func EncodeSignatures(signatures []IndexedSignature) ([]byte, error) {
 	buffer := bytes.NewBuffer(nil)
 	if len(signatures) > math.MaxUint16 {
@@ -65,6 +66,10 @@ func EncodeSignatures(signatures []IndexedSignature) ([]byte, error) {
 // An already-normalised V (0 or 1) underflows on subtraction; EIP-155
 // values (chainID*2 + 35 + {0,1}) and garbage bytes produce out-of-range
 // recids that downstream ecrecover would reject. Both are caught up front.
+//
+// This is a pure byte-layout transform; it does not enforce signature
+// canonicalisation. If the consumer is not ecrecover, callers must enforce
+// low-S (s <= N/2) themselves to avoid malleability (audit F-ENC2-4).
 func TransformSignatureVRStoRSV(vrs []byte) ([]byte, error) {
 	if len(vrs) != 65 {
 		return nil, fmt.Errorf("signature must be 65 bytes, got %d", len(vrs))
@@ -86,6 +91,10 @@ func TransformSignatureVRStoRSV(vrs []byte) ([]byte, error) {
 // secp256k1 recovery id values. Any other value would produce an out-of-spec
 // V byte (29-255) or, at the far edge, wrap to a low byte (e.g. recid 229 →
 // V 0) that masks the caller's input bug behind a "successful" transform.
+//
+// This is a pure byte-layout transform; it does not enforce signature
+// canonicalisation. If the consumer is not ecrecover, callers must enforce
+// low-S (s <= N/2) themselves to avoid malleability (audit F-ENC2-4).
 func TransformSignatureRSVtoVRS(rsv []byte) ([]byte, error) {
 	if len(rsv) != 65 {
 		return nil, fmt.Errorf("signature must be 65 bytes, got %d", len(rsv))
