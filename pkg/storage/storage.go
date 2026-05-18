@@ -20,8 +20,8 @@ type Cyclic[K constraints.Integer, T any] struct {
 }
 
 // Size is the size of cyclic storage.
-func (s *Cyclic[K, T]) Size() K {
-	return K(len(s.values))
+func (s *Cyclic[K, T]) Size() int {
+	return len(s.values)
 }
 
 // Store stores value with key to key (mod size).
