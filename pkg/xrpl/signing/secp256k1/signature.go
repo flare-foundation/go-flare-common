@@ -274,8 +274,11 @@ func (sig *SignatureWithRecovery) RSV() []byte {
 	return out
 }
 
-// Recover recovers signer's public key form signature and hash (has to be 32 bytes long).
+// Recover recovers signer's public key from signature and hash. hash must be 32 bytes.
 func (sig *SignatureWithRecovery) Recover(hash []byte) (*ecdsa.PublicKey, error) {
+	if len(hash) != 32 {
+		return nil, fmt.Errorf("hash must be 32 bytes, got %d", len(hash))
+	}
 	return crypto.SigToPub(hash, sig.RSV())
 }
 

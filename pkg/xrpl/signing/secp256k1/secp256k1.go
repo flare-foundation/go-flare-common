@@ -107,6 +107,11 @@ func PrvToPub(prv *ecdsa.PrivateKey) string {
 }
 
 // secp256k1PrivateToPub returns compressed public Key for ECDSA private key in byte slice.
+// PublicKey.X/Y are derived from D when missing so callers that only populate D do not nil-deref.
 func secp256k1PrvToPub(prv *ecdsa.PrivateKey) []byte {
+	if prv.X == nil || prv.Y == nil {
+		x, y := crypto.S256().ScalarBaseMult(prv.D.Bytes())
+		return toBytesCompressed(&ecdsa.PublicKey{Curve: crypto.S256(), X: x, Y: y})
+	}
 	return toBytesCompressed(&prv.PublicKey)
 }
