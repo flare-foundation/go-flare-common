@@ -81,7 +81,7 @@ func TestValidate(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := Validate(tt.url)
+			err := Validate(t.Context(), tt.url)
 			require.Error(t, err)
 			assert.Contains(t, err.Error(), tt.wantErr)
 		})
@@ -90,7 +90,7 @@ func TestValidate(t *testing.T) {
 
 func TestValidatePublicURL(t *testing.T) {
 	// This test requires network access; skip in isolated environments.
-	err := Validate("https://example.com")
+	err := Validate(t.Context(), "https://example.com")
 	assert.NoError(t, err)
 }
 

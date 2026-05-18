@@ -5,8 +5,10 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
+	"mime"
 	"net/http"
 	"slices"
 	"strings"
@@ -23,9 +25,13 @@ type APIKey struct {
 
 // Params configures HTTP request behavior.
 type Params struct {
-	Timeout         time.Duration     // maximal time to wait for a response
-	MaxResponseSize int64             // maximal response size in bytes
-	Transport       http.RoundTripper // if non-nil, used as the HTTP client transport
+	Timeout         time.Duration // maximal time to wait for a response
+	MaxResponseSize int64         // maximal response size in bytes; also caps the request body buffered by PostRawWithRetry
+	// Transport, if non-nil, is used as the HTTP client transport. When nil
+	// http.DefaultTransport is used, which performs no SSRF filtering — callers
+	// that proxy attacker-controlled URLs should wire safeurl.NewTransport()
+	// explicitly.
+	Transport http.RoundTripper
 
 	// NoRetryStatuses lists HTTP response statuses that must NOT trigger a retry
 	// in the *WithRetry helpers. The status and any error are still surfaced to
@@ -71,7 +77,7 @@ func PostRaw[T any](ctx context.Context, url string, apiKey APIKey, body io.Read
 	resOut.Status = resp.StatusCode
 
 	if resp.StatusCode != http.StatusOK {
-		if resp.Header.Get("Content-Type") == "text/plain; charset=utf-8" {
+		if isTextPlain(resp.Header.Get("Content-Type")) {
 			respLimited := &io.LimitedReader{R: resp.Body, N: p.MaxResponseSize}
 			buf := new(strings.Builder)
 			_, err := io.Copy(buf, respLimited)
@@ -98,10 +104,18 @@ func PostRaw[T any](ctx context.Context, url string, apiKey APIKey, body io.Read
 }
 
 // PostRawWithRetry sends a post request and retries on unsuccessful attempts according to retry parameters.
+// The request body is fully buffered up to p.MaxResponseSize to enable retries; oversize bodies are rejected.
 func PostRawWithRetry[T any](ctx context.Context, url string, apiKey APIKey, body io.Reader, p Params, acceptableFail []int, rp retry.Params) (Response[T], error) {
-	bodyBytes, err := io.ReadAll(body)
+	if p.MaxResponseSize <= 0 {
+		return Response[T]{}, errors.New("MaxResponseSize must be set to buffer retry body")
+	}
+	limited := &io.LimitedReader{R: body, N: p.MaxResponseSize + 1}
+	bodyBytes, err := io.ReadAll(limited)
 	if err != nil {
 		return Response[T]{}, fmt.Errorf("reading request body: %w", err)
+	}
+	if int64(len(bodyBytes)) > p.MaxResponseSize {
+		return Response[T]{}, fmt.Errorf("request body exceeds MaxResponseSize (%d bytes)", p.MaxResponseSize)
 	}
 
 	fn := func() (Response[T], error) {
@@ -109,6 +123,20 @@ func PostRawWithRetry[T any](ctx context.Context, url string, apiKey APIKey, bod
 	}
 
 	return executeWithRetry(ctx, fn, p.NoRetryStatuses, acceptableFail, rp)
+}
+
+// isTextPlain reports whether contentType is a text/plain media type, ignoring
+// charset and whitespace differences. It tolerates rfc-compliant variants like
+// "text/plain;charset=utf-8" and "text/plain; charset=UTF-8".
+func isTextPlain(contentType string) bool {
+	if contentType == "" {
+		return false
+	}
+	mediaType, _, err := mime.ParseMediaType(contentType)
+	if err != nil {
+		return false
+	}
+	return mediaType == "text/plain"
 }
 
 // Post sends a post request with marshaled body and apiKey in header to url and unmarshals the response of type T.

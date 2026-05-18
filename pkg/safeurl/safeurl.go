@@ -24,7 +24,10 @@ import (
 // build the client with NewTransport or NewClient — those validate every
 // resolved IP again inside the dialer, so the validated address is the
 // connected address.
-func Validate(rawURL string) error {
+//
+// The DNS lookup honors ctx; a cancelled or expired ctx aborts the lookup
+// instead of waiting for the OS resolver to time out.
+func Validate(ctx context.Context, rawURL string) error {
 	u, err := url.Parse(rawURL)
 	if err != nil {
 		return fmt.Errorf("parsing URL: %w", err)
@@ -39,7 +42,7 @@ func Validate(rawURL string) error {
 		return errors.New("empty host")
 	}
 
-	ips, err := net.LookupHost(host)
+	ips, err := net.DefaultResolver.LookupHost(ctx, host)
 	if err != nil {
 		return fmt.Errorf("resolving host %q: %w", host, err)
 	}
