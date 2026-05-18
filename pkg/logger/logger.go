@@ -94,10 +94,10 @@ func createSugared(config Config) *zap.SugaredLogger {
 // automatically called during fatal or panic log events. If you need to manually
 // synchronize the logger at other points in your application, you can invoke this function as needed.
 func SyncFileLogger() {
-	current().Infof("Syncing file logger.")
-	err := current().Sync()
-	if err != nil {
-		current().Infof("Failed to sync logger: %v", err)
+	l := current()
+	l.Infof("Syncing file logger.")
+	if err := l.Sync(); err != nil {
+		l.Infof("Failed to sync logger: %v", err)
 	}
 }
 
