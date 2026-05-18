@@ -493,6 +493,9 @@ func mptToJSON(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
 		return nil, errors.New("mpt value too large")
 	}
 
+	// Both 0x20+0 (sign-bit-clear, zero mantissa) and 0x60+0 decode here to "0"
+	// — non-canonical relative to rippled's preferred 0x60 zero, but the
+	// duplicate decoding is harmless on this side. Encode always emits 0x60.
 	valueStr := bv.String()
 	if firstByte&signBitMask == 0 && bv.Sign() != 0 {
 		valueStr = "-" + valueStr

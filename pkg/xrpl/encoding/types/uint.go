@@ -213,7 +213,7 @@ func convertInt64(value any, t string) (int64, error) {
 	case int64:
 		return value, nil
 	case uint64:
-		if value > 1<<63 {
+		if value >= 1<<63 {
 			return 0, &InvalidTypeError{
 				t: t,
 				v: value,
@@ -221,7 +221,7 @@ func convertInt64(value any, t string) (int64, error) {
 		}
 		return int64(value), nil
 	case float32:
-		if float64(value) != math.Ceil(float64(value)) || value > 1<<63 || -value > 1<<63 {
+		if float64(value) != math.Ceil(float64(value)) || value >= 1<<63 || -value >= 1<<63 {
 			return 0, &InvalidTypeError{
 				t: t,
 				v: value,
@@ -229,7 +229,7 @@ func convertInt64(value any, t string) (int64, error) {
 		}
 		return int64(value), nil
 	case float64:
-		if value != math.Ceil(value) || value > 1<<63 || -value > 1<<63 {
+		if value != math.Ceil(value) || value >= 1<<63 || -value >= 1<<63 {
 			return 0, &InvalidTypeError{
 				t: t,
 				v: value,
