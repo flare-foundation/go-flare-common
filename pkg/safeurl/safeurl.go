@@ -25,8 +25,7 @@ import (
 // resolved IP again inside the dialer, so the validated address is the
 // connected address.
 //
-// The DNS lookup honors ctx; a cancelled or expired ctx aborts the lookup
-// instead of waiting for the OS resolver to time out.
+// The DNS lookup honors ctx.
 func Validate(ctx context.Context, rawURL string) error {
 	u, err := url.Parse(rawURL)
 	if err != nil {

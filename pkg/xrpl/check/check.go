@@ -88,8 +88,7 @@ type JSONRPC struct {
 	Transport http.RoundTripper
 }
 
-// Info gets account info for the XRPL address. ctx governs the HTTP request
-// lifetime; an unresponsive rippled cancels along with ctx.
+// Info gets account info for the XRPL address.
 func (jr JSONRPC) Info(ctx context.Context, address string) (AccountInfoResponse, error) {
 	request := AccountInfoRequest{
 		Method: accountInfoMethod,

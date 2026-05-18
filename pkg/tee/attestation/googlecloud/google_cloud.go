@@ -254,9 +254,7 @@ func (c *GoogleTeeClaims) Apply(p Policy) error {
 	if _, ok := p.AllowedImageIDs[ch]; !ok {
 		return fmt.Errorf("image_id %s not in allowlist", ch.Hex())
 	}
-	// WARNING: empty p.EATNonce silently disables cross-deployment replay
-	// binding. Set EATNonce to a per-deployment challenge unless the caller
-	// has another mechanism guaranteeing token freshness.
+	// WARNING: empty p.EATNonce silently skips replay binding.
 	if p.EATNonce != "" {
 		if !slices.Contains([]string(c.EATNonce), p.EATNonce) {
 			return errors.New("eat_nonce does not contain expected challenge")

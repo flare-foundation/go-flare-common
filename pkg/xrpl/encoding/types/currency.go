@@ -77,10 +77,8 @@ func serializeNonstandardCode(code string) ([]byte, error) {
 	return out, nil
 }
 
-// deserializeCurrency decodes the 20-byte currency field. The 3-char ISO
-// path is enforced symmetrically with serializeStandardCode: the 3 bytes
-// must match StandardCodeRegex, otherwise the field is treated as a binary
-// nonstandard code (hex-encoded) so Decode∘Encode is identity-preserving.
+// deserializeCurrency decodes the 20-byte currency field.
+// 3-char ISO codes must match StandardCodeRegex (symmetric with serializeStandardCode); other values round-trip as hex.
 func deserializeCurrency(c []byte) (string, error) {
 	if len(c) != 20 {
 		return "", fmt.Errorf("invalid currency length %v should be 20", len(c))

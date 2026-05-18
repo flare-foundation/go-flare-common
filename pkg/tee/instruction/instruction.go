@@ -178,10 +178,7 @@ type Instruction struct {
 }
 
 // RecoverSignersPubKey recovers the signers public key from Data and Signature.
-// Rejects non-canonical (high-S) signatures so the recovered pubkey is unique
-// per (data, signature) — otherwise (r, s, v) and (r, N-s, v^1) recover the
-// same key, breaking replay protection when callers use the signature as a
-// uniqueness key.
+// Non-canonical (high-S) signatures are rejected to keep the (data, signature) pair unique.
 func (i Instruction) RecoverSignersPubKey() (*ecdsa.PublicKey, error) {
 	hash, err := i.Data.HashForSigning()
 	if err != nil {

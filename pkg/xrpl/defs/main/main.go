@@ -99,7 +99,7 @@ func main() {
 
 	generatedFile = fmt.Appendf(generatedFile, "package defs\n\n")
 
-	// Types — sort keys so the generated output is byte-identical across runs.
+	// Sort keys for deterministic output.
 	generatedFile = fmt.Appendf(generatedFile, "const (\n")
 	typeKeys := sortedKeys(df.Types)
 	for _, k := range typeKeys {

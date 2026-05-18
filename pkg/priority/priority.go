@@ -15,8 +15,7 @@ type backOff func(int) time.Duration // custom function defining timeOut after a
 
 const bucketSize = 2
 
-// Logger is the subset of logger.Logger used by PriorityQueue.
-// logger.Nop satisfies it directly (Panic and Panicf propagate as panics).
+// Logger is the subset of logger.Logger used by PriorityQueue; logger.Nop satisfies it.
 type Logger interface {
 	Infof(string, ...any)
 	Errorf(string, ...any)

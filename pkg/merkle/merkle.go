@@ -43,9 +43,7 @@ type Tree []common.Hash
 // the rehashed leaves and the internal nodes are plain keccak256 outputs.
 // Caller-side domain separation (see package doc) is still required.
 //
-// Build sorts the input hashes and silently drops duplicates, so the leaf
-// position in the resulting tree has no relation to the caller's input order.
-// Use ProofFromHash to look proofs up by leaf value.
+// Inputs are sorted and de-duplicated, so leaf position is not preserved; use ProofFromHash to look up by value.
 func Build(hashes []common.Hash, initialHash bool) Tree {
 	if initialHash {
 		hashes = mapSingleHash(hashes)
@@ -67,8 +65,7 @@ func Build(hashes []common.Hash, initialHash bool) Tree {
 	sortedHashes = removeDuplicates(sortedHashes)
 	n = len(sortedHashes)
 
-	// 2*n-1 overflows int on 32-bit platforms when n > 2^30. The make below
-	// would then panic with a misleading "len out of range"; reject early.
+	// Reject n that would overflow 2*n-1 (32-bit only).
 	if n > (int(^uint(0)>>1)-1)/2+1 {
 		return Tree{}
 	}
@@ -99,10 +96,8 @@ func removeDuplicates(hashes []common.Hash) []common.Hash {
 // BuildFromHex builds the Merkle tree from a slice of hex-encoded leaf hashes.
 // If initialHash is true, each leaf hash is hashed again before building the tree.
 //
-// Each hex value must decode to exactly 32 bytes (with or without a 0x prefix);
-// short / long inputs that common.HexToHash would silently pad or truncate are
-// rejected with an error. The same leaf-domain-separation precondition applies;
-// see the package doc.
+// Each hex value must decode to exactly 32 bytes (with or without 0x prefix); shorter or longer inputs are rejected.
+// The same leaf-domain precondition as Build applies (see the package doc).
 func BuildFromHex(hexValues []string, initialHash bool) (Tree, error) {
 	hashes := make([]common.Hash, 0, len(hexValues))
 	for i, v := range hexValues {
@@ -173,8 +168,7 @@ func (t Tree) LeavesCount() int {
 	return (len(t) + 1) / 2
 }
 
-// Leaves returns all leaves in a slice. The returned slice is a fresh copy;
-// mutating it does not affect the underlying tree.
+// Leaves returns a fresh copy of all leaves; mutating the result does not affect the tree.
 func (t Tree) Leaves() []common.Hash {
 	numLeaves := t.LeavesCount()
 	if numLeaves == 0 {
