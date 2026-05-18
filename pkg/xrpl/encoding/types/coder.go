@@ -353,6 +353,10 @@ func decodeNext(b *bytes.Buffer, depth int) (string, any, error) {
 
 // Decode deserializes an XRPL binary blob into a map of field names to values.
 func Decode(blob []byte) (map[string]any, error) {
+	if len(blob) == 0 {
+		return nil, errors.New("empty blob")
+	}
+
 	out := make(map[string]any)
 
 	b := bytes.NewBuffer(blob)
