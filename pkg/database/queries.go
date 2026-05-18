@@ -101,8 +101,9 @@ func fetchLatestLogsByAddressAndTopic0(
 type LogsFullParams struct {
 	Address common.Address
 	Topics  [4]common.Hash
-	Number  int // -1 for unlimited
-
+	// Number bounds the number of logs returned, passed directly to gorm Limit.
+	// Use -1 for unlimited; 0 returns no rows (gorm convention).
+	Number int
 }
 
 // FetchLogsFull returns the last <Number> logs with Topics emitted by Address.

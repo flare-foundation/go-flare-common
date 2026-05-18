@@ -3,7 +3,9 @@ package database
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/flare-foundation/go-flare-common/pkg/logger"
@@ -56,7 +58,8 @@ func Connect(cfg *Config) (*gorm.DB, error) {
 	}
 	db, err := gorm.Open(gormMysql.Open(dbConfig.FormatDSN()), &gormConfig)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("opening mysql connection to %s/%s as %s: %w",
+			dbConfig.Addr, dbConfig.DBName, dbConfig.User, redactPassword(err, cfg.Password))
 	}
 
 	sqlDB, err := db.DB()
@@ -66,6 +69,21 @@ func Connect(cfg *Config) (*gorm.DB, error) {
 	applyPoolConfig(sqlDB, cfg.Pool)
 
 	return db, nil
+}
+
+// redactPassword returns an error whose message has every occurrence of password
+// replaced with "[REDACTED]". This guards against driver errors that embed the
+// DSN in their text (the DSN contains username:password@…), which a caller's
+// error log would otherwise leak.
+func redactPassword(err error, password string) error {
+	if err == nil || password == "" {
+		return err
+	}
+	msg := err.Error()
+	if !strings.Contains(msg, password) {
+		return err
+	}
+	return errors.New(strings.ReplaceAll(msg, password, "[REDACTED]"))
 }
 
 // applyPoolConfig sets database/sql pool knobs from p. Zero values are left untouched.
@@ -95,8 +113,9 @@ type SyncParams struct {
 // WaitCIndexerToSync waits for C-chain indexer DB to sync.
 //
 // If db is not up to date, the check is performed again after 1/20 of the delay (bound by MaxSleepTime and MinSleepTime).
-// Retries specifies at most how many times the check is done.
-// If the check does not succeed by then, error is returned.
+// At most Retries+1 checks are performed: Retries inside the loop with a sleep between
+// iterations, plus one final check after the loop. Retries=0 still performs one check.
+// If none succeed, an error is returned.
 //
 // Logger for logging can be provided. If it is nil, no logging is done.
 func WaitCIndexerToSync(ctx context.Context, db *gorm.DB, params SyncParams, l syncLogger) error {
@@ -107,7 +126,7 @@ func WaitCIndexerToSync(ctx context.Context, db *gorm.DB, params SyncParams, l s
 	k := 0
 	for k < params.Retries {
 		if k > 0 {
-			l.Debugf("Checking database for %v/%v time", k, params.Retries+1)
+			l.Debugf("Checking database for %d/%d time", k+1, params.Retries+1)
 		}
 		state, err := FetchState(ctx, db, nil)
 		if err != nil {
