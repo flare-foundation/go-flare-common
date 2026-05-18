@@ -67,6 +67,8 @@ func (s *Storage) Add(sp *SigningPolicy) error {
 			if sp.RewardEpochID == 0 || prev.RewardEpochID != sp.RewardEpochID-1 {
 				return fmt.Errorf("expected reward epoch ID %d, got %d", prev.RewardEpochID+1, sp.RewardEpochID)
 			}
+		} else if sp.RewardEpochID < prev.RewardEpochID {
+			return fmt.Errorf("reward epoch ID %d lower than previous %d", sp.RewardEpochID, prev.RewardEpochID)
 		}
 		// should be sorted by voting round ID, should not happen
 		if sp.StartVotingRoundID < prev.StartVotingRoundID {
@@ -98,7 +100,7 @@ func (s *Storage) RemoveBefore(votingRoundID uint32) []uint32 {
 	defer s.mu.Unlock()
 
 	var removedRewardEpochIDs []uint32
-	for len(s.spList) > 1 && s.spList[1].StartVotingRoundID < votingRoundID {
+	for len(s.spList) > 1 && s.spList[1].StartVotingRoundID <= votingRoundID {
 		removedRewardEpochIDs = append(removedRewardEpochIDs, s.spList[0].RewardEpochID)
 		s.spList[0] = nil
 		s.spList = s.spList[1:]

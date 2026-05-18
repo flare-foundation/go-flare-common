@@ -25,7 +25,8 @@ var (
 )
 
 func TestInitialHashSeed(t *testing.T) {
-	seed := voters.InitialHashSeed(big.NewInt(1), 2, 3)
+	seed, err := voters.InitialHashSeed(big.NewInt(1), 2, 3)
+	require.NoError(t, err)
 	if seed != common.HexToHash("0x6e0c627900b24bd432fe7b1f713f1b0744091a646a9fe4a65a18dfed21f2949c") {
 		t.Errorf("initial hash seed is not correct")
 	}
@@ -109,7 +110,8 @@ func TestBinarySearch(t *testing.T) {
 func TestSelectVoters(t *testing.T) {
 	vs, err := voters.NewSet(testVoters, testWeights, nil)
 	require.NoError(t, err)
-	seed := voters.InitialHashSeed(big.NewInt(1), 1, 1)
+	seed, err := voters.InitialHashSeed(big.NewInt(1), 1, 1)
+	require.NoError(t, err)
 	voterSet, err := vs.RandomSelectThresholdWeightVoters(seed, 3000)
 	require.NoError(t, err)
 

@@ -163,15 +163,27 @@ func FromRawBytes(b []byte) (*SigningPolicy, int, error) {
 }
 
 // Hash computes hash of a signing policy from signingPolicyBytes.
+//
+// The first two 32-byte blocks are always combined. Inputs shorter than 64 bytes
+// are right-zero-padded so the function does not slice past the end (production
+// signing-policy blobs are always >=43 bytes and the helper here normalises any
+// shorter input to a well-defined result).
 func Hash(b []byte) []byte {
-	if len(b)%32 != 0 {
-		padded := make([]byte, len(b)+32-len(b)%32)
+	const block = 32
+	minLen := 2 * block
+	switch {
+	case len(b) < minLen:
+		padded := make([]byte, minLen)
+		copy(padded, b)
+		b = padded
+	case len(b)%block != 0:
+		padded := make([]byte, len(b)+block-len(b)%block)
 		copy(padded, b)
 		b = padded
 	}
-	hash := crypto.Keccak256(b[:32], b[32:64])
-	for i := 2; i < len(b)/32; i++ {
-		hash = crypto.Keccak256(hash, b[i*32:(i+1)*32])
+	hash := crypto.Keccak256(b[:block], b[block:2*block])
+	for i := 2; i < len(b)/block; i++ {
+		hash = crypto.Keccak256(hash, b[i*block:(i+1)*block])
 	}
 	return hash
 }

@@ -82,10 +82,14 @@ func NewSet(voters []common.Address, weights []uint16, submitToSigningAddress ma
 // InitialHashSeed returns initial seed for voter selection.
 //
 // Seed is keccak256 hash of rewardEpochSeed, protocolID, and votingRoundID each written in its own 32-byte slot.
-func InitialHashSeed(rewardEpochSeed *big.Int, protocolID byte, votingRoundID uint32) common.Hash {
+// rewardEpochSeed must be non-negative and fit in 256 bits; otherwise an error is returned rather than letting FillBytes panic.
+func InitialHashSeed(rewardEpochSeed *big.Int, protocolID byte, votingRoundID uint32) (common.Hash, error) {
 	seed := make([]byte, 96)
 	// 0-31 bytes are filled with the reward epoch seed
 	if rewardEpochSeed != nil {
+		if rewardEpochSeed.Sign() < 0 || rewardEpochSeed.BitLen() > 256 {
+			return common.Hash{}, fmt.Errorf("rewardEpochSeed out of 256-bit range (bitlen=%d)", rewardEpochSeed.BitLen())
+		}
 		rewardEpochSeed.FillBytes(seed[0:32])
 	}
 	// 32-63 bytes are filled with the protocol ID
@@ -93,12 +97,15 @@ func InitialHashSeed(rewardEpochSeed *big.Int, protocolID byte, votingRoundID ui
 	// 64-95 bytes are filled with the voting round ID
 	binary.BigEndian.PutUint32(seed[92:96], votingRoundID)
 
-	return crypto.Keccak256Hash(seed)
+	return crypto.Keccak256Hash(seed), nil
 }
 
 // SelectVoters returns a set of signingPolicyAddresses that are prioritized to finalize.
 func (vs *Set) SelectVoters(rewardEpochSeed *big.Int, protocolID byte, votingRoundID uint32, thresholdBIPS uint16) (map[common.Address]bool, error) {
-	seed := InitialHashSeed(rewardEpochSeed, protocolID, votingRoundID)
+	seed, err := InitialHashSeed(rewardEpochSeed, protocolID, votingRoundID)
+	if err != nil {
+		return nil, fmt.Errorf("computing seed: %w", err)
+	}
 	return vs.RandomSelectThresholdWeightVoters(seed, thresholdBIPS)
 }
 
@@ -139,7 +146,11 @@ func (vs *Set) selectVoterIndex(randomNumber common.Hash) int {
 // BinarySearch finds the highest index of the threshold that is less than or equal to the value.
 //
 // value has to be lower then vs.totalWeight otherwise, the function will panic.
+// Returns -1 if the voter set is empty.
 func (vs *Set) BinarySearch(value uint16) int {
+	if len(vs.thresholds) == 0 {
+		return -1
+	}
 	if value > vs.TotalWeight {
 		panic("Value must be between 0 and total weight")
 	}
@@ -200,6 +211,9 @@ func (vs *Set) VoterWeightForAddress(a common.Address) uint16 {
 }
 
 // Voters returns a slice of signing policy addresses of voters.
+// The returned slice is a fresh copy; mutating it does not affect the Set.
 func (vs *Set) Voters() []common.Address {
-	return vs.voters
+	out := make([]common.Address, len(vs.voters))
+	copy(out, vs.voters)
+	return out
 }
