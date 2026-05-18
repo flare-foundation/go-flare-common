@@ -200,8 +200,6 @@ func (q *PriorityQueue[T]) DequeueAsync(ctx context.Context, handler func(contex
 		if q.workersSem != nil {
 			defer q.decrementWorkers()
 		}
-		// Local err so the closure does not mutate the named return; the
-		// caller has already returned by the time this runs.
 		if err := handler(ctx, item.value); err != nil {
 			q.handleError(ctx, item)
 		}

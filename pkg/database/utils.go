@@ -71,10 +71,7 @@ func Connect(cfg *Config) (*gorm.DB, error) {
 	return db, nil
 }
 
-// redactPassword returns an error whose message has every occurrence of password
-// replaced with "[REDACTED]". This guards against driver errors that embed the
-// DSN in their text (the DSN contains username:password@…), which a caller's
-// error log would otherwise leak.
+// redactPassword replaces every occurrence of password in err's message with "[REDACTED]".
 func redactPassword(err error, password string) error {
 	if err == nil || password == "" {
 		return err

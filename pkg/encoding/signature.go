@@ -67,9 +67,7 @@ func EncodeSignatures(signatures []IndexedSignature) ([]byte, error) {
 // values (chainID*2 + 35 + {0,1}) and garbage bytes produce out-of-range
 // recids that downstream ecrecover would reject. Both are caught up front.
 //
-// This is a pure byte-layout transform; it does not enforce signature
-// canonicalisation. If the consumer is not ecrecover, callers must enforce
-// low-S (s <= N/2) themselves to avoid malleability.
+// Byte-layout transform only; callers feeding non-ecrecover verifiers must enforce low-S themselves.
 func TransformSignatureVRStoRSV(vrs []byte) ([]byte, error) {
 	if len(vrs) != 65 {
 		return nil, fmt.Errorf("signature must be 65 bytes, got %d", len(vrs))
@@ -92,9 +90,7 @@ func TransformSignatureVRStoRSV(vrs []byte) ([]byte, error) {
 // V byte (29-255) or, at the far edge, wrap to a low byte (e.g. recid 229 →
 // V 0) that masks the caller's input bug behind a "successful" transform.
 //
-// This is a pure byte-layout transform; it does not enforce signature
-// canonicalisation. If the consumer is not ecrecover, callers must enforce
-// low-S (s <= N/2) themselves to avoid malleability.
+// Byte-layout transform only; callers feeding non-ecrecover verifiers must enforce low-S themselves.
 func TransformSignatureRSVtoVRS(rsv []byte) ([]byte, error) {
 	if len(rsv) != 65 {
 		return nil, fmt.Errorf("signature must be 65 bytes, got %d", len(rsv))

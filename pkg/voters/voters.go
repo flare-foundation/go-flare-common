@@ -82,7 +82,7 @@ func NewSet(voters []common.Address, weights []uint16, submitToSigningAddress ma
 // InitialHashSeed returns initial seed for voter selection.
 //
 // Seed is keccak256 hash of rewardEpochSeed, protocolID, and votingRoundID each written in its own 32-byte slot.
-// rewardEpochSeed must be non-negative and fit in 256 bits; otherwise an error is returned rather than letting FillBytes panic.
+// Returns an error if rewardEpochSeed is negative or exceeds 256 bits.
 func InitialHashSeed(rewardEpochSeed *big.Int, protocolID byte, votingRoundID uint32) (common.Hash, error) {
 	seed := make([]byte, 96)
 	// 0-31 bytes are filled with the reward epoch seed
@@ -210,8 +210,7 @@ func (vs *Set) VoterWeightForAddress(a common.Address) uint16 {
 	return d.Weight
 }
 
-// Voters returns a slice of signing policy addresses of voters.
-// The returned slice is a fresh copy; mutating it does not affect the Set.
+// Voters returns a fresh copy of voter addresses; mutating the result does not affect the Set.
 func (vs *Set) Voters() []common.Address {
 	out := make([]common.Address, len(vs.voters))
 	copy(out, vs.voters)

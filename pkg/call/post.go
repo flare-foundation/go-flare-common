@@ -27,10 +27,7 @@ type APIKey struct {
 type Params struct {
 	Timeout         time.Duration // maximal time to wait for a response
 	MaxResponseSize int64         // maximal response size in bytes; also caps the request body buffered by PostRawWithRetry
-	// Transport, if non-nil, is used as the HTTP client transport. When nil
-	// http.DefaultTransport is used, which performs no SSRF filtering — callers
-	// that proxy attacker-controlled URLs should wire safeurl.NewTransport()
-	// explicitly.
+	// Transport sets the HTTP client transport. Nil uses http.DefaultTransport (no SSRF filtering); pass safeurl.NewTransport() to enable it.
 	Transport http.RoundTripper
 
 	// NoRetryStatuses lists HTTP response statuses that must NOT trigger a retry
@@ -125,9 +122,7 @@ func PostRawWithRetry[T any](ctx context.Context, url string, apiKey APIKey, bod
 	return executeWithRetry(ctx, fn, p.NoRetryStatuses, acceptableFail, rp)
 }
 
-// isTextPlain reports whether contentType is a text/plain media type, ignoring
-// charset and whitespace differences. It tolerates rfc-compliant variants like
-// "text/plain;charset=utf-8" and "text/plain; charset=UTF-8".
+// isTextPlain reports whether contentType is a text/plain media type, ignoring charset and whitespace.
 func isTextPlain(contentType string) bool {
 	if contentType == "" {
 		return false

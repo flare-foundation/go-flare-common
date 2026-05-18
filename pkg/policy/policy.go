@@ -164,10 +164,7 @@ func FromRawBytes(b []byte) (*SigningPolicy, int, error) {
 
 // Hash computes hash of a signing policy from signingPolicyBytes.
 //
-// The first two 32-byte blocks are always combined. Inputs shorter than 64 bytes
-// are right-zero-padded so the function does not slice past the end (production
-// signing-policy blobs are always >=43 bytes and the helper here normalises any
-// shorter input to a well-defined result).
+// Inputs shorter than 64 bytes are right-zero-padded to two 32-byte blocks.
 func Hash(b []byte) []byte {
 	const block = 32
 	minLen := 2 * block
