@@ -113,7 +113,15 @@ func nextDelay(p Params, j int) time.Duration {
 			jitter = 1
 		}
 		wobble := 1.0 + (rand.Float64()*2-1)*jitter
-		d = max(time.Duration(float64(d)*wobble), 0)
+		scaled := float64(d) * wobble
+		switch {
+		case scaled < 0:
+			d = 0
+		case scaled >= float64(math.MaxInt64):
+			d = math.MaxInt64
+		default:
+			d = time.Duration(scaled)
+		}
 	}
 	return d
 }
