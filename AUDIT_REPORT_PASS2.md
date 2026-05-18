@@ -1413,3 +1413,81 @@ Headline gaps after Pass 2 — recommend prioritising:
 4. **Database unbounded reads** (F-DB-1, F-DB-2) — OOM via public API of the shared lib.
 5. **Priority queue concurrency** (F-PRI-1, F-PRI-2) — missed-wakeup + post-cancel hang.
 6. **Aggregator weight vs count + data race** (F-AGG-1, F-AGG-3) — weighted multisig unreachable + concurrent-collection bugs.
+
+---
+
+# Pass 2 Low/Info closures (2026-05-18)
+
+Closing pass on the remaining Low (27) and Info (47) findings.
+Per-package commits between `25935d6` (pass-2 C/H/M baseline) and `9f01d52`.
+
+## Closures
+
+| Commit    | Package(s)                    | Findings                                                                       |
+| --------- | ----------------------------- | ------------------------------------------------------------------------------ |
+| `9805d03` | call, safeurl                 | F-CALL-2, F-CALL-3, F-CALL-4 (breaking), F-CALL-5                              |
+| `3303a06` | database                      | F-DB-5 (doc), F-DB-6, F-DB-8                                                   |
+| `1dd9e6f` | encoding                      | F-ENC2-4, F-ENC2-5                                                             |
+| `39b574b` | xrpl/signing                  | F-SIGNCURVE-4, F-SIGNCURVE-5, F-SIGNCURVE-7                                    |
+| `83f2c3a` | merkle                        | F-MERKLE-4, F-MERKLE-5, F-MERKLE-6 (breaking), F-MERKLE-8                      |
+| `4b5812d` | voters, policy                | F-POLICY-2, F-POLICY-3, F-POLICY-4, F-POLICY-5, F-POLICY-9, F-POLICY-10        |
+| `68481f5` | logger, events                | F-LOG-3, F-LOG-4                                                               |
+| `713709f` | priority, queue, heapt        | F-PRI-7 (msg only), F-PRI-8 (breaking), F-PRI-9, F-PRI-11, F-PRI-14 (breaking) |
+| `932d9bb` | storage, retry                | F-UTIL-2 (breaking), F-UTIL-5                                                  |
+| `da49ba2` | xrpl/defs, hash, address      | F-XLOW-2, F-XLOW-3, F-XLOW-4                                                   |
+| `af5d507` | xrpl/encoding                 | F-ENC-4 (doc), F-ENC-5, F-ENC-7, F-ENC-8, F-ENC-9                              |
+| `6d7fe6d` | xrpl/check, aggregator        | F-AGG-5 (breaking), F-AGG-6                                                    |
+| `d646208` | tee/signer, tee/instruction   | F-TEE-3, F-TEE-4, F-TEE-5, F-TEE-9                                             |
+| `d9ab3e5` | tee/xrpl, tee/attestation     | F-TEEX-2, F-TEEX-3 (doc), F-TEEX-5                                             |
+| `9f01d52` | xrpl/defs/main, abi_update.sh | F-META-3, F-META-4, F-META-5, F-META-6, F-META-7                               |
+
+Breaking-API changes introduced in this pass (compile-error at next out-of-tree bump):
+
+- `safeurl.Validate(rawURL string)` → `Validate(ctx, rawURL)`
+- `merkle.BuildFromHex(hex, init) Tree` → `(Tree, error)` and strict 32-byte input
+- `priority.New`/`NewWithLogger` return `*PriorityQueue` instead of value
+- `heapt.Remove(h, i) T` → `(T, bool)`
+- `storage.Cyclic.Size() K` → `() int`
+- `voters.InitialHashSeed(...)` now returns `(Hash, error)`
+- `xrpl/check.JSONRPC.Info(addr)` → `Info(ctx, addr)`
+- `priority` `logger` interface gained `Panicf` and was renamed to exported `Logger`
+
+## Already closed by pass-2 C/H/M
+
+Closed under existing pass-2 commits (verified, no new code needed): F-SIGN-3 (dup of F-SIGNCURVE-3, `631735e`), F-SIGNCURVE-3 (atomic.Pointer cache, `631735e`).
+
+## Verified-clean / explicit non-actions
+
+Recorded as verified, no commit needed:
+
+- `F-UTIL-9` (pkg/convert clean), `F-UTIL-10` (pkg/random clean) — package-level audits with no findings.
+- `F-POLICY-11` — non-issue (public material, no secret).
+- `F-POLICY-12` — intentional fail-fast at package init.
+- `F-TEE-6`, `F-TEE-7` — by design (TEE-resident signing oracle posture, key-zeroization out of scope).
+
+## Doc-only / deferred (no code change)
+
+These were left as code, with rationale captured either in this report, in `project_audit_progress` memory, or in doc comments:
+
+- `F-CALL-5` (doc), `F-CALL-6` (skipped — already protected by ctx in DialContext).
+- `F-DB-5` (doc — user kept the post-loop final check), `F-DB-7`, `F-DB-8`.
+- `F-MERKLE-7`, `F-MERKLE-9`, `F-MERKLE-10` — doc-only; package-level warning already covers leaf-domain risk.
+- `F-POLICY-6`, `F-POLICY-7`, `F-POLICY-8` — doc-only.
+- `F-LOG-5`, `F-LOG-6`, `F-LOG-7`, `F-LOG-8` — defensive notes, skipped.
+- `F-PRI-6` — defensive, skipped (every Pop is preceded by `Len() > 0`).
+- `F-PRI-7` — message-only improvement; panic-on-imbalance retained per user preference.
+- `F-PRI-10`, `F-PRI-12`, `F-PRI-13` — doc-only.
+- `F-UTIL-4`, `F-UTIL-6`, `F-UTIL-7`, `F-UTIL-8` — defensive/doc-only.
+- `F-XLOW-1`, `F-XLOW-5` — doc notes about exported-API contracts.
+- `F-ENC-4` — doc; the existing `TestMPTReservedBitsRejected` documents 0x20+0 as intentional permissive behaviour.
+- `F-ENC-6`, `F-ENC-10`, `F-ENC-11` — doc-only.
+- `F-AGG-7`, `F-AGG-8` — defensive notes.
+- `F-TEE-8`, `F-TEE-10`, `F-TEE-11`, `F-TEE-12`, `F-TEE-13` — defensive/doc.
+- `F-TEEX-3` (doc-warning kept; strict rejection broke existing test surface), `F-TEEX-4` — doc-only.
+- `F-META-8`, `F-META-9`, `F-META-10` — abigen-generated boilerplate / config note.
+- `F-SIGN-2` (= `F-SIGNCURVE-8`), `F-SIGN-4`, `F-SIGNCURVE-6`, `F-SIGNCURVE-8` — preconditions already documented; no code change.
+
+## Final verification (2026-05-18)
+
+- `go test ./...` — all packages pass.
+- `golangci-lint run ./...` — 0 issues.
