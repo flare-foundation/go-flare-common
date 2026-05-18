@@ -78,11 +78,11 @@ func IDToAddress(id []byte) string {
 func PubToAddress(pub string) (string, error) {
 	pubBytes, err := hex.DecodeString(pub)
 	if err != nil {
-		return "", fmt.Errorf("decoding prv key: %w", err)
+		return "", fmt.Errorf("decoding pub key: %w", err)
 	}
 
 	if len(pubBytes) != 33 {
-		return "", errors.New("wrong private key length. Should be 33 bytes long")
+		return "", errors.New("wrong public key length. Should be 33 bytes long")
 	}
 
 	if !slices.Contains([]byte{0x03, 0x02, 0xed}, pubBytes[0]) {

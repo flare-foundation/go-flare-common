@@ -58,19 +58,16 @@ func (f Field) ID() ([]byte, error) {
 	t := uint8(f.Type)
 	n := uint8(f.Nth)
 
-	var b []byte
-	var err error
 	switch {
 	case t < 16 && n < 16:
-		b = []byte{t<<4 | n}
+		return []byte{t<<4 | n}, nil
 	case t < 16: // n >= 16
-		b = []byte{t << 4, n}
+		return []byte{t << 4, n}, nil
 	case n < 16: // t >= 16
-		b = []byte{n, t}
+		return []byte{n, t}, nil
 	default: // t,n >= 16
-		b = []byte{0, t, n}
+		return []byte{0, t, n}, nil
 	}
-	return b, err
 }
 
 // ReadID reads a field/type ID pair from the buffer according to the XRPL binary format.

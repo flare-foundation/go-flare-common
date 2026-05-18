@@ -25,8 +25,7 @@ func DoubleSha256(b []byte) []byte {
 }
 
 // Sha256RipeMD160 computes RipeMD160(sha256(b)).
-//
-// ONLY FOR LEGACY PURPOSES.
+// This is the canonical XRPL accountID derivation from a compressed pubkey.
 func Sha256RipeMD160(b []byte) []byte {
 	ripe := ripemd160.New() //nolint:gosec
 	sha := sha256.New()
