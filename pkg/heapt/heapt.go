@@ -58,9 +58,13 @@ func Pop[T any](h Interface[T]) (T, bool) {
 
 // Remove removes and returns the element at index i from the heap.
 //
-// Panics if i is out of bounds.
+// Returns the zero value and false if i is out of bounds.
 // The complexity is O(log n) where n = h.Len().
-func Remove[T any](h Interface[T], i int) T {
+func Remove[T any](h Interface[T], i int) (T, bool) {
+	var zero T
+	if i < 0 || i >= h.Len() {
+		return zero, false
+	}
 	n := h.Len() - 1
 	if n != i {
 		h.Swap(i, n)
@@ -68,7 +72,7 @@ func Remove[T any](h Interface[T], i int) T {
 			up(h, i)
 		}
 	}
-	return h.Pop()
+	return h.Pop(), true
 }
 
 // Fix re-establishes the heap ordering after the element at index i has changed its value.

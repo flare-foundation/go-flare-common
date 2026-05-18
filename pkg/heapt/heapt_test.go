@@ -122,7 +122,8 @@ func TestRemove0(t *testing.T) {
 	h.verify(t, 0)
 	for h.Len() > 0 {
 		i := h.Len() - 1
-		x := heapt.Remove(h, i)
+		x, ok := heapt.Remove(h, i)
+		require.True(t, ok)
 		require.Equalf(t, i, x, "%d.th remove got %d; want %d", i, x, i)
 		h.verify(t, 0)
 	}
@@ -137,7 +138,8 @@ func TestRemove1(t *testing.T) {
 	h.verify(t, 0)
 
 	for i := 0; h.Len() > 0; i++ {
-		x := heapt.Remove(h, 0)
+		x, ok := heapt.Remove(h, 0)
+		require.True(t, ok)
 		require.Equalf(t, i, x, "Remove(0) got %d; want %d", x, i)
 		h.verify(t, 0)
 	}
@@ -155,7 +157,9 @@ func TestRemove2(t *testing.T) {
 
 	m := make(map[int]bool)
 	for h.Len() > 0 {
-		m[heapt.Remove(h, (h.Len()-1)/2)] = true
+		x, ok := heapt.Remove(h, (h.Len()-1)/2)
+		require.True(t, ok)
+		m[x] = true
 		h.verify(t, 0)
 	}
 
