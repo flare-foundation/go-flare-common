@@ -348,7 +348,7 @@ func TestInfoHTTPStub(t *testing.T) {
 	defer srv.Close()
 
 	rpc := JSONRPC{URL: srv.URL}
-	resp, err := rpc.Info("rpo6E7mHvQ4xzeEBy8ViVzbG8q251ztKB8")
+	resp, err := rpc.Info(t.Context(), "rpo6E7mHvQ4xzeEBy8ViVzbG8q251ztKB8")
 	require.NoError(t, err)
 
 	require.Equal(t, expected.Result.AccountData.Account, resp.AccountData.Account)
@@ -367,7 +367,7 @@ func TestInfoSafeurlBlocksLoopback(t *testing.T) {
 	defer srv.Close()
 
 	rpc := JSONRPC{URL: srv.URL, Transport: safeurl.NewTransport()}
-	_, err := rpc.Info("rpo6E7mHvQ4xzeEBy8ViVzbG8q251ztKB8")
+	_, err := rpc.Info(t.Context(), "rpo6E7mHvQ4xzeEBy8ViVzbG8q251ztKB8")
 	require.Error(t, err)
 	require.Contains(t, err.Error(), "non-public")
 }
@@ -382,7 +382,7 @@ func TestInfoHTTPStubRejectsBadStatus(t *testing.T) {
 	defer srv.Close()
 
 	rpc := JSONRPC{URL: srv.URL}
-	_, err := rpc.Info("rpo6E7mHvQ4xzeEBy8ViVzbG8q251ztKB8")
+	_, err := rpc.Info(t.Context(), "rpo6E7mHvQ4xzeEBy8ViVzbG8q251ztKB8")
 	require.Error(t, err)
 }
 
@@ -393,7 +393,7 @@ func TestInfo(t *testing.T) {
 		URL: url,
 	}
 
-	resp, err := rpc.Info("rpo6E7mHvQ4xzeEBy8ViVzbG8q251ztKB8")
+	resp, err := rpc.Info(t.Context(), "rpo6E7mHvQ4xzeEBy8ViVzbG8q251ztKB8")
 	require.NoError(t, err)
 
 	require.Len(t, resp.AccountData.SignersLists, 1)

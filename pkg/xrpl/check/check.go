@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/http"
 	"slices"
+	"time"
 
 	"github.com/flare-foundation/go-flare-common/pkg/call"
 )
@@ -87,8 +88,9 @@ type JSONRPC struct {
 	Transport http.RoundTripper
 }
 
-// Info gets account info for the XRPL address.
-func (jr JSONRPC) Info(address string) (AccountInfoResponse, error) {
+// Info gets account info for the XRPL address. ctx governs the HTTP request
+// lifetime; an unresponsive rippled cancels along with ctx.
+func (jr JSONRPC) Info(ctx context.Context, address string) (AccountInfoResponse, error) {
 	request := AccountInfoRequest{
 		Method: accountInfoMethod,
 		Params: []AccountInfoParams{{
@@ -97,10 +99,8 @@ func (jr JSONRPC) Info(address string) (AccountInfoResponse, error) {
 		}},
 	}
 
-	ctx := context.TODO()
-
 	res, err := call.Post[AccountInfoRequest, AccountInfoResponseWrapped](ctx, jr.URL, call.NoAPIKey, request, call.Params{
-		Timeout:         0,
+		Timeout:         30 * time.Second,
 		MaxResponseSize: 10000,
 		Transport:       jr.Transport,
 	})
