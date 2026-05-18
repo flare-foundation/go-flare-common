@@ -204,8 +204,11 @@ type ScheduledFee struct {
 	Delay   time.Duration
 }
 
-// Fee returns the FeeBIPS of max.
+// Fee returns the FeeBIPS of max. A nil max is treated as zero.
 func (s *ScheduledFee) Fee(max *big.Int) string {
+	if max == nil {
+		return "0"
+	}
 	bips := big.NewInt(int64(s.FeeBIPS))
 	fee := new(big.Int).Mul(bips, max)
 	fee.Div(fee, big.NewInt(10000))
