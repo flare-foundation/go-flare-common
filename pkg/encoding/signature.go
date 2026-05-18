@@ -69,7 +69,7 @@ func EncodeSignatures(signatures []IndexedSignature) ([]byte, error) {
 //
 // This is a pure byte-layout transform; it does not enforce signature
 // canonicalisation. If the consumer is not ecrecover, callers must enforce
-// low-S (s <= N/2) themselves to avoid malleability (audit F-ENC2-4).
+// low-S (s <= N/2) themselves to avoid malleability.
 func TransformSignatureVRStoRSV(vrs []byte) ([]byte, error) {
 	if len(vrs) != 65 {
 		return nil, fmt.Errorf("signature must be 65 bytes, got %d", len(vrs))
@@ -94,7 +94,7 @@ func TransformSignatureVRStoRSV(vrs []byte) ([]byte, error) {
 //
 // This is a pure byte-layout transform; it does not enforce signature
 // canonicalisation. If the consumer is not ecrecover, callers must enforce
-// low-S (s <= N/2) themselves to avoid malleability (audit F-ENC2-4).
+// low-S (s <= N/2) themselves to avoid malleability.
 func TransformSignatureRSVtoVRS(rsv []byte) ([]byte, error) {
 	if len(rsv) != 65 {
 		return nil, fmt.Errorf("signature must be 65 bytes, got %d", len(rsv))

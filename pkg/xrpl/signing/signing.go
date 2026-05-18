@@ -4,6 +4,7 @@ package signing
 import (
 	"encoding/hex"
 	"fmt"
+	"strings"
 
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/types"
@@ -40,8 +41,9 @@ func ValidateMultiSig(tx map[string]any, s *signer.Signer) (bool, error) {
 		return false, fmt.Errorf("decoding signature: %w", err)
 	}
 
-	switch pubPrefix {
-	case "ED", "ed":
+	// Match rippled: prefix routing is case-insensitive since hex itself is.
+	switch strings.ToLower(pubPrefix) {
+	case "ed":
 		return ed25519.Validate(msg, sigBytes, s.SigningPubKey)
 	case "02", "03":
 		return secp256k1.Validate(msg, sigBytes, s.SigningPubKey)
