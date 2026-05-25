@@ -51,8 +51,9 @@ func init() {
 
 // ID returns the ID of a field according to https://xrpl.org/docs/references/protocol/binary-format#field-ids.
 func (f Field) ID() ([]byte, error) {
-	if f.Type < 0 || f.Type > 255 || f.Nth < 0 || f.Nth > 255 {
-		return nil, fmt.Errorf("invalid type or name %d, %d", f.Type, f.Nth)
+	if f.Type <= 0 || f.Type > 255 || f.Nth <= 0 || f.Nth > 255 {
+		// Nth==0 and Type==0 are sentinels that would round-trip asymmetrically with ReadID.
+		return nil, fmt.Errorf("invalid field ID: type %d, nth %d (must be in [1,255])", f.Type, f.Nth)
 	}
 
 	t := uint8(f.Type)

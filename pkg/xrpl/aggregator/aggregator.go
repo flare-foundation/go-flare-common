@@ -59,10 +59,6 @@ type transaction struct {
 // extracted, validated, and stored. The returned common.Hash identifies the
 // transaction and can be passed to Finalize once quorum is reached. The
 // boolean is true the first time the quorum is reached.
-//
-// Audit M10: previously this returned *transaction whose useful field was
-// unexported, so external callers could not finalize. The id is the public
-// handle.
 func (a *Account) AddSignatures(blob []byte) (common.Hash, bool, error) {
 	txJSON, err := encoding.Decode(blob)
 	if err != nil {

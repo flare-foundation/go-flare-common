@@ -117,10 +117,8 @@ func (jr JSONRPC) Info(ctx context.Context, address string) (AccountInfoResponse
 //   - signers list setting
 //   - no regular key
 //
-// Audit M11: a SignerList read from a non-validated ledger can be rolled
-// back; trusting it for quorum decisions risks issuing transactions against
-// stale or speculative state. Reject responses where rippled has not yet
-// committed the read.
+// A SignerList read from a non-validated ledger can be rolled back; trusting it
+// risks issuing transactions against stale or speculative state.
 func (ai AccountInfoResponse) Check(quorum uint64, signers []string) error {
 	if !ai.Validated {
 		return errors.New("account_info response is from a non-validated ledger")

@@ -78,7 +78,7 @@ func generateType(f field) string {
 }
 
 func main() {
-	file, err := os.Open("./pkg/xrpl/defs/main/definitions.json")
+	file, err := os.Open("./pkg/xrpl/defs/internal/main/definitions.json")
 
 	if err != nil {
 		panic(fmt.Sprintf("building xrpl definitions: %v", err))

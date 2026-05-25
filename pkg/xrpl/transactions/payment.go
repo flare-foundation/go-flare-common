@@ -64,11 +64,8 @@ func CheckAndEncodePayment(tx map[string]any, native bool) ([]byte, error) {
 		return nil, errors.New("destination should not be equal to the account")
 	}
 
-	// Sequence and SigningPubKey are soeREQUIRED in rippled TxFormats.cpp
-	// (lines 19, 27). Audit finding M4: omitting either could let the codec
-	// accept a structurally incomplete transaction. SigningPubKey is the
-	// empty string in the multi-sig flow; that's still presence, so we only
-	// check that the key exists.
+	// Sequence and SigningPubKey are soeREQUIRED in rippled TxFormats.cpp.
+	// SigningPubKey is empty in the multi-sig flow, so only check presence.
 	if _, ok := decoded["Sequence"]; !ok {
 		return nil, errors.New("missing Sequence")
 	}
