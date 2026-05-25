@@ -353,32 +353,32 @@ func TestSigner(t *testing.T) {
 
 func TestConfigs(t *testing.T) {
 	lts := Limits{
-		maxReqBodySize:        200,
-		maxReqBodySizeDecrypt: 500,
-		maxHeaderBytes:        1 << 10,
-		writeTimeout:          1 * time.Second,
-		readTimeout:           1 * time.Second,
-		readHeaderTimeout:     1 * time.Second,
+		MaxReqBodySize:        200,
+		MaxReqBodySizeDecrypt: 500,
+		MaxHeaderBytes:        1 << 10,
+		WriteTimeout:          1 * time.Second,
+		ReadTimeout:           1 * time.Second,
+		ReadHeaderTimeout:     1 * time.Second,
 	}
 
 	t.Run("limits", func(t *testing.T) {
 		// nothing changed
 		lts.setDefaults()
-		require.Equal(t, int64(200), lts.maxReqBodySize)
-		require.Equal(t, int64(500), lts.maxReqBodySizeDecrypt)
-		require.Equal(t, 1<<10, lts.maxHeaderBytes)
-		require.Equal(t, 1*time.Second, lts.writeTimeout)
-		require.Equal(t, 1*time.Second, lts.readTimeout)
-		require.Equal(t, 1*time.Second, lts.readHeaderTimeout)
+		require.Equal(t, int64(200), lts.MaxReqBodySize)
+		require.Equal(t, int64(500), lts.MaxReqBodySizeDecrypt)
+		require.Equal(t, 1<<10, lts.MaxHeaderBytes)
+		require.Equal(t, 1*time.Second, lts.WriteTimeout)
+		require.Equal(t, 1*time.Second, lts.ReadTimeout)
+		require.Equal(t, 1*time.Second, lts.ReadHeaderTimeout)
 
 		ltsDef := Limits{}
 		ltsDef.setDefaults()
-		require.Equal(t, defaultMaxReqBodySize, ltsDef.maxReqBodySize)
-		require.Equal(t, defaultMaxReqBodySizeDecrypt, ltsDef.maxReqBodySizeDecrypt)
-		require.Equal(t, defaultMaxHeaderBytes, ltsDef.maxHeaderBytes)
-		require.Equal(t, defaultWriteTimeout, ltsDef.writeTimeout)
-		require.Equal(t, defaultReadTimeout, ltsDef.readTimeout)
-		require.Equal(t, defaultReadHeaderTimeout, ltsDef.readHeaderTimeout)
+		require.Equal(t, defaultMaxReqBodySize, ltsDef.MaxReqBodySize)
+		require.Equal(t, defaultMaxReqBodySizeDecrypt, ltsDef.MaxReqBodySizeDecrypt)
+		require.Equal(t, defaultMaxHeaderBytes, ltsDef.MaxHeaderBytes)
+		require.Equal(t, defaultWriteTimeout, ltsDef.WriteTimeout)
+		require.Equal(t, defaultReadTimeout, ltsDef.ReadTimeout)
+		require.Equal(t, defaultReadHeaderTimeout, ltsDef.ReadHeaderTimeout)
 	})
 
 	cfg := Config{
