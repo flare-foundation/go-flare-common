@@ -3,6 +3,7 @@ package retry
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math"
 	"math/rand/v2"
@@ -17,11 +18,11 @@ type ExecuteStatus[T any] struct {
 	Value   T
 }
 
-// Params configures retry behavior for Execute.
+// Params configures retry behavior for Execute. Negative values are rejected.
 type Params struct {
-	MaxAttempts int           // if non-positive, unlimited; caller must cancel ctx or set Timeout to stop.
-	Delay       time.Duration // initial delay between attempts
-	Timeout     time.Duration // total maximal duration. If zero, no timeout. Per-call timeout is the function's responsibility.
+	MaxAttempts int           // 0 → unlimited; caller must cancel ctx or set Timeout to stop.
+	Delay       time.Duration // initial delay between attempts; 0 → no sleep.
+	Timeout     time.Duration // total maximal duration; 0 → no timeout (rely on ctx).
 
 	Multiplier float64       // if >1, the delay is multiplied by this factor each attempt. Default ≤1 keeps delay constant.
 	MaxDelay   time.Duration // optional cap on the computed delay. Zero means no cap.
@@ -29,7 +30,15 @@ type Params struct {
 }
 
 // Execute executes function f and retries on error according to params.
+//
+// Risk: with MaxAttempts, Delay, and Timeout all unset (zero) and a constantly
+// failing f, this loop runs as fast as f can return; the only exit is ctx
+// cancellation. Callers in that configuration MUST pass a cancellable ctx.
 func Execute[T any](ctx context.Context, f func() (T, error), params Params) ExecuteStatus[T] {
+	if params.MaxAttempts < 0 || params.Delay < 0 || params.Timeout < 0 {
+		return ExecuteStatus[T]{Err: errors.New("negative MaxAttempts/Delay/Timeout not allowed")}
+	}
+
 	var cancel context.CancelFunc
 
 	if params.Timeout > 0 {

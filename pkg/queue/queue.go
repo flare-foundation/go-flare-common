@@ -212,12 +212,15 @@ func (q *PriorityQueue[T]) handleError(ctx context.Context, item priorityQueueIt
 	waitDuration := item.backoff.NextBackOff()
 
 	if waitDuration == backoff.Stop {
-		// Attempt to send the item to the dead letter queue, but do not block if it is full -
-		// in that case the item will be discarded.
+		if q.DeadLetterQueue == nil {
+			logger.Warnf("queue %s: backoff stopped for item %v but no DLQ configured; dropping", q.Name(), item.value)
+			return
+		}
 		select {
 		case q.DeadLetterQueue <- item.value:
 			logger.Debugf("max retry attempts reached in queue %s, sent item to dead letter queue: %v", q.Name(), item.value)
 		default:
+			logger.Warnf("queue %s: DLQ full; dropping item %v", q.Name(), item.value)
 		}
 		return
 	}

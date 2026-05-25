@@ -67,12 +67,12 @@ func (s *Storage) Add(sp *SigningPolicy) error {
 			if sp.RewardEpochID == 0 || prev.RewardEpochID != sp.RewardEpochID-1 {
 				return fmt.Errorf("expected reward epoch ID %d, got %d", prev.RewardEpochID+1, sp.RewardEpochID)
 			}
-		} else if sp.RewardEpochID < prev.RewardEpochID {
-			return fmt.Errorf("reward epoch ID %d lower than previous %d", sp.RewardEpochID, prev.RewardEpochID)
+		} else if sp.RewardEpochID <= prev.RewardEpochID {
+			return fmt.Errorf("reward epoch ID %d not greater than previous %d", sp.RewardEpochID, prev.RewardEpochID)
 		}
-		// should be sorted by voting round ID, should not happen
-		if sp.StartVotingRoundID < prev.StartVotingRoundID {
-			return fmt.Errorf("signing policy for reward epoch ID %d has lower start voting round ID than previous policy",
+		// Strictly greater: equal StartVotingRoundIDs make sort.Find return nondeterministic results on ties.
+		if sp.StartVotingRoundID <= prev.StartVotingRoundID {
+			return fmt.Errorf("signing policy for reward epoch ID %d has start voting round ID not greater than previous policy",
 				sp.RewardEpochID)
 		}
 	}

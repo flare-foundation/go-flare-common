@@ -58,7 +58,7 @@ func NewSigningPolicy(r *relay.RelaySigningPolicyInitialized, submitToSigning ma
 		StartVotingRoundID: r.StartVotingRoundId,
 		Threshold:          r.Threshold,
 		Seed:               r.Seed,
-		rawBytes:           r.SigningPolicyBytes,
+		rawBytes:           slices.Clone(r.SigningPolicyBytes),
 		blockTimestamp:     r.Timestamp,
 		Voters:             vs,
 	}, nil

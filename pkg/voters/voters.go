@@ -5,8 +5,10 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
+	"maps"
 	"math"
 	"math/big"
+	"slices"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -42,9 +44,10 @@ func NewSet(voters []common.Address, weights []uint16, submitToSigningAddress ma
 		return nil, fmt.Errorf("voters/weights length mismatch: %d vs %d", len(voters), len(weights))
 	}
 
+	// Defensive copies: callers' slice/map mutations after NewSet must not corrupt the Set.
 	vs := Set{
-		voters:     voters,
-		weights:    weights,
+		voters:     slices.Clone(voters),
+		weights:    slices.Clone(weights),
 		thresholds: make([]uint16, len(weights)),
 	}
 	// Accumulate into a wider type so we can detect overflow before it
@@ -61,6 +64,9 @@ func NewSet(voters []common.Address, weights []uint16, submitToSigningAddress ma
 			return nil, fmt.Errorf("total weight exceeds uint16 max: %d", sum)
 		}
 	}
+	if sum == 0 {
+		return nil, errors.New("total weight is zero")
+	}
 	vs.TotalWeight = uint16(sum)
 
 	vMap := make(map[common.Address]VoterData, len(voters))
@@ -74,7 +80,7 @@ func NewSet(voters []common.Address, weights []uint16, submitToSigningAddress ma
 		}
 	}
 	vs.VoterDataMap = vMap
-	vs.SubmitToSigningAddress = submitToSigningAddress
+	vs.SubmitToSigningAddress = maps.Clone(submitToSigningAddress)
 
 	return &vs, nil
 }
