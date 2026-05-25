@@ -401,16 +401,14 @@ func ParsePEMCertificate(certificate string) (*x509.Certificate, error) {
 //   - Leaf and intermediate certificates are not revoked (if CRLs are provided).
 //
 // Equivalent to VerifyWithPolicy(..., Policy{}). New code should call
-// VerifyWithPolicy and supply the per-deployment hardening knobs added in
-// audit M12/M13.
+// VerifyWithPolicy and supply the per-deployment hardening knobs.
 func (c *PKICertificates) Verify(expectedRoot *x509.Certificate, leafCRL, intermediateCRL *x509.RevocationList) error {
 	return c.VerifyWithPolicy(expectedRoot, leafCRL, intermediateCRL, Policy{})
 }
 
-// VerifyWithPolicy is the policy-aware variant of Verify. Policy.RequireCRL
-// fails closed when a certificate declares DPs but no CRL was supplied
-// (M12); Policy.AllowedLeafEKUs constrains chain validation to specific
-// Extended Key Usage values rather than ExtKeyUsageAny (M13).
+// VerifyWithPolicy is the policy-aware variant of Verify. Policy.RequireCRL fails closed
+// when a certificate declares DPs but no CRL was supplied; Policy.AllowedLeafEKUs constrains
+// chain validation to specific Extended Key Usage values rather than ExtKeyUsageAny.
 func (c *PKICertificates) VerifyWithPolicy(expectedRoot *x509.Certificate, leafCRL, intermediateCRL *x509.RevocationList, policy Policy) error {
 	// Verify the leaf certificate signature algorithm is an RSA key
 	if c.Leaf.SignatureAlgorithm != x509.SHA256WithRSA {
@@ -463,11 +461,10 @@ func (c *PKICertificates) verifyLifetime() error {
 
 // verifyChain verifies the certificate chain from leaf to root.
 //
-// Audit M13: KeyUsages is pinned to policy.AllowedLeafEKUs when set;
-// otherwise it falls back to the leaf's own declared ExtKeyUsage so the
-// chain validator does not accept any EKU via ExtKeyUsageAny. If the leaf
-// declares no EKU we keep ExtKeyUsageAny — there is nothing stricter to
-// pin to without a deployment-specific Policy.AllowedLeafEKUs value.
+// KeyUsages is pinned to policy.AllowedLeafEKUs when set; otherwise it falls back to the
+// leaf's own declared ExtKeyUsage so the chain validator does not accept any EKU via
+// ExtKeyUsageAny. If the leaf declares no EKU we keep ExtKeyUsageAny — there is nothing
+// stricter to pin to without a deployment-specific Policy.AllowedLeafEKUs value.
 func (c *PKICertificates) verifyChain(policy Policy) error {
 	interPool := x509.NewCertPool()
 	interPool.AddCert(c.Intermediate)
@@ -498,7 +495,7 @@ func (c *PKICertificates) verifyChain(policy Policy) error {
 // verifyCRL checks whether the leaf or intermediate certificates have been revoked
 // according to the provided CRLs. If a CRL is nil and requireCRL is false,
 // a warning is logged and the check is skipped; if requireCRL is true, the
-// function fails closed (audit M12).
+// function fails closed.
 func (c *PKICertificates) verifyCRL(leafCRL, intermediateCRL *x509.RevocationList, requireCRL bool) error {
 	if err := checkCRL("leaf", c.Leaf, leafCRL, c.Intermediate, requireCRL); err != nil {
 		return err

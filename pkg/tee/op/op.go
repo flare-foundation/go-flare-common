@@ -36,13 +36,9 @@ const (
 	VRF                        Command = "VRF"
 
 	KeyInfo Command = "KEY_INFO"
-	// KeyProof is recognized as a valid Get-class command but has no
-	// payload binding in this repo. Audit M16: without a struct that ties
-	// the proof to an instructionId, attestation hash, and freshness
-	// nonce, a signed KeyProof from one context can be replayed against
-	// another. A payload binding must be defined (in pkg/tee/structs)
-	// and the producing/consuming code wired through before KeyProof is
-	// used in production paths.
+	// KeyProof has no payload binding yet; without one tying the proof to instructionId,
+	// attestation hash, and freshness nonce, a signed KeyProof can be replayed across contexts.
+	// Do not use in production until the binding is defined in pkg/tee/structs.
 	KeyProof  Command = "KEY_PROOF"
 	TEEBackup Command = "TEE_BACKUP"
 	TEEInfo   Command = "TEE_INFO"
@@ -100,9 +96,9 @@ func HashToOPType(h common.Hash) Type {
 	return Type(s)
 }
 
-// Hash returns utf8 encoding of t padded to 32 bytes.
+// Hash returns utf8 encoding of t padded to 32 bytes. Panics if t exceeds 32 bytes.
 func (t Type) Hash() common.Hash {
-	return common.BytesToHash(common.RightPadBytes([]byte(t), 32))
+	return toHash(string(t))
 }
 
 func (t Type) IsSystem() bool {
@@ -123,9 +119,19 @@ func HashToOPCommand(h common.Hash) Command {
 	return Command(s)
 }
 
-// Hash returns utf8 encoding of c padded to 32 bytes.
+// Hash returns utf8 encoding of c padded to 32 bytes. Panics if c exceeds 32 bytes.
 func (c Command) Hash() common.Hash {
-	return common.BytesToHash(common.RightPadBytes([]byte(c), 32))
+	return toHash(string(c))
+}
+
+func toHash(s string) common.Hash {
+	b := []byte(s)
+	if len(b) > 32 {
+		panic("op: identifier too long for 32-byte hash: " + s)
+	}
+	var h common.Hash
+	copy(h[:], b)
+	return h
 }
 
 // IsValid reports whether the command is valid for the given operation type.

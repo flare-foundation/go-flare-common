@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"math"
 	"math/big"
 	"reflect"
 	"strconv"
@@ -14,19 +15,16 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/payments"
 )
 
-// PaymentTxFromInstruction prepares a transaction from the Payment Instruction
-// Message. Scope: native XRP payments only — TokenId must be empty, which is
-// how the on-chain side signals "no issued token; use the chain's native
-// asset." Audit M15 hardening:
+// PaymentTxFromInstruction prepares a transaction from the Payment Instruction Message.
+// Scope: native XRP payments only — TokenId must be empty, signaling "use the chain's native asset".
+// Hardening:
 //
 //   - i.Amount must be non-nil (the on-chain decoder allows nil through);
-//   - SenderAddress and RecipientAddress must differ (self-payment is
-//     meaningful only via Paths/SendMax cross-currency conversion, which
-//     this entrypoint does not support);
-//   - TokenId must be empty so an issued-token payment cannot accidentally
-//     produce a native-XRP transaction;
-//   - the resulting tx is run through CheckNativePayment so the caller
-//     never gets back a structurally invalid blob.
+//   - SenderAddress and RecipientAddress must differ (self-payment is only meaningful via
+//     Paths/SendMax cross-currency conversion, which this entrypoint does not support);
+//   - TokenId must be empty so an issued-token payment cannot accidentally produce a native-XRP tx;
+//   - the resulting tx is run through CheckNativePayment so the caller never gets back a
+//     structurally invalid blob.
 func PaymentTxFromInstruction(i payments.ITeePaymentsPaymentInstructionMessage, try int) (map[string]any, error) {
 	if i.Amount == nil {
 		return nil, errors.New("nil Amount")
@@ -37,6 +35,9 @@ func PaymentTxFromInstruction(i payments.ITeePaymentsPaymentInstructionMessage, 
 	if len(i.TokenId) != 0 {
 		return nil, fmt.Errorf("non-empty TokenId %s; this entrypoint only builds native XRP payments", hex.EncodeToString(i.TokenId))
 	}
+	if i.Nonce > math.MaxUint32 {
+		return nil, fmt.Errorf("nonce %d exceeds XRPL Sequence (UInt32) range", i.Nonce)
+	}
 
 	tx := make(map[string]any)
 
@@ -45,7 +46,7 @@ func PaymentTxFromInstruction(i payments.ITeePaymentsPaymentInstructionMessage, 
 	tx["Destination"] = i.RecipientAddress
 	tx["Amount"] = i.Amount.String()
 	tx["SigningPubKey"] = ""
-	tx["Sequence"] = i.Nonce
+	tx["Sequence"] = uint32(i.Nonce) //nolint:gosec // XRPL Sequence is UInt32; on-chain Nonce bounded to fit
 
 	// [
 	//   {
@@ -90,7 +91,7 @@ func Nullify(i payments.ITeePaymentsPaymentInstructionMessage, fee string) map[s
 	tx["TransactionType"] = "AccountSet"
 	tx["Account"] = i.SenderAddress
 	tx["SigningPubKey"] = ""
-	tx["Sequence"] = i.Nonce
+	tx["Sequence"] = uint32(i.Nonce) //nolint:gosec // XRPL Sequence is UInt32; on-chain Nonce bounded to fit
 
 	// [
 	//   {

@@ -16,10 +16,9 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/tee"
 )
 
-// MaxMessageSize caps each of the variable-length byte fields on an
-// Instruction's Data. Audit M14: on-chain events feed Data unchecked, so a
-// pathological message length would otherwise inflate hash cost and
-// downstream allocation. 64 KiB is an order of magnitude above any
+// MaxMessageSize caps each of the variable-length byte fields on an Instruction's Data.
+// On-chain events feed Data unchecked; without this cap a pathological message length would
+// inflate hash cost and downstream allocation. 64 KiB is an order of magnitude above any
 // legitimate payload observed in production.
 const MaxMessageSize = 64 * 1024
 
