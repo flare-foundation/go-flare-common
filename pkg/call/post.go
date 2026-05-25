@@ -75,9 +75,8 @@ func PostRaw[T any](ctx context.Context, url string, apiKey APIKey, body io.Read
 
 	if resp.StatusCode != http.StatusOK {
 		if isTextPlain(resp.Header.Get("Content-Type")) {
-			respLimited := &io.LimitedReader{R: resp.Body, N: p.MaxResponseSize}
 			buf := new(strings.Builder)
-			_, err := io.Copy(buf, respLimited)
+			_, err := io.Copy(buf, capReader(resp.Body, p.MaxResponseSize))
 			if err == nil {
 				return resOut, fmt.Errorf("request responded with code %d, reason: %s", resp.StatusCode, buf.String())
 			}
@@ -86,9 +85,7 @@ func PostRaw[T any](ctx context.Context, url string, apiKey APIKey, body io.Read
 		return resOut, fmt.Errorf("request responded with code %d", resp.StatusCode)
 	}
 
-	respLimited := &io.LimitedReader{R: resp.Body, N: p.MaxResponseSize}
-
-	decoder := json.NewDecoder(respLimited)
+	decoder := json.NewDecoder(capReader(resp.Body, p.MaxResponseSize))
 
 	response := new(T)
 	err = decoder.Decode(response)
@@ -120,6 +117,14 @@ func PostRawWithRetry[T any](ctx context.Context, url string, apiKey APIKey, bod
 	}
 
 	return executeWithRetry(ctx, fn, p.NoRetryStatuses, acceptableFail, rp)
+}
+
+// capReader returns r capped to n bytes, or r unchanged if n <= 0 (unbounded).
+func capReader(r io.Reader, n int64) io.Reader {
+	if n <= 0 {
+		return r
+	}
+	return &io.LimitedReader{R: r, N: n}
 }
 
 // isTextPlain reports whether contentType is a text/plain media type, ignoring charset and whitespace.

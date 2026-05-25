@@ -60,9 +60,8 @@ func Validate(ctx context.Context, rawURL string) error {
 	return nil
 }
 
-// Default transport timeouts (audit M21). The defaults bound slowloris-style
-// attacks where a malicious endpoint trickles bytes to keep a goroutine and
-// connection pinned indefinitely.
+// Default transport timeouts. The defaults bound slowloris-style attacks where
+// a malicious endpoint trickles bytes to keep a goroutine and connection pinned indefinitely.
 const (
 	defaultConnectTimeout      = 10 * time.Second
 	defaultTLSHandshakeTimeout = 10 * time.Second
@@ -76,7 +75,7 @@ const (
 // window that exists when validation and dialing are separate steps. The
 // transport carries connect, TLS-handshake, response-header, expect-continue,
 // and idle-connection timeouts so a slow or malicious remote cannot pin
-// resources indefinitely (audit M21).
+// resources indefinitely.
 func NewTransport() *http.Transport {
 	d := &net.Dialer{Timeout: defaultConnectTimeout}
 	return &http.Transport{
@@ -89,6 +88,9 @@ func NewTransport() *http.Transport {
 			ips, err := net.DefaultResolver.LookupHost(ctx, host)
 			if err != nil {
 				return nil, fmt.Errorf("resolving host %q: %w", host, err)
+			}
+			if len(ips) == 0 {
+				return nil, fmt.Errorf("no IPs resolved for host %q", host)
 			}
 
 			var validIPs []string
@@ -154,8 +156,7 @@ func checkRedirect(req *http.Request, via []*http.Request) error {
 	return nil
 }
 
-// nonPublicCIDRs holds extra address ranges that net.IP's built-in predicates
-// do not cover (audit M18):
+// nonPublicCIDRs holds extra address ranges that net.IP's built-in predicates do not cover:
 //   - 100.64.0.0/10: CGNAT (RFC 6598). Used by ISPs for shared address space;
 //     resolvable to a carrier's internal infrastructure.
 //   - 0.0.0.0/8: "this network" (RFC 1122). The all-zeros address is
