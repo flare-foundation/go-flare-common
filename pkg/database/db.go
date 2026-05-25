@@ -138,6 +138,11 @@ func retryWithConfig[F any, P any](
 				interval = minRetryInterval
 			}
 
+			// Bail if the next sleep would itself blow the budget.
+			if time.Since(start)+interval >= cfg.MaxDuration {
+				return result, err
+			}
+
 			retryLogger.Errorf("error %s: %v, retrying after %v", errorMsg, err, interval)
 
 			timer := time.NewTimer(interval)

@@ -72,8 +72,11 @@ func Connect(cfg *Config) (*gorm.DB, error) {
 }
 
 // redactPassword replaces every occurrence of password in err's message with "[REDACTED]".
+// Skips redaction for short passwords (< minRedactablePassword bytes) because a short
+// or common substring (e.g. "root", "1234") could corrupt unrelated tokens in the message.
 func redactPassword(err error, password string) error {
-	if err == nil || password == "" {
+	const minRedactablePassword = 8
+	if err == nil || len(password) < minRedactablePassword {
 		return err
 	}
 	msg := err.Error()
@@ -118,6 +121,14 @@ type SyncParams struct {
 func WaitCIndexerToSync(ctx context.Context, db *gorm.DB, params SyncParams, l syncLogger) error {
 	if l == nil {
 		l = logger.Nop{}
+	}
+
+	// Both bounds must be positive; otherwise sleepTime collapses to 0 and the loop tight-spins.
+	if params.MaxSleepTime <= 0 || params.MinSleepTime <= 0 {
+		return fmt.Errorf("validating SyncParams: MaxSleepTime and MinSleepTime must be positive (got %v, %v)", params.MaxSleepTime, params.MinSleepTime)
+	}
+	if params.MinSleepTime > params.MaxSleepTime {
+		return fmt.Errorf("validating SyncParams: MinSleepTime %v exceeds MaxSleepTime %v", params.MinSleepTime, params.MaxSleepTime)
 	}
 
 	k := 0
@@ -201,7 +212,10 @@ func DoInTransaction(db *gorm.DB, operations ...func(db *gorm.DB) error) (err er
 			return opErr
 		}
 	}
-	return tx.Commit().Error
+	if err := tx.Commit().Error; err != nil {
+		return fmt.Errorf("committing transaction: %w", err)
+	}
+	return nil
 }
 
 // CheckDelay checks whether db is delayed by more than tolerance.

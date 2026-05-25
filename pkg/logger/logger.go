@@ -29,9 +29,18 @@ func current() *zap.SugaredLogger {
 type Config struct {
 	Level       string `toml:"level"` // valid values are: DEBUG, INFO, WARN, ERROR, DPANIC, PANIC, FATAL (zap)
 	File        string `toml:"file"`
-	MaxFileSize int    `toml:"max_file_size"` // In megabytes
+	MaxFileSize int    `toml:"max_file_size"` // megabytes; 0 → lumberjack default (100 MB)
+	MaxBackups  int    `toml:"max_backups"`   // rotated files retained on disk; 0 → defaultMaxBackups
+	MaxAgeDays  int    `toml:"max_age_days"`  // max age of rotated files; 0 → defaultMaxAgeDays
 	Console     bool   `toml:"console"`
 }
+
+const (
+	// Defensive caps applied when Config.MaxBackups / MaxAgeDays are unset; without
+	// them lumberjack retains every rotated file forever, leaking disk on long-running services.
+	defaultMaxBackups = 10
+	defaultMaxAgeDays = 30
+)
 
 // DefaultConfig returns the default logger configuration.
 //
@@ -56,7 +65,20 @@ func Set(cfg Config) {
 }
 
 func createSugared(config Config) *zap.SugaredLogger {
-	atom := zap.NewAtomicLevel()
+	// Resolve level first so AtomicLevel is correctly populated from the start;
+	// otherwise the cores enable Info-and-above until SetLevel runs.
+	level, err := zapcore.ParseLevel(config.Level)
+	parseErr := err
+	if err != nil {
+		// Fall back to DEBUG (the DefaultConfig level) rather than the
+		// zero value of zapcore.Level (which is InfoLevel). Silently
+		// downgrading to INFO would drop messages the operator likely
+		// intended to see; DEBUG keeps everything visible — including
+		// the subsequent parse-error log.
+		level = zapcore.DebugLevel
+	}
+	atom := zap.NewAtomicLevelAt(level)
+
 	cores := make([]zapcore.Core, 0)
 	if config.Console {
 		cores = append(cores, createConsoleLoggerCore(atom))
@@ -74,25 +96,16 @@ func createSugared(config Config) *zap.SugaredLogger {
 
 	sugared := logger.Sugar()
 
-	level, err := zapcore.ParseLevel(config.Level)
-	if err != nil {
-		// Fall back to DEBUG (the DefaultConfig level) rather than the
-		// zero value of zapcore.Level (which is InfoLevel). Silently
-		// downgrading to INFO would drop messages the operator likely
-		// intended to see; DEBUG keeps everything visible — including
-		// this very Errorf, which the surrounding atom.SetLevel below
-		// must pass through. Reload-time Set() callers see the same
-		// fallback path.
-		level = zapcore.DebugLevel
+	if parseErr != nil {
 		sugared.Errorf("invalid logger level %q; falling back to DEBUG", config.Level)
 	}
-	atom.SetLevel(level)
 	return sugared
 }
 
-// SyncFileLogger synchronizes the file logger (but not the console logger). It is
-// automatically called during fatal or panic log events. If you need to manually
-// synchronize the logger at other points in your application, you can invoke this function as needed.
+// SyncFileLogger flushes buffered log entries. It calls Sync on every configured
+// core, but the console core uses noSyncWriter (whose Sync is a no-op), so in
+// practice this only flushes the file writer. It is automatically called during
+// fatal or panic log events; call it manually if you need to flush at other points.
 func SyncFileLogger() {
 	l := current()
 	l.Infof("Syncing file logger.")
@@ -102,9 +115,19 @@ func SyncFileLogger() {
 }
 
 func createFileLoggerCore(config Config, atom zap.AtomicLevel) zapcore.Core {
+	maxBackups := config.MaxBackups
+	if maxBackups == 0 {
+		maxBackups = defaultMaxBackups
+	}
+	maxAge := config.MaxAgeDays
+	if maxAge == 0 {
+		maxAge = defaultMaxAgeDays
+	}
 	w := zapcore.AddSync(&lumberjack.Logger{
-		Filename: config.File,
-		MaxSize:  config.MaxFileSize,
+		Filename:   config.File,
+		MaxSize:    config.MaxFileSize,
+		MaxBackups: maxBackups,
+		MaxAge:     maxAge,
 	})
 	encoderCfg := zap.NewProductionEncoderConfig()
 	encoderCfg.EncodeLevel = fileLevelEncoder
