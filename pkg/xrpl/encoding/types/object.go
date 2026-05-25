@@ -2,7 +2,6 @@ package types
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 )
 
@@ -16,6 +15,11 @@ func (*STObject) ToBytes(value any, signing bool) ([]byte, error) {
 	valuerObj, ok := value.(Object)
 	if !ok {
 		return nil, fmt.Errorf("value %v is not an object", value)
+	}
+
+	// Empty inner STObject emits just the end marker; rippled does the same.
+	if len(valuerObj) == 0 {
+		return []byte{objectEnd}, nil
 	}
 
 	bytes, err := Encode(valuerObj, signing)
@@ -36,10 +40,9 @@ func (s *STObject) ToJSON(b *bytes.Buffer, length int) (any, error) {
 
 // ToJSONDepth is the depth-tracked variant of ToJSON; decodeNext calls this
 // to enforce the maxDecodeDepth bound on nested STObject/STArray.
+// Accepts an empty STObject (an immediate end-marker) to match rippled.
 func (*STObject) ToJSONDepth(b *bytes.Buffer, _ int, depth int) (any, error) {
 	out := make(map[string]any)
-
-	empty := true
 
 	for {
 		nextByte, err := b.ReadByte()
@@ -61,13 +64,10 @@ func (*STObject) ToJSONDepth(b *bytes.Buffer, _ int, depth int) (any, error) {
 			return nil, fmt.Errorf("decoding next: %w", err)
 		}
 
+		if _, dup := out[name]; dup {
+			return nil, fmt.Errorf("duplicate field %s", name)
+		}
 		out[name] = value
-
-		empty = false
-	}
-
-	if empty {
-		return nil, errors.New("empty object")
 	}
 
 	return out, nil

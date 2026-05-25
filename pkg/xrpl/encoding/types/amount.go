@@ -282,7 +282,7 @@ func serializeTokenValue(value string) ([]byte, error) {
 
 	normalizedExponent := exponent + exponentNormalization - precision
 	if normalizedExponent < minNormalizedExponent || normalizedExponent > maxNormalizedExponent {
-		return nil, fmt.Errorf("exponent %d out of range [%d,%d]", exponent, minNormalizedExponent-exponentNormalization, maxNormalizedExponent-exponentNormalization)
+		return nil, fmt.Errorf("exponent %d out of range [%d,%d]", exponent, minNormalizedExponent-exponentNormalization+precision, maxNormalizedExponent-exponentNormalization+precision)
 	}
 
 	if significant < minSignificant || significant > maxSignificant {
@@ -556,6 +556,12 @@ func serializeMPTValue(value string) ([8]byte, error) {
 				return out, errors.New("negative exponent not allowed")
 			}
 
+			// MPT values fit in uint64, so 10^exponent above ~19 cannot be valid.
+			// Bound before Exp to prevent a giant big.Int allocation on hostile input.
+			if !exponent.IsInt64() || exponent.Int64() > 20 {
+				return out, errors.New("exponent out of range")
+			}
+
 			multiplier := new(big.Int).Exp(big.NewInt(10), exponent, nil)
 
 			valueBig.Mul(valueBig, multiplier)
@@ -572,13 +578,18 @@ func serializeMPTValue(value string) ([8]byte, error) {
 }
 
 func decideAmountType(amount map[string]any) amountType {
-	if _, hasCurrency := amount["currency"]; hasCurrency {
+	_, hasCurrency := amount["currency"]
+	_, hasMPTID := amount["mpt_issuance_id"]
+
+	// currency+mpt_issuance_id is ambiguous; reject instead of silently routing to IOU.
+	if hasCurrency && hasMPTID {
+		return invalid
+	}
+	if hasCurrency {
 		return tokenAmount
 	}
-
-	if _, hasMPTID := amount["mpt_issuance_id"]; hasMPTID {
+	if hasMPTID {
 		return mptAmount
 	}
-
-	return 0 // invalid
+	return invalid
 }

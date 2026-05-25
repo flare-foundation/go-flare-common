@@ -62,6 +62,12 @@ func Encode(value Object, signing bool) ([]byte, error) {
 		}
 	}
 
+	// All fields were filtered (not-serialized or not-signing-field); refuse to
+	// hand back an empty blob a caller might sign.
+	if outBuff.Len() == 0 {
+		return nil, errors.New("all fields filtered out")
+	}
+
 	return outBuff.Bytes(), nil
 }
 
@@ -367,6 +373,9 @@ func Decode(blob []byte) (map[string]any, error) {
 			return nil, fmt.Errorf("decoding next: %w", err)
 		}
 
+		if _, dup := out[name]; dup {
+			return nil, fmt.Errorf("duplicate field %s", name)
+		}
 		out[name] = value
 	}
 

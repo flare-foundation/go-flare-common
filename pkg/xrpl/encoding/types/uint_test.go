@@ -107,7 +107,7 @@ func TestUintEncode(t *testing.T) {
 		},
 		{
 			t:      &UInt64{},
-			inputs: []any{uint(10), uint8(10), uint16(10), uint32(10), uint64(10), int(10), int8(10), int16(10), int32(10), int64(10), float32(10), float64(10), "10"},
+			inputs: []any{uint(10), uint8(10), uint16(10), uint32(10), uint64(10), int(10), int8(10), int16(10), int32(10), int64(10), float32(10), float64(10), "0a", "0x0a"},
 			output: "000000000000000a",
 			err:    false,
 		},
@@ -119,7 +119,7 @@ func TestUintEncode(t *testing.T) {
 		},
 		{
 			t:      &UInt64{},
-			inputs: []any{8.1, -8, "-10", "gg", "aa", "10,1", "10.0", "18446744073709551616"},
+			inputs: []any{8.1, -8, "-10", "gg", "10,1", "10.0", "ffffffffffffffff0"},
 			output: "",
 			err:    true,
 		},

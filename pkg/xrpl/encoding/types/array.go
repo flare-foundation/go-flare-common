@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"fmt"
 	"reflect"
+
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/defs"
 )
 
 // ArrayObject is a wrapped element of form map[string]map[string]any{"nameOfTheObject: Object"}.
@@ -36,6 +38,11 @@ func (*stArray) ToBytes(value any, signing bool) ([]byte, error) {
 		}
 
 		for key := range arrayObj {
+			// rippled STArray rejects any field whose declared type is not STObject.
+			if field, ok := defs.NameToField[key]; ok && field.Type != defs.STObject {
+				return nil, fmt.Errorf("array element %s is not an STObject field", key)
+			}
+
 			bytes, err := encodeInner(key, arrayObj[key], signing)
 			if err != nil {
 				return nil, fmt.Errorf("encoding %v: %w", array[i], err)
@@ -84,6 +91,11 @@ func (*stArray) ToJSONDepth(b *bytes.Buffer, _ int, depth int) (any, error) {
 		name, value, err := decodeNext(b, depth)
 		if err != nil {
 			return nil, fmt.Errorf("decoding next: %w", err)
+		}
+
+		// rippled STArray rejects any field whose declared type is not STObject.
+		if field, ok := defs.NameToField[name]; !ok || field.Type != defs.STObject {
+			return nil, fmt.Errorf("array element %s is not an STObject field", name)
 		}
 
 		wrapped := make(map[string]any)

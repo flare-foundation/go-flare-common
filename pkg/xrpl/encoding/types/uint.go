@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"math"
 	"strconv"
+	"strings"
 
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/defs"
 )
@@ -144,14 +145,17 @@ func (*UInt32) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 type UInt64 struct {
 }
 
-// ToBytes serializes values of UInt64 fields.
+// ToBytes serializes values of UInt64 fields. String values are parsed as hex
+// (with optional 0x prefix) to match rippled's canonical JSON. MPT-specific
+// SMdBaseTen fields (MaximumAmount, OutstandingAmount, MPTAmount, LockedAmount)
+// are not specially handled here yet.
 func (*UInt64) ToBytes(value any, _ bool) ([]byte, error) {
 	var valueUint uint64
 	var err error
 
 	switch value := value.(type) {
 	case string:
-		valueUint, err = strconv.ParseUint(value, 10, 64)
+		valueUint, err = strconv.ParseUint(strings.TrimPrefix(value, "0x"), 16, 64)
 		if err != nil {
 			return nil, fmt.Errorf("invalid UInt64 %v: %w", value, err)
 		}
@@ -171,6 +175,7 @@ func (*UInt64) ToBytes(value any, _ bool) ([]byte, error) {
 	return out, nil
 }
 
+// ToJSON reads 8 bytes and returns them as an uppercase hex string (rippled canonical form).
 func (*UInt64) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	const l = 8
 	v := make([]byte, l)
@@ -185,7 +190,7 @@ func (*UInt64) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 
 	value := binary.BigEndian.Uint64(v)
 
-	return strconv.FormatUint(value, 10), nil
+	return strings.ToUpper(strconv.FormatUint(value, 16)), nil
 }
 
 // convertInt64 converts a value of a number type to int64.
