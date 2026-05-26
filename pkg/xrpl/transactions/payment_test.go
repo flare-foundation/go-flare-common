@@ -215,10 +215,6 @@ func TestCheckAndEncodePaymentOptionalFields(t *testing.T) {
 			extra: map[string]any{"Flags": uint32(2147483648)},
 		},
 		{
-			name:  "SendMax",
-			extra: map[string]any{"SendMax": "15000"},
-		},
-		{
 			name: "Memos",
 			extra: map[string]any{"Memos": []any{
 				map[string]any{"Memo": map[string]any{"MemoData": hex.EncodeToString([]byte("hi"))}},
@@ -281,6 +277,111 @@ func TestCheckAndEncodePaymentMissingCommonRequiredFields(t *testing.T) {
 			require.Contains(t, err.Error(), c.omit)
 		})
 	}
+}
+
+func TestCheckAndEncodePaymentRejectsPathFields(t *testing.T) {
+	base := map[string]any{
+		"TransactionType": "Payment",
+		"Account":         "rw16SLQGtfnjQJxgp1RCfkxsMCk8G7PaCJ",
+		"Destination":     "rfNgpzQecR231M6d9rRZKsMCmrykK5bYLB",
+		"Fee":             "10",
+		"Amount":          "1",
+		"Sequence":        uint32(1),
+		"SigningPubKey":   "",
+	}
+
+	cases := []struct {
+		name  string
+		extra map[string]any
+		want  string
+	}{
+		{
+			name:  "SendMax",
+			extra: map[string]any{"SendMax": "15000"},
+			want:  "SendMax not supported",
+		},
+		{
+			name:  "DeliverMin",
+			extra: map[string]any{"DeliverMin": "1"},
+			want:  "DeliverMin not supported",
+		},
+		{
+			name: "tfPartialPayment",
+			extra: map[string]any{
+				"Flags":   uint32(0x00020000),
+				"SendMax": "15000",
+			},
+			want: "SendMax not supported",
+		},
+		{
+			name:  "Flags tfPartialPayment alone",
+			extra: map[string]any{"Flags": uint32(0x00020000)},
+			want:  "disallowed Flags bits",
+		},
+		{
+			name:  "Flags tfNoDirectRipple",
+			extra: map[string]any{"Flags": uint32(0x00010000)},
+			want:  "disallowed Flags bits",
+		},
+		{
+			name:  "Flags tfLimitQuality",
+			extra: map[string]any{"Flags": uint32(0x00040000)},
+			want:  "disallowed Flags bits",
+		},
+	}
+
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			tx := make(map[string]any, len(base)+len(c.extra))
+			maps.Copy(tx, base)
+			maps.Copy(tx, c.extra)
+			_, err := CheckAndEncodePayment(tx, true)
+			require.Error(t, err)
+			require.Contains(t, err.Error(), c.want)
+		})
+	}
+}
+
+// TestCheckAndEncodePaymentDeliverMaxAlias mirrors rippled
+// TransactionSign.cpp DeliverMax handling: DeliverMax alone substitutes
+// for Amount; DeliverMax equal to Amount is accepted; differing values
+// are rejected.
+func TestCheckAndEncodePaymentDeliverMaxAlias(t *testing.T) {
+	base := map[string]any{
+		"TransactionType": "Payment",
+		"Account":         "rw16SLQGtfnjQJxgp1RCfkxsMCk8G7PaCJ",
+		"Destination":     "rfNgpzQecR231M6d9rRZKsMCmrykK5bYLB",
+		"Fee":             "10",
+		"Sequence":        uint32(1),
+		"SigningPubKey":   "",
+	}
+
+	t.Run("DeliverMax alone", func(t *testing.T) {
+		tx := make(map[string]any, len(base)+1)
+		maps.Copy(tx, base)
+		tx["DeliverMax"] = "1"
+		_, err := CheckAndEncodePayment(tx, true)
+		require.NoError(t, err)
+	})
+
+	t.Run("DeliverMax equal to Amount", func(t *testing.T) {
+		tx := make(map[string]any, len(base)+2)
+		maps.Copy(tx, base)
+		tx["Amount"] = "1"
+		tx["DeliverMax"] = "1"
+		_, err := CheckAndEncodePayment(tx, true)
+		require.NoError(t, err)
+	})
+
+	t.Run("DeliverMax differs from Amount", func(t *testing.T) {
+		tx := make(map[string]any, len(base)+2)
+		maps.Copy(tx, base)
+		tx["Amount"] = "1"
+		tx["DeliverMax"] = "2"
+		_, err := CheckAndEncodePayment(tx, true)
+		require.Error(t, err)
+		require.Contains(t, err.Error(), "differing Amount and DeliverMax")
+	})
 }
 
 // TestCheckAndEncodePaymentRejectsOversizeMemos covers the rippled
