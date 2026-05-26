@@ -62,6 +62,11 @@
           {
             "components": [
               {
+                "internalType": "uint256",
+                "name": "chainId",
+                "type": "uint256"
+              },
+              {
                 "internalType": "bytes32",
                 "name": "attestationType",
                 "type": "bytes32"
@@ -442,6 +447,11 @@
       {
         "components": [
           {
+            "internalType": "uint256",
+            "name": "chainId",
+            "type": "uint256"
+          },
+          {
             "internalType": "bytes32",
             "name": "attestationType",
             "type": "bytes32"
@@ -549,6 +559,11 @@
           },
           {
             "components": [
+              {
+                "internalType": "uint256",
+                "name": "chainId",
+                "type": "uint256"
+              },
               {
                 "internalType": "bytes32",
                 "name": "attestationType",
@@ -777,6 +792,11 @@
           {
             "components": [
               {
+                "internalType": "uint256",
+                "name": "chainId",
+                "type": "uint256"
+              },
+              {
                 "internalType": "bytes32",
                 "name": "attestationType",
                 "type": "bytes32"
@@ -983,6 +1003,11 @@
           },
           {
             "components": [
+              {
+                "internalType": "uint256",
+                "name": "chainId",
+                "type": "uint256"
+              },
               {
                 "internalType": "bytes32",
                 "name": "attestationType",

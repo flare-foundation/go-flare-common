@@ -1,5 +1,27 @@
 [
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "addr",
+        "type": "address"
+      }
+    ],
+    "name": "AddressAlreadyInSet",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "addr",
+        "type": "address"
+      }
+    ],
+    "name": "AddressNotInSet",
+    "type": "error"
+  },
+  {
     "inputs": [],
     "name": "AvailabilityCheckTimestampInvalid",
     "type": "error"
@@ -171,7 +193,34 @@
   },
   {
     "inputs": [],
+    "name": "NoAddresses",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "NoTeeMachinesSpecified",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "caller",
+        "type": "address"
+      }
+    ],
+    "name": "NotOwnerOrPauser",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "caller",
+        "type": "address"
+      }
+    ],
+    "name": "NotOwnerOrUnpauser",
     "type": "error"
   },
   {
@@ -647,6 +696,40 @@
     "name": "deleteKey",
     "outputs": [],
     "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_teeId",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_walletId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_keyId",
+        "type": "uint64"
+      }
+    ],
+    "name": "getKeyNonce",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "_nonce",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "_teeHoldsKey",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {

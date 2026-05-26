@@ -1,5 +1,27 @@
 [
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "addr",
+        "type": "address"
+      }
+    ],
+    "name": "AddressAlreadyInSet",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "addr",
+        "type": "address"
+      }
+    ],
+    "name": "AddressNotInSet",
+    "type": "error"
+  },
+  {
     "inputs": [],
     "name": "AvailabilityCheckTimestampInvalid",
     "type": "error"
@@ -32,12 +54,7 @@
   },
   {
     "inputs": [],
-    "name": "GovernedAddressZero",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "GovernedAlreadyInitialized",
+    "name": "InvalidAddress",
     "type": "error"
   },
   {
@@ -68,7 +85,17 @@
   },
   {
     "inputs": [],
+    "name": "InvalidExtensionOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "InvalidGovernanceHash",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidInitialization",
     "type": "error"
   },
   {
@@ -94,6 +121,11 @@
   {
     "inputs": [],
     "name": "InvalidPublicKey",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidReservedExtensionId",
     "type": "error"
   },
   {
@@ -150,6 +182,11 @@
   },
   {
     "inputs": [],
+    "name": "NoAddresses",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "NoPlatforms",
     "type": "error"
   },
@@ -162,6 +199,38 @@
       }
     ],
     "name": "NoSigningAlgos",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotAllowedExtensionOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotInitializing",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "caller",
+        "type": "address"
+      }
+    ],
+    "name": "NotOwnerOrPauser",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "caller",
+        "type": "address"
+      }
+    ],
+    "name": "NotOwnerOrUnpauser",
     "type": "error"
   },
   {
@@ -213,6 +282,11 @@
   {
     "inputs": [],
     "name": "PlatformEmpty",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ReservedExtensionIdAlreadyAssigned",
     "type": "error"
   },
   {
@@ -327,12 +401,12 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "address",
-        "name": "initialGovernance",
-        "type": "address"
+        "internalType": "uint64",
+        "name": "version",
+        "type": "uint64"
       }
     ],
-    "name": "GovernanceInitialised",
+    "name": "Initialized",
     "type": "event"
   },
   {
@@ -649,19 +723,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "extensionsCounter",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -966,6 +1027,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "nextPublicExtensionId",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -1004,6 +1078,24 @@
         "type": "uint256"
       }
     ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extensionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_owner",
+        "type": "address"
+      }
+    ],
+    "name": "registerReserved",
+    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },

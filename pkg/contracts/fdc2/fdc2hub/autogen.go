@@ -45,7 +45,7 @@ type IFdc2HubFdc2RequestHeader struct {
 
 // Fdc2HubMetaData contains all meta data concerning the Fdc2Hub contract.
 var Fdc2HubMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"}],\"name\":\"AddressEmptyCode\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CosignersThresholdInvalid\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"DefaultNumberOfTeesZero\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"}],\"name\":\"DuplicatedTeeId\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"ERC1967InvalidImplementation\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC1967NonPayable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FailedCall\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FeeTooLow\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"MinThresholdInvalid\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"MultipleResponsesPossible\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NumberOfTeesAndTeeIdsInvalid\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"}],\"name\":\"OnlySystemExtensionId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TeeMachineNotAvailable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ThresholdInvalid\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UUPSUnauthorizedCallContext\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"slot\",\"type\":\"bytes32\"}],\"name\":\"UUPSUnsupportedProxiableUUID\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"claimBackAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"}],\"name\":\"AttestationRequested\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"defaultNumberOfTees\",\"type\":\"uint8\"}],\"name\":\"DefaultNumberOfTeesSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"name\":\"GovernanceCallTimelocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"initialGovernance\",\"type\":\"address\"}],\"name\":\"GovernanceInitialised\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"governanceSettings\",\"type\":\"address\"}],\"name\":\"GovernedProductionModeEntered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint16\",\"name\":\"minThresholdBIPS\",\"type\":\"uint16\"}],\"name\":\"MinThresholdBIPSSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallCanceled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallExecuted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"Upgraded\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"UPGRADE_INTERFACE_VERSION\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"cancelGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"defaultNumberOfTees\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"executeGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"fdc2RequestFeeConfigurations\",\"outputs\":[{\"internalType\":\"contractIFdc2RequestFeeConfigurations\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"flareSystemsManager\",\"outputs\":[{\"internalType\":\"contractIFlareSystemsManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"flareTeeManager\",\"outputs\":[{\"internalType\":\"contractIIFlareTeeManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAddressUpdater\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governance\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governanceSettings\",\"outputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"implementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"}],\"name\":\"initialise\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"},{\"internalType\":\"uint16\",\"name\":\"_minThresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"uint8\",\"name\":\"_defaultNumberOfTees\",\"type\":\"uint8\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"isExecutor\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"minThresholdBIPS\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"productionMode\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"proxiableUUID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"}],\"internalType\":\"structIFdc2Hub.Fdc2RequestHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"internalType\":\"bytes\",\"name\":\"requestBody\",\"type\":\"bytes\"}],\"internalType\":\"structIFdc2Hub.Fdc2AttestationRequest\",\"name\":\"_attestationRequest\",\"type\":\"tuple\"},{\"internalType\":\"uint256\",\"name\":\"_numberOfTees\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_teeIds\",\"type\":\"address[]\"},{\"internalType\":\"address[]\",\"name\":\"_cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"_cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"address\",\"name\":\"_claimBackAddress\",\"type\":\"address\"}],\"name\":\"requestAttestation\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"rewardManager\",\"outputs\":[{\"internalType\":\"contractIIRewardManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_defaultNumberOfTees\",\"type\":\"uint8\"}],\"name\":\"setDefaultNumberOfTees\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint16\",\"name\":\"_minThresholdBIPS\",\"type\":\"uint16\"}],\"name\":\"setMinThresholdBIPS\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"switchToProductionMode\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"}],\"name\":\"timelockedCalls\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_contractNameHashes\",\"type\":\"bytes32[]\"},{\"internalType\":\"address[]\",\"name\":\"_contractAddresses\",\"type\":\"address[]\"}],\"name\":\"updateContractAddresses\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newImplementation\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"upgradeToAndCall\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"}],\"name\":\"AddressEmptyCode\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AlreadyInProductionMode\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CosignersThresholdInvalid\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"DefaultNumberOfTeesZero\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"}],\"name\":\"DuplicatedTeeId\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"ERC1967InvalidImplementation\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC1967NonPayable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FailedCall\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FeeTooLow\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"GovernedAddressZero\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"GovernedAlreadyInitialized\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidInitialization\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"MinThresholdInvalid\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"MultipleResponsesPossible\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotInitializing\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NumberOfTeesAndTeeIdsInvalid\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExecutor\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyGovernance\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"}],\"name\":\"OnlySystemExtensionId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TeeMachineNotAvailable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ThresholdInvalid\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TimelockInvalidSelector\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TimelockNotAllowedYet\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UUPSUnauthorizedCallContext\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"slot\",\"type\":\"bytes32\"}],\"name\":\"UUPSUnsupportedProxiableUUID\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"claimBackAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"}],\"name\":\"AttestationRequested\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"defaultNumberOfTees\",\"type\":\"uint8\"}],\"name\":\"DefaultNumberOfTeesSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"encodedCallHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"}],\"name\":\"GovernanceCallTimelocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"initialGovernance\",\"type\":\"address\"}],\"name\":\"GovernanceInitialised\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"governanceSettings\",\"type\":\"address\"}],\"name\":\"GovernedProductionModeEntered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"version\",\"type\":\"uint64\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint16\",\"name\":\"minThresholdBIPS\",\"type\":\"uint16\"}],\"name\":\"MinThresholdBIPSSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"encodedCallHash\",\"type\":\"bytes32\"}],\"name\":\"TimelockedGovernanceCallCanceled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"encodedCallHash\",\"type\":\"bytes32\"}],\"name\":\"TimelockedGovernanceCallExecuted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"Upgraded\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"UPGRADE_INTERFACE_VERSION\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_encodedCall\",\"type\":\"bytes\"}],\"name\":\"cancelGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"defaultNumberOfTees\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_encodedCall\",\"type\":\"bytes\"}],\"name\":\"executeGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"fdc2RequestFeeConfigurations\",\"outputs\":[{\"internalType\":\"contractIFdc2RequestFeeConfigurations\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"flareSystemsManager\",\"outputs\":[{\"internalType\":\"contractIFlareSystemsManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"flareTeeManager\",\"outputs\":[{\"internalType\":\"contractIIFlareTeeManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAddressUpdater\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governance\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governanceSettings\",\"outputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"implementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"},{\"internalType\":\"uint16\",\"name\":\"_minThresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"uint8\",\"name\":\"_defaultNumberOfTees\",\"type\":\"uint8\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"isExecutor\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"minThresholdBIPS\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"productionMode\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"proxiableUUID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"}],\"internalType\":\"structIFdc2Hub.Fdc2RequestHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"internalType\":\"bytes\",\"name\":\"requestBody\",\"type\":\"bytes\"}],\"internalType\":\"structIFdc2Hub.Fdc2AttestationRequest\",\"name\":\"_attestationRequest\",\"type\":\"tuple\"},{\"internalType\":\"uint256\",\"name\":\"_numberOfTees\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_teeIds\",\"type\":\"address[]\"},{\"internalType\":\"address[]\",\"name\":\"_cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"_cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"address\",\"name\":\"_claimBackAddress\",\"type\":\"address\"}],\"name\":\"requestAttestation\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"rewardManager\",\"outputs\":[{\"internalType\":\"contractIIRewardManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_defaultNumberOfTees\",\"type\":\"uint8\"}],\"name\":\"setDefaultNumberOfTees\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint16\",\"name\":\"_minThresholdBIPS\",\"type\":\"uint16\"}],\"name\":\"setMinThresholdBIPS\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"switchToProductionMode\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_contractNameHashes\",\"type\":\"bytes32[]\"},{\"internalType\":\"address[]\",\"name\":\"_contractAddresses\",\"type\":\"address[]\"}],\"name\":\"updateContractAddresses\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newImplementation\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"upgradeToAndCall\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}]",
 }
 
 // Fdc2HubABI is the input ABI used to generate the binding from.
@@ -628,112 +628,46 @@ func (_Fdc2Hub *Fdc2HubCallerSession) RewardManager() (common.Address, error) {
 	return _Fdc2Hub.Contract.RewardManager(&_Fdc2Hub.CallOpts)
 }
 
-// TimelockedCalls is a free data retrieval call binding the contract method 0x74e6310e.
+// CancelGovernanceCall is a paid mutator transaction binding the contract method 0x16fc2f6d.
 //
-// Solidity: function timelockedCalls(bytes4 selector) view returns(uint256 allowedAfterTimestamp, bytes encodedCall)
-func (_Fdc2Hub *Fdc2HubCaller) TimelockedCalls(opts *bind.CallOpts, selector [4]byte) (struct {
-	AllowedAfterTimestamp *big.Int
-	EncodedCall           []byte
-}, error) {
-	var out []interface{}
-	err := _Fdc2Hub.contract.Call(opts, &out, "timelockedCalls", selector)
-
-	outstruct := new(struct {
-		AllowedAfterTimestamp *big.Int
-		EncodedCall           []byte
-	})
-	if err != nil {
-		return *outstruct, err
-	}
-
-	outstruct.AllowedAfterTimestamp = *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-	outstruct.EncodedCall = *abi.ConvertType(out[1], new([]byte)).(*[]byte)
-
-	return *outstruct, err
-
+// Solidity: function cancelGovernanceCall(bytes _encodedCall) returns()
+func (_Fdc2Hub *Fdc2HubTransactor) CancelGovernanceCall(opts *bind.TransactOpts, _encodedCall []byte) (*types.Transaction, error) {
+	return _Fdc2Hub.contract.Transact(opts, "cancelGovernanceCall", _encodedCall)
 }
 
-// TimelockedCalls is a free data retrieval call binding the contract method 0x74e6310e.
+// CancelGovernanceCall is a paid mutator transaction binding the contract method 0x16fc2f6d.
 //
-// Solidity: function timelockedCalls(bytes4 selector) view returns(uint256 allowedAfterTimestamp, bytes encodedCall)
-func (_Fdc2Hub *Fdc2HubSession) TimelockedCalls(selector [4]byte) (struct {
-	AllowedAfterTimestamp *big.Int
-	EncodedCall           []byte
-}, error) {
-	return _Fdc2Hub.Contract.TimelockedCalls(&_Fdc2Hub.CallOpts, selector)
+// Solidity: function cancelGovernanceCall(bytes _encodedCall) returns()
+func (_Fdc2Hub *Fdc2HubSession) CancelGovernanceCall(_encodedCall []byte) (*types.Transaction, error) {
+	return _Fdc2Hub.Contract.CancelGovernanceCall(&_Fdc2Hub.TransactOpts, _encodedCall)
 }
 
-// TimelockedCalls is a free data retrieval call binding the contract method 0x74e6310e.
+// CancelGovernanceCall is a paid mutator transaction binding the contract method 0x16fc2f6d.
 //
-// Solidity: function timelockedCalls(bytes4 selector) view returns(uint256 allowedAfterTimestamp, bytes encodedCall)
-func (_Fdc2Hub *Fdc2HubCallerSession) TimelockedCalls(selector [4]byte) (struct {
-	AllowedAfterTimestamp *big.Int
-	EncodedCall           []byte
-}, error) {
-	return _Fdc2Hub.Contract.TimelockedCalls(&_Fdc2Hub.CallOpts, selector)
+// Solidity: function cancelGovernanceCall(bytes _encodedCall) returns()
+func (_Fdc2Hub *Fdc2HubTransactorSession) CancelGovernanceCall(_encodedCall []byte) (*types.Transaction, error) {
+	return _Fdc2Hub.Contract.CancelGovernanceCall(&_Fdc2Hub.TransactOpts, _encodedCall)
 }
 
-// CancelGovernanceCall is a paid mutator transaction binding the contract method 0x67fc4029.
+// ExecuteGovernanceCall is a paid mutator transaction binding the contract method 0x20c5f99d.
 //
-// Solidity: function cancelGovernanceCall(bytes4 _selector) returns()
-func (_Fdc2Hub *Fdc2HubTransactor) CancelGovernanceCall(opts *bind.TransactOpts, _selector [4]byte) (*types.Transaction, error) {
-	return _Fdc2Hub.contract.Transact(opts, "cancelGovernanceCall", _selector)
+// Solidity: function executeGovernanceCall(bytes _encodedCall) returns()
+func (_Fdc2Hub *Fdc2HubTransactor) ExecuteGovernanceCall(opts *bind.TransactOpts, _encodedCall []byte) (*types.Transaction, error) {
+	return _Fdc2Hub.contract.Transact(opts, "executeGovernanceCall", _encodedCall)
 }
 
-// CancelGovernanceCall is a paid mutator transaction binding the contract method 0x67fc4029.
+// ExecuteGovernanceCall is a paid mutator transaction binding the contract method 0x20c5f99d.
 //
-// Solidity: function cancelGovernanceCall(bytes4 _selector) returns()
-func (_Fdc2Hub *Fdc2HubSession) CancelGovernanceCall(_selector [4]byte) (*types.Transaction, error) {
-	return _Fdc2Hub.Contract.CancelGovernanceCall(&_Fdc2Hub.TransactOpts, _selector)
+// Solidity: function executeGovernanceCall(bytes _encodedCall) returns()
+func (_Fdc2Hub *Fdc2HubSession) ExecuteGovernanceCall(_encodedCall []byte) (*types.Transaction, error) {
+	return _Fdc2Hub.Contract.ExecuteGovernanceCall(&_Fdc2Hub.TransactOpts, _encodedCall)
 }
 
-// CancelGovernanceCall is a paid mutator transaction binding the contract method 0x67fc4029.
+// ExecuteGovernanceCall is a paid mutator transaction binding the contract method 0x20c5f99d.
 //
-// Solidity: function cancelGovernanceCall(bytes4 _selector) returns()
-func (_Fdc2Hub *Fdc2HubTransactorSession) CancelGovernanceCall(_selector [4]byte) (*types.Transaction, error) {
-	return _Fdc2Hub.Contract.CancelGovernanceCall(&_Fdc2Hub.TransactOpts, _selector)
-}
-
-// ExecuteGovernanceCall is a paid mutator transaction binding the contract method 0x5ff27079.
-//
-// Solidity: function executeGovernanceCall(bytes4 _selector) returns()
-func (_Fdc2Hub *Fdc2HubTransactor) ExecuteGovernanceCall(opts *bind.TransactOpts, _selector [4]byte) (*types.Transaction, error) {
-	return _Fdc2Hub.contract.Transact(opts, "executeGovernanceCall", _selector)
-}
-
-// ExecuteGovernanceCall is a paid mutator transaction binding the contract method 0x5ff27079.
-//
-// Solidity: function executeGovernanceCall(bytes4 _selector) returns()
-func (_Fdc2Hub *Fdc2HubSession) ExecuteGovernanceCall(_selector [4]byte) (*types.Transaction, error) {
-	return _Fdc2Hub.Contract.ExecuteGovernanceCall(&_Fdc2Hub.TransactOpts, _selector)
-}
-
-// ExecuteGovernanceCall is a paid mutator transaction binding the contract method 0x5ff27079.
-//
-// Solidity: function executeGovernanceCall(bytes4 _selector) returns()
-func (_Fdc2Hub *Fdc2HubTransactorSession) ExecuteGovernanceCall(_selector [4]byte) (*types.Transaction, error) {
-	return _Fdc2Hub.Contract.ExecuteGovernanceCall(&_Fdc2Hub.TransactOpts, _selector)
-}
-
-// Initialise is a paid mutator transaction binding the contract method 0xef88bf13.
-//
-// Solidity: function initialise(address _governanceSettings, address _initialGovernance) returns()
-func (_Fdc2Hub *Fdc2HubTransactor) Initialise(opts *bind.TransactOpts, _governanceSettings common.Address, _initialGovernance common.Address) (*types.Transaction, error) {
-	return _Fdc2Hub.contract.Transact(opts, "initialise", _governanceSettings, _initialGovernance)
-}
-
-// Initialise is a paid mutator transaction binding the contract method 0xef88bf13.
-//
-// Solidity: function initialise(address _governanceSettings, address _initialGovernance) returns()
-func (_Fdc2Hub *Fdc2HubSession) Initialise(_governanceSettings common.Address, _initialGovernance common.Address) (*types.Transaction, error) {
-	return _Fdc2Hub.Contract.Initialise(&_Fdc2Hub.TransactOpts, _governanceSettings, _initialGovernance)
-}
-
-// Initialise is a paid mutator transaction binding the contract method 0xef88bf13.
-//
-// Solidity: function initialise(address _governanceSettings, address _initialGovernance) returns()
-func (_Fdc2Hub *Fdc2HubTransactorSession) Initialise(_governanceSettings common.Address, _initialGovernance common.Address) (*types.Transaction, error) {
-	return _Fdc2Hub.Contract.Initialise(&_Fdc2Hub.TransactOpts, _governanceSettings, _initialGovernance)
+// Solidity: function executeGovernanceCall(bytes _encodedCall) returns()
+func (_Fdc2Hub *Fdc2HubTransactorSession) ExecuteGovernanceCall(_encodedCall []byte) (*types.Transaction, error) {
+	return _Fdc2Hub.Contract.ExecuteGovernanceCall(&_Fdc2Hub.TransactOpts, _encodedCall)
 }
 
 // Initialize is a paid mutator transaction binding the contract method 0xd6b35a06.
@@ -1251,15 +1185,15 @@ func (it *Fdc2HubGovernanceCallTimelockedIterator) Close() error {
 
 // Fdc2HubGovernanceCallTimelocked represents a GovernanceCallTimelocked event raised by the Fdc2Hub contract.
 type Fdc2HubGovernanceCallTimelocked struct {
-	Selector              [4]byte
-	AllowedAfterTimestamp *big.Int
 	EncodedCall           []byte
+	EncodedCallHash       [32]byte
+	AllowedAfterTimestamp *big.Int
 	Raw                   types.Log // Blockchain specific contextual infos
 }
 
-// FilterGovernanceCallTimelocked is a free log retrieval operation binding the contract event 0xed948300a3694aa01d4a6b258bfd664350193d770c0b51f8387277f6d83ea3b6.
+// FilterGovernanceCallTimelocked is a free log retrieval operation binding the contract event 0x8c02104dfc280f713854f25297de671710c544c58de69dbde8fb66974ce1ab9e.
 //
-// Solidity: event GovernanceCallTimelocked(bytes4 selector, uint256 allowedAfterTimestamp, bytes encodedCall)
+// Solidity: event GovernanceCallTimelocked(bytes encodedCall, bytes32 encodedCallHash, uint256 allowedAfterTimestamp)
 func (_Fdc2Hub *Fdc2HubFilterer) FilterGovernanceCallTimelocked(opts *bind.FilterOpts) (*Fdc2HubGovernanceCallTimelockedIterator, error) {
 
 	logs, sub, err := _Fdc2Hub.contract.FilterLogs(opts, "GovernanceCallTimelocked")
@@ -1269,9 +1203,9 @@ func (_Fdc2Hub *Fdc2HubFilterer) FilterGovernanceCallTimelocked(opts *bind.Filte
 	return &Fdc2HubGovernanceCallTimelockedIterator{contract: _Fdc2Hub.contract, event: "GovernanceCallTimelocked", logs: logs, sub: sub}, nil
 }
 
-// WatchGovernanceCallTimelocked is a free log subscription operation binding the contract event 0xed948300a3694aa01d4a6b258bfd664350193d770c0b51f8387277f6d83ea3b6.
+// WatchGovernanceCallTimelocked is a free log subscription operation binding the contract event 0x8c02104dfc280f713854f25297de671710c544c58de69dbde8fb66974ce1ab9e.
 //
-// Solidity: event GovernanceCallTimelocked(bytes4 selector, uint256 allowedAfterTimestamp, bytes encodedCall)
+// Solidity: event GovernanceCallTimelocked(bytes encodedCall, bytes32 encodedCallHash, uint256 allowedAfterTimestamp)
 func (_Fdc2Hub *Fdc2HubFilterer) WatchGovernanceCallTimelocked(opts *bind.WatchOpts, sink chan<- *Fdc2HubGovernanceCallTimelocked) (event.Subscription, error) {
 
 	logs, sub, err := _Fdc2Hub.contract.WatchLogs(opts, "GovernanceCallTimelocked")
@@ -1306,9 +1240,9 @@ func (_Fdc2Hub *Fdc2HubFilterer) WatchGovernanceCallTimelocked(opts *bind.WatchO
 	}), nil
 }
 
-// ParseGovernanceCallTimelocked is a log parse operation binding the contract event 0xed948300a3694aa01d4a6b258bfd664350193d770c0b51f8387277f6d83ea3b6.
+// ParseGovernanceCallTimelocked is a log parse operation binding the contract event 0x8c02104dfc280f713854f25297de671710c544c58de69dbde8fb66974ce1ab9e.
 //
-// Solidity: event GovernanceCallTimelocked(bytes4 selector, uint256 allowedAfterTimestamp, bytes encodedCall)
+// Solidity: event GovernanceCallTimelocked(bytes encodedCall, bytes32 encodedCallHash, uint256 allowedAfterTimestamp)
 func (_Fdc2Hub *Fdc2HubFilterer) ParseGovernanceCallTimelocked(log types.Log) (*Fdc2HubGovernanceCallTimelocked, error) {
 	event := new(Fdc2HubGovernanceCallTimelocked)
 	if err := _Fdc2Hub.contract.UnpackLog(event, "GovernanceCallTimelocked", log); err != nil {
@@ -1586,6 +1520,140 @@ func (_Fdc2Hub *Fdc2HubFilterer) ParseGovernedProductionModeEntered(log types.Lo
 	return event, nil
 }
 
+// Fdc2HubInitializedIterator is returned from FilterInitialized and is used to iterate over the raw logs and unpacked data for Initialized events raised by the Fdc2Hub contract.
+type Fdc2HubInitializedIterator struct {
+	Event *Fdc2HubInitialized // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *Fdc2HubInitializedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(Fdc2HubInitialized)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(Fdc2HubInitialized)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *Fdc2HubInitializedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *Fdc2HubInitializedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// Fdc2HubInitialized represents a Initialized event raised by the Fdc2Hub contract.
+type Fdc2HubInitialized struct {
+	Version uint64
+	Raw     types.Log // Blockchain specific contextual infos
+}
+
+// FilterInitialized is a free log retrieval operation binding the contract event 0xc7f505b2f371ae2175ee4913f4499e1f2633a7b5936321eed1cdaeb6115181d2.
+//
+// Solidity: event Initialized(uint64 version)
+func (_Fdc2Hub *Fdc2HubFilterer) FilterInitialized(opts *bind.FilterOpts) (*Fdc2HubInitializedIterator, error) {
+
+	logs, sub, err := _Fdc2Hub.contract.FilterLogs(opts, "Initialized")
+	if err != nil {
+		return nil, err
+	}
+	return &Fdc2HubInitializedIterator{contract: _Fdc2Hub.contract, event: "Initialized", logs: logs, sub: sub}, nil
+}
+
+// WatchInitialized is a free log subscription operation binding the contract event 0xc7f505b2f371ae2175ee4913f4499e1f2633a7b5936321eed1cdaeb6115181d2.
+//
+// Solidity: event Initialized(uint64 version)
+func (_Fdc2Hub *Fdc2HubFilterer) WatchInitialized(opts *bind.WatchOpts, sink chan<- *Fdc2HubInitialized) (event.Subscription, error) {
+
+	logs, sub, err := _Fdc2Hub.contract.WatchLogs(opts, "Initialized")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(Fdc2HubInitialized)
+				if err := _Fdc2Hub.contract.UnpackLog(event, "Initialized", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseInitialized is a log parse operation binding the contract event 0xc7f505b2f371ae2175ee4913f4499e1f2633a7b5936321eed1cdaeb6115181d2.
+//
+// Solidity: event Initialized(uint64 version)
+func (_Fdc2Hub *Fdc2HubFilterer) ParseInitialized(log types.Log) (*Fdc2HubInitialized, error) {
+	event := new(Fdc2HubInitialized)
+	if err := _Fdc2Hub.contract.UnpackLog(event, "Initialized", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
 // Fdc2HubMinThresholdBIPSSetIterator is returned from FilterMinThresholdBIPSSet and is used to iterate over the raw logs and unpacked data for MinThresholdBIPSSet events raised by the Fdc2Hub contract.
 type Fdc2HubMinThresholdBIPSSetIterator struct {
 	Event *Fdc2HubMinThresholdBIPSSet // Event containing the contract specifics and raw log
@@ -1789,14 +1857,13 @@ func (it *Fdc2HubTimelockedGovernanceCallCanceledIterator) Close() error {
 
 // Fdc2HubTimelockedGovernanceCallCanceled represents a TimelockedGovernanceCallCanceled event raised by the Fdc2Hub contract.
 type Fdc2HubTimelockedGovernanceCallCanceled struct {
-	Selector  [4]byte
-	Timestamp *big.Int
-	Raw       types.Log // Blockchain specific contextual infos
+	EncodedCallHash [32]byte
+	Raw             types.Log // Blockchain specific contextual infos
 }
 
-// FilterTimelockedGovernanceCallCanceled is a free log retrieval operation binding the contract event 0x7735b2391c38a81419c513e30ca578db7158eadd7101511b23e221c654d19cf8.
+// FilterTimelockedGovernanceCallCanceled is a free log retrieval operation binding the contract event 0x69b058d6225c01c1f2a25801ca5b05705fa2e9118e93d518390ba804398c87b1.
 //
-// Solidity: event TimelockedGovernanceCallCanceled(bytes4 selector, uint256 timestamp)
+// Solidity: event TimelockedGovernanceCallCanceled(bytes32 encodedCallHash)
 func (_Fdc2Hub *Fdc2HubFilterer) FilterTimelockedGovernanceCallCanceled(opts *bind.FilterOpts) (*Fdc2HubTimelockedGovernanceCallCanceledIterator, error) {
 
 	logs, sub, err := _Fdc2Hub.contract.FilterLogs(opts, "TimelockedGovernanceCallCanceled")
@@ -1806,9 +1873,9 @@ func (_Fdc2Hub *Fdc2HubFilterer) FilterTimelockedGovernanceCallCanceled(opts *bi
 	return &Fdc2HubTimelockedGovernanceCallCanceledIterator{contract: _Fdc2Hub.contract, event: "TimelockedGovernanceCallCanceled", logs: logs, sub: sub}, nil
 }
 
-// WatchTimelockedGovernanceCallCanceled is a free log subscription operation binding the contract event 0x7735b2391c38a81419c513e30ca578db7158eadd7101511b23e221c654d19cf8.
+// WatchTimelockedGovernanceCallCanceled is a free log subscription operation binding the contract event 0x69b058d6225c01c1f2a25801ca5b05705fa2e9118e93d518390ba804398c87b1.
 //
-// Solidity: event TimelockedGovernanceCallCanceled(bytes4 selector, uint256 timestamp)
+// Solidity: event TimelockedGovernanceCallCanceled(bytes32 encodedCallHash)
 func (_Fdc2Hub *Fdc2HubFilterer) WatchTimelockedGovernanceCallCanceled(opts *bind.WatchOpts, sink chan<- *Fdc2HubTimelockedGovernanceCallCanceled) (event.Subscription, error) {
 
 	logs, sub, err := _Fdc2Hub.contract.WatchLogs(opts, "TimelockedGovernanceCallCanceled")
@@ -1843,9 +1910,9 @@ func (_Fdc2Hub *Fdc2HubFilterer) WatchTimelockedGovernanceCallCanceled(opts *bin
 	}), nil
 }
 
-// ParseTimelockedGovernanceCallCanceled is a log parse operation binding the contract event 0x7735b2391c38a81419c513e30ca578db7158eadd7101511b23e221c654d19cf8.
+// ParseTimelockedGovernanceCallCanceled is a log parse operation binding the contract event 0x69b058d6225c01c1f2a25801ca5b05705fa2e9118e93d518390ba804398c87b1.
 //
-// Solidity: event TimelockedGovernanceCallCanceled(bytes4 selector, uint256 timestamp)
+// Solidity: event TimelockedGovernanceCallCanceled(bytes32 encodedCallHash)
 func (_Fdc2Hub *Fdc2HubFilterer) ParseTimelockedGovernanceCallCanceled(log types.Log) (*Fdc2HubTimelockedGovernanceCallCanceled, error) {
 	event := new(Fdc2HubTimelockedGovernanceCallCanceled)
 	if err := _Fdc2Hub.contract.UnpackLog(event, "TimelockedGovernanceCallCanceled", log); err != nil {
@@ -1924,14 +1991,13 @@ func (it *Fdc2HubTimelockedGovernanceCallExecutedIterator) Close() error {
 
 // Fdc2HubTimelockedGovernanceCallExecuted represents a TimelockedGovernanceCallExecuted event raised by the Fdc2Hub contract.
 type Fdc2HubTimelockedGovernanceCallExecuted struct {
-	Selector  [4]byte
-	Timestamp *big.Int
-	Raw       types.Log // Blockchain specific contextual infos
+	EncodedCallHash [32]byte
+	Raw             types.Log // Blockchain specific contextual infos
 }
 
-// FilterTimelockedGovernanceCallExecuted is a free log retrieval operation binding the contract event 0xa7326b57fc9cfe267aaea5e7f0b01757154d265620a0585819416ee9ddd2c438.
+// FilterTimelockedGovernanceCallExecuted is a free log retrieval operation binding the contract event 0xec1225e5a8a8acb91e03ce648c683c74f5d152a775b9715980999441d714c44f.
 //
-// Solidity: event TimelockedGovernanceCallExecuted(bytes4 selector, uint256 timestamp)
+// Solidity: event TimelockedGovernanceCallExecuted(bytes32 encodedCallHash)
 func (_Fdc2Hub *Fdc2HubFilterer) FilterTimelockedGovernanceCallExecuted(opts *bind.FilterOpts) (*Fdc2HubTimelockedGovernanceCallExecutedIterator, error) {
 
 	logs, sub, err := _Fdc2Hub.contract.FilterLogs(opts, "TimelockedGovernanceCallExecuted")
@@ -1941,9 +2007,9 @@ func (_Fdc2Hub *Fdc2HubFilterer) FilterTimelockedGovernanceCallExecuted(opts *bi
 	return &Fdc2HubTimelockedGovernanceCallExecutedIterator{contract: _Fdc2Hub.contract, event: "TimelockedGovernanceCallExecuted", logs: logs, sub: sub}, nil
 }
 
-// WatchTimelockedGovernanceCallExecuted is a free log subscription operation binding the contract event 0xa7326b57fc9cfe267aaea5e7f0b01757154d265620a0585819416ee9ddd2c438.
+// WatchTimelockedGovernanceCallExecuted is a free log subscription operation binding the contract event 0xec1225e5a8a8acb91e03ce648c683c74f5d152a775b9715980999441d714c44f.
 //
-// Solidity: event TimelockedGovernanceCallExecuted(bytes4 selector, uint256 timestamp)
+// Solidity: event TimelockedGovernanceCallExecuted(bytes32 encodedCallHash)
 func (_Fdc2Hub *Fdc2HubFilterer) WatchTimelockedGovernanceCallExecuted(opts *bind.WatchOpts, sink chan<- *Fdc2HubTimelockedGovernanceCallExecuted) (event.Subscription, error) {
 
 	logs, sub, err := _Fdc2Hub.contract.WatchLogs(opts, "TimelockedGovernanceCallExecuted")
@@ -1978,9 +2044,9 @@ func (_Fdc2Hub *Fdc2HubFilterer) WatchTimelockedGovernanceCallExecuted(opts *bin
 	}), nil
 }
 
-// ParseTimelockedGovernanceCallExecuted is a log parse operation binding the contract event 0xa7326b57fc9cfe267aaea5e7f0b01757154d265620a0585819416ee9ddd2c438.
+// ParseTimelockedGovernanceCallExecuted is a log parse operation binding the contract event 0xec1225e5a8a8acb91e03ce648c683c74f5d152a775b9715980999441d714c44f.
 //
-// Solidity: event TimelockedGovernanceCallExecuted(bytes4 selector, uint256 timestamp)
+// Solidity: event TimelockedGovernanceCallExecuted(bytes32 encodedCallHash)
 func (_Fdc2Hub *Fdc2HubFilterer) ParseTimelockedGovernanceCallExecuted(log types.Log) (*Fdc2HubTimelockedGovernanceCallExecuted, error) {
 	event := new(Fdc2HubTimelockedGovernanceCallExecuted)
 	if err := _Fdc2Hub.contract.UnpackLog(event, "TimelockedGovernanceCallExecuted", log); err != nil {

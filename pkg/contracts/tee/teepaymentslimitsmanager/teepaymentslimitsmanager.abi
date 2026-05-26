@@ -22,6 +22,11 @@
   },
   {
     "inputs": [],
+    "name": "AlreadyInProductionMode",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "DailyLimitBelowTransactionLimit",
     "type": "error"
   },
@@ -48,7 +53,47 @@
   },
   {
     "inputs": [],
+    "name": "GovernedAddressZero",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "GovernedAlreadyInitialized",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidInitialization",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotInitializing",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OnlyExecutor",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OnlyGovernance",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "OnlyWalletOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TimelockInvalidSelector",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TimelockNotAllowedYet",
     "type": "error"
   },
   {
@@ -77,21 +122,21 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "bytes4",
-        "name": "selector",
-        "type": "bytes4"
+        "internalType": "bytes",
+        "name": "encodedCall",
+        "type": "bytes"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "encodedCallHash",
+        "type": "bytes32"
       },
       {
         "indexed": false,
         "internalType": "uint256",
         "name": "allowedAfterTimestamp",
         "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes",
-        "name": "encodedCall",
-        "type": "bytes"
       }
     ],
     "name": "GovernanceCallTimelocked",
@@ -121,6 +166,19 @@
       }
     ],
     "name": "GovernedProductionModeEntered",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "version",
+        "type": "uint64"
+      }
+    ],
+    "name": "Initialized",
     "type": "event"
   },
   {
@@ -165,15 +223,9 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "bytes4",
-        "name": "selector",
-        "type": "bytes4"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
+        "internalType": "bytes32",
+        "name": "encodedCallHash",
+        "type": "bytes32"
       }
     ],
     "name": "TimelockedGovernanceCallCanceled",
@@ -184,15 +236,9 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "bytes4",
-        "name": "selector",
-        "type": "bytes4"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
+        "internalType": "bytes32",
+        "name": "encodedCallHash",
+        "type": "bytes32"
       }
     ],
     "name": "TimelockedGovernanceCallExecuted",
@@ -227,9 +273,9 @@
   {
     "inputs": [
       {
-        "internalType": "bytes4",
-        "name": "_selector",
-        "type": "bytes4"
+        "internalType": "bytes",
+        "name": "_encodedCall",
+        "type": "bytes"
       }
     ],
     "name": "cancelGovernanceCall",
@@ -240,9 +286,9 @@
   {
     "inputs": [
       {
-        "internalType": "bytes4",
-        "name": "_selector",
-        "type": "bytes4"
+        "internalType": "bytes",
+        "name": "_encodedCall",
+        "type": "bytes"
       }
     ],
     "name": "executeGovernanceCall",
@@ -344,24 +390,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract IGovernanceSettings",
-        "name": "_governanceSettings",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_initialGovernance",
-        "type": "address"
-      }
-    ],
-    "name": "initialise",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -487,30 +515,6 @@
         "internalType": "contract ITeePaymentsRegistry",
         "name": "",
         "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes4",
-        "name": "selector",
-        "type": "bytes4"
-      }
-    ],
-    "name": "timelockedCalls",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "allowedAfterTimestamp",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes",
-        "name": "encodedCall",
-        "type": "bytes"
       }
     ],
     "stateMutability": "view",

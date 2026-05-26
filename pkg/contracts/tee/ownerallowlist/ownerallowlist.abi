@@ -1,5 +1,27 @@
 [
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "addr",
+        "type": "address"
+      }
+    ],
+    "name": "AddressAlreadyInSet",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "addr",
+        "type": "address"
+      }
+    ],
+    "name": "AddressNotInSet",
+    "type": "error"
+  },
+  {
     "inputs": [],
     "name": "AvailabilityCheckTimestampInvalid",
     "type": "error"
@@ -18,6 +40,11 @@
   {
     "inputs": [],
     "name": "ExtensionIdMismatch",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidAddress",
     "type": "error"
   },
   {
@@ -48,17 +75,17 @@
   },
   {
     "inputs": [],
+    "name": "InvalidInitialization",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "InvalidKeyType",
     "type": "error"
   },
   {
     "inputs": [],
     "name": "InvalidNonce",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "InvalidOwner",
     "type": "error"
   },
   {
@@ -104,7 +131,44 @@
   },
   {
     "inputs": [],
+    "name": "NoAddresses",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotInitializing",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "caller",
+        "type": "address"
+      }
+    ],
+    "name": "NotOwnerOrPauser",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "caller",
+        "type": "address"
+      }
+    ],
+    "name": "NotOwnerOrUnpauser",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "OnlyExtensionOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OnlyGovernance",
     "type": "error"
   },
   {
@@ -128,30 +192,8 @@
     "type": "error"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      }
-    ],
-    "name": "OwnerAlreadyAllowed",
-    "type": "error"
-  },
-  {
     "inputs": [],
     "name": "OwnerNotAllowed",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      }
-    ],
-    "name": "OwnerNotInAllowlist",
     "type": "error"
   },
   {
@@ -163,6 +205,18 @@
     "inputs": [],
     "name": "VersionNotSupported",
     "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [],
+    "name": "AllExtensionOwnersAllowed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [],
+    "name": "AllExtensionOwnersDisallowed",
+    "type": "event"
   },
   {
     "anonymous": false,
@@ -214,6 +268,32 @@
       }
     ],
     "name": "AllTeeWalletProjectOwnersDisallowed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address[]",
+        "name": "owners",
+        "type": "address[]"
+      }
+    ],
+    "name": "AllowedExtensionOwnersAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address[]",
+        "name": "owners",
+        "type": "address[]"
+      }
+    ],
+    "name": "AllowedExtensionOwnersRemoved",
     "type": "event"
   },
   {
@@ -293,6 +373,32 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "version",
+        "type": "uint64"
+      }
+    ],
+    "name": "Initialized",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "_owners",
+        "type": "address[]"
+      }
+    ],
+    "name": "addAllowedExtensionOwners",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -326,6 +432,19 @@
     "name": "addAllowedTeeWalletProjectOwners",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "allExtensionOwnersAllowed",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "_allAllowed",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -367,6 +486,13 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "allowAllExtensionOwners",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -388,6 +514,13 @@
       }
     ],
     "name": "allowAllTeeWalletProjectOwners",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "disallowAllExtensionOwners",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -416,6 +549,19 @@
     "name": "disallowAllTeeWalletProjectOwners",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getAllowedExtensionOwners",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "_allowedOwners",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -451,6 +597,25 @@
         "internalType": "address[]",
         "name": "_allowedOwners",
         "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_owner",
+        "type": "address"
+      }
+    ],
+    "name": "isAllowedExtensionOwner",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "_isAllowed",
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -502,6 +667,19 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "_owners",
+        "type": "address[]"
+      }
+    ],
+    "name": "removeAllowedExtensionOwners",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

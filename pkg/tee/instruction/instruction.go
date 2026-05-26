@@ -77,6 +77,7 @@ func (d *DataFixed) Validate() error {
 
 type DataFixed struct {
 	InstructionID          common.Hash      `json:"instructionId"`
+	ChainID                uint64           `json:"chainId"`
 	TeeID                  common.Address   `json:"teeId"`
 	Timestamp              uint64           `json:"timestamp"`
 	RewardEpochID          uint32           `json:"rewardEpochId"`
@@ -89,7 +90,17 @@ type DataFixed struct {
 }
 
 // HashFixed computes the hash of the DataFixed.
-func (d *DataFixed) HashFixed() (common.Hash, error) {
+func (d *DataFixed) HashFixed() (h common.Hash, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			e, ok := r.(error)
+			if ok {
+				err = fmt.Errorf("recovered panic: %w", e)
+			} else {
+				err = fmt.Errorf("recovered panic non error: %v", r)
+			}
+		}
+	}()
 	e, err := structs.Encode(tee.StructArg[tee.Instruction], d.prepareForEncoding())
 	if err != nil {
 		return common.Hash{}, err
@@ -101,6 +112,7 @@ func (d *DataFixed) HashFixed() (common.Hash, error) {
 func (d *DataFixed) prepareForEncoding() tee.TeeStructsInstruction {
 	return tee.TeeStructsInstruction{
 		InstructionId:          d.InstructionID,
+		ChainId:                new(big.Int).SetUint64(d.ChainID),
 		TeeId:                  d.TeeID,
 		Timestamp:              d.Timestamp,
 		RewardEpochId:          d.RewardEpochID,

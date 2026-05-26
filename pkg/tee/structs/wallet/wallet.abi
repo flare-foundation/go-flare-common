@@ -231,6 +231,145 @@
         "components": [
           {
             "internalType": "address",
+            "name": "sourceTeeId",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "walletId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint64",
+            "name": "keyId",
+            "type": "uint64"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "x",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "y",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct PublicKey",
+            "name": "destinationTeePublicKey",
+            "type": "tuple"
+          },
+          {
+            "internalType": "uint256",
+            "name": "machinePathListNonce",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IWalletBackupManager.KeyDirectBackup",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "keyDirectBackupStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "sourceTeeId",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "sourceProxyUrl",
+            "type": "string"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "teeId",
+                "type": "address"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "walletId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint64",
+                "name": "keyId",
+                "type": "uint64"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "keyType",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "signingAlgo",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes",
+                "name": "publicKey",
+                "type": "bytes"
+              },
+              {
+                "internalType": "uint32",
+                "name": "rewardEpochId",
+                "type": "uint32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "randomNonce",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct IWalletBackupManager.BackupId",
+            "name": "backupId",
+            "type": "tuple"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "backupInstructionId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "destinationNonce",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "machinePathListNonce",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IWalletBackupManager.KeyDirectRestore",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "keyDirectRestoreStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
             "name": "teeId",
             "type": "address"
           },

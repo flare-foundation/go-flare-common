@@ -19,12 +19,18 @@ import (
 func TestValidate(t *testing.T) {
 	good := Data{
 		DataFixed: DataFixed{
-			OPType:             op.Wallet.Hash(),
-			OPCommand:          op.KeyGenerate.Hash(),
-			Cosigners:          []common.Address{{0x01}, {0x02}, {0x03}},
-			CosignersThreshold: 2,
-			OriginalMessage:    hexutil.Bytes{1, 2, 3},
+			OPType:                 op.Wallet.Hash(),
+			OPCommand:              op.KeyGenerate.Hash(),
+			Cosigners:              []common.Address{{0x01}, {0x02}, {0x03}},
+			CosignersThreshold:     2,
+			OriginalMessage:        hexutil.Bytes{1, 2, 3},
+			InstructionID:          common.Hash{},
+			TeeID:                  common.Address{},
+			Timestamp:              0,
+			RewardEpochID:          0,
+			AdditionalFixedMessage: hexutil.Bytes{},
 		},
+		AdditionalVariableMessage: hexutil.Bytes{},
 	}
 
 	t.Run("good", func(t *testing.T) {
@@ -122,6 +128,8 @@ func TestHash(t *testing.T) {
 		OPCommand:              common.Hash{},
 		OriginalMessage:        hexutil.Bytes{1},
 		AdditionalFixedMessage: hexutil.Bytes{1},
+		Cosigners:              []common.Address{},
+		CosignersThreshold:     0,
 	}
 
 	data.DataFixed = dataFixed
