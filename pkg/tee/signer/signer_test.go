@@ -7,6 +7,7 @@ import (
 	"crypto/rand"
 	"encoding/json"
 	"fmt"
+	"net"
 	"net/http"
 	"strconv"
 	"sync"
@@ -20,6 +21,21 @@ import (
 	"github.com/ethereum/go-ethereum/crypto/ecies"
 	"github.com/stretchr/testify/require"
 )
+
+// waitForServerReady polls addr by TCP dial until the listener is up or the deadline expires.
+func waitForServerReady(t *testing.T, addr string) {
+	t.Helper()
+	deadline := time.Now().Add(5 * time.Second)
+	for time.Now().Before(deadline) {
+		conn, err := net.DialTimeout("tcp", addr, 100*time.Millisecond)
+		if err == nil {
+			_ = conn.Close()
+			return
+		}
+		time.Sleep(5 * time.Millisecond)
+	}
+	t.Fatalf("server at %s not ready within deadline", addr)
+}
 
 const (
 	port    = 6739
@@ -103,7 +119,7 @@ func TestSigner(t *testing.T) {
 	})
 
 	wg2.Wait()
-	time.Sleep(100 * time.Millisecond)
+	waitForServerReady(t, fmt.Sprintf("127.0.0.1:%d", port))
 
 	t.Run("sign happy path", func(t *testing.T) {
 		t.Parallel()
@@ -387,7 +403,7 @@ func TestConfigs(t *testing.T) {
 		require.Error(t, err)
 	})
 
-	time.Sleep(1 * time.Second)
+	waitForServerReady(t, fmt.Sprintf("127.0.0.1:%d", port))
 
 	t.Run("sign with custom limit", func(t *testing.T) {
 		const nuOfHashesFail uint64 = 3

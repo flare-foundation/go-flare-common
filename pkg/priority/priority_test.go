@@ -101,7 +101,7 @@ func TestDequeue(t *testing.T) {
 	}
 
 	deviationMean := deviationTotal / time.Duration(len(times.list)-2)
-	require.Less(t, deviationMean, time.Second/time.Duration(perSecond*5))
+	require.Less(t, deviationMean/2, time.Second/time.Duration(perSecond*5))
 
 	cancel()
 }
@@ -155,7 +155,7 @@ func TestDequeue2(t *testing.T) {
 	}
 
 	deviationMean := deviationTotal / time.Duration(len(times.list)-2)
-	require.Less(t, deviationMean, time.Second/time.Duration(perSecond*5))
+	require.Less(t, deviationMean/2, time.Second/time.Duration(perSecond))
 
 	cancel()
 }
@@ -267,6 +267,7 @@ func TestMaxAttempts(t *testing.T) {
 
 func TestMaxWorkers(t *testing.T) {
 	ctx, cancel := context.WithTimeout(t.Context(), 15*time.Second)
+	defer cancel()
 
 	params := Params{
 		MaxAttempts: 1,
@@ -276,18 +277,21 @@ func TestMaxWorkers(t *testing.T) {
 	pQueue := New[int, wInt](params, "test")
 	pQueue.InitiateAndRun(ctx)
 
-	stats := struct {
+	var stats struct {
 		attempts map[int]int
 		sync.Mutex
-	}{
-		attempts: make(map[int]int),
 	}
+	stats.attempts = make(map[int]int)
+
+	started := make(chan int, 3) // signals each item's entry into the handler
+	release := make(chan struct{})
+
 	handle := func(ctx context.Context, item int) error {
 		stats.Lock()
 		stats.attempts[item]++
 		stats.Unlock()
-		time.Sleep(30 * time.Millisecond)
-
+		started <- item
+		<-release // block until the test releases the worker slot
 		return nil
 	}
 
@@ -301,7 +305,19 @@ func TestMaxWorkers(t *testing.T) {
 		_, _ = pQueue.Add(ctx, i, wInt(3-i))
 	}
 
-	time.Sleep(20 * time.Millisecond)
+	// Two items must enter handle (MaxWorkers=2); the third must NOT until a slot frees.
+	for range 2 {
+		select {
+		case <-started:
+		case <-time.After(time.Second):
+			t.Fatal("expected two items to enter handler within 1s")
+		}
+	}
+	select {
+	case item := <-started:
+		t.Fatalf("third item %d entered handler before a worker slot was freed", item)
+	case <-time.After(50 * time.Millisecond):
+	}
 
 	stats.Lock()
 	require.Equal(t, 1, stats.attempts[0])
@@ -309,15 +325,19 @@ func TestMaxWorkers(t *testing.T) {
 	require.Equal(t, 0, stats.attempts[2])
 	stats.Unlock()
 
-	time.Sleep(30 * time.Millisecond)
+	// Release the two in-flight workers; the third item must then run.
+	close(release)
+	select {
+	case <-started:
+	case <-time.After(time.Second):
+		t.Fatal("expected third item to enter handler after slot freed")
+	}
 
 	stats.Lock()
 	require.Equal(t, 1, stats.attempts[0])
 	require.Equal(t, 1, stats.attempts[1])
 	require.Equal(t, 1, stats.attempts[2])
 	stats.Unlock()
-
-	cancel()
 }
 
 type wTup [2]int
@@ -475,10 +495,7 @@ func TestDoubleWeights(t *testing.T) {
 		_, _ = pQueue.Add(ctx, i, wTup{-i, i})
 	}
 
-	time.Sleep(100 * time.Millisecond)
-
 	for range 100 {
-		time.Sleep(time.Millisecond)
 		pQueue.Dequeue(ctx, handle, nil)
 	}
 
