@@ -28,37 +28,39 @@ const productionDebugStatus = "disabled-since-boot"
 
 const defaultLeeway = 30 * time.Second
 
-// Policy carries the per-deployment configuration the verifier supplies to
-// ParseAndValidatePKIToken. The library performs the comparisons; the consumer
-// only supplies the values it alone knows.
+// Policy carries the per-deployment configuration the verifier supplies. The library
+// performs the comparisons; the consumer only supplies the values it alone knows.
+//
+// Each optional check runs only when the policy carries the information to perform it:
+// an allowlist/value field is checked when non-empty, a Require* boolean when true.
+// Every field therefore defaults to "skip", so the zero Policy verifies token
+// AUTHENTICITY ONLY — signature, x5c chain to the pinned root, RS256, iss, and exp —
+// but NOT workload IDENTITY. Almost every production caller should set at least
+// AllowedImageIDs and RequireSecBoot. iss is always checked; supplying Issuer only
+// overrides the expected value (intended for test environments).
+//
+// Fields group by where they are consumed:
+//   - Always (JWT/chain level, both entry points): Audience, Issuer, Leeway,
+//     RequireCRL, AllowedLeafEKUs.
+//   - Only by Apply (the full ParseAndValidatePKIToken path; the generic-claims
+//     variant does not run these): AllowedImageIDs, AllowedHWModels, EATNonce,
+//     RequireSecBoot, AllowedDebugStatuses.
+//
+// Do not add a validate() that requires Apply-only fields: they have no effect on the
+// ParseAndValidatePKITokenClaims path and requiring them there would reject callers
+// that legitimately assert those claims themselves.
 type Policy struct {
-	// Audience is the expected aud claim of the token. Required.
+	// Audience is the expected aud claim. Empty skips the aud check.
 	// The TEE workload requests an attestation token with this audience from the
-	// Google metadata server; the verifier must require the same value back.
+	// Google metadata server; the verifier should require the same value back.
 	Audience string
 
-	// AllowedImageIDs is the allowlist of acceptable workload container image IDs
-	// (the sha256 hash from submods.container.image_id). Required.
-	AllowedImageIDs map[common.Hash]struct{}
-
-	// AllowedHWModels optionally restricts to specific hardware models (hwmodel claim).
-	// nil/empty accepts any hwmodel.
-	AllowedHWModels map[string]struct{}
-
-	// EATNonce is the per-request challenge to bind. If non-empty, the token's
-	// eat_nonce list must contain this value.
-	EATNonce string
+	// Issuer overrides the expected iss claim. Empty defaults to ConfidentialSpaceIssuer.
+	// iss is always checked; this field only changes the expected value (intended for tests).
+	Issuer string
 
 	// Leeway is the clock skew tolerance for exp/iat/nbf. Zero means defaultLeeway.
 	Leeway time.Duration
-
-	// AllowDebug permits dbgstat != "disabled-since-boot" or secboot=false.
-	// Default false; flip only for non-production verification paths.
-	AllowDebug bool
-
-	// Issuer overrides the expected iss claim. Zero defaults to ConfidentialSpaceIssuer.
-	// Override is intended for test environments.
-	Issuer string
 
 	// RequireCRL causes verification to fail closed when a certificate
 	// declares CRLDistributionPoints but the caller did not supply the
@@ -74,16 +76,26 @@ type Policy struct {
 	// chain validator from accepting any EKU via ExtKeyUsageAny. Audit
 	// finding M13.
 	AllowedLeafEKUs []x509.ExtKeyUsage
-}
 
-func (p Policy) validate() error {
-	if p.Audience == "" {
-		return errors.New("Policy.Audience is required")
-	}
-	if len(p.AllowedImageIDs) == 0 {
-		return errors.New("Policy.AllowedImageIDs is required")
-	}
-	return nil
+	// AllowedImageIDs is the allowlist of acceptable workload container image IDs
+	// (the sha256 hash from submods.container.image_id). Empty skips the image_id check.
+	AllowedImageIDs map[common.Hash]struct{}
+
+	// AllowedHWModels restricts to specific hardware models (hwmodel claim).
+	// Empty skips the hwmodel check.
+	AllowedHWModels map[string]struct{}
+
+	// EATNonce is the per-request challenge to bind. When non-empty, the token's
+	// eat_nonce list must contain this value. Empty skips replay binding.
+	EATNonce string
+
+	// RequireSecBoot, when true, rejects tokens reporting secboot=false.
+	// Default false skips the check.
+	RequireSecBoot bool
+
+	// AllowedDebugStatuses is the allowlist of acceptable dbgstat claim values
+	// (e.g. productionDebugStatus). Empty skips the dbgstat check.
+	AllowedDebugStatuses []string
 }
 
 func (p Policy) issuer() string {
@@ -174,8 +186,10 @@ func (c *GoogleTeeClaims) CodeHash() (common.Hash, error) {
 // leafCRL and intermediateCRL are optional pre-fetched CRLs for revocation checking.
 //
 // The library enforces the full check chain against policy: x5c chain to root, RS256-only,
-// iss/aud/exp claims, leeway, secboot, dbgstat, image_id allowlist, and optional eat_nonce.
-// The consumer supplies the per-deployment values; comparison is done here.
+// iss/exp claims, leeway, and — when the corresponding policy field is set — aud, secboot,
+// dbgstat, hwmodel, image_id allowlist, and eat_nonce. The consumer supplies the
+// per-deployment values; comparison is done here. See Policy: unset fields skip their check,
+// so an under-specified policy verifies authenticity but not workload identity.
 //
 // storedRootCertificate is compared against the chain's root via x509.Certificate.Equal,
 // so the caller is responsible for sourcing it from a trusted external location (e.g.
@@ -183,9 +197,6 @@ func (c *GoogleTeeClaims) CodeHash() (common.Hash, error) {
 // by SHA-256 fingerprint — before passing it in. The library does NOT embed the root,
 // to avoid making this repo a supply-chain target for cert substitution.
 func ParseAndValidatePKIToken(attestationToken string, storedRootCertificate *x509.Certificate, leafCRL, intermediateCRL *x509.RevocationList, policy Policy) (*jwt.Token, *GoogleTeeClaims, error) {
-	if err := policy.validate(); err != nil {
-		return nil, nil, err
-	}
 	claims := &GoogleTeeClaims{}
 	parsed, claims, err := parseAndVerifyJWT(attestationToken, storedRootCertificate, leafCRL, intermediateCRL, policy, claims)
 	if err != nil {
@@ -198,14 +209,12 @@ func ParseAndValidatePKIToken(attestationToken string, storedRootCertificate *x5
 }
 
 // ParseAndValidatePKITokenClaims is the generic-claims variant of ParseAndValidatePKIToken.
-// JWT-level checks (signature, iss, aud, exp, leeway) are performed by this function.
-// Confidential-Space-specific claim checks (secboot, dbgstat, image_id, hwmodel, eat_nonce)
-// are NOT applied — the caller is responsible for asserting them on the custom claims type.
+// JWT-level checks (signature, iss, exp, leeway, and aud when Policy.Audience is set) are
+// performed by this function. The Apply-only claim checks (secboot, dbgstat, image_id,
+// hwmodel, eat_nonce) are NOT applied — the caller is responsible for asserting them on the
+// custom claims type, and the corresponding Policy fields are ignored here.
 // Use ParseAndValidatePKIToken when consuming GoogleTeeClaims to get the full check chain.
 func ParseAndValidatePKITokenClaims[T jwt.Claims](attestationToken string, storedRootCertificate *x509.Certificate, leafCRL, intermediateCRL *x509.RevocationList, policy Policy, claims T) (*jwt.Token, T, error) {
-	if err := policy.validate(); err != nil {
-		return nil, claims, err
-	}
 	return parseAndVerifyJWT(attestationToken, storedRootCertificate, leafCRL, intermediateCRL, policy, claims)
 }
 
@@ -215,9 +224,13 @@ func parseAndVerifyJWT[T jwt.Claims](attestationToken string, storedRootCertific
 	opts := []jwt.ParserOption{
 		jwt.WithValidMethods([]string{"RS256"}),
 		jwt.WithIssuer(policy.issuer()),
-		jwt.WithAudience(policy.Audience),
 		jwt.WithExpirationRequired(),
 		jwt.WithLeeway(policy.leeway()),
+	}
+	// WithAudience("") would require an empty aud claim and reject every real token,
+	// so the aud check is opt-in: add it only when an expected audience is set.
+	if policy.Audience != "" {
+		opts = append(opts, jwt.WithAudience(policy.Audience))
 	}
 
 	verifiedJWT, err := jwt.ParseWithClaims(attestationToken, claims, keyFunc, opts...)
@@ -228,31 +241,33 @@ func parseAndVerifyJWT[T jwt.Claims](attestationToken string, storedRootCertific
 }
 
 // Apply asserts the Confidential-Space-specific claim values on c against the policy.
-// Returns nil if all required checks pass.
+// Each check runs only when its policy field is set (RequireSecBoot true, or the relevant
+// allowlist/nonce non-empty); an unset field skips its check. Returns nil if all enabled
+// checks pass.
 //
 // Called automatically by ParseAndValidatePKIToken; callers using
 // ParseAndValidatePKITokenClaims with a custom claim type are responsible for their own
 // equivalent checks.
 func (c *GoogleTeeClaims) Apply(p Policy) error {
-	if !p.AllowDebug {
-		if !c.SecBoot {
-			return errors.New("secboot not enabled")
-		}
-		if c.DebugStatus != productionDebugStatus {
-			return fmt.Errorf("dbgstat: got %q, want %q", c.DebugStatus, productionDebugStatus)
-		}
+	if p.RequireSecBoot && !c.SecBoot {
+		return errors.New("secboot not enabled")
+	}
+	if len(p.AllowedDebugStatuses) > 0 && !slices.Contains(p.AllowedDebugStatuses, c.DebugStatus) {
+		return fmt.Errorf("dbgstat %q not in allowlist", c.DebugStatus)
 	}
 	if len(p.AllowedHWModels) > 0 {
 		if _, ok := p.AllowedHWModels[c.HWModel]; !ok {
 			return fmt.Errorf("hwmodel %q not in allowlist", c.HWModel)
 		}
 	}
-	ch, err := c.CodeHash()
-	if err != nil {
-		return fmt.Errorf("decoding image_id: %w", err)
-	}
-	if _, ok := p.AllowedImageIDs[ch]; !ok {
-		return fmt.Errorf("image_id %s not in allowlist", ch.Hex())
+	if len(p.AllowedImageIDs) > 0 {
+		ch, err := c.CodeHash()
+		if err != nil {
+			return fmt.Errorf("decoding image_id: %w", err)
+		}
+		if _, ok := p.AllowedImageIDs[ch]; !ok {
+			return fmt.Errorf("image_id %s not in allowlist", ch.Hex())
+		}
 	}
 	// WARNING: empty p.EATNonce silently skips replay binding.
 	if p.EATNonce != "" {

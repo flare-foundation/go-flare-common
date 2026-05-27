@@ -33,9 +33,11 @@ func validTestPolicy(t *testing.T) Policy {
 	h, err := convert.Hex32StringToCommonHash(testImageHashHex)
 	require.NoError(t, err)
 	return Policy{
-		Audience:        testAudience,
-		AllowedImageIDs: map[common.Hash]struct{}{h: {}},
-		Issuer:          testIssuer,
+		Audience:             testAudience,
+		AllowedImageIDs:      map[common.Hash]struct{}{h: {}},
+		Issuer:               testIssuer,
+		RequireSecBoot:       true,
+		AllowedDebugStatuses: []string{productionDebugStatus},
 	}
 }
 
@@ -45,7 +47,6 @@ func chainFailurePolicy() Policy {
 	return Policy{
 		Audience:        "any",
 		AllowedImageIDs: map[common.Hash]struct{}{{}: {}},
-		AllowDebug:      true,
 		Issuer:          testIssuer,
 	}
 }
@@ -307,22 +308,24 @@ func TestParseAndValidatePKITokenFail(t *testing.T) {
 func TestPolicyEnforcement(t *testing.T) {
 	now := time.Now()
 
-	t.Run("policy missing audience rejected", func(t *testing.T) {
-		signedToken, root := generateTestPKIToken(t, now, now, now, validTestClaims(now))
+	t.Run("empty audience skips aud check", func(t *testing.T) {
+		c := validTestClaims(now)
+		c.Audience = jwt.ClaimStrings{"someone-else"}
+		signedToken, root := generateTestPKIToken(t, now, now, now, c)
 		p := validTestPolicy(t)
 		p.Audience = ""
 		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, p)
-		require.Error(t, err)
-		require.Contains(t, err.Error(), "Audience is required")
+		require.NoError(t, err)
 	})
 
-	t.Run("policy missing image allowlist rejected", func(t *testing.T) {
-		signedToken, root := generateTestPKIToken(t, now, now, now, validTestClaims(now))
+	t.Run("empty image allowlist skips image_id check", func(t *testing.T) {
+		c := validTestClaims(now)
+		c.SubMods.Container.ImageID = "sha256:" + strings.Repeat("ab", 32)
+		signedToken, root := generateTestPKIToken(t, now, now, now, c)
 		p := validTestPolicy(t)
 		p.AllowedImageIDs = nil
 		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, p)
-		require.Error(t, err)
-		require.Contains(t, err.Error(), "AllowedImageIDs is required")
+		require.NoError(t, err)
 	})
 
 	t.Run("token missing exp rejected", func(t *testing.T) {
@@ -377,13 +380,14 @@ func TestPolicyEnforcement(t *testing.T) {
 		require.Contains(t, err.Error(), "dbgstat")
 	})
 
-	t.Run("AllowDebug bypasses secboot and dbgstat", func(t *testing.T) {
+	t.Run("unset secboot and dbgstat policy skips both checks", func(t *testing.T) {
 		c := validTestClaims(now)
 		c.SecBoot = false
 		c.DebugStatus = "enabled"
 		signedToken, root := generateTestPKIToken(t, now, now, now, c)
 		p := validTestPolicy(t)
-		p.AllowDebug = true
+		p.RequireSecBoot = false
+		p.AllowedDebugStatuses = nil
 		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, p)
 		require.NoError(t, err)
 	})
