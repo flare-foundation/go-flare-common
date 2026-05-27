@@ -32,6 +32,8 @@ const (
 	KeyDataProviderRestore     Command = "KEY_DATA_PROVIDER_RESTORE"
 	KeyDataProviderRestoreTest Command = "KEY_DATA_PROVIDER_RESTORE_TEST"
 	KeyDelete                  Command = "KEY_DELETE"
+	KeyDirectBackup            Command = "KEY_DIRECT_BACKUP"
+	KeyDirectRestore           Command = "KEY_DIRECT_RESTORE"
 	KeyGenerate                Command = "KEY_GENERATE"
 	VRF                        Command = "VRF"
 
@@ -61,6 +63,8 @@ var validSystemPairs = map[Type]map[Command]bool{
 		KeyDataProviderRestore:     true,
 		KeyDataProviderRestoreTest: true,
 		KeyDelete:                  true,
+		KeyDirectBackup:            true,
+		KeyDirectRestore:           true,
 		KeyGenerate:                true,
 		VRF:                        true,
 	},

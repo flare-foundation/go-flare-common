@@ -5,6 +5,28 @@
     "type": "error"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "addr",
+        "type": "address"
+      }
+    ],
+    "name": "AddressAlreadyInSet",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "addr",
+        "type": "address"
+      }
+    ],
+    "name": "AddressNotInSet",
+    "type": "error"
+  },
+  {
     "inputs": [],
     "name": "AvailabilityCheckTimestampInvalid",
     "type": "error"
@@ -53,12 +75,7 @@
   },
   {
     "inputs": [],
-    "name": "GovernedAddressZero",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "GovernedAlreadyInitialized",
+    "name": "InvalidAddress",
     "type": "error"
   },
   {
@@ -90,6 +107,11 @@
   {
     "inputs": [],
     "name": "InvalidGovernanceHash",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidInitialization",
     "type": "error"
   },
   {
@@ -160,7 +182,39 @@
   },
   {
     "inputs": [],
+    "name": "NoAddresses",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "NoTeeMachinesSpecified",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotInitializing",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "caller",
+        "type": "address"
+      }
+    ],
+    "name": "NotOwnerOrPauser",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "caller",
+        "type": "address"
+      }
+    ],
+    "name": "NotOwnerOrUnpauser",
     "type": "error"
   },
   {
@@ -297,12 +351,12 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "address",
-        "name": "initialGovernance",
-        "type": "address"
+        "internalType": "uint64",
+        "name": "version",
+        "type": "uint64"
       }
     ],
-    "name": "GovernanceInitialised",
+    "name": "Initialized",
     "type": "event"
   },
   {

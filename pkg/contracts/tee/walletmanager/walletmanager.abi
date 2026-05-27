@@ -1,5 +1,27 @@
 [
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "addr",
+        "type": "address"
+      }
+    ],
+    "name": "AddressAlreadyInSet",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "addr",
+        "type": "address"
+      }
+    ],
+    "name": "AddressNotInSet",
+    "type": "error"
+  },
+  {
     "inputs": [],
     "name": "AdminsNotSet",
     "type": "error"
@@ -46,6 +68,11 @@
   {
     "inputs": [],
     "name": "ExtensionIdMismatch",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidAddress",
     "type": "error"
   },
   {
@@ -169,6 +196,11 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "NoAddresses",
+    "type": "error"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -198,6 +230,28 @@
   {
     "inputs": [],
     "name": "NotEnoughKeys",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "caller",
+        "type": "address"
+      }
+    ],
+    "name": "NotOwnerOrPauser",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "caller",
+        "type": "address"
+      }
+    ],
+    "name": "NotOwnerOrUnpauser",
     "type": "error"
   },
   {
@@ -383,19 +437,6 @@
       }
     ],
     "name": "WalletInitialized",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "walletId",
-        "type": "bytes32"
-      }
-    ],
-    "name": "WalletPaused",
     "type": "event"
   },
   {
@@ -608,19 +649,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_walletId",
-        "type": "bytes32"
-      }
-    ],
-    "name": "pauseWallet",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

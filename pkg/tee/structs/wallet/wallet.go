@@ -12,6 +12,8 @@ var opCommands = []op.Command{
 	op.KeyDataProviderRestore,
 	// constants.KeyDataProviderRestoreTest, // TODO
 	op.KeyDelete,
+	op.KeyDirectBackup,
+	op.KeyDirectRestore,
 	op.KeyGenerate,
 }
 
@@ -20,6 +22,8 @@ var opCommands = []op.Command{
 var methods = []string{
 	"keyDataProviderRestoreStruct",
 	"keyDeleteStruct",
+	"keyDirectBackupStruct",
+	"keyDirectRestoreStruct",
 	"keyGenerateStruct",
 }
 

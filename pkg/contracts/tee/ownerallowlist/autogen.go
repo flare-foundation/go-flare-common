@@ -31,7 +31,7 @@ var (
 
 // OwnerAllowlistMetaData contains all meta data concerning the OwnerAllowlist contract.
 var OwnerAllowlistMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"name\":\"AvailabilityCheckTimestampInvalid\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"cosigner\",\"type\":\"address\"}],\"name\":\"DuplicatedCosigner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ExtensionIdMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAvailabilityCheckStatus\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"cosigner\",\"type\":\"address\"}],\"name\":\"InvalidCosigner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidDuration\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidGovernanceHash\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidKeyType\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidNonce\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPublicKey\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidResponseData\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidSigningAlgo\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidThreshold\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidWalletStatus\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"}],\"name\":\"KeyTypeNotSupported\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LengthsMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExtensionOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwnerOrBackupManager\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProductionOrPausedStatus\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProposedOwner\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"OwnerAlreadyAllowed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OwnerNotAllowed\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"OwnerNotInAllowlist\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TeeMachineNotAvailable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"VersionNotSupported\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"AllTeeMachineOwnersAllowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"AllTeeMachineOwnersDisallowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"AllTeeWalletProjectOwnersAllowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"AllTeeWalletProjectOwnersDisallowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedTeeMachineOwnersAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedTeeMachineOwnersRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedTeeWalletProjectOwnersAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedTeeWalletProjectOwnersRemoved\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"addAllowedTeeMachineOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"addAllowedTeeWalletProjectOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"allTeeMachineOwnersAllowed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_allAllowed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"allTeeWalletProjectOwnersAllowed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_allAllowed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"allowAllTeeMachineOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"allowAllTeeWalletProjectOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"disallowAllTeeMachineOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"disallowAllTeeWalletProjectOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getAllowedTeeMachineOwners\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"_allowedOwners\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getAllowedTeeWalletProjectOwners\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"_allowedOwners\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"isAllowedTeeMachineOwner\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_isAllowed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"isAllowedTeeWalletProjectOwner\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_isAllowed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"removeAllowedTeeMachineOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"removeAllowedTeeWalletProjectOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"AddressAlreadyInSet\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"AddressNotInSet\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AvailabilityCheckTimestampInvalid\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"cosigner\",\"type\":\"address\"}],\"name\":\"DuplicatedCosigner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ExtensionIdMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAddress\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAvailabilityCheckStatus\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"cosigner\",\"type\":\"address\"}],\"name\":\"InvalidCosigner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidDuration\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidGovernanceHash\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidInitialization\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidKeyType\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidNonce\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPublicKey\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidResponseData\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidSigningAlgo\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidThreshold\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidWalletStatus\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"}],\"name\":\"KeyTypeNotSupported\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LengthsMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoAddresses\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotInitializing\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\"}],\"name\":\"NotOwnerOrPauser\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\"}],\"name\":\"NotOwnerOrUnpauser\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExtensionOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyGovernance\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwnerOrBackupManager\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProductionOrPausedStatus\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProposedOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OwnerNotAllowed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TeeMachineNotAvailable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"VersionNotSupported\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[],\"name\":\"AllExtensionOwnersAllowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[],\"name\":\"AllExtensionOwnersDisallowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"AllTeeMachineOwnersAllowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"AllTeeMachineOwnersDisallowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"AllTeeWalletProjectOwnersAllowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"AllTeeWalletProjectOwnersDisallowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedExtensionOwnersAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedExtensionOwnersRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedTeeMachineOwnersAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedTeeMachineOwnersRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedTeeWalletProjectOwnersAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedTeeWalletProjectOwnersRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"version\",\"type\":\"uint64\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"addAllowedExtensionOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"addAllowedTeeMachineOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"addAllowedTeeWalletProjectOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"allExtensionOwnersAllowed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_allAllowed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"allTeeMachineOwnersAllowed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_allAllowed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"allTeeWalletProjectOwnersAllowed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_allAllowed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"allowAllExtensionOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"allowAllTeeMachineOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"allowAllTeeWalletProjectOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"disallowAllExtensionOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"disallowAllTeeMachineOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"disallowAllTeeWalletProjectOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAllowedExtensionOwners\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"_allowedOwners\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getAllowedTeeMachineOwners\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"_allowedOwners\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getAllowedTeeWalletProjectOwners\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"_allowedOwners\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"isAllowedExtensionOwner\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_isAllowed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"isAllowedTeeMachineOwner\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_isAllowed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"isAllowedTeeWalletProjectOwner\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_isAllowed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"removeAllowedExtensionOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"removeAllowedTeeMachineOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"removeAllowedTeeWalletProjectOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // OwnerAllowlistABI is the input ABI used to generate the binding from.
@@ -180,6 +180,37 @@ func (_OwnerAllowlist *OwnerAllowlistTransactorRaw) Transact(opts *bind.Transact
 	return _OwnerAllowlist.Contract.contract.Transact(opts, method, params...)
 }
 
+// AllExtensionOwnersAllowed is a free data retrieval call binding the contract method 0x899aa572.
+//
+// Solidity: function allExtensionOwnersAllowed() view returns(bool _allAllowed)
+func (_OwnerAllowlist *OwnerAllowlistCaller) AllExtensionOwnersAllowed(opts *bind.CallOpts) (bool, error) {
+	var out []interface{}
+	err := _OwnerAllowlist.contract.Call(opts, &out, "allExtensionOwnersAllowed")
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// AllExtensionOwnersAllowed is a free data retrieval call binding the contract method 0x899aa572.
+//
+// Solidity: function allExtensionOwnersAllowed() view returns(bool _allAllowed)
+func (_OwnerAllowlist *OwnerAllowlistSession) AllExtensionOwnersAllowed() (bool, error) {
+	return _OwnerAllowlist.Contract.AllExtensionOwnersAllowed(&_OwnerAllowlist.CallOpts)
+}
+
+// AllExtensionOwnersAllowed is a free data retrieval call binding the contract method 0x899aa572.
+//
+// Solidity: function allExtensionOwnersAllowed() view returns(bool _allAllowed)
+func (_OwnerAllowlist *OwnerAllowlistCallerSession) AllExtensionOwnersAllowed() (bool, error) {
+	return _OwnerAllowlist.Contract.AllExtensionOwnersAllowed(&_OwnerAllowlist.CallOpts)
+}
+
 // AllTeeMachineOwnersAllowed is a free data retrieval call binding the contract method 0x2a30b9f4.
 //
 // Solidity: function allTeeMachineOwnersAllowed(uint256 _extensionId) view returns(bool _allAllowed)
@@ -240,6 +271,37 @@ func (_OwnerAllowlist *OwnerAllowlistSession) AllTeeWalletProjectOwnersAllowed(_
 // Solidity: function allTeeWalletProjectOwnersAllowed(uint256 _extensionId) view returns(bool _allAllowed)
 func (_OwnerAllowlist *OwnerAllowlistCallerSession) AllTeeWalletProjectOwnersAllowed(_extensionId *big.Int) (bool, error) {
 	return _OwnerAllowlist.Contract.AllTeeWalletProjectOwnersAllowed(&_OwnerAllowlist.CallOpts, _extensionId)
+}
+
+// GetAllowedExtensionOwners is a free data retrieval call binding the contract method 0x6affbc67.
+//
+// Solidity: function getAllowedExtensionOwners() view returns(address[] _allowedOwners)
+func (_OwnerAllowlist *OwnerAllowlistCaller) GetAllowedExtensionOwners(opts *bind.CallOpts) ([]common.Address, error) {
+	var out []interface{}
+	err := _OwnerAllowlist.contract.Call(opts, &out, "getAllowedExtensionOwners")
+
+	if err != nil {
+		return *new([]common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([]common.Address)).(*[]common.Address)
+
+	return out0, err
+
+}
+
+// GetAllowedExtensionOwners is a free data retrieval call binding the contract method 0x6affbc67.
+//
+// Solidity: function getAllowedExtensionOwners() view returns(address[] _allowedOwners)
+func (_OwnerAllowlist *OwnerAllowlistSession) GetAllowedExtensionOwners() ([]common.Address, error) {
+	return _OwnerAllowlist.Contract.GetAllowedExtensionOwners(&_OwnerAllowlist.CallOpts)
+}
+
+// GetAllowedExtensionOwners is a free data retrieval call binding the contract method 0x6affbc67.
+//
+// Solidity: function getAllowedExtensionOwners() view returns(address[] _allowedOwners)
+func (_OwnerAllowlist *OwnerAllowlistCallerSession) GetAllowedExtensionOwners() ([]common.Address, error) {
+	return _OwnerAllowlist.Contract.GetAllowedExtensionOwners(&_OwnerAllowlist.CallOpts)
 }
 
 // GetAllowedTeeMachineOwners is a free data retrieval call binding the contract method 0x5f37ea30.
@@ -304,6 +366,37 @@ func (_OwnerAllowlist *OwnerAllowlistCallerSession) GetAllowedTeeWalletProjectOw
 	return _OwnerAllowlist.Contract.GetAllowedTeeWalletProjectOwners(&_OwnerAllowlist.CallOpts, _extensionId)
 }
 
+// IsAllowedExtensionOwner is a free data retrieval call binding the contract method 0xd3886a10.
+//
+// Solidity: function isAllowedExtensionOwner(address _owner) view returns(bool _isAllowed)
+func (_OwnerAllowlist *OwnerAllowlistCaller) IsAllowedExtensionOwner(opts *bind.CallOpts, _owner common.Address) (bool, error) {
+	var out []interface{}
+	err := _OwnerAllowlist.contract.Call(opts, &out, "isAllowedExtensionOwner", _owner)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// IsAllowedExtensionOwner is a free data retrieval call binding the contract method 0xd3886a10.
+//
+// Solidity: function isAllowedExtensionOwner(address _owner) view returns(bool _isAllowed)
+func (_OwnerAllowlist *OwnerAllowlistSession) IsAllowedExtensionOwner(_owner common.Address) (bool, error) {
+	return _OwnerAllowlist.Contract.IsAllowedExtensionOwner(&_OwnerAllowlist.CallOpts, _owner)
+}
+
+// IsAllowedExtensionOwner is a free data retrieval call binding the contract method 0xd3886a10.
+//
+// Solidity: function isAllowedExtensionOwner(address _owner) view returns(bool _isAllowed)
+func (_OwnerAllowlist *OwnerAllowlistCallerSession) IsAllowedExtensionOwner(_owner common.Address) (bool, error) {
+	return _OwnerAllowlist.Contract.IsAllowedExtensionOwner(&_OwnerAllowlist.CallOpts, _owner)
+}
+
 // IsAllowedTeeMachineOwner is a free data retrieval call binding the contract method 0x84f5da36.
 //
 // Solidity: function isAllowedTeeMachineOwner(uint256 _extensionId, address _owner) view returns(bool _isAllowed)
@@ -366,6 +459,27 @@ func (_OwnerAllowlist *OwnerAllowlistCallerSession) IsAllowedTeeWalletProjectOwn
 	return _OwnerAllowlist.Contract.IsAllowedTeeWalletProjectOwner(&_OwnerAllowlist.CallOpts, _extensionId, _owner)
 }
 
+// AddAllowedExtensionOwners is a paid mutator transaction binding the contract method 0x55414fd1.
+//
+// Solidity: function addAllowedExtensionOwners(address[] _owners) returns()
+func (_OwnerAllowlist *OwnerAllowlistTransactor) AddAllowedExtensionOwners(opts *bind.TransactOpts, _owners []common.Address) (*types.Transaction, error) {
+	return _OwnerAllowlist.contract.Transact(opts, "addAllowedExtensionOwners", _owners)
+}
+
+// AddAllowedExtensionOwners is a paid mutator transaction binding the contract method 0x55414fd1.
+//
+// Solidity: function addAllowedExtensionOwners(address[] _owners) returns()
+func (_OwnerAllowlist *OwnerAllowlistSession) AddAllowedExtensionOwners(_owners []common.Address) (*types.Transaction, error) {
+	return _OwnerAllowlist.Contract.AddAllowedExtensionOwners(&_OwnerAllowlist.TransactOpts, _owners)
+}
+
+// AddAllowedExtensionOwners is a paid mutator transaction binding the contract method 0x55414fd1.
+//
+// Solidity: function addAllowedExtensionOwners(address[] _owners) returns()
+func (_OwnerAllowlist *OwnerAllowlistTransactorSession) AddAllowedExtensionOwners(_owners []common.Address) (*types.Transaction, error) {
+	return _OwnerAllowlist.Contract.AddAllowedExtensionOwners(&_OwnerAllowlist.TransactOpts, _owners)
+}
+
 // AddAllowedTeeMachineOwners is a paid mutator transaction binding the contract method 0xa8f3cab7.
 //
 // Solidity: function addAllowedTeeMachineOwners(uint256 _extensionId, address[] _owners) returns()
@@ -406,6 +520,27 @@ func (_OwnerAllowlist *OwnerAllowlistSession) AddAllowedTeeWalletProjectOwners(_
 // Solidity: function addAllowedTeeWalletProjectOwners(uint256 _extensionId, address[] _owners) returns()
 func (_OwnerAllowlist *OwnerAllowlistTransactorSession) AddAllowedTeeWalletProjectOwners(_extensionId *big.Int, _owners []common.Address) (*types.Transaction, error) {
 	return _OwnerAllowlist.Contract.AddAllowedTeeWalletProjectOwners(&_OwnerAllowlist.TransactOpts, _extensionId, _owners)
+}
+
+// AllowAllExtensionOwners is a paid mutator transaction binding the contract method 0xef10f5ad.
+//
+// Solidity: function allowAllExtensionOwners() returns()
+func (_OwnerAllowlist *OwnerAllowlistTransactor) AllowAllExtensionOwners(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _OwnerAllowlist.contract.Transact(opts, "allowAllExtensionOwners")
+}
+
+// AllowAllExtensionOwners is a paid mutator transaction binding the contract method 0xef10f5ad.
+//
+// Solidity: function allowAllExtensionOwners() returns()
+func (_OwnerAllowlist *OwnerAllowlistSession) AllowAllExtensionOwners() (*types.Transaction, error) {
+	return _OwnerAllowlist.Contract.AllowAllExtensionOwners(&_OwnerAllowlist.TransactOpts)
+}
+
+// AllowAllExtensionOwners is a paid mutator transaction binding the contract method 0xef10f5ad.
+//
+// Solidity: function allowAllExtensionOwners() returns()
+func (_OwnerAllowlist *OwnerAllowlistTransactorSession) AllowAllExtensionOwners() (*types.Transaction, error) {
+	return _OwnerAllowlist.Contract.AllowAllExtensionOwners(&_OwnerAllowlist.TransactOpts)
 }
 
 // AllowAllTeeMachineOwners is a paid mutator transaction binding the contract method 0x1b489f2d.
@@ -450,6 +585,27 @@ func (_OwnerAllowlist *OwnerAllowlistTransactorSession) AllowAllTeeWalletProject
 	return _OwnerAllowlist.Contract.AllowAllTeeWalletProjectOwners(&_OwnerAllowlist.TransactOpts, _extensionId)
 }
 
+// DisallowAllExtensionOwners is a paid mutator transaction binding the contract method 0x12282f33.
+//
+// Solidity: function disallowAllExtensionOwners() returns()
+func (_OwnerAllowlist *OwnerAllowlistTransactor) DisallowAllExtensionOwners(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _OwnerAllowlist.contract.Transact(opts, "disallowAllExtensionOwners")
+}
+
+// DisallowAllExtensionOwners is a paid mutator transaction binding the contract method 0x12282f33.
+//
+// Solidity: function disallowAllExtensionOwners() returns()
+func (_OwnerAllowlist *OwnerAllowlistSession) DisallowAllExtensionOwners() (*types.Transaction, error) {
+	return _OwnerAllowlist.Contract.DisallowAllExtensionOwners(&_OwnerAllowlist.TransactOpts)
+}
+
+// DisallowAllExtensionOwners is a paid mutator transaction binding the contract method 0x12282f33.
+//
+// Solidity: function disallowAllExtensionOwners() returns()
+func (_OwnerAllowlist *OwnerAllowlistTransactorSession) DisallowAllExtensionOwners() (*types.Transaction, error) {
+	return _OwnerAllowlist.Contract.DisallowAllExtensionOwners(&_OwnerAllowlist.TransactOpts)
+}
+
 // DisallowAllTeeMachineOwners is a paid mutator transaction binding the contract method 0xb86936ba.
 //
 // Solidity: function disallowAllTeeMachineOwners(uint256 _extensionId) returns()
@@ -492,6 +648,27 @@ func (_OwnerAllowlist *OwnerAllowlistTransactorSession) DisallowAllTeeWalletProj
 	return _OwnerAllowlist.Contract.DisallowAllTeeWalletProjectOwners(&_OwnerAllowlist.TransactOpts, _extensionId)
 }
 
+// RemoveAllowedExtensionOwners is a paid mutator transaction binding the contract method 0x0d9ef68a.
+//
+// Solidity: function removeAllowedExtensionOwners(address[] _owners) returns()
+func (_OwnerAllowlist *OwnerAllowlistTransactor) RemoveAllowedExtensionOwners(opts *bind.TransactOpts, _owners []common.Address) (*types.Transaction, error) {
+	return _OwnerAllowlist.contract.Transact(opts, "removeAllowedExtensionOwners", _owners)
+}
+
+// RemoveAllowedExtensionOwners is a paid mutator transaction binding the contract method 0x0d9ef68a.
+//
+// Solidity: function removeAllowedExtensionOwners(address[] _owners) returns()
+func (_OwnerAllowlist *OwnerAllowlistSession) RemoveAllowedExtensionOwners(_owners []common.Address) (*types.Transaction, error) {
+	return _OwnerAllowlist.Contract.RemoveAllowedExtensionOwners(&_OwnerAllowlist.TransactOpts, _owners)
+}
+
+// RemoveAllowedExtensionOwners is a paid mutator transaction binding the contract method 0x0d9ef68a.
+//
+// Solidity: function removeAllowedExtensionOwners(address[] _owners) returns()
+func (_OwnerAllowlist *OwnerAllowlistTransactorSession) RemoveAllowedExtensionOwners(_owners []common.Address) (*types.Transaction, error) {
+	return _OwnerAllowlist.Contract.RemoveAllowedExtensionOwners(&_OwnerAllowlist.TransactOpts, _owners)
+}
+
 // RemoveAllowedTeeMachineOwners is a paid mutator transaction binding the contract method 0x5d371c3c.
 //
 // Solidity: function removeAllowedTeeMachineOwners(uint256 _extensionId, address[] _owners) returns()
@@ -532,6 +709,272 @@ func (_OwnerAllowlist *OwnerAllowlistSession) RemoveAllowedTeeWalletProjectOwner
 // Solidity: function removeAllowedTeeWalletProjectOwners(uint256 _extensionId, address[] _owners) returns()
 func (_OwnerAllowlist *OwnerAllowlistTransactorSession) RemoveAllowedTeeWalletProjectOwners(_extensionId *big.Int, _owners []common.Address) (*types.Transaction, error) {
 	return _OwnerAllowlist.Contract.RemoveAllowedTeeWalletProjectOwners(&_OwnerAllowlist.TransactOpts, _extensionId, _owners)
+}
+
+// OwnerAllowlistAllExtensionOwnersAllowedIterator is returned from FilterAllExtensionOwnersAllowed and is used to iterate over the raw logs and unpacked data for AllExtensionOwnersAllowed events raised by the OwnerAllowlist contract.
+type OwnerAllowlistAllExtensionOwnersAllowedIterator struct {
+	Event *OwnerAllowlistAllExtensionOwnersAllowed // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *OwnerAllowlistAllExtensionOwnersAllowedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(OwnerAllowlistAllExtensionOwnersAllowed)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(OwnerAllowlistAllExtensionOwnersAllowed)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *OwnerAllowlistAllExtensionOwnersAllowedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *OwnerAllowlistAllExtensionOwnersAllowedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// OwnerAllowlistAllExtensionOwnersAllowed represents a AllExtensionOwnersAllowed event raised by the OwnerAllowlist contract.
+type OwnerAllowlistAllExtensionOwnersAllowed struct {
+	Raw types.Log // Blockchain specific contextual infos
+}
+
+// FilterAllExtensionOwnersAllowed is a free log retrieval operation binding the contract event 0x187952b217dbb616bfaa4b45d52b804e332e3af0cc43291f4c21105e6f99a1a9.
+//
+// Solidity: event AllExtensionOwnersAllowed()
+func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllExtensionOwnersAllowed(opts *bind.FilterOpts) (*OwnerAllowlistAllExtensionOwnersAllowedIterator, error) {
+
+	logs, sub, err := _OwnerAllowlist.contract.FilterLogs(opts, "AllExtensionOwnersAllowed")
+	if err != nil {
+		return nil, err
+	}
+	return &OwnerAllowlistAllExtensionOwnersAllowedIterator{contract: _OwnerAllowlist.contract, event: "AllExtensionOwnersAllowed", logs: logs, sub: sub}, nil
+}
+
+// WatchAllExtensionOwnersAllowed is a free log subscription operation binding the contract event 0x187952b217dbb616bfaa4b45d52b804e332e3af0cc43291f4c21105e6f99a1a9.
+//
+// Solidity: event AllExtensionOwnersAllowed()
+func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllExtensionOwnersAllowed(opts *bind.WatchOpts, sink chan<- *OwnerAllowlistAllExtensionOwnersAllowed) (event.Subscription, error) {
+
+	logs, sub, err := _OwnerAllowlist.contract.WatchLogs(opts, "AllExtensionOwnersAllowed")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(OwnerAllowlistAllExtensionOwnersAllowed)
+				if err := _OwnerAllowlist.contract.UnpackLog(event, "AllExtensionOwnersAllowed", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseAllExtensionOwnersAllowed is a log parse operation binding the contract event 0x187952b217dbb616bfaa4b45d52b804e332e3af0cc43291f4c21105e6f99a1a9.
+//
+// Solidity: event AllExtensionOwnersAllowed()
+func (_OwnerAllowlist *OwnerAllowlistFilterer) ParseAllExtensionOwnersAllowed(log types.Log) (*OwnerAllowlistAllExtensionOwnersAllowed, error) {
+	event := new(OwnerAllowlistAllExtensionOwnersAllowed)
+	if err := _OwnerAllowlist.contract.UnpackLog(event, "AllExtensionOwnersAllowed", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// OwnerAllowlistAllExtensionOwnersDisallowedIterator is returned from FilterAllExtensionOwnersDisallowed and is used to iterate over the raw logs and unpacked data for AllExtensionOwnersDisallowed events raised by the OwnerAllowlist contract.
+type OwnerAllowlistAllExtensionOwnersDisallowedIterator struct {
+	Event *OwnerAllowlistAllExtensionOwnersDisallowed // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *OwnerAllowlistAllExtensionOwnersDisallowedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(OwnerAllowlistAllExtensionOwnersDisallowed)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(OwnerAllowlistAllExtensionOwnersDisallowed)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *OwnerAllowlistAllExtensionOwnersDisallowedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *OwnerAllowlistAllExtensionOwnersDisallowedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// OwnerAllowlistAllExtensionOwnersDisallowed represents a AllExtensionOwnersDisallowed event raised by the OwnerAllowlist contract.
+type OwnerAllowlistAllExtensionOwnersDisallowed struct {
+	Raw types.Log // Blockchain specific contextual infos
+}
+
+// FilterAllExtensionOwnersDisallowed is a free log retrieval operation binding the contract event 0x26b7975912f19fefe2f76735b4a0d6d37eee9a185598010b9ba0a8cd2bbbe243.
+//
+// Solidity: event AllExtensionOwnersDisallowed()
+func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllExtensionOwnersDisallowed(opts *bind.FilterOpts) (*OwnerAllowlistAllExtensionOwnersDisallowedIterator, error) {
+
+	logs, sub, err := _OwnerAllowlist.contract.FilterLogs(opts, "AllExtensionOwnersDisallowed")
+	if err != nil {
+		return nil, err
+	}
+	return &OwnerAllowlistAllExtensionOwnersDisallowedIterator{contract: _OwnerAllowlist.contract, event: "AllExtensionOwnersDisallowed", logs: logs, sub: sub}, nil
+}
+
+// WatchAllExtensionOwnersDisallowed is a free log subscription operation binding the contract event 0x26b7975912f19fefe2f76735b4a0d6d37eee9a185598010b9ba0a8cd2bbbe243.
+//
+// Solidity: event AllExtensionOwnersDisallowed()
+func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllExtensionOwnersDisallowed(opts *bind.WatchOpts, sink chan<- *OwnerAllowlistAllExtensionOwnersDisallowed) (event.Subscription, error) {
+
+	logs, sub, err := _OwnerAllowlist.contract.WatchLogs(opts, "AllExtensionOwnersDisallowed")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(OwnerAllowlistAllExtensionOwnersDisallowed)
+				if err := _OwnerAllowlist.contract.UnpackLog(event, "AllExtensionOwnersDisallowed", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseAllExtensionOwnersDisallowed is a log parse operation binding the contract event 0x26b7975912f19fefe2f76735b4a0d6d37eee9a185598010b9ba0a8cd2bbbe243.
+//
+// Solidity: event AllExtensionOwnersDisallowed()
+func (_OwnerAllowlist *OwnerAllowlistFilterer) ParseAllExtensionOwnersDisallowed(log types.Log) (*OwnerAllowlistAllExtensionOwnersDisallowed, error) {
+	event := new(OwnerAllowlistAllExtensionOwnersDisallowed)
+	if err := _OwnerAllowlist.contract.UnpackLog(event, "AllExtensionOwnersDisallowed", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
 }
 
 // OwnerAllowlistAllTeeMachineOwnersAllowedIterator is returned from FilterAllTeeMachineOwnersAllowed and is used to iterate over the raw logs and unpacked data for AllTeeMachineOwnersAllowed events raised by the OwnerAllowlist contract.
@@ -1064,6 +1507,274 @@ func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllTeeWalletProjectOwnersDis
 func (_OwnerAllowlist *OwnerAllowlistFilterer) ParseAllTeeWalletProjectOwnersDisallowed(log types.Log) (*OwnerAllowlistAllTeeWalletProjectOwnersDisallowed, error) {
 	event := new(OwnerAllowlistAllTeeWalletProjectOwnersDisallowed)
 	if err := _OwnerAllowlist.contract.UnpackLog(event, "AllTeeWalletProjectOwnersDisallowed", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// OwnerAllowlistAllowedExtensionOwnersAddedIterator is returned from FilterAllowedExtensionOwnersAdded and is used to iterate over the raw logs and unpacked data for AllowedExtensionOwnersAdded events raised by the OwnerAllowlist contract.
+type OwnerAllowlistAllowedExtensionOwnersAddedIterator struct {
+	Event *OwnerAllowlistAllowedExtensionOwnersAdded // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *OwnerAllowlistAllowedExtensionOwnersAddedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(OwnerAllowlistAllowedExtensionOwnersAdded)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(OwnerAllowlistAllowedExtensionOwnersAdded)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *OwnerAllowlistAllowedExtensionOwnersAddedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *OwnerAllowlistAllowedExtensionOwnersAddedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// OwnerAllowlistAllowedExtensionOwnersAdded represents a AllowedExtensionOwnersAdded event raised by the OwnerAllowlist contract.
+type OwnerAllowlistAllowedExtensionOwnersAdded struct {
+	Owners []common.Address
+	Raw    types.Log // Blockchain specific contextual infos
+}
+
+// FilterAllowedExtensionOwnersAdded is a free log retrieval operation binding the contract event 0x797f6c04f9e79520974cccffdd9b9c115500fe0814c99569c35795f619a862c2.
+//
+// Solidity: event AllowedExtensionOwnersAdded(address[] owners)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllowedExtensionOwnersAdded(opts *bind.FilterOpts) (*OwnerAllowlistAllowedExtensionOwnersAddedIterator, error) {
+
+	logs, sub, err := _OwnerAllowlist.contract.FilterLogs(opts, "AllowedExtensionOwnersAdded")
+	if err != nil {
+		return nil, err
+	}
+	return &OwnerAllowlistAllowedExtensionOwnersAddedIterator{contract: _OwnerAllowlist.contract, event: "AllowedExtensionOwnersAdded", logs: logs, sub: sub}, nil
+}
+
+// WatchAllowedExtensionOwnersAdded is a free log subscription operation binding the contract event 0x797f6c04f9e79520974cccffdd9b9c115500fe0814c99569c35795f619a862c2.
+//
+// Solidity: event AllowedExtensionOwnersAdded(address[] owners)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllowedExtensionOwnersAdded(opts *bind.WatchOpts, sink chan<- *OwnerAllowlistAllowedExtensionOwnersAdded) (event.Subscription, error) {
+
+	logs, sub, err := _OwnerAllowlist.contract.WatchLogs(opts, "AllowedExtensionOwnersAdded")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(OwnerAllowlistAllowedExtensionOwnersAdded)
+				if err := _OwnerAllowlist.contract.UnpackLog(event, "AllowedExtensionOwnersAdded", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseAllowedExtensionOwnersAdded is a log parse operation binding the contract event 0x797f6c04f9e79520974cccffdd9b9c115500fe0814c99569c35795f619a862c2.
+//
+// Solidity: event AllowedExtensionOwnersAdded(address[] owners)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) ParseAllowedExtensionOwnersAdded(log types.Log) (*OwnerAllowlistAllowedExtensionOwnersAdded, error) {
+	event := new(OwnerAllowlistAllowedExtensionOwnersAdded)
+	if err := _OwnerAllowlist.contract.UnpackLog(event, "AllowedExtensionOwnersAdded", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// OwnerAllowlistAllowedExtensionOwnersRemovedIterator is returned from FilterAllowedExtensionOwnersRemoved and is used to iterate over the raw logs and unpacked data for AllowedExtensionOwnersRemoved events raised by the OwnerAllowlist contract.
+type OwnerAllowlistAllowedExtensionOwnersRemovedIterator struct {
+	Event *OwnerAllowlistAllowedExtensionOwnersRemoved // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *OwnerAllowlistAllowedExtensionOwnersRemovedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(OwnerAllowlistAllowedExtensionOwnersRemoved)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(OwnerAllowlistAllowedExtensionOwnersRemoved)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *OwnerAllowlistAllowedExtensionOwnersRemovedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *OwnerAllowlistAllowedExtensionOwnersRemovedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// OwnerAllowlistAllowedExtensionOwnersRemoved represents a AllowedExtensionOwnersRemoved event raised by the OwnerAllowlist contract.
+type OwnerAllowlistAllowedExtensionOwnersRemoved struct {
+	Owners []common.Address
+	Raw    types.Log // Blockchain specific contextual infos
+}
+
+// FilterAllowedExtensionOwnersRemoved is a free log retrieval operation binding the contract event 0xb52d8b6252652e9c1e6c8d29277bdd801eaeab2e49d26ed01bf2fc9e98be0c66.
+//
+// Solidity: event AllowedExtensionOwnersRemoved(address[] owners)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllowedExtensionOwnersRemoved(opts *bind.FilterOpts) (*OwnerAllowlistAllowedExtensionOwnersRemovedIterator, error) {
+
+	logs, sub, err := _OwnerAllowlist.contract.FilterLogs(opts, "AllowedExtensionOwnersRemoved")
+	if err != nil {
+		return nil, err
+	}
+	return &OwnerAllowlistAllowedExtensionOwnersRemovedIterator{contract: _OwnerAllowlist.contract, event: "AllowedExtensionOwnersRemoved", logs: logs, sub: sub}, nil
+}
+
+// WatchAllowedExtensionOwnersRemoved is a free log subscription operation binding the contract event 0xb52d8b6252652e9c1e6c8d29277bdd801eaeab2e49d26ed01bf2fc9e98be0c66.
+//
+// Solidity: event AllowedExtensionOwnersRemoved(address[] owners)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllowedExtensionOwnersRemoved(opts *bind.WatchOpts, sink chan<- *OwnerAllowlistAllowedExtensionOwnersRemoved) (event.Subscription, error) {
+
+	logs, sub, err := _OwnerAllowlist.contract.WatchLogs(opts, "AllowedExtensionOwnersRemoved")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(OwnerAllowlistAllowedExtensionOwnersRemoved)
+				if err := _OwnerAllowlist.contract.UnpackLog(event, "AllowedExtensionOwnersRemoved", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseAllowedExtensionOwnersRemoved is a log parse operation binding the contract event 0xb52d8b6252652e9c1e6c8d29277bdd801eaeab2e49d26ed01bf2fc9e98be0c66.
+//
+// Solidity: event AllowedExtensionOwnersRemoved(address[] owners)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) ParseAllowedExtensionOwnersRemoved(log types.Log) (*OwnerAllowlistAllowedExtensionOwnersRemoved, error) {
+	event := new(OwnerAllowlistAllowedExtensionOwnersRemoved)
+	if err := _OwnerAllowlist.contract.UnpackLog(event, "AllowedExtensionOwnersRemoved", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
@@ -1604,6 +2315,140 @@ func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllowedTeeWalletProjectOwner
 func (_OwnerAllowlist *OwnerAllowlistFilterer) ParseAllowedTeeWalletProjectOwnersRemoved(log types.Log) (*OwnerAllowlistAllowedTeeWalletProjectOwnersRemoved, error) {
 	event := new(OwnerAllowlistAllowedTeeWalletProjectOwnersRemoved)
 	if err := _OwnerAllowlist.contract.UnpackLog(event, "AllowedTeeWalletProjectOwnersRemoved", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// OwnerAllowlistInitializedIterator is returned from FilterInitialized and is used to iterate over the raw logs and unpacked data for Initialized events raised by the OwnerAllowlist contract.
+type OwnerAllowlistInitializedIterator struct {
+	Event *OwnerAllowlistInitialized // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *OwnerAllowlistInitializedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(OwnerAllowlistInitialized)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(OwnerAllowlistInitialized)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *OwnerAllowlistInitializedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *OwnerAllowlistInitializedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// OwnerAllowlistInitialized represents a Initialized event raised by the OwnerAllowlist contract.
+type OwnerAllowlistInitialized struct {
+	Version uint64
+	Raw     types.Log // Blockchain specific contextual infos
+}
+
+// FilterInitialized is a free log retrieval operation binding the contract event 0xc7f505b2f371ae2175ee4913f4499e1f2633a7b5936321eed1cdaeb6115181d2.
+//
+// Solidity: event Initialized(uint64 version)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterInitialized(opts *bind.FilterOpts) (*OwnerAllowlistInitializedIterator, error) {
+
+	logs, sub, err := _OwnerAllowlist.contract.FilterLogs(opts, "Initialized")
+	if err != nil {
+		return nil, err
+	}
+	return &OwnerAllowlistInitializedIterator{contract: _OwnerAllowlist.contract, event: "Initialized", logs: logs, sub: sub}, nil
+}
+
+// WatchInitialized is a free log subscription operation binding the contract event 0xc7f505b2f371ae2175ee4913f4499e1f2633a7b5936321eed1cdaeb6115181d2.
+//
+// Solidity: event Initialized(uint64 version)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchInitialized(opts *bind.WatchOpts, sink chan<- *OwnerAllowlistInitialized) (event.Subscription, error) {
+
+	logs, sub, err := _OwnerAllowlist.contract.WatchLogs(opts, "Initialized")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(OwnerAllowlistInitialized)
+				if err := _OwnerAllowlist.contract.UnpackLog(event, "Initialized", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseInitialized is a log parse operation binding the contract event 0xc7f505b2f371ae2175ee4913f4499e1f2633a7b5936321eed1cdaeb6115181d2.
+//
+// Solidity: event Initialized(uint64 version)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) ParseInitialized(log types.Log) (*OwnerAllowlistInitialized, error) {
+	event := new(OwnerAllowlistInitialized)
+	if err := _OwnerAllowlist.contract.UnpackLog(event, "Initialized", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

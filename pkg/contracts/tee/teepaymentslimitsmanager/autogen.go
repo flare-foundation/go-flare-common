@@ -37,7 +37,7 @@ type ITeePaymentsPMWMultisigAccount struct {
 
 // TeePaymentsLimitsManagerMetaData contains all meta data concerning the TeePaymentsLimitsManager contract.
 var TeePaymentsLimitsManagerMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"AccountNotRegistered\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"}],\"name\":\"AddressEmptyCode\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"DailyLimitBelowTransactionLimit\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"ERC1967InvalidImplementation\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC1967NonPayable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FailedCall\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyWalletOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UUPSUnauthorizedCallContext\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"slot\",\"type\":\"bytes32\"}],\"name\":\"UUPSUnsupportedProxiableUUID\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UnsupportedSourceId\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"name\":\"GovernanceCallTimelocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"initialGovernance\",\"type\":\"address\"}],\"name\":\"GovernanceInitialised\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"governanceSettings\",\"type\":\"address\"}],\"name\":\"GovernedProductionModeEntered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"transactionLimit\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"dailyLimit\",\"type\":\"uint256\"}],\"name\":\"PaymentLimitsSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallCanceled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TimelockedGovernanceCallExecuted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"Upgraded\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"UPGRADE_INTERFACE_VERSION\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"cancelGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_selector\",\"type\":\"bytes4\"}],\"name\":\"executeGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"flareTeeManager\",\"outputs\":[{\"internalType\":\"contractIIFlareTeeManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAddressUpdater\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePayments.PMWMultisigAccount\",\"name\":\"_account\",\"type\":\"tuple\"}],\"name\":\"getPaymentLimitsNonce\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governance\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governanceSettings\",\"outputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"implementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"}],\"name\":\"initialise\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"isExecutor\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"productionMode\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"proxiableUUID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePayments.PMWMultisigAccount\",\"name\":\"_account\",\"type\":\"tuple\"},{\"internalType\":\"uint256\",\"name\":\"_transactionLimit\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_dailyLimit\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_claimBackAddress\",\"type\":\"address\"}],\"name\":\"setPaymentLimits\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"switchToProductionMode\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teePaymentsRegistry\",\"outputs\":[{\"internalType\":\"contractITeePaymentsRegistry\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"}],\"name\":\"timelockedCalls\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_contractNameHashes\",\"type\":\"bytes32[]\"},{\"internalType\":\"address[]\",\"name\":\"_contractAddresses\",\"type\":\"address[]\"}],\"name\":\"updateContractAddresses\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newImplementation\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"upgradeToAndCall\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"AccountNotRegistered\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"}],\"name\":\"AddressEmptyCode\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AlreadyInProductionMode\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"DailyLimitBelowTransactionLimit\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"ERC1967InvalidImplementation\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC1967NonPayable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FailedCall\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"GovernedAddressZero\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"GovernedAlreadyInitialized\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidInitialization\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotInitializing\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExecutor\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyGovernance\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyWalletOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TimelockInvalidSelector\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TimelockNotAllowedYet\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UUPSUnauthorizedCallContext\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"slot\",\"type\":\"bytes32\"}],\"name\":\"UUPSUnsupportedProxiableUUID\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UnsupportedSourceId\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"encodedCallHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"}],\"name\":\"GovernanceCallTimelocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"initialGovernance\",\"type\":\"address\"}],\"name\":\"GovernanceInitialised\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"governanceSettings\",\"type\":\"address\"}],\"name\":\"GovernedProductionModeEntered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"version\",\"type\":\"uint64\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"transactionLimit\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"dailyLimit\",\"type\":\"uint256\"}],\"name\":\"PaymentLimitsSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"encodedCallHash\",\"type\":\"bytes32\"}],\"name\":\"TimelockedGovernanceCallCanceled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"encodedCallHash\",\"type\":\"bytes32\"}],\"name\":\"TimelockedGovernanceCallExecuted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"Upgraded\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"UPGRADE_INTERFACE_VERSION\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_encodedCall\",\"type\":\"bytes\"}],\"name\":\"cancelGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_encodedCall\",\"type\":\"bytes\"}],\"name\":\"executeGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"flareTeeManager\",\"outputs\":[{\"internalType\":\"contractIIFlareTeeManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAddressUpdater\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePayments.PMWMultisigAccount\",\"name\":\"_account\",\"type\":\"tuple\"}],\"name\":\"getPaymentLimitsNonce\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governance\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governanceSettings\",\"outputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"implementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"isExecutor\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"productionMode\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"proxiableUUID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePayments.PMWMultisigAccount\",\"name\":\"_account\",\"type\":\"tuple\"},{\"internalType\":\"uint256\",\"name\":\"_transactionLimit\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_dailyLimit\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_claimBackAddress\",\"type\":\"address\"}],\"name\":\"setPaymentLimits\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"switchToProductionMode\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teePaymentsRegistry\",\"outputs\":[{\"internalType\":\"contractITeePaymentsRegistry\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_contractNameHashes\",\"type\":\"bytes32[]\"},{\"internalType\":\"address[]\",\"name\":\"_contractAddresses\",\"type\":\"address[]\"}],\"name\":\"updateContractAddresses\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newImplementation\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"upgradeToAndCall\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}]",
 }
 
 // TeePaymentsLimitsManagerABI is the input ABI used to generate the binding from.
@@ -527,112 +527,46 @@ func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerCallerSession) TeePayme
 	return _TeePaymentsLimitsManager.Contract.TeePaymentsRegistry(&_TeePaymentsLimitsManager.CallOpts)
 }
 
-// TimelockedCalls is a free data retrieval call binding the contract method 0x74e6310e.
+// CancelGovernanceCall is a paid mutator transaction binding the contract method 0x16fc2f6d.
 //
-// Solidity: function timelockedCalls(bytes4 selector) view returns(uint256 allowedAfterTimestamp, bytes encodedCall)
-func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerCaller) TimelockedCalls(opts *bind.CallOpts, selector [4]byte) (struct {
-	AllowedAfterTimestamp *big.Int
-	EncodedCall           []byte
-}, error) {
-	var out []interface{}
-	err := _TeePaymentsLimitsManager.contract.Call(opts, &out, "timelockedCalls", selector)
-
-	outstruct := new(struct {
-		AllowedAfterTimestamp *big.Int
-		EncodedCall           []byte
-	})
-	if err != nil {
-		return *outstruct, err
-	}
-
-	outstruct.AllowedAfterTimestamp = *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-	outstruct.EncodedCall = *abi.ConvertType(out[1], new([]byte)).(*[]byte)
-
-	return *outstruct, err
-
+// Solidity: function cancelGovernanceCall(bytes _encodedCall) returns()
+func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerTransactor) CancelGovernanceCall(opts *bind.TransactOpts, _encodedCall []byte) (*types.Transaction, error) {
+	return _TeePaymentsLimitsManager.contract.Transact(opts, "cancelGovernanceCall", _encodedCall)
 }
 
-// TimelockedCalls is a free data retrieval call binding the contract method 0x74e6310e.
+// CancelGovernanceCall is a paid mutator transaction binding the contract method 0x16fc2f6d.
 //
-// Solidity: function timelockedCalls(bytes4 selector) view returns(uint256 allowedAfterTimestamp, bytes encodedCall)
-func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerSession) TimelockedCalls(selector [4]byte) (struct {
-	AllowedAfterTimestamp *big.Int
-	EncodedCall           []byte
-}, error) {
-	return _TeePaymentsLimitsManager.Contract.TimelockedCalls(&_TeePaymentsLimitsManager.CallOpts, selector)
+// Solidity: function cancelGovernanceCall(bytes _encodedCall) returns()
+func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerSession) CancelGovernanceCall(_encodedCall []byte) (*types.Transaction, error) {
+	return _TeePaymentsLimitsManager.Contract.CancelGovernanceCall(&_TeePaymentsLimitsManager.TransactOpts, _encodedCall)
 }
 
-// TimelockedCalls is a free data retrieval call binding the contract method 0x74e6310e.
+// CancelGovernanceCall is a paid mutator transaction binding the contract method 0x16fc2f6d.
 //
-// Solidity: function timelockedCalls(bytes4 selector) view returns(uint256 allowedAfterTimestamp, bytes encodedCall)
-func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerCallerSession) TimelockedCalls(selector [4]byte) (struct {
-	AllowedAfterTimestamp *big.Int
-	EncodedCall           []byte
-}, error) {
-	return _TeePaymentsLimitsManager.Contract.TimelockedCalls(&_TeePaymentsLimitsManager.CallOpts, selector)
+// Solidity: function cancelGovernanceCall(bytes _encodedCall) returns()
+func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerTransactorSession) CancelGovernanceCall(_encodedCall []byte) (*types.Transaction, error) {
+	return _TeePaymentsLimitsManager.Contract.CancelGovernanceCall(&_TeePaymentsLimitsManager.TransactOpts, _encodedCall)
 }
 
-// CancelGovernanceCall is a paid mutator transaction binding the contract method 0x67fc4029.
+// ExecuteGovernanceCall is a paid mutator transaction binding the contract method 0x20c5f99d.
 //
-// Solidity: function cancelGovernanceCall(bytes4 _selector) returns()
-func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerTransactor) CancelGovernanceCall(opts *bind.TransactOpts, _selector [4]byte) (*types.Transaction, error) {
-	return _TeePaymentsLimitsManager.contract.Transact(opts, "cancelGovernanceCall", _selector)
+// Solidity: function executeGovernanceCall(bytes _encodedCall) returns()
+func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerTransactor) ExecuteGovernanceCall(opts *bind.TransactOpts, _encodedCall []byte) (*types.Transaction, error) {
+	return _TeePaymentsLimitsManager.contract.Transact(opts, "executeGovernanceCall", _encodedCall)
 }
 
-// CancelGovernanceCall is a paid mutator transaction binding the contract method 0x67fc4029.
+// ExecuteGovernanceCall is a paid mutator transaction binding the contract method 0x20c5f99d.
 //
-// Solidity: function cancelGovernanceCall(bytes4 _selector) returns()
-func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerSession) CancelGovernanceCall(_selector [4]byte) (*types.Transaction, error) {
-	return _TeePaymentsLimitsManager.Contract.CancelGovernanceCall(&_TeePaymentsLimitsManager.TransactOpts, _selector)
+// Solidity: function executeGovernanceCall(bytes _encodedCall) returns()
+func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerSession) ExecuteGovernanceCall(_encodedCall []byte) (*types.Transaction, error) {
+	return _TeePaymentsLimitsManager.Contract.ExecuteGovernanceCall(&_TeePaymentsLimitsManager.TransactOpts, _encodedCall)
 }
 
-// CancelGovernanceCall is a paid mutator transaction binding the contract method 0x67fc4029.
+// ExecuteGovernanceCall is a paid mutator transaction binding the contract method 0x20c5f99d.
 //
-// Solidity: function cancelGovernanceCall(bytes4 _selector) returns()
-func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerTransactorSession) CancelGovernanceCall(_selector [4]byte) (*types.Transaction, error) {
-	return _TeePaymentsLimitsManager.Contract.CancelGovernanceCall(&_TeePaymentsLimitsManager.TransactOpts, _selector)
-}
-
-// ExecuteGovernanceCall is a paid mutator transaction binding the contract method 0x5ff27079.
-//
-// Solidity: function executeGovernanceCall(bytes4 _selector) returns()
-func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerTransactor) ExecuteGovernanceCall(opts *bind.TransactOpts, _selector [4]byte) (*types.Transaction, error) {
-	return _TeePaymentsLimitsManager.contract.Transact(opts, "executeGovernanceCall", _selector)
-}
-
-// ExecuteGovernanceCall is a paid mutator transaction binding the contract method 0x5ff27079.
-//
-// Solidity: function executeGovernanceCall(bytes4 _selector) returns()
-func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerSession) ExecuteGovernanceCall(_selector [4]byte) (*types.Transaction, error) {
-	return _TeePaymentsLimitsManager.Contract.ExecuteGovernanceCall(&_TeePaymentsLimitsManager.TransactOpts, _selector)
-}
-
-// ExecuteGovernanceCall is a paid mutator transaction binding the contract method 0x5ff27079.
-//
-// Solidity: function executeGovernanceCall(bytes4 _selector) returns()
-func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerTransactorSession) ExecuteGovernanceCall(_selector [4]byte) (*types.Transaction, error) {
-	return _TeePaymentsLimitsManager.Contract.ExecuteGovernanceCall(&_TeePaymentsLimitsManager.TransactOpts, _selector)
-}
-
-// Initialise is a paid mutator transaction binding the contract method 0xef88bf13.
-//
-// Solidity: function initialise(address _governanceSettings, address _initialGovernance) returns()
-func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerTransactor) Initialise(opts *bind.TransactOpts, _governanceSettings common.Address, _initialGovernance common.Address) (*types.Transaction, error) {
-	return _TeePaymentsLimitsManager.contract.Transact(opts, "initialise", _governanceSettings, _initialGovernance)
-}
-
-// Initialise is a paid mutator transaction binding the contract method 0xef88bf13.
-//
-// Solidity: function initialise(address _governanceSettings, address _initialGovernance) returns()
-func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerSession) Initialise(_governanceSettings common.Address, _initialGovernance common.Address) (*types.Transaction, error) {
-	return _TeePaymentsLimitsManager.Contract.Initialise(&_TeePaymentsLimitsManager.TransactOpts, _governanceSettings, _initialGovernance)
-}
-
-// Initialise is a paid mutator transaction binding the contract method 0xef88bf13.
-//
-// Solidity: function initialise(address _governanceSettings, address _initialGovernance) returns()
-func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerTransactorSession) Initialise(_governanceSettings common.Address, _initialGovernance common.Address) (*types.Transaction, error) {
-	return _TeePaymentsLimitsManager.Contract.Initialise(&_TeePaymentsLimitsManager.TransactOpts, _governanceSettings, _initialGovernance)
+// Solidity: function executeGovernanceCall(bytes _encodedCall) returns()
+func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerTransactorSession) ExecuteGovernanceCall(_encodedCall []byte) (*types.Transaction, error) {
+	return _TeePaymentsLimitsManager.Contract.ExecuteGovernanceCall(&_TeePaymentsLimitsManager.TransactOpts, _encodedCall)
 }
 
 // Initialize is a paid mutator transaction binding the contract method 0xc0c53b8b.
@@ -809,15 +743,15 @@ func (it *TeePaymentsLimitsManagerGovernanceCallTimelockedIterator) Close() erro
 
 // TeePaymentsLimitsManagerGovernanceCallTimelocked represents a GovernanceCallTimelocked event raised by the TeePaymentsLimitsManager contract.
 type TeePaymentsLimitsManagerGovernanceCallTimelocked struct {
-	Selector              [4]byte
-	AllowedAfterTimestamp *big.Int
 	EncodedCall           []byte
+	EncodedCallHash       [32]byte
+	AllowedAfterTimestamp *big.Int
 	Raw                   types.Log // Blockchain specific contextual infos
 }
 
-// FilterGovernanceCallTimelocked is a free log retrieval operation binding the contract event 0xed948300a3694aa01d4a6b258bfd664350193d770c0b51f8387277f6d83ea3b6.
+// FilterGovernanceCallTimelocked is a free log retrieval operation binding the contract event 0x8c02104dfc280f713854f25297de671710c544c58de69dbde8fb66974ce1ab9e.
 //
-// Solidity: event GovernanceCallTimelocked(bytes4 selector, uint256 allowedAfterTimestamp, bytes encodedCall)
+// Solidity: event GovernanceCallTimelocked(bytes encodedCall, bytes32 encodedCallHash, uint256 allowedAfterTimestamp)
 func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerFilterer) FilterGovernanceCallTimelocked(opts *bind.FilterOpts) (*TeePaymentsLimitsManagerGovernanceCallTimelockedIterator, error) {
 
 	logs, sub, err := _TeePaymentsLimitsManager.contract.FilterLogs(opts, "GovernanceCallTimelocked")
@@ -827,9 +761,9 @@ func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerFilterer) FilterGoverna
 	return &TeePaymentsLimitsManagerGovernanceCallTimelockedIterator{contract: _TeePaymentsLimitsManager.contract, event: "GovernanceCallTimelocked", logs: logs, sub: sub}, nil
 }
 
-// WatchGovernanceCallTimelocked is a free log subscription operation binding the contract event 0xed948300a3694aa01d4a6b258bfd664350193d770c0b51f8387277f6d83ea3b6.
+// WatchGovernanceCallTimelocked is a free log subscription operation binding the contract event 0x8c02104dfc280f713854f25297de671710c544c58de69dbde8fb66974ce1ab9e.
 //
-// Solidity: event GovernanceCallTimelocked(bytes4 selector, uint256 allowedAfterTimestamp, bytes encodedCall)
+// Solidity: event GovernanceCallTimelocked(bytes encodedCall, bytes32 encodedCallHash, uint256 allowedAfterTimestamp)
 func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerFilterer) WatchGovernanceCallTimelocked(opts *bind.WatchOpts, sink chan<- *TeePaymentsLimitsManagerGovernanceCallTimelocked) (event.Subscription, error) {
 
 	logs, sub, err := _TeePaymentsLimitsManager.contract.WatchLogs(opts, "GovernanceCallTimelocked")
@@ -864,9 +798,9 @@ func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerFilterer) WatchGovernan
 	}), nil
 }
 
-// ParseGovernanceCallTimelocked is a log parse operation binding the contract event 0xed948300a3694aa01d4a6b258bfd664350193d770c0b51f8387277f6d83ea3b6.
+// ParseGovernanceCallTimelocked is a log parse operation binding the contract event 0x8c02104dfc280f713854f25297de671710c544c58de69dbde8fb66974ce1ab9e.
 //
-// Solidity: event GovernanceCallTimelocked(bytes4 selector, uint256 allowedAfterTimestamp, bytes encodedCall)
+// Solidity: event GovernanceCallTimelocked(bytes encodedCall, bytes32 encodedCallHash, uint256 allowedAfterTimestamp)
 func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerFilterer) ParseGovernanceCallTimelocked(log types.Log) (*TeePaymentsLimitsManagerGovernanceCallTimelocked, error) {
 	event := new(TeePaymentsLimitsManagerGovernanceCallTimelocked)
 	if err := _TeePaymentsLimitsManager.contract.UnpackLog(event, "GovernanceCallTimelocked", log); err != nil {
@@ -1144,6 +1078,140 @@ func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerFilterer) ParseGoverned
 	return event, nil
 }
 
+// TeePaymentsLimitsManagerInitializedIterator is returned from FilterInitialized and is used to iterate over the raw logs and unpacked data for Initialized events raised by the TeePaymentsLimitsManager contract.
+type TeePaymentsLimitsManagerInitializedIterator struct {
+	Event *TeePaymentsLimitsManagerInitialized // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *TeePaymentsLimitsManagerInitializedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(TeePaymentsLimitsManagerInitialized)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(TeePaymentsLimitsManagerInitialized)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *TeePaymentsLimitsManagerInitializedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *TeePaymentsLimitsManagerInitializedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// TeePaymentsLimitsManagerInitialized represents a Initialized event raised by the TeePaymentsLimitsManager contract.
+type TeePaymentsLimitsManagerInitialized struct {
+	Version uint64
+	Raw     types.Log // Blockchain specific contextual infos
+}
+
+// FilterInitialized is a free log retrieval operation binding the contract event 0xc7f505b2f371ae2175ee4913f4499e1f2633a7b5936321eed1cdaeb6115181d2.
+//
+// Solidity: event Initialized(uint64 version)
+func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerFilterer) FilterInitialized(opts *bind.FilterOpts) (*TeePaymentsLimitsManagerInitializedIterator, error) {
+
+	logs, sub, err := _TeePaymentsLimitsManager.contract.FilterLogs(opts, "Initialized")
+	if err != nil {
+		return nil, err
+	}
+	return &TeePaymentsLimitsManagerInitializedIterator{contract: _TeePaymentsLimitsManager.contract, event: "Initialized", logs: logs, sub: sub}, nil
+}
+
+// WatchInitialized is a free log subscription operation binding the contract event 0xc7f505b2f371ae2175ee4913f4499e1f2633a7b5936321eed1cdaeb6115181d2.
+//
+// Solidity: event Initialized(uint64 version)
+func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerFilterer) WatchInitialized(opts *bind.WatchOpts, sink chan<- *TeePaymentsLimitsManagerInitialized) (event.Subscription, error) {
+
+	logs, sub, err := _TeePaymentsLimitsManager.contract.WatchLogs(opts, "Initialized")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(TeePaymentsLimitsManagerInitialized)
+				if err := _TeePaymentsLimitsManager.contract.UnpackLog(event, "Initialized", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseInitialized is a log parse operation binding the contract event 0xc7f505b2f371ae2175ee4913f4499e1f2633a7b5936321eed1cdaeb6115181d2.
+//
+// Solidity: event Initialized(uint64 version)
+func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerFilterer) ParseInitialized(log types.Log) (*TeePaymentsLimitsManagerInitialized, error) {
+	event := new(TeePaymentsLimitsManagerInitialized)
+	if err := _TeePaymentsLimitsManager.contract.UnpackLog(event, "Initialized", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
 // TeePaymentsLimitsManagerPaymentLimitsSetIterator is returned from FilterPaymentLimitsSet and is used to iterate over the raw logs and unpacked data for PaymentLimitsSet events raised by the TeePaymentsLimitsManager contract.
 type TeePaymentsLimitsManagerPaymentLimitsSetIterator struct {
 	Event *TeePaymentsLimitsManagerPaymentLimitsSet // Event containing the contract specifics and raw log
@@ -1361,14 +1429,13 @@ func (it *TeePaymentsLimitsManagerTimelockedGovernanceCallCanceledIterator) Clos
 
 // TeePaymentsLimitsManagerTimelockedGovernanceCallCanceled represents a TimelockedGovernanceCallCanceled event raised by the TeePaymentsLimitsManager contract.
 type TeePaymentsLimitsManagerTimelockedGovernanceCallCanceled struct {
-	Selector  [4]byte
-	Timestamp *big.Int
-	Raw       types.Log // Blockchain specific contextual infos
+	EncodedCallHash [32]byte
+	Raw             types.Log // Blockchain specific contextual infos
 }
 
-// FilterTimelockedGovernanceCallCanceled is a free log retrieval operation binding the contract event 0x7735b2391c38a81419c513e30ca578db7158eadd7101511b23e221c654d19cf8.
+// FilterTimelockedGovernanceCallCanceled is a free log retrieval operation binding the contract event 0x69b058d6225c01c1f2a25801ca5b05705fa2e9118e93d518390ba804398c87b1.
 //
-// Solidity: event TimelockedGovernanceCallCanceled(bytes4 selector, uint256 timestamp)
+// Solidity: event TimelockedGovernanceCallCanceled(bytes32 encodedCallHash)
 func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerFilterer) FilterTimelockedGovernanceCallCanceled(opts *bind.FilterOpts) (*TeePaymentsLimitsManagerTimelockedGovernanceCallCanceledIterator, error) {
 
 	logs, sub, err := _TeePaymentsLimitsManager.contract.FilterLogs(opts, "TimelockedGovernanceCallCanceled")
@@ -1378,9 +1445,9 @@ func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerFilterer) FilterTimeloc
 	return &TeePaymentsLimitsManagerTimelockedGovernanceCallCanceledIterator{contract: _TeePaymentsLimitsManager.contract, event: "TimelockedGovernanceCallCanceled", logs: logs, sub: sub}, nil
 }
 
-// WatchTimelockedGovernanceCallCanceled is a free log subscription operation binding the contract event 0x7735b2391c38a81419c513e30ca578db7158eadd7101511b23e221c654d19cf8.
+// WatchTimelockedGovernanceCallCanceled is a free log subscription operation binding the contract event 0x69b058d6225c01c1f2a25801ca5b05705fa2e9118e93d518390ba804398c87b1.
 //
-// Solidity: event TimelockedGovernanceCallCanceled(bytes4 selector, uint256 timestamp)
+// Solidity: event TimelockedGovernanceCallCanceled(bytes32 encodedCallHash)
 func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerFilterer) WatchTimelockedGovernanceCallCanceled(opts *bind.WatchOpts, sink chan<- *TeePaymentsLimitsManagerTimelockedGovernanceCallCanceled) (event.Subscription, error) {
 
 	logs, sub, err := _TeePaymentsLimitsManager.contract.WatchLogs(opts, "TimelockedGovernanceCallCanceled")
@@ -1415,9 +1482,9 @@ func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerFilterer) WatchTimelock
 	}), nil
 }
 
-// ParseTimelockedGovernanceCallCanceled is a log parse operation binding the contract event 0x7735b2391c38a81419c513e30ca578db7158eadd7101511b23e221c654d19cf8.
+// ParseTimelockedGovernanceCallCanceled is a log parse operation binding the contract event 0x69b058d6225c01c1f2a25801ca5b05705fa2e9118e93d518390ba804398c87b1.
 //
-// Solidity: event TimelockedGovernanceCallCanceled(bytes4 selector, uint256 timestamp)
+// Solidity: event TimelockedGovernanceCallCanceled(bytes32 encodedCallHash)
 func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerFilterer) ParseTimelockedGovernanceCallCanceled(log types.Log) (*TeePaymentsLimitsManagerTimelockedGovernanceCallCanceled, error) {
 	event := new(TeePaymentsLimitsManagerTimelockedGovernanceCallCanceled)
 	if err := _TeePaymentsLimitsManager.contract.UnpackLog(event, "TimelockedGovernanceCallCanceled", log); err != nil {
@@ -1496,14 +1563,13 @@ func (it *TeePaymentsLimitsManagerTimelockedGovernanceCallExecutedIterator) Clos
 
 // TeePaymentsLimitsManagerTimelockedGovernanceCallExecuted represents a TimelockedGovernanceCallExecuted event raised by the TeePaymentsLimitsManager contract.
 type TeePaymentsLimitsManagerTimelockedGovernanceCallExecuted struct {
-	Selector  [4]byte
-	Timestamp *big.Int
-	Raw       types.Log // Blockchain specific contextual infos
+	EncodedCallHash [32]byte
+	Raw             types.Log // Blockchain specific contextual infos
 }
 
-// FilterTimelockedGovernanceCallExecuted is a free log retrieval operation binding the contract event 0xa7326b57fc9cfe267aaea5e7f0b01757154d265620a0585819416ee9ddd2c438.
+// FilterTimelockedGovernanceCallExecuted is a free log retrieval operation binding the contract event 0xec1225e5a8a8acb91e03ce648c683c74f5d152a775b9715980999441d714c44f.
 //
-// Solidity: event TimelockedGovernanceCallExecuted(bytes4 selector, uint256 timestamp)
+// Solidity: event TimelockedGovernanceCallExecuted(bytes32 encodedCallHash)
 func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerFilterer) FilterTimelockedGovernanceCallExecuted(opts *bind.FilterOpts) (*TeePaymentsLimitsManagerTimelockedGovernanceCallExecutedIterator, error) {
 
 	logs, sub, err := _TeePaymentsLimitsManager.contract.FilterLogs(opts, "TimelockedGovernanceCallExecuted")
@@ -1513,9 +1579,9 @@ func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerFilterer) FilterTimeloc
 	return &TeePaymentsLimitsManagerTimelockedGovernanceCallExecutedIterator{contract: _TeePaymentsLimitsManager.contract, event: "TimelockedGovernanceCallExecuted", logs: logs, sub: sub}, nil
 }
 
-// WatchTimelockedGovernanceCallExecuted is a free log subscription operation binding the contract event 0xa7326b57fc9cfe267aaea5e7f0b01757154d265620a0585819416ee9ddd2c438.
+// WatchTimelockedGovernanceCallExecuted is a free log subscription operation binding the contract event 0xec1225e5a8a8acb91e03ce648c683c74f5d152a775b9715980999441d714c44f.
 //
-// Solidity: event TimelockedGovernanceCallExecuted(bytes4 selector, uint256 timestamp)
+// Solidity: event TimelockedGovernanceCallExecuted(bytes32 encodedCallHash)
 func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerFilterer) WatchTimelockedGovernanceCallExecuted(opts *bind.WatchOpts, sink chan<- *TeePaymentsLimitsManagerTimelockedGovernanceCallExecuted) (event.Subscription, error) {
 
 	logs, sub, err := _TeePaymentsLimitsManager.contract.WatchLogs(opts, "TimelockedGovernanceCallExecuted")
@@ -1550,9 +1616,9 @@ func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerFilterer) WatchTimelock
 	}), nil
 }
 
-// ParseTimelockedGovernanceCallExecuted is a log parse operation binding the contract event 0xa7326b57fc9cfe267aaea5e7f0b01757154d265620a0585819416ee9ddd2c438.
+// ParseTimelockedGovernanceCallExecuted is a log parse operation binding the contract event 0xec1225e5a8a8acb91e03ce648c683c74f5d152a775b9715980999441d714c44f.
 //
-// Solidity: event TimelockedGovernanceCallExecuted(bytes4 selector, uint256 timestamp)
+// Solidity: event TimelockedGovernanceCallExecuted(bytes32 encodedCallHash)
 func (_TeePaymentsLimitsManager *TeePaymentsLimitsManagerFilterer) ParseTimelockedGovernanceCallExecuted(log types.Log) (*TeePaymentsLimitsManagerTimelockedGovernanceCallExecuted, error) {
 	event := new(TeePaymentsLimitsManagerTimelockedGovernanceCallExecuted)
 	if err := _TeePaymentsLimitsManager.contract.UnpackLog(event, "TimelockedGovernanceCallExecuted", log); err != nil {
