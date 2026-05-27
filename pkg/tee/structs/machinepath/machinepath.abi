@@ -1,0 +1,27 @@
+[
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address[]",
+            "name": "sourceTeeIds",
+            "type": "address[]"
+          },
+          {
+            "internalType": "address[]",
+            "name": "destinationTeeIds",
+            "type": "address[]"
+          }
+        ],
+        "internalType": "struct IMachinePathManager.MachinePath",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "machinePathStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

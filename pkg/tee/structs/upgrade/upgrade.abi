@@ -1,0 +1,180 @@
+[
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "teeId",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "initialTeeId",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct IReplication.PauseForUpgrade",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "pauseForUpgradeStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "teeId",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "initialTeeId",
+                "type": "address"
+              },
+              {
+                "internalType": "string",
+                "name": "url",
+                "type": "string"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "codeHash",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "platform",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct IMachineManager.TeeMachineWithAttestationData",
+            "name": "oldTeeMachine",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "teeId",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "initialTeeId",
+                "type": "address"
+              },
+              {
+                "internalType": "string",
+                "name": "url",
+                "type": "string"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "codeHash",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "platform",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct IMachineManager.TeeMachineWithAttestationData",
+            "name": "newTeeMachine",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct IReplication.ReplicateTeeMachine",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "replicateTeeMachineStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "codeHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "platform",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct IUpgradeManager.TeeNodeVersion",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "teeNodeVersionStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "codeHash",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "platform",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct IUpgradeManager.TeeNodeVersion[]",
+            "name": "sourceVersions",
+            "type": "tuple[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "codeHash",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "platform",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct IUpgradeManager.TeeNodeVersion[]",
+            "name": "targetVersions",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct IUpgradeManager.TeeUpgradePath",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "teeUpgradePathStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
