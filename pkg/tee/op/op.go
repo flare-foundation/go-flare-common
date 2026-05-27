@@ -10,13 +10,14 @@ import (
 type Type string
 
 const (
-	Reg    Type = "F_REG"
-	Wallet Type = "F_WALLET"
-	Get    Type = "F_GET"
-	Policy Type = "F_POLICY"
-	XRP    Type = "F_XRP"
-	BTC    Type = "F_BTC"
-	FDC2   Type = "F_FDC2"
+	Reg        Type = "F_REG"
+	Wallet     Type = "F_WALLET"
+	Get        Type = "F_GET"
+	Policy     Type = "F_POLICY"
+	Governance Type = "F_GOVERNANCE"
+	XRP        Type = "F_XRP"
+	BTC        Type = "F_BTC"
+	FDC2       Type = "F_FDC2"
 )
 
 // Command represents an operation command in the TEE system.
@@ -45,8 +46,9 @@ const (
 	TEEBackup Command = "TEE_BACKUP"
 	TEEInfo   Command = "TEE_INFO"
 
-	InitializePolicy Command = "INITIALIZE_POLICY"
-	UpdatePolicy     Command = "UPDATE_POLICY"
+	InitializePolicy   Command = "INITIALIZE_POLICY"
+	UpdatePolicy       Command = "UPDATE_POLICY"
+	SetMachinePathList Command = "SET_MACHINE_PATH_LIST"
 
 	Pay     Command = "PAY"
 	Reissue Command = "REISSUE"
@@ -80,6 +82,9 @@ var validSystemPairs = map[Type]map[Command]bool{
 	Policy: {
 		InitializePolicy: true,
 		UpdatePolicy:     true,
+	},
+	Governance: {
+		SetMachinePathList: true,
 	},
 	XRP: {
 		Pay:     true,
