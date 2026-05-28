@@ -3,6 +3,7 @@ package instruction
 
 import (
 	"crypto/ecdsa"
+	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/common"
@@ -18,6 +19,7 @@ type Data struct {
 }
 
 type DataFixed struct {
+	ChainID                *big.Int         `json:"chainId"`
 	InstructionID          common.Hash      `json:"instructionId"`
 	TeeID                  common.Address   `json:"teeId"`
 	Timestamp              uint64           `json:"timestamp"`
@@ -42,6 +44,7 @@ func (d *DataFixed) HashFixed() (common.Hash, error) {
 
 func (d *DataFixed) prepareForEncoding() tee.TeeStructsInstruction {
 	return tee.TeeStructsInstruction{
+		ChainId:                d.ChainID,
 		InstructionId:          d.InstructionID,
 		TeeId:                  d.TeeID,
 		Timestamp:              d.Timestamp,

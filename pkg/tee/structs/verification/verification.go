@@ -20,6 +20,11 @@ var methods = []string{
 
 var MessageArguments map[op.Command]abi.Argument
 
+// TeeSystemStateStructArg is the abi.Argument describing the
+// ISystemStateVerifier.TeeSystemState tuple. Use it with structs.Encode to
+// produce the bytes the SystemStateVerifier facet abi.decodes on chain.
+var TeeSystemStateStructArg abi.Argument
+
 func init() {
 	verificationABI, err := TeeVerificationMetaData.GetAbi()
 	if err != nil {
@@ -38,4 +43,10 @@ func init() {
 		}
 		MessageArguments[opCommands[j]] = method.Inputs[0]
 	}
+
+	teeSystemStateMethod, ok := verificationABI.Methods["teeSystemStateStruct"]
+	if !ok {
+		panic("missing method teeSystemStateStruct")
+	}
+	TeeSystemStateStructArg = teeSystemStateMethod.Inputs[0]
 }

@@ -1,6 +1,7 @@
 package instruction
 
 import (
+	"math/big"
 	"testing"
 	"time"
 
@@ -12,6 +13,7 @@ import (
 
 func TestHashForSigning(t *testing.T) {
 	var data Data
+	data.ChainID = big.NewInt(31337)
 
 	hash0, err := data.HashForSigning()
 	require.NoError(t, err)
@@ -42,6 +44,7 @@ func TestHash(t *testing.T) {
 	var data Data
 
 	dataFixed := DataFixed{
+		ChainID:                big.NewInt(31337),
 		InstructionID:          common.Hash{},
 		TeeID:                  common.Address{},
 		Timestamp:              0,
@@ -91,6 +94,7 @@ func TestSignAndRecover(t *testing.T) {
 	var data Data
 
 	dataFixed := DataFixed{
+		ChainID:                big.NewInt(31337),
 		InstructionID:          common.Hash{},
 		TeeID:                  common.Address{},
 		Timestamp:              0,
