@@ -387,6 +387,8 @@ func TestInfoHTTPStubRejectsBadStatus(t *testing.T) {
 }
 
 func TestInfo(t *testing.T) {
+	t.Skip("hits live rippletest.net JSON-RPC; covered locally by TestInfoHTTPStub")
+
 	url := "https://s.altnet.rippletest.net:51234/"
 
 	rpc := JSONRPC{
