@@ -138,6 +138,11 @@ func retryWithConfig[F any, P any](
 				interval = minRetryInterval
 			}
 
+			// Bail if the next sleep would itself blow the budget.
+			if time.Since(start)+interval >= cfg.MaxDuration {
+				return result, err
+			}
+
 			retryLogger.Errorf("error %s: %v, retrying after %v", errorMsg, err, interval)
 
 			timer := time.NewTimer(interval)
@@ -194,11 +199,21 @@ func (d *DB) FetchState(ctx context.Context, params StateQuery) (State, error) {
 }
 
 // FetchLogs returns all logs matching the non-nil fields in params, ordered by timestamp ascending.
+//
+// WARNING: every field in LogsQuery is an optional pointer; if all are nil
+// the query has no WHERE clause and no LIMIT, so the entire logs table is
+// loaded into a Go slice. On a populated indexer this can OOM the process
+// and pressure the database. Callers should supply at least one filter, or
+// page the result via the FromB/ToB block-range fields.
 func (d *DB) FetchLogs(ctx context.Context, params LogsQuery) ([]Log, error) {
 	return retryWithConfig(dbFetchLogs, "fetching logs", d.cfg, d.logger)(ctx, d.db, params)
 }
 
 // FetchTransactions returns all transactions matching the non-nil fields in params, ordered by timestamp ascending.
+//
+// WARNING: same unbounded-read caveat as FetchLogs — all TxQuery fields are
+// optional and an all-nil params produces a full-table SELECT loaded into
+// memory. Callers should supply at least one filter when the dataset is large.
 func (d *DB) FetchTransactions(ctx context.Context, params TxQuery) ([]Transaction, error) {
 	return retryWithConfig(dbFetchTransactions, "fetching transactions", d.cfg, d.logger)(ctx, d.db, params)
 }

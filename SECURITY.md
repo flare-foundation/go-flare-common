@@ -15,9 +15,7 @@ Please refer to our [Immunefi Bug Bounty Program](https://immunefi.com/bug-bount
 
 ## Vulnerability disclosures
 
-Critical vulnerabilities will be disclosed via GitHub's
-[security advisory](https://github.com/flare-foundation/go-flare-common/security)
-system.
+Critical vulnerabilities will be disclosed via GitHub's [security advisory](https://github.com/flare-foundation/go-flare-common/security) system.
 
 ## Audit reports
 

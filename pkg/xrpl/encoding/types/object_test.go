@@ -101,7 +101,6 @@ func TestDecodeError(t *testing.T) {
 	inputs := []string{
 		"",
 		"00",
-		"e1",
 	}
 
 	for _, input := range inputs {
@@ -121,7 +120,6 @@ func TestEncodeError(t *testing.T) {
 		nil,
 		1,
 		struct{}{},
-		map[string]any{},
 		map[string]any{"random11": 1},
 	}
 

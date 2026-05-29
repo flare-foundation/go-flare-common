@@ -4,7 +4,11 @@ package voters
 import (
 	"encoding/binary"
 	"errors"
+	"fmt"
+	"maps"
+	"math"
 	"math/big"
+	"slices"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -30,45 +34,68 @@ type Set struct {
 // NewSet creates Set from voters' addresses and their weights.
 // Optionally, a map from submitAddresses to signingAddress can be added.
 //
-// There has to be the same number of voters and weights otherwise a nil pointer is returned.
-func NewSet(voters []common.Address, weights []uint16, submitToSigningAddress map[common.Address]common.Address) *Set {
+// Returns an error if voters and weights differ in length or if voters contains
+// a duplicate address. The signing policy emitted by the Flare smart contracts
+// is guaranteed to be free of duplicates, so a duplicate here indicates a
+// caller-side bug or corrupt input that would otherwise silently double-count
+// weight in the slice-indexed selection path while VoterDataMap dedupes.
+func NewSet(voters []common.Address, weights []uint16, submitToSigningAddress map[common.Address]common.Address) (*Set, error) {
 	if len(voters) != len(weights) {
-		return nil
+		return nil, fmt.Errorf("voters/weights length mismatch: %d vs %d", len(voters), len(weights))
 	}
 
+	// Defensive copies: callers' slice/map mutations after NewSet must not corrupt the Set.
 	vs := Set{
-		voters:     voters,
-		weights:    weights,
+		voters:     slices.Clone(voters),
+		weights:    slices.Clone(weights),
 		thresholds: make([]uint16, len(weights)),
 	}
-	// sum does not exceed uint16 limit, guaranteed by the smart contract
+	// Accumulate into a wider type so we can detect overflow before it
+	// wraps TotalWeight and silently corrupts thresholds (non-monotonic
+	// after wrap). The smart-contract path enforces this at decode time
+	// (see policy.FromRawBytes); NewSet must enforce it for every caller
+	// — overflowing here would silently disagree with chain consensus on
+	// the selected voter.
+	var sum uint32
 	for i, w := range weights {
-		vs.thresholds[i] = vs.TotalWeight
-		vs.TotalWeight += w
+		vs.thresholds[i] = uint16(sum)
+		sum += uint32(w)
+		if sum > math.MaxUint16 {
+			return nil, fmt.Errorf("total weight exceeds uint16 max: %d", sum)
+		}
 	}
+	if sum == 0 {
+		return nil, errors.New("total weight is zero")
+	}
+	vs.TotalWeight = uint16(sum)
 
-	vMap := make(map[common.Address]VoterData)
+	vMap := make(map[common.Address]VoterData, len(voters))
 	for i, voter := range vs.voters {
-		if _, ok := vMap[voter]; !ok {
-			vMap[voter] = VoterData{
-				Index:  i,
-				Weight: vs.weights[i],
-			}
+		if _, ok := vMap[voter]; ok {
+			return nil, fmt.Errorf("duplicate voter address at index %d: %s", i, voter.Hex())
+		}
+		vMap[voter] = VoterData{
+			Index:  i,
+			Weight: vs.weights[i],
 		}
 	}
 	vs.VoterDataMap = vMap
-	vs.SubmitToSigningAddress = submitToSigningAddress
+	vs.SubmitToSigningAddress = maps.Clone(submitToSigningAddress)
 
-	return &vs
+	return &vs, nil
 }
 
 // InitialHashSeed returns initial seed for voter selection.
 //
 // Seed is keccak256 hash of rewardEpochSeed, protocolID, and votingRoundID each written in its own 32-byte slot.
-func InitialHashSeed(rewardEpochSeed *big.Int, protocolID byte, votingRoundID uint32) common.Hash {
+// Returns an error if rewardEpochSeed is negative or exceeds 256 bits.
+func InitialHashSeed(rewardEpochSeed *big.Int, protocolID byte, votingRoundID uint32) (common.Hash, error) {
 	seed := make([]byte, 96)
 	// 0-31 bytes are filled with the reward epoch seed
 	if rewardEpochSeed != nil {
+		if rewardEpochSeed.Sign() < 0 || rewardEpochSeed.BitLen() > 256 {
+			return common.Hash{}, fmt.Errorf("rewardEpochSeed out of 256-bit range (bitlen=%d)", rewardEpochSeed.BitLen())
+		}
 		rewardEpochSeed.FillBytes(seed[0:32])
 	}
 	// 32-63 bytes are filled with the protocol ID
@@ -76,12 +103,15 @@ func InitialHashSeed(rewardEpochSeed *big.Int, protocolID byte, votingRoundID ui
 	// 64-95 bytes are filled with the voting round ID
 	binary.BigEndian.PutUint32(seed[92:96], votingRoundID)
 
-	return crypto.Keccak256Hash(seed)
+	return crypto.Keccak256Hash(seed), nil
 }
 
 // SelectVoters returns a set of signingPolicyAddresses that are prioritized to finalize.
 func (vs *Set) SelectVoters(rewardEpochSeed *big.Int, protocolID byte, votingRoundID uint32, thresholdBIPS uint16) (map[common.Address]bool, error) {
-	seed := InitialHashSeed(rewardEpochSeed, protocolID, votingRoundID)
+	seed, err := InitialHashSeed(rewardEpochSeed, protocolID, votingRoundID)
+	if err != nil {
+		return nil, fmt.Errorf("computing seed: %w", err)
+	}
 	return vs.RandomSelectThresholdWeightVoters(seed, thresholdBIPS)
 }
 
@@ -122,7 +152,11 @@ func (vs *Set) selectVoterIndex(randomNumber common.Hash) int {
 // BinarySearch finds the highest index of the threshold that is less than or equal to the value.
 //
 // value has to be lower then vs.totalWeight otherwise, the function will panic.
+// Returns -1 if the voter set is empty.
 func (vs *Set) BinarySearch(value uint16) int {
+	if len(vs.thresholds) == 0 {
+		return -1
+	}
 	if value > vs.TotalWeight {
 		panic("Value must be between 0 and total weight")
 	}
@@ -182,7 +216,9 @@ func (vs *Set) VoterWeightForAddress(a common.Address) uint16 {
 	return d.Weight
 }
 
-// Voters returns a slice of signing policy addresses of voters.
+// Voters returns a fresh copy of voter addresses; mutating the result does not affect the Set.
 func (vs *Set) Voters() []common.Address {
-	return vs.voters
+	out := make([]common.Address, len(vs.voters))
+	copy(out, vs.voters)
+	return out
 }

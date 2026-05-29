@@ -5,7 +5,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/http"
 	"slices"
+	"time"
 
 	"github.com/flare-foundation/go-flare-common/pkg/call"
 )
@@ -77,10 +79,17 @@ type AccountInfoParams struct {
 
 type JSONRPC struct {
 	URL string
+	// Transport sets the HTTP transport used by Info. Nil falls back to
+	// http.DefaultTransport, which permits any reachable address (including
+	// private VPC ranges where a co-located rippled typically lives).
+	// Callers expecting a public-only URL should pass safeurl.NewTransport()
+	// to enable SSRF protection at dial time; callers happy with the default
+	// take responsibility for trusting the URL.
+	Transport http.RoundTripper
 }
 
 // Info gets account info for the XRPL address.
-func (jr JSONRPC) Info(address string) (AccountInfoResponse, error) {
+func (jr JSONRPC) Info(ctx context.Context, address string) (AccountInfoResponse, error) {
 	request := AccountInfoRequest{
 		Method: accountInfoMethod,
 		Params: []AccountInfoParams{{
@@ -89,11 +98,10 @@ func (jr JSONRPC) Info(address string) (AccountInfoResponse, error) {
 		}},
 	}
 
-	ctx := context.TODO()
-
 	res, err := call.Post[AccountInfoRequest, AccountInfoResponseWrapped](ctx, jr.URL, call.NoAPIKey, request, call.Params{
-		Timeout:         0,
+		Timeout:         30 * time.Second,
 		MaxResponseSize: 10000,
+		Transport:       jr.Transport,
 	})
 	if err != nil {
 		return AccountInfoResponse{}, fmt.Errorf("calling %s: %w", jr.URL, err)
@@ -103,11 +111,19 @@ func (jr JSONRPC) Info(address string) (AccountInfoResponse, error) {
 }
 
 // Check checks account info:
+//   - response is from a validated ledger
 //   - illegal Flags
 //   - required Flags
 //   - signers list setting
 //   - no regular key
+//
+// A SignerList read from a non-validated ledger can be rolled back; trusting it
+// risks issuing transactions against stale or speculative state.
 func (ai AccountInfoResponse) Check(quorum uint64, signers []string) error {
+	if !ai.Validated {
+		return errors.New("account_info response is from a non-validated ledger")
+	}
+
 	if err := checkFlags(ai.AccountData.Flags); err != nil {
 		return fmt.Errorf("flags: %w", err)
 	}
@@ -160,6 +176,8 @@ func checkFlags(f uint64) error {
 }
 
 // checkSigners checks that SignerList has the right quorum and exactly the specified signers all with weight 1.
+// Duplicate accounts in SignerEntries are rejected — without dedup, a malformed list could pass the length
+// equality check while missing an expected signer.
 func checkSigners(sl SignerList, quorum uint64, signers []string) error {
 	if sl.SignerQuorum != quorum {
 		return fmt.Errorf("wrong signer quorum. xrpl: %d, expected: %d", sl.SignerQuorum, quorum)
@@ -169,13 +187,18 @@ func checkSigners(sl SignerList, quorum uint64, signers []string) error {
 		return fmt.Errorf("wrong number of signers. xrpl: %d, expected: %d", len(sl.SignerEntries), len(signers))
 	}
 
+	seen := make(map[string]struct{}, len(sl.SignerEntries))
 	for j := range sl.SignerEntries {
+		account := sl.SignerEntries[j].SignerEntry.Account
 		if sl.SignerEntries[j].SignerEntry.SignerWeight != 1 {
-			return fmt.Errorf("signer %s has weight %d", sl.SignerEntries[j].SignerEntry.Account, sl.SignerEntries[j].SignerEntry.SignerWeight)
+			return fmt.Errorf("signer %s has weight %d", account, sl.SignerEntries[j].SignerEntry.SignerWeight)
 		}
-
-		if !slices.Contains(signers, sl.SignerEntries[j].SignerEntry.Account) {
-			return fmt.Errorf("signer on xrpl %s not among expected signers", sl.SignerEntries[j].SignerEntry.Account)
+		if _, dup := seen[account]; dup {
+			return fmt.Errorf("duplicate signer %s on xrpl", account)
+		}
+		seen[account] = struct{}{}
+		if !slices.Contains(signers, account) {
+			return fmt.Errorf("signer on xrpl %s not among expected signers", account)
 		}
 	}
 

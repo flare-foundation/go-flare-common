@@ -3,6 +3,7 @@ package types
 import (
 	"bytes"
 	"fmt"
+	"strings"
 
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/address"
 )
@@ -28,10 +29,13 @@ func (*issue) ToBytes(value any, _ bool) ([]byte, error) {
 		return nil, fmt.Errorf("invalid issue %v, invalid currency", value)
 	}
 
-	// XRP issue
-	if currencyStr == XRP {
+	// XRP issue: only the currency key is allowed; XRP has no issuer.
+	if strings.EqualFold(currencyStr, XRP) {
+		if _, hasIssuer := valueMap["issuer"]; hasIssuer {
+			return nil, fmt.Errorf("invalid issue %v: XRP has no issuer", value)
+		}
 		if len(valueMap) != 1 {
-			return nil, fmt.Errorf("invalid issue %v", value)
+			return nil, fmt.Errorf("invalid issue %v: unexpected keys alongside XRP currency", value)
 		}
 		return make([]byte, 20), nil
 	}

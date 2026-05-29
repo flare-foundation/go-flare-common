@@ -49,16 +49,16 @@ func TestAddSignatures(t *testing.T) {
 
 	acc := Account{
 		Address:    "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
-		SignerList: map[string]bool{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": true},
+		SignerList: map[string]uint16{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": 1},
 		Quorum:     2,
 		txs:        make(map[common.Hash]*transaction),
 	}
 
-	txResult, dispatch, err := acc.AddSignatures(blob)
+	txID, dispatch, err := acc.AddSignatures(blob)
 	require.NoError(t, err)
 	require.False(t, dispatch)
 
-	require.Len(t, txResult.signers, 1, "signatures")
+	require.Len(t, acc.txs[txID].signers, 1, "signatures")
 	require.Len(t, acc.txs, 1, "transactions")
 }
 
@@ -70,22 +70,22 @@ func TestAddSignaturesFull(t *testing.T) {
 
 	acc := Account{
 		Address: "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
-		SignerList: map[string]bool{
-			"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": true,
-			"rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v": true,
+		SignerList: map[string]uint16{
+			"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": 1,
+			"rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v": 1,
 		},
 		Quorum: 2,
 		txs:    make(map[common.Hash]*transaction),
 	}
 
-	txResult, dispatch, err := acc.AddSignatures(blob)
+	txID, dispatch, err := acc.AddSignatures(blob)
 	require.NoError(t, err)
 	require.True(t, dispatch)
 
-	require.Len(t, txResult.signers, 2, "signatures")
+	require.Len(t, acc.txs[txID].signers, 2, "signatures")
 	require.Len(t, acc.txs, 1, "transactions")
 
-	txBlob, err := acc.Finalize(txResult.id)
+	txBlob, err := acc.Finalize(txID)
 	require.NoError(t, err)
 
 	const expectedBlob = "1200142200040000240000000263D5038D7EA4C680000000000000000000000000005553440000000000B5F762798A53D543A014CAF8B297CFF8F2F937E868400000000000753073008114A3780F5CB5A44D366520FC44055E8ED44D9A2270F3E010732102B3EC4E5DD96029A647CFA20DA07FE1F85296505552CCAC114087E66B46BD77DF744730450221009C195DBBF7967E223D8626CA19CF02073667F2B22E206727BFE848FF42BEAC8A022048C323B0BED19A988BDBEFA974B6DE8AA9DCAE250AA82BBD1221787032A864E58114204288D2E47F8EF6C99BCC457966320D12409711E1E0107321028FFB276505F9AC3F57E8D5242B386A597EF6C40A7999F37F1948636FD484E25B744630440220680BBD745004E9CFB6B13A137F505FB92298AD309071D16C7B982825188FD1AE022004200B1F7E4A6A84BB0E4FC09E1E3BA2B66EBD32F0E6D121A34BA3B04AD99BC181147908A7F0EDD48EA896C3580A399F0EE78611C8E3E1F1"
@@ -95,7 +95,118 @@ func TestAddSignaturesFull(t *testing.T) {
 	require.Equal(t, expectedBlobByte, txBlob)
 }
 
+// TestAddSignaturesConcurrent covers audit finding F-AGG-3: AddSignatures
+// and Finalize previously mutated Account.txs / tx.signers / tx.quorumReached
+// without any synchronization. With go test -race this must not flag a data
+// race and the final state must be consistent: the tx exists, holds both
+// signers, and dispatch fired exactly once (the first goroutine to push the
+// summed weight past Quorum).
+func TestAddSignaturesConcurrent(t *testing.T) {
+	tx := buildTrustSetTx()
+
+	blob1, err := signing.JoinMultisig(tx, []*signer.Signer{testSigner1})
+	require.NoError(t, err)
+	blob2, err := signing.JoinMultisig(tx, []*signer.Signer{testSigner2})
+	require.NoError(t, err)
+
+	acc := NewAccount(
+		"rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
+		map[string]uint16{
+			"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": 1,
+			"rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v": 1,
+		},
+		2,
+	)
+
+	type result struct {
+		id       common.Hash
+		dispatch bool
+		err      error
+	}
+	results := make(chan result, 2)
+	for _, blob := range [][]byte{blob1, blob2} {
+		go func(b []byte) {
+			id, dispatch, err := acc.AddSignatures(b)
+			results <- result{id, dispatch, err}
+		}(blob)
+	}
+
+	var dispatchCount int
+	var lastID common.Hash
+	for range 2 {
+		r := <-results
+		require.NoError(t, r.err)
+		if r.dispatch {
+			dispatchCount++
+		}
+		lastID = r.id
+	}
+	require.Equal(t, 1, dispatchCount, "dispatch must fire exactly once on first quorum")
+	require.Len(t, acc.txs[lastID].signers, 2)
+
+	finalBlob, err := acc.Finalize(lastID)
+	require.NoError(t, err)
+	require.NotEmpty(t, finalBlob)
+}
+
+// TestAddSignaturesLazyInit covers audit finding F-AGG-4: callers that built
+// an Account via struct literal (without setting the private txs field)
+// previously hit a nil-map write on the first AddSignatures call. The lazy
+// init under the mutex must keep that path safe.
+func TestAddSignaturesLazyInit(t *testing.T) {
+	tx := buildTrustSetTx()
+
+	blob, err := signing.JoinMultisig(tx, []*signer.Signer{testSigner1})
+	require.NoError(t, err)
+
+	// Note: no txs initialization, no NewAccount.
+	acc := Account{
+		Address:    "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
+		SignerList: map[string]uint16{testSigner1.Account: 1},
+		Quorum:     1,
+	}
+
+	_, dispatch, err := acc.AddSignatures(blob)
+	require.NoError(t, err)
+	require.True(t, dispatch)
+}
+
+// TestFinalizeWeightedQuorum covers audit finding F-AGG-1: Quorum is a
+// summed-weight threshold (rippled STTx::checkMultiSign), not a count.
+// Previously Finalize passed int(a.Quorum) to sort() as the required
+// signer count, so a weighted multisig where a single weight-2 signer
+// satisfied Quorum=2 by weight (but had len(signers) == 1) never
+// finalized.
+func TestFinalizeWeightedQuorum(t *testing.T) {
+	tx := buildTrustSetTx()
+
+	// Only testSigner1 signs.
+	blob, err := signing.JoinMultisig(tx, []*signer.Signer{testSigner1})
+	require.NoError(t, err)
+
+	// testSigner1 has weight 2; Quorum is 2 → weight threshold met with one signer.
+	acc := Account{
+		Address:    "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
+		SignerList: map[string]uint16{testSigner1.Account: 2},
+		Quorum:     2,
+		txs:        make(map[common.Hash]*transaction),
+	}
+
+	txID, dispatch, err := acc.AddSignatures(blob)
+	require.NoError(t, err)
+	require.True(t, dispatch, "single weight-2 signer must meet Quorum=2")
+	require.Len(t, acc.txs[txID].signers, 1)
+
+	// Finalize must succeed with len(signers) == 1 < int(Quorum) == 2.
+	finalBlob, err := acc.Finalize(txID)
+	require.NoError(t, err)
+	require.NotEmpty(t, finalBlob)
+}
+
 // TestAddSignaturesInvalidSignature verifies that a signer with a tampered signature is rejected.
+// JoinMultisig itself now refuses to assemble blobs with invalid signers
+// (audit M6), so we bypass it and encode the bad blob directly to exercise
+// the receiver-side reject path in AddSignatures.
 func TestAddSignaturesInvalidSignature(t *testing.T) {
 	tx := buildTrustSetTx()
 
@@ -107,12 +218,13 @@ func TestAddSignaturesInvalidSignature(t *testing.T) {
 		SigningPubKey: testSigner1.SigningPubKey,
 	}
 
-	blob, err := signing.JoinMultisig(tx, []*signer.Signer{s1WithWrongSig})
+	tx["Signers"] = []any{s1WithWrongSig.Format()}
+	blob, err := encoding.Encode(tx, false)
 	require.NoError(t, err)
 
 	acc := Account{
 		Address:    "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
-		SignerList: map[string]bool{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": true},
+		SignerList: map[string]uint16{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": 1},
 		Quorum:     1,
 		txs:        make(map[common.Hash]*transaction),
 	}
@@ -132,7 +244,7 @@ func TestAddSignaturesWrongAccount(t *testing.T) {
 	// Aggregator expects a different address than what is in the blob.
 	acc := Account{
 		Address:    "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
-		SignerList: map[string]bool{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": true},
+		SignerList: map[string]uint16{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": 1},
 		Quorum:     1,
 		txs:        make(map[common.Hash]*transaction),
 	}
@@ -152,19 +264,19 @@ func TestFinalizeWithoutQuorum(t *testing.T) {
 
 	acc := Account{
 		Address: "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
-		SignerList: map[string]bool{
-			"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": true,
-			"rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v": true,
+		SignerList: map[string]uint16{
+			"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": 1,
+			"rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v": 1,
 		},
 		Quorum: 2,
 		txs:    make(map[common.Hash]*transaction),
 	}
 
-	txResult, dispatch, err := acc.AddSignatures(blob)
+	txID, dispatch, err := acc.AddSignatures(blob)
 	require.NoError(t, err)
 	require.False(t, dispatch)
 
-	_, err = acc.Finalize(txResult.id)
+	_, err = acc.Finalize(txID)
 	require.Error(t, err)
 	require.Contains(t, err.Error(), "quorum not yet reached")
 }
@@ -173,7 +285,7 @@ func TestFinalizeWithoutQuorum(t *testing.T) {
 func TestFinalizeNonexistent(t *testing.T) {
 	acc := Account{
 		Address:    "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
-		SignerList: map[string]bool{},
+		SignerList: map[string]uint16{},
 		Quorum:     1,
 		txs:        make(map[common.Hash]*transaction),
 	}
@@ -191,19 +303,19 @@ func TestAddSignaturesDuplicateSigner(t *testing.T) {
 
 	acc := Account{
 		Address: "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
-		SignerList: map[string]bool{
-			"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": true,
-			"rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v": true,
+		SignerList: map[string]uint16{
+			"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": 1,
+			"rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v": 1,
 		},
 		Quorum: 2,
 		txs:    make(map[common.Hash]*transaction),
 	}
 
 	// First submission: both valid signers are accepted.
-	txResult, dispatch, err := acc.AddSignatures(blob)
+	txID, dispatch, err := acc.AddSignatures(blob)
 	require.NoError(t, err)
 	require.True(t, dispatch)
-	require.Len(t, txResult.signers, 2)
+	require.Len(t, acc.txs[txID].signers, 2)
 
 	// Second submission of the same blob: no new valid signatures.
 	_, _, err = acc.AddSignatures(blob)
@@ -224,15 +336,15 @@ func TestAggregatorIdentifierIsKeccakOfSigningEncoding(t *testing.T) {
 
 	acc := Account{
 		Address: "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
-		SignerList: map[string]bool{
-			"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": true,
-			"rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v": true,
+		SignerList: map[string]uint16{
+			"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": 1,
+			"rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v": 1,
 		},
 		Quorum: 2,
 		txs:    make(map[common.Hash]*transaction),
 	}
 
-	txResult, _, err := acc.AddSignatures(blob)
+	txID, _, err := acc.AddSignatures(blob)
 	require.NoError(t, err)
 
 	decoded, err := encoding.Decode(blob)
@@ -242,8 +354,8 @@ func TestAggregatorIdentifierIsKeccakOfSigningEncoding(t *testing.T) {
 	require.NoError(t, err)
 
 	expected := crypto.Keccak256Hash(signingBlob)
-	require.Equal(t, expected, txResult.id)
-	require.Len(t, txResult.id, 32)
+	require.Equal(t, expected, txID)
+	require.Len(t, txID, 32)
 }
 
 // TestFinalizeIdempotent verifies that once quorum is reached, Finalize returns a consistent blob
@@ -256,22 +368,22 @@ func TestFinalizeIdempotent(t *testing.T) {
 
 	acc := Account{
 		Address: "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
-		SignerList: map[string]bool{
-			"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": true,
-			"rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v": true,
+		SignerList: map[string]uint16{
+			"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": 1,
+			"rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v": 1,
 		},
 		Quorum: 2,
 		txs:    make(map[common.Hash]*transaction),
 	}
 
-	txResult, dispatch, err := acc.AddSignatures(blob)
+	txID, dispatch, err := acc.AddSignatures(blob)
 	require.NoError(t, err)
 	require.True(t, dispatch, "first quorum hit must report dispatch")
 
-	blobA, err := acc.Finalize(txResult.id)
+	blobA, err := acc.Finalize(txID)
 	require.NoError(t, err)
 
-	blobB, err := acc.Finalize(txResult.id)
+	blobB, err := acc.Finalize(txID)
 	require.NoError(t, err)
 	require.Equal(t, blobA, blobB)
 }
@@ -288,18 +400,18 @@ func TestAddSignaturesNonSignerIgnored(t *testing.T) {
 	// signature over the tx but is not in the SignerList.
 	acc := Account{
 		Address:    "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
-		SignerList: map[string]bool{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": true},
+		SignerList: map[string]uint16{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": 1},
 		Quorum:     1,
 		txs:        make(map[common.Hash]*transaction),
 	}
 
-	txResult, dispatch, err := acc.AddSignatures(blob)
+	txID, dispatch, err := acc.AddSignatures(blob)
 	require.NoError(t, err)
 	require.True(t, dispatch)
-	require.Len(t, txResult.signers, 1)
-	_, ok := txResult.signers["rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW"]
+	require.Len(t, acc.txs[txID].signers, 1)
+	_, ok := acc.txs[txID].signers["rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW"]
 	require.True(t, ok)
-	_, ok = txResult.signers["rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v"]
+	_, ok = acc.txs[txID].signers["rUpy3eEg8rqjqfUoLeBnZkscbKbFsKXC3v"]
 	require.False(t, ok, "non-listed signer must be ignored")
 }
 
@@ -327,11 +439,77 @@ func TestAddSignaturesMissingAccount(t *testing.T) {
 
 	acc := Account{
 		Address:    "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
-		SignerList: map[string]bool{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": true},
+		SignerList: map[string]uint16{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW": 1},
 		Quorum:     1,
 		txs:        make(map[common.Hash]*transaction),
 	}
 
 	_, _, err = acc.AddSignatures(blob)
 	require.Error(t, err)
+}
+
+// TestAddSignaturesWeightedQuorum covers audit finding H9: the quorum check
+// must sum SignerWeights, not count signers. Configure signer1 with weight 2
+// and signer2 with weight 1, quorum 2. signer1 alone reaches quorum;
+// signer2 alone does not.
+func TestAddSignaturesWeightedQuorum(t *testing.T) {
+	t.Run("heavy signer alone reaches quorum", func(t *testing.T) {
+		tx := buildTrustSetTx()
+		blob, err := signing.JoinMultisig(tx, []*signer.Signer{testSigner1})
+		require.NoError(t, err)
+
+		acc := Account{
+			Address: "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
+			SignerList: map[string]uint16{
+				testSigner1.Account: 2,
+				testSigner2.Account: 1,
+			},
+			Quorum: 2,
+			txs:    make(map[common.Hash]*transaction),
+		}
+
+		_, dispatch, err := acc.AddSignatures(blob)
+		require.NoError(t, err)
+		require.True(t, dispatch, "weight 2 alone should reach quorum 2")
+	})
+
+	t.Run("light signer alone does not reach quorum", func(t *testing.T) {
+		tx := buildTrustSetTx()
+		blob, err := signing.JoinMultisig(tx, []*signer.Signer{testSigner2})
+		require.NoError(t, err)
+
+		acc := Account{
+			Address: "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
+			SignerList: map[string]uint16{
+				testSigner1.Account: 2,
+				testSigner2.Account: 1,
+			},
+			Quorum: 2,
+			txs:    make(map[common.Hash]*transaction),
+		}
+
+		_, dispatch, err := acc.AddSignatures(blob)
+		require.NoError(t, err)
+		require.False(t, dispatch, "weight 1 alone must not reach quorum 2")
+	})
+
+	t.Run("two light signers sum to quorum", func(t *testing.T) {
+		tx := buildTrustSetTx()
+		blob, err := signing.JoinMultisig(tx, []*signer.Signer{testSigner1, testSigner2})
+		require.NoError(t, err)
+
+		acc := Account{
+			Address: "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
+			SignerList: map[string]uint16{
+				testSigner1.Account: 1,
+				testSigner2.Account: 1,
+			},
+			Quorum: 2,
+			txs:    make(map[common.Hash]*transaction),
+		}
+
+		_, dispatch, err := acc.AddSignatures(blob)
+		require.NoError(t, err)
+		require.True(t, dispatch, "1+1 must reach quorum 2")
+	})
 }

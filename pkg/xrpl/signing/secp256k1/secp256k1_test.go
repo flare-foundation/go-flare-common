@@ -5,14 +5,24 @@ import (
 	"encoding/hex"
 
 	"fmt"
+	"math/big"
+	"strings"
 	"testing"
 
 	"github.com/btcsuite/btcd/btcec/v2"
 	btcecdsa "github.com/btcsuite/btcd/btcec/v2/ecdsa"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/hash"
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/signing/utils"
 	"github.com/stretchr/testify/require"
 )
+
+func prefixed(t *testing.T, raw []byte) []byte {
+	t.Helper()
+	m, err := utils.Prepare(raw, false, nil)
+	require.NoError(t, err)
+	return m
+}
 
 func TestAddress(t *testing.T) {
 	priv, err := crypto.HexToECDSA("76C4FB30C5E1C68142495F367F08F7970783897300A8D29044E89044D6E7F872")
@@ -37,7 +47,7 @@ func TestSignatureMarshaling(t *testing.T) {
 
 	for range 500 {
 		for j := range 5 {
-			msg := fmt.Appendf(nil, "neki%d", j)
+			msg := prefixed(t, fmt.Appendf(nil, "neki%d", j))
 
 			sig, err := sign(hash.Sha512Half(msg), prv)
 			require.NoError(t, err, j)
@@ -88,6 +98,174 @@ func TestMarshaling(t *testing.T) {
 		_, err = MarshalDER(b)
 		require.NoError(t, err, j)
 	}
+}
+
+// TestMarshalDERStrictCanonical covers audit finding M7: the parser must
+// enforce strict DER per BIP-66 so non-canonical encodings of an otherwise
+// valid signature are rejected. r/s must be minimal-encoded positive
+// integers, and the outer length must match the buffer exactly.
+func TestMarshalDERStrictCanonical(t *testing.T) {
+	cases := []struct {
+		name string
+		hex  string
+	}{
+		{
+			// rLen=2 with leading zero but next byte high bit clear:
+			// the zero is non-minimal padding.
+			name: "non-minimal leading zero in r",
+			hex:  "3008" + "0202" + "0001" + "020101",
+		},
+		{
+			// rLen=1 with high-bit-set byte: would parse as negative.
+			name: "negative r",
+			hex:  "3006" + "0201" + "80" + "020101",
+		},
+		{
+			name: "non-minimal leading zero in s",
+			hex:  "3008" + "020101" + "0202" + "0001",
+		},
+		{
+			name: "negative s",
+			hex:  "3006" + "020101" + "0201" + "80",
+		},
+		{
+			// Trailing bytes beyond outer length.
+			name: "trailing bytes",
+			hex:  "3006" + "020101" + "020101" + "AAAA",
+		},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			b, err := hex.DecodeString(tc.hex)
+			require.NoError(t, err)
+			_, err = MarshalDER(b)
+			require.Error(t, err)
+		})
+	}
+}
+
+// TestMarshalDERRejectsMalformed exercises the panic surfaces fixed in
+// audit findings H1 (oversize rLen/sLen → negative slice index) and
+// H2 (zero sLen → out-of-bounds index read). Each case must error,
+// not panic.
+func TestMarshalDERRejectsMalformed(t *testing.T) {
+	cases := []struct {
+		name string
+		// hex encoding of a DER signature byte string
+		hex string
+	}{
+		{
+			// H1: rLen=33 with non-zero leading byte. After leading-zero
+			// strip is skipped, rLen stays 33 and copy(r[32-33:], ...) panics.
+			name: "rLen 33 without leading zero",
+			hex:  "3026" + "0221" + strings.Repeat("AA", 33) + "020101",
+		},
+		{
+			// H1: rLen=200. copy(r[32-200:], ...) panics.
+			name: "rLen 200",
+			hex:  "30CD" + "02C8" + strings.Repeat("AA", 200) + "020101",
+		},
+		{
+			// H1 mirrored to s: sLen=200.
+			name: "sLen 200",
+			hex:  "30CD" + "020101" + "02C8" + strings.Repeat("BB", 200),
+		},
+		{
+			// H2: sLen=0. The outer length checks pass, but
+			// `if sig[sStart] == 0` reads one byte past end.
+			name: "sLen 0",
+			hex:  "3005" + "020101" + "0200",
+		},
+		{
+			// rLen=0 (degenerate zero r) — defensive: rejected.
+			name: "rLen 0",
+			hex:  "3004" + "0200" + "020101",
+		},
+		{
+			// rLen=1 with leading zero strips to 0 — degenerate.
+			name: "rLen strips to 0",
+			hex:  "3005" + "020100" + "020101",
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			b, err := hex.DecodeString(tc.hex)
+			require.NoError(t, err)
+
+			require.NotPanics(t, func() {
+				_, err := MarshalDER(b)
+				require.Error(t, err)
+			})
+		})
+	}
+}
+
+// TestMarshalDERRejectsHighS covers audit finding F-SIGNCURVE-1: the parser
+// must reject signatures whose s component is in the upper half of the curve
+// order. Accepting high-S enables malleability — for any valid (r, s) the
+// byte-distinct (r, N-s) is equally valid for the same message and key,
+// which rippled rejects via fully-canonical-signature.
+func TestMarshalDERRejectsHighS(t *testing.T) {
+	// secp256k1 curve order N.
+	N := crypto.S256().Params().N
+	halfN := new(big.Int).Rsh(N, 1)
+
+	// Craft (r=1, s = halfN+1). halfN+1 is the smallest high-S value.
+	r := big.NewInt(1)
+	s := new(big.Int).Add(halfN, big.NewInt(1))
+
+	// Pack as minimal-DER. Both r=1 and s have positive high-bit-clear MSB
+	// (halfN+1 starts with 0x7F so high bit is clear, no 0x00 padding needed).
+	rb := r.Bytes()
+	sb := s.Bytes()
+
+	der := []byte{0x30, byte(2 + len(rb) + 2 + len(sb)), 0x02, byte(len(rb))}
+	der = append(der, rb...)
+	der = append(der, 0x02, byte(len(sb)))
+	der = append(der, sb...)
+
+	_, err := MarshalDER(der)
+	require.Error(t, err, "high-S DER signature must be rejected")
+
+	// Same s also rejected by MarshalRS.
+	var rs [64]byte
+	copy(rs[32-len(rb):32], rb)
+	copy(rs[64-len(sb):64], sb)
+	_, err = MarshalRS(rs[:])
+	require.Error(t, err, "high-S compact signature must be rejected")
+
+	// Sanity: the low-S counterpart (s = halfN) is accepted.
+	sLow := new(big.Int).Set(halfN)
+	sbLow := sLow.Bytes()
+	// halfN's top byte is 0x7F so no 0x00 padding needed.
+	derLow := []byte{0x30, byte(2 + len(rb) + 2 + len(sbLow)), 0x02, byte(len(rb))}
+	derLow = append(derLow, rb...)
+	derLow = append(derLow, 0x02, byte(len(sbLow)))
+	derLow = append(derLow, sbLow...)
+	_, err = MarshalDER(derLow)
+	require.NoError(t, err, "low-S DER signature (s = N/2) must be accepted")
+}
+
+// TestMarshalRSRejectsZeroScalars covers audit finding F-SIGNCURVE-2:
+// big.Int.Bytes() returns an empty slice for zero, and DER() then panics
+// on rb[0]. A Signature with zero r or s must not be constructable.
+func TestMarshalRSRejectsZeroScalars(t *testing.T) {
+	// All-zero r||s.
+	_, err := MarshalRS(make([]byte, 64))
+	require.Error(t, err)
+
+	// Zero r, non-zero s.
+	rs := make([]byte, 64)
+	rs[63] = 1
+	_, err = MarshalRS(rs)
+	require.Error(t, err)
+
+	// Non-zero r, zero s.
+	rs = make([]byte, 64)
+	rs[31] = 1
+	_, err = MarshalRS(rs)
+	require.Error(t, err)
 }
 
 // Vectors ported from rippled src/test/protocol/SecretKey_test.cpp secp256k1TestVectors.
@@ -156,7 +334,7 @@ func TestDeterministicSigningRFC6979(t *testing.T) {
 	priv, err := crypto.HexToECDSA("1ACAAEDECE405B2A958212629E16F2EB46B153EEE94CDD350FDEFF52795525B7")
 	require.NoError(t, err)
 
-	msg := []byte("http://www.xrpl.org")
+	msg := prefixed(t, []byte("http://www.xrpl.org"))
 
 	sigGo, err := SignXRPL(msg, priv)
 	require.NoError(t, err)
@@ -173,4 +351,18 @@ func TestDeterministicSigningRFC6979(t *testing.T) {
 	ok, err := Validate(msg, sigGo, PrvToPub(priv))
 	require.NoError(t, err)
 	require.True(t, ok)
+}
+
+func TestSignXRPLRejectsUnprefixedInput(t *testing.T) {
+	priv, err := crypto.HexToECDSA("1ACAAEDECE405B2A958212629E16F2EB46B153EEE94CDD350FDEFF52795525B7")
+	require.NoError(t, err)
+
+	_, err = SignXRPL([]byte("http://www.xrpl.org"), priv)
+	require.Error(t, err)
+
+	_, err = SignXRPL([]byte{}, priv)
+	require.Error(t, err)
+
+	_, err = SignXRPL([]byte{0x00, 0x00, 0x00}, priv)
+	require.Error(t, err)
 }

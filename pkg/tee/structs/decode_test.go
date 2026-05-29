@@ -27,7 +27,6 @@ func TestDecodeUint8(t *testing.T) {
 
 	var unpacked uint8
 	var unpacked2 uint8
-	var unpacked3 uint8
 
 	unpacked2, err = Decode[uint8](arg, packed)
 	require.NoError(t, err)
@@ -35,12 +34,8 @@ func TestDecodeUint8(t *testing.T) {
 	err = DecodeTo(arg, packed, &unpacked)
 	require.NoError(t, err)
 
-	err = DecodeTo2(arg, packed, &unpacked3)
-	require.NoError(t, err)
-
 	require.Equal(t, eight, unpacked)
 	require.Equal(t, eight, unpacked2)
-	require.Equal(t, eight, unpacked3)
 }
 
 func TestDecodeFail(t *testing.T) {
@@ -88,15 +83,11 @@ func TestDecodeFail(t *testing.T) {
 			require.NoError(t, err)
 
 			var unpacked0 any
-			var unpacked1 any
 
 			_, err = Decode[any](test.outputType, packed)
 			require.Error(t, err)
 
 			err = DecodeTo(test.outputType, packed, &unpacked0)
-			require.Error(t, err)
-
-			err = DecodeTo2(test.outputType, packed, &unpacked1)
 			require.Error(t, err)
 		})
 	}
@@ -120,15 +111,11 @@ func TestUint8(t *testing.T) {
 	packed = append(packed, 2)
 
 	var unpacked0 uint8
-	var unpacked1 uint8
 
 	_, err = Decode[uint8](argUint8, packed)
 	require.Error(t, err)
 
 	err = DecodeTo(argUint8, packed, &unpacked0)
-	require.Error(t, err)
-
-	err = DecodeTo2(argUint8, packed, &unpacked1)
 	require.Error(t, err)
 }
 
@@ -173,7 +160,6 @@ func TestDecodeStruct(t *testing.T) {
 
 	var unpacked Neki
 	var unpacked2 Neki
-	var unpacked3 Neki
 
 	err = DecodeTo(arg, packed, &unpacked)
 	require.NoError(t, err)
@@ -181,12 +167,8 @@ func TestDecodeStruct(t *testing.T) {
 	unpacked2, err = Decode[Neki](arg, packed)
 	require.NoError(t, err)
 
-	err = DecodeTo2(arg, packed, &unpacked3)
-	require.NoError(t, err)
-
 	require.Equal(t, pre, unpacked)
 	require.Equal(t, pre, unpacked2)
-	require.Equal(t, pre, unpacked3)
 }
 
 func TestDecodeStructNested(t *testing.T) {
@@ -247,7 +229,6 @@ func TestDecodeStructNested(t *testing.T) {
 
 	var unpacked Neki2
 	var unpacked2 Neki2
-	var unpacked3 Neki2
 
 	err = DecodeTo(arg, packed, &unpacked)
 	require.NoError(t, err)
@@ -255,12 +236,8 @@ func TestDecodeStructNested(t *testing.T) {
 	unpacked2, err = Decode[Neki2](arg, packed)
 	require.NoError(t, err)
 
-	err = DecodeTo2(arg, packed, &unpacked3)
-	require.NoError(t, err)
-
 	require.Equal(t, pre, unpacked)
 	require.Equal(t, pre, unpacked2)
-	require.Equal(t, pre, unpacked3)
 }
 
 func TestDecodeArray(t *testing.T) {
@@ -282,7 +259,6 @@ func TestDecodeArray(t *testing.T) {
 
 	var unpacked [2][32]byte
 	var unpacked2 [2][32]byte
-	var unpacked3 [2][32]byte
 
 	err = DecodeTo(arg, packed, &unpacked)
 	require.NoError(t, err)
@@ -290,12 +266,8 @@ func TestDecodeArray(t *testing.T) {
 	unpacked2, err = Decode[[2][32]byte](arg, packed)
 	require.NoError(t, err)
 
-	err = DecodeTo2(arg, packed, &unpacked3)
-	require.NoError(t, err)
-
 	require.Equal(t, pre, unpacked)
 	require.Equal(t, pre, unpacked2)
-	require.Equal(t, pre, unpacked3)
 }
 
 func TestDecodeInstructionMessage(t *testing.T) {
@@ -321,20 +293,15 @@ func TestDecodeInstructionMessage(t *testing.T) {
 	require.NoError(t, err)
 
 	var unpacked1 verification.IVerificationTeeAttestation
-	var unpacked2 verification.IVerificationTeeAttestation
 
 	err = DecodeTo(arg, encoded, &unpacked1)
 	require.NoError(t, err)
 	require.Equal(t, pre, unpacked1)
 
-	err = DecodeTo2(arg, encoded, &unpacked2)
+	unpacked2, err := Decode[verification.IVerificationTeeAttestation](arg, encoded)
 	require.NoError(t, err)
+
 	require.Equal(t, pre, unpacked2)
-
-	unpacked3, err := Decode[verification.IVerificationTeeAttestation](arg, encoded)
-	require.NoError(t, err)
-
-	require.Equal(t, pre, unpacked3)
 }
 
 func TestMismatchedStructs(t *testing.T) {
@@ -381,14 +348,47 @@ func TestMismatchedStructs(t *testing.T) {
 	require.NoError(t, err)
 
 	var unpacked Drugo
-	var unpacked3 Drugo
 
 	err = DecodeTo(arg0, packed, &unpacked)
 	require.Error(t, err)
 
 	_, err = Decode[Drugo](arg0, packed)
 	require.Error(t, err)
+}
 
-	err = DecodeTo2(arg0, packed, &unpacked3)
-	require.Error(t, err)
+// TestDecodeToRejectsSubtleShapeMismatch covers audit finding H14: the
+// previous DecodeTo body wrapped dest in struct{X any}, defeating ABI
+// strict-shape verification — a destination with the right field count but
+// a wrong field type silently produced garbage. The strict implementation
+// must error on this.
+func TestDecodeToRejectsSubtleShapeMismatch(t *testing.T) {
+	abiJSON := `{
+        "components": [
+          {"internalType": "string", "name": "A", "type": "string"},
+          {"internalType": "uint8",  "name": "B", "type": "uint8"}
+        ],
+        "internalType": "struct Mismatch.Subtle",
+        "name": "subtle",
+        "type": "tuple"
+    }`
+
+	arg := abi.Argument{}
+	require.NoError(t, arg.UnmarshalJSON([]byte(abiJSON)))
+
+	type Source struct {
+		A string
+		B uint8
+	}
+	// Dest has the right field count but B's type is wrong (uint8 -> []byte).
+	type Dest struct {
+		A string
+		B []byte
+	}
+
+	packed, err := abi.Arguments{arg}.PackValues([]any{Source{"hello", 7}})
+	require.NoError(t, err)
+
+	var dst Dest
+	err = DecodeTo(arg, packed, &dst)
+	require.Error(t, err, "subtle B-field type mismatch must be rejected")
 }

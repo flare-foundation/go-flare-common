@@ -7,6 +7,7 @@ import (
 	"crypto/rand"
 	"encoding/json"
 	"fmt"
+	"net"
 	"net/http"
 	"strconv"
 	"sync"
@@ -20,6 +21,21 @@ import (
 	"github.com/ethereum/go-ethereum/crypto/ecies"
 	"github.com/stretchr/testify/require"
 )
+
+// waitForServerReady polls addr by TCP dial until the listener is up or the deadline expires.
+func waitForServerReady(t *testing.T, addr string) {
+	t.Helper()
+	deadline := time.Now().Add(5 * time.Second)
+	for time.Now().Before(deadline) {
+		conn, err := net.DialTimeout("tcp", addr, 100*time.Millisecond)
+		if err == nil {
+			_ = conn.Close()
+			return
+		}
+		time.Sleep(5 * time.Millisecond)
+	}
+	t.Fatalf("server at %s not ready within deadline", addr)
+}
 
 const (
 	port    = 6739
@@ -42,12 +58,14 @@ func prepareServer(t *testing.T) (*Signer, *ecdsa.PrivateKey) {
 	require.NoError(t, err)
 
 	cfg := Config{
-		Addr:       fmt.Sprintf(":%d", port),
+		Addr:       fmt.Sprintf("127.0.0.1:%d", port),
 		APIKeyName: "X-API-KEY",
 		APIKeys:    []string{apiKey},
 	}
 
-	return New(cfg, prv), prv
+	s, err := New(cfg, prv)
+	require.NoError(t, err)
+	return s, prv
 }
 
 func prepareSignBody(n uint64) SignBody {
@@ -70,6 +88,7 @@ func preparePOSTRequest(t *testing.T, body any, endpoint string) *http.Request {
 
 	req, err := http.NewRequest(http.MethodPost, url+endpoint, bytes.NewBuffer(encodedBody))
 	require.NoError(t, err)
+	req.Header.Set("Content-Type", "application/json")
 
 	return req
 }
@@ -100,7 +119,7 @@ func TestSigner(t *testing.T) {
 	})
 
 	wg2.Wait()
-	time.Sleep(100 * time.Millisecond)
+	waitForServerReady(t, fmt.Sprintf("127.0.0.1:%d", port))
 
 	t.Run("sign happy path", func(t *testing.T) {
 		t.Parallel()
@@ -189,6 +208,7 @@ func TestSigner(t *testing.T) {
 
 		requestNoContentType := preparePOSTRequest(t, body, signEP)
 		requestNoContentType.Header.Set("X-API-KEY", apiKey)
+		requestNoContentType.Header.Del("Content-Type")
 
 		respFailNoContentType := sendRequest(t, requestNoContentType)
 		require.Equal(t, http.StatusNotAcceptable, respFailNoContentType.StatusCode)
@@ -333,36 +353,36 @@ func TestSigner(t *testing.T) {
 
 func TestConfigs(t *testing.T) {
 	lts := Limits{
-		maxReqBodySize:        200,
-		maxReqBodySizeDecrypt: 500,
-		maxHeaderBytes:        1 << 10,
-		writeTimeout:          1 * time.Second,
-		readTimeout:           1 * time.Second,
-		readHeaderTimeout:     1 * time.Second,
+		MaxReqBodySize:        200,
+		MaxReqBodySizeDecrypt: 500,
+		MaxHeaderBytes:        1 << 10,
+		WriteTimeout:          1 * time.Second,
+		ReadTimeout:           1 * time.Second,
+		ReadHeaderTimeout:     1 * time.Second,
 	}
 
 	t.Run("limits", func(t *testing.T) {
 		// nothing changed
 		lts.setDefaults()
-		require.Equal(t, int64(200), lts.maxReqBodySize)
-		require.Equal(t, int64(500), lts.maxReqBodySizeDecrypt)
-		require.Equal(t, 1<<10, lts.maxHeaderBytes)
-		require.Equal(t, 1*time.Second, lts.writeTimeout)
-		require.Equal(t, 1*time.Second, lts.readTimeout)
-		require.Equal(t, 1*time.Second, lts.readHeaderTimeout)
+		require.Equal(t, int64(200), lts.MaxReqBodySize)
+		require.Equal(t, int64(500), lts.MaxReqBodySizeDecrypt)
+		require.Equal(t, 1<<10, lts.MaxHeaderBytes)
+		require.Equal(t, 1*time.Second, lts.WriteTimeout)
+		require.Equal(t, 1*time.Second, lts.ReadTimeout)
+		require.Equal(t, 1*time.Second, lts.ReadHeaderTimeout)
 
 		ltsDef := Limits{}
 		ltsDef.setDefaults()
-		require.Equal(t, defaultMaxReqBodySize, ltsDef.maxReqBodySize)
-		require.Equal(t, defaultMaxReqBodySizeDecrypt, ltsDef.maxReqBodySizeDecrypt)
-		require.Equal(t, defaultMaxHeaderBytes, ltsDef.maxHeaderBytes)
-		require.Equal(t, defaultWriteTimeout, ltsDef.writeTimeout)
-		require.Equal(t, defaultReadTimeout, ltsDef.readTimeout)
-		require.Equal(t, defaultReadHeaderTimeout, ltsDef.readHeaderTimeout)
+		require.Equal(t, defaultMaxReqBodySize, ltsDef.MaxReqBodySize)
+		require.Equal(t, defaultMaxReqBodySizeDecrypt, ltsDef.MaxReqBodySizeDecrypt)
+		require.Equal(t, defaultMaxHeaderBytes, ltsDef.MaxHeaderBytes)
+		require.Equal(t, defaultWriteTimeout, ltsDef.WriteTimeout)
+		require.Equal(t, defaultReadTimeout, ltsDef.ReadTimeout)
+		require.Equal(t, defaultReadHeaderTimeout, ltsDef.ReadHeaderTimeout)
 	})
 
 	cfg := Config{
-		Addr:       fmt.Sprintf(":%d", port),
+		Addr:       fmt.Sprintf("127.0.0.1:%d", port),
 		APIKeyName: "X-API-KEY",
 		APIKeys:    []string{apiKey},
 		Limits:     lts,
@@ -373,7 +393,8 @@ func TestConfigs(t *testing.T) {
 	prv, err := crypto.GenerateKey()
 	require.NoError(t, err)
 
-	s := New(cfg, prv)
+	s, err := New(cfg, prv)
+	require.NoError(t, err)
 
 	var wg sync.WaitGroup
 
@@ -382,7 +403,7 @@ func TestConfigs(t *testing.T) {
 		require.Error(t, err)
 	})
 
-	time.Sleep(1 * time.Second)
+	waitForServerReady(t, fmt.Sprintf("127.0.0.1:%d", port))
 
 	t.Run("sign with custom limit", func(t *testing.T) {
 		const nuOfHashesFail uint64 = 3
@@ -467,4 +488,116 @@ func TestConfigs(t *testing.T) {
 		cancel()
 		wg.Wait()
 	})
+}
+
+// TestAPIKeyHMACCompare covers audit finding H21: API-key comparison runs
+// against HMAC digests with subtle.ConstantTimeCompare. The test exercises
+// the behavioural contract — correct keys accepted, wrong/empty keys
+// rejected, multiple configured keys all accepted — independent of timing.
+func TestAPIKeyHMACCompare(t *testing.T) {
+	cfg := Config{
+		APIKeyName: "X-API-KEY",
+		APIKeys:    []string{"alpha", "beta", "gamma"},
+	}
+	ak, err := newAPIKeys(cfg)
+	require.NoError(t, err)
+	require.Len(t, ak.digests, 3)
+	require.Len(t, ak.secret, 32)
+
+	mk := func(v string) *http.Header {
+		h := http.Header{}
+		if v != "" {
+			h.Set(cfg.APIKeyName, v)
+		}
+		return &h
+	}
+
+	for _, valid := range cfg.APIKeys {
+		require.Truef(t, ak.authorize(mk(valid)), "valid key %q should authorize", valid)
+	}
+	require.False(t, ak.authorize(mk("")))
+	require.False(t, ak.authorize(mk("delta")))
+	require.False(t, ak.authorize(mk("alpha1")))
+	require.False(t, ak.authorize(mk("alph")))
+}
+
+// TestAssertLoopbackAddr covers audit finding H22: New() must reject any
+// configuration that would bind the signer outside loopback, because the
+// deferred C4/C5/C6 unbound-oracle findings rely on the signer being
+// reachable only from inside the host trust boundary.
+func TestAssertLoopbackAddr(t *testing.T) {
+	good := []string{
+		"127.0.0.1:0",
+		"127.0.0.1:8080",
+		"127.1.2.3:8080",
+		"[::1]:8080",
+	}
+	for _, a := range good {
+		t.Run("accept "+a, func(t *testing.T) {
+			require.NoError(t, assertLoopbackAddr(a))
+		})
+	}
+
+	bad := []struct {
+		addr string
+		want string
+	}{
+		{"", "must be specified"},
+		{":8080", "empty host"},
+		{"0.0.0.0:8080", "not a loopback"},
+		{"192.168.1.5:8080", "not a loopback"},
+		{"10.0.0.1:8080", "not a loopback"},
+		{"localhost:8080", "not a literal IP"},
+		{"example.com:8080", "not a literal IP"},
+		{"127.0.0.1", "parsing"},
+		{"::1:8080", "parsing"},
+	}
+	for _, tc := range bad {
+		t.Run("reject "+tc.addr, func(t *testing.T) {
+			err := assertLoopbackAddr(tc.addr)
+			require.Error(t, err)
+			require.Contains(t, err.Error(), tc.want)
+		})
+	}
+}
+
+func TestNewRejectsNonLoopbackAddr(t *testing.T) {
+	prv, err := crypto.GenerateKey()
+	require.NoError(t, err)
+
+	cfg := Config{
+		Addr:       ":8080",
+		APIKeyName: "X-API-KEY",
+		APIKeys:    []string{"k"},
+	}
+	s, err := New(cfg, prv)
+	require.Error(t, err)
+	require.Nil(t, s)
+	require.Contains(t, err.Error(), "signer address")
+}
+
+// TestNewRejectsNilPrivateKey covers audit finding F-TEE-2: a nil
+// *ecdsa.PrivateKey used to pass New() and surface as a deref panic on
+// the first /sign or /id request — exposing the listener before the
+// crash. New must reject up front.
+func TestNewRejectsNilPrivateKey(t *testing.T) {
+	cfg := Config{
+		Addr:       "127.0.0.1:0",
+		APIKeyName: "X-API-KEY",
+		APIKeys:    []string{"k"},
+	}
+	s, err := New(cfg, nil)
+	require.Error(t, err)
+	require.Nil(t, s)
+	require.Contains(t, err.Error(), "private key is nil")
+}
+
+func TestAPIKeyHMACSecretsAreDistinct(t *testing.T) {
+	cfg := Config{APIKeyName: "X-API-KEY", APIKeys: []string{"k"}}
+	a, err := newAPIKeys(cfg)
+	require.NoError(t, err)
+	b, err := newAPIKeys(cfg)
+	require.NoError(t, err)
+	require.NotEqual(t, a.secret, b.secret, "each New() must use a fresh HMAC secret")
+	require.NotEqual(t, a.digests[0], b.digests[0], "digest under different secret must differ")
 }

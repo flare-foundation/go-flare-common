@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"math"
 	"math/big"
 	"reflect"
 	"strconv"
@@ -15,7 +16,29 @@ import (
 )
 
 // PaymentTxFromInstruction prepares a transaction from the Payment Instruction Message.
+// Scope: native XRP payments only — TokenId must be empty, signaling "use the chain's native asset".
+// Hardening:
+//
+//   - i.Amount must be non-nil (the on-chain decoder allows nil through);
+//   - SenderAddress and RecipientAddress must differ (self-payment is only meaningful via
+//     Paths/SendMax cross-currency conversion, which this entrypoint does not support);
+//   - TokenId must be empty so an issued-token payment cannot accidentally produce a native-XRP tx;
+//   - the resulting tx is run through CheckNativePayment so the caller never gets back a
+//     structurally invalid blob.
 func PaymentTxFromInstruction(i payments.ITeePaymentsPaymentInstructionMessage, try int) (map[string]any, error) {
+	if i.Amount == nil {
+		return nil, errors.New("nil Amount")
+	}
+	if i.SenderAddress == i.RecipientAddress {
+		return nil, errors.New("sender equals recipient")
+	}
+	if len(i.TokenId) != 0 {
+		return nil, fmt.Errorf("non-empty TokenId %s; this entrypoint only builds native XRP payments", hex.EncodeToString(i.TokenId))
+	}
+	if i.Nonce > math.MaxUint32 {
+		return nil, fmt.Errorf("nonce %d exceeds XRPL Sequence (UInt32) range", i.Nonce)
+	}
+
 	tx := make(map[string]any)
 
 	tx["TransactionType"] = "Payment"
@@ -23,7 +46,7 @@ func PaymentTxFromInstruction(i payments.ITeePaymentsPaymentInstructionMessage, 
 	tx["Destination"] = i.RecipientAddress
 	tx["Amount"] = i.Amount.String()
 	tx["SigningPubKey"] = ""
-	tx["Sequence"] = i.Nonce
+	tx["Sequence"] = uint32(i.Nonce) //nolint:gosec // XRPL Sequence is UInt32; on-chain Nonce bounded to fit
 
 	// [
 	//   {
@@ -53,6 +76,10 @@ func PaymentTxFromInstruction(i payments.ITeePaymentsPaymentInstructionMessage, 
 
 	tx["Fee"] = feeFixture.Fee(i.MaxFee)
 
+	if err := CheckNativePayment(tx); err != nil {
+		return nil, fmt.Errorf("native payment validation: %w", err)
+	}
+
 	return tx, nil
 }
 
@@ -64,7 +91,7 @@ func Nullify(i payments.ITeePaymentsPaymentInstructionMessage, fee string) map[s
 	tx["TransactionType"] = "AccountSet"
 	tx["Account"] = i.SenderAddress
 	tx["SigningPubKey"] = ""
-	tx["Sequence"] = i.Nonce
+	tx["Sequence"] = uint32(i.Nonce) //nolint:gosec // XRPL Sequence is UInt32; on-chain Nonce bounded to fit
 
 	// [
 	//   {
@@ -178,8 +205,11 @@ type ScheduledFee struct {
 	Delay   time.Duration
 }
 
-// Fee returns the FeeBIPS of max.
+// Fee returns the FeeBIPS of max. A nil max is treated as zero.
 func (s *ScheduledFee) Fee(max *big.Int) string {
+	if max == nil {
+		return "0"
+	}
 	bips := big.NewInt(int64(s.FeeBIPS))
 	fee := new(big.Int).Mul(bips, max)
 	fee.Div(fee, big.NewInt(10000))
@@ -210,8 +240,15 @@ func ParseFeeEntry(schedule []byte, try int) (ScheduledFee, error) {
 	if len(schedule)%4 != 0 {
 		return ScheduledFee{}, errors.New("invalid schedule length")
 	}
-	if len(schedule) < (try+1)*4 {
-		return ScheduledFee{}, errors.New("try beyond schedule length")
+	// Check try against the entry count directly. The original guard
+	// computed (try+1)*4 and compared against len(schedule): for negative
+	// try the RHS becomes non-positive and the check passed, then the
+	// slice with a negative bound panicked; for try near math.MaxInt the
+	// (try+1)*4 multiplication wrapped to a large negative and the slice
+	// likewise panicked. Range-checking try directly avoids both edges.
+	entries := len(schedule) / 4
+	if try < 0 || try >= entries {
+		return ScheduledFee{}, fmt.Errorf("try %d out of range [0, %d)", try, entries)
 	}
 
 	entry := schedule[try*4 : (try+1)*4]

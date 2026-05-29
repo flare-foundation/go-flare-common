@@ -1,14 +1,4 @@
-<div align="center">
-  <a href="https://flare.network/" target="blank">
-    <img src="https://content.flare.network/Flare-2.svg" width="300" alt="Flare Logo" />
-  </a>
-  <br />
-  <a href="CONTRIBUTING.md">Contributing</a>
-  ·
-  <a href="SECURITY.md">Security</a>
-  ·
-  <a href="CHANGELOG.md">Changelog</a>
-</div>
+<div align="center"> <a href="https://flare.network/" target="blank"> <img src="https://content.flare.network/Flare-2.svg" width="300" alt="Flare Logo" /> </a> <br /> <a href="CONTRIBUTING.md">Contributing</a> · <a href="SECURITY.md">Security</a> · <a href="CHANGELOG.md">Changelog</a> </div>
 
 # Go Flare Common V1
 

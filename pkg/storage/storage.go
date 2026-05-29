@@ -2,6 +2,7 @@
 package storage
 
 import (
+	"fmt"
 	"sync"
 
 	"golang.org/x/exp/constraints"
@@ -19,8 +20,8 @@ type Cyclic[K constraints.Integer, T any] struct {
 }
 
 // Size is the size of cyclic storage.
-func (s *Cyclic[K, T]) Size() K {
-	return K(len(s.values))
+func (s *Cyclic[K, T]) Size() int {
+	return len(s.values)
 }
 
 // Store stores value with key to key (mod size).
@@ -64,17 +65,32 @@ func (s *Cyclic[K, T]) Get(key K) (T, bool) {
 	return storedItem.value, true
 }
 
-// Deprecated: NewCyclic initializes a Cyclic storage with size.
+// Deprecated: NewCyclic initializes a Cyclic storage with size. Panics if
+// size is not positive or cannot be represented losslessly by K (the
+// modulo arithmetic in Store/Get otherwise produces out-of-range indices
+// and a runtime slice-OOB panic on first access).
 //
 // Use New instead.
 func NewCyclic[K constraints.Integer, T any](size int) Cyclic[K, T] {
-	return Cyclic[K, T]{values: make([]*cyclicItem[K, T], size), mu: new(sync.RWMutex)}
+	p := New[K, T](size)
+	if p == nil {
+		panic(fmt.Sprintf("storage.NewCyclic: invalid size %d for key type", size))
+	}
+	return *p
 }
 
 // New initializes a Cyclic storage with size.
-// If size is not positive, nil is returned.
+//
+// Returns nil if size is not positive, or if size cannot be represented
+// losslessly by K (e.g., size=200 with K=int8 overflows to -56; the modulo
+// arithmetic in Store/Get would then produce out-of-range indices and the
+// slice access would panic at runtime). The roundtrip int(K(size)) == size
+// catches both signed-narrowing and unsigned-truncation cases.
 func New[K constraints.Integer, T any](size int) *Cyclic[K, T] {
 	if size <= 0 {
+		return nil
+	}
+	if int(K(size)) != size {
 		return nil
 	}
 	return &Cyclic[K, T]{values: make([]*cyclicItem[K, T], size), mu: new(sync.RWMutex)}

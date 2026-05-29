@@ -24,9 +24,8 @@ func DoubleSha256(b []byte) []byte {
 	return sha.Sum(nil)
 }
 
-// Sha256RipeMD160 computes sha256 hash of a RipeMD160 hash.
-//
-// ONLY FOR LEGACY PURPOSES.
+// Sha256RipeMD160 computes RipeMD160(sha256(b)).
+// This is the canonical XRPL accountID derivation from a compressed pubkey.
 func Sha256RipeMD160(b []byte) []byte {
 	ripe := ripemd160.New() //nolint:gosec
 	sha := sha256.New()

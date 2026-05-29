@@ -139,7 +139,7 @@ func stepToBytes(step map[string]any) ([]byte, error) {
 			return nil, fmt.Errorf("invalid currency %v", currency)
 		}
 
-		xrpCurrency := curr == XRP || strings.TrimPrefix(curr, "0x") == "0000000000000000000000000000000000000000"
+		xrpCurrency := strings.EqualFold(curr, XRP) || strings.TrimPrefix(curr, "0x") == "0000000000000000000000000000000000000000"
 
 		switch xrpCurrency {
 		case true:
@@ -149,9 +149,14 @@ func stepToBytes(step map[string]any) ([]byte, error) {
 			out = append(out, make([]byte, 20)...)
 
 		case false:
+			// Non-XRP currency without an issuer is unroutable; rippled rejects such steps.
+			if !ie {
+				return nil, fmt.Errorf("invalid path %v, non-XRP currency requires issuer", step)
+			}
+
 			currencyBytes, err := serializeCurrency(curr, disallowedCodes)
 			if err != nil {
-				return nil, fmt.Errorf("invalid path %v, invalid issuer: %w", step, err)
+				return nil, fmt.Errorf("invalid path %v, invalid currency: %w", step, err)
 			}
 
 			out = append(out, currencyBytes...)
@@ -294,7 +299,7 @@ func readCurrency(b *bytes.Buffer) (string, error) {
 		return "", fmt.Errorf("reading bytes: %w", err)
 	}
 	if n != l {
-		return "nil", outOfBytes("currency", l, n)
+		return "", outOfBytes("currency", l, n)
 	}
 
 	if bytes.Equal(c, make([]byte, l)) {

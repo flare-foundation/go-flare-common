@@ -98,7 +98,8 @@ func TestNewSigningPolicyLogs(t *testing.T) {
 		event, err := policy.ParseSigningPolicyInitializedEvent(test.log)
 		require.NoError(t, err)
 
-		siginingPolicy := policy.NewSigningPolicy(event, nil)
+		siginingPolicy, err := policy.NewSigningPolicy(event, nil)
+		require.NoErrorf(t, err, "NewSigningPolicy test %d", i)
 		require.Equalf(t, test.totalWeight, siginingPolicy.Voters.TotalWeight, "error total weight test %d", i)
 		require.Lenf(t, siginingPolicy.Voters.VoterDataMap, test.noOfVoters, "error number of voters test %d", i)
 
@@ -126,7 +127,8 @@ func TestStorage(t *testing.T) {
 	event2, err := policy.ParseSigningPolicyInitializedEvent(log2)
 	require.NoError(t, err)
 
-	siginingPolicy2 := policy.NewSigningPolicy(event2, nil)
+	siginingPolicy2, err := policy.NewSigningPolicy(event2, nil)
+	require.NoError(t, err)
 
 	err = storage.Add(siginingPolicy2)
 	require.NoError(t, err)
@@ -134,7 +136,8 @@ func TestStorage(t *testing.T) {
 	event1, err := policy.ParseSigningPolicyInitializedEvent(log1)
 	require.NoError(t, err)
 
-	siginingPolicy1 := policy.NewSigningPolicy(event1, nil)
+	siginingPolicy1, err := policy.NewSigningPolicy(event1, nil)
+	require.NoError(t, err)
 
 	err = storage.Add(siginingPolicy1)
 	require.NoError(t, err)
@@ -158,6 +161,22 @@ func TestStorage(t *testing.T) {
 
 	removeOne := storage.RemoveBefore(667080)
 	require.Len(t, removeOne, 1)
+}
+
+func TestStorageAddRejectsRewardEpochZeroAfterExisting(t *testing.T) {
+	storage := policy.NewStorage()
+
+	event, err := policy.ParseSigningPolicyInitializedEvent(log2)
+	require.NoError(t, err)
+	sp, err := policy.NewSigningPolicy(event, nil)
+	require.NoError(t, err)
+	require.NoError(t, storage.Add(sp))
+
+	// Synthesize a sibling policy with RewardEpochID==0; the strict-mode check
+	// must reject it without underflowing sp.RewardEpochID-1.
+	zero := *sp
+	zero.RewardEpochID = 0
+	require.Error(t, storage.Add(&zero))
 }
 
 func TestHash(t *testing.T) {

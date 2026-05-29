@@ -179,6 +179,102 @@ func TestIngrainAttemptConcurrent(t *testing.T) {
 	}
 }
 
+func TestNextDelay(t *testing.T) {
+	base := 10 * time.Millisecond
+
+	tests := []struct {
+		name   string
+		params Params
+		j      int
+		want   time.Duration
+	}{
+		{
+			name:   "constant when multiplier <= 1",
+			params: Params{Delay: base},
+			j:      5,
+			want:   base,
+		},
+		{
+			name:   "first retry uses base delay (j=0 unaffected by multiplier)",
+			params: Params{Delay: base, Multiplier: 2},
+			j:      0,
+			want:   base,
+		},
+		{
+			name:   "exponential doubling at j=3",
+			params: Params{Delay: base, Multiplier: 2},
+			j:      3,
+			want:   80 * time.Millisecond, // base * 2^3
+		},
+		{
+			name:   "MaxDelay caps growth",
+			params: Params{Delay: base, Multiplier: 2, MaxDelay: 50 * time.Millisecond},
+			j:      10,
+			want:   50 * time.Millisecond,
+		},
+		{
+			name:   "saturates on overflow without panic",
+			params: Params{Delay: time.Hour, Multiplier: 1e9, MaxDelay: 2 * time.Second},
+			j:      100,
+			want:   2 * time.Second,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			require.Equal(t, tc.want, nextDelay(tc.params, tc.j))
+		})
+	}
+}
+
+func TestNextDelayJitter(t *testing.T) {
+	base := 100 * time.Millisecond
+	p := Params{Delay: base, Jitter: 0.5}
+
+	for range 200 {
+		d := nextDelay(p, 0)
+		require.GreaterOrEqual(t, d, 50*time.Millisecond)
+		require.LessOrEqual(t, d, 150*time.Millisecond)
+	}
+}
+
+func TestExecuteReturnsEarlyOnCtxCancelDuringDelay(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	delay := 100 * time.Millisecond
+	go func() {
+		time.Sleep(5 * time.Millisecond)
+		cancel()
+	}()
+
+	start := time.Now()
+	res := Execute(ctx, func() (int, error) { return 0, errRetry }, Params{
+		MaxAttempts: 10,
+		Delay:       delay,
+	})
+	elapsed := time.Since(start)
+
+	require.False(t, res.Success)
+	require.ErrorIs(t, res.Err, context.Canceled)
+	require.ErrorIs(t, res.Err, errRetry)
+	require.Less(t, elapsed, delay, "Execute must return before the next delay completes (elapsed=%s)", elapsed)
+}
+
+func TestExecuteBackoffDelays(t *testing.T) {
+	// 3 attempts with base 5ms, multiplier 2: delays before attempts 2 and 3 are 5ms and 10ms => >= 15ms.
+	start := time.Now()
+	res := Execute(context.Background(), testFunction(2), Params{
+		MaxAttempts: 3,
+		Delay:       5 * time.Millisecond,
+		Multiplier:  2,
+		Timeout:     500 * time.Millisecond,
+	})
+	elapsed := time.Since(start)
+	require.True(t, res.Success)
+	require.GreaterOrEqual(t, elapsed, 15*time.Millisecond, "backoff did not grow as expected (elapsed=%s)", elapsed)
+}
+
 func TestExecuteAttempt(t *testing.T) {
 	limit := 3
 

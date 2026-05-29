@@ -34,6 +34,32 @@ func TestEmptyTree(t *testing.T) {
 	assert.Equal(t, merkle.ErrHashNotFound, err)
 }
 
+func TestInvalidTreeLayout(t *testing.T) {
+	// A non-empty tree of even length cannot satisfy the heap invariant
+	// (which requires len == 2n-1, always odd). Such a Tree could exist
+	// only via manual construction or deserialization of an untrusted
+	// blob; Root/Leaf/Proof must reject it instead of panicking.
+	for _, tree := range []merkle.Tree{
+		{common.HexToHash("0x01"), common.HexToHash("0x02")},
+		{
+			common.HexToHash("0x01"), common.HexToHash("0x02"),
+			common.HexToHash("0x03"), common.HexToHash("0x04"),
+		},
+	} {
+		_, err := tree.Root()
+		assert.Equal(t, merkle.ErrInvalidTree, err)
+
+		_, err = tree.Leaf(0)
+		assert.Equal(t, merkle.ErrInvalidTree, err)
+
+		_, err = tree.Proof(0)
+		assert.Equal(t, merkle.ErrInvalidTree, err)
+
+		_, err = tree.ProofFromHash(common.HexToHash("0x01"))
+		assert.Equal(t, merkle.ErrInvalidTree, err)
+	}
+}
+
 func TestBuildEmpty(t *testing.T) {
 	hashes := []common.Hash{}
 	tree := merkle.Build(hashes, false)
@@ -89,10 +115,15 @@ func TestSingleLeafTree(t *testing.T) {
 
 func TestMultiLeafTree(t *testing.T) {
 	vals := []string{
-		"0x01", "0x02", "0x03", "0x04", "0x05",
+		"0x0000000000000000000000000000000000000000000000000000000000000001",
+		"0x0000000000000000000000000000000000000000000000000000000000000002",
+		"0x0000000000000000000000000000000000000000000000000000000000000003",
+		"0x0000000000000000000000000000000000000000000000000000000000000004",
+		"0x0000000000000000000000000000000000000000000000000000000000000005",
 	}
 
-	tree := merkle.BuildFromHex(vals, true)
+	tree, err := merkle.BuildFromHex(vals, true)
+	require.NoError(t, err)
 
 	expectedRoot := common.HexToHash("0xc9f523a58f30cdf128d0c9b9b5c47307fffd7d0edcdadf7c623c2b01b48cdf82")
 	root, err := tree.Root()
@@ -184,22 +215,24 @@ func TestMultiLeafTree(t *testing.T) {
 }
 
 func TestSorting(t *testing.T) {
+	const (
+		h1 = "0x0000000000000000000000000000000000000000000000000000000000000001"
+		h2 = "0x0000000000000000000000000000000000000000000000000000000000000002"
+		h3 = "0x0000000000000000000000000000000000000000000000000000000000000003"
+		h4 = "0x0000000000000000000000000000000000000000000000000000000000000004"
+		h5 = "0x0000000000000000000000000000000000000000000000000000000000000005"
+	)
 	vals := [][]string{
-		{
-			"0x01", "0x02", "0x03", "0x04", "0x05", // 1-5
-		},
-		{
-			"0x05", "0x04", "0x03", "0x02", "0x01", // 1-5 shuffled
-		},
-		{
-			"0x02", "0x01", "0x05", "0x04", "0x03", "0x01", // 1-5 shuffled with duplicated 1
-		},
+		{h1, h2, h3, h4, h5},     // 1-5
+		{h5, h4, h3, h2, h1},     // 1-5 shuffled
+		{h2, h1, h5, h4, h3, h1}, // 1-5 shuffled with duplicated 1
 	}
 
 	prevRoot := common.Hash{}
 
 	for i, val := range vals {
-		tree := merkle.BuildFromHex(val, false)
+		tree, err := merkle.BuildFromHex(val, false)
+		require.NoError(t, err)
 		root, err := tree.Root()
 		require.NoError(t, err)
 

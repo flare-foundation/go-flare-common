@@ -1,4 +1,9 @@
 // Package seed decodes base58-encoded rippled-native XRPL family seeds.
+//
+// Decoded payloads are returned as-is; the package does not assess the seed's
+// entropy. Callers that generate seeds programmatically must source the 16
+// payload bytes from a cryptographically secure RNG (e.g., crypto/rand). A
+// low-entropy or attacker-controlled seed yields predictable derived keys.
 package seed
 
 import (
@@ -27,8 +32,13 @@ func DecodeFamilySeed(s string) ([]byte, error) {
 	}
 	raw, err := base58.XRPLCoder.Decode(s)
 	if err != nil {
-		return nil, fmt.Errorf("decoding: %w", err)
+		// Deliberately do NOT wrap err: base58.Decode embeds its raw input
+		// in the error string, and the input here is private-key-equivalent
+		// seed material. Returning a static error keeps the seed out of
+		// caller logs / aggregators.
+		return nil, errors.New("decoding seed")
 	}
+	defer clear(raw) // zeroize the raw buffer; base58 internals may still retain copies we can't reach.
 	if len(raw) != 1+Length+4 {
 		return nil, fmt.Errorf("unexpected decoded length %d, want %d", len(raw), 1+Length+4)
 	}
@@ -54,5 +64,7 @@ func EncodeFamilySeed(payload []byte) (string, error) {
 	body = append(body, familySeedPrefix)
 	body = append(body, payload...)
 	body = append(body, hash.Checksum(body)...)
-	return base58.XRPLCoder.Encode(body), nil
+	encoded := base58.XRPLCoder.Encode(body)
+	clear(body) // zeroize after encode; base58 internals may still retain copies we can't reach.
+	return encoded, nil
 }

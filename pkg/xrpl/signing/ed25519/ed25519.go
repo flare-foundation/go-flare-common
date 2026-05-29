@@ -1,4 +1,13 @@
 // Package ed25519 provides XRPL Ed25519 key management and transaction signing.
+//
+// Secret-material zeroization is not implemented. Go's GC may
+// relocate objects, and crypto/ed25519, crypto/sha512, and math/big.Int
+// internals all retain copies of secret bytes that are not reachable from
+// this package. A partial zero-out of the visible buffers would mislead
+// callers into believing key material is gone when copies persist; the
+// honest position is that secret-in-memory hygiene requires a
+// platform-level mitigation (mlocked pages, hardware-backed key storage)
+// outside this library's scope.
 package ed25519
 
 import (
@@ -70,11 +79,16 @@ func PrivKeyFromSecret(secret string) (ed25519.PrivateKey, error) {
 	}
 	secretBytes, err := base58.XRPLCoder.Decode(secret)
 	if err != nil {
-		return nil, fmt.Errorf("decoding secret: %w", err)
+		return nil, errors.New("decoding secret")
 	}
 
-	if len(secretBytes) < 7 { // 3 prefix bytes + at least 4 checksum bytes
-		return nil, errors.New("invalid secret length")
+	// xrpl.js encodes Ed25519 secrets as: 3 prefix bytes (01 E1 4B) + 16 seed
+	// bytes + 4 checksum bytes. Other lengths still produce a valid Ed25519
+	// key but are non-canonical and would not interoperate with rippled or
+	// xrpl.js, so reject them.
+	const expectedLen = 3 + 16 + 4
+	if len(secretBytes) != expectedLen {
+		return nil, fmt.Errorf("invalid secret length %d, want %d", len(secretBytes), expectedLen)
 	}
 
 	cs := hash.Checksum(secretBytes[:len(secretBytes)-4])
@@ -163,12 +177,12 @@ func Validate(msg, sig []byte, pub string) (bool, error) {
 		return false, fmt.Errorf("reading pub: %w", err)
 	}
 
-	if pubBytes[0] != 0xed {
-		return false, errors.New("pub key should ED (or ed) prefixed")
-	}
-
 	if len(pubBytes) != ed25519.PublicKeySize+1 {
 		return false, fmt.Errorf("invalid pubKey length (require %d bytes)", ed25519.PublicKeySize+1)
+	}
+
+	if pubBytes[0] != 0xed {
+		return false, errors.New("pub key should ED (or ed) prefixed")
 	}
 
 	if len(sig) != ed25519.SignatureSize {

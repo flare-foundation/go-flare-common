@@ -5,8 +5,10 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
+	"mime"
 	"net/http"
 	"slices"
 	"strings"
@@ -23,9 +25,18 @@ type APIKey struct {
 
 // Params configures HTTP request behavior.
 type Params struct {
-	Timeout         time.Duration     // maximal time to wait for a response
-	MaxResponseSize int64             // maximal response size in bytes
-	Transport       http.RoundTripper // if non-nil, used as the HTTP client transport
+	Timeout         time.Duration // maximal time to wait for a response
+	MaxResponseSize int64         // maximal response size in bytes; also caps the request body buffered by PostRawWithRetry
+	// Transport sets the HTTP client transport. Nil uses http.DefaultTransport (no SSRF filtering); pass safeurl.NewTransport() to enable it.
+	Transport http.RoundTripper
+
+	// NoRetryStatuses lists HTTP response statuses that must NOT trigger a retry
+	// in the *WithRetry helpers. The status and any error are still surfaced to
+	// the caller; only the retry loop is suppressed. When nil/empty (default),
+	// the helpers retry on any error from PostRaw (legacy behavior; dangerous for
+	// non-idempotent POSTs). Independent of acceptableFail, which converts a status
+	// to a successful result; NoRetryStatuses preserves the error.
+	NoRetryStatuses []int
 }
 
 // NoAPIKey is an empty APIKey that skips adding an authentication header.
@@ -63,10 +74,9 @@ func PostRaw[T any](ctx context.Context, url string, apiKey APIKey, body io.Read
 	resOut.Status = resp.StatusCode
 
 	if resp.StatusCode != http.StatusOK {
-		if resp.Header.Get("Content-Type") == "text/plain; charset=utf-8" {
-			respLimited := &io.LimitedReader{R: resp.Body, N: p.MaxResponseSize}
+		if isTextPlain(resp.Header.Get("Content-Type")) {
 			buf := new(strings.Builder)
-			_, err := io.Copy(buf, respLimited)
+			_, err := io.Copy(buf, capReader(resp.Body, p.MaxResponseSize))
 			if err == nil {
 				return resOut, fmt.Errorf("request responded with code %d, reason: %s", resp.StatusCode, buf.String())
 			}
@@ -75,9 +85,7 @@ func PostRaw[T any](ctx context.Context, url string, apiKey APIKey, body io.Read
 		return resOut, fmt.Errorf("request responded with code %d", resp.StatusCode)
 	}
 
-	respLimited := &io.LimitedReader{R: resp.Body, N: p.MaxResponseSize}
-
-	decoder := json.NewDecoder(respLimited)
+	decoder := json.NewDecoder(capReader(resp.Body, p.MaxResponseSize))
 
 	response := new(T)
 	err = decoder.Decode(response)
@@ -90,23 +98,45 @@ func PostRaw[T any](ctx context.Context, url string, apiKey APIKey, body io.Read
 }
 
 // PostRawWithRetry sends a post request and retries on unsuccessful attempts according to retry parameters.
+// The request body is fully buffered up to p.MaxResponseSize to enable retries; oversize bodies are rejected.
 func PostRawWithRetry[T any](ctx context.Context, url string, apiKey APIKey, body io.Reader, p Params, acceptableFail []int, rp retry.Params) (Response[T], error) {
-	bodyBytes, err := io.ReadAll(body)
+	if p.MaxResponseSize <= 0 {
+		return Response[T]{}, errors.New("MaxResponseSize must be set to buffer retry body")
+	}
+	limited := &io.LimitedReader{R: body, N: p.MaxResponseSize + 1}
+	bodyBytes, err := io.ReadAll(limited)
 	if err != nil {
 		return Response[T]{}, fmt.Errorf("reading request body: %w", err)
 	}
-
-	fn := func() (Response[T], error) {
-		r, err := PostRaw[T](ctx, url, apiKey, bytes.NewReader(bodyBytes), p)
-		if err != nil && !slices.Contains(acceptableFail, r.Status) {
-			return r, err
-		}
-		return r, nil
+	if int64(len(bodyBytes)) > p.MaxResponseSize {
+		return Response[T]{}, fmt.Errorf("request body exceeds MaxResponseSize (%d bytes)", p.MaxResponseSize)
 	}
 
-	res := retry.Execute(ctx, fn, rp)
+	fn := func() (Response[T], error) {
+		return PostRaw[T](ctx, url, apiKey, bytes.NewReader(bodyBytes), p)
+	}
 
-	return res.Value, res.Err
+	return executeWithRetry(ctx, fn, p.NoRetryStatuses, acceptableFail, rp)
+}
+
+// capReader returns r capped to n bytes, or r unchanged if n <= 0 (unbounded).
+func capReader(r io.Reader, n int64) io.Reader {
+	if n <= 0 {
+		return r
+	}
+	return &io.LimitedReader{R: r, N: n}
+}
+
+// isTextPlain reports whether contentType is a text/plain media type, ignoring charset and whitespace.
+func isTextPlain(contentType string) bool {
+	if contentType == "" {
+		return false
+	}
+	mediaType, _, err := mime.ParseMediaType(contentType)
+	if err != nil {
+		return false
+	}
+	return mediaType == "text/plain"
 }
 
 // Post sends a post request with marshaled body and apiKey in header to url and unmarshals the response of type T.
@@ -122,14 +152,42 @@ func Post[S, T any](ctx context.Context, url string, apiKey APIKey, body S, p Pa
 // PostWithRetry sends a post request with marshaled body and retries on unsuccessful attempts according to retry parameters.
 func PostWithRetry[S, T any](ctx context.Context, url string, apiKey APIKey, body S, p Params, acceptableFail []int, rp retry.Params) (Response[T], error) {
 	fn := func() (Response[T], error) {
-		r, err := Post[S, T](ctx, url, apiKey, body, p)
-		if err != nil && !slices.Contains(acceptableFail, r.Status) {
-			return r, err
-		}
-		return r, nil
+		return Post[S, T](ctx, url, apiKey, body, p)
 	}
 
-	res := retry.Execute(ctx, fn, rp)
+	return executeWithRetry(ctx, fn, p.NoRetryStatuses, acceptableFail, rp)
+}
 
-	return res.Value, res.Err
+// executeWithRetry runs fn through retry.Execute, applying the *WithRetry helpers'
+// per-status gating. acceptableFail eats the error and stops retrying (legacy);
+// noRetry preserves the error and stops retrying; otherwise the error triggers retry.
+func executeWithRetry[T any](
+	ctx context.Context,
+	fn func() (Response[T], error),
+	noRetry []int,
+	acceptableFail []int,
+	rp retry.Params,
+) (Response[T], error) {
+	type result struct {
+		r   Response[T]
+		err error
+	}
+	wrapped := func() (result, error) {
+		r, err := fn()
+		if err == nil {
+			return result{r: r}, nil
+		}
+		if slices.Contains(acceptableFail, r.Status) {
+			return result{r: r}, nil
+		}
+		if slices.Contains(noRetry, r.Status) {
+			return result{r: r, err: err}, nil
+		}
+		return result{r: r}, err
+	}
+	res := retry.Execute(ctx, wrapped, rp)
+	if res.Value.err != nil {
+		return res.Value.r, res.Value.err
+	}
+	return res.Value.r, res.Err
 }

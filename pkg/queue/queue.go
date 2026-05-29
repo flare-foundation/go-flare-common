@@ -200,10 +200,7 @@ func (q *PriorityQueue[T]) DequeueAsync(ctx context.Context, handler func(contex
 		if q.workersSem != nil {
 			defer q.decrementWorkers()
 		}
-		err = handler(ctx, item.value)
-
-		// If there was any error, we re-queue the item for processing again.
-		if err != nil {
+		if err := handler(ctx, item.value); err != nil {
 			q.handleError(ctx, item)
 		}
 	}()
@@ -215,12 +212,15 @@ func (q *PriorityQueue[T]) handleError(ctx context.Context, item priorityQueueIt
 	waitDuration := item.backoff.NextBackOff()
 
 	if waitDuration == backoff.Stop {
-		// Attempt to send the item to the dead letter queue, but do not block if it is full -
-		// in that case the item will be discarded.
+		if q.DeadLetterQueue == nil {
+			logger.Warnf("queue %s: backoff stopped for item %v but no DLQ configured; dropping", q.Name(), item.value)
+			return
+		}
 		select {
 		case q.DeadLetterQueue <- item.value:
 			logger.Debugf("max retry attempts reached in queue %s, sent item to dead letter queue: %v", q.Name(), item.value)
 		default:
+			logger.Warnf("queue %s: DLQ full; dropping item %v", q.Name(), item.value)
 		}
 		return
 	}

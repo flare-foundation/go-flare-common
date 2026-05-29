@@ -92,3 +92,66 @@ func InMemoryDB(t *testing.T, name string) (*gorm.DB, string) {
 	}
 	return db, dsn
 }
+
+// TestDoInTransactionPanicReturnsError covers audit finding H20: a panic
+// from inside an operation must not be silently swallowed. The caller must
+// see an error instead of a nil return that would otherwise be indistinguishable
+// from a committed transaction.
+func TestDoInTransactionPanicReturnsError(t *testing.T) {
+	db, _ := InMemoryDB(t, "do_in_transaction_panic")
+	sqlDB, err := db.DB()
+	require.NoError(t, err)
+	defer sqlDB.Close() //nolint:errcheck // closing test database
+
+	require.NotPanics(t, func() {
+		err = DoInTransaction(db, func(tx *gorm.DB) error {
+			panic("boom")
+		})
+	})
+	require.Error(t, err)
+	require.Contains(t, err.Error(), "panic in transaction")
+	require.Contains(t, err.Error(), "boom")
+}
+
+func TestDoInTransactionPropagatesErrorFromOperation(t *testing.T) {
+	db, _ := InMemoryDB(t, "do_in_transaction_err")
+	sqlDB, err := db.DB()
+	require.NoError(t, err)
+	defer sqlDB.Close() //nolint:errcheck // closing test database
+
+	sentinel := fmt.Errorf("operation failed")
+	err = DoInTransaction(db, func(tx *gorm.DB) error {
+		return sentinel
+	})
+	require.ErrorIs(t, err, sentinel)
+}
+
+func TestDoInTransactionReportsBeginError(t *testing.T) {
+	db, _ := InMemoryDB(t, "do_in_transaction_begin_err")
+	sqlDB, err := db.DB()
+	require.NoError(t, err)
+	require.NoError(t, sqlDB.Close())
+
+	err = DoInTransaction(db, func(tx *gorm.DB) error {
+		t.Fatal("operation must not run when Begin fails")
+		return nil
+	})
+	require.Error(t, err)
+	require.Contains(t, err.Error(), "beginning transaction")
+}
+
+func TestApplyPoolConfigSetsMaxOpenConns(t *testing.T) {
+	db, _ := InMemoryDB(t, "apply_pool_config")
+	sqlDB, err := db.DB()
+	require.NoError(t, err)
+	defer sqlDB.Close() //nolint:errcheck // closing test database
+
+	applyPoolConfig(sqlDB, PoolConfig{
+		MaxOpenConns:    5,
+		MaxIdleConns:    3,
+		ConnMaxLifetime: 10 * time.Minute,
+		ConnMaxIdleTime: 5 * time.Minute,
+	})
+
+	require.Equal(t, 5, sqlDB.Stats().MaxOpenConnections)
+}

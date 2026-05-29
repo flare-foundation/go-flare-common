@@ -5,9 +5,14 @@ package signer
 import (
 	"context"
 	"crypto/ecdsa"
+	"crypto/hmac"
+	"crypto/rand"
+	"crypto/sha256"
+	"crypto/subtle"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net"
 	"net/http"
 	"time"
 
@@ -35,37 +40,40 @@ type Config struct {
 	APIKeyName string   `toml:"api_key_name"`
 	APIKeys    []string `toml:"api_keys"`
 	Limits     Limits   `toml:"limits"`
+
+	// Opt-in to start with empty APIKeyName/APIKeys (dev/test only — accepts every request).
+	AllowUnauthenticated bool `toml:"allow_unauthenticated"`
 }
 
 type Limits struct {
-	maxReqBodySize        int64 `toml:"max_req_body_size"`
-	maxReqBodySizeDecrypt int64 `toml:"max_req_body_size_decrypt"`
-	maxHeaderBytes        int   `toml:"max_header_bytes"`
+	MaxReqBodySize        int64 `toml:"max_req_body_size"`
+	MaxReqBodySizeDecrypt int64 `toml:"max_req_body_size_decrypt"`
+	MaxHeaderBytes        int   `toml:"max_header_bytes"`
 
-	writeTimeout      time.Duration `toml:"write_timeout"`
-	readTimeout       time.Duration `toml:"read_timeout"`
-	readHeaderTimeout time.Duration `toml:"read_header_timeout"`
+	WriteTimeout      time.Duration `toml:"write_timeout"`
+	ReadTimeout       time.Duration `toml:"read_timeout"`
+	ReadHeaderTimeout time.Duration `toml:"read_header_timeout"`
 }
 
 // setDefaults sets default values for any zero-valued fields in Limits.
 func (l *Limits) setDefaults() {
-	if l.maxReqBodySize == 0 {
-		l.maxReqBodySize = defaultMaxReqBodySize
+	if l.MaxReqBodySize == 0 {
+		l.MaxReqBodySize = defaultMaxReqBodySize
 	}
-	if l.maxReqBodySizeDecrypt == 0 {
-		l.maxReqBodySizeDecrypt = defaultMaxReqBodySizeDecrypt
+	if l.MaxReqBodySizeDecrypt == 0 {
+		l.MaxReqBodySizeDecrypt = defaultMaxReqBodySizeDecrypt
 	}
-	if l.maxHeaderBytes == 0 {
-		l.maxHeaderBytes = defaultMaxHeaderBytes
+	if l.MaxHeaderBytes == 0 {
+		l.MaxHeaderBytes = defaultMaxHeaderBytes
 	}
-	if l.writeTimeout == 0 {
-		l.writeTimeout = defaultWriteTimeout
+	if l.WriteTimeout == 0 {
+		l.WriteTimeout = defaultWriteTimeout
 	}
-	if l.readTimeout == 0 {
-		l.readTimeout = defaultReadTimeout
+	if l.ReadTimeout == 0 {
+		l.ReadTimeout = defaultReadTimeout
 	}
-	if l.readHeaderTimeout == 0 {
-		l.readHeaderTimeout = defaultReadHeaderTimeout
+	if l.ReadHeaderTimeout == 0 {
+		l.ReadHeaderTimeout = defaultReadHeaderTimeout
 	}
 }
 
@@ -74,19 +82,65 @@ type Signer struct {
 	*http.Server
 }
 
+// assertLoopbackAddr returns nil iff addr is a host:port whose host portion
+// is a literal loopback IP. The check is intentionally strict: hostnames are
+// rejected because their resolution can change between New() and Listen(); the
+// safety invariant must hold at construction time, not at dial time.
+func assertLoopbackAddr(addr string) error {
+	if addr == "" {
+		return errors.New("address must be specified; an unset address binds to all interfaces, breaking the signer's loopback-only invariant")
+	}
+	host, _, err := net.SplitHostPort(addr)
+	if err != nil {
+		return fmt.Errorf("parsing %q: %w", addr, err)
+	}
+	if host == "" {
+		return fmt.Errorf("address %q has empty host; signer must bind a loopback address explicitly (127.0.0.1 or ::1)", addr)
+	}
+	ip := net.ParseIP(host)
+	if ip == nil {
+		return fmt.Errorf("address host %q is not a literal IP; signer must bind a loopback IP (127.0.0.1 or ::1), not a hostname whose resolution can change", host)
+	}
+	if !ip.IsLoopback() {
+		return fmt.Errorf("address host %q is not a loopback IP; signer must bind 127.0.0.1 or ::1", host)
+	}
+	return nil
+}
+
 // New creates a new Signer from the given config and ECDSA private key.
 //
 // The Signer listens to POST requests on /sign and /decrypt, and GET requests on /id.
 // API key validation is performed for each request.
-func New(cfg Config, prv *ecdsa.PrivateKey) *Signer {
-	apiKeys := newAPIKeys(cfg)
+//
+// cfg.Addr must be a host:port whose host portion resolves to a loopback
+// address (127.0.0.0/8 or ::1). This enforces the audit's H22 boundary: the
+// signer is a local-only oracle, so a remote attacker who would otherwise
+// hold the deferred C4/C5/C6 unbound-oracle threat model cannot reach it.
+// Empty or non-loopback Addr values are rejected at New() time, before any
+// listener opens.
+func New(cfg Config, prv *ecdsa.PrivateKey) (*Signer, error) {
+	if prv == nil {
+		// All handlers dereference prv (PublicKey for /id, crypto.Sign for
+		// /sign, ECIES decrypt for /decrypt). A nil key passes New() only
+		// to crash the listener on the first authenticated request — by
+		// which point the network surface is already exposed.
+		return nil, errors.New("signer private key is nil")
+	}
+	if err := assertLoopbackAddr(cfg.Addr); err != nil {
+		return nil, fmt.Errorf("signer address: %w", err)
+	}
+
+	apiKeys, err := newAPIKeys(cfg)
+	if err != nil {
+		return nil, fmt.Errorf("initializing API keys: %w", err)
+	}
 
 	cfg.Limits.setDefaults()
 
 	mux := http.NewServeMux()
 
-	mux.Handle("POST /sign", signHandler(prv, cfg.Limits.maxReqBodySize))
-	mux.Handle("POST /decrypt", decryptHandler(prv, cfg.Limits.maxReqBodySizeDecrypt))
+	mux.Handle("POST /sign", signHandler(prv, cfg.Limits.MaxReqBodySize))
+	mux.Handle("POST /decrypt", decryptHandler(prv, cfg.Limits.MaxReqBodySizeDecrypt))
 
 	mux.Handle("GET /id", idHandler(&prv.PublicKey))
 
@@ -96,63 +150,101 @@ func New(cfg Config, prv *ecdsa.PrivateKey) *Signer {
 		Addr:                         cfg.Addr,
 		Handler:                      handler,
 		DisableGeneralOptionsHandler: false,
-		ReadTimeout:                  cfg.Limits.readTimeout,
-		ReadHeaderTimeout:            cfg.Limits.readHeaderTimeout,
-		WriteTimeout:                 cfg.Limits.writeTimeout,
-		MaxHeaderBytes:               cfg.Limits.maxHeaderBytes,
+		ReadTimeout:                  cfg.Limits.ReadTimeout,
+		ReadHeaderTimeout:            cfg.Limits.ReadHeaderTimeout,
+		WriteTimeout:                 cfg.Limits.WriteTimeout,
+		MaxHeaderBytes:               cfg.Limits.MaxHeaderBytes,
 	}
 
-	return &Signer{Server: &server}
+	return &Signer{Server: &server}, nil
 }
 
-// Run starts the HTTP server and listens for requests until the context is cancelled.
+// Run starts the HTTP server and listens for requests until the context is
+// cancelled or ListenAndServe returns. The ListenAndServe result is propagated
+// back to the caller (http.ErrServerClosed on graceful shutdown, or the real listener error).
+// The result channel is buffered so the goroutine never blocks if Run already returned via
+// ctx.Done; Shutdown uses a fresh bounded context so a cancelled parent does not no-op it.
 func (s *Signer) Run(ctx context.Context) error {
 	if s == nil {
 		return errors.New("no signer")
 	}
 
-	c := make(chan error)
+	c := make(chan error, 1)
 
 	go func() {
-		err := s.ListenAndServe()
-		c <- err
+		c <- s.ListenAndServe()
 	}()
-
-	var err error
 
 	select {
 	case <-ctx.Done():
-		err = s.Shutdown(ctx)
-		err = fmt.Errorf("server shut down: %w", err)
-	case err = <-c:
+		shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+		if err := s.Shutdown(shutdownCtx); err != nil {
+			return fmt.Errorf("server shut down: %w", err)
+		}
+		// Drain the ListenAndServe goroutine; it returns http.ErrServerClosed
+		// after Shutdown completes. Propagate that as the Run result so the
+		// caller sees the conventional sentinel.
+		return <-c
+	case err := <-c:
+		return err
 	}
-
-	return err
 }
 
-// apiKeys hold API keys for authorization of incoming requests.
+// apiKeys hold API key digests for authorization of incoming requests.
+//
+// Each configured API key is stored as HMAC-SHA256(secret, key), where secret
+// is a startup-random 32-byte value. On every request, the provided header
+// value is HMAC'd under the same secret and compared with subtle.ConstantTimeCompare
+// against each stored digest. This makes the comparison length- and content-
+// independent in time and avoids storing raw keys in memory.
 type apiKeys struct {
-	name string
-	keys map[string]bool
+	name    string
+	secret  []byte
+	digests [][]byte
 }
 
 // newAPIKeys builds an apiKeys struct from Config.
-func newAPIKeys(cfg Config) apiKeys {
-	keys := make(map[string]bool)
-	for j := range cfg.APIKeys {
-		keys[cfg.APIKeys[j]] = true
+// Empty APIKeyName/APIKeys authenticates every request; require AllowUnauthenticated to opt in.
+func newAPIKeys(cfg Config) (apiKeys, error) {
+	if (cfg.APIKeyName == "" || len(cfg.APIKeys) == 0) && !cfg.AllowUnauthenticated {
+		return apiKeys{}, errors.New("empty APIKeyName or APIKeys: set AllowUnauthenticated to allow this")
+	}
+
+	secret := make([]byte, 32)
+	if _, err := rand.Read(secret); err != nil {
+		return apiKeys{}, fmt.Errorf("generating HMAC secret: %w", err)
+	}
+
+	digests := make([][]byte, len(cfg.APIKeys))
+	for j, k := range cfg.APIKeys {
+		digests[j] = hmacKey(secret, k)
 	}
 
 	return apiKeys{
-		name: cfg.APIKeyName,
-		keys: keys,
-	}
+		name:    cfg.APIKeyName,
+		secret:  secret,
+		digests: digests,
+	}, nil
+}
+
+// hmacKey returns HMAC-SHA256(secret, key).
+func hmacKey(secret []byte, key string) []byte {
+	h := hmac.New(sha256.New, secret)
+	h.Write([]byte(key))
+	return h.Sum(nil)
 }
 
 // authorize checks whether the request header contains a valid API key.
+// Comparison is constant-time and runs against every configured digest so
+// match position does not leak through timing.
 func (ak *apiKeys) authorize(h *http.Header) bool {
-	providedKey := h.Get(ak.name)
-	return ak.keys[providedKey]
+	provided := hmacKey(ak.secret, h.Get(ak.name))
+	var ok byte
+	for _, d := range ak.digests {
+		ok |= byte(subtle.ConstantTimeCompare(provided, d))
+	}
+	return ok == 1
 }
 
 // SignBody is the request body format for the /sign endpoint.
@@ -183,9 +275,9 @@ func signHandler(prv *ecdsa.PrivateKey, maxReqBodySize int64) http.HandlerFunc {
 
 		err := decoder.Decode(&rb)
 		if err != nil {
-			if err.Error() == "http: request body too large" {
-				msg := "request too large"
-				http.Error(w, msg, http.StatusRequestEntityTooLarge)
+			var maxErr *http.MaxBytesError
+			if errors.As(err, &maxErr) {
+				http.Error(w, "request too large", http.StatusRequestEntityTooLarge)
 				return
 			}
 
@@ -197,16 +289,15 @@ func signHandler(prv *ecdsa.PrivateKey, maxReqBodySize int64) http.HandlerFunc {
 
 		signatures, err := signHashes(rb.Hashes, prv)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "signing failed", http.StatusInternalServerError)
 			return
 		}
 		response := SignedBody{Signatures: signatures}
 
 		encoder := json.NewEncoder(w)
 
-		err = encoder.Encode(response)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+		if err := encoder.Encode(response); err != nil {
+			http.Error(w, "encoding response", http.StatusInternalServerError)
 			return
 		}
 	}
@@ -240,9 +331,8 @@ func idHandler(pubKey *ecdsa.PublicKey) http.HandlerFunc {
 		pk := pubKeyToStruct(pubKey)
 		encoder := json.NewEncoder(w)
 
-		err := encoder.Encode(pk)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+		if err := encoder.Encode(pk); err != nil {
+			http.Error(w, "encoding response", http.StatusInternalServerError)
 			return
 		}
 	}
@@ -257,7 +347,7 @@ func prepare(h http.Handler, ak apiKeys) http.Handler {
 			return
 		}
 
-		w.Header().Add("Content-Type", "application/json")
+		w.Header().Set("Content-Type", "application/json")
 		h.ServeHTTP(w, r)
 	})
 }
@@ -300,6 +390,11 @@ type DecryptedBody struct {
 // decryptHandler returns an HTTP handler that decrypts the cipher from the request body using the provided ECDSA private key.
 func decryptHandler(prv *ecdsa.PrivateKey, maxReqBodySize int64) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Header.Get("Content-Type") != "application/json" {
+			http.Error(w, "Content-Type must be application/json", http.StatusNotAcceptable)
+			return
+		}
+
 		r.Body = http.MaxBytesReader(w, r.Body, maxReqBodySize)
 
 		defer r.Body.Close() //nolint:errcheck // closing request body, error not actionable
@@ -310,9 +405,9 @@ func decryptHandler(prv *ecdsa.PrivateKey, maxReqBodySize int64) http.HandlerFun
 
 		err := decoder.Decode(&eb)
 		if err != nil {
-			if err.Error() == "http: request body too large" {
-				msg := "request too large"
-				http.Error(w, msg, http.StatusRequestEntityTooLarge)
+			var maxErr *http.MaxBytesError
+			if errors.As(err, &maxErr) {
+				http.Error(w, "request too large", http.StatusRequestEntityTooLarge)
 				return
 			}
 
@@ -337,7 +432,7 @@ func decryptHandler(prv *ecdsa.PrivateKey, maxReqBodySize int64) http.HandlerFun
 
 		err = encoder.Encode(response)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "encoding response", http.StatusInternalServerError)
 			return
 		}
 	}

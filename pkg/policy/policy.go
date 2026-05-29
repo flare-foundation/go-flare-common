@@ -45,16 +45,23 @@ func (sp *SigningPolicy) Hash() []byte {
 // NewSigningPolicy creates a SigningPolicy from a SigningPolicyInitialized event.
 //
 // Mapping from submitAddress to signingPolicyAddress can be added if needed.
-func NewSigningPolicy(r *relay.RelaySigningPolicyInitialized, submitToSigning map[common.Address]common.Address) *SigningPolicy {
+// Returns an error if the event's voters/weights are malformed (length mismatch
+// or duplicate address). The smart contract guarantees both, so an error here
+// indicates upstream corruption.
+func NewSigningPolicy(r *relay.RelaySigningPolicyInitialized, submitToSigning map[common.Address]common.Address) (*SigningPolicy, error) {
+	vs, err := voters.NewSet(r.Voters, r.Weights, submitToSigning)
+	if err != nil {
+		return nil, fmt.Errorf("building voter set: %w", err)
+	}
 	return &SigningPolicy{
 		RewardEpochID:      uint32(r.RewardEpochId.Uint64()), //nolint:gosec // r.RewardEpochId is uint24 in the event
 		StartVotingRoundID: r.StartVotingRoundId,
 		Threshold:          r.Threshold,
 		Seed:               r.Seed,
-		rawBytes:           r.SigningPolicyBytes,
+		rawBytes:           slices.Clone(r.SigningPolicyBytes),
 		blockTimestamp:     r.Timestamp,
-		Voters:             voters.NewSet(r.Voters, r.Weights, submitToSigning),
-	}
+		Voters:             vs,
+	}, nil
 }
 
 // Equals compares two SigningPolicy objects based on their rawBytes.
@@ -140,26 +147,40 @@ func FromRawBytes(b []byte) (*SigningPolicy, int, error) {
 		return nil, p, errors.New("total weight exceeds maximum uint16 value")
 	}
 
+	vs, err := voters.NewSet(signers, weights, nil)
+	if err != nil {
+		return nil, p, fmt.Errorf("building voter set: %w", err)
+	}
+
 	return &SigningPolicy{
 		RewardEpochID:      epoch,
 		StartVotingRoundID: startingRound,
 		Threshold:          threshold,
 		Seed:               new(big.Int).SetBytes(seed[:]),
 		rawBytes:           slices.Clone(b[:p]),
-		Voters:             voters.NewSet(signers, weights, nil),
+		Voters:             vs,
 	}, p, nil
 }
 
 // Hash computes hash of a signing policy from signingPolicyBytes.
+//
+// Inputs shorter than 64 bytes are right-zero-padded to two 32-byte blocks.
 func Hash(b []byte) []byte {
-	if len(b)%32 != 0 {
-		padded := make([]byte, len(b)+32-len(b)%32)
+	const block = 32
+	minLen := 2 * block
+	switch {
+	case len(b) < minLen:
+		padded := make([]byte, minLen)
+		copy(padded, b)
+		b = padded
+	case len(b)%block != 0:
+		padded := make([]byte, len(b)+block-len(b)%block)
 		copy(padded, b)
 		b = padded
 	}
-	hash := crypto.Keccak256(b[:32], b[32:64])
-	for i := 2; i < len(b)/32; i++ {
-		hash = crypto.Keccak256(hash, b[i*32:(i+1)*32])
+	hash := crypto.Keccak256(b[:block], b[block:2*block])
+	for i := 2; i < len(b)/block; i++ {
+		hash = crypto.Keccak256(hash, b[i*block:(i+1)*block])
 	}
 	return hash
 }

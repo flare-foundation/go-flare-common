@@ -5,14 +5,32 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net"
 	"net/http"
+	"net/http/httptest"
 	"sync"
+	"sync/atomic"
 	"testing"
 	"time"
 
 	"github.com/flare-foundation/go-flare-common/pkg/retry"
 	"github.com/stretchr/testify/require"
 )
+
+// waitForServerReady polls addr by TCP dial until the listener is up.
+func waitForServerReady(t *testing.T, addr string) {
+	t.Helper()
+	deadline := time.Now().Add(5 * time.Second)
+	for time.Now().Before(deadline) {
+		conn, err := net.DialTimeout("tcp", addr, 100*time.Millisecond)
+		if err == nil {
+			_ = conn.Close()
+			return
+		}
+		time.Sleep(5 * time.Millisecond)
+	}
+	t.Fatalf("server at %s not ready within deadline", addr)
+}
 
 func TestPOST(t *testing.T) {
 	port := 4912
@@ -86,7 +104,7 @@ func TestPOST(t *testing.T) {
 	url := fmt.Sprintf("http://localhost:%d/abs", port)
 
 	wg2.Wait()
-	time.Sleep(10 * time.Millisecond)
+	waitForServerReady(t, fmt.Sprintf("localhost:%d", port))
 	responseRaw, err := PostRawWithRetry[res](context.Background(), url, NoAPIKey, bytes.NewReader(reqMarshaled), Params{
 		Timeout:         3 * time.Second,
 		MaxResponseSize: 300,
@@ -112,4 +130,75 @@ func TestPOST(t *testing.T) {
 	require.NoError(t, err)
 
 	wg.Wait()
+}
+
+type echoBody struct{}
+
+func newAlwaysStatus(t *testing.T, code int) (*httptest.Server, *atomic.Int32) {
+	t.Helper()
+	var hits atomic.Int32
+	s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		hits.Add(1)
+		w.WriteHeader(code)
+	}))
+	t.Cleanup(s.Close)
+	return s, &hits
+}
+
+func TestPostWithRetry_NoRetryStatuses_SuppressesRetry(t *testing.T) {
+	srv, hits := newAlwaysStatus(t, http.StatusBadRequest)
+
+	resp, err := PostWithRetry[echoBody, echoBody](
+		context.Background(),
+		srv.URL,
+		NoAPIKey,
+		echoBody{},
+		Params{
+			Timeout:         time.Second,
+			MaxResponseSize: 256,
+			NoRetryStatuses: []int{http.StatusBadRequest},
+		},
+		nil,
+		retry.Params{MaxAttempts: 5, Delay: 0, Timeout: time.Second},
+	)
+	require.Error(t, err, "expected the HTTP error to be surfaced")
+	require.Equal(t, http.StatusBadRequest, resp.Status)
+	require.Equal(t, int32(1), hits.Load(), "must not retry when status is in NoRetryStatuses")
+}
+
+func TestPostWithRetry_LegacyDefaultRetries(t *testing.T) {
+	srv, hits := newAlwaysStatus(t, http.StatusInternalServerError)
+
+	_, err := PostWithRetry[echoBody, echoBody](
+		context.Background(),
+		srv.URL,
+		NoAPIKey,
+		echoBody{},
+		Params{Timeout: time.Second, MaxResponseSize: 256},
+		nil,
+		retry.Params{MaxAttempts: 3, Delay: 0, Timeout: time.Second},
+	)
+	require.Error(t, err)
+	require.Equal(t, int32(3), hits.Load(), "default (nil NoRetryStatuses) must retry to exhaustion")
+}
+
+func TestPostWithRetry_AcceptableFailWinsOverNoRetry(t *testing.T) {
+	srv, hits := newAlwaysStatus(t, http.StatusTeapot)
+
+	resp, err := PostWithRetry[echoBody, echoBody](
+		context.Background(),
+		srv.URL,
+		NoAPIKey,
+		echoBody{},
+		Params{
+			Timeout:         time.Second,
+			MaxResponseSize: 256,
+			NoRetryStatuses: []int{http.StatusTeapot},
+		},
+		[]int{http.StatusTeapot}, // acceptableFail
+		retry.Params{MaxAttempts: 3, Delay: 0, Timeout: time.Second},
+	)
+	require.NoError(t, err, "acceptableFail must eat the error even when status is also in NoRetryStatuses")
+	require.Equal(t, http.StatusTeapot, resp.Status)
+	require.Equal(t, int32(1), hits.Load())
 }

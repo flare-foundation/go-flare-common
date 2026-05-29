@@ -28,8 +28,16 @@ func (*accountID) ToBytes(value any, _ bool) ([]byte, error) {
 }
 
 // ToJSON reads next 20 bytes and converts them to a string xrpl address.
-func (*accountID) ToJSON(b *bytes.Buffer, _ int) (any, error) {
+//
+// length must be either 0 (inline caller — pathset, xchainbridge) or 20
+// (canonical VL-prefixed encoding). Any other length is non-canonical and
+// rippled rejects it; we do the same to avoid VL/payload-length disagreement
+// silently smuggling bytes into the next field.
+func (*accountID) ToJSON(b *bytes.Buffer, length int) (any, error) {
 	const l = 20
+	if length != 0 && length != l {
+		return nil, fmt.Errorf("account id: non-canonical length %d (expected %d)", length, l)
+	}
 	value := make([]byte, l)
 
 	n, err := b.Read(value)

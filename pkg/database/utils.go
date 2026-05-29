@@ -2,7 +2,10 @@ package database
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/flare-foundation/go-flare-common/pkg/logger"
@@ -12,14 +15,24 @@ import (
 	gormLogger "gorm.io/gorm/logger"
 )
 
+// PoolConfig tunes the underlying database/sql connection pool. Zero values
+// keep the stdlib defaults (unlimited open/idle, no lifetime/idletime cap).
+type PoolConfig struct {
+	MaxOpenConns    int           `toml:"max_open_conns" envconfig:"DB_MAX_OPEN_CONNS"`
+	MaxIdleConns    int           `toml:"max_idle_conns" envconfig:"DB_MAX_IDLE_CONNS"`
+	ConnMaxLifetime time.Duration `toml:"conn_max_lifetime" envconfig:"DB_CONN_MAX_LIFETIME"`
+	ConnMaxIdleTime time.Duration `toml:"conn_max_idle_time" envconfig:"DB_CONN_MAX_IDLE_TIME"`
+}
+
 // Config holds MySQL database connection parameters.
 type Config struct {
-	Host       string `toml:"host" envconfig:"DB_HOST"`
-	Port       int    `toml:"port" envconfig:"DB_PORT"`
-	Database   string `toml:"database" envconfig:"DB_DATABASE"`
-	Username   string `toml:"username" envconfig:"DB_USERNAME"`
-	Password   string `toml:"password" envconfig:"DB_PASSWORD"`
-	LogQueries bool   `toml:"log_queries"`
+	Host       string     `toml:"host" envconfig:"DB_HOST"`
+	Port       int        `toml:"port" envconfig:"DB_PORT"`
+	Database   string     `toml:"database" envconfig:"DB_DATABASE"`
+	Username   string     `toml:"username" envconfig:"DB_USERNAME"`
+	Password   string     `toml:"password" envconfig:"DB_PASSWORD"`
+	LogQueries bool       `toml:"log_queries"`
+	Pool       PoolConfig `toml:"pool"`
 }
 
 // Connect returns a gorm.DB specified in the config.
@@ -43,7 +56,50 @@ func Connect(cfg *Config) (*gorm.DB, error) {
 	gormConfig := gorm.Config{
 		Logger: gormLogger.Default.LogMode(gormLogLevel),
 	}
-	return gorm.Open(gormMysql.Open(dbConfig.FormatDSN()), &gormConfig)
+	db, err := gorm.Open(gormMysql.Open(dbConfig.FormatDSN()), &gormConfig)
+	if err != nil {
+		return nil, fmt.Errorf("opening mysql connection to %s/%s as %s: %w",
+			dbConfig.Addr, dbConfig.DBName, dbConfig.User, redactPassword(err, cfg.Password))
+	}
+
+	sqlDB, err := db.DB()
+	if err != nil {
+		return nil, fmt.Errorf("getting underlying sql.DB: %w", err)
+	}
+	applyPoolConfig(sqlDB, cfg.Pool)
+
+	return db, nil
+}
+
+// redactPassword replaces every occurrence of password in err's message with "[REDACTED]".
+// Skips redaction for short passwords (< minRedactablePassword bytes) because a short
+// or common substring (e.g. "root", "1234") could corrupt unrelated tokens in the message.
+func redactPassword(err error, password string) error {
+	const minRedactablePassword = 8
+	if err == nil || len(password) < minRedactablePassword {
+		return err
+	}
+	msg := err.Error()
+	if !strings.Contains(msg, password) {
+		return err
+	}
+	return errors.New(strings.ReplaceAll(msg, password, "[REDACTED]"))
+}
+
+// applyPoolConfig sets database/sql pool knobs from p. Zero values are left untouched.
+func applyPoolConfig(sqlDB *sql.DB, p PoolConfig) {
+	if p.MaxOpenConns > 0 {
+		sqlDB.SetMaxOpenConns(p.MaxOpenConns)
+	}
+	if p.MaxIdleConns > 0 {
+		sqlDB.SetMaxIdleConns(p.MaxIdleConns)
+	}
+	if p.ConnMaxLifetime > 0 {
+		sqlDB.SetConnMaxLifetime(p.ConnMaxLifetime)
+	}
+	if p.ConnMaxIdleTime > 0 {
+		sqlDB.SetConnMaxIdleTime(p.ConnMaxIdleTime)
+	}
 }
 
 // SyncParams configures the retry behavior for waiting on C-chain indexer synchronization.
@@ -57,8 +113,9 @@ type SyncParams struct {
 // WaitCIndexerToSync waits for C-chain indexer DB to sync.
 //
 // If db is not up to date, the check is performed again after 1/20 of the delay (bound by MaxSleepTime and MinSleepTime).
-// Retries specifies at most how many times the check is done.
-// If the check does not succeed by then, error is returned.
+// At most Retries+1 checks are performed: Retries inside the loop with a sleep between
+// iterations, plus one final check after the loop. Retries=0 still performs one check.
+// If none succeed, an error is returned.
 //
 // Logger for logging can be provided. If it is nil, no logging is done.
 func WaitCIndexerToSync(ctx context.Context, db *gorm.DB, params SyncParams, l syncLogger) error {
@@ -66,10 +123,18 @@ func WaitCIndexerToSync(ctx context.Context, db *gorm.DB, params SyncParams, l s
 		l = logger.Nop{}
 	}
 
+	// Both bounds must be positive; otherwise sleepTime collapses to 0 and the loop tight-spins.
+	if params.MaxSleepTime <= 0 || params.MinSleepTime <= 0 {
+		return fmt.Errorf("validating SyncParams: MaxSleepTime and MinSleepTime must be positive (got %v, %v)", params.MaxSleepTime, params.MinSleepTime)
+	}
+	if params.MinSleepTime > params.MaxSleepTime {
+		return fmt.Errorf("validating SyncParams: MinSleepTime %v exceeds MaxSleepTime %v", params.MinSleepTime, params.MaxSleepTime)
+	}
+
 	k := 0
 	for k < params.Retries {
 		if k > 0 {
-			l.Debugf("Checking database for %v/%v time", k, params.Retries+1)
+			l.Debugf("Checking database for %d/%d time", k+1, params.Retries+1)
 		}
 		state, err := FetchState(ctx, db, nil)
 		if err != nil {
@@ -118,22 +183,39 @@ type syncLogger interface {
 	Warnf(string, ...any)
 }
 
-// DoInTransaction executes operations within a single database transaction, rolling back on any error.
-func DoInTransaction(db *gorm.DB, operations ...func(db *gorm.DB) error) error {
+// DoInTransaction executes operations within a single database transaction,
+// rolling back on any returned error or panic. A panic from inside an
+// operation is converted into a returned error so the caller does not treat
+// a panicked-and-rolled-back transaction as committed. Begin and Rollback
+// errors are surfaced rather than silently dropped.
+func DoInTransaction(db *gorm.DB, operations ...func(db *gorm.DB) error) (err error) {
 	tx := db.Begin()
+	if tx.Error != nil {
+		return fmt.Errorf("beginning transaction: %w", tx.Error)
+	}
 	defer func() {
 		if r := recover(); r != nil {
-			tx.Rollback()
+			rerr := tx.Rollback().Error
+			if rerr != nil {
+				err = fmt.Errorf("panic in transaction: %v (rollback failed: %v)", r, rerr)
+				return
+			}
+			err = fmt.Errorf("panic in transaction: %v", r)
 		}
 	}()
 
 	for _, f := range operations {
-		if err := f(tx); err != nil {
-			tx.Rollback()
-			return err
+		if opErr := f(tx); opErr != nil {
+			if rerr := tx.Rollback().Error; rerr != nil {
+				return fmt.Errorf("%w (rollback failed: %v)", opErr, rerr)
+			}
+			return opErr
 		}
 	}
-	return tx.Commit().Error
+	if err := tx.Commit().Error; err != nil {
+		return fmt.Errorf("committing transaction: %w", err)
+	}
+	return nil
 }
 
 // CheckDelay checks whether db is delayed by more than tolerance.

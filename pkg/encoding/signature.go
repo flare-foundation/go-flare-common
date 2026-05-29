@@ -18,8 +18,9 @@ type IndexedSignature struct {
 }
 
 // EncodeSignatures encodes indexed signature to be used in the finalization transaction input.
-// Signatures should be ordered by the indexes of their providers.
-// Signatures should be 65 bytes long, otherwise the function will panic.
+// Signatures must be ordered by strictly increasing Index in [0, math.MaxUint16].
+// Each Signature must be 65 bytes in [R || S || V-27] form; non-65-byte inputs
+// or invalid recids cause an error to be returned (no panic).
 func EncodeSignatures(signatures []IndexedSignature) ([]byte, error) {
 	buffer := bytes.NewBuffer(nil)
 	if len(signatures) > math.MaxUint16 {
@@ -33,11 +34,21 @@ func EncodeSignatures(signatures []IndexedSignature) ([]byte, error) {
 		if signature.Index < 0 {
 			return nil, errors.New("payload index not set")
 		}
+		// Index is encoded as uint16 below. Without this guard, an Index >
+		// math.MaxUint16 passes the monotonicity check (compared as int)
+		// and is then truncated to its low 16 bits — silently producing a
+		// non-monotonic, possibly-duplicate on-the-wire index sequence.
+		if signature.Index > math.MaxUint16 {
+			return nil, fmt.Errorf("payload index %d exceeds uint16 range", signature.Index)
+		}
 		if prevIndex >= signature.Index {
 			return nil, errors.New("payloads not sorted by index")
 		}
 
-		sig := TransformSignatureRSVtoVRS(signature.Signature)
+		sig, err := TransformSignatureRSVtoVRS(signature.Signature)
+		if err != nil {
+			return nil, fmt.Errorf("transforming signature at index %d: %w", signature.Index, err)
+		}
 		buffer.Write(sig)
 
 		indexBytes := convert.Uint16ToBytes(uint16(signature.Index))
@@ -50,25 +61,48 @@ func EncodeSignatures(signatures []IndexedSignature) ([]byte, error) {
 }
 
 // TransformSignatureVRStoRSV transforms [V || R || S] to [R || S || V - 27].
-// No checks are performed, we assume that signature array has length 65.
-func TransformSignatureVRStoRSV(vrs []byte) (rsv []byte) {
-	rsv = make([]byte, 65)
+// vrs must be 65 bytes and vrs[0] (the V byte) must be 27 or 28 — the only
+// Ethereum-style values that map to a valid secp256k1 recovery id (0 or 1).
+// An already-normalised V (0 or 1) underflows on subtraction; EIP-155
+// values (chainID*2 + 35 + {0,1}) and garbage bytes produce out-of-range
+// recids that downstream ecrecover would reject. Both are caught up front.
+//
+// Byte-layout transform only; callers feeding non-ecrecover verifiers must enforce low-S themselves.
+func TransformSignatureVRStoRSV(vrs []byte) ([]byte, error) {
+	if len(vrs) != 65 {
+		return nil, fmt.Errorf("signature must be 65 bytes, got %d", len(vrs))
+	}
+	if vrs[0] < 27 || vrs[0] > 28 {
+		return nil, fmt.Errorf("invalid V byte %d, expected 27 or 28", vrs[0])
+	}
 
+	rsv := make([]byte, 65)
 	copy(rsv, vrs[1:33])
 	copy(rsv[32:], vrs[33:65])
 	rsv[64] = vrs[0] - 27
 
-	return rsv
+	return rsv, nil
 }
 
 // TransformSignatureRSVtoVRS transforms [R || S || V - 27] to [V || R || S].
-// No checks are performed, we assume that signature array has length 65.
-func TransformSignatureRSVtoVRS(rsv []byte) (vrs []byte) {
-	vrs = make([]byte, 65)
+// rsv must be 65 bytes and rsv[64] (the recid) must be 0 or 1 — the canonical
+// secp256k1 recovery id values. Any other value would produce an out-of-spec
+// V byte (29-255) or, at the far edge, wrap to a low byte (e.g. recid 229 →
+// V 0) that masks the caller's input bug behind a "successful" transform.
+//
+// Byte-layout transform only; callers feeding non-ecrecover verifiers must enforce low-S themselves.
+func TransformSignatureRSVtoVRS(rsv []byte) ([]byte, error) {
+	if len(rsv) != 65 {
+		return nil, fmt.Errorf("signature must be 65 bytes, got %d", len(rsv))
+	}
+	if rsv[64] > 1 {
+		return nil, fmt.Errorf("invalid recid %d, expected 0 or 1", rsv[64])
+	}
 
+	vrs := make([]byte, 65)
 	vrs[0] = rsv[64] + 27
 	copy(vrs[1:], rsv[0:32])
 	copy(vrs[33:], rsv[32:64])
 
-	return vrs
+	return vrs, nil
 }

@@ -1,9 +1,19 @@
 // Package secp256k1 provides XRPL secp256k1 key management and transaction signing.
+//
+// Secret-material zeroization is not implemented. Go's GC may
+// relocate objects, and crypto/ecdsa, crypto/sha512, and math/big.Int
+// internals all retain copies of secret bytes that are not reachable from
+// this package. A partial zero-out of the visible buffers would mislead
+// callers into believing key material is gone when copies persist; the
+// honest position is that secret-in-memory hygiene requires a
+// platform-level mitigation (mlocked pages, hardware-backed key storage)
+// outside this library's scope.
 package secp256k1
 
 import (
 	"crypto/ecdsa"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -53,8 +63,14 @@ func SignTxMultisig(tx map[string]any, prv *ecdsa.PrivateKey) (*signer.Signer, e
 }
 
 // SignXRPL computes Secp256k1 signature of the message and returns it in DER format
-// as needed for signing of an XRPL transaction.
+// as needed for signing of an XRPL transaction. message must start with the XRPL
+// signing-domain prefix produced by utils.Prepare; raw bytes outside that domain
+// are rejected to prevent SignXRPL from being used as a generic signing oracle.
 func SignXRPL(message []byte, privKey *ecdsa.PrivateKey) ([]byte, error) {
+	if !utils.HasXRPLSigningPrefix(message) {
+		return nil, errors.New("message missing XRPL signing-domain prefix; use utils.Prepare to build it")
+	}
+
 	h := hash.Sha512Half(message)
 
 	sig, err := sign(h, privKey)
@@ -91,6 +107,11 @@ func PrvToPub(prv *ecdsa.PrivateKey) string {
 }
 
 // secp256k1PrivateToPub returns compressed public Key for ECDSA private key in byte slice.
+// PublicKey.X/Y are derived from D when missing so callers that only populate D do not nil-deref.
 func secp256k1PrvToPub(prv *ecdsa.PrivateKey) []byte {
+	if prv.X == nil || prv.Y == nil {
+		x, y := crypto.S256().ScalarBaseMult(prv.D.Bytes())
+		return toBytesCompressed(&ecdsa.PublicKey{Curve: crypto.S256(), X: x, Y: y})
+	}
 	return toBytesCompressed(&prv.PublicKey)
 }

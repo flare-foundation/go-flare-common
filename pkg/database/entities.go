@@ -3,6 +3,7 @@ package database
 
 import (
 	"encoding/hex"
+	"fmt"
 	"time"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -11,7 +12,7 @@ import (
 
 // BaseEntity is an abstract entity. All other entities should be derived from it.
 type BaseEntity struct {
-	ID uint64 `gorm:"primaryKey;unique"`
+	ID uint64 `gorm:"primaryKey"`
 }
 
 // State represents the indexer state.
@@ -61,21 +62,31 @@ type Log struct {
 	BlockNumber     uint64       `gorm:"index"`
 }
 
-// ToEthLog converts l to a go-ethereum types.Log for use with abigen parsers.
-// Only Topics and Data are populated; other fields are not used by the log decoder.
+// NullTopic is the sentinel value stored when a log topic is absent.
+const NullTopic = "NULL"
+
+// ToEthLog converts l to a go-ethereum types.Log for use with abigen parsers and other callers.
 func (l Log) ToEthLog() (types.Log, error) {
 	data, err := hex.DecodeString(l.Data)
 	if err != nil {
-		return types.Log{}, err
+		return types.Log{}, fmt.Errorf("decoding log data: %w", err)
 	}
 
 	var topics []common.Hash
 	for _, t := range []string{l.Topic0, l.Topic1, l.Topic2, l.Topic3} {
-		if t != "" && t != "NULL" {
+		if t != "" && t != NullTopic {
 			topics = append(topics, common.HexToHash(t))
 		}
 	}
-	return types.Log{Topics: topics, Data: data}, nil
+	return types.Log{
+		Topics:         topics,
+		Data:           data,
+		BlockNumber:    l.BlockNumber,
+		BlockTimestamp: l.Timestamp,
+		Address:        common.HexToAddress(l.Address),
+		Index:          uint(l.LogIndex),
+		TxHash:         common.HexToHash(l.TransactionHash),
+	}, nil
 }
 
 // Block represents a C-chain block.

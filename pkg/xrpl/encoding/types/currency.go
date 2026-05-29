@@ -63,6 +63,12 @@ func serializeStandardCode(code string) ([]byte, error) {
 		return nil, fmt.Errorf("invalid currency code %s", code)
 	}
 
+	// Any case-fold of "XRP" would encode as an IOU code whose 20-byte form
+	// masquerades as XRP-issued tokens; reject all variants symmetrically with deserializeCurrency.
+	if strings.EqualFold(code, XRP) {
+		return nil, fmt.Errorf("invalid currency code %s", code)
+	}
+
 	codeBytes := make([]byte, 20)
 	copy(codeBytes[12:], []byte(code)) // 12 bytes zero | 3 bytes currency | 5 bytes bytes zero
 	return codeBytes, nil
@@ -74,9 +80,17 @@ func serializeNonstandardCode(code string) ([]byte, error) {
 		return nil, fmt.Errorf("invalid nonstandard currency code: %w", err)
 	}
 
+	// First byte 0x00 collides with the ISO standard-code encoding,
+	// where bytes 0-11 are zero and the code lives at bytes 12-14.
+	if out[0] == 0 {
+		return nil, fmt.Errorf("nonstandard currency code must not start with 0x00: %s", code)
+	}
+
 	return out, nil
 }
 
+// deserializeCurrency decodes the 20-byte currency field.
+// 3-char ISO codes must match StandardCodeRegex (symmetric with serializeStandardCode); other values round-trip as hex.
 func deserializeCurrency(c []byte) (string, error) {
 	if len(c) != 20 {
 		return "", fmt.Errorf("invalid currency length %v should be 20", len(c))
@@ -98,10 +112,12 @@ func deserializeCurrency(c []byte) (string, error) {
 
 		if isIso {
 			out := string(c[12:15])
-			if out == XRP {
+			if strings.EqualFold(out, XRP) {
 				return "", fmt.Errorf("invalid currency %v", out)
 			}
-			return out, nil
+			if r := regexp.MustCompile(StandardCodeRegex); len(r.FindAllString(out, -1)) == 3 {
+				return out, nil
+			}
 		}
 	}
 

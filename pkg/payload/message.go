@@ -4,6 +4,8 @@ package payload
 import (
 	"encoding/binary"
 	"encoding/hex"
+	"fmt"
+	"math"
 
 	"github.com/ethereum/go-ethereum/common"
 )
@@ -30,7 +32,14 @@ type SubprotocolResponse struct {
 
 // BuildMessage builds a submit message string from protocolID, votingRoundID and payload.
 // The message string is in the format: 0x<protocolID(1 byte)><votingRoundID(4 byte)><payloadLength(2 byte)><payload>.
-func BuildMessage(protocolID uint8, votingRoundID uint32, payload []byte) string {
+//
+// Returns an error when len(payload) exceeds math.MaxUint16 (65535), since the
+// on-wire length field is a uint16; receivers would otherwise mis-frame.
+func BuildMessage(protocolID uint8, votingRoundID uint32, payload []byte) (string, error) {
+	if len(payload) > math.MaxUint16 {
+		return "", fmt.Errorf("payload too large: %d bytes (max %d)", len(payload), math.MaxUint16)
+	}
+
 	message := make([]byte, msgHeaderLength, msgHeaderLength+len(payload))
 
 	message[0] = protocolID
@@ -40,7 +49,7 @@ func BuildMessage(protocolID uint8, votingRoundID uint32, payload []byte) string
 
 	message = append(message, payload...)
 
-	return "0x" + hex.EncodeToString(message)
+	return "0x" + hex.EncodeToString(message), nil
 }
 
 // BuildMessageForSigning builds payload message for submitSignatures.

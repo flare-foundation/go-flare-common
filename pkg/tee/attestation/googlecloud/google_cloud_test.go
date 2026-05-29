@@ -9,13 +9,64 @@ import (
 	"encoding/json"
 	"math/big"
 	"os"
+	"strings"
 	"testing"
 	"time"
 
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/flare-foundation/go-flare-common/pkg/convert"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/stretchr/testify/require"
 )
+
+const (
+	testIssuer        = "issuer"
+	testAudience      = "test-audience"
+	testImageHashHex  = "732d2328d06950198ffbd35b5eb55ec95ae700d05bddfa56fa0bc4c43ed1ce97"
+	testImageHashFull = "sha256:" + testImageHashHex
+)
+
+// validTestPolicy returns a Policy that passes every check when used with claims
+// produced by validTestClaims.
+func validTestPolicy(t *testing.T) Policy {
+	t.Helper()
+	h, err := convert.Hex32StringToCommonHash(testImageHashHex)
+	require.NoError(t, err)
+	return Policy{
+		Audience:        testAudience,
+		AllowedImageIDs: map[common.Hash]struct{}{h: {}},
+		Issuer:          testIssuer,
+	}
+}
+
+// chainFailurePolicy returns a structurally-valid Policy for tests where the
+// failure occurs before claim/JWT checks (e.g. cert chain validation).
+func chainFailurePolicy() Policy {
+	return Policy{
+		Audience:        "any",
+		AllowedImageIDs: map[common.Hash]struct{}{{}: {}},
+		AllowDebug:      true,
+		Issuer:          testIssuer,
+	}
+}
+
+// validTestClaims returns claims that pass every Apply check and have all
+// JWT-required fields set so that exp/iss/aud validation succeeds.
+func validTestClaims(now time.Time) GoogleTeeClaims {
+	return GoogleTeeClaims{
+		HWModel:     "testmodel",
+		SecBoot:     true,
+		DebugStatus: productionDebugStatus,
+		SubMods: SubMods{
+			Container: Container{ImageID: testImageHashFull},
+		},
+		RegisteredClaims: jwt.RegisteredClaims{
+			Issuer:    testIssuer,
+			Audience:  jwt.ClaimStrings{testAudience},
+			ExpiresAt: jwt.NewNumericDate(now.Add(time.Hour)),
+		},
+	}
+}
 
 const rootCert = `-----BEGIN CERTIFICATE-----
 MIIGCDCCA/CgAwIBAgITYBvRy5g9aYYMh7tJS7pFwafL6jANBgkqhkiG9w0BAQsF
@@ -146,33 +197,22 @@ func TestParsePKITokenUnverifiedHappy(t *testing.T) {
 }
 
 func TestParseAndValidatePKITokenHappy(t *testing.T) {
-	tokenClaims := GoogleTeeClaims{
-		HWModel: "testmodel",
-		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer: "issuer",
-		},
-	}
-
 	now := time.Now()
+	tokenClaims := validTestClaims(now)
 
 	signedToken, root := generateTestPKIToken(t, now, now, now, tokenClaims)
 
-	parsedToken, parsedClaims, err := ParseAndValidatePKIToken(signedToken, root, nil, nil)
+	parsedToken, parsedClaims, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, validTestPolicy(t))
 	require.NoError(t, err)
 	require.NotNil(t, parsedToken)
 	require.Equal(t, "testmodel", parsedClaims.HWModel)
-	require.Equal(t, "issuer", parsedClaims.Issuer)
+	require.Equal(t, testIssuer, parsedClaims.Issuer)
 }
 
 func TestParseAndValidatePKITokenFail(t *testing.T) {
-	defClaims := GoogleTeeClaims{
-		HWModel: "testmodel",
-		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer: "issuer",
-		},
-	}
-
 	now := time.Now()
+	defClaims := validTestClaims(now)
+
 	past := now.Add(-300 * time.Hour)
 	future := now.Add(300 * time.Hour)
 
@@ -215,29 +255,26 @@ func TestParseAndValidatePKITokenFail(t *testing.T) {
 		for _, test := range tests {
 			signedToken, root := generateTestPKIToken(t, test.rt, test.it, test.lt, defClaims)
 
-			_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil)
+			_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, validTestPolicy(t))
 			require.Error(t, err)
 		}
 	})
 
 	t.Run("invalid lifetime token", func(t *testing.T) {
 		t.Parallel()
-		claims := []jwt.RegisteredClaims{
-			{
-				Issuer:    "issuer",
-				ExpiresAt: jwt.NewNumericDate(past), // expired token
-			},
-			{
-				Issuer:    "issuer",
-				NotBefore: jwt.NewNumericDate(future), // not before future time
-			},
-		}
+		now := time.Now()
+		baseClaims := validTestClaims(now)
 
-		for _, claims := range claims {
-			now := time.Now()
+		expired := baseClaims
+		expired.ExpiresAt = jwt.NewNumericDate(past)
+
+		notYet := baseClaims
+		notYet.NotBefore = jwt.NewNumericDate(future)
+
+		for _, claims := range []GoogleTeeClaims{expired, notYet} {
 			signedToken, root := generateTestPKIToken(t, now, now, now, claims)
 
-			_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil)
+			_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, validTestPolicy(t))
 			require.Error(t, err)
 		}
 	})
@@ -252,7 +289,7 @@ func TestParseAndValidatePKITokenFail(t *testing.T) {
 		invalidLeaf := base64.StdEncoding.EncodeToString([]byte("not a real leaf"))
 
 		signedToken := assembleSignedToken(t, defClaims, []string{invalidLeaf, invalidInter, invalidRoot}, rootKey)
-		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil)
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, chainFailurePolicy())
 		require.Error(t, err)
 	})
 
@@ -262,8 +299,158 @@ func TestParseAndValidatePKITokenFail(t *testing.T) {
 		root, rootKey := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), true, nil, nil)
 
 		signedToken := assembleSignedToken(t, defClaims, nil, rootKey)
-		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil)
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, chainFailurePolicy())
 		require.Error(t, err)
+	})
+}
+
+func TestPolicyEnforcement(t *testing.T) {
+	now := time.Now()
+
+	t.Run("policy missing audience rejected", func(t *testing.T) {
+		signedToken, root := generateTestPKIToken(t, now, now, now, validTestClaims(now))
+		p := validTestPolicy(t)
+		p.Audience = ""
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, p)
+		require.Error(t, err)
+		require.Contains(t, err.Error(), "Audience is required")
+	})
+
+	t.Run("policy missing image allowlist rejected", func(t *testing.T) {
+		signedToken, root := generateTestPKIToken(t, now, now, now, validTestClaims(now))
+		p := validTestPolicy(t)
+		p.AllowedImageIDs = nil
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, p)
+		require.Error(t, err)
+		require.Contains(t, err.Error(), "AllowedImageIDs is required")
+	})
+
+	t.Run("token missing exp rejected", func(t *testing.T) {
+		c := validTestClaims(now)
+		c.ExpiresAt = nil
+		signedToken, root := generateTestPKIToken(t, now, now, now, c)
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, validTestPolicy(t))
+		require.Error(t, err)
+	})
+
+	t.Run("wrong audience rejected", func(t *testing.T) {
+		c := validTestClaims(now)
+		c.Audience = jwt.ClaimStrings{"someone-else"}
+		signedToken, root := generateTestPKIToken(t, now, now, now, c)
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, validTestPolicy(t))
+		require.Error(t, err)
+	})
+
+	t.Run("wrong issuer rejected", func(t *testing.T) {
+		c := validTestClaims(now)
+		c.Issuer = "attacker"
+		signedToken, root := generateTestPKIToken(t, now, now, now, c)
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, validTestPolicy(t))
+		require.Error(t, err)
+	})
+
+	t.Run("default issuer is ConfidentialSpaceIssuer", func(t *testing.T) {
+		c := validTestClaims(now)
+		c.Issuer = ConfidentialSpaceIssuer
+		signedToken, root := generateTestPKIToken(t, now, now, now, c)
+		p := validTestPolicy(t)
+		p.Issuer = "" // exercise default
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, p)
+		require.NoError(t, err)
+	})
+
+	t.Run("secboot false rejected", func(t *testing.T) {
+		c := validTestClaims(now)
+		c.SecBoot = false
+		signedToken, root := generateTestPKIToken(t, now, now, now, c)
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, validTestPolicy(t))
+		require.Error(t, err)
+		require.Contains(t, err.Error(), "secboot")
+	})
+
+	t.Run("debug dbgstat rejected", func(t *testing.T) {
+		c := validTestClaims(now)
+		c.DebugStatus = "enabled"
+		signedToken, root := generateTestPKIToken(t, now, now, now, c)
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, validTestPolicy(t))
+		require.Error(t, err)
+		require.Contains(t, err.Error(), "dbgstat")
+	})
+
+	t.Run("AllowDebug bypasses secboot and dbgstat", func(t *testing.T) {
+		c := validTestClaims(now)
+		c.SecBoot = false
+		c.DebugStatus = "enabled"
+		signedToken, root := generateTestPKIToken(t, now, now, now, c)
+		p := validTestPolicy(t)
+		p.AllowDebug = true
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, p)
+		require.NoError(t, err)
+	})
+
+	t.Run("image_id not in allowlist rejected", func(t *testing.T) {
+		c := validTestClaims(now)
+		c.SubMods.Container.ImageID = "sha256:" + strings.Repeat("ab", 32)
+		signedToken, root := generateTestPKIToken(t, now, now, now, c)
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, validTestPolicy(t))
+		require.Error(t, err)
+		require.Contains(t, err.Error(), "image_id")
+	})
+
+	t.Run("hwmodel not in allowlist rejected", func(t *testing.T) {
+		signedToken, root := generateTestPKIToken(t, now, now, now, validTestClaims(now))
+		p := validTestPolicy(t)
+		p.AllowedHWModels = map[string]struct{}{"other-model": {}}
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, p)
+		require.Error(t, err)
+		require.Contains(t, err.Error(), "hwmodel")
+	})
+
+	t.Run("hwmodel allowlist hit accepted", func(t *testing.T) {
+		signedToken, root := generateTestPKIToken(t, now, now, now, validTestClaims(now))
+		p := validTestPolicy(t)
+		p.AllowedHWModels = map[string]struct{}{"testmodel": {}}
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, p)
+		require.NoError(t, err)
+	})
+
+	t.Run("eat_nonce mismatch rejected", func(t *testing.T) {
+		c := validTestClaims(now)
+		c.EATNonce = []string{"other-challenge"}
+		signedToken, root := generateTestPKIToken(t, now, now, now, c)
+		p := validTestPolicy(t)
+		p.EATNonce = "expected-challenge"
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, p)
+		require.Error(t, err)
+		require.Contains(t, err.Error(), "eat_nonce")
+	})
+
+	t.Run("eat_nonce match accepted", func(t *testing.T) {
+		c := validTestClaims(now)
+		c.EATNonce = []string{"expected-challenge", "another"}
+		signedToken, root := generateTestPKIToken(t, now, now, now, c)
+		p := validTestPolicy(t)
+		p.EATNonce = "expected-challenge"
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, p)
+		require.NoError(t, err)
+	})
+
+	t.Run("expired token rejected", func(t *testing.T) {
+		c := validTestClaims(now)
+		c.ExpiresAt = jwt.NewNumericDate(now.Add(-time.Hour))
+		signedToken, root := generateTestPKIToken(t, now, now, now, c)
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, validTestPolicy(t))
+		require.Error(t, err)
+	})
+
+	t.Run("leeway accepts narrowly-expired token", func(t *testing.T) {
+		c := validTestClaims(now)
+		c.ExpiresAt = jwt.NewNumericDate(now.Add(-5 * time.Second))
+		signedToken, root := generateTestPKIToken(t, now, now, now, c)
+		p := validTestPolicy(t)
+		p.Leeway = 30 * time.Second
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, p)
+		require.NoError(t, err)
 	})
 }
 
@@ -279,12 +466,7 @@ func TestInvalidChains(t *testing.T) {
 	inter1, intermediateKey1 := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), true, inter0, intermediateKey0)
 	leaf1, leafKey1 := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), false, inter1, intermediateKey1)
 
-	defClaims := GoogleTeeClaims{
-		HWModel: "testmodel",
-		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer: "issuer",
-		},
-	}
+	defClaims := validTestClaims(now)
 
 	tests := []struct {
 		certs  []*x509.Certificate
@@ -332,7 +514,7 @@ func TestInvalidChains(t *testing.T) {
 	for _, test := range tests {
 		signedToken := assembleSignedToken(t, defClaims, convertToHeaderEntry(test.certs), test.signer)
 
-		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil)
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, chainFailurePolicy())
 		require.Error(t, err)
 	}
 }
@@ -411,17 +593,12 @@ func TestVerifyCRL(t *testing.T) {
 	inter, interKey := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), true, root, rootKey)
 	leaf, leafKey := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), false, inter, interKey)
 
-	claims := GoogleTeeClaims{
-		HWModel: "testmodel",
-		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer: "issuer",
-		},
-	}
+	claims := validTestClaims(now)
 
 	signedToken := assembleSignedToken(t, claims, convertToHeaderEntry([]*x509.Certificate{leaf, inter, root}), leafKey)
 
 	t.Run("nil CRLs succeed with warning", func(t *testing.T) {
-		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil)
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, validTestPolicy(t))
 		require.NoError(t, err)
 	})
 
@@ -429,7 +606,7 @@ func TestVerifyCRL(t *testing.T) {
 		leafCRL := generateTestCRL(t, inter, interKey, nil)
 		interCRL := generateTestCRL(t, root, rootKey, nil)
 
-		_, _, err := ParseAndValidatePKIToken(signedToken, root, leafCRL, interCRL)
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, leafCRL, interCRL, validTestPolicy(t))
 		require.NoError(t, err)
 	})
 
@@ -437,7 +614,7 @@ func TestVerifyCRL(t *testing.T) {
 		now := time.Now()
 		leafCRL := generateTestCRLWithTimes(t, inter, interKey, nil, now.Add(time.Hour), now.Add(2*time.Hour))
 
-		_, _, err := ParseAndValidatePKIToken(signedToken, root, leafCRL, nil)
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, leafCRL, nil, validTestPolicy(t))
 		require.Error(t, err)
 		require.Contains(t, err.Error(), "not yet valid")
 	})
@@ -446,7 +623,7 @@ func TestVerifyCRL(t *testing.T) {
 		now := time.Now()
 		interCRL := generateTestCRLWithTimes(t, root, rootKey, nil, now.Add(-2*time.Hour), now.Add(-time.Hour))
 
-		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, interCRL)
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, interCRL, validTestPolicy(t))
 		require.Error(t, err)
 		require.Contains(t, err.Error(), "expired")
 	})
@@ -454,7 +631,7 @@ func TestVerifyCRL(t *testing.T) {
 	t.Run("revoked leaf certificate", func(t *testing.T) {
 		leafCRL := generateTestCRL(t, inter, interKey, []*big.Int{leaf.SerialNumber})
 
-		_, _, err := ParseAndValidatePKIToken(signedToken, root, leafCRL, nil)
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, leafCRL, nil, validTestPolicy(t))
 		require.Error(t, err)
 		require.Contains(t, err.Error(), "revoked")
 	})
@@ -462,7 +639,7 @@ func TestVerifyCRL(t *testing.T) {
 	t.Run("revoked intermediate certificate", func(t *testing.T) {
 		interCRL := generateTestCRL(t, root, rootKey, []*big.Int{inter.SerialNumber})
 
-		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, interCRL)
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, interCRL, validTestPolicy(t))
 		require.Error(t, err)
 		require.Contains(t, err.Error(), "revoked")
 	})
@@ -471,7 +648,7 @@ func TestVerifyCRL(t *testing.T) {
 		// Leaf CRL signed by root instead of intermediate
 		wrongLeafCRL := generateTestCRL(t, root, rootKey, nil)
 
-		_, _, err := ParseAndValidatePKIToken(signedToken, root, wrongLeafCRL, nil)
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, wrongLeafCRL, nil, validTestPolicy(t))
 		require.Error(t, err)
 		require.Contains(t, err.Error(), "CRL signature")
 	})
@@ -480,7 +657,7 @@ func TestVerifyCRL(t *testing.T) {
 		// Intermediate CRL signed by intermediate instead of root
 		wrongInterCRL := generateTestCRL(t, inter, interKey, nil)
 
-		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, wrongInterCRL)
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, wrongInterCRL, validTestPolicy(t))
 		require.Error(t, err)
 		require.Contains(t, err.Error(), "CRL signature")
 	})
@@ -490,9 +667,138 @@ func TestVerifyCRL(t *testing.T) {
 		leafCRL := generateTestCRL(t, inter, interKey, []*big.Int{otherSerial})
 		interCRL := generateTestCRL(t, root, rootKey, []*big.Int{otherSerial})
 
-		_, _, err := ParseAndValidatePKIToken(signedToken, root, leafCRL, interCRL)
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, leafCRL, interCRL, validTestPolicy(t))
 		require.NoError(t, err)
 	})
+}
+
+// TestRequireCRLFailsClosed covers audit finding M12: when a certificate
+// declares CRLDistributionPoints and the caller did not provide a CRL,
+// Policy.RequireCRL forces verification to fail instead of warn-and-skip.
+func TestRequireCRLFailsClosed(t *testing.T) {
+	now := time.Now()
+
+	root, rootKey := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), true, nil, nil)
+	// Intermediate carries a CRL distribution point but no CRL is supplied.
+	inter, interKey := generateTestCertificateWithDP(t, now.Add(-time.Hour), now.Add(time.Hour), true, root, rootKey, []string{"http://example.invalid/crl"})
+	leaf, leafKey := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), false, inter, interKey)
+
+	signedToken := assembleSignedToken(t, validTestClaims(now), convertToHeaderEntry([]*x509.Certificate{leaf, inter, root}), leafKey)
+
+	t.Run("RequireCRL false accepts (warn-and-skip)", func(t *testing.T) {
+		p := validTestPolicy(t)
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, p)
+		require.NoError(t, err)
+	})
+
+	t.Run("RequireCRL true rejects when CRL missing", func(t *testing.T) {
+		p := validTestPolicy(t)
+		p.RequireCRL = true
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, p)
+		require.Error(t, err)
+		require.Contains(t, err.Error(), "RequireCRL")
+	})
+}
+
+// TestAllowedLeafEKUs covers audit finding M13: chain validation honors a
+// caller-supplied AllowedLeafEKUs list instead of falling back to
+// ExtKeyUsageAny when the policy is unset and the leaf has no EKU.
+func TestAllowedLeafEKUs(t *testing.T) {
+	now := time.Now()
+
+	root, rootKey := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), true, nil, nil)
+	inter, interKey := generateTestCertificate(t, now.Add(-time.Hour), now.Add(time.Hour), true, root, rootKey)
+	leaf, leafKey := generateTestCertificateWithEKU(t, now.Add(-time.Hour), now.Add(time.Hour), inter, interKey, []x509.ExtKeyUsage{x509.ExtKeyUsageCodeSigning})
+
+	signedToken := assembleSignedToken(t, validTestClaims(now), convertToHeaderEntry([]*x509.Certificate{leaf, inter, root}), leafKey)
+
+	t.Run("matching policy accepts", func(t *testing.T) {
+		p := validTestPolicy(t)
+		p.AllowedLeafEKUs = []x509.ExtKeyUsage{x509.ExtKeyUsageCodeSigning}
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, p)
+		require.NoError(t, err)
+	})
+
+	t.Run("mismatched policy rejects", func(t *testing.T) {
+		p := validTestPolicy(t)
+		p.AllowedLeafEKUs = []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth}
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, p)
+		require.Error(t, err)
+	})
+
+	t.Run("nil policy falls back to leaf EKU", func(t *testing.T) {
+		p := validTestPolicy(t)
+		// AllowedLeafEKUs left unset; falls back to leaf.ExtKeyUsage = CodeSigning.
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, p)
+		require.NoError(t, err)
+	})
+}
+
+func generateTestCertificateWithDP(
+	t *testing.T,
+	notBefore, notAfter time.Time,
+	isCA bool,
+	parent *x509.Certificate,
+	parentKey crypto.Signer,
+	dps []string,
+) (*x509.Certificate, *rsa.PrivateKey) {
+	t.Helper()
+	priv, err := rsa.GenerateKey(rand.Reader, 2048)
+	require.NoError(t, err)
+
+	template := &x509.Certificate{
+		SerialNumber:          big.NewInt(time.Now().UnixNano()),
+		NotBefore:             notBefore,
+		NotAfter:              notAfter,
+		SignatureAlgorithm:    x509.SHA256WithRSA,
+		PublicKeyAlgorithm:    x509.RSA,
+		IsCA:                  isCA,
+		BasicConstraintsValid: true,
+		CRLDistributionPoints: dps,
+	}
+	if isCA {
+		template.KeyUsage = x509.KeyUsageCertSign | x509.KeyUsageCRLSign
+	} else {
+		template.KeyUsage = x509.KeyUsageDigitalSignature
+	}
+	if parent == nil {
+		parent = template
+		parentKey = priv
+	}
+	certDER, err := x509.CreateCertificate(rand.Reader, template, parent, &priv.PublicKey, parentKey)
+	require.NoError(t, err)
+	cert, err := x509.ParseCertificate(certDER)
+	require.NoError(t, err)
+	return cert, priv
+}
+
+func generateTestCertificateWithEKU(
+	t *testing.T,
+	notBefore, notAfter time.Time,
+	parent *x509.Certificate,
+	parentKey crypto.Signer,
+	ekus []x509.ExtKeyUsage,
+) (*x509.Certificate, *rsa.PrivateKey) {
+	t.Helper()
+	priv, err := rsa.GenerateKey(rand.Reader, 2048)
+	require.NoError(t, err)
+
+	template := &x509.Certificate{
+		SerialNumber:          big.NewInt(time.Now().UnixNano()),
+		NotBefore:             notBefore,
+		NotAfter:              notAfter,
+		SignatureAlgorithm:    x509.SHA256WithRSA,
+		PublicKeyAlgorithm:    x509.RSA,
+		IsCA:                  false,
+		BasicConstraintsValid: true,
+		KeyUsage:              x509.KeyUsageDigitalSignature,
+		ExtKeyUsage:           ekus,
+	}
+	certDER, err := x509.CreateCertificate(rand.Reader, template, parent, &priv.PublicKey, parentKey)
+	require.NoError(t, err)
+	cert, err := x509.ParseCertificate(certDER)
+	require.NoError(t, err)
+	return cert, priv
 }
 
 func generateTestCRL(

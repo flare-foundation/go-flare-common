@@ -1,4 +1,8 @@
 #!/bin/bash
+set -euo pipefail
+
+# Resolve paths relative to this script so it works from any CWD.
+cd "$(dirname "$0")"
 
 # Source artifacts. Output path is derived from the contract name:
 #   contracts go to pkg/contracts/<scope>/<name>/<name>.abi
@@ -54,7 +58,13 @@ extract() {
 
   if [ -f "$input_file" ]; then
     mkdir -p "$(dirname "$output_file")"
-    jq '.abi' "$input_file" > "$output_file"
+    local abi
+    abi="$(jq '.abi' "$input_file")"
+    if [ "$abi" = "null" ]; then
+      echo "Missing .abi in $input_file" >&2
+      return 1
+    fi
+    printf '%s\n' "$abi" > "$output_file"
     echo "Extracted ABI from $input_file → $output_file"
   else
     echo "File not found: $input_file"

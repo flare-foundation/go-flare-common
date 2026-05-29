@@ -344,9 +344,45 @@ func TestBuildMessage(t *testing.T) {
 		payloadBytes, err := hex.DecodeString(test.payload)
 		require.NoError(t, err)
 
-		payloadMsg := payload.BuildMessage(test.protocolID, test.votingRound, payloadBytes)
+		payloadMsg, err := payload.BuildMessage(test.protocolID, test.votingRound, payloadBytes)
+		require.NoError(t, err)
 		require.Equal(t, test.result, payloadMsg)
 	}
+}
+
+func TestBuildMessageRejectsOversize(t *testing.T) {
+	tooBig := make([]byte, 0x10000) // MaxUint16 + 1
+	_, err := payload.BuildMessage(0, 0, tooBig)
+	require.Error(t, err)
+
+	// Maximum-sized payload must still round-trip.
+	exact := make([]byte, 0xFFFF)
+	_, err = payload.BuildMessage(0, 0, exact)
+	require.NoError(t, err)
+}
+
+func TestExtractPayloadsRejectsDuplicateProtocolID(t *testing.T) {
+	const selector = "6c532fae"
+
+	frame := func(proto uint8, round uint32, length uint16, p []byte) []byte {
+		var buf bytes.Buffer
+		buf.WriteByte(proto)
+		_ = binary.Write(&buf, binary.BigEndian, round)
+		_ = binary.Write(&buf, binary.BigEndian, length)
+		buf.Write(p)
+		return buf.Bytes()
+	}
+
+	first := frame(100, 1, 1, []byte{0xAA})
+	dup := frame(100, 2, 1, []byte{0xBB}) // same protocolID -> reject
+
+	tx := &database.Transaction{
+		Hash:        "h",
+		FunctionSig: "f",
+		Input:       selector + hex.EncodeToString(first) + hex.EncodeToString(dup),
+	}
+	_, err := payload.ExtractPayloads(tx)
+	require.Error(t, err)
 }
 
 func TestBuildMessageForSigning(t *testing.T) {

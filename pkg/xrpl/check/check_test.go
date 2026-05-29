@@ -8,6 +8,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/flare-foundation/go-flare-common/pkg/safeurl"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -175,8 +176,24 @@ func TestCheck(t *testing.T) {
 				Flags:        lsfDisableMaster,
 				SignersLists: validSignerList,
 			},
+			Validated: true,
 		}
 		require.NoError(t, info.Check(1, []string{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW"}))
+	})
+
+	// M11: non-validated responses must be rejected so a rolled-back signer
+	// list cannot drive a quorum decision.
+	t.Run("non-validated response rejected", func(t *testing.T) {
+		info := AccountInfoResponse{
+			AccountData: AccountData{
+				Flags:        lsfDisableMaster,
+				SignersLists: validSignerList,
+			},
+			Validated: false,
+		}
+		err := info.Check(1, []string{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW"})
+		require.Error(t, err)
+		require.Contains(t, err.Error(), "non-validated ledger")
 	})
 
 	t.Run("regular key set", func(t *testing.T) {
@@ -186,6 +203,7 @@ func TestCheck(t *testing.T) {
 				RegularKey:   "rSomeOtherKey",
 				SignersLists: validSignerList,
 			},
+			Validated: true,
 		}
 		require.Error(t, info.Check(1, []string{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW"}))
 	})
@@ -195,6 +213,7 @@ func TestCheck(t *testing.T) {
 			AccountData: AccountData{
 				Flags: lsfDisableMaster,
 			},
+			Validated: true,
 		}
 		require.Error(t, info.Check(1, []string{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW"}))
 	})
@@ -205,6 +224,7 @@ func TestCheck(t *testing.T) {
 				Flags:        lsfDisableMaster,
 				SignersLists: []SignerList{validSignerList[0], validSignerList[0]},
 			},
+			Validated: true,
 		}
 		require.Error(t, info.Check(1, []string{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW"}))
 	})
@@ -215,6 +235,7 @@ func TestCheck(t *testing.T) {
 				Flags:        lsfDisableMaster | lsfRequireDestTag,
 				SignersLists: validSignerList,
 			},
+			Validated: true,
 		}
 		require.Error(t, info.Check(1, []string{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW"}))
 	})
@@ -327,13 +348,28 @@ func TestInfoHTTPStub(t *testing.T) {
 	defer srv.Close()
 
 	rpc := JSONRPC{URL: srv.URL}
-	resp, err := rpc.Info("rpo6E7mHvQ4xzeEBy8ViVzbG8q251ztKB8")
+	resp, err := rpc.Info(t.Context(), "rpo6E7mHvQ4xzeEBy8ViVzbG8q251ztKB8")
 	require.NoError(t, err)
 
 	require.Equal(t, expected.Result.AccountData.Account, resp.AccountData.Account)
 	require.EqualValues(t, 42, resp.Sequence())
 	require.Len(t, resp.AccountData.SignersLists, 1)
 	require.NoError(t, resp.Check(1, []string{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW"}))
+}
+
+// TestInfoSafeurlBlocksLoopback verifies that callers wanting SSRF
+// protection can wire safeurl explicitly via the Transport field; when
+// they do, an httptest server on loopback is rejected.
+func TestInfoSafeurlBlocksLoopback(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+	defer srv.Close()
+
+	rpc := JSONRPC{URL: srv.URL, Transport: safeurl.NewTransport()}
+	_, err := rpc.Info(t.Context(), "rpo6E7mHvQ4xzeEBy8ViVzbG8q251ztKB8")
+	require.Error(t, err)
+	require.Contains(t, err.Error(), "non-public")
 }
 
 // TestInfoHTTPStubRejectsBadStatus covers the non-200 error branch.
@@ -346,7 +382,7 @@ func TestInfoHTTPStubRejectsBadStatus(t *testing.T) {
 	defer srv.Close()
 
 	rpc := JSONRPC{URL: srv.URL}
-	_, err := rpc.Info("rpo6E7mHvQ4xzeEBy8ViVzbG8q251ztKB8")
+	_, err := rpc.Info(t.Context(), "rpo6E7mHvQ4xzeEBy8ViVzbG8q251ztKB8")
 	require.Error(t, err)
 }
 
@@ -359,7 +395,7 @@ func TestInfo(t *testing.T) {
 		URL: url,
 	}
 
-	resp, err := rpc.Info("rpo6E7mHvQ4xzeEBy8ViVzbG8q251ztKB8")
+	resp, err := rpc.Info(t.Context(), "rpo6E7mHvQ4xzeEBy8ViVzbG8q251ztKB8")
 	require.NoError(t, err)
 
 	require.Len(t, resp.AccountData.SignersLists, 1)

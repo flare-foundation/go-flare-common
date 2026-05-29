@@ -1,6 +1,7 @@
 package ed25519
 
 import (
+	"bytes"
 	"crypto/ed25519"
 	"encoding/hex"
 	"strings"
@@ -84,6 +85,24 @@ func TestPrivateKeyFromSecret(t *testing.T) {
 	invalidStart := base58.XRPLCoder.Encode(z)
 	_, err = PrivKeyFromSecret(invalidStart)
 	require.Error(t, err)
+}
+
+// TestPrivKeyFromSecretRejectsNonCanonicalLength covers audit finding H5:
+// only the canonical xrpl.js shape (3-byte prefix + 16-byte seed + 4-byte
+// checksum = 23 bytes) is accepted. Other lengths with valid prefix and
+// checksum produce non-canonical keys that won't interoperate with rippled
+// or xrpl.js, so they must be rejected.
+func TestPrivKeyFromSecretRejectsNonCanonicalLength(t *testing.T) {
+	for _, seedLen := range []int{8, 15, 17} {
+		body := append([]byte{0x01, 0xe1, 0x4b}, bytes.Repeat([]byte{0xab}, seedLen)...)
+		cs := hash.Checksum(body)
+		body = append(body, cs...)
+		encoded := base58.XRPLCoder.Encode(body)
+
+		_, err := PrivKeyFromSecret(encoded)
+		require.Error(t, err)
+		require.Contains(t, err.Error(), "invalid secret length")
+	}
 }
 
 // Vectors ported from rippled src/test/protocol/SecretKey_test.cpp ed25519TestVectors.
@@ -174,4 +193,22 @@ func TestValidateRejectsWrongPrefix(t *testing.T) {
 
 	_, err = Validate(msg, sig[:len(sig)-1], pub)
 	require.Error(t, err)
+}
+
+// TestValidateEmptyPubKey covers audit finding H4: an empty hex-decoded
+// pubkey previously panicked at pubBytes[0] before the length check fired.
+func TestValidateEmptyPubKey(t *testing.T) {
+	_, priv, err := ed25519.GenerateKey(nil)
+	require.NoError(t, err)
+
+	msg := []byte("payload")
+	sig := ed25519.Sign(priv, msg)
+
+	for _, pub := range []string{"", "ED"} {
+		require.NotPanics(t, func() {
+			ok, err := Validate(msg, sig, pub)
+			require.Error(t, err)
+			require.False(t, ok)
+		})
+	}
 }

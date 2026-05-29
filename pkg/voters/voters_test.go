@@ -25,26 +25,70 @@ var (
 )
 
 func TestInitialHashSeed(t *testing.T) {
-	seed := voters.InitialHashSeed(big.NewInt(1), 2, 3)
+	seed, err := voters.InitialHashSeed(big.NewInt(1), 2, 3)
+	require.NoError(t, err)
 	if seed != common.HexToHash("0x6e0c627900b24bd432fe7b1f713f1b0744091a646a9fe4a65a18dfed21f2949c") {
 		t.Errorf("initial hash seed is not correct")
 	}
 }
 
 func TestVoterSetInitialization(t *testing.T) {
-	vs := voters.NewSet(testVoters, testWeights, nil)
-	if vs == nil {
-		t.Errorf("voter set is nil")
-	} else if vs.TotalWeight != 1500 {
+	vs, err := voters.NewSet(testVoters, testWeights, nil)
+	require.NoError(t, err)
+	require.NotNil(t, vs)
+	if vs.TotalWeight != 1500 {
 		t.Errorf("total weight is not correct")
 	}
+}
+
+// TestNewSetRejectsDuplicate covers audit finding H19: NewSet must error
+// when the voters slice contains the same address twice. The signing policy
+// emitted by the smart contract is guaranteed not to contain duplicates, so
+// any duplicate here is corrupt input.
+func TestNewSetRejectsDuplicate(t *testing.T) {
+	dup := []common.Address{
+		common.HexToAddress("0xc783df8a850f42e7f7e57013759c285caa701eb6"),
+		common.HexToAddress("0xead9c93b79ae7c1591b1fb5323bd777e86e150d4"),
+		common.HexToAddress("0xc783df8a850f42e7f7e57013759c285caa701eb6"),
+	}
+	weights := []uint16{100, 200, 300}
+
+	vs, err := voters.NewSet(dup, weights, nil)
+	require.Error(t, err)
+	require.Nil(t, vs)
+	require.Contains(t, err.Error(), "duplicate voter address")
+}
+
+func TestNewSetRejectsLengthMismatch(t *testing.T) {
+	vs, err := voters.NewSet(testVoters, testWeights[:2], nil)
+	require.Error(t, err)
+	require.Nil(t, vs)
+}
+
+// TestNewSetRejectsWeightOverflow covers audit finding F-POLICY-1: NewSet
+// previously summed weights into TotalWeight (uint16) with no overflow
+// check, relying on the "guaranteed by the smart contract" comment. A
+// non-FromRawBytes caller (tests, tooling, future internal use) could
+// silently wrap the sum, leaving thresholds non-monotonic and producing
+// voter selections that disagree with the on-chain protocol.
+func TestNewSetRejectsWeightOverflow(t *testing.T) {
+	// Two MaxUint16 weights sum to 2*65535 = 131070, well over uint16 range.
+	vs, err := voters.NewSet(testVoters[:2], []uint16{65535, 65535}, nil)
+	require.Error(t, err)
+	require.Nil(t, vs)
+
+	// Boundary: sum exactly at MaxUint16 must be accepted.
+	vs, err = voters.NewSet(testVoters[:2], []uint16{65000, 535}, nil)
+	require.NoError(t, err)
+	require.NotNil(t, vs)
 }
 
 func TestBinarySearch(t *testing.T) {
 	testPairs := []uint16{0, 1, 99, 100, 101, 105, 299, 300, 301, 305, 599, 600, 601, 605, 999, 1000, 1001, 1005}
 
 	t.Run("test1", func(t *testing.T) {
-		vs := voters.NewSet([]common.Address{common.HexToAddress("0xc783df8a850f42e7f7e57013759c285caa701eb6")}, []uint16{100}, nil)
+		vs, err := voters.NewSet([]common.Address{common.HexToAddress("0xc783df8a850f42e7f7e57013759c285caa701eb6")}, []uint16{100}, nil)
+		require.NoError(t, err)
 		testResults := make([]int, 4)
 		for i := 0; i <= 3; i++ {
 			testResults[i] = vs.BinarySearch(testPairs[i])
@@ -53,7 +97,8 @@ func TestBinarySearch(t *testing.T) {
 	})
 
 	t.Run("test2", func(t *testing.T) {
-		vs := voters.NewSet(testVoters, testWeights, nil)
+		vs, err := voters.NewSet(testVoters, testWeights, nil)
+		require.NoError(t, err)
 		test2Results := make([]int, len(testPairs))
 		for i := range testPairs {
 			test2Results[i] = vs.BinarySearch(testPairs[i])
@@ -63,8 +108,10 @@ func TestBinarySearch(t *testing.T) {
 }
 
 func TestSelectVoters(t *testing.T) {
-	vs := voters.NewSet(testVoters, testWeights, nil)
-	seed := voters.InitialHashSeed(big.NewInt(1), 1, 1)
+	vs, err := voters.NewSet(testVoters, testWeights, nil)
+	require.NoError(t, err)
+	seed, err := voters.InitialHashSeed(big.NewInt(1), 1, 1)
+	require.NoError(t, err)
 	voterSet, err := vs.RandomSelectThresholdWeightVoters(seed, 3000)
 	require.NoError(t, err)
 

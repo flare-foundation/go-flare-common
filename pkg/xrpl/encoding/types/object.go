@@ -2,7 +2,6 @@ package types
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 )
 
@@ -18,6 +17,11 @@ func (*STObject) ToBytes(value any, signing bool) ([]byte, error) {
 		return nil, fmt.Errorf("value %v is not an object", value)
 	}
 
+	// Empty inner STObject emits just the end marker; rippled does the same.
+	if len(valuerObj) == 0 {
+		return []byte{objectEnd}, nil
+	}
+
 	bytes, err := Encode(valuerObj, signing)
 	if err != nil {
 		return nil, fmt.Errorf("encoding object %v: %w", value, err)
@@ -28,11 +32,17 @@ func (*STObject) ToBytes(value any, signing bool) ([]byte, error) {
 	return bytes, nil
 }
 
-// ToJSON deserializes Object Field
-func (*STObject) ToJSON(b *bytes.Buffer, _ int) (any, error) {
-	out := make(map[string]any)
+// ToJSON deserializes Object Field. Equivalent to ToJSONDepth at depth 0;
+// prefer ToJSONDepth in a recursive context so the codec can bound nesting.
+func (s *STObject) ToJSON(b *bytes.Buffer, length int) (any, error) {
+	return s.ToJSONDepth(b, length, 0)
+}
 
-	empty := true
+// ToJSONDepth is the depth-tracked variant of ToJSON; decodeNext calls this
+// to enforce the maxDecodeDepth bound on nested STObject/STArray.
+// Accepts an empty STObject (an immediate end-marker) to match rippled.
+func (*STObject) ToJSONDepth(b *bytes.Buffer, _ int, depth int) (any, error) {
+	out := make(map[string]any)
 
 	for {
 		nextByte, err := b.ReadByte()
@@ -49,18 +59,15 @@ func (*STObject) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 			return nil, fmt.Errorf("unreading next byte: %w", err)
 		}
 
-		name, value, err := decodeNext(b)
+		name, value, err := decodeNext(b, depth)
 		if err != nil {
 			return nil, fmt.Errorf("decoding next: %w", err)
 		}
 
+		if _, dup := out[name]; dup {
+			return nil, fmt.Errorf("duplicate field %s", name)
+		}
 		out[name] = value
-
-		empty = false
-	}
-
-	if empty {
-		return nil, errors.New("empty object")
 	}
 
 	return out, nil

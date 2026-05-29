@@ -98,3 +98,34 @@ func TestValidateMultiSigRoundTripED(t *testing.T) {
 	require.NoError(t, err)
 	require.False(t, ok)
 }
+
+// TestValidateMultiSigShortPubKey covers audit finding H3: a malformed signer
+// with a sub-2-character SigningPubKey previously panicked at s.SigningPubKey[0:2].
+func TestValidateMultiSigShortPubKey(t *testing.T) {
+	tx := map[string]any{
+		"TransactionType": "TrustSet",
+		"Account":         "rEuLyBCvcw4CFmzv8RepSiAoNgF8tTGJQC",
+		"Fee":             "30000",
+		"Flags":           262144,
+		"LimitAmount": map[string]any{
+			"currency": "USD",
+			"issuer":   "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
+			"value":    "100",
+		},
+		"Sequence":      2,
+		"SigningPubKey": "",
+	}
+
+	for _, pub := range []string{"", "E"} {
+		s := &signer.Signer{
+			Account:       "rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW",
+			TxnSignature:  "30",
+			SigningPubKey: pub,
+		}
+		require.NotPanics(t, func() {
+			ok, err := ValidateMultiSig(tx, s)
+			require.Error(t, err)
+			require.False(t, ok)
+		})
+	}
+}

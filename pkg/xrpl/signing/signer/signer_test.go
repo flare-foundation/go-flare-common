@@ -2,12 +2,41 @@ package signer
 
 import (
 	"bytes"
+	"sync"
 	"testing"
 
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/address"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/types"
 	"github.com/stretchr/testify/require"
 )
+
+// TestValueConcurrent covers audit finding F-SIGNCURVE-3: Value()'s lazy
+// cache was a plain *big.Int write/read pair, racy under concurrent first
+// callers. With go test -race this must not flag a data race, and all
+// concurrent callers must observe the same *big.Int.
+func TestValueConcurrent(t *testing.T) {
+	s := &Signer{
+		Account: "rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW",
+	}
+
+	const goroutines = 32
+	results := make([]string, goroutines)
+	var wg sync.WaitGroup
+	wg.Add(goroutines)
+	for i := range goroutines {
+		go func(i int) {
+			defer wg.Done()
+			v, err := s.Value()
+			require.NoError(t, err)
+			results[i] = v.String()
+		}(i)
+	}
+	wg.Wait()
+
+	for _, r := range results {
+		require.Equal(t, results[0], r)
+	}
+}
 
 func TestSort(t *testing.T) {
 	s1 := &Signer{
@@ -72,7 +101,7 @@ func TestSort(t *testing.T) {
 }
 
 func TestFormatParse(t *testing.T) {
-	signers := []Signer{
+	signers := []*Signer{
 		{
 			Account:       "rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW",
 			TxnSignature:  "30450221009C195DBBF7967E223D8626CA19CF02073667F2B22E206727BFE848FF42BEAC8A022048C323B0BED19A988BDBEFA974B6DE8AA9DCAE250AA82BBD1221787032A864E5",

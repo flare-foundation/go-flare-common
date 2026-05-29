@@ -81,7 +81,7 @@ func TestValidate(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := Validate(tt.url)
+			err := Validate(t.Context(), tt.url)
 			require.Error(t, err)
 			assert.Contains(t, err.Error(), tt.wantErr)
 		})
@@ -90,7 +90,7 @@ func TestValidate(t *testing.T) {
 
 func TestValidatePublicURL(t *testing.T) {
 	// This test requires network access; skip in isolated environments.
-	err := Validate("https://example.com")
+	err := Validate(t.Context(), "https://example.com")
 	assert.NoError(t, err)
 }
 
@@ -109,6 +109,15 @@ func TestIsPublicIP(t *testing.T) {
 		{"unspecified v4", "0.0.0.0", false},
 		{"unspecified v6", "::", false},
 		{"multicast", "224.0.0.1", false},
+		// Audit M18 additions.
+		{"CGNAT 100.64", "100.64.0.1", false},
+		{"CGNAT 100.127", "100.127.255.254", false},
+		{"this-network 0.1.2.3", "0.1.2.3", false},
+		{"TEST-NET-1", "192.0.2.42", false},
+		{"TEST-NET-2", "198.51.100.42", false},
+		{"TEST-NET-3", "203.0.113.42", false},
+		{"benchmarking 198.18", "198.18.0.1", false},
+		{"reserved 240", "240.0.0.1", false},
 		{"public v4", "93.184.216.34", true},
 		{"public v6", "2606:2800:220:1:248:1893:25c8:1946", true},
 	}
@@ -157,4 +166,45 @@ func parseIP(t *testing.T, s string) net.IP {
 	require.NotNil(t, ip, "failed to parse IP %q", s)
 
 	return ip
+}
+
+// TestCheckRedirect covers audit finding H18: NewClient's redirect policy
+// caps chain length and rejects https→http downgrade.
+func TestCheckRedirect(t *testing.T) {
+	mk := func(scheme string) *http.Request {
+		r, err := http.NewRequest(http.MethodGet, scheme+"://example.com", nil)
+		require.NoError(t, err)
+		return r
+	}
+
+	t.Run("first hop allowed", func(t *testing.T) {
+		require.NoError(t, checkRedirect(mk("https"), nil))
+	})
+
+	t.Run("chain under limit allowed", func(t *testing.T) {
+		via := []*http.Request{mk("https"), mk("https"), mk("https")}
+		require.NoError(t, checkRedirect(mk("https"), via))
+	})
+
+	t.Run("chain at limit rejected", func(t *testing.T) {
+		via := make([]*http.Request, maxRedirects)
+		for i := range via {
+			via[i] = mk("https")
+		}
+		err := checkRedirect(mk("https"), via)
+		require.Error(t, err)
+		assert.Contains(t, err.Error(), "stopped after")
+	})
+
+	t.Run("https-to-http downgrade rejected", func(t *testing.T) {
+		via := []*http.Request{mk("https")}
+		err := checkRedirect(mk("http"), via)
+		require.Error(t, err)
+		assert.Contains(t, err.Error(), "downgrades")
+	})
+
+	t.Run("http-to-https upgrade allowed", func(t *testing.T) {
+		via := []*http.Request{mk("http")}
+		require.NoError(t, checkRedirect(mk("https"), via))
+	})
 }

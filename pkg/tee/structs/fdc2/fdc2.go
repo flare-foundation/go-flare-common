@@ -82,6 +82,10 @@ func init() {
 		MessageArguments[opCommands[j]] = method.Inputs[0]
 	}
 
+	if len(attestationTypes) != len(attestationTypeMethods) {
+		panic("attestationTypes, attestationTypeMethods miss match")
+	}
+
 	AttestationTypeArguments = make(map[AttestationType]AttestationArguments)
 
 	for j := range attestationTypes {

@@ -3,6 +3,7 @@ package xrpl
 import (
 	"encoding/hex"
 	"maps"
+	"math"
 	"math/big"
 	"testing"
 	"time"
@@ -89,6 +90,50 @@ func TestPaymentTxFromInstructionNullify(t *testing.T) {
 
 // TestCheckNativePaymentRejectsIOUAmount verifies that CheckNativePayment rejects a Payment
 // whose Amount is an IOU issued-currency object rather than an XRP drops string.
+// TestPaymentTxFromInstructionRejects covers audit finding M15: the input
+// instruction must be checked up front. nil Amount panics; sender==recipient
+// is meaningless for native payments; non-empty TokenId means an issued
+// token, which this entrypoint does not support.
+func TestPaymentTxFromInstructionRejects(t *testing.T) {
+	base := payments.ITeePaymentsPaymentInstructionMessage{
+		WalletId:         [32]byte{1},
+		TeeIdKeyIdPairs:  []payments.TeeIdKeyIdPair{},
+		SenderAddress:    "rGYYWKxT1XgNipUJouCq4cKiyAdq8xBoE9",
+		RecipientAddress: "rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe",
+		Amount:           big.NewInt(10),
+		PaymentReference: crypto.Keccak256Hash([]byte("test")),
+		Nonce:            10,
+		SubNonce:         0,
+		MaxFee:           big.NewInt(10),
+		FeeSchedule:      []byte{0x27, 0x10, 0, 1},
+		BatchEndTs:       0,
+	}
+
+	t.Run("nil Amount", func(t *testing.T) {
+		i := base
+		i.Amount = nil
+		_, err := PaymentTxFromInstruction(i, 0)
+		require.Error(t, err)
+		require.Contains(t, err.Error(), "nil Amount")
+	})
+
+	t.Run("sender equals recipient", func(t *testing.T) {
+		i := base
+		i.RecipientAddress = i.SenderAddress
+		_, err := PaymentTxFromInstruction(i, 0)
+		require.Error(t, err)
+		require.Contains(t, err.Error(), "sender equals recipient")
+	})
+
+	t.Run("non-empty TokenId rejected", func(t *testing.T) {
+		i := base
+		i.TokenId = []byte{0xAA, 0xBB}
+		_, err := PaymentTxFromInstruction(i, 0)
+		require.Error(t, err)
+		require.Contains(t, err.Error(), "TokenId")
+	})
+}
+
 func TestCheckNativePaymentRejectsIOUAmount(t *testing.T) {
 	tx := map[string]any{
 		"TransactionType": "Payment",
@@ -234,6 +279,20 @@ func TestParseFeeEntriesMultiple(t *testing.T) {
 
 	_, err = ParseFeeEntries([]byte{0x00, 0x01, 0x00})
 	require.Error(t, err)
+}
+
+// TestParseFeeEntryRejectsOutOfRangeTry covers audit finding F-TEEX-1:
+// the original guard computed (try+1)*4 and compared against len(schedule),
+// which let a negative try (with non-positive RHS) and a near-MaxInt try
+// (with the multiplication wrapping negative) past the check — the
+// subsequent slice on a negative bound panicked.
+func TestParseFeeEntryRejectsOutOfRangeTry(t *testing.T) {
+	schedule := []byte{0x00, 0x01, 0x00, 0x00, 0xEC, 0x78, 0x00, 0x3C}
+
+	for _, try := range []int{-1, -100, math.MaxInt - 1, math.MaxInt} {
+		_, err := ParseFeeEntry(schedule, try)
+		require.Error(t, err, "try %d must be rejected", try)
+	}
 }
 
 func TestScheduledFeeComputation(t *testing.T) {

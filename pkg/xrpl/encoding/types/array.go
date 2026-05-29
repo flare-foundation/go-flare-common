@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"fmt"
 	"reflect"
+
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/defs"
 )
 
 // ArrayObject is a wrapped element of form map[string]map[string]any{"nameOfTheObject: Object"}.
@@ -36,6 +38,11 @@ func (*stArray) ToBytes(value any, signing bool) ([]byte, error) {
 		}
 
 		for key := range arrayObj {
+			// rippled STArray rejects any field whose declared type is not STObject.
+			if field, ok := defs.NameToField[key]; ok && field.Type != defs.STObject {
+				return nil, fmt.Errorf("array element %s is not an STObject field", key)
+			}
+
 			bytes, err := encodeInner(key, arrayObj[key], signing)
 			if err != nil {
 				return nil, fmt.Errorf("encoding %v: %w", array[i], err)
@@ -56,8 +63,15 @@ func (*stArray) ToBytes(value any, signing bool) ([]byte, error) {
 	return outBuff.Bytes(), nil
 }
 
-// ToJSON decodes an encoded array.
-func (*stArray) ToJSON(b *bytes.Buffer, _ int) (any, error) {
+// ToJSON decodes an encoded array. Equivalent to ToJSONDepth at depth 0;
+// prefer ToJSONDepth in a recursive context so the codec can bound nesting.
+func (s *stArray) ToJSON(b *bytes.Buffer, length int) (any, error) {
+	return s.ToJSONDepth(b, length, 0)
+}
+
+// ToJSONDepth is the depth-tracked variant of ToJSON; decodeNext calls this
+// to enforce the maxDecodeDepth bound on nested STObject/STArray.
+func (*stArray) ToJSONDepth(b *bytes.Buffer, _ int, depth int) (any, error) {
 	out := make([]any, 0, 2)
 
 	for {
@@ -74,9 +88,14 @@ func (*stArray) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 			return nil, fmt.Errorf("unreading next byte: %w", err)
 		}
 
-		name, value, err := decodeNext(b)
+		name, value, err := decodeNext(b, depth)
 		if err != nil {
 			return nil, fmt.Errorf("decoding next: %w", err)
+		}
+
+		// rippled STArray rejects any field whose declared type is not STObject.
+		if field, ok := defs.NameToField[name]; !ok || field.Type != defs.STObject {
+			return nil, fmt.Errorf("array element %s is not an STObject field", name)
 		}
 
 		wrapped := make(map[string]any)

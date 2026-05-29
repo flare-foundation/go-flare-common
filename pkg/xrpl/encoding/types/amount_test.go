@@ -91,6 +91,35 @@ func TestAmountDecodeEncode(t *testing.T) {
 	}
 }
 
+// TestMPTReservedBitsRejected covers audit finding M3: rippled rejects any
+// MPT indicator byte with a reserved bit set. The decoder must too, or it
+// silently accepts blobs that wouldn't be valid on the ledger.
+func TestMPTReservedBitsRejected(t *testing.T) {
+	// 32-byte body: 8 bytes value + 24 bytes mpt_issuance_id.
+	body := make([]byte, 32)
+
+	t.Run("0x20 negative MPT valid", func(t *testing.T) {
+		blob := append([]byte{0x20}, body...)
+		_, err := Amount.ToJSON(bytes.NewBuffer(blob), 0)
+		require.NoError(t, err)
+	})
+
+	t.Run("0x60 positive MPT valid", func(t *testing.T) {
+		blob := append([]byte{0x60}, body...)
+		_, err := Amount.ToJSON(bytes.NewBuffer(blob), 0)
+		require.NoError(t, err)
+	})
+
+	for _, b := range []byte{0x21, 0x22, 0x24, 0x28, 0x30, 0x3F, 0x61, 0x7F} {
+		t.Run("reserved bit set", func(t *testing.T) {
+			blob := append([]byte{b}, body...)
+			_, err := Amount.ToJSON(bytes.NewBuffer(blob), 0)
+			require.Error(t, err, "byte 0x%02x must be rejected", b)
+			require.Contains(t, err.Error(), "reserved bits")
+		})
+	}
+}
+
 func TestAmountEncoding(t *testing.T) {
 	tests := []struct {
 		name        string
@@ -864,6 +893,31 @@ func TestAmountDecodingXRPLErrors(t *testing.T) {
 		{
 			name:     "XRP negative rejected",
 			hexInput: "0000000000000001",
+		},
+		// rippled treats firstByte with both token and MPT bits set as reserved.
+		// Accepting this lets the stray 0x20 bit corrupt the IOU exponent in
+		// tokenToJSON (real exponent acquires +31 because 0x20 lands inside
+		// the exponent mask). The first byte must be rejected up front.
+		{
+			name:     "reserved token+MPT bit combination rejected",
+			hexInput: "a000000000000000d4c44364c5bb000000000000000000000000000055534400000000000000000000000000000000000000000000000001",
+		},
+		// IOU canonical-form rules (rippled STAmount): non-zero significand must be
+		// in [10^15, 10^16-1] and normalised exponent in [1, 177]. Below: a token
+		// amount whose significand is below 10^15 — non-canonical, must be rejected.
+		// firstByte=0xC0 (token + positive sign), exponent bits=0x61 (=97, real
+		// exponent 0), significand=1. Currency USD, issuer all-zero.
+		{
+			name:     "IOU significand below 10^15 rejected",
+			hexInput: "d840000000000001000000000000000000000000000000000000000055534400000000000000000000000000000000000000000000000001",
+		},
+		// Zero-mantissa with non-zero exponent bits — non-canonical zero.
+		// firstByte=0xC0 (token + positive sign), exponent bits=0x61 (=97),
+		// significand=0. The canonical zero is all-bits-zero in the
+		// significand-and-exponent region.
+		{
+			name:     "IOU non-canonical zero rejected",
+			hexInput: "d840000000000000000000000000000000000000000000000000000055534400000000000000000000000000000000000000000000000001",
 		},
 	}
 
