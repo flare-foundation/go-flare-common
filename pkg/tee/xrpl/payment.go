@@ -23,8 +23,8 @@ import (
 //   - SenderAddress and RecipientAddress must differ (self-payment is only meaningful via
 //     Paths/SendMax cross-currency conversion, which this entrypoint does not support);
 //   - TokenId must be empty so an issued-token payment cannot accidentally produce a native-XRP tx;
-//   - the resulting tx is run through CheckNativePayment so the caller never gets back a
-//     structurally invalid blob.
+//   - the resulting tx is run through CheckNativePayment (CheckNullify for the nullify
+//     path) so the caller never gets back a structurally invalid blob.
 func PaymentTxFromInstruction(i payments.ITeePaymentsPaymentInstructionMessage, try int) (map[string]any, error) {
 	if i.Amount == nil {
 		return nil, errors.New("nil Amount")
@@ -71,7 +71,7 @@ func PaymentTxFromInstruction(i payments.ITeePaymentsPaymentInstructionMessage, 
 	fee := feeFixture.Fee(i.MaxFee)
 
 	if feeFixture.Nullify {
-		return Nullify(i, fee), nil
+		return Nullify(i, fee)
 	}
 
 	tx["Fee"] = feeFixture.Fee(i.MaxFee)
@@ -83,15 +83,19 @@ func PaymentTxFromInstruction(i payments.ITeePaymentsPaymentInstructionMessage, 
 	return tx, nil
 }
 
-// Nullify prepares a transaction that nullifies the transaction prepared for the the Payment Instruction Message.
-// Cannot be used as a replacement as the fee is not raised.
-func Nullify(i payments.ITeePaymentsPaymentInstructionMessage, fee string) map[string]any {
+// Nullify prepares a transaction that nullifies the transaction prepared for the Payment Instruction Message.
+// Cannot be used as a replacement as the fee is not raised. The result is validated by CheckNullify.
+func Nullify(i payments.ITeePaymentsPaymentInstructionMessage, fee string) (map[string]any, error) {
+	if i.Nonce > math.MaxUint32 {
+		return nil, fmt.Errorf("nonce %d exceeds XRPL Sequence (UInt32) range", i.Nonce)
+	}
+
 	tx := make(map[string]any)
 
 	tx["TransactionType"] = "AccountSet"
 	tx["Account"] = i.SenderAddress
 	tx["SigningPubKey"] = ""
-	tx["Sequence"] = uint32(i.Nonce) //nolint:gosec // XRPL Sequence is UInt32; on-chain Nonce bounded to fit
+	tx["Sequence"] = uint32(i.Nonce) //nolint:gosec // bounded by the guard above
 
 	// [
 	//   {
@@ -110,7 +114,11 @@ func Nullify(i payments.ITeePaymentsPaymentInstructionMessage, fee string) map[s
 
 	tx["Fee"] = fee
 
-	return tx
+	if err := CheckNullify(tx); err != nil {
+		return nil, fmt.Errorf("nullify validation: %w", err)
+	}
+
+	return tx, nil
 }
 
 // CheckNativePayment checks the following for a native xrpl payment for multi-signing:
@@ -142,20 +150,8 @@ func CheckNativePayment(tx map[string]any) error {
 	}
 
 	// Fee
-	fee, ok := tx["Fee"]
-	if !ok {
-		return errors.New("missing Fee")
-	}
-	feeStr, ok := fee.(string)
-	if !ok {
-		return fmt.Errorf("invalid Fee type %v: %v", fee, reflect.TypeOf(fee))
-	}
-	feeUint, err := strconv.ParseUint(feeStr, 10, 32)
-	if err != nil {
-		return fmt.Errorf("unparsable unsigned integer for Fee: %v: %w", fee, err)
-	}
-	if feeUint == 0 {
-		return errors.New("zero Fee set")
+	if err := checkNonzeroFee(tx); err != nil {
+		return err
 	}
 
 	// Amount
@@ -182,20 +178,72 @@ func CheckNativePayment(tx map[string]any) error {
 	}
 
 	// SigningPubKey
+	if err := checkEmptySigningPubKey(tx); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// CheckNullify validates a nullify (AccountSet) transaction for multi-signing:
+//   - correct transaction type
+//   - Account is set
+//   - Fee is set and nonzero
+//   - Sequence is set
+//   - SigningPubKey is set to empty string
+func CheckNullify(tx map[string]any) error {
+	if tx["TransactionType"] != "AccountSet" {
+		return fmt.Errorf("invalid transaction type %v", tx["TransactionType"])
+	}
+
+	if _, ok := tx["Account"]; !ok {
+		return errors.New("missing Account")
+	}
+
+	if err := checkNonzeroFee(tx); err != nil {
+		return err
+	}
+
+	if _, ok := tx["Sequence"]; !ok {
+		return errors.New("missing Sequence")
+	}
+
+	return checkEmptySigningPubKey(tx)
+}
+
+// checkNonzeroFee reports whether tx carries a string Fee that parses to a nonzero UInt32.
+func checkNonzeroFee(tx map[string]any) error {
+	fee, ok := tx["Fee"]
+	if !ok {
+		return errors.New("missing Fee")
+	}
+	feeStr, ok := fee.(string)
+	if !ok {
+		return fmt.Errorf("invalid Fee type %v: %v", fee, reflect.TypeOf(fee))
+	}
+	feeUint, err := strconv.ParseUint(feeStr, 10, 32)
+	if err != nil {
+		return fmt.Errorf("unparsable unsigned integer for Fee: %v: %w", fee, err)
+	}
+	if feeUint == 0 {
+		return errors.New("zero Fee set")
+	}
+	return nil
+}
+
+// checkEmptySigningPubKey reports whether tx carries an empty-string SigningPubKey.
+func checkEmptySigningPubKey(tx map[string]any) error {
 	signingPubKey, ok := tx["SigningPubKey"]
 	if !ok {
 		return errors.New("missing 'empty' SigningPubKey")
 	}
-
 	signingPubKeyStr, ok := signingPubKey.(string)
 	if !ok {
 		return fmt.Errorf("invalid type of signingPubKey %v: %v", signingPubKey, reflect.TypeOf(signingPubKey))
 	}
-
 	if signingPubKeyStr != "" {
 		return errors.New("signingPubKey must be empty string")
 	}
-
 	return nil
 }
 

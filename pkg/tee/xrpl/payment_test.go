@@ -88,6 +88,49 @@ func TestPaymentTxFromInstructionNullify(t *testing.T) {
 	require.Equal(t, "AccountSet", decoded["TransactionType"])
 }
 
+// TestNullifyRejectsOutOfRangeNonce: Nullify must reject a Nonce above the XRPL Sequence
+// (UInt32) range rather than silently truncating it.
+func TestNullifyRejectsOutOfRangeNonce(t *testing.T) {
+	i := payments.ITeePaymentsPaymentInstructionMessage{
+		SenderAddress:    "rGYYWKxT1XgNipUJouCq4cKiyAdq8xBoE9",
+		PaymentReference: crypto.Keccak256Hash([]byte("nullify")),
+		Nonce:            uint64(math.MaxUint32) + 1,
+	}
+	_, err := Nullify(i, "10")
+	require.Error(t, err)
+	require.Contains(t, err.Error(), "Sequence")
+}
+
+// TestNullifyRejectsZeroFee: a nullify with a zero Fee is structurally invalid and must be
+// rejected rather than returned.
+func TestNullifyRejectsZeroFee(t *testing.T) {
+	i := payments.ITeePaymentsPaymentInstructionMessage{
+		SenderAddress:    "rGYYWKxT1XgNipUJouCq4cKiyAdq8xBoE9",
+		PaymentReference: crypto.Keccak256Hash([]byte("nullify")),
+		Nonce:            5,
+	}
+	_, err := Nullify(i, "0")
+	require.Error(t, err)
+	require.Contains(t, err.Error(), "zero Fee")
+}
+
+// TestPaymentTxFromInstructionNullifyRejectsNilMaxFee: a nil MaxFee makes ScheduledFee.Fee
+// return "0", which the nullify branch must reject rather than emit a Fee "0" tx.
+func TestPaymentTxFromInstructionNullifyRejectsNilMaxFee(t *testing.T) {
+	instruction := payments.ITeePaymentsPaymentInstructionMessage{
+		SenderAddress:    "rGYYWKxT1XgNipUJouCq4cKiyAdq8xBoE9",
+		RecipientAddress: "rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe",
+		Amount:           big.NewInt(1000),
+		PaymentReference: crypto.Keccak256Hash([]byte("nullify")),
+		Nonce:            5,
+		MaxFee:           nil,
+		FeeSchedule:      []byte{0xD8, 0xF0, 0, 1}, // -10000 bips → nullify
+	}
+	_, err := PaymentTxFromInstruction(instruction, 0)
+	require.Error(t, err)
+	require.Contains(t, err.Error(), "zero Fee")
+}
+
 // TestCheckNativePaymentRejectsIOUAmount verifies that CheckNativePayment rejects a Payment
 // whose Amount is an IOU issued-currency object rather than an XRP drops string.
 // TestPaymentTxFromInstructionRejects covers audit finding M15: the input
