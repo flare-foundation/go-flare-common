@@ -250,6 +250,10 @@ func serializeTokenValue(value string) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("unparsable value %v", value)
 	}
+	if fl.IsInf() {
+		// Parse yields ±Inf with no error for "Inf" literals and overflowing exponents.
+		return nil, fmt.Errorf("non-finite value %v", value)
+	}
 
 	sign := uint64(1) // positive
 
@@ -301,11 +305,17 @@ func format(f *big.Float, p int, bitSize int) (uint64, int64, error) {
 	formatted := f.Text(e, p) // "d.ddddddddd...dddddE±dd"
 
 	separated := strings.Split(formatted, ".")
+	if len(separated) < 2 {
+		return 0, 0, fmt.Errorf("unexpected float format %q", formatted)
+	}
 
 	leadingDigit := separated[0]
 	rest := separated[1]
 
 	second := strings.Split(rest, "E")
+	if len(second) < 2 {
+		return 0, 0, fmt.Errorf("unexpected float format %q", formatted)
+	}
 
 	significantDec := leadingDigit + second[0]
 	exponentStr := second[1]

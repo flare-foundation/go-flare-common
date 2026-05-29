@@ -478,6 +478,21 @@ func TestTokenAmountSerializationFailure(t *testing.T) {
 		{
 			name: "Not a number", value: "abc",
 		},
+		{
+			name: "Inf literal", value: "Inf",
+		},
+		{
+			name: "Negative inf literal", value: "-inf",
+		},
+		{
+			name: "Plus inf literal", value: "+Inf",
+		},
+		{
+			name: "Exponent overflows to inf", value: "1e2000000000",
+		},
+		{
+			name: "Negative exponent overflows to inf", value: "-1e2000000000",
+		},
 	}
 
 	for _, test := range tests {
