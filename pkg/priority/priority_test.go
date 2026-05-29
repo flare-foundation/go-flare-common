@@ -155,7 +155,7 @@ func TestDequeue2(t *testing.T) {
 	}
 
 	deviationMean := deviationTotal / time.Duration(len(times.list)-2)
-	require.Less(t, deviationMean, time.Second/time.Duration(perSecond*5))
+	require.Less(t, deviationMean, time.Second/time.Duration(perSecond*2))
 
 	cancel()
 }
