@@ -26,7 +26,7 @@ type APIKey struct {
 // Params configures HTTP request behavior.
 type Params struct {
 	Timeout         time.Duration // maximal time to wait for a response
-	MaxResponseSize int64         // maximal response size in bytes; also caps the request body buffered by PostRawWithRetry
+	MaxResponseSize int64         // response body cap in bytes; 0 means unbounded (PostRawWithRetry requires > 0)
 	// Transport sets the HTTP client transport. Nil uses http.DefaultTransport (no SSRF filtering); pass safeurl.NewTransport() to enable it.
 	Transport http.RoundTripper
 
@@ -76,7 +76,7 @@ func PostRaw[T any](ctx context.Context, url string, apiKey APIKey, body io.Read
 	if resp.StatusCode != http.StatusOK {
 		if isTextPlain(resp.Header.Get("Content-Type")) {
 			buf := new(strings.Builder)
-			_, err := io.Copy(buf, capReader(resp.Body, p.MaxResponseSize))
+			_, err := io.Copy(buf, capReader(resp.Body, maxErrorReasonSize))
 			if err == nil {
 				return resOut, fmt.Errorf("request responded with code %d, reason: %s", resp.StatusCode, buf.String())
 			}
@@ -118,6 +118,9 @@ func PostRawWithRetry[T any](ctx context.Context, url string, apiKey APIKey, bod
 
 	return executeWithRetry(ctx, fn, p.NoRetryStatuses, acceptableFail, rp)
 }
+
+// maxErrorReasonSize caps the text/plain reason read from a non-OK response.
+const maxErrorReasonSize = 64 << 10 // 64 KiB
 
 // capReader returns r capped to n bytes, or r unchanged if n <= 0 (unbounded).
 func capReader(r io.Reader, n int64) io.Reader {
