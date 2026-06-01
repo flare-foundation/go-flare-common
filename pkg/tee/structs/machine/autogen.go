@@ -38,11 +38,12 @@ type IMachineManagerTeeMachine struct {
 
 // IMachineManagerTeeMachineData is an auto generated low-level Go binding around an user-defined struct.
 type IMachineManagerTeeMachineData struct {
-	ExtensionId  *big.Int
-	InitialOwner common.Address
-	CodeHash     [32]byte
-	Platform     [32]byte
-	PublicKey    PublicKey
+	ExtensionId    *big.Int
+	InitialOwner   common.Address
+	CodeHash       [32]byte
+	Platform       [32]byte
+	PublicKey      PublicKey
+	GovernanceHash [32]byte
 }
 
 // IMachineManagerTeeMachineWithAttestationData is an auto generated low-level Go binding around an user-defined struct.
@@ -62,7 +63,7 @@ type PublicKey struct {
 
 // TeeMachineMetaData contains all meta data concerning the TeeMachine contract.
 var TeeMachineMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"initialOwner\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"x\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"y\",\"type\":\"bytes32\"}],\"internalType\":\"structPublicKey\",\"name\":\"publicKey\",\"type\":\"tuple\"}],\"internalType\":\"structIMachineManager.TeeMachineData\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"teeMachineDataStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"teeProxyId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"}],\"internalType\":\"structIMachineManager.TeeMachine\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"teeMachineStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"initialTeeId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structIMachineManager.TeeMachineWithAttestationData\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"teeMachineWithAttestationDataStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"initialOwner\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"x\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"y\",\"type\":\"bytes32\"}],\"internalType\":\"structPublicKey\",\"name\":\"publicKey\",\"type\":\"tuple\"},{\"internalType\":\"bytes32\",\"name\":\"governanceHash\",\"type\":\"bytes32\"}],\"internalType\":\"structIMachineManager.TeeMachineData\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"teeMachineDataStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"teeProxyId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"}],\"internalType\":\"structIMachineManager.TeeMachine\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"teeMachineStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"initialTeeId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"internalType\":\"structIMachineManager.TeeMachineWithAttestationData\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"teeMachineWithAttestationDataStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // TeeMachineABI is the input ABI used to generate the binding from.
@@ -211,23 +212,23 @@ func (_TeeMachine *TeeMachineTransactorRaw) Transact(opts *bind.TransactOpts, me
 	return _TeeMachine.Contract.contract.Transact(opts, method, params...)
 }
 
-// TeeMachineDataStruct is a paid mutator transaction binding the contract method 0x6d3d9ce3.
+// TeeMachineDataStruct is a paid mutator transaction binding the contract method 0xa8332a77.
 //
-// Solidity: function teeMachineDataStruct((uint256,address,bytes32,bytes32,(bytes32,bytes32)) ) returns()
+// Solidity: function teeMachineDataStruct((uint256,address,bytes32,bytes32,(bytes32,bytes32),bytes32) ) returns()
 func (_TeeMachine *TeeMachineTransactor) TeeMachineDataStruct(opts *bind.TransactOpts, arg0 IMachineManagerTeeMachineData) (*types.Transaction, error) {
 	return _TeeMachine.contract.Transact(opts, "teeMachineDataStruct", arg0)
 }
 
-// TeeMachineDataStruct is a paid mutator transaction binding the contract method 0x6d3d9ce3.
+// TeeMachineDataStruct is a paid mutator transaction binding the contract method 0xa8332a77.
 //
-// Solidity: function teeMachineDataStruct((uint256,address,bytes32,bytes32,(bytes32,bytes32)) ) returns()
+// Solidity: function teeMachineDataStruct((uint256,address,bytes32,bytes32,(bytes32,bytes32),bytes32) ) returns()
 func (_TeeMachine *TeeMachineSession) TeeMachineDataStruct(arg0 IMachineManagerTeeMachineData) (*types.Transaction, error) {
 	return _TeeMachine.Contract.TeeMachineDataStruct(&_TeeMachine.TransactOpts, arg0)
 }
 
-// TeeMachineDataStruct is a paid mutator transaction binding the contract method 0x6d3d9ce3.
+// TeeMachineDataStruct is a paid mutator transaction binding the contract method 0xa8332a77.
 //
-// Solidity: function teeMachineDataStruct((uint256,address,bytes32,bytes32,(bytes32,bytes32)) ) returns()
+// Solidity: function teeMachineDataStruct((uint256,address,bytes32,bytes32,(bytes32,bytes32),bytes32) ) returns()
 func (_TeeMachine *TeeMachineTransactorSession) TeeMachineDataStruct(arg0 IMachineManagerTeeMachineData) (*types.Transaction, error) {
 	return _TeeMachine.Contract.TeeMachineDataStruct(&_TeeMachine.TransactOpts, arg0)
 }

@@ -77,7 +77,6 @@ func (d *DataFixed) Validate() error {
 
 type DataFixed struct {
 	InstructionID          common.Hash      `json:"instructionId"`
-	ChainID                uint64           `json:"chainId"`
 	TeeID                  common.Address   `json:"teeId"`
 	Timestamp              uint64           `json:"timestamp"`
 	RewardEpochID          uint32           `json:"rewardEpochId"`
@@ -112,7 +111,6 @@ func (d *DataFixed) HashFixed() (h common.Hash, err error) {
 func (d *DataFixed) prepareForEncoding() tee.TeeStructsInstruction {
 	return tee.TeeStructsInstruction{
 		InstructionId:          d.InstructionID,
-		ChainId:                new(big.Int).SetUint64(d.ChainID),
 		TeeId:                  d.TeeID,
 		Timestamp:              d.Timestamp,
 		RewardEpochId:          d.RewardEpochID,

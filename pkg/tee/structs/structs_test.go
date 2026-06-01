@@ -8,7 +8,6 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/machinepath"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/payments"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/tee"
-	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/upgrade"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/wallet"
 	"github.com/stretchr/testify/require"
 )
@@ -22,8 +21,4 @@ func TestInit(t *testing.T) {
 	require.NotNil(t, tee.StructArg)
 	require.NotNil(t, machine.TeeMachineDataStructArg)
 	require.NotNil(t, machinepath.MachinePathStructArg)
-	require.NotNil(t, upgrade.PauseForUpgradeStructArg)
-	require.NotNil(t, upgrade.ReplicateTeeMachineStructArg)
-	require.NotNil(t, upgrade.TeeNodeVersionStructArg)
-	require.NotNil(t, upgrade.TeeUpgradePathStructArg)
 }

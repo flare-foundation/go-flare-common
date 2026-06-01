@@ -31,7 +31,7 @@ var (
 
 // ExtensionManagerMetaData contains all meta data concerning the ExtensionManager contract.
 var ExtensionManagerMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"AddressAlreadyInSet\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"AddressNotInSet\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AvailabilityCheckTimestampInvalid\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CodeHashPlatformAlreadyDisabled\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CodeHashZero\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"cosigner\",\"type\":\"address\"}],\"name\":\"DuplicatedCosigner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ExtensionIdMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAddress\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAvailabilityCheckStatus\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidCodeHash\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"cosigner\",\"type\":\"address\"}],\"name\":\"InvalidCosigner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidDuration\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidExtensionOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidGovernanceHash\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidInitialization\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidInstructionsSender\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidKeyType\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidNonce\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPlatform\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPublicKey\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidReservedExtensionId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidResponseData\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidSigningAlgo\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidThreshold\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidWalletStatus\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"}],\"name\":\"KeyTypeAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"KeyTypeEmpty\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"}],\"name\":\"KeyTypeNotSupported\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LengthsMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoAddresses\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoPlatforms\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"}],\"name\":\"NoSigningAlgos\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotAllowedExtensionOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotInitializing\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\"}],\"name\":\"NotOwnerOrPauser\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\"}],\"name\":\"NotOwnerOrUnpauser\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExtensionOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyGovernance\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwnerOrBackupManager\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProductionOrPausedStatus\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProposedOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OwnerNotAllowed\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"name\":\"PlatformAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"PlatformEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ReservedExtensionIdAlreadyAssigned\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"signingAlgo\",\"type\":\"bytes32\"}],\"name\":\"SigningAlgoAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SigningAlgoEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SystemOwnedExtensionId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TeeMachineNotAvailable\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"name\":\"UnsupportedPlatform\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"VersionAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"VersionEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"VersionNotSupported\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"name\":\"CodeHashPlatformDisabled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"encodedCallHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"}],\"name\":\"GovernanceCallTimelocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"version\",\"type\":\"uint64\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"NewOwnerConfirmed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"oldOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"NewOwnerProposed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"keyTypes\",\"type\":\"bytes32[]\"}],\"name\":\"SupportedKeyTypesAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"keyTypes\",\"type\":\"bytes32[]\"}],\"name\":\"SupportedKeyTypesRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"keyTypes\",\"type\":\"bytes32[]\"},{\"indexed\":false,\"internalType\":\"bytes32[][]\",\"name\":\"_signingAlgosByKeyType\",\"type\":\"bytes32[][]\"}],\"name\":\"SystemSupportedKeyTypesAndSigningAlgosAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"platforms\",\"type\":\"bytes32[]\"}],\"name\":\"SystemSupportedPlatformsAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"contractITeeExtensionStateVerifier\",\"name\":\"teeExtensionStateVerifier\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"teeExtensionInstructionsSender\",\"type\":\"address\"}],\"name\":\"TeeExtensionContractsSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"TeeExtensionRegistered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"version\",\"type\":\"string\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"platforms\",\"type\":\"bytes32[]\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"governanceHash\",\"type\":\"bytes32\"}],\"name\":\"TeeVersionAdded\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32[]\",\"name\":\"_keyTypes\",\"type\":\"bytes32[]\"}],\"name\":\"addSupportedKeyTypes\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_keyTypes\",\"type\":\"bytes32[]\"},{\"internalType\":\"bytes32[][]\",\"name\":\"_signingAlgosByKeyType\",\"type\":\"bytes32[][]\"}],\"name\":\"addSystemSupportedKeyTypesAndSigningAlgos\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_platforms\",\"type\":\"bytes32[]\"}],\"name\":\"addSystemSupportedPlatforms\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_version\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32[]\",\"name\":\"_platforms\",\"type\":\"bytes32[]\"},{\"internalType\":\"bytes32\",\"name\":\"_governanceHash\",\"type\":\"bytes32\"}],\"name\":\"addTeeVersion\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"confirmOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_platform\",\"type\":\"bytes32\"}],\"name\":\"disableCodeHashPlatform\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"}],\"name\":\"getCodeHashInfo\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"_governanceHash\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"_version\",\"type\":\"string\"},{\"internalType\":\"bytes32[]\",\"name\":\"_platforms\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getExtensionOwner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getSupportedCodeHashes\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_supportedCodeHashes\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getSupportedKeyTypes\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_supportedKeyTypes\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSystemSupportedKeyTypes\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSystemSupportedPlatforms\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_keyType\",\"type\":\"bytes32\"}],\"name\":\"getSystemSupportedSigningAlgos\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getTeeExtensionInstructionsSender\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getTeeExtensionStateVerifier\",\"outputs\":[{\"internalType\":\"contractITeeExtensionStateVerifier\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"}],\"name\":\"getTeeGovernanceHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_platform\",\"type\":\"bytes32\"}],\"name\":\"isCodeHashPlatformDisabled\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_platform\",\"type\":\"bytes32\"}],\"name\":\"isCodeHashPlatformSupported\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_keyType\",\"type\":\"bytes32\"}],\"name\":\"isKeyTypeSupported\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_keyType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_signingAlgo\",\"type\":\"bytes32\"}],\"name\":\"isSigningAlgoSupported\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nextPublicExtensionId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_newOwner\",\"type\":\"address\"}],\"name\":\"proposeNewOwner\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractITeeExtensionStateVerifier\",\"name\":\"_teeExtensionStateVerifier\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_teeExtensionInstructionsSender\",\"type\":\"address\"}],\"name\":\"register\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"registerReserved\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32[]\",\"name\":\"_keyTypes\",\"type\":\"bytes32[]\"}],\"name\":\"removeSupportedKeyTypes\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"contractITeeExtensionStateVerifier\",\"name\":\"_teeExtensionStateVerifier\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_teeExtensionInstructionsSender\",\"type\":\"address\"}],\"name\":\"setExtensionContracts\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"AddressAlreadyInSet\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"AddressNotInSet\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AvailabilityCheckTimestampInvalid\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CodeHashPlatformAlreadyDisabled\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CodeHashZero\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"cosigner\",\"type\":\"address\"}],\"name\":\"DuplicatedCosigner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ExtensionIdMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAddress\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAvailabilityCheckStatus\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidCodeHash\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"cosigner\",\"type\":\"address\"}],\"name\":\"InvalidCosigner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidDuration\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidExtensionOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidGovernanceHash\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidInitialization\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidInstructionsSender\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidKeyType\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidNonce\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPlatform\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPublicKey\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidReservedExtensionId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidResponseData\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidSigningAlgo\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidThreshold\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidWalletStatus\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"}],\"name\":\"KeyTypeAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"KeyTypeEmpty\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"}],\"name\":\"KeyTypeNotSupported\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LengthsMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoAddresses\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoPlatforms\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"}],\"name\":\"NoSigningAlgos\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotAllowedExtensionOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotInitializing\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\"}],\"name\":\"NotOwnerOrPauser\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\"}],\"name\":\"NotOwnerOrUnpauser\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExtensionOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExtensionOwnerOrOperator\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyGovernance\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwnerOrBackupManager\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProductionOrPausedStatus\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProposedOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OwnerNotAllowed\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"name\":\"PlatformAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"PlatformEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ReservedExtensionIdAlreadyAssigned\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"signingAlgo\",\"type\":\"bytes32\"}],\"name\":\"SigningAlgoAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SigningAlgoEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SystemOwnedExtensionId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TeeMachineNotAvailable\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"name\":\"UnsupportedPlatform\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"VersionAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"VersionEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"VersionNotSupported\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"name\":\"CodeHashPlatformDisabled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"oldOperator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOperator\",\"type\":\"address\"}],\"name\":\"ExtensionOperatorSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"encodedCallHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"}],\"name\":\"GovernanceCallTimelocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"version\",\"type\":\"uint64\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"NewOwnerConfirmed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"oldOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"NewOwnerProposed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"keyTypes\",\"type\":\"bytes32[]\"}],\"name\":\"SupportedKeyTypesAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"keyTypes\",\"type\":\"bytes32[]\"}],\"name\":\"SupportedKeyTypesRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"keyTypes\",\"type\":\"bytes32[]\"},{\"indexed\":false,\"internalType\":\"bytes32[][]\",\"name\":\"_signingAlgosByKeyType\",\"type\":\"bytes32[][]\"}],\"name\":\"SystemSupportedKeyTypesAndSigningAlgosAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"platforms\",\"type\":\"bytes32[]\"}],\"name\":\"SystemSupportedPlatformsAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"contractITeeExtensionStateVerifier\",\"name\":\"teeExtensionStateVerifier\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"teeExtensionInstructionsSender\",\"type\":\"address\"}],\"name\":\"TeeExtensionContractsSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"TeeExtensionRegistered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"version\",\"type\":\"string\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"platforms\",\"type\":\"bytes32[]\"}],\"name\":\"TeeVersionAdded\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32[]\",\"name\":\"_keyTypes\",\"type\":\"bytes32[]\"}],\"name\":\"addSupportedKeyTypes\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_keyTypes\",\"type\":\"bytes32[]\"},{\"internalType\":\"bytes32[][]\",\"name\":\"_signingAlgosByKeyType\",\"type\":\"bytes32[][]\"}],\"name\":\"addSystemSupportedKeyTypesAndSigningAlgos\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_platforms\",\"type\":\"bytes32[]\"}],\"name\":\"addSystemSupportedPlatforms\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_version\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32[]\",\"name\":\"_platforms\",\"type\":\"bytes32[]\"}],\"name\":\"addTeeVersion\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"confirmOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_platform\",\"type\":\"bytes32\"}],\"name\":\"disableCodeHashPlatform\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"}],\"name\":\"getCodeHashInfo\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"_version\",\"type\":\"string\"},{\"internalType\":\"bytes32[]\",\"name\":\"_platforms\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getExtensionOperator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getExtensionOwner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getSupportedCodeHashes\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_supportedCodeHashes\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getSupportedKeyTypes\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_supportedKeyTypes\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSystemSupportedKeyTypes\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSystemSupportedPlatforms\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_keyType\",\"type\":\"bytes32\"}],\"name\":\"getSystemSupportedSigningAlgos\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getTeeExtensionInstructionsSender\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getTeeExtensionStateVerifier\",\"outputs\":[{\"internalType\":\"contractITeeExtensionStateVerifier\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_platform\",\"type\":\"bytes32\"}],\"name\":\"isCodeHashPlatformDisabled\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_platform\",\"type\":\"bytes32\"}],\"name\":\"isCodeHashPlatformSupported\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_keyType\",\"type\":\"bytes32\"}],\"name\":\"isKeyTypeSupported\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_keyType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_signingAlgo\",\"type\":\"bytes32\"}],\"name\":\"isSigningAlgoSupported\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nextPublicExtensionId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_newOwner\",\"type\":\"address\"}],\"name\":\"proposeNewOwner\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractITeeExtensionStateVerifier\",\"name\":\"_teeExtensionStateVerifier\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_teeExtensionInstructionsSender\",\"type\":\"address\"}],\"name\":\"register\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"registerReserved\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32[]\",\"name\":\"_keyTypes\",\"type\":\"bytes32[]\"}],\"name\":\"removeSupportedKeyTypes\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"contractITeeExtensionStateVerifier\",\"name\":\"_teeExtensionStateVerifier\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_teeExtensionInstructionsSender\",\"type\":\"address\"}],\"name\":\"setExtensionContracts\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"}],\"name\":\"setExtensionOperator\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // ExtensionManagerABI is the input ABI used to generate the binding from.
@@ -182,27 +182,24 @@ func (_ExtensionManager *ExtensionManagerTransactorRaw) Transact(opts *bind.Tran
 
 // GetCodeHashInfo is a free data retrieval call binding the contract method 0x62672305.
 //
-// Solidity: function getCodeHashInfo(uint256 _extensionId, bytes32 _codeHash) view returns(bytes32 _governanceHash, string _version, bytes32[] _platforms)
+// Solidity: function getCodeHashInfo(uint256 _extensionId, bytes32 _codeHash) view returns(string _version, bytes32[] _platforms)
 func (_ExtensionManager *ExtensionManagerCaller) GetCodeHashInfo(opts *bind.CallOpts, _extensionId *big.Int, _codeHash [32]byte) (struct {
-	GovernanceHash [32]byte
-	Version        string
-	Platforms      [][32]byte
+	Version   string
+	Platforms [][32]byte
 }, error) {
 	var out []interface{}
 	err := _ExtensionManager.contract.Call(opts, &out, "getCodeHashInfo", _extensionId, _codeHash)
 
 	outstruct := new(struct {
-		GovernanceHash [32]byte
-		Version        string
-		Platforms      [][32]byte
+		Version   string
+		Platforms [][32]byte
 	})
 	if err != nil {
 		return *outstruct, err
 	}
 
-	outstruct.GovernanceHash = *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
-	outstruct.Version = *abi.ConvertType(out[1], new(string)).(*string)
-	outstruct.Platforms = *abi.ConvertType(out[2], new([][32]byte)).(*[][32]byte)
+	outstruct.Version = *abi.ConvertType(out[0], new(string)).(*string)
+	outstruct.Platforms = *abi.ConvertType(out[1], new([][32]byte)).(*[][32]byte)
 
 	return *outstruct, err
 
@@ -210,24 +207,53 @@ func (_ExtensionManager *ExtensionManagerCaller) GetCodeHashInfo(opts *bind.Call
 
 // GetCodeHashInfo is a free data retrieval call binding the contract method 0x62672305.
 //
-// Solidity: function getCodeHashInfo(uint256 _extensionId, bytes32 _codeHash) view returns(bytes32 _governanceHash, string _version, bytes32[] _platforms)
+// Solidity: function getCodeHashInfo(uint256 _extensionId, bytes32 _codeHash) view returns(string _version, bytes32[] _platforms)
 func (_ExtensionManager *ExtensionManagerSession) GetCodeHashInfo(_extensionId *big.Int, _codeHash [32]byte) (struct {
-	GovernanceHash [32]byte
-	Version        string
-	Platforms      [][32]byte
+	Version   string
+	Platforms [][32]byte
 }, error) {
 	return _ExtensionManager.Contract.GetCodeHashInfo(&_ExtensionManager.CallOpts, _extensionId, _codeHash)
 }
 
 // GetCodeHashInfo is a free data retrieval call binding the contract method 0x62672305.
 //
-// Solidity: function getCodeHashInfo(uint256 _extensionId, bytes32 _codeHash) view returns(bytes32 _governanceHash, string _version, bytes32[] _platforms)
+// Solidity: function getCodeHashInfo(uint256 _extensionId, bytes32 _codeHash) view returns(string _version, bytes32[] _platforms)
 func (_ExtensionManager *ExtensionManagerCallerSession) GetCodeHashInfo(_extensionId *big.Int, _codeHash [32]byte) (struct {
-	GovernanceHash [32]byte
-	Version        string
-	Platforms      [][32]byte
+	Version   string
+	Platforms [][32]byte
 }, error) {
 	return _ExtensionManager.Contract.GetCodeHashInfo(&_ExtensionManager.CallOpts, _extensionId, _codeHash)
+}
+
+// GetExtensionOperator is a free data retrieval call binding the contract method 0xb69caaca.
+//
+// Solidity: function getExtensionOperator(uint256 _extensionId) view returns(address)
+func (_ExtensionManager *ExtensionManagerCaller) GetExtensionOperator(opts *bind.CallOpts, _extensionId *big.Int) (common.Address, error) {
+	var out []interface{}
+	err := _ExtensionManager.contract.Call(opts, &out, "getExtensionOperator", _extensionId)
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// GetExtensionOperator is a free data retrieval call binding the contract method 0xb69caaca.
+//
+// Solidity: function getExtensionOperator(uint256 _extensionId) view returns(address)
+func (_ExtensionManager *ExtensionManagerSession) GetExtensionOperator(_extensionId *big.Int) (common.Address, error) {
+	return _ExtensionManager.Contract.GetExtensionOperator(&_ExtensionManager.CallOpts, _extensionId)
+}
+
+// GetExtensionOperator is a free data retrieval call binding the contract method 0xb69caaca.
+//
+// Solidity: function getExtensionOperator(uint256 _extensionId) view returns(address)
+func (_ExtensionManager *ExtensionManagerCallerSession) GetExtensionOperator(_extensionId *big.Int) (common.Address, error) {
+	return _ExtensionManager.Contract.GetExtensionOperator(&_ExtensionManager.CallOpts, _extensionId)
 }
 
 // GetExtensionOwner is a free data retrieval call binding the contract method 0x5e46e380.
@@ -478,37 +504,6 @@ func (_ExtensionManager *ExtensionManagerCallerSession) GetTeeExtensionStateVeri
 	return _ExtensionManager.Contract.GetTeeExtensionStateVerifier(&_ExtensionManager.CallOpts, _extensionId)
 }
 
-// GetTeeGovernanceHash is a free data retrieval call binding the contract method 0x9f300b9b.
-//
-// Solidity: function getTeeGovernanceHash(uint256 _extensionId, bytes32 _codeHash) view returns(bytes32)
-func (_ExtensionManager *ExtensionManagerCaller) GetTeeGovernanceHash(opts *bind.CallOpts, _extensionId *big.Int, _codeHash [32]byte) ([32]byte, error) {
-	var out []interface{}
-	err := _ExtensionManager.contract.Call(opts, &out, "getTeeGovernanceHash", _extensionId, _codeHash)
-
-	if err != nil {
-		return *new([32]byte), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
-
-	return out0, err
-
-}
-
-// GetTeeGovernanceHash is a free data retrieval call binding the contract method 0x9f300b9b.
-//
-// Solidity: function getTeeGovernanceHash(uint256 _extensionId, bytes32 _codeHash) view returns(bytes32)
-func (_ExtensionManager *ExtensionManagerSession) GetTeeGovernanceHash(_extensionId *big.Int, _codeHash [32]byte) ([32]byte, error) {
-	return _ExtensionManager.Contract.GetTeeGovernanceHash(&_ExtensionManager.CallOpts, _extensionId, _codeHash)
-}
-
-// GetTeeGovernanceHash is a free data retrieval call binding the contract method 0x9f300b9b.
-//
-// Solidity: function getTeeGovernanceHash(uint256 _extensionId, bytes32 _codeHash) view returns(bytes32)
-func (_ExtensionManager *ExtensionManagerCallerSession) GetTeeGovernanceHash(_extensionId *big.Int, _codeHash [32]byte) ([32]byte, error) {
-	return _ExtensionManager.Contract.GetTeeGovernanceHash(&_ExtensionManager.CallOpts, _extensionId, _codeHash)
-}
-
 // IsCodeHashPlatformDisabled is a free data retrieval call binding the contract method 0x2a19c98e.
 //
 // Solidity: function isCodeHashPlatformDisabled(uint256 _extensionId, bytes32 _codeHash, bytes32 _platform) view returns(bool)
@@ -727,25 +722,25 @@ func (_ExtensionManager *ExtensionManagerTransactorSession) AddSystemSupportedPl
 	return _ExtensionManager.Contract.AddSystemSupportedPlatforms(&_ExtensionManager.TransactOpts, _platforms)
 }
 
-// AddTeeVersion is a paid mutator transaction binding the contract method 0x65b771f7.
+// AddTeeVersion is a paid mutator transaction binding the contract method 0x45d6c0da.
 //
-// Solidity: function addTeeVersion(uint256 _extensionId, string _version, bytes32 _codeHash, bytes32[] _platforms, bytes32 _governanceHash) returns()
-func (_ExtensionManager *ExtensionManagerTransactor) AddTeeVersion(opts *bind.TransactOpts, _extensionId *big.Int, _version string, _codeHash [32]byte, _platforms [][32]byte, _governanceHash [32]byte) (*types.Transaction, error) {
-	return _ExtensionManager.contract.Transact(opts, "addTeeVersion", _extensionId, _version, _codeHash, _platforms, _governanceHash)
+// Solidity: function addTeeVersion(uint256 _extensionId, string _version, bytes32 _codeHash, bytes32[] _platforms) returns()
+func (_ExtensionManager *ExtensionManagerTransactor) AddTeeVersion(opts *bind.TransactOpts, _extensionId *big.Int, _version string, _codeHash [32]byte, _platforms [][32]byte) (*types.Transaction, error) {
+	return _ExtensionManager.contract.Transact(opts, "addTeeVersion", _extensionId, _version, _codeHash, _platforms)
 }
 
-// AddTeeVersion is a paid mutator transaction binding the contract method 0x65b771f7.
+// AddTeeVersion is a paid mutator transaction binding the contract method 0x45d6c0da.
 //
-// Solidity: function addTeeVersion(uint256 _extensionId, string _version, bytes32 _codeHash, bytes32[] _platforms, bytes32 _governanceHash) returns()
-func (_ExtensionManager *ExtensionManagerSession) AddTeeVersion(_extensionId *big.Int, _version string, _codeHash [32]byte, _platforms [][32]byte, _governanceHash [32]byte) (*types.Transaction, error) {
-	return _ExtensionManager.Contract.AddTeeVersion(&_ExtensionManager.TransactOpts, _extensionId, _version, _codeHash, _platforms, _governanceHash)
+// Solidity: function addTeeVersion(uint256 _extensionId, string _version, bytes32 _codeHash, bytes32[] _platforms) returns()
+func (_ExtensionManager *ExtensionManagerSession) AddTeeVersion(_extensionId *big.Int, _version string, _codeHash [32]byte, _platforms [][32]byte) (*types.Transaction, error) {
+	return _ExtensionManager.Contract.AddTeeVersion(&_ExtensionManager.TransactOpts, _extensionId, _version, _codeHash, _platforms)
 }
 
-// AddTeeVersion is a paid mutator transaction binding the contract method 0x65b771f7.
+// AddTeeVersion is a paid mutator transaction binding the contract method 0x45d6c0da.
 //
-// Solidity: function addTeeVersion(uint256 _extensionId, string _version, bytes32 _codeHash, bytes32[] _platforms, bytes32 _governanceHash) returns()
-func (_ExtensionManager *ExtensionManagerTransactorSession) AddTeeVersion(_extensionId *big.Int, _version string, _codeHash [32]byte, _platforms [][32]byte, _governanceHash [32]byte) (*types.Transaction, error) {
-	return _ExtensionManager.Contract.AddTeeVersion(&_ExtensionManager.TransactOpts, _extensionId, _version, _codeHash, _platforms, _governanceHash)
+// Solidity: function addTeeVersion(uint256 _extensionId, string _version, bytes32 _codeHash, bytes32[] _platforms) returns()
+func (_ExtensionManager *ExtensionManagerTransactorSession) AddTeeVersion(_extensionId *big.Int, _version string, _codeHash [32]byte, _platforms [][32]byte) (*types.Transaction, error) {
+	return _ExtensionManager.Contract.AddTeeVersion(&_ExtensionManager.TransactOpts, _extensionId, _version, _codeHash, _platforms)
 }
 
 // ConfirmOwnership is a paid mutator transaction binding the contract method 0x290fbb03.
@@ -893,6 +888,27 @@ func (_ExtensionManager *ExtensionManagerSession) SetExtensionContracts(_extensi
 // Solidity: function setExtensionContracts(uint256 _extensionId, address _teeExtensionStateVerifier, address _teeExtensionInstructionsSender) returns()
 func (_ExtensionManager *ExtensionManagerTransactorSession) SetExtensionContracts(_extensionId *big.Int, _teeExtensionStateVerifier common.Address, _teeExtensionInstructionsSender common.Address) (*types.Transaction, error) {
 	return _ExtensionManager.Contract.SetExtensionContracts(&_ExtensionManager.TransactOpts, _extensionId, _teeExtensionStateVerifier, _teeExtensionInstructionsSender)
+}
+
+// SetExtensionOperator is a paid mutator transaction binding the contract method 0x868843b9.
+//
+// Solidity: function setExtensionOperator(uint256 _extensionId, address _operator) returns()
+func (_ExtensionManager *ExtensionManagerTransactor) SetExtensionOperator(opts *bind.TransactOpts, _extensionId *big.Int, _operator common.Address) (*types.Transaction, error) {
+	return _ExtensionManager.contract.Transact(opts, "setExtensionOperator", _extensionId, _operator)
+}
+
+// SetExtensionOperator is a paid mutator transaction binding the contract method 0x868843b9.
+//
+// Solidity: function setExtensionOperator(uint256 _extensionId, address _operator) returns()
+func (_ExtensionManager *ExtensionManagerSession) SetExtensionOperator(_extensionId *big.Int, _operator common.Address) (*types.Transaction, error) {
+	return _ExtensionManager.Contract.SetExtensionOperator(&_ExtensionManager.TransactOpts, _extensionId, _operator)
+}
+
+// SetExtensionOperator is a paid mutator transaction binding the contract method 0x868843b9.
+//
+// Solidity: function setExtensionOperator(uint256 _extensionId, address _operator) returns()
+func (_ExtensionManager *ExtensionManagerTransactorSession) SetExtensionOperator(_extensionId *big.Int, _operator common.Address) (*types.Transaction, error) {
+	return _ExtensionManager.Contract.SetExtensionOperator(&_ExtensionManager.TransactOpts, _extensionId, _operator)
 }
 
 // ExtensionManagerCodeHashPlatformDisabledIterator is returned from FilterCodeHashPlatformDisabled and is used to iterate over the raw logs and unpacked data for CodeHashPlatformDisabled events raised by the ExtensionManager contract.
@@ -1051,6 +1067,168 @@ func (_ExtensionManager *ExtensionManagerFilterer) WatchCodeHashPlatformDisabled
 func (_ExtensionManager *ExtensionManagerFilterer) ParseCodeHashPlatformDisabled(log types.Log) (*ExtensionManagerCodeHashPlatformDisabled, error) {
 	event := new(ExtensionManagerCodeHashPlatformDisabled)
 	if err := _ExtensionManager.contract.UnpackLog(event, "CodeHashPlatformDisabled", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// ExtensionManagerExtensionOperatorSetIterator is returned from FilterExtensionOperatorSet and is used to iterate over the raw logs and unpacked data for ExtensionOperatorSet events raised by the ExtensionManager contract.
+type ExtensionManagerExtensionOperatorSetIterator struct {
+	Event *ExtensionManagerExtensionOperatorSet // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *ExtensionManagerExtensionOperatorSetIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(ExtensionManagerExtensionOperatorSet)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(ExtensionManagerExtensionOperatorSet)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *ExtensionManagerExtensionOperatorSetIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *ExtensionManagerExtensionOperatorSetIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// ExtensionManagerExtensionOperatorSet represents a ExtensionOperatorSet event raised by the ExtensionManager contract.
+type ExtensionManagerExtensionOperatorSet struct {
+	ExtensionId *big.Int
+	OldOperator common.Address
+	NewOperator common.Address
+	Raw         types.Log // Blockchain specific contextual infos
+}
+
+// FilterExtensionOperatorSet is a free log retrieval operation binding the contract event 0xb77f1ac9c5126ae326ea54af75b1240e4353002c10c5cfb2b9244b8e5d356e78.
+//
+// Solidity: event ExtensionOperatorSet(uint256 indexed extensionId, address indexed oldOperator, address indexed newOperator)
+func (_ExtensionManager *ExtensionManagerFilterer) FilterExtensionOperatorSet(opts *bind.FilterOpts, extensionId []*big.Int, oldOperator []common.Address, newOperator []common.Address) (*ExtensionManagerExtensionOperatorSetIterator, error) {
+
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+	var oldOperatorRule []interface{}
+	for _, oldOperatorItem := range oldOperator {
+		oldOperatorRule = append(oldOperatorRule, oldOperatorItem)
+	}
+	var newOperatorRule []interface{}
+	for _, newOperatorItem := range newOperator {
+		newOperatorRule = append(newOperatorRule, newOperatorItem)
+	}
+
+	logs, sub, err := _ExtensionManager.contract.FilterLogs(opts, "ExtensionOperatorSet", extensionIdRule, oldOperatorRule, newOperatorRule)
+	if err != nil {
+		return nil, err
+	}
+	return &ExtensionManagerExtensionOperatorSetIterator{contract: _ExtensionManager.contract, event: "ExtensionOperatorSet", logs: logs, sub: sub}, nil
+}
+
+// WatchExtensionOperatorSet is a free log subscription operation binding the contract event 0xb77f1ac9c5126ae326ea54af75b1240e4353002c10c5cfb2b9244b8e5d356e78.
+//
+// Solidity: event ExtensionOperatorSet(uint256 indexed extensionId, address indexed oldOperator, address indexed newOperator)
+func (_ExtensionManager *ExtensionManagerFilterer) WatchExtensionOperatorSet(opts *bind.WatchOpts, sink chan<- *ExtensionManagerExtensionOperatorSet, extensionId []*big.Int, oldOperator []common.Address, newOperator []common.Address) (event.Subscription, error) {
+
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+	var oldOperatorRule []interface{}
+	for _, oldOperatorItem := range oldOperator {
+		oldOperatorRule = append(oldOperatorRule, oldOperatorItem)
+	}
+	var newOperatorRule []interface{}
+	for _, newOperatorItem := range newOperator {
+		newOperatorRule = append(newOperatorRule, newOperatorItem)
+	}
+
+	logs, sub, err := _ExtensionManager.contract.WatchLogs(opts, "ExtensionOperatorSet", extensionIdRule, oldOperatorRule, newOperatorRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(ExtensionManagerExtensionOperatorSet)
+				if err := _ExtensionManager.contract.UnpackLog(event, "ExtensionOperatorSet", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseExtensionOperatorSet is a log parse operation binding the contract event 0xb77f1ac9c5126ae326ea54af75b1240e4353002c10c5cfb2b9244b8e5d356e78.
+//
+// Solidity: event ExtensionOperatorSet(uint256 indexed extensionId, address indexed oldOperator, address indexed newOperator)
+func (_ExtensionManager *ExtensionManagerFilterer) ParseExtensionOperatorSet(log types.Log) (*ExtensionManagerExtensionOperatorSet, error) {
+	event := new(ExtensionManagerExtensionOperatorSet)
+	if err := _ExtensionManager.contract.UnpackLog(event, "ExtensionOperatorSet", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
@@ -2585,17 +2763,16 @@ func (it *ExtensionManagerTeeVersionAddedIterator) Close() error {
 
 // ExtensionManagerTeeVersionAdded represents a TeeVersionAdded event raised by the ExtensionManager contract.
 type ExtensionManagerTeeVersionAdded struct {
-	ExtensionId    *big.Int
-	Version        string
-	CodeHash       [32]byte
-	Platforms      [][32]byte
-	GovernanceHash [32]byte
-	Raw            types.Log // Blockchain specific contextual infos
+	ExtensionId *big.Int
+	Version     string
+	CodeHash    [32]byte
+	Platforms   [][32]byte
+	Raw         types.Log // Blockchain specific contextual infos
 }
 
-// FilterTeeVersionAdded is a free log retrieval operation binding the contract event 0x22e0033da6f945065ea0809d45dd72ddcd4cee1f5e8296c9bde27e59d99490b8.
+// FilterTeeVersionAdded is a free log retrieval operation binding the contract event 0xed45dbd9e42b8708db688f58c954a39dbe9f1d41252a0b5e45ef26291130139e.
 //
-// Solidity: event TeeVersionAdded(uint256 indexed extensionId, string version, bytes32 indexed codeHash, bytes32[] platforms, bytes32 governanceHash)
+// Solidity: event TeeVersionAdded(uint256 indexed extensionId, string version, bytes32 indexed codeHash, bytes32[] platforms)
 func (_ExtensionManager *ExtensionManagerFilterer) FilterTeeVersionAdded(opts *bind.FilterOpts, extensionId []*big.Int, codeHash [][32]byte) (*ExtensionManagerTeeVersionAddedIterator, error) {
 
 	var extensionIdRule []interface{}
@@ -2615,9 +2792,9 @@ func (_ExtensionManager *ExtensionManagerFilterer) FilterTeeVersionAdded(opts *b
 	return &ExtensionManagerTeeVersionAddedIterator{contract: _ExtensionManager.contract, event: "TeeVersionAdded", logs: logs, sub: sub}, nil
 }
 
-// WatchTeeVersionAdded is a free log subscription operation binding the contract event 0x22e0033da6f945065ea0809d45dd72ddcd4cee1f5e8296c9bde27e59d99490b8.
+// WatchTeeVersionAdded is a free log subscription operation binding the contract event 0xed45dbd9e42b8708db688f58c954a39dbe9f1d41252a0b5e45ef26291130139e.
 //
-// Solidity: event TeeVersionAdded(uint256 indexed extensionId, string version, bytes32 indexed codeHash, bytes32[] platforms, bytes32 governanceHash)
+// Solidity: event TeeVersionAdded(uint256 indexed extensionId, string version, bytes32 indexed codeHash, bytes32[] platforms)
 func (_ExtensionManager *ExtensionManagerFilterer) WatchTeeVersionAdded(opts *bind.WatchOpts, sink chan<- *ExtensionManagerTeeVersionAdded, extensionId []*big.Int, codeHash [][32]byte) (event.Subscription, error) {
 
 	var extensionIdRule []interface{}
@@ -2662,9 +2839,9 @@ func (_ExtensionManager *ExtensionManagerFilterer) WatchTeeVersionAdded(opts *bi
 	}), nil
 }
 
-// ParseTeeVersionAdded is a log parse operation binding the contract event 0x22e0033da6f945065ea0809d45dd72ddcd4cee1f5e8296c9bde27e59d99490b8.
+// ParseTeeVersionAdded is a log parse operation binding the contract event 0xed45dbd9e42b8708db688f58c954a39dbe9f1d41252a0b5e45ef26291130139e.
 //
-// Solidity: event TeeVersionAdded(uint256 indexed extensionId, string version, bytes32 indexed codeHash, bytes32[] platforms, bytes32 governanceHash)
+// Solidity: event TeeVersionAdded(uint256 indexed extensionId, string version, bytes32 indexed codeHash, bytes32[] platforms)
 func (_ExtensionManager *ExtensionManagerFilterer) ParseTeeVersionAdded(log types.Log) (*ExtensionManagerTeeVersionAdded, error) {
 	event := new(ExtensionManagerTeeVersionAdded)
 	if err := _ExtensionManager.contract.UnpackLog(event, "TeeVersionAdded", log); err != nil {
