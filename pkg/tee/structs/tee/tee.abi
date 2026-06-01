@@ -4,6 +4,11 @@
       {
         "components": [
           {
+            "internalType": "uint256",
+            "name": "chainId",
+            "type": "uint256"
+          },
+          {
             "internalType": "bytes32",
             "name": "challenge",
             "type": "bytes32"
@@ -76,6 +81,16 @@
             "internalType": "uint64",
             "name": "teeTimestamp",
             "type": "uint64"
+          },
+          {
+            "internalType": "uint256",
+            "name": "machinePathListNonce",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "machinePathListHash",
+            "type": "bytes32"
           }
         ],
         "internalType": "struct TeeStructs.Attestation",
@@ -92,11 +107,6 @@
     "inputs": [
       {
         "components": [
-          {
-            "internalType": "uint256",
-            "name": "chainId",
-            "type": "uint256"
-          },
           {
             "internalType": "bytes32",
             "name": "instructionId",

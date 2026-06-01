@@ -39,6 +39,11 @@
             "internalType": "struct PublicKey",
             "name": "publicKey",
             "type": "tuple"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "governanceHash",
+            "type": "bytes32"
           }
         ],
         "internalType": "struct IMachineManager.TeeMachineData",

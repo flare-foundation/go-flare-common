@@ -37,6 +37,17 @@
     "type": "error"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "teeId",
+        "type": "address"
+      }
+    ],
+    "name": "GovernanceHashZero",
+    "type": "error"
+  },
+  {
     "inputs": [],
     "name": "InvalidMachinePath",
     "type": "error"
@@ -83,7 +94,7 @@
   },
   {
     "inputs": [],
-    "name": "OnlyExtensionOwner",
+    "name": "OnlyExtensionOwnerOrOperator",
     "type": "error"
   },
   {
@@ -98,7 +109,7 @@
   },
   {
     "inputs": [],
-    "name": "TeeIdNotEligible",
+    "name": "TeeNotFound",
     "type": "error"
   },
   {

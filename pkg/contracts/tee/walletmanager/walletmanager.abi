@@ -261,6 +261,11 @@
   },
   {
     "inputs": [],
+    "name": "OnlyExtensionOwnerOrOperator",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "OnlyOwner",
     "type": "error"
   },

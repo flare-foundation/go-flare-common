@@ -64,11 +64,6 @@
             "internalType": "address",
             "name": "initialTeeId",
             "type": "address"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "teeGovernanceHash",
-            "type": "bytes32"
           }
         ],
         "internalType": "struct ISystemStateVerifier.TeeSystemState",
