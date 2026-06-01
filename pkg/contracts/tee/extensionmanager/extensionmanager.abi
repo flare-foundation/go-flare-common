@@ -608,9 +608,9 @@
       },
       {
         "indexed": false,
-        "internalType": "string",
+        "internalType": "bytes32",
         "name": "version",
-        "type": "string"
+        "type": "bytes32"
       },
       {
         "indexed": true,
@@ -685,9 +685,9 @@
         "type": "uint256"
       },
       {
-        "internalType": "string",
+        "internalType": "bytes32",
         "name": "_version",
-        "type": "string"
+        "type": "bytes32"
       },
       {
         "internalType": "bytes32",
@@ -757,9 +757,9 @@
     "name": "getCodeHashInfo",
     "outputs": [
       {
-        "internalType": "string",
+        "internalType": "bytes32",
         "name": "_version",
-        "type": "string"
+        "type": "bytes32"
       },
       {
         "internalType": "bytes32[]",
