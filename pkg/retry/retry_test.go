@@ -128,6 +128,18 @@ func TestExecuteWithRetry(t *testing.T) {
 	}
 }
 
+// TestExecutePreservesLastValueOnExhaustion verifies that Value holds the last
+// attempt's value when all attempts fail, rather than the zero value.
+func TestExecutePreservesLastValueOnExhaustion(t *testing.T) {
+	f := func() (int, error) {
+		return 42, errRetry
+	}
+	res := Execute(t.Context(), f, Params{MaxAttempts: 3})
+	require.False(t, res.Success)
+	require.Error(t, res.Err)
+	require.Equal(t, 42, res.Value)
+}
+
 func TestIngrainAttempt(t *testing.T) {
 	identity := func(i int) (int, error) {
 		return i, nil

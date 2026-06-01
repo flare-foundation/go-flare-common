@@ -175,12 +175,8 @@ func executeWithRetry[T any](
 		r   Response[T]
 		err error
 	}
-	// retry.Execute keeps Value only from the successful attempt, so on
-	// exhaustion the last Response (and its Status) would be lost; capture it.
-	var last Response[T]
 	wrapped := func() (result, error) {
 		r, err := fn()
-		last = r
 		if err == nil {
 			return result{r: r}, nil
 		}
@@ -192,12 +188,11 @@ func executeWithRetry[T any](
 		}
 		return result{r: r}, err
 	}
+	// retry.Execute keeps Value from the last attempt, so on exhaustion res.Value.r
+	// still holds the final Response (and its Status).
 	res := retry.Execute(ctx, wrapped, rp)
 	if res.Value.err != nil {
 		return res.Value.r, res.Value.err
 	}
-	if res.Success {
-		return res.Value.r, res.Err
-	}
-	return last, res.Err
+	return res.Value.r, res.Err
 }
