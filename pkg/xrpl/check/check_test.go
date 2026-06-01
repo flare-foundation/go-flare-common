@@ -181,7 +181,7 @@ func TestCheck(t *testing.T) {
 		require.NoError(t, info.Check(1, []string{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW"}))
 	})
 
-	// M11: non-validated responses must be rejected so a rolled-back signer
+	// non-validated responses must be rejected so a rolled-back signer
 	// list cannot drive a quorum decision.
 	t.Run("non-validated response rejected", func(t *testing.T) {
 		info := AccountInfoResponse{

@@ -87,7 +87,7 @@ func TestPrivateKeyFromSecret(t *testing.T) {
 	require.Error(t, err)
 }
 
-// TestPrivKeyFromSecretRejectsNonCanonicalLength covers audit finding H5:
+// TestPrivKeyFromSecretRejectsNonCanonicalLength verifies that
 // only the canonical xrpl.js shape (3-byte prefix + 16-byte seed + 4-byte
 // checksum = 23 bytes) is accepted. Other lengths with valid prefix and
 // checksum produce non-canonical keys that won't interoperate with rippled
@@ -195,8 +195,8 @@ func TestValidateRejectsWrongPrefix(t *testing.T) {
 	require.Error(t, err)
 }
 
-// TestValidateEmptyPubKey covers audit finding H4: an empty hex-decoded
-// pubkey previously panicked at pubBytes[0] before the length check fired.
+// TestValidateEmptyPubKey verifies that an empty hex-decoded
+// pubkey does not panic at pubBytes[0] before the length check fires.
 func TestValidateEmptyPubKey(t *testing.T) {
 	_, priv, err := ed25519.GenerateKey(nil)
 	require.NoError(t, err)

@@ -7,10 +7,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// TestNopPanicAndFatalTerminate covers audit finding F-LOG-2: Nop.Panic and
-// Nop.Fatal previously returned silently, breaking the terminating-call
+// TestNopPanicAndFatalTerminate verifies that Nop.Panic and Nop.Fatal do not
+// return silently, which would break the terminating-call
 // contract that downstream code (e.g., logger.Fatal("invariant"); return ok)
-// relies on. They must now panic so the call does not return.
+// relies on. They must panic so the call does not return.
 func TestNopPanicAndFatalTerminate(t *testing.T) {
 	require.PanicsWithValue(t, "boom", func() { Nop{}.Panic("boom") })
 	require.PanicsWithValue(t, "boom 42", func() { Nop{}.Panicf("boom %d", 42) })
@@ -18,8 +18,8 @@ func TestNopPanicAndFatalTerminate(t *testing.T) {
 	require.PanicsWithValue(t, "boom 42", func() { Nop{}.Fatalf("boom %d", 42) })
 }
 
-// TestSetInvalidLevelFallsBackToDebug covers audit finding F-LOG-1: an
-// unrecognised Config.Level used to return the zero-value zapcore.Level
+// TestSetInvalidLevelFallsBackToDebug verifies that an unrecognised
+// Config.Level does not return the zero-value zapcore.Level
 // (InfoLevel), silently downgrading DEBUG callers to INFO. The fix falls
 // back to DEBUG so debug messages stay visible and the operator-facing
 // error log itself is guaranteed to surface.
@@ -31,8 +31,8 @@ func TestSetInvalidLevelFallsBackToDebug(t *testing.T) {
 	require.NotNil(t, Logger())
 }
 
-// TestSetConcurrentWithLogger covers audit Low 11e: Set must be safe to call
-// concurrently with the logging convenience functions and Logger().
+// TestSetConcurrentWithLogger verifies that Set is safe to call concurrently
+// with the logging convenience functions and Logger().
 func TestSetConcurrentWithLogger(t *testing.T) {
 	require.NotNil(t, Logger())
 

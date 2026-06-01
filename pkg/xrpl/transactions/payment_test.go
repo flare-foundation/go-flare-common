@@ -243,7 +243,7 @@ func TestCheckAndEncodePaymentOptionalFields(t *testing.T) {
 	}
 }
 
-// TestCheckAndEncodePaymentMissingCommonRequiredFields covers audit finding M4:
+// TestCheckAndEncodePaymentMissingCommonRequiredFields verifies that
 // rippled TxFormats.cpp marks Sequence and SigningPubKey as soeREQUIRED;
 // CheckAndEncodePayment now enforces presence so a structurally incomplete
 // transaction cannot survive validation. SigningPubKey == "" is acceptable
@@ -412,7 +412,7 @@ func TestCheckAndEncodePaymentRejectsOversizeMemos(t *testing.T) {
 	require.Contains(t, err.Error(), "memos exceed")
 }
 
-// TestCheckAndEncodePaymentRejectsMalformedMemo covers audit finding H6:
+// TestCheckAndEncodePaymentRejectsMalformedMemo verifies that
 // the recently-aligned ValidateMemo (rippled's isMemoOkay) must fire from
 // the entrypoint. Previously the entrypoint never walked Memos, so a memo
 // with MemoType bytes outside the RFC 3986 URL set encoded successfully and

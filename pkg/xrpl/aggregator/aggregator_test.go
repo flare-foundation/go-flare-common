@@ -95,9 +95,9 @@ func TestAddSignaturesFull(t *testing.T) {
 	require.Equal(t, expectedBlobByte, txBlob)
 }
 
-// TestAddSignaturesConcurrent covers audit finding F-AGG-3: AddSignatures
-// and Finalize previously mutated Account.txs / tx.signers / tx.quorumReached
-// without any synchronization. With go test -race this must not flag a data
+// TestAddSignaturesConcurrent verifies that concurrent AddSignatures
+// and Finalize calls synchronize access to Account.txs / tx.signers /
+// tx.quorumReached. With go test -race this must not flag a data
 // race and the final state must be consistent: the tx exists, holds both
 // signers, and dispatch fired exactly once (the first goroutine to push the
 // summed weight past Quorum).
@@ -149,7 +149,7 @@ func TestAddSignaturesConcurrent(t *testing.T) {
 	require.NotEmpty(t, finalBlob)
 }
 
-// TestAddSignaturesLazyInit covers audit finding F-AGG-4: callers that built
+// TestAddSignaturesLazyInit verifies that callers that built
 // an Account via struct literal (without setting the private txs field)
 // previously hit a nil-map write on the first AddSignatures call. The lazy
 // init under the mutex must keep that path safe.
@@ -171,7 +171,7 @@ func TestAddSignaturesLazyInit(t *testing.T) {
 	require.True(t, dispatch)
 }
 
-// TestFinalizeWeightedQuorum covers audit finding F-AGG-1: Quorum is a
+// TestFinalizeWeightedQuorum verifies that Quorum is a
 // summed-weight threshold (rippled STTx::checkMultiSign), not a count.
 // Previously Finalize passed int(a.Quorum) to sort() as the required
 // signer count, so a weighted multisig where a single weight-2 signer
@@ -204,8 +204,8 @@ func TestFinalizeWeightedQuorum(t *testing.T) {
 }
 
 // TestAddSignaturesInvalidSignature verifies that a signer with a tampered signature is rejected.
-// JoinMultisig itself now refuses to assemble blobs with invalid signers
-// (audit M6), so we bypass it and encode the bad blob directly to exercise
+// JoinMultisig itself now refuses to assemble blobs with invalid signers,
+// so we bypass it and encode the bad blob directly to exercise
 // the receiver-side reject path in AddSignatures.
 func TestAddSignaturesInvalidSignature(t *testing.T) {
 	tx := buildTrustSetTx()
@@ -448,7 +448,7 @@ func TestAddSignaturesMissingAccount(t *testing.T) {
 	require.Error(t, err)
 }
 
-// TestAddSignaturesWeightedQuorum covers audit finding H9: the quorum check
+// TestAddSignaturesWeightedQuorum verifies that the quorum check
 // must sum SignerWeights, not count signers. Configure signer1 with weight 2
 // and signer2 with weight 1, quorum 2. signer1 alone reaches quorum;
 // signer2 alone does not.

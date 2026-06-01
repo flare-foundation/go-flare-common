@@ -65,16 +65,15 @@ type Policy struct {
 	// RequireCRL causes verification to fail closed when a certificate
 	// declares CRLDistributionPoints but the caller did not supply the
 	// corresponding x509.RevocationList. The default false keeps the
-	// pre-audit behavior (warn + skip), which is appropriate when CRLs are
+	// prior behavior (warn + skip), which is appropriate when CRLs are
 	// fetched out-of-band or when the leaf has no DPs (Confidential Space
-	// leaves typically don't). Audit finding M12.
+	// leaves typically don't).
 	RequireCRL bool
 
 	// AllowedLeafEKUs is the set of Extended Key Usage values the chain
 	// must authorize for the leaf certificate. Nil or empty falls back to
 	// the leaf's own declared ExtKeyUsage, which at least prevents the
-	// chain validator from accepting any EKU via ExtKeyUsageAny. Audit
-	// finding M13.
+	// chain validator from accepting any EKU via ExtKeyUsageAny.
 	AllowedLeafEKUs []x509.ExtKeyUsage
 
 	// AllowedImageIDs is the allowlist of acceptable workload container image IDs

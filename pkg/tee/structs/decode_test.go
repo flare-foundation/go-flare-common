@@ -356,11 +356,9 @@ func TestMismatchedStructs(t *testing.T) {
 	require.Error(t, err)
 }
 
-// TestDecodeToRejectsSubtleShapeMismatch covers audit finding H14: the
-// previous DecodeTo body wrapped dest in struct{X any}, defeating ABI
-// strict-shape verification — a destination with the right field count but
-// a wrong field type silently produced garbage. The strict implementation
-// must error on this.
+// TestDecodeToRejectsSubtleShapeMismatch verifies that DecodeTo errors
+// when a destination has the right field count but a wrong field type,
+// which strict ABI shape verification must reject.
 func TestDecodeToRejectsSubtleShapeMismatch(t *testing.T) {
 	abiJSON := `{
         "components": [

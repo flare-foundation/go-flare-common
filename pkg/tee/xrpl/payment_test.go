@@ -133,8 +133,8 @@ func TestPaymentTxFromInstructionNullifyRejectsNilMaxFee(t *testing.T) {
 
 // TestCheckNativePaymentRejectsIOUAmount verifies that CheckNativePayment rejects a Payment
 // whose Amount is an IOU issued-currency object rather than an XRP drops string.
-// TestPaymentTxFromInstructionRejects covers audit finding M15: the input
-// instruction must be checked up front. nil Amount panics; sender==recipient
+// TestPaymentTxFromInstructionRejects verifies that the input
+// instruction is checked up front. nil Amount panics; sender==recipient
 // is meaningless for native payments; non-empty TokenId means an issued
 // token, which this entrypoint does not support.
 func TestPaymentTxFromInstructionRejects(t *testing.T) {
@@ -324,11 +324,9 @@ func TestParseFeeEntriesMultiple(t *testing.T) {
 	require.Error(t, err)
 }
 
-// TestParseFeeEntryRejectsOutOfRangeTry covers audit finding F-TEEX-1:
-// the original guard computed (try+1)*4 and compared against len(schedule),
-// which let a negative try (with non-positive RHS) and a near-MaxInt try
-// (with the multiplication wrapping negative) past the check — the
-// subsequent slice on a negative bound panicked.
+// TestParseFeeEntryRejectsOutOfRangeTry verifies that ParseFeeEntry rejects
+// a negative try and a near-MaxInt try, both of which could slip past a
+// (try+1)*4 bound check and panic on a negative slice bound.
 func TestParseFeeEntryRejectsOutOfRangeTry(t *testing.T) {
 	schedule := []byte{0x00, 0x01, 0x00, 0x00, 0xEC, 0x78, 0x00, 0x3C}
 

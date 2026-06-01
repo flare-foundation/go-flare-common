@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// TestValidate covers audit M14: parsed instruction Data must reject
+// TestValidate verifies that parsed instruction Data rejects
 // oversize message bytes, broken cosigner threshold/uniqueness, and
 // unrecognized op type/command pairs before the values flow into a hash
 // or dispatch path.

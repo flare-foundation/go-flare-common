@@ -91,7 +91,7 @@ func TestAmountDecodeEncode(t *testing.T) {
 	}
 }
 
-// TestMPTReservedBitsRejected covers audit finding M3: rippled rejects any
+// TestMPTReservedBitsRejected verifies that rippled rejects any
 // MPT indicator byte with a reserved bit set. The decoder must too, or it
 // silently accepts blobs that wouldn't be valid on the ledger.
 func TestMPTReservedBitsRejected(t *testing.T) {

@@ -32,7 +32,7 @@ type Data struct {
 }
 
 // Validate enforces shape and policy invariants on an instruction parsed
-// from an on-chain event. Audit finding M14: untrusted size and field
+// from an on-chain event. Untrusted size and field
 // content must not flow into hash/dispatch paths unchecked.
 func (d *Data) Validate() error {
 	if err := d.DataFixed.Validate(); err != nil {

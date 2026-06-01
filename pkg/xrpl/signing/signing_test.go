@@ -99,8 +99,8 @@ func TestValidateMultiSigRoundTripED(t *testing.T) {
 	require.False(t, ok)
 }
 
-// TestValidateMultiSigShortPubKey covers audit finding H3: a malformed signer
-// with a sub-2-character SigningPubKey previously panicked at s.SigningPubKey[0:2].
+// TestValidateMultiSigShortPubKey verifies that a malformed signer
+// with a sub-2-character SigningPubKey does not panic at s.SigningPubKey[0:2].
 func TestValidateMultiSigShortPubKey(t *testing.T) {
 	tx := map[string]any{
 		"TransactionType": "TrustSet",

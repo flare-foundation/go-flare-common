@@ -676,7 +676,7 @@ func TestVerifyCRL(t *testing.T) {
 	})
 }
 
-// TestRequireCRLFailsClosed covers audit finding M12: when a certificate
+// TestRequireCRLFailsClosed verifies that when a certificate
 // declares CRLDistributionPoints and the caller did not provide a CRL,
 // Policy.RequireCRL forces verification to fail instead of warn-and-skip.
 func TestRequireCRLFailsClosed(t *testing.T) {
@@ -704,7 +704,7 @@ func TestRequireCRLFailsClosed(t *testing.T) {
 	})
 }
 
-// TestAllowedLeafEKUs covers audit finding M13: chain validation honors a
+// TestAllowedLeafEKUs verifies that chain validation honors a
 // caller-supplied AllowedLeafEKUs list instead of falling back to
 // ExtKeyUsageAny when the policy is unset and the leaf has no EKU.
 func TestAllowedLeafEKUs(t *testing.T) {

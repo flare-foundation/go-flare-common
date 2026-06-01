@@ -41,8 +41,8 @@ func TestVoterSetInitialization(t *testing.T) {
 	}
 }
 
-// TestNewSetRejectsDuplicate covers audit finding H19: NewSet must error
-// when the voters slice contains the same address twice. The signing policy
+// TestNewSetRejectsDuplicate verifies that NewSet errors when the voters
+// slice contains the same address twice. The signing policy
 // emitted by the smart contract is guaranteed not to contain duplicates, so
 // any duplicate here is corrupt input.
 func TestNewSetRejectsDuplicate(t *testing.T) {
@@ -65,9 +65,9 @@ func TestNewSetRejectsLengthMismatch(t *testing.T) {
 	require.Nil(t, vs)
 }
 
-// TestNewSetRejectsWeightOverflow covers audit finding F-POLICY-1: NewSet
-// previously summed weights into TotalWeight (uint16) with no overflow
-// check, relying on the "guaranteed by the smart contract" comment. A
+// TestNewSetRejectsWeightOverflow verifies that NewSet rejects a weight sum
+// that overflows TotalWeight (uint16) rather than relying on the "guaranteed
+// by the smart contract" comment. A
 // non-FromRawBytes caller (tests, tooling, future internal use) could
 // silently wrap the sum, leaving thresholds non-monotonic and producing
 // voter selections that disagree with the on-chain protocol.

@@ -490,7 +490,7 @@ func TestConfigs(t *testing.T) {
 	})
 }
 
-// TestAPIKeyHMACCompare covers audit finding H21: API-key comparison runs
+// TestAPIKeyHMACCompare verifies that API-key comparison runs
 // against HMAC digests with subtle.ConstantTimeCompare. The test exercises
 // the behavioural contract — correct keys accepted, wrong/empty keys
 // rejected, multiple configured keys all accepted — independent of timing.
@@ -562,10 +562,9 @@ func TestNewAPIKeysRejectsEmptyConfig(t *testing.T) {
 	require.Error(t, err)
 }
 
-// TestAssertLoopbackAddr covers audit finding H22: New() must reject any
+// TestAssertLoopbackAddr verifies that New() rejects any
 // configuration that would bind the signer outside loopback, because the
-// deferred C4/C5/C6 unbound-oracle findings rely on the signer being
-// reachable only from inside the host trust boundary.
+// signer must be reachable only from inside the host trust boundary.
 func TestAssertLoopbackAddr(t *testing.T) {
 	good := []string{
 		"127.0.0.1:0",
@@ -617,7 +616,7 @@ func TestNewRejectsNonLoopbackAddr(t *testing.T) {
 	require.Contains(t, err.Error(), "signer address")
 }
 
-// TestNewRejectsNilPrivateKey covers audit finding F-TEE-2: a nil
+// TestNewRejectsNilPrivateKey verifies that a nil
 // *ecdsa.PrivateKey used to pass New() and surface as a deref panic on
 // the first /sign or /id request — exposing the listener before the
 // crash. New must reject up front.

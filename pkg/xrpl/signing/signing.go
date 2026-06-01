@@ -54,8 +54,8 @@ func ValidateMultiSig(tx map[string]any, s *signer.Signer) (bool, error) {
 // JoinMultisig appends signers to the transaction and serializes the result.
 //
 // Every signer is checked: signature is verified against the for-signing form
-// of tx (M6), and the slice must be in canonical address order per rippled's
-// STTx::checkMultiSign (M9). Returns an error if any signer is invalid or
+// of tx, and the slice must be in canonical address order per rippled's
+// STTx::checkMultiSign. Returns an error if any signer is invalid or
 // the order is wrong.
 func JoinMultisig(tx map[string]any, signers []*signer.Signer) ([]byte, error) {
 	if err := validateSignersForJoin(tx, signers); err != nil {

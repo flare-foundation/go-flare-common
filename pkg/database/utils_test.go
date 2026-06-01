@@ -93,10 +93,10 @@ func InMemoryDB(t *testing.T, name string) (*gorm.DB, string) {
 	return db, dsn
 }
 
-// TestDoInTransactionPanicReturnsError covers audit finding H20: a panic
-// from inside an operation must not be silently swallowed. The caller must
-// see an error instead of a nil return that would otherwise be indistinguishable
-// from a committed transaction.
+// TestDoInTransactionPanicReturnsError verifies that a panic from inside an
+// operation is not silently swallowed. The caller must see an error instead
+// of a nil return that would otherwise be indistinguishable from a committed
+// transaction.
 func TestDoInTransactionPanicReturnsError(t *testing.T) {
 	db, _ := InMemoryDB(t, "do_in_transaction_panic")
 	sqlDB, err := db.DB()

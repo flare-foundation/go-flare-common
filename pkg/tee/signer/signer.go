@@ -114,9 +114,8 @@ func assertLoopbackAddr(addr string) error {
 // API key validation is performed for each request.
 //
 // cfg.Addr must be a host:port whose host portion resolves to a loopback
-// address (127.0.0.0/8 or ::1). This enforces the audit's H22 boundary: the
-// signer is a local-only oracle, so a remote attacker who would otherwise
-// hold the deferred C4/C5/C6 unbound-oracle threat model cannot reach it.
+// address (127.0.0.0/8 or ::1). This enforces the loopback boundary: the
+// signer is a local-only oracle, so a remote attacker cannot reach it.
 // Empty or non-loopback Addr values are rejected at New() time, before any
 // listener opens.
 func New(cfg Config, prv *ecdsa.PrivateKey) (*Signer, error) {
