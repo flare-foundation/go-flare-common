@@ -182,6 +182,23 @@ func TestPostWithRetry_LegacyDefaultRetries(t *testing.T) {
 	require.Equal(t, int32(3), hits.Load(), "default (nil NoRetryStatuses) must retry to exhaustion")
 }
 
+func TestPostWithRetryExhaustionPreservesStatus(t *testing.T) {
+	srv, hits := newAlwaysStatus(t, http.StatusServiceUnavailable)
+
+	resp, err := PostWithRetry[echoBody, echoBody](
+		t.Context(),
+		srv.URL,
+		NoAPIKey,
+		echoBody{},
+		Params{Timeout: time.Second, MaxResponseSize: 256},
+		nil,
+		retry.Params{MaxAttempts: 3, Delay: 0, Timeout: time.Second},
+	)
+	require.Error(t, err)
+	require.Equal(t, int32(3), hits.Load(), "must retry to exhaustion")
+	require.Equal(t, http.StatusServiceUnavailable, resp.Status, "exhaustion must surface the last status, not 0")
+}
+
 func TestPostRawErrorReasonCappedWithUnboundedParams(t *testing.T) {
 	const bodySize = 1 << 20 // 1 MiB, far above maxErrorReasonSize
 	s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
