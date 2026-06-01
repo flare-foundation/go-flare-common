@@ -521,6 +521,47 @@ func TestAPIKeyHMACCompare(t *testing.T) {
 	require.False(t, ak.authorize(mk("alph")))
 }
 
+// TestAllowUnauthenticated verifies that AllowUnauthenticated yields an
+// allow-all authorizer: newAPIKeys succeeds with empty keys and authorize
+// accepts every request, including one with no header.
+func TestAllowUnauthenticated(t *testing.T) {
+	ak, err := newAPIKeys(Config{AllowUnauthenticated: true})
+	require.NoError(t, err)
+	require.True(t, ak.allowAll)
+	require.Empty(t, ak.digests)
+
+	mk := func(v string) *http.Header {
+		h := http.Header{}
+		if v != "" {
+			h.Set("X-API-KEY", v)
+		}
+		return &h
+	}
+	require.True(t, ak.authorize(mk("")))
+	require.True(t, ak.authorize(mk("anything")))
+}
+
+// TestAllowUnauthenticatedRejectsKeys verifies that AllowUnauthenticated cannot
+// be combined with APIKeyName or APIKeys, so flipping the flag on a configured
+// deployment errors rather than silently dropping auth.
+func TestAllowUnauthenticatedRejectsKeys(t *testing.T) {
+	_, err := newAPIKeys(Config{AllowUnauthenticated: true, APIKeyName: "X-API-KEY"})
+	require.Error(t, err)
+
+	_, err = newAPIKeys(Config{AllowUnauthenticated: true, APIKeys: []string{"k"}})
+	require.Error(t, err)
+}
+
+// TestNewAPIKeysRejectsEmptyConfig verifies that without AllowUnauthenticated,
+// empty APIKeyName or APIKeys is rejected at construction.
+func TestNewAPIKeysRejectsEmptyConfig(t *testing.T) {
+	_, err := newAPIKeys(Config{APIKeyName: "X-API-KEY"})
+	require.Error(t, err)
+
+	_, err = newAPIKeys(Config{APIKeys: []string{"k"}})
+	require.Error(t, err)
+}
+
 // TestAssertLoopbackAddr covers audit finding H22: New() must reject any
 // configuration that would bind the signer outside loopback, because the
 // deferred C4/C5/C6 unbound-oracle findings rely on the signer being

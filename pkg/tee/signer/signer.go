@@ -41,7 +41,8 @@ type Config struct {
 	APIKeys    []string `toml:"api_keys"`
 	Limits     Limits   `toml:"limits"`
 
-	// Opt-in to start with empty APIKeyName/APIKeys (dev/test only — accepts every request).
+	// Accept every request with no API-key check. Tests or isolated environments only.
+	// Cannot be combined with APIKeyName or APIKeys.
 	AllowUnauthenticated bool `toml:"allow_unauthenticated"`
 }
 
@@ -199,16 +200,23 @@ func (s *Signer) Run(ctx context.Context) error {
 // against each stored digest. This makes the comparison length- and content-
 // independent in time and avoids storing raw keys in memory.
 type apiKeys struct {
-	name    string
-	secret  []byte
-	digests [][]byte
+	name     string
+	secret   []byte
+	digests  [][]byte
+	allowAll bool
 }
 
 // newAPIKeys builds an apiKeys struct from Config.
-// Empty APIKeyName/APIKeys authenticates every request; require AllowUnauthenticated to opt in.
+// AllowUnauthenticated yields an allow-all authorizer; otherwise APIKeyName and APIKeys must be non-empty.
 func newAPIKeys(cfg Config) (apiKeys, error) {
-	if (cfg.APIKeyName == "" || len(cfg.APIKeys) == 0) && !cfg.AllowUnauthenticated {
-		return apiKeys{}, errors.New("empty APIKeyName or APIKeys: set AllowUnauthenticated to allow this")
+	if cfg.AllowUnauthenticated {
+		if cfg.APIKeyName != "" || len(cfg.APIKeys) > 0 {
+			return apiKeys{}, errors.New("AllowUnauthenticated must not be combined with APIKeyName or APIKeys")
+		}
+		return apiKeys{allowAll: true}, nil
+	}
+	if cfg.APIKeyName == "" || len(cfg.APIKeys) == 0 {
+		return apiKeys{}, errors.New("empty APIKeyName or APIKeys: set AllowUnauthenticated to run without authentication")
 	}
 
 	secret := make([]byte, 32)
@@ -239,6 +247,9 @@ func hmacKey(secret []byte, key string) []byte {
 // Comparison is constant-time and runs against every configured digest so
 // match position does not leak through timing.
 func (ak *apiKeys) authorize(h *http.Header) bool {
+	if ak.allowAll {
+		return true
+	}
 	provided := hmacKey(ak.secret, h.Get(ak.name))
 	var ok byte
 	for _, d := range ak.digests {
