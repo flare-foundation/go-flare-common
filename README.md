@@ -6,6 +6,7 @@ Golang packages that are used across multiple Flare projects.
 
 Contains the following packages:
 
+- abicoder: generic ABI encoding and decoding utilities
 - call: HTTP POST request utilities with retry support
 - contracts: [abigen](https://geth.ethereum.org/docs/tools/abigen) bindings for Flare contracts
 - convert: type conversion utilities for common Go and Ethereum types
@@ -21,13 +22,14 @@ Contains the following packages:
 - queue: channel implementation of a priority queue with two lanes
 - random: cryptographic random value generation utilities
 - retry: retried execution of a function
+- safeurl: HTTP client utilities that guard against SSRF attacks
 - storage: an implementation of a cyclic storage
 - tee
   - attestation: working with JWT tokens carrying Google Cloud TEE attestations
   - instruction: working with TEE instructions
   - op: opTypes and opCommands
   - signer: signer server for remote ETH messages signing and decrypting
-  - structs: encoding and decoding messages from TEE instructions events, FDC2 requests and attestations
+  - structs: ABI argument definitions for TEE instructions events, FDC2 requests and attestations
   - xrpl: XRPL payment transaction construction for TEE instructions
 - toml: reading toml files
 - voters: working with Flare entities
