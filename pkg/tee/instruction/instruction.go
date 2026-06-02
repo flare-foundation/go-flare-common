@@ -11,8 +11,8 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/flare-foundation/go-flare-common/pkg/abicoder"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/op"
-	"github.com/flare-foundation/go-flare-common/pkg/tee/structs"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/tee"
 )
 
@@ -101,7 +101,7 @@ func (d *DataFixed) HashFixed() (h common.Hash, err error) {
 			}
 		}
 	}()
-	e, err := structs.Encode(tee.StructArg[tee.Instruction], d.prepareForEncoding())
+	e, err := abicoder.Encode(tee.StructArg[tee.Instruction], d.prepareForEncoding())
 	if err != nil {
 		return common.Hash{}, err
 	}
@@ -139,7 +139,7 @@ func (d *DataFixed) InitialVoteHash() (common.Hash, error) {
 		TeeId:           d.TeeID,
 	}
 
-	e, err := structs.Encode(tee.StructArg[tee.VoteSequenceInit], s)
+	e, err := abicoder.Encode(tee.StructArg[tee.VoteSequenceInit], s)
 	if err != nil {
 		return common.Hash{}, err
 	}
@@ -158,7 +158,7 @@ func NextVoteHash(hash common.Hash, sequence uint64, signature, additionalVariab
 		Timestamp:                     time,
 	}
 
-	e, err := structs.Encode(tee.StructArg[tee.VoteSequenceNext], s)
+	e, err := abicoder.Encode(tee.StructArg[tee.VoteSequenceNext], s)
 	if err != nil {
 		return common.Hash{}, err
 	}
