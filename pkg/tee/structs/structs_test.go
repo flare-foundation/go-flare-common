@@ -7,6 +7,8 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/machine"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/payments"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/tee"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/verification"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/vrf"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/wallet"
 	"github.com/stretchr/testify/require"
 )
@@ -19,4 +21,6 @@ func TestInit(t *testing.T) {
 	require.NotNil(t, fdc2.AttestationTypeArguments)
 	require.NotNil(t, tee.StructArg)
 	require.NotNil(t, machine.TeeMachineDataStructArg)
+	require.NotNil(t, verification.MessageArguments)
+	require.NotNil(t, vrf.MessageArguments)
 }
