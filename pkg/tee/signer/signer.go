@@ -450,6 +450,10 @@ func decryptHandler(prv *ecdsa.PrivateKey, maxReqBodySize int64) http.HandlerFun
 
 // ECDSAPubKeyToECIES converts an ECDSA public key on secp256k1 to an ECIES public key.
 func ECDSAPubKeyToECIES(pubKey *ecdsa.PublicKey) (*ecies.PublicKey, error) {
+	if pubKey == nil {
+		return nil, errors.New("nil public key")
+	}
+
 	if pubKey.Curve != secp256k1.S256() && pubKey.Curve != crypto.S256() {
 		return nil, errors.New("curve not S256")
 	}
@@ -459,6 +463,10 @@ func ECDSAPubKeyToECIES(pubKey *ecdsa.PublicKey) (*ecies.PublicKey, error) {
 
 // ECDSAPrivKeyToECIES converts an ECDSA private key on secp256k1 to an ECIES private key.
 func ECDSAPrivKeyToECIES(privKey *ecdsa.PrivateKey) (*ecies.PrivateKey, error) {
+	if privKey == nil {
+		return nil, errors.New("nil private key")
+	}
+
 	pubKey, err := ECDSAPubKeyToECIES(&privKey.PublicKey)
 	if err != nil {
 		return nil, err

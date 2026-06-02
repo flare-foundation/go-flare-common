@@ -424,6 +424,13 @@ func (c *PKICertificates) Verify(expectedRoot *x509.Certificate, leafCRL, interm
 // when a certificate declares DPs but no CRL was supplied; Policy.AllowedLeafEKUs constrains
 // chain validation to specific Extended Key Usage values rather than ExtKeyUsageAny.
 func (c *PKICertificates) VerifyWithPolicy(expectedRoot *x509.Certificate, leafCRL, intermediateCRL *x509.RevocationList, policy Policy) error {
+	if c.Leaf == nil || c.Intermediate == nil || c.Root == nil {
+		return errors.New("nil certificate in chain")
+	}
+	if expectedRoot == nil {
+		return errors.New("nil expected root certificate")
+	}
+
 	// Verify the leaf certificate signature algorithm is an RSA key
 	if c.Leaf.SignatureAlgorithm != x509.SHA256WithRSA {
 		return errors.New("leaf certificate signature algorithm is not SHA256WithRSA")

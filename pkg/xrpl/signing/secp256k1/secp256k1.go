@@ -33,6 +33,13 @@ const (
 
 // SignTxMultisig signs a transaction for multi-signing using a secp256k1 private key.
 func SignTxMultisig(tx map[string]any, prv *ecdsa.PrivateKey) (*signer.Signer, error) {
+	if tx == nil {
+		return nil, errors.New("nil tx")
+	}
+	if prv == nil || prv.D == nil {
+		return nil, errors.New("nil private key")
+	}
+
 	tx["SigningPubKey"] = ""
 
 	encoded, err := encoding.Encode(tx, true)

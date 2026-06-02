@@ -301,6 +301,10 @@ func (sig *SignatureWithRecovery) Recover(hash []byte) (*ecdsa.PublicKey, error)
 // toBytesCompressed returns compressed public Key for ECDSA public key in byte slice.
 // Returns nil if pub.X is out of range (>32 bytes); on a valid secp256k1 point this cannot happen.
 func toBytesCompressed(pub *ecdsa.PublicKey) []byte {
+	if pub == nil || pub.X == nil || pub.Y == nil {
+		return nil
+	}
+
 	b := pub.X.Bytes()
 	if len(b) > 32 {
 		return nil

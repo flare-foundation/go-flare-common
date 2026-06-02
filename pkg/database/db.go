@@ -90,12 +90,21 @@ type PermanentError struct {
 	Err error
 }
 
-func (e *PermanentError) Error() string { return e.Err.Error() }
+func (e *PermanentError) Error() string {
+	if e.Err == nil {
+		return ""
+	}
+	return e.Err.Error()
+}
 func (e *PermanentError) Unwrap() error { return e.Err }
 
 // Permanent marks an error as non-retryable.
 // The retry wrapper unwraps it before returning so callers see the original error.
+// A nil error is returned unchanged so callers never wrap "no error" as permanent.
 func Permanent(err error) error {
+	if err == nil {
+		return nil
+	}
 	return &PermanentError{Err: err}
 }
 
