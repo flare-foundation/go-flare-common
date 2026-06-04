@@ -65,7 +65,7 @@ func TestVLLengthOverflow(t *testing.T) {
 	require.Error(t, err)
 }
 
-// TestLengthPrefixAmplificationGuard covers audit finding M2: a VL prefix
+// TestLengthPrefixAmplificationGuard verifies that a VL prefix
 // claiming far more bytes than the buffer actually holds must error before
 // allocating, so a malicious blob cannot churn ~230 000x its own size in
 // allocations (a 3-byte prefix can claim up to 918744 bytes).

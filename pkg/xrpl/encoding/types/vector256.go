@@ -29,7 +29,7 @@ func (*vector256) ToBytes(value any, _ bool) ([]byte, error) {
 }
 
 func (*vector256) ToJSON(b *bytes.Buffer, l int) (any, error) {
-	if l%32 != 0 {
+	if l < 0 || l%32 != 0 {
 		return nil, fmt.Errorf("invalid length of encoded vector256 %d", l)
 	}
 

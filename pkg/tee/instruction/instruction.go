@@ -11,8 +11,8 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/flare-foundation/go-flare-common/pkg/abicoder"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/op"
-	"github.com/flare-foundation/go-flare-common/pkg/tee/structs"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/tee"
 )
 
@@ -32,7 +32,7 @@ type Data struct {
 }
 
 // Validate enforces shape and policy invariants on an instruction parsed
-// from an on-chain event. Audit finding M14: untrusted size and field
+// from an on-chain event. Untrusted size and field
 // content must not flow into hash/dispatch paths unchecked.
 func (d *Data) Validate() error {
 	if err := d.DataFixed.Validate(); err != nil {
@@ -77,7 +77,6 @@ func (d *DataFixed) Validate() error {
 
 type DataFixed struct {
 	InstructionID          common.Hash      `json:"instructionId"`
-	ChainID                uint64           `json:"chainId"`
 	TeeID                  common.Address   `json:"teeId"`
 	Timestamp              uint64           `json:"timestamp"`
 	RewardEpochID          uint32           `json:"rewardEpochId"`
@@ -101,7 +100,7 @@ func (d *DataFixed) HashFixed() (h common.Hash, err error) {
 			}
 		}
 	}()
-	e, err := structs.Encode(tee.StructArg[tee.Instruction], d.prepareForEncoding())
+	e, err := abicoder.Encode(tee.StructArg[tee.Instruction], d.prepareForEncoding())
 	if err != nil {
 		return common.Hash{}, err
 	}
@@ -112,7 +111,6 @@ func (d *DataFixed) HashFixed() (h common.Hash, err error) {
 func (d *DataFixed) prepareForEncoding() tee.TeeStructsInstruction {
 	return tee.TeeStructsInstruction{
 		InstructionId:          d.InstructionID,
-		ChainId:                new(big.Int).SetUint64(d.ChainID),
 		TeeId:                  d.TeeID,
 		Timestamp:              d.Timestamp,
 		RewardEpochId:          d.RewardEpochID,
@@ -139,7 +137,7 @@ func (d *DataFixed) InitialVoteHash() (common.Hash, error) {
 		TeeId:           d.TeeID,
 	}
 
-	e, err := structs.Encode(tee.StructArg[tee.VoteSequenceInit], s)
+	e, err := abicoder.Encode(tee.StructArg[tee.VoteSequenceInit], s)
 	if err != nil {
 		return common.Hash{}, err
 	}
@@ -158,7 +156,7 @@ func NextVoteHash(hash common.Hash, sequence uint64, signature, additionalVariab
 		Timestamp:                     time,
 	}
 
-	e, err := structs.Encode(tee.StructArg[tee.VoteSequenceNext], s)
+	e, err := abicoder.Encode(tee.StructArg[tee.VoteSequenceNext], s)
 	if err != nil {
 		return common.Hash{}, err
 	}

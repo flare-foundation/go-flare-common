@@ -88,10 +88,53 @@ func TestPaymentTxFromInstructionNullify(t *testing.T) {
 	require.Equal(t, "AccountSet", decoded["TransactionType"])
 }
 
+// TestNullifyRejectsOutOfRangeNonce: Nullify must reject a Nonce above the XRPL Sequence
+// (UInt32) range rather than silently truncating it.
+func TestNullifyRejectsOutOfRangeNonce(t *testing.T) {
+	i := payments.ITeePaymentsPaymentInstructionMessage{
+		SenderAddress:    "rGYYWKxT1XgNipUJouCq4cKiyAdq8xBoE9",
+		PaymentReference: crypto.Keccak256Hash([]byte("nullify")),
+		Nonce:            uint64(math.MaxUint32) + 1,
+	}
+	_, err := Nullify(i, "10")
+	require.Error(t, err)
+	require.Contains(t, err.Error(), "Sequence")
+}
+
+// TestNullifyRejectsZeroFee: a nullify with a zero Fee is structurally invalid and must be
+// rejected rather than returned.
+func TestNullifyRejectsZeroFee(t *testing.T) {
+	i := payments.ITeePaymentsPaymentInstructionMessage{
+		SenderAddress:    "rGYYWKxT1XgNipUJouCq4cKiyAdq8xBoE9",
+		PaymentReference: crypto.Keccak256Hash([]byte("nullify")),
+		Nonce:            5,
+	}
+	_, err := Nullify(i, "0")
+	require.Error(t, err)
+	require.Contains(t, err.Error(), "zero Fee")
+}
+
+// TestPaymentTxFromInstructionNullifyRejectsNilMaxFee: a nil MaxFee makes ScheduledFee.Fee
+// return "0", which the nullify branch must reject rather than emit a Fee "0" tx.
+func TestPaymentTxFromInstructionNullifyRejectsNilMaxFee(t *testing.T) {
+	instruction := payments.ITeePaymentsPaymentInstructionMessage{
+		SenderAddress:    "rGYYWKxT1XgNipUJouCq4cKiyAdq8xBoE9",
+		RecipientAddress: "rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe",
+		Amount:           big.NewInt(1000),
+		PaymentReference: crypto.Keccak256Hash([]byte("nullify")),
+		Nonce:            5,
+		MaxFee:           nil,
+		FeeSchedule:      []byte{0xD8, 0xF0, 0, 1}, // -10000 bips → nullify
+	}
+	_, err := PaymentTxFromInstruction(instruction, 0)
+	require.Error(t, err)
+	require.Contains(t, err.Error(), "zero Fee")
+}
+
 // TestCheckNativePaymentRejectsIOUAmount verifies that CheckNativePayment rejects a Payment
 // whose Amount is an IOU issued-currency object rather than an XRP drops string.
-// TestPaymentTxFromInstructionRejects covers audit finding M15: the input
-// instruction must be checked up front. nil Amount panics; sender==recipient
+// TestPaymentTxFromInstructionRejects verifies that the input
+// instruction is checked up front. nil Amount panics; sender==recipient
 // is meaningless for native payments; non-empty TokenId means an issued
 // token, which this entrypoint does not support.
 func TestPaymentTxFromInstructionRejects(t *testing.T) {
@@ -281,11 +324,9 @@ func TestParseFeeEntriesMultiple(t *testing.T) {
 	require.Error(t, err)
 }
 
-// TestParseFeeEntryRejectsOutOfRangeTry covers audit finding F-TEEX-1:
-// the original guard computed (try+1)*4 and compared against len(schedule),
-// which let a negative try (with non-positive RHS) and a near-MaxInt try
-// (with the multiplication wrapping negative) past the check — the
-// subsequent slice on a negative bound panicked.
+// TestParseFeeEntryRejectsOutOfRangeTry verifies that ParseFeeEntry rejects
+// a negative try and a near-MaxInt try, both of which could slip past a
+// (try+1)*4 bound check and panic on a negative slice bound.
 func TestParseFeeEntryRejectsOutOfRangeTry(t *testing.T) {
 	schedule := []byte{0x00, 0x01, 0x00, 0x00, 0xEC, 0x78, 0x00, 0x3C}
 

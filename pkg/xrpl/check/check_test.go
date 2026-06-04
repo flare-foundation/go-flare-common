@@ -181,7 +181,7 @@ func TestCheck(t *testing.T) {
 		require.NoError(t, info.Check(1, []string{"rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW"}))
 	})
 
-	// M11: non-validated responses must be rejected so a rolled-back signer
+	// non-validated responses must be rejected so a rolled-back signer
 	// list cannot drive a quorum decision.
 	t.Run("non-validated response rejected", func(t *testing.T) {
 		info := AccountInfoResponse{
@@ -387,6 +387,8 @@ func TestInfoHTTPStubRejectsBadStatus(t *testing.T) {
 }
 
 func TestInfo(t *testing.T) {
+	t.Skip("hits live rippletest.net JSON-RPC; covered locally by TestInfoHTTPStub")
+
 	url := "https://s.altnet.rippletest.net:51234/"
 
 	rpc := JSONRPC{

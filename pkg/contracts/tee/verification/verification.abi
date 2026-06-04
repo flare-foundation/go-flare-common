@@ -64,6 +64,17 @@
     "type": "error"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "extensionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "EmergencyPauseActive",
+    "type": "error"
+  },
+  {
     "inputs": [],
     "name": "ExtensionIdMismatch",
     "type": "error"
@@ -220,6 +231,11 @@
   {
     "inputs": [],
     "name": "OnlyExtensionOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OnlyExtensionOwnerOrOperator",
     "type": "error"
   },
   {
@@ -555,11 +571,6 @@
           },
           {
             "components": [
-              {
-                "internalType": "uint256",
-                "name": "chainId",
-                "type": "uint256"
-              },
               {
                 "internalType": "bytes32",
                 "name": "attestationType",
@@ -960,11 +971,6 @@
           {
             "components": [
               {
-                "internalType": "uint256",
-                "name": "chainId",
-                "type": "uint256"
-              },
-              {
                 "internalType": "bytes32",
                 "name": "attestationType",
                 "type": "bytes32"
@@ -1184,11 +1190,6 @@
           },
           {
             "components": [
-              {
-                "internalType": "uint256",
-                "name": "chainId",
-                "type": "uint256"
-              },
               {
                 "internalType": "bytes32",
                 "name": "attestationType",

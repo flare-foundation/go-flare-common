@@ -91,6 +91,28 @@
     "type": "error"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "extensionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "EmergencyPauseActive",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "extensionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "EmergencyProtectionActive",
+    "type": "error"
+  },
+  {
     "inputs": [],
     "name": "ExtensionIdMismatch",
     "type": "error"
@@ -272,6 +294,11 @@
   {
     "inputs": [],
     "name": "OnlyExtensionOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OnlyExtensionOwnerOrOperator",
     "type": "error"
   },
   {
@@ -565,6 +592,12 @@
         "indexed": false,
         "internalType": "bytes32",
         "name": "platform",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "governanceHash",
         "type": "bytes32"
       }
     ],
@@ -1007,11 +1040,6 @@
           {
             "components": [
               {
-                "internalType": "uint256",
-                "name": "chainId",
-                "type": "uint256"
-              },
-              {
                 "internalType": "bytes32",
                 "name": "attestationType",
                 "type": "bytes32"
@@ -1216,6 +1244,11 @@
             "internalType": "struct PublicKey",
             "name": "publicKey",
             "type": "tuple"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "governanceHash",
+            "type": "bytes32"
           }
         ],
         "internalType": "struct IMachineManager.TeeMachineData",
@@ -1327,11 +1360,6 @@
           },
           {
             "components": [
-              {
-                "internalType": "uint256",
-                "name": "chainId",
-                "type": "uint256"
-              },
               {
                 "internalType": "bytes32",
                 "name": "attestationType",

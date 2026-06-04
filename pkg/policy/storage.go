@@ -2,6 +2,7 @@ package policy
 
 import (
 	"cmp"
+	"errors"
 	"fmt"
 	"sort"
 	"sync"
@@ -56,6 +57,10 @@ func (s *Storage) findByVotingRoundID(votingRoundID uint32) *SigningPolicy {
 // Unless the storage was created with notStrict, the added signingPolicy must have a reward epoch ID
 // exactly one greater than the latest stored policy.
 func (s *Storage) Add(sp *SigningPolicy) error {
+	if sp == nil {
+		return errors.New("nil signing policy")
+	}
+
 	s.mu.Lock()
 	defer s.mu.Unlock()
 

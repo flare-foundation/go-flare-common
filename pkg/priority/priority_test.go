@@ -350,8 +350,8 @@ func (x wTup) Less(y wTup) bool {
 	return x[0] < y[0] || (x[0] == y[0] && x[1] < y[1])
 }
 
-// TestDequeueReturnsOnCtxCancel covers audit Low 11c: next() must honor ctx
-// when both lanes are empty, instead of blocking forever.
+// TestDequeueReturnsOnCtxCancel verifies that next() honors ctx when both
+// lanes are empty, instead of blocking forever.
 func TestDequeueReturnsOnCtxCancel(t *testing.T) {
 	ctx, cancel := context.WithCancel(t.Context())
 	pQueue := New[int, wInt](Params{}, "test")
@@ -372,10 +372,10 @@ func TestDequeueReturnsOnCtxCancel(t *testing.T) {
 	}
 }
 
-// TestAddBeforeInitiateAndRun covers audit finding M28: Add must not race
-// against (nor hang forever on) a not-yet-initialized channel. After the fix
-// the channels exist from construction, so Add blocks only until the
-// processing goroutines start, then proceeds normally.
+// TestAddBeforeInitiateAndRun verifies that Add does not race against (nor
+// hang forever on) a not-yet-initialized channel. The channels exist from
+// construction, so Add blocks only until the processing goroutines start,
+// then proceeds normally.
 func TestAddBeforeInitiateAndRun(t *testing.T) {
 	ctx, cancel := context.WithTimeout(t.Context(), 5*time.Second)
 	defer cancel()
@@ -415,9 +415,9 @@ func TestAddBeforeInitiateAndRun(t *testing.T) {
 	}
 }
 
-// TestSetBackOffConcurrent covers audit finding F-PRI-3: SetBackOff used to
-// write p.bo without synchronization while the retry goroutine in
-// handleRetry read it. With go test -race this must not flag a data race.
+// TestSetBackOffConcurrent verifies that SetBackOff writing p.bo concurrently
+// with the retry goroutine in handleRetry reading it does not flag a data
+// race under go test -race.
 func TestSetBackOffConcurrent(t *testing.T) {
 	pQueue := New[int, wInt](Params{MaxAttempts: 5, TimeOff: time.Millisecond}, "test")
 
@@ -436,12 +436,11 @@ func TestSetBackOffConcurrent(t *testing.T) {
 	<-done
 }
 
-// TestAddReturnsAfterCtxCancel covers audit finding F-PRI-2: Add and
-// AddFast used to send unconditionally on the internal unbuffered
-// channels. Once InitiateAndRun's ctx was cancelled, the processIn /
-// processInFast goroutines had returned and a follow-up Add blocked
-// forever — a permanent goroutine leak. With the new signature, the
-// caller's ctx aborts the send.
+// TestAddReturnsAfterCtxCancel verifies that the caller's ctx aborts the
+// send. Add and AddFast must not send unconditionally on the internal
+// unbuffered channels: once InitiateAndRun's ctx is cancelled, the
+// processIn / processInFast goroutines have returned and a follow-up Add
+// would otherwise block forever, leaking a goroutine.
 func TestAddReturnsAfterCtxCancel(t *testing.T) {
 	ctx, cancel := context.WithCancel(t.Context())
 

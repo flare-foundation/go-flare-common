@@ -100,8 +100,8 @@ func TestMarshaling(t *testing.T) {
 	}
 }
 
-// TestMarshalDERStrictCanonical covers audit finding M7: the parser must
-// enforce strict DER per BIP-66 so non-canonical encodings of an otherwise
+// TestMarshalDERStrictCanonical verifies that the parser
+// enforces strict DER per BIP-66 so non-canonical encodings of an otherwise
 // valid signature are rejected. r/s must be minimal-encoded positive
 // integers, and the outer length must match the buffer exactly.
 func TestMarshalDERStrictCanonical(t *testing.T) {
@@ -144,10 +144,9 @@ func TestMarshalDERStrictCanonical(t *testing.T) {
 	}
 }
 
-// TestMarshalDERRejectsMalformed exercises the panic surfaces fixed in
-// audit findings H1 (oversize rLen/sLen → negative slice index) and
-// H2 (zero sLen → out-of-bounds index read). Each case must error,
-// not panic.
+// TestMarshalDERRejectsMalformed verifies the parser rejects oversize rLen/sLen
+// (negative slice index) and zero sLen (out-of-bounds index read). Each case
+// must error, not panic.
 func TestMarshalDERRejectsMalformed(t *testing.T) {
 	cases := []struct {
 		name string
@@ -155,23 +154,23 @@ func TestMarshalDERRejectsMalformed(t *testing.T) {
 		hex string
 	}{
 		{
-			// H1: rLen=33 with non-zero leading byte. After leading-zero
+			// rLen=33 with non-zero leading byte. After leading-zero
 			// strip is skipped, rLen stays 33 and copy(r[32-33:], ...) panics.
 			name: "rLen 33 without leading zero",
 			hex:  "3026" + "0221" + strings.Repeat("AA", 33) + "020101",
 		},
 		{
-			// H1: rLen=200. copy(r[32-200:], ...) panics.
+			// rLen=200. copy(r[32-200:], ...) panics.
 			name: "rLen 200",
 			hex:  "30CD" + "02C8" + strings.Repeat("AA", 200) + "020101",
 		},
 		{
-			// H1 mirrored to s: sLen=200.
+			// mirrored to s: sLen=200.
 			name: "sLen 200",
 			hex:  "30CD" + "020101" + "02C8" + strings.Repeat("BB", 200),
 		},
 		{
-			// H2: sLen=0. The outer length checks pass, but
+			// sLen=0. The outer length checks pass, but
 			// `if sig[sStart] == 0` reads one byte past end.
 			name: "sLen 0",
 			hex:  "3005" + "020101" + "0200",
@@ -201,8 +200,8 @@ func TestMarshalDERRejectsMalformed(t *testing.T) {
 	}
 }
 
-// TestMarshalDERRejectsHighS covers audit finding F-SIGNCURVE-1: the parser
-// must reject signatures whose s component is in the upper half of the curve
+// TestMarshalDERRejectsHighS verifies that the parser
+// rejects signatures whose s component is in the upper half of the curve
 // order. Accepting high-S enables malleability — for any valid (r, s) the
 // byte-distinct (r, N-s) is equally valid for the same message and key,
 // which rippled rejects via fully-canonical-signature.
@@ -247,9 +246,9 @@ func TestMarshalDERRejectsHighS(t *testing.T) {
 	require.NoError(t, err, "low-S DER signature (s = N/2) must be accepted")
 }
 
-// TestMarshalRSRejectsZeroScalars covers audit finding F-SIGNCURVE-2:
-// big.Int.Bytes() returns an empty slice for zero, and DER() then panics
-// on rb[0]. A Signature with zero r or s must not be constructable.
+// TestMarshalRSRejectsZeroScalars verifies that a Signature with zero r or s
+// is not constructable, since big.Int.Bytes() returns an empty slice for zero
+// and DER() would then panic on rb[0].
 func TestMarshalRSRejectsZeroScalars(t *testing.T) {
 	// All-zero r||s.
 	_, err := MarshalRS(make([]byte, 64))

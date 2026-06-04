@@ -42,9 +42,8 @@ func TestTransformSignatureRejectsBadInput(t *testing.T) {
 	require.Error(t, err)
 }
 
-// TestTransformSignatureRangeChecks covers audit findings F-ENC2-1 and
-// F-ENC2-2: VRStoRSV must reject V > 28 (out-of-range Ethereum recid),
-// and RSVtoVRS must reject recid > 1.
+// TestTransformSignatureRangeChecks verifies that VRStoRSV rejects V > 28
+// (out-of-range Ethereum recid), and RSVtoVRS rejects recid > 1.
 func TestTransformSignatureRangeChecks(t *testing.T) {
 	// V byte values that previously slipped through: EIP-155 chainID*2+35+{0,1},
 	// and the all-ones byte.
@@ -64,8 +63,8 @@ func TestTransformSignatureRangeChecks(t *testing.T) {
 	}
 }
 
-// TestEncodeSignatureRejectsLargeIndex covers audit finding F-ENC2-3:
-// Index is encoded as uint16, but the prior monotonicity check compared
+// TestEncodeSignatureRejectsLargeIndex verifies that an out-of-range Index is
+// rejected. Index is encoded as uint16, but the prior monotonicity check compared
 // full int values. A sorted, distinct int pair like [65535, 65536] passed
 // the check and then truncated to [65535, 0] on the wire — silently
 // non-monotonic and possibly duplicate.

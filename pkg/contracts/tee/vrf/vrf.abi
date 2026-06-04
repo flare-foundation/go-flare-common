@@ -5,6 +5,17 @@
     "type": "error"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "extensionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "EmergencyPauseActive",
+    "type": "error"
+  },
+  {
     "inputs": [],
     "name": "ExtensionIdMismatch",
     "type": "error"

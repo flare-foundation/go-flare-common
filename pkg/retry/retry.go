@@ -15,7 +15,8 @@ import (
 type ExecuteStatus[T any] struct {
 	Success bool
 	Err     error
-	Value   T
+	// Value is the value returned by the last attempt; on failure it is the last failed attempt's value.
+	Value T
 }
 
 // Params configures retry behavior for Execute. Negative values are rejected.
@@ -74,9 +75,9 @@ func Execute[T any](ctx context.Context, f func() (T, error), params Params) Exe
 		}
 
 		r, err = f()
+		result.Value = r
 		if err == nil {
 			result.Success = true
-			result.Value = r
 			return result
 		}
 

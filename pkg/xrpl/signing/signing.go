@@ -3,6 +3,7 @@ package signing
 
 import (
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -54,8 +55,8 @@ func ValidateMultiSig(tx map[string]any, s *signer.Signer) (bool, error) {
 // JoinMultisig appends signers to the transaction and serializes the result.
 //
 // Every signer is checked: signature is verified against the for-signing form
-// of tx (M6), and the slice must be in canonical address order per rippled's
-// STTx::checkMultiSign (M9). Returns an error if any signer is invalid or
+// of tx, and the slice must be in canonical address order per rippled's
+// STTx::checkMultiSign. Returns an error if any signer is invalid or
 // the order is wrong.
 func JoinMultisig(tx map[string]any, signers []*signer.Signer) ([]byte, error) {
 	if err := validateSignersForJoin(tx, signers); err != nil {
@@ -95,6 +96,9 @@ func JoinMultisigJSON(tx map[string]any, signers []*signer.Signer) (map[string]a
 // asserts the slice is in strictly-ascending canonical address order, which
 // rippled requires for the multi-sig blob to validate.
 func validateSignersForJoin(tx map[string]any, signers []*signer.Signer) error {
+	if tx == nil {
+		return errors.New("nil tx")
+	}
 	for j, s := range signers {
 		if _, err := s.Value(); err != nil {
 			return fmt.Errorf("signer %d (%s): computing canonical value: %w", j, s.Account, err)

@@ -41,7 +41,8 @@ type Config struct {
 	APIKeys    []string `toml:"api_keys"`
 	Limits     Limits   `toml:"limits"`
 
-	// Opt-in to start with empty APIKeyName/APIKeys (dev/test only — accepts every request).
+	// Accept every request with no API-key check. Tests or isolated environments only.
+	// Cannot be combined with APIKeyName or APIKeys.
 	AllowUnauthenticated bool `toml:"allow_unauthenticated"`
 }
 
@@ -113,9 +114,8 @@ func assertLoopbackAddr(addr string) error {
 // API key validation is performed for each request.
 //
 // cfg.Addr must be a host:port whose host portion resolves to a loopback
-// address (127.0.0.0/8 or ::1). This enforces the audit's H22 boundary: the
-// signer is a local-only oracle, so a remote attacker who would otherwise
-// hold the deferred C4/C5/C6 unbound-oracle threat model cannot reach it.
+// address (127.0.0.0/8 or ::1). This enforces the loopback boundary: the
+// signer is a local-only oracle, so a remote attacker cannot reach it.
 // Empty or non-loopback Addr values are rejected at New() time, before any
 // listener opens.
 func New(cfg Config, prv *ecdsa.PrivateKey) (*Signer, error) {
@@ -199,16 +199,23 @@ func (s *Signer) Run(ctx context.Context) error {
 // against each stored digest. This makes the comparison length- and content-
 // independent in time and avoids storing raw keys in memory.
 type apiKeys struct {
-	name    string
-	secret  []byte
-	digests [][]byte
+	name     string
+	secret   []byte
+	digests  [][]byte
+	allowAll bool
 }
 
 // newAPIKeys builds an apiKeys struct from Config.
-// Empty APIKeyName/APIKeys authenticates every request; require AllowUnauthenticated to opt in.
+// AllowUnauthenticated yields an allow-all authorizer; otherwise APIKeyName and APIKeys must be non-empty.
 func newAPIKeys(cfg Config) (apiKeys, error) {
-	if (cfg.APIKeyName == "" || len(cfg.APIKeys) == 0) && !cfg.AllowUnauthenticated {
-		return apiKeys{}, errors.New("empty APIKeyName or APIKeys: set AllowUnauthenticated to allow this")
+	if cfg.AllowUnauthenticated {
+		if cfg.APIKeyName != "" || len(cfg.APIKeys) > 0 {
+			return apiKeys{}, errors.New("AllowUnauthenticated must not be combined with APIKeyName or APIKeys")
+		}
+		return apiKeys{allowAll: true}, nil
+	}
+	if cfg.APIKeyName == "" || len(cfg.APIKeys) == 0 {
+		return apiKeys{}, errors.New("empty APIKeyName or APIKeys: set AllowUnauthenticated to run without authentication")
 	}
 
 	secret := make([]byte, 32)
@@ -239,6 +246,9 @@ func hmacKey(secret []byte, key string) []byte {
 // Comparison is constant-time and runs against every configured digest so
 // match position does not leak through timing.
 func (ak *apiKeys) authorize(h *http.Header) bool {
+	if ak.allowAll {
+		return true
+	}
 	provided := hmacKey(ak.secret, h.Get(ak.name))
 	var ok byte
 	for _, d := range ak.digests {
@@ -440,6 +450,10 @@ func decryptHandler(prv *ecdsa.PrivateKey, maxReqBodySize int64) http.HandlerFun
 
 // ECDSAPubKeyToECIES converts an ECDSA public key on secp256k1 to an ECIES public key.
 func ECDSAPubKeyToECIES(pubKey *ecdsa.PublicKey) (*ecies.PublicKey, error) {
+	if pubKey == nil {
+		return nil, errors.New("nil public key")
+	}
+
 	if pubKey.Curve != secp256k1.S256() && pubKey.Curve != crypto.S256() {
 		return nil, errors.New("curve not S256")
 	}
@@ -449,6 +463,10 @@ func ECDSAPubKeyToECIES(pubKey *ecdsa.PublicKey) (*ecies.PublicKey, error) {
 
 // ECDSAPrivKeyToECIES converts an ECDSA private key on secp256k1 to an ECIES private key.
 func ECDSAPrivKeyToECIES(privKey *ecdsa.PrivateKey) (*ecies.PrivateKey, error) {
+	if privKey == nil {
+		return nil, errors.New("nil private key")
+	}
+
 	pubKey, err := ECDSAPubKeyToECIES(&privKey.PublicKey)
 	if err != nil {
 		return nil, err

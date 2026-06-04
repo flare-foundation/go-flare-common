@@ -49,6 +49,10 @@ func (sp *SigningPolicy) Hash() []byte {
 // or duplicate address). The smart contract guarantees both, so an error here
 // indicates upstream corruption.
 func NewSigningPolicy(r *relay.RelaySigningPolicyInitialized, submitToSigning map[common.Address]common.Address) (*SigningPolicy, error) {
+	if r == nil || r.RewardEpochId == nil {
+		return nil, errors.New("nil signing policy event")
+	}
+
 	vs, err := voters.NewSet(r.Voters, r.Weights, submitToSigning)
 	if err != nil {
 		return nil, fmt.Errorf("building voter set: %w", err)

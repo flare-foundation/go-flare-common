@@ -182,12 +182,20 @@ func (vs *Set) BinarySearch(value uint16) int {
 }
 
 // VoterAddress returns the signing policy address of the voter at the specified index.
+// Returns the zero address if index is out of range.
 func (vs *Set) VoterAddress(index int) common.Address {
+	if index < 0 || index >= len(vs.voters) {
+		return common.Address{}
+	}
 	return vs.voters[index]
 }
 
 // VoterWeight returns the weight of the voter with index.
+// Returns 0 if index is out of range.
 func (vs *Set) VoterWeight(index int) uint16 {
+	if index < 0 || index >= len(vs.weights) {
+		return 0
+	}
 	return vs.weights[index]
 }
 

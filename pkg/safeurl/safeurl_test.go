@@ -109,7 +109,7 @@ func TestIsPublicIP(t *testing.T) {
 		{"unspecified v4", "0.0.0.0", false},
 		{"unspecified v6", "::", false},
 		{"multicast", "224.0.0.1", false},
-		// Audit M18 additions.
+		// Additional cases.
 		{"CGNAT 100.64", "100.64.0.1", false},
 		{"CGNAT 100.127", "100.127.255.254", false},
 		{"this-network 0.1.2.3", "0.1.2.3", false},
@@ -168,8 +168,8 @@ func parseIP(t *testing.T, s string) net.IP {
 	return ip
 }
 
-// TestCheckRedirect covers audit finding H18: NewClient's redirect policy
-// caps chain length and rejects https→http downgrade.
+// TestCheckRedirect verifies that NewClient's redirect policy caps chain
+// length and rejects https→http downgrade.
 func TestCheckRedirect(t *testing.T) {
 	mk := func(scheme string) *http.Request {
 		r, err := http.NewRequest(http.MethodGet, scheme+"://example.com", nil)

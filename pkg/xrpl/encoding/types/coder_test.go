@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// TestDecodeDepthBomb covers audit finding M1: nested STObject/STArray
+// TestDecodeDepthBomb verifies that nested STObject/STArray
 // recursion must be bounded so a malicious blob cannot amplify CPU/alloc
 // churn by chaining open-object markers indefinitely.
 //

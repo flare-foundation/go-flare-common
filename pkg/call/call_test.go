@@ -182,6 +182,38 @@ func TestPostWithRetry_LegacyDefaultRetries(t *testing.T) {
 	require.Equal(t, int32(3), hits.Load(), "default (nil NoRetryStatuses) must retry to exhaustion")
 }
 
+func TestPostWithRetryExhaustionPreservesStatus(t *testing.T) {
+	srv, hits := newAlwaysStatus(t, http.StatusServiceUnavailable)
+
+	resp, err := PostWithRetry[echoBody, echoBody](
+		t.Context(),
+		srv.URL,
+		NoAPIKey,
+		echoBody{},
+		Params{Timeout: time.Second, MaxResponseSize: 256},
+		nil,
+		retry.Params{MaxAttempts: 3, Delay: 0, Timeout: time.Second},
+	)
+	require.Error(t, err)
+	require.Equal(t, int32(3), hits.Load(), "must retry to exhaustion")
+	require.Equal(t, http.StatusServiceUnavailable, resp.Status, "exhaustion must surface the last status, not 0")
+}
+
+func TestPostRawErrorReasonCappedWithUnboundedParams(t *testing.T) {
+	const bodySize = 1 << 20 // 1 MiB, far above maxErrorReasonSize
+	s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/plain")
+		w.WriteHeader(http.StatusBadGateway)
+		_, _ = w.Write(bytes.Repeat([]byte("x"), bodySize))
+	}))
+	t.Cleanup(s.Close)
+
+	// MaxResponseSize: 0 (unbounded success path) must NOT make the error reason unbounded.
+	_, err := PostRaw[echoBody](t.Context(), s.URL, NoAPIKey, nil, Params{Timeout: 5 * time.Second})
+	require.Error(t, err)
+	require.Less(t, len(err.Error()), maxErrorReasonSize+128, "error reason must be capped regardless of MaxResponseSize")
+}
+
 func TestPostWithRetry_AcceptableFailWinsOverNoRetry(t *testing.T) {
 	srv, hits := newAlwaysStatus(t, http.StatusTeapot)
 

@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// TestValidate covers audit M14: parsed instruction Data must reject
+// TestValidate verifies that parsed instruction Data rejects
 // oversize message bytes, broken cosigner threshold/uniqueness, and
 // unrecognized op type/command pairs before the values flow into a hash
 // or dispatch path.
@@ -201,62 +201,4 @@ func TestSignAndRecover(t *testing.T) {
 	require.NoError(t, err)
 
 	require.Equal(t, *pub, pk.PublicKey)
-}
-
-func TestHashFixedIncludesChainID(t *testing.T) {
-	base := DataFixed{
-		InstructionID:          common.Hash{0xAA},
-		TeeID:                  common.Address{0xBB},
-		Timestamp:              42,
-		RewardEpochID:          7,
-		OPType:                 op.Wallet.Hash(),
-		OPCommand:              op.KeyGenerate.Hash(),
-		Cosigners:              []common.Address{{0x01}},
-		CosignersThreshold:     1,
-		OriginalMessage:        hexutil.Bytes{1, 2, 3},
-		AdditionalFixedMessage: hexutil.Bytes{4, 5},
-	}
-
-	t.Run("different ChainID changes the hash", func(t *testing.T) {
-		a := base
-		a.ChainID = 1
-		b := base
-		b.ChainID = 2
-
-		ha, err := a.HashFixed()
-		require.NoError(t, err)
-		hb, err := b.HashFixed()
-		require.NoError(t, err)
-
-		require.NotEqual(t, ha, hb, "HashFixed must depend on ChainID")
-	})
-
-	t.Run("same ChainID yields stable hash", func(t *testing.T) {
-		a := base
-		a.ChainID = 14
-		b := base
-		b.ChainID = 14
-
-		ha, err := a.HashFixed()
-		require.NoError(t, err)
-		hb, err := b.HashFixed()
-		require.NoError(t, err)
-
-		require.Equal(t, ha, hb)
-	})
-
-	t.Run("ChainID zero differs from non-zero", func(t *testing.T) {
-		zero := base // ChainID defaults to 0
-		nonzero := base
-		nonzero.ChainID = 1
-
-		hz, err := zero.HashFixed()
-		require.NoError(t, err)
-		hnz, err := nonzero.HashFixed()
-		require.NoError(t, err)
-
-		require.NotEqual(t, hz, hnz,
-			"ChainID=0 must hash differently than ChainID=1; "+
-				"otherwise a JSON producer that omits chainId silently matches ChainID=0")
-	})
 }

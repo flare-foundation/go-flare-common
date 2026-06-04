@@ -490,7 +490,7 @@ func TestConfigs(t *testing.T) {
 	})
 }
 
-// TestAPIKeyHMACCompare covers audit finding H21: API-key comparison runs
+// TestAPIKeyHMACCompare verifies that API-key comparison runs
 // against HMAC digests with subtle.ConstantTimeCompare. The test exercises
 // the behavioural contract — correct keys accepted, wrong/empty keys
 // rejected, multiple configured keys all accepted — independent of timing.
@@ -521,10 +521,50 @@ func TestAPIKeyHMACCompare(t *testing.T) {
 	require.False(t, ak.authorize(mk("alph")))
 }
 
-// TestAssertLoopbackAddr covers audit finding H22: New() must reject any
+// TestAllowUnauthenticated verifies that AllowUnauthenticated yields an
+// allow-all authorizer: newAPIKeys succeeds with empty keys and authorize
+// accepts every request, including one with no header.
+func TestAllowUnauthenticated(t *testing.T) {
+	ak, err := newAPIKeys(Config{AllowUnauthenticated: true})
+	require.NoError(t, err)
+	require.True(t, ak.allowAll)
+	require.Empty(t, ak.digests)
+
+	mk := func(v string) *http.Header {
+		h := http.Header{}
+		if v != "" {
+			h.Set("X-API-KEY", v)
+		}
+		return &h
+	}
+	require.True(t, ak.authorize(mk("")))
+	require.True(t, ak.authorize(mk("anything")))
+}
+
+// TestAllowUnauthenticatedRejectsKeys verifies that AllowUnauthenticated cannot
+// be combined with APIKeyName or APIKeys, so flipping the flag on a configured
+// deployment errors rather than silently dropping auth.
+func TestAllowUnauthenticatedRejectsKeys(t *testing.T) {
+	_, err := newAPIKeys(Config{AllowUnauthenticated: true, APIKeyName: "X-API-KEY"})
+	require.Error(t, err)
+
+	_, err = newAPIKeys(Config{AllowUnauthenticated: true, APIKeys: []string{"k"}})
+	require.Error(t, err)
+}
+
+// TestNewAPIKeysRejectsEmptyConfig verifies that without AllowUnauthenticated,
+// empty APIKeyName or APIKeys is rejected at construction.
+func TestNewAPIKeysRejectsEmptyConfig(t *testing.T) {
+	_, err := newAPIKeys(Config{APIKeyName: "X-API-KEY"})
+	require.Error(t, err)
+
+	_, err = newAPIKeys(Config{APIKeys: []string{"k"}})
+	require.Error(t, err)
+}
+
+// TestAssertLoopbackAddr verifies that New() rejects any
 // configuration that would bind the signer outside loopback, because the
-// deferred C4/C5/C6 unbound-oracle findings rely on the signer being
-// reachable only from inside the host trust boundary.
+// signer must be reachable only from inside the host trust boundary.
 func TestAssertLoopbackAddr(t *testing.T) {
 	good := []string{
 		"127.0.0.1:0",
@@ -576,7 +616,7 @@ func TestNewRejectsNonLoopbackAddr(t *testing.T) {
 	require.Contains(t, err.Error(), "signer address")
 }
 
-// TestNewRejectsNilPrivateKey covers audit finding F-TEE-2: a nil
+// TestNewRejectsNilPrivateKey verifies that a nil
 // *ecdsa.PrivateKey used to pass New() and surface as a deref panic on
 // the first /sign or /id request — exposing the listener before the
 // crash. New must reject up front.

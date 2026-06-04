@@ -2,6 +2,7 @@
 package events
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
@@ -22,6 +23,10 @@ func SelectorFromMetadata(metaData *bind.MetaData, eventName string) (common.Has
 
 // SelectorFromABI returns the event selector (topic0) for the named event from a parsed ABI.
 func SelectorFromABI(a *abi.ABI, eventName string) (common.Hash, error) {
+	if a == nil {
+		return common.Hash{}, errors.New("nil ABI")
+	}
+
 	ev, ok := a.Events[eventName]
 	if !ok {
 		return common.Hash{}, fmt.Errorf("event %s not found in ABI", eventName)

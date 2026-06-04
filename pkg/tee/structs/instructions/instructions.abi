@@ -1,0 +1,47 @@
+[
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "opType",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "opCommand",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "message",
+            "type": "bytes"
+          },
+          {
+            "internalType": "address[]",
+            "name": "cosigners",
+            "type": "address[]"
+          },
+          {
+            "internalType": "uint64",
+            "name": "cosignersThreshold",
+            "type": "uint64"
+          },
+          {
+            "internalType": "address",
+            "name": "claimBackAddress",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct IInstructions.TeeInstructionParams",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "teeInstructionParamsStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

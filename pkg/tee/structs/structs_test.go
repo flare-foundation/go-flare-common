@@ -4,9 +4,14 @@ import (
 	"testing"
 
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/fdc2"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/instructions"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/machine"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/machinepath"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/payments"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/replication"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/tee"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/verification"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/vrf"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/wallet"
 	"github.com/stretchr/testify/require"
 )
@@ -19,4 +24,10 @@ func TestInit(t *testing.T) {
 	require.NotNil(t, fdc2.AttestationTypeArguments)
 	require.NotNil(t, tee.StructArg)
 	require.NotNil(t, machine.TeeMachineDataStructArg)
+	require.NotNil(t, machinepath.MachinePathStructArg)
+	require.NotNil(t, instructions.TeeInstructionParamsStructArg)
+	require.NotNil(t, replication.PauseForUpgradeStructArg)
+	require.NotNil(t, replication.ReplicateTeeMachineStructArg)
+	require.NotNil(t, verification.MessageArguments)
+	require.NotNil(t, vrf.MessageArguments)
 }

@@ -33,6 +33,10 @@ const (
 
 // SignTxMultisig signs a transaction for multi-signing using an Ed25519 private key.
 func SignTxMultisig(tx map[string]any, prv ed25519.PrivateKey) (*signer.Signer, error) {
+	if tx == nil {
+		return nil, errors.New("nil tx")
+	}
+
 	tx["SigningPubKey"] = ""
 
 	encoded, err := encoding.Encode(tx, true)

@@ -10,10 +10,9 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// TestValueConcurrent covers audit finding F-SIGNCURVE-3: Value()'s lazy
-// cache was a plain *big.Int write/read pair, racy under concurrent first
-// callers. With go test -race this must not flag a data race, and all
-// concurrent callers must observe the same *big.Int.
+// TestValueConcurrent verifies that Value()'s lazy cache is safe under
+// concurrent first callers: with go test -race this must not flag a data
+// race, and all concurrent callers must observe the same *big.Int.
 func TestValueConcurrent(t *testing.T) {
 	s := &Signer{
 		Account: "rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW",

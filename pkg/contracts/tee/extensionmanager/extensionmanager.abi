@@ -240,6 +240,11 @@
   },
   {
     "inputs": [],
+    "name": "OnlyExtensionOwnerOrOperator",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "OnlyGovernance",
     "type": "error"
   },
@@ -369,6 +374,31 @@
       }
     ],
     "name": "CodeHashPlatformDisabled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "extensionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "oldOperator",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOperator",
+        "type": "address"
+      }
+    ],
+    "name": "ExtensionOperatorSet",
     "type": "event"
   },
   {
@@ -578,9 +608,9 @@
       },
       {
         "indexed": false,
-        "internalType": "string",
+        "internalType": "bytes32",
         "name": "version",
-        "type": "string"
+        "type": "bytes32"
       },
       {
         "indexed": true,
@@ -593,12 +623,6 @@
         "internalType": "bytes32[]",
         "name": "platforms",
         "type": "bytes32[]"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes32",
-        "name": "governanceHash",
-        "type": "bytes32"
       }
     ],
     "name": "TeeVersionAdded",
@@ -661,9 +685,9 @@
         "type": "uint256"
       },
       {
-        "internalType": "string",
+        "internalType": "bytes32",
         "name": "_version",
-        "type": "string"
+        "type": "bytes32"
       },
       {
         "internalType": "bytes32",
@@ -674,11 +698,6 @@
         "internalType": "bytes32[]",
         "name": "_platforms",
         "type": "bytes32[]"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_governanceHash",
-        "type": "bytes32"
       }
     ],
     "name": "addTeeVersion",
@@ -739,18 +758,32 @@
     "outputs": [
       {
         "internalType": "bytes32",
-        "name": "_governanceHash",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "string",
         "name": "_version",
-        "type": "string"
+        "type": "bytes32"
       },
       {
         "internalType": "bytes32[]",
         "name": "_platforms",
         "type": "bytes32[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extensionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getExtensionOperator",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -891,30 +924,6 @@
         "internalType": "contract ITeeExtensionStateVerifier",
         "name": "",
         "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_extensionId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_codeHash",
-        "type": "bytes32"
-      }
-    ],
-    "name": "getTeeGovernanceHash",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
       }
     ],
     "stateMutability": "view",
@@ -1136,6 +1145,24 @@
       }
     ],
     "name": "setExtensionContracts",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extensionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_operator",
+        "type": "address"
+      }
+    ],
+    "name": "setExtensionOperator",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

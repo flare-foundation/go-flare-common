@@ -55,6 +55,10 @@ func NewPriority[T any](input *PriorityQueueParams) PriorityQueue[T] {
 		input = new(PriorityQueueParams)
 	}
 
+	if input.Size < 0 {
+		input.Size = 0
+	}
+
 	var limiter *rate.Limiter
 
 	if input.MaxDequeuesPerSecond > 0 {
@@ -121,6 +125,10 @@ func (q *PriorityQueue[T]) newBackoff() (bOff backoff.BackOff) {
 		bOff = backoff.NewConstantBackOff(q.timeOff)
 	} else {
 		bOff = q.backoff()
+	}
+
+	if bOff == nil {
+		bOff = backoff.NewConstantBackOff(q.timeOff)
 	}
 
 	if q.maxAttempts > 0 {
