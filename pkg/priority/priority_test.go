@@ -141,7 +141,8 @@ func TestDequeue2(t *testing.T) {
 
 	time.Sleep(10 * time.Microsecond)
 
-	for i := range 20 {
+	// Sample 100, not 20: too few samples let one CI hiccup skew the mean deviation.
+	for i := range 100 {
 		wg.Add(1)
 		_, _ = pQueue.AddFast(ctx, i, wInt(i))
 	}
@@ -448,23 +449,23 @@ func TestAddReturnsAfterCtxCancel(t *testing.T) {
 	pQueue.InitiateAndRun(ctx)
 
 	cancel()
-	// Settle so processIn/processInFast observe ctx.Done() and exit;
-	// select is non-deterministic when both p.in and ctx.Done() are ready,
-	// so without a brief pause the producer goroutines may still consume
-	// one Add even after cancel().
-	time.Sleep(50 * time.Millisecond)
 
-	// Fresh ctx with a short deadline so the test fails fast if Add
-	// blocks: the producer goroutines are gone, so the only way Add can
-	// return is via the new ctx.Done() select branch.
-	addCtx, addCancel := context.WithTimeout(t.Context(), 2*time.Second)
-	defer addCancel()
+	// Once the producer goroutines exit, no one receives on p.in/p.inFast, so
+	// Add/AddFast must surface their ctx error. Poll instead of sleeping a fixed
+	// interval, which is unreliable under CI scheduling load.
+	require.Eventually(t, func() bool {
+		probeCtx, probeCancel := context.WithTimeout(t.Context(), 100*time.Millisecond)
+		defer probeCancel()
+		_, err := pQueue.Add(probeCtx, 1, wInt(1))
+		return err != nil
+	}, 5*time.Second, 20*time.Millisecond, "Add must return after the queue's ctx was cancelled")
 
-	_, err := pQueue.Add(addCtx, 1, wInt(1))
-	require.Error(t, err, "Add must return after the queue's ctx was cancelled")
-
-	_, err = pQueue.AddFast(addCtx, 1, wInt(1))
-	require.Error(t, err, "AddFast must return after the queue's ctx was cancelled")
+	require.Eventually(t, func() bool {
+		probeCtx, probeCancel := context.WithTimeout(t.Context(), 100*time.Millisecond)
+		defer probeCancel()
+		_, err := pQueue.AddFast(probeCtx, 1, wInt(1))
+		return err != nil
+	}, 5*time.Second, 20*time.Millisecond, "AddFast must return after the queue's ctx was cancelled")
 }
 
 func TestDoubleWeights(t *testing.T) {
