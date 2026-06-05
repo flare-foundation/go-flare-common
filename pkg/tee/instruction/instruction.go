@@ -12,6 +12,7 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/flare-foundation/go-flare-common/pkg/abicoder"
+	"github.com/flare-foundation/go-flare-common/pkg/signing"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/op"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/tee"
 )
@@ -23,7 +24,6 @@ import (
 const MaxMessageSize = 64 * 1024
 
 // MaxCosigners bounds the cosigner set so threshold arithmetic stays sane.
-// rippled multi-sig caps at 32 signers; cosigners here mirror that scale.
 const MaxCosigners = 32
 
 type Data struct {
@@ -42,6 +42,19 @@ func (d *Data) Validate() error {
 		return fmt.Errorf("AdditionalVariableMessage %d bytes exceeds %d", len(d.AdditionalVariableMessage), MaxMessageSize)
 	}
 	return nil
+}
+
+type DataFixed struct {
+	InstructionID          common.Hash      `json:"instructionId"`
+	TeeID                  common.Address   `json:"teeId"`
+	Timestamp              uint64           `json:"timestamp"`
+	RewardEpochID          uint32           `json:"rewardEpochId"`
+	OPType                 common.Hash      `json:"opType"`
+	OPCommand              common.Hash      `json:"opCommand"`
+	Cosigners              []common.Address `json:"cosigners"`
+	CosignersThreshold     uint64           `json:"cosignersThreshold"`
+	OriginalMessage        hexutil.Bytes    `json:"originalMessage"`
+	AdditionalFixedMessage hexutil.Bytes    `json:"additionalFixedMessage"`
 }
 
 // Validate enforces shape and policy invariants on the fixed portion of an
@@ -73,19 +86,6 @@ func (d *DataFixed) Validate() error {
 		return fmt.Errorf("invalid op type/command pair: type=%s command=%s", d.OPType.Hex(), d.OPCommand.Hex())
 	}
 	return nil
-}
-
-type DataFixed struct {
-	InstructionID          common.Hash      `json:"instructionId"`
-	TeeID                  common.Address   `json:"teeId"`
-	Timestamp              uint64           `json:"timestamp"`
-	RewardEpochID          uint32           `json:"rewardEpochId"`
-	OPType                 common.Hash      `json:"opType"`
-	OPCommand              common.Hash      `json:"opCommand"`
-	Cosigners              []common.Address `json:"cosigners"`
-	CosignersThreshold     uint64           `json:"cosignersThreshold"`
-	OriginalMessage        hexutil.Bytes    `json:"originalMessage"`
-	AdditionalFixedMessage hexutil.Bytes    `json:"additionalFixedMessage"`
 }
 
 // HashFixed computes the hash of the DataFixed.
@@ -165,12 +165,26 @@ func NextVoteHash(hash common.Hash, sequence uint64, signature, additionalVariab
 }
 
 // HashForSigning computes the hash of the Data d that is signed by the provider.
-func (d Data) HashForSigning() (common.Hash, error) {
+func (d Data) HashForSigning(chainID uint64) (common.Hash, error) {
 	fixed, err := d.HashFixed()
 	if err != nil {
 		return common.Hash{}, err
 	}
-	return crypto.Keccak256Hash(fixed[:], crypto.Keccak256(d.AdditionalVariableMessage)), nil
+
+	dh := crypto.Keccak256Hash(fixed[:], crypto.Keccak256(d.AdditionalVariableMessage))
+
+	p := signing.Payload{
+		Prefix:   signing.TEEInstruction,
+		ChainID:  new(big.Int).SetUint64(chainID),
+		DataHash: dh,
+	}
+
+	h, err := p.Hash()
+	if err != nil {
+		return common.Hash{}, fmt.Errorf("hashing payload: %w", err)
+	}
+
+	return h, nil
 }
 
 // SignInstructionHash signs the hash of the tee instruction.
@@ -188,8 +202,8 @@ type Instruction struct {
 
 // RecoverSignersPubKey recovers the signers public key from Data and Signature.
 // Non-canonical (high-S) signatures are rejected to keep the (data, signature) pair unique.
-func (i Instruction) RecoverSignersPubKey() (*ecdsa.PublicKey, error) {
-	hash, err := i.Data.HashForSigning()
+func (i Instruction) RecoverSignersPubKey(chainID uint64) (*ecdsa.PublicKey, error) {
+	hash, err := i.Data.HashForSigning(chainID)
 	if err != nil {
 		return nil, err
 	}

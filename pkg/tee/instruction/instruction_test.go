@@ -91,7 +91,9 @@ func TestValidate(t *testing.T) {
 func TestHashForSigning(t *testing.T) {
 	var data Data
 
-	hash0, err := data.HashForSigning()
+	chainID := uint64(14)
+
+	hash0, err := data.HashForSigning(chainID)
 	require.NoError(t, err)
 
 	require.Nil(t, data.AdditionalFixedMessage)
@@ -100,13 +102,13 @@ func TestHashForSigning(t *testing.T) {
 	data.AdditionalFixedMessage = []byte{}
 	data.AdditionalVariableMessage = hexutil.Bytes{}
 
-	hash, err := data.HashForSigning()
+	hash, err := data.HashForSigning(chainID)
 	require.NoError(t, err)
 	require.Equal(t, hash0, hash)
 
 	data.RewardEpochID = 1
 
-	hash, err = data.HashForSigning()
+	hash, err = data.HashForSigning(chainID)
 	require.NoError(t, err)
 	require.NotEqual(t, hash0, hash)
 
@@ -166,6 +168,8 @@ func TestHash(t *testing.T) {
 func TestSignAndRecover(t *testing.T) {
 	pk, err := crypto.GenerateKey()
 
+	chainID := uint64(14)
+
 	require.NoError(t, err)
 
 	var data Data
@@ -186,7 +190,7 @@ func TestSignAndRecover(t *testing.T) {
 	data.DataFixed = dataFixed
 	data.AdditionalVariableMessage = []byte{1}
 
-	hash, err := data.HashForSigning()
+	hash, err := data.HashForSigning(chainID)
 	require.NoError(t, err)
 
 	sig, err := SignInstructionHash(hash, pk)
@@ -197,8 +201,13 @@ func TestSignAndRecover(t *testing.T) {
 		Signature: sig,
 	}
 
-	pub, err := i.RecoverSignersPubKey()
+	pub, err := i.RecoverSignersPubKey(chainID)
 	require.NoError(t, err)
 
 	require.Equal(t, *pub, pk.PublicKey)
+
+	pubWrong, err := i.RecoverSignersPubKey(chainID + 1)
+	require.NoError(t, err)
+
+	require.NotEqual(t, *pubWrong, pk.PublicKey)
 }
