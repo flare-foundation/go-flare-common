@@ -23,6 +23,15 @@ type Payload struct {
 	DataHash [32]byte `abi:"dataHash"`
 }
 
+// NewPayload builds a Payload.
+func NewPayload(prefix [32]byte, chainID uint64, dataHash [32]byte) Payload {
+	return Payload{
+		Prefix:   prefix,
+		ChainID:  new(big.Int).SetUint64(chainID),
+		DataHash: dataHash,
+	}
+}
+
 // PayloadArgument is the abi.Argument matching the Solidity Payload struct:
 var PayloadArgument abi.Argument
 

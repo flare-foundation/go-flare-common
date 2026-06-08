@@ -13,6 +13,14 @@ var (
 	FDC2               Prefix = mustStringBytes32("FDC2")
 	TEEPausingAddress  Prefix = mustStringBytes32("TEE_PAUSING_ADDRESSES")
 	TEEMachinePathList Prefix = mustStringBytes32("TEE_MACHINE_PATH_LIST")
+	TEEMachineRegister Prefix = mustStringBytes32("TEE_MACHINE_REGISTER")
+	TEEKeyExistence    Prefix = mustStringBytes32("TEE_KEY_EXISTENCE")
+	TEEActionResult    Prefix = mustStringBytes32("TEE_ACTION_RESULT")
+	TEEVoteHash        Prefix = mustStringBytes32("TEE_VOTE_HASH")
+	TEEKeyDirectBackup Prefix = mustStringBytes32("TEE_KEY_DIRECT_BACKUP")
+	TEEWalletBackup    Prefix = mustStringBytes32("TEE_WALLET_BACKUP")
+	PMWWalletBackup    Prefix = mustStringBytes32("PMW_WALLET_BACKUP")
+	PMWKeySplit        Prefix = mustStringBytes32("PMW_KEY_SPLIT")
 )
 
 func mustStringBytes32(s string) [32]byte {
