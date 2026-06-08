@@ -7,7 +7,7 @@ import (
 type Prefix [32]byte
 
 var (
-	TEEInstruction Prefix = mustStringBytes32("TeeInstruction")
+	TEEInstruction Prefix = mustStringBytes32("TEE_INSTRUCTION")
 
 	// must be aligned with smart contracts
 	FDC2               Prefix = mustStringBytes32("FDC2")
