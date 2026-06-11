@@ -4,17 +4,23 @@ package storage
 import (
 	"fmt"
 	"sync"
-
-	"golang.org/x/exp/constraints"
 )
 
-type cyclicItem[K constraints.Integer, T any] struct {
+// Integer matches any integer type. It mirrors x/exp's constraints.Integer.
+type Integer interface {
+	~int | ~int8 | ~int16 | ~int32 | ~int64 |
+		~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr
+}
+
+type cyclicItem[K Integer, T any] struct {
 	key   K
 	value T
 }
 
 // Cyclic is a limited size storage. Keys are of type K, items are of type T. Item with key n is stored to n (mod size) together with the key.
-type Cyclic[K constraints.Integer, T any] struct {
+//
+// The zero value is not usable; construct it with New.
+type Cyclic[K Integer, T any] struct {
 	values []*cyclicItem[K, T]
 	mu     *sync.RWMutex
 }
@@ -65,13 +71,13 @@ func (s *Cyclic[K, T]) Get(key K) (T, bool) {
 	return storedItem.value, true
 }
 
-// Deprecated: NewCyclic initializes a Cyclic storage with size. Panics if
-// size is not positive or cannot be represented losslessly by K (the
-// modulo arithmetic in Store/Get otherwise produces out-of-range indices
-// and a runtime slice-OOB panic on first access).
+// NewCyclic initializes a Cyclic storage with size. Panics if size is not
+// positive or cannot be represented losslessly by K (the modulo arithmetic
+// in Store/Get otherwise produces out-of-range indices and a runtime
+// slice-OOB panic on first access).
 //
-// Use New instead.
-func NewCyclic[K constraints.Integer, T any](size int) Cyclic[K, T] {
+// Deprecated: Use New instead.
+func NewCyclic[K Integer, T any](size int) Cyclic[K, T] {
 	p := New[K, T](size)
 	if p == nil {
 		panic(fmt.Sprintf("storage.NewCyclic: invalid size %d for key type", size))
@@ -86,7 +92,7 @@ func NewCyclic[K constraints.Integer, T any](size int) Cyclic[K, T] {
 // arithmetic in Store/Get would then produce out-of-range indices and the
 // slice access would panic at runtime). The roundtrip int(K(size)) == size
 // catches both signed-narrowing and unsigned-truncation cases.
-func New[K constraints.Integer, T any](size int) *Cyclic[K, T] {
+func New[K Integer, T any](size int) *Cyclic[K, T] {
 	if size <= 0 {
 		return nil
 	}
