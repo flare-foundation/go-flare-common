@@ -3,6 +3,7 @@ package priority
 
 import (
 	"context"
+	"fmt"
 	"sync/atomic"
 	"time"
 
@@ -16,6 +17,8 @@ type backOff func(int) time.Duration // custom function defining timeOut after a
 const bucketSize = 2
 
 // Logger is the subset of logger.Logger used by PriorityQueue; logger.Nop satisfies it.
+// Panicf implementations are not required to panic: when an invariant is
+// violated the queue logs through Panicf and then panics itself.
 type Logger interface {
 	Infof(string, ...any)
 	Errorf(string, ...any)
@@ -122,7 +125,12 @@ func NewWithLogger[T any, W weight[W]](params Params, name string, l Logger) *Pr
 }
 
 // SetBackOff sets the backOff function for the queue.
+// A nil bo resets the queue to the default TimeOff.
 func (p *PriorityQueue[T, W]) SetBackOff(bo backOff) {
+	if bo == nil {
+		p.bo.Store(nil)
+		return
+	}
 	p.bo.Store(&bo)
 }
 
@@ -235,6 +243,13 @@ func (p *PriorityQueue[T, W]) next(ctx context.Context) (*Item[Wrapped[T], W], b
 		p.fast.Lock()
 		if p.fast.Len() > 0 {
 			item, _ := heapt.Pop(&p.fast)
+			// Pass the wakeup on: racing pushes may have coalesced into one signal.
+			if p.fast.Len() > 0 {
+				select {
+				case p.fast.empty <- false:
+				default:
+				}
+			}
 			p.fast.Unlock()
 			return item, true
 		}
@@ -249,6 +264,13 @@ func (p *PriorityQueue[T, W]) next(ctx context.Context) (*Item[Wrapped[T], W], b
 		p.regular.Lock()
 		if p.regular.Len() > 0 {
 			item, _ := heapt.Pop(&p.regular)
+			// Pass the wakeup on: racing pushes may have coalesced into one signal.
+			if p.regular.Len() > 0 {
+				select {
+				case p.regular.empty <- false:
+				default:
+				}
+			}
 			p.regular.Unlock()
 			return item, true
 		}
@@ -272,6 +294,7 @@ func (p *PriorityQueue[T, W]) next(ctx context.Context) (*Item[Wrapped[T], W], b
 // Dequeue gets next item and processes it with discard and handler function.
 // Items that are discarded do not affect rate limit.
 // If handler returns an error, item (from regular lane) is retried until success or maxAttempts is reached.
+// A panicking handler is not recovered and terminates the process.
 //
 // Delivery is at-most-once. Once an item is popped from the heap, it is no
 // longer in the queue; if ctx is cancelled before the handler runs (between
@@ -281,12 +304,12 @@ func (p *PriorityQueue[T, W]) next(ctx context.Context) (*Item[Wrapped[T], W], b
 // producers to stop, waiting for Length to reach zero, and only then
 // cancelling.
 func (p *PriorityQueue[T, W]) Dequeue(ctx context.Context, handler func(context.Context, T) error, discard func(context.Context, T) bool) {
-	wItem, ok := p.next(ctx)
-	if !ok {
+	if handler == nil {
 		return
 	}
 
-	if handler == nil {
+	wItem, ok := p.next(ctx)
+	if !ok {
 		return
 	}
 
@@ -307,16 +330,30 @@ func (p *PriorityQueue[T, W]) Dequeue(ctx context.Context, handler func(context.
 	}
 
 	go func() {
-		err := handler(ctx, wItem.value.item)
-
 		if p.workers != nil {
-			p.decrementWorkers()
+			defer p.decrementWorkers()
 		}
 
+		err := handler(ctx, wItem.value.item)
 		if err != nil {
 			p.handleRetry(ctx, wItem, err)
 		}
 	}()
+}
+
+// Length returns the number of items currently stored in the fast and regular
+// lanes. Items buffered in Add channels, waiting on retry backoff, or being
+// handled are not counted.
+func (p *PriorityQueue[T, W]) Length() int {
+	p.fast.RLock()
+	n := p.fast.Len()
+	p.fast.RUnlock()
+
+	p.regular.RLock()
+	n += p.regular.Len()
+	p.regular.RUnlock()
+
+	return n
 }
 
 // Name of the PriorityQueue. Returns "unnamed" if not set.
@@ -344,7 +381,10 @@ func (p *PriorityQueue[T, W]) decrementWorkers() {
 	case <-p.workers:
 		return
 	default:
-		p.logger.Panicf("queue %s: decrementWorkers called with no worker in flight", p.Name())
+		msg := fmt.Sprintf("queue %s: decrementWorkers called with no worker in flight", p.Name())
+		p.logger.Panicf("%s", msg)
+		// The injected logger may not panic; the invariant must.
+		panic(msg)
 	}
 }
 
