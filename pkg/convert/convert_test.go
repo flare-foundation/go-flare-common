@@ -38,7 +38,7 @@ func TestMapToValueSlice(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			result := MapToValueSlice(test.input)
 
-			require.Equal(t, len(test.input), len(test.expected))
+			require.Len(t, result, len(test.expected))
 
 			// Since map iteration order is nondeterministic, we need to check if all expected values are preset with multiplicity.
 			resultMap := make(map[int]int)
@@ -84,7 +84,7 @@ func TestMapToKeySlice(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			result := MapToKeySlice(test.input)
 
-			require.Equal(t, len(test.input), len(test.expected))
+			require.Len(t, result, len(test.expected))
 
 			// Since map iteration order is nondeterministic, we need to check if all expected keys are present.
 			resultMap := make(map[string]bool)

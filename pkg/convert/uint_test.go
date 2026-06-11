@@ -50,6 +50,12 @@ func TestBigToUint64(t *testing.T) {
 			expected:  0,
 			shouldErr: true,
 		},
+		{
+			name:      "nil",
+			input:     nil,
+			expected:  0,
+			shouldErr: true,
+		},
 	}
 
 	for _, test := range tests {
@@ -109,6 +115,12 @@ func TestBigToUint32(t *testing.T) {
 			expected:  0,
 			shouldErr: true,
 		},
+		{
+			name:      "nil",
+			input:     nil,
+			expected:  0,
+			shouldErr: true,
+		},
 	}
 
 	for _, test := range tests {
@@ -123,4 +135,24 @@ func TestBigToUint32(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestBigToUintSentinels(t *testing.T) {
+	_, err := BigToUint32Safe(nil)
+	require.ErrorIs(t, err, ErrNilBigInt)
+
+	_, err = BigToUint64Safe(nil)
+	require.ErrorIs(t, err, ErrNilBigInt)
+
+	_, err = BigToUint32Safe(big.NewInt(-1))
+	require.ErrorIs(t, err, ErrOutOfRange)
+
+	_, err = BigToUint32Safe(new(big.Int).Lsh(big.NewInt(1), 32))
+	require.ErrorIs(t, err, ErrOutOfRange)
+
+	_, err = BigToUint64Safe(big.NewInt(-1))
+	require.ErrorIs(t, err, ErrOutOfRange)
+
+	_, err = BigToUint64Safe(new(big.Int).Lsh(big.NewInt(1), 64))
+	require.ErrorIs(t, err, ErrOutOfRange)
 }

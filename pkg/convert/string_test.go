@@ -1,6 +1,7 @@
 package convert
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -104,6 +105,24 @@ func TestHex32StringToCommonHash(t *testing.T) {
 			expected: "",
 			err:      true,
 		},
+		{
+			name:     "doubled prefix 0x0X",
+			input:    "0x0X1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+			expected: "",
+			err:      true,
+		},
+		{
+			name:     "doubled prefix 0X0x",
+			input:    "0X0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+			expected: "",
+			err:      true,
+		},
+		{
+			name:     "doubled prefix 0x0x",
+			input:    "0x0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+			expected: "",
+			err:      true,
+		},
 	}
 
 	for _, test := range tests {
@@ -117,4 +136,14 @@ func TestHex32StringToCommonHash(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestHex32StringToCommonHashErrorBounded(t *testing.T) {
+	_, err := Hex32StringToCommonHash(strings.Repeat("zz", 10000))
+	require.Error(t, err)
+	require.Less(t, len(err.Error()), 200)
+
+	_, err = Hex32StringToCommonHash(strings.Repeat("ab", 10000))
+	require.Error(t, err)
+	require.Less(t, len(err.Error()), 200)
 }
