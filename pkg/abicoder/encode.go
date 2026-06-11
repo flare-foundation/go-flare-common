@@ -1,4 +1,7 @@
 // Package abicoder provides generic ABI encoding and decoding utilities.
+//
+// It handles ABI argument values such as structs, tuples, and primitives. It
+// does not handle events: indexed (topic) arguments are not supported.
 package abicoder
 
 import (
@@ -22,6 +25,10 @@ func Encode(arg abi.Argument, data any) (encoded []byte, err error) {
 			}
 		}
 	}()
+
+	if err := checkArgType(arg.Type); err != nil {
+		return nil, err
+	}
 
 	args := abi.Arguments{arg}
 

@@ -13,51 +13,31 @@ var errNonPointer = errors.New("dest is not a non nil pointer")
 
 // DecodeTo decodes ABI-encoded data and writes it to dest.
 //
-// dest must be a non-nil pointer to a value of type T whose shape matches the
-// ABI argument. Shape verification is strict: abi.ConvertType panics if the
-// destination's field set or types diverge from arg, which the deferred
-// recover surfaces as an error.
-func DecodeTo[T any](arg abi.Argument, data []byte, dest *T) (err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			e, ok := r.(error)
-			if ok {
-				err = fmt.Errorf("recovered panic: %w", e)
-			} else {
-				err = fmt.Errorf("recovered panic non error: %v", r)
-			}
-		}
-	}()
-
+// dest must be a non-nil pointer. DecodeTo behaves like [Decode] and writes the
+// result through dest, leaving dest unchanged on error.
+func DecodeTo[T any](arg abi.Argument, data []byte, dest *T) error {
 	rv := reflect.ValueOf(dest)
 	if rv.Kind() != reflect.Pointer || rv.IsNil() {
 		return errNonPointer
 	}
 
-	args := abi.Arguments{arg}
-
-	decodedSlice, err := args.Unpack(data)
+	t, err := Decode[T](arg, data)
 	if err != nil {
 		return err
 	}
 
-	err = checkEncodeDecode(&args, data, decodedSlice)
-	if err != nil {
-		return err
-	}
-
-	temp := abi.ConvertType(decodedSlice[0], new(T))
-	temp2, ok := temp.(*T)
-	if !ok {
-		return errors.New("invalid type assertion")
-	}
-
-	*dest = *temp2
+	*dest = t
 
 	return nil
 }
 
-// Decode decodes abi encoded data and converts it to a go struct of type T.
+// Decode decodes ABI-encoded data into a value of type T.
+//
+// T's array lengths and struct field counts must match the ABI argument, else
+// ErrShapeMismatch is returned; tuple-to-struct mapping is positional by index
+// and ignores field names. Non-canonical encodings (including offset aliasing,
+// see ErrNonCanonical) are rejected. When T is an interface no shape check is
+// performed and tuples decode to go-ethereum's json-tagged anonymous struct.
 func Decode[T any](arg abi.Argument, data []byte) (t T, err error) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -69,6 +49,18 @@ func Decode[T any](arg abi.Argument, data []byte) (t T, err error) {
 			}
 		}
 	}()
+
+	if err := checkArgType(arg.Type); err != nil {
+		return t, err
+	}
+
+	if err := checkShape[T](arg.Type); err != nil {
+		return t, err
+	}
+
+	if exceedsStringBudget(arg.Type, data) {
+		return t, ErrNonCanonical
+	}
 
 	args := abi.Arguments{arg}
 
