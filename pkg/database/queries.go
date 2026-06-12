@@ -92,7 +92,7 @@ func fetchLatestLogsByAddressAndTopic0(
 	err := db.WithContext(ctx).Where("address = ? AND topic0 = ?",
 		hex.EncodeToString(params.Address[:]), // encodes without 0x prefix and without checksum
 		hex.EncodeToString(params.Topic0[:]),
-	).Order("timestamp DESC").Limit(params.Number).Find(&logs).Error
+	).Order("timestamp DESC, id DESC").Limit(params.Number).Find(&logs).Error
 
 	return logs, err
 }
@@ -175,7 +175,7 @@ func fetchLogsByAddressAndTopic0Timestamp(ctx context.Context, db *gorm.DB, para
 		hex.EncodeToString(params.Topic0[:]),
 		params.From,
 		params.To,
-	).Order("timestamp").Find(&logs).Error
+	).Order("timestamp, id").Find(&logs).Error
 	if err != nil {
 		return nil, err
 	}
@@ -196,7 +196,7 @@ func fetchLogsByAddressAndTopic0FromTimestampToBlockNumber(ctx context.Context, 
 		hex.EncodeToString(params.Topic0[:]),
 		params.From,
 		params.To,
-	).Order("timestamp").Find(&logs).Error
+	).Order("timestamp, id").Find(&logs).Error
 	if err != nil {
 		return nil, err
 	}
@@ -218,7 +218,7 @@ func fetchLogsByAddressAndTopic0BlockNumber(ctx context.Context, db *gorm.DB, pa
 		hex.EncodeToString(params.Topic0[:]),
 		params.From,
 		params.To,
-	).Order("timestamp").Find(&logs).Error
+	).Order("timestamp, id").Find(&logs).Error
 	if err != nil {
 		return nil, err
 	}
@@ -251,7 +251,7 @@ func fetchTransactionsByAddressAndSelectorTimestamp(ctx context.Context, db *gor
 		hex.EncodeToString(params.FunctionSel[:]),
 		params.From,
 		params.To,
-	).Order("timestamp").Find(&transactions).Error
+	).Order("timestamp, id").Find(&transactions).Error
 	if err != nil {
 		return nil, err
 	}
@@ -273,7 +273,7 @@ func fetchTransactionsByAddressAndSelectorBlockNumber(ctx context.Context, db *g
 		hex.EncodeToString(params.FunctionSel[:]),
 		params.From,
 		params.To,
-	).Order("timestamp").Find(&transactions).Error
+	).Order("timestamp, id").Find(&transactions).Error
 	if err != nil {
 		return nil, err
 	}
@@ -294,7 +294,7 @@ func fetchTransactionsByAddressAndSelectorFromBlockNumber(ctx context.Context, d
 		hex.EncodeToString(params.ToAddress[:]), // encodes without 0x prefix and without checksum
 		hex.EncodeToString(params.FunctionSel[:]),
 		params.From,
-	).Order("timestamp").Find(&transactions).Error
+	).Order("timestamp, id").Find(&transactions).Error
 	if err != nil {
 		return nil, err
 	}
