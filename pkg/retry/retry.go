@@ -35,6 +35,7 @@ type Params struct {
 // Risk: with MaxAttempts, Delay, and Timeout all unset (zero) and a constantly
 // failing f, this loop runs as fast as f can return; the only exit is ctx
 // cancellation. Callers in that configuration MUST pass a cancellable ctx.
+// If the function f stalls, Execute exits only after context gets canceled or Timeout has passed.
 func Execute[T any](ctx context.Context, f func() (T, error), params Params) ExecuteStatus[T] {
 	if params.MaxAttempts < 0 || params.Delay < 0 || params.Timeout < 0 {
 		return ExecuteStatus[T]{Err: errors.New("negative MaxAttempts/Delay/Timeout not allowed")}
@@ -74,10 +75,29 @@ func Execute[T any](ctx context.Context, f func() (T, error), params Params) Exe
 			return result
 		}
 
-		r, err = f()
-		result.Value = r
-		if err == nil {
-			result.Success = true
+		type anon struct {
+			r   T
+			err error
+		}
+
+		x := make(chan anon)
+
+		go func() {
+			r, err = f()
+			packed := anon{r: r, err: err}
+			x <- packed
+		}()
+
+		select {
+		case packed := <-x:
+			result.Value = packed.r
+			if packed.err == nil {
+				result.Success = true
+				return result
+			}
+			err = packed.err
+		case <-ctx.Done():
+			result.Err = fmt.Errorf("context error mid retry: %w. Last error: %w", ctx.Err(), err)
 			return result
 		}
 
