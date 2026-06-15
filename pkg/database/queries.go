@@ -53,7 +53,7 @@ func fetchLatestBlock(
 ) (Block, error) {
 	var blocks []Block
 
-	err := db.WithContext(ctx).Order("timestamp DESC").Limit(1).Find(&blocks).Error
+	err := db.WithContext(ctx).Order("timestamp DESC, id DESC").Limit(1).Find(&blocks).Error
 	if err != nil {
 		return Block{}, err
 	}
@@ -144,7 +144,7 @@ func fetchLogsFull(
 		}
 	}
 
-	err := db.WithContext(ctx).Where(pMap).Order("timestamp DESC").Limit(params.Number).Find(&logs).Error
+	err := db.WithContext(ctx).Where(pMap).Order("timestamp DESC, id DESC").Limit(params.Number).Find(&logs).Error
 
 	return logs, err
 }

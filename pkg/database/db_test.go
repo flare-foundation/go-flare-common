@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"testing"
@@ -12,6 +13,14 @@ import (
 	"github.com/stretchr/testify/require"
 	"gorm.io/gorm"
 )
+
+func logIDs(logs []Log) []uint64 {
+	ids := make([]uint64, len(logs))
+	for i, l := range logs {
+		ids[i] = l.ID
+	}
+	return ids
+}
 
 func ptr[T any](v T) *T { return &v }
 
@@ -137,6 +146,70 @@ func TestDBFetchLogsOrderedByTimestamp(t *testing.T) {
 	got, err := dbFetchLogs(context.Background(), db, LogsQuery{})
 	require.NoError(t, err)
 	require.Equal(t, []uint64{2, 3, 1}, []uint64{got[0].ID, got[1].ID, got[2].ID})
+}
+
+// TestDBFetchLogsTieBreaksByID pins the ascending id tie-breaker so logs with
+// equal timestamps come back in a deterministic order.
+func TestDBFetchLogsTieBreaksByID(t *testing.T) {
+	db := newTestDB(t)
+
+	// Equal timestamps, inserted out of id order; expect ascending id.
+	logs := []Log{
+		{BaseEntity: BaseEntity{ID: 3}, Timestamp: 100, TransactionHash: "tx3", LogIndex: 2},
+		{BaseEntity: BaseEntity{ID: 1}, Timestamp: 100, TransactionHash: "tx1", LogIndex: 0},
+		{BaseEntity: BaseEntity{ID: 2}, Timestamp: 100, TransactionHash: "tx2", LogIndex: 1},
+	}
+	require.NoError(t, db.Create(&logs).Error)
+
+	got, err := dbFetchLogs(context.Background(), db, LogsQuery{})
+	require.NoError(t, err)
+	require.Equal(t, []uint64{1, 2, 3}, logIDs(got))
+}
+
+// TestFetchLatestLogsTieBreaksByIDDescending pins the descending id tie-breaker
+// for the latest-logs query: equal timestamps return highest id first.
+func TestFetchLatestLogsTieBreaksByIDDescending(t *testing.T) {
+	db := newTestDB(t)
+
+	addr := common.HexToAddress("0x1111111111111111111111111111111111111111")
+	topic0 := common.HexToHash("0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+	addrHex := hex.EncodeToString(addr[:])
+	topicHex := hex.EncodeToString(topic0[:])
+
+	logs := []Log{
+		{BaseEntity: BaseEntity{ID: 1}, Address: addrHex, Topic0: topicHex, Timestamp: 100, TransactionHash: "tx1", LogIndex: 0},
+		{BaseEntity: BaseEntity{ID: 2}, Address: addrHex, Topic0: topicHex, Timestamp: 100, TransactionHash: "tx2", LogIndex: 1},
+		{BaseEntity: BaseEntity{ID: 3}, Address: addrHex, Topic0: topicHex, Timestamp: 100, TransactionHash: "tx3", LogIndex: 2},
+	}
+	require.NoError(t, db.Create(&logs).Error)
+
+	got, err := fetchLatestLogsByAddressAndTopic0(context.Background(), db, LatestLogsParams{
+		Address: addr,
+		Topic0:  topic0,
+		Number:  10,
+	})
+	require.NoError(t, err)
+	require.Equal(t, []uint64{3, 2, 1}, logIDs(got))
+}
+
+// TestFetchLogsFullTieBreaksByIDDescending pins the descending id tie-breaker
+// for the full-filter logs query on equal timestamps.
+func TestFetchLogsFullTieBreaksByIDDescending(t *testing.T) {
+	db := newTestDB(t)
+
+	addr := common.HexToAddress("0x1111111111111111111111111111111111111111")
+	addrHex := hex.EncodeToString(addr[:])
+
+	logs := []Log{
+		{BaseEntity: BaseEntity{ID: 1}, Address: addrHex, Timestamp: 100, TransactionHash: "tx1", LogIndex: 0},
+		{BaseEntity: BaseEntity{ID: 2}, Address: addrHex, Timestamp: 100, TransactionHash: "tx2", LogIndex: 1},
+		{BaseEntity: BaseEntity{ID: 3}, Address: addrHex, Timestamp: 100, TransactionHash: "tx3", LogIndex: 2},
+	}
+	require.NoError(t, db.Create(&logs).Error)
+
+	got, err := fetchLogsFull(context.Background(), db, LogsFullParams{Address: addr, Number: 10})
+	require.NoError(t, err)
+	require.Equal(t, []uint64{3, 2, 1}, logIDs(got))
 }
 
 func TestDBFetchLogsMethod(t *testing.T) {
