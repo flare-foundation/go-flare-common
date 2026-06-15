@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"runtime"
 	"sync"
 	"testing"
 	"time"
@@ -271,6 +272,43 @@ func TestExecuteReturnsEarlyOnCtxCancelDuringDelay(t *testing.T) {
 	require.ErrorIs(t, res.Err, context.Canceled)
 	require.ErrorIs(t, res.Err, errRetry)
 	require.Less(t, elapsed, delay, "Execute must return before the next delay completes (elapsed=%s)", elapsed)
+}
+
+// TestExecuteReturnsWhenFStalls verifies that a stalled f does not pin Execute:
+// once Timeout elapses Execute returns promptly with the context error, and the
+// abandoned goroutine exits once f is released — no leak, no racing write.
+func TestExecuteReturnsWhenFStalls(t *testing.T) {
+	before := runtime.NumGoroutine()
+
+	release := make(chan struct{})
+	f := func() (int, error) {
+		<-release // stall until released
+		return 7, nil
+	}
+
+	start := time.Now()
+	res := Execute(t.Context(), f, Params{Timeout: 10 * time.Millisecond})
+	elapsed := time.Since(start)
+
+	require.False(t, res.Success)
+	require.ErrorIs(t, res.Err, context.DeadlineExceeded)
+	require.Less(t, elapsed, time.Second, "Execute must not wait for a stalled f (elapsed=%s)", elapsed)
+
+	close(release) // let the abandoned f finish so its goroutine can exit
+	requireNoGoroutineLeak(t, before)
+}
+
+// requireNoGoroutineLeak waits for the live goroutine count to return to baseline.
+func requireNoGoroutineLeak(t *testing.T, baseline int) {
+	t.Helper()
+	for range 200 {
+		runtime.GC()
+		if runtime.NumGoroutine() <= baseline {
+			return
+		}
+		time.Sleep(5 * time.Millisecond)
+	}
+	require.LessOrEqual(t, runtime.NumGoroutine(), baseline, "goroutine leaked")
 }
 
 func TestExecuteBackoffDelays(t *testing.T) {

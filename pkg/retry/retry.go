@@ -32,10 +32,13 @@ type Params struct {
 
 // Execute executes function f and retries on error according to params.
 //
+// Each attempt runs f in its own goroutine, so a stalled f cannot pin Execute:
+// it returns as soon as ctx is canceled or Timeout elapses, and the abandoned
+// goroutine exits on its own once f finally returns.
+//
 // Risk: with MaxAttempts, Delay, and Timeout all unset (zero) and a constantly
 // failing f, this loop runs as fast as f can return; the only exit is ctx
 // cancellation. Callers in that configuration MUST pass a cancellable ctx.
-// If the function f stalls, Execute exits only after context gets canceled or Timeout has passed.
 func Execute[T any](ctx context.Context, f func() (T, error), params Params) ExecuteStatus[T] {
 	if params.MaxAttempts < 0 || params.Delay < 0 || params.Timeout < 0 {
 		return ExecuteStatus[T]{Err: errors.New("negative MaxAttempts/Delay/Timeout not allowed")}
@@ -58,7 +61,12 @@ func Execute[T any](ctx context.Context, f func() (T, error), params Params) Exe
 	var result ExecuteStatus[T]
 
 	var err error
-	var r T
+
+	// attempt carries one f() result from its goroutine back to the loop.
+	type attempt struct {
+		value T
+		err   error
+	}
 
 	cond := func(j, attempts int) bool {
 		return j < attempts
@@ -75,27 +83,24 @@ func Execute[T any](ctx context.Context, f func() (T, error), params Params) Exe
 			return result
 		}
 
-		type anon struct {
-			r   T
-			err error
-		}
-
-		x := make(chan anon)
+		// Run f in its own goroutine so a stalled f cannot block past ctx
+		// cancellation. The channel is buffered so the goroutine can send and
+		// exit even after we have returned on ctx.Done.
+		done := make(chan attempt, 1)
 
 		go func() {
-			r, err = f()
-			packed := anon{r: r, err: err}
-			x <- packed
+			value, ferr := f()
+			done <- attempt{value: value, err: ferr}
 		}()
 
 		select {
-		case packed := <-x:
-			result.Value = packed.r
-			if packed.err == nil {
+		case a := <-done:
+			result.Value = a.value
+			if a.err == nil {
 				result.Success = true
 				return result
 			}
-			err = packed.err
+			err = a.err
 		case <-ctx.Done():
 			result.Err = fmt.Errorf("context error mid retry: %w. Last error: %w", ctx.Err(), err)
 			return result
