@@ -24,6 +24,7 @@ const (
 	testAudience      = "test-audience"
 	testImageHashHex  = "732d2328d06950198ffbd35b5eb55ec95ae700d05bddfa56fa0bc4c43ed1ce97"
 	testImageHashFull = "sha256:" + testImageHashHex
+	testNonce         = "expected-challenge"
 )
 
 // validTestPolicy returns a Policy that passes every check when used with claims
@@ -38,6 +39,7 @@ func validTestPolicy(t *testing.T) Policy {
 		Issuer:               testIssuer,
 		RequireSecBoot:       true,
 		AllowedDebugStatuses: []string{productionDebugStatus},
+		EATNonce:             testNonce,
 	}
 }
 
@@ -58,6 +60,7 @@ func validTestClaims(now time.Time) GoogleTeeClaims {
 		HWModel:     "testmodel",
 		SecBoot:     true,
 		DebugStatus: productionDebugStatus,
+		EATNonce:    EATNonce{testNonce},
 		SubMods: SubMods{
 			Container: Container{ImageID: testImageHashFull},
 		},
@@ -418,23 +421,54 @@ func TestPolicyEnforcement(t *testing.T) {
 		require.NoError(t, err)
 	})
 
+	t.Run("single matching eat_nonce accepted", func(t *testing.T) {
+		c := validTestClaims(now)
+		c.EATNonce = []string{testNonce}
+		signedToken, root := generateTestPKIToken(t, now, now, now, c)
+		p := validTestPolicy(t)
+		p.EATNonce = testNonce
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, p)
+		require.NoError(t, err)
+	})
+
 	t.Run("eat_nonce mismatch rejected", func(t *testing.T) {
 		c := validTestClaims(now)
 		c.EATNonce = []string{"other-challenge"}
 		signedToken, root := generateTestPKIToken(t, now, now, now, c)
 		p := validTestPolicy(t)
-		p.EATNonce = "expected-challenge"
+		p.EATNonce = testNonce
 		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, p)
 		require.Error(t, err)
 		require.Contains(t, err.Error(), "eat_nonce")
 	})
 
-	t.Run("eat_nonce match accepted", func(t *testing.T) {
+	t.Run("multiple eat_nonce entries rejected even if one matches", func(t *testing.T) {
 		c := validTestClaims(now)
-		c.EATNonce = []string{"expected-challenge", "another"}
+		c.EATNonce = []string{testNonce, "another"}
 		signedToken, root := generateTestPKIToken(t, now, now, now, c)
 		p := validTestPolicy(t)
-		p.EATNonce = "expected-challenge"
+		p.EATNonce = testNonce
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, p)
+		require.Error(t, err)
+		require.Contains(t, err.Error(), "eat_nonce")
+	})
+
+	t.Run("missing eat_nonce rejected by default", func(t *testing.T) {
+		c := validTestClaims(now)
+		c.EATNonce = nil
+		signedToken, root := generateTestPKIToken(t, now, now, now, c)
+		p := validTestPolicy(t)
+		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, p)
+		require.Error(t, err)
+		require.Contains(t, err.Error(), "eat_nonce")
+	})
+
+	t.Run("SkipNonceCheck skips binding", func(t *testing.T) {
+		c := validTestClaims(now)
+		c.EATNonce = nil
+		signedToken, root := generateTestPKIToken(t, now, now, now, c)
+		p := validTestPolicy(t)
+		p.SkipNonceCheck = true
 		_, _, err := ParseAndValidatePKIToken(signedToken, root, nil, nil, p)
 		require.NoError(t, err)
 	})

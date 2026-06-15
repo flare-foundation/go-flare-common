@@ -31,11 +31,13 @@ const defaultLeeway = 30 * time.Second
 // Policy carries the per-deployment configuration the verifier supplies. The library
 // performs the comparisons; the consumer only supplies the values it alone knows.
 //
-// Each optional check runs only when the policy carries the information to perform it:
-// an allowlist/value field is checked when non-empty, a Require* boolean when true.
-// Every field therefore defaults to "skip", so the zero Policy verifies token
-// AUTHENTICITY ONLY — signature, x5c chain to the pinned root, RS256, iss, and exp —
-// but NOT workload IDENTITY. Almost every production caller should set at least
+// Most optional checks run only when the policy carries the information to perform
+// it: an allowlist/value field is checked when non-empty, a Require* boolean when
+// true. eat_nonce replay binding is the exception — it is enforced by default, so a
+// policy must set EATNonce to the expected challenge or set SkipNonceCheck to opt
+// out. Apart from the nonce, an otherwise-zero Policy verifies token AUTHENTICITY
+// ONLY — signature, x5c chain to the pinned root, RS256, iss, and exp — but NOT
+// workload IDENTITY. Almost every production caller should set at least
 // AllowedImageIDs and RequireSecBoot. iss is always checked; supplying Issuer only
 // overrides the expected value (intended for test environments).
 //
@@ -44,7 +46,7 @@ const defaultLeeway = 30 * time.Second
 //     RequireCRL, AllowedLeafEKUs.
 //   - Only by Apply (the full ParseAndValidatePKIToken path; the generic-claims
 //     variant does not run these): AllowedImageIDs, AllowedHWModels, EATNonce,
-//     RequireSecBoot, AllowedDebugStatuses.
+//     SkipNonceCheck, RequireSecBoot, AllowedDebugStatuses.
 //
 // Do not add a validate() that requires Apply-only fields: they have no effect on the
 // ParseAndValidatePKITokenClaims path and requiring them there would reject callers
@@ -84,8 +86,12 @@ type Policy struct {
 	// Empty skips the hwmodel check.
 	AllowedHWModels map[string]struct{}
 
-	// EATNonce is the per-request challenge to bind. When non-empty, the token's
-	// eat_nonce list must contain this value. Empty skips replay binding.
+	// SkipNonceCheck disables eat_nonce replay binding. Binding is enforced by
+	// default (fail closed); set true only when the nonce is asserted elsewhere.
+	SkipNonceCheck bool
+
+	// EATNonce is the per-request challenge to bind. Unless SkipNonceCheck is set,
+	// the token's eat_nonce must be exactly this one value.
 	EATNonce string
 
 	// RequireSecBoot, when true, rejects tokens reporting secboot=false.
@@ -241,8 +247,8 @@ func parseAndVerifyJWT[T jwt.Claims](attestationToken string, storedRootCertific
 
 // Apply asserts the Confidential-Space-specific claim values on c against the policy.
 // Each check runs only when its policy field is set (RequireSecBoot true, or the relevant
-// allowlist/nonce non-empty); an unset field skips its check. Returns nil if all enabled
-// checks pass.
+// allowlist non-empty); an unset field skips its check. eat_nonce binding is the exception:
+// it is enforced unless SkipNonceCheck is set. Returns nil if all enabled checks pass.
 //
 // Called automatically by ParseAndValidatePKIToken; callers using
 // ParseAndValidatePKITokenClaims with a custom claim type are responsible for their own
@@ -268,10 +274,15 @@ func (c *GoogleTeeClaims) Apply(p Policy) error {
 			return fmt.Errorf("image_id %s not in allowlist", ch.Hex())
 		}
 	}
-	// WARNING: empty p.EATNonce silently skips replay binding.
-	if p.EATNonce != "" {
-		if !slices.Contains([]string(c.EATNonce), p.EATNonce) {
-			return errors.New("eat_nonce does not contain expected challenge")
+
+	// Replay binding, enforced unless opted out: the token must carry exactly one
+	// eat_nonce equal to the expected challenge.
+	if !p.SkipNonceCheck {
+		if len(c.EATNonce) != 1 {
+			return fmt.Errorf("expected exactly one eat_nonce entry, got %d", len(c.EATNonce))
+		}
+		if c.EATNonce[0] != p.EATNonce {
+			return errors.New("eat_nonce does not match expected challenge")
 		}
 	}
 	return nil
