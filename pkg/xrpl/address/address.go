@@ -34,7 +34,7 @@ func ID(address string) ([]byte, error) {
 
 	// leading byte
 	if addressBytes[0] != 0 {
-		return nil, fmt.Errorf("wrong leading byte %v", address)
+		return nil, fmt.Errorf("wrong leading byte %#x", addressBytes[0])
 	}
 
 	// checksum
@@ -46,7 +46,7 @@ func ID(address string) ([]byte, error) {
 	}
 
 	// trim leading byte and checksum
-	return addressBytes[1:21], nil
+	return addressBytes[1:21:21], nil
 }
 
 // Address calculates XRPL Address from accountID.
