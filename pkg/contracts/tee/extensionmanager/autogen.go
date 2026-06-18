@@ -31,7 +31,7 @@ var (
 
 // ExtensionManagerMetaData contains all meta data concerning the ExtensionManager contract.
 var ExtensionManagerMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"AddressAlreadyInSet\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"AddressNotInSet\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AvailabilityCheckTimestampInvalid\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CodeHashPlatformAlreadyDisabled\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CodeHashZero\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"cosigner\",\"type\":\"address\"}],\"name\":\"DuplicatedCosigner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ExtensionIdMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAddress\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAvailabilityCheckStatus\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidCodeHash\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"cosigner\",\"type\":\"address\"}],\"name\":\"InvalidCosigner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidDuration\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidExtensionOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidGovernanceHash\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidInitialization\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidInstructionsSender\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidKeyType\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidNonce\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPlatform\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPublicKey\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidReservedExtensionId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidResponseData\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidSigningAlgo\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidThreshold\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidWalletStatus\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"}],\"name\":\"KeyTypeAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"KeyTypeEmpty\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"}],\"name\":\"KeyTypeNotSupported\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LengthsMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoAddresses\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoPlatforms\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"}],\"name\":\"NoSigningAlgos\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotAllowedExtensionOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotInitializing\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\"}],\"name\":\"NotOwnerOrPauser\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\"}],\"name\":\"NotOwnerOrUnpauser\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExtensionOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExtensionOwnerOrOperator\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyGovernance\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwnerOrBackupManager\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProductionOrPausedStatus\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProposedOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OwnerNotAllowed\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"name\":\"PlatformAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"PlatformEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ReservedExtensionIdAlreadyAssigned\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"signingAlgo\",\"type\":\"bytes32\"}],\"name\":\"SigningAlgoAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SigningAlgoEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SystemOwnedExtensionId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TeeMachineNotAvailable\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"name\":\"UnsupportedPlatform\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"VersionAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"VersionEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"VersionNotSupported\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"name\":\"CodeHashPlatformDisabled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"oldOperator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOperator\",\"type\":\"address\"}],\"name\":\"ExtensionOperatorSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"encodedCallHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"}],\"name\":\"GovernanceCallTimelocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"version\",\"type\":\"uint64\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"NewOwnerConfirmed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"oldOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"NewOwnerProposed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"keyTypes\",\"type\":\"bytes32[]\"}],\"name\":\"SupportedKeyTypesAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"keyTypes\",\"type\":\"bytes32[]\"}],\"name\":\"SupportedKeyTypesRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"keyTypes\",\"type\":\"bytes32[]\"},{\"indexed\":false,\"internalType\":\"bytes32[][]\",\"name\":\"_signingAlgosByKeyType\",\"type\":\"bytes32[][]\"}],\"name\":\"SystemSupportedKeyTypesAndSigningAlgosAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"platforms\",\"type\":\"bytes32[]\"}],\"name\":\"SystemSupportedPlatformsAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"contractITeeExtensionStateVerifier\",\"name\":\"teeExtensionStateVerifier\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"teeExtensionInstructionsSender\",\"type\":\"address\"}],\"name\":\"TeeExtensionContractsSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"TeeExtensionRegistered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"version\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"platforms\",\"type\":\"bytes32[]\"}],\"name\":\"TeeVersionAdded\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32[]\",\"name\":\"_keyTypes\",\"type\":\"bytes32[]\"}],\"name\":\"addSupportedKeyTypes\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_keyTypes\",\"type\":\"bytes32[]\"},{\"internalType\":\"bytes32[][]\",\"name\":\"_signingAlgosByKeyType\",\"type\":\"bytes32[][]\"}],\"name\":\"addSystemSupportedKeyTypesAndSigningAlgos\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_platforms\",\"type\":\"bytes32[]\"}],\"name\":\"addSystemSupportedPlatforms\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_version\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32[]\",\"name\":\"_platforms\",\"type\":\"bytes32[]\"}],\"name\":\"addTeeVersion\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"confirmOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_platform\",\"type\":\"bytes32\"}],\"name\":\"disableCodeHashPlatform\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"}],\"name\":\"getCodeHashInfo\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"_version\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32[]\",\"name\":\"_platforms\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getExtensionOperator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getExtensionOwner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getSupportedCodeHashes\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_supportedCodeHashes\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getSupportedKeyTypes\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_supportedKeyTypes\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSystemSupportedKeyTypes\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSystemSupportedPlatforms\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_keyType\",\"type\":\"bytes32\"}],\"name\":\"getSystemSupportedSigningAlgos\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getTeeExtensionInstructionsSender\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getTeeExtensionStateVerifier\",\"outputs\":[{\"internalType\":\"contractITeeExtensionStateVerifier\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_platform\",\"type\":\"bytes32\"}],\"name\":\"isCodeHashPlatformDisabled\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_platform\",\"type\":\"bytes32\"}],\"name\":\"isCodeHashPlatformSupported\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_keyType\",\"type\":\"bytes32\"}],\"name\":\"isKeyTypeSupported\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_keyType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_signingAlgo\",\"type\":\"bytes32\"}],\"name\":\"isSigningAlgoSupported\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nextPublicExtensionId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_newOwner\",\"type\":\"address\"}],\"name\":\"proposeNewOwner\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractITeeExtensionStateVerifier\",\"name\":\"_teeExtensionStateVerifier\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_teeExtensionInstructionsSender\",\"type\":\"address\"}],\"name\":\"register\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"registerReserved\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32[]\",\"name\":\"_keyTypes\",\"type\":\"bytes32[]\"}],\"name\":\"removeSupportedKeyTypes\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"contractITeeExtensionStateVerifier\",\"name\":\"_teeExtensionStateVerifier\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_teeExtensionInstructionsSender\",\"type\":\"address\"}],\"name\":\"setExtensionContracts\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"}],\"name\":\"setExtensionOperator\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"AddressAlreadyInSet\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"AddressNotInSet\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AvailabilityCheckTimestampInvalid\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CodeHashPlatformAlreadyDisabled\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CodeHashZero\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"cosigner\",\"type\":\"address\"}],\"name\":\"DuplicatedCosigner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ExtensionIdMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAddress\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAvailabilityCheckStatus\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidCodeHash\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"cosigner\",\"type\":\"address\"}],\"name\":\"InvalidCosigner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidDuration\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidExtensionOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidGovernanceHash\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidInitialization\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidInstructionsSender\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidKeyType\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidNonce\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPlatform\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPublicKey\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidReservedExtensionId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidResponseData\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidSigningAlgo\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidThreshold\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidWalletStatus\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"}],\"name\":\"KeyTypeAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"KeyTypeEmpty\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"}],\"name\":\"KeyTypeNotSupported\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LengthsMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoAddresses\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoPlatforms\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"}],\"name\":\"NoSigningAlgos\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotAllowedExtensionOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotInitializing\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\"}],\"name\":\"NotOwnerOrPauser\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\"}],\"name\":\"NotOwnerOrUnpauser\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExtensionOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExtensionOwnerOrOperator\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyGovernance\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwnerOrBackupManager\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProductionOrPausedStatus\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProposedOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OwnerNotAllowed\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"name\":\"PlatformAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"PlatformEmpty\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"name\":\"PlatformNotFound\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ReservedExtensionIdAlreadyAssigned\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"signingAlgo\",\"type\":\"bytes32\"}],\"name\":\"SigningAlgoAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SigningAlgoEmpty\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"signingAlgo\",\"type\":\"bytes32\"}],\"name\":\"SigningAlgoNotFound\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SystemOwnedExtensionId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TeeMachineNotAvailable\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"}],\"name\":\"UnsupportedPlatform\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"VersionAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"VersionEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"VersionNotSupported\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"platforms\",\"type\":\"bytes32[]\"}],\"name\":\"CodeHashPlatformsDisabled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"oldOperator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOperator\",\"type\":\"address\"}],\"name\":\"ExtensionOperatorSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"encodedCallHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"}],\"name\":\"GovernanceCallTimelocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"version\",\"type\":\"uint64\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"NewOwnerConfirmed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"oldOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"NewOwnerProposed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"keyTypes\",\"type\":\"bytes32[]\"}],\"name\":\"SupportedKeyTypesAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"keyTypes\",\"type\":\"bytes32[]\"}],\"name\":\"SupportedKeyTypesRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"keyTypes\",\"type\":\"bytes32[]\"},{\"indexed\":false,\"internalType\":\"bytes32[][]\",\"name\":\"signingAlgosByKeyType\",\"type\":\"bytes32[][]\"}],\"name\":\"SystemSupportedKeyTypesAndSigningAlgosAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"keyTypes\",\"type\":\"bytes32[]\"},{\"indexed\":false,\"internalType\":\"bytes32[][]\",\"name\":\"signingAlgosByKeyType\",\"type\":\"bytes32[][]\"}],\"name\":\"SystemSupportedKeyTypesAndSigningAlgosRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"platforms\",\"type\":\"bytes32[]\"}],\"name\":\"SystemSupportedPlatformsAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"platforms\",\"type\":\"bytes32[]\"}],\"name\":\"SystemSupportedPlatformsRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"contractITeeExtensionStateVerifier\",\"name\":\"teeExtensionStateVerifier\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"teeExtensionInstructionsSender\",\"type\":\"address\"}],\"name\":\"TeeExtensionContractsSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"TeeExtensionRegistered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"version\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"platforms\",\"type\":\"bytes32[]\"}],\"name\":\"TeeVersionAdded\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32[]\",\"name\":\"_keyTypes\",\"type\":\"bytes32[]\"}],\"name\":\"addSupportedKeyTypes\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_keyTypes\",\"type\":\"bytes32[]\"},{\"internalType\":\"bytes32[][]\",\"name\":\"_signingAlgosByKeyType\",\"type\":\"bytes32[][]\"}],\"name\":\"addSystemSupportedKeyTypesAndSigningAlgos\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_platforms\",\"type\":\"bytes32[]\"}],\"name\":\"addSystemSupportedPlatforms\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_version\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32[]\",\"name\":\"_platforms\",\"type\":\"bytes32[]\"}],\"name\":\"addTeeVersion\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"confirmOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32[]\",\"name\":\"_platforms\",\"type\":\"bytes32[]\"}],\"name\":\"disableCodeHashPlatforms\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"}],\"name\":\"getCodeHashInfo\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"_version\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32[]\",\"name\":\"_platforms\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getExtensionOperator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getExtensionOwner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getSupportedCodeHashes\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_supportedCodeHashes\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getSupportedKeyTypes\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_supportedKeyTypes\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSystemSupportedKeyTypes\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSystemSupportedPlatforms\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_keyType\",\"type\":\"bytes32\"}],\"name\":\"getSystemSupportedSigningAlgos\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getTeeExtensionInstructionsSender\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getTeeExtensionStateVerifier\",\"outputs\":[{\"internalType\":\"contractITeeExtensionStateVerifier\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_platform\",\"type\":\"bytes32\"}],\"name\":\"isCodeHashPlatformDisabled\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_platform\",\"type\":\"bytes32\"}],\"name\":\"isCodeHashPlatformSupported\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_keyType\",\"type\":\"bytes32\"}],\"name\":\"isKeyTypeSupported\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_keyType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_signingAlgo\",\"type\":\"bytes32\"}],\"name\":\"isSigningAlgoSupported\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nextPublicExtensionId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_newOwner\",\"type\":\"address\"}],\"name\":\"proposeNewOwner\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractITeeExtensionStateVerifier\",\"name\":\"_teeExtensionStateVerifier\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_teeExtensionInstructionsSender\",\"type\":\"address\"}],\"name\":\"register\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"registerReserved\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32[]\",\"name\":\"_keyTypes\",\"type\":\"bytes32[]\"}],\"name\":\"removeSupportedKeyTypes\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_keyTypes\",\"type\":\"bytes32[]\"},{\"internalType\":\"bytes32[][]\",\"name\":\"_signingAlgosByKeyType\",\"type\":\"bytes32[][]\"}],\"name\":\"removeSystemSupportedKeyTypesAndSigningAlgos\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_platforms\",\"type\":\"bytes32[]\"}],\"name\":\"removeSystemSupportedPlatforms\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"contractITeeExtensionStateVerifier\",\"name\":\"_teeExtensionStateVerifier\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_teeExtensionInstructionsSender\",\"type\":\"address\"}],\"name\":\"setExtensionContracts\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"}],\"name\":\"setExtensionOperator\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // ExtensionManagerABI is the input ABI used to generate the binding from.
@@ -764,25 +764,25 @@ func (_ExtensionManager *ExtensionManagerTransactorSession) ConfirmOwnership(_ex
 	return _ExtensionManager.Contract.ConfirmOwnership(&_ExtensionManager.TransactOpts, _extensionId)
 }
 
-// DisableCodeHashPlatform is a paid mutator transaction binding the contract method 0x96f54e59.
+// DisableCodeHashPlatforms is a paid mutator transaction binding the contract method 0xc7ef55f8.
 //
-// Solidity: function disableCodeHashPlatform(uint256 _extensionId, bytes32 _codeHash, bytes32 _platform) returns()
-func (_ExtensionManager *ExtensionManagerTransactor) DisableCodeHashPlatform(opts *bind.TransactOpts, _extensionId *big.Int, _codeHash [32]byte, _platform [32]byte) (*types.Transaction, error) {
-	return _ExtensionManager.contract.Transact(opts, "disableCodeHashPlatform", _extensionId, _codeHash, _platform)
+// Solidity: function disableCodeHashPlatforms(uint256 _extensionId, bytes32 _codeHash, bytes32[] _platforms) returns()
+func (_ExtensionManager *ExtensionManagerTransactor) DisableCodeHashPlatforms(opts *bind.TransactOpts, _extensionId *big.Int, _codeHash [32]byte, _platforms [][32]byte) (*types.Transaction, error) {
+	return _ExtensionManager.contract.Transact(opts, "disableCodeHashPlatforms", _extensionId, _codeHash, _platforms)
 }
 
-// DisableCodeHashPlatform is a paid mutator transaction binding the contract method 0x96f54e59.
+// DisableCodeHashPlatforms is a paid mutator transaction binding the contract method 0xc7ef55f8.
 //
-// Solidity: function disableCodeHashPlatform(uint256 _extensionId, bytes32 _codeHash, bytes32 _platform) returns()
-func (_ExtensionManager *ExtensionManagerSession) DisableCodeHashPlatform(_extensionId *big.Int, _codeHash [32]byte, _platform [32]byte) (*types.Transaction, error) {
-	return _ExtensionManager.Contract.DisableCodeHashPlatform(&_ExtensionManager.TransactOpts, _extensionId, _codeHash, _platform)
+// Solidity: function disableCodeHashPlatforms(uint256 _extensionId, bytes32 _codeHash, bytes32[] _platforms) returns()
+func (_ExtensionManager *ExtensionManagerSession) DisableCodeHashPlatforms(_extensionId *big.Int, _codeHash [32]byte, _platforms [][32]byte) (*types.Transaction, error) {
+	return _ExtensionManager.Contract.DisableCodeHashPlatforms(&_ExtensionManager.TransactOpts, _extensionId, _codeHash, _platforms)
 }
 
-// DisableCodeHashPlatform is a paid mutator transaction binding the contract method 0x96f54e59.
+// DisableCodeHashPlatforms is a paid mutator transaction binding the contract method 0xc7ef55f8.
 //
-// Solidity: function disableCodeHashPlatform(uint256 _extensionId, bytes32 _codeHash, bytes32 _platform) returns()
-func (_ExtensionManager *ExtensionManagerTransactorSession) DisableCodeHashPlatform(_extensionId *big.Int, _codeHash [32]byte, _platform [32]byte) (*types.Transaction, error) {
-	return _ExtensionManager.Contract.DisableCodeHashPlatform(&_ExtensionManager.TransactOpts, _extensionId, _codeHash, _platform)
+// Solidity: function disableCodeHashPlatforms(uint256 _extensionId, bytes32 _codeHash, bytes32[] _platforms) returns()
+func (_ExtensionManager *ExtensionManagerTransactorSession) DisableCodeHashPlatforms(_extensionId *big.Int, _codeHash [32]byte, _platforms [][32]byte) (*types.Transaction, error) {
+	return _ExtensionManager.Contract.DisableCodeHashPlatforms(&_ExtensionManager.TransactOpts, _extensionId, _codeHash, _platforms)
 }
 
 // ProposeNewOwner is a paid mutator transaction binding the contract method 0xe947a09f.
@@ -869,6 +869,48 @@ func (_ExtensionManager *ExtensionManagerTransactorSession) RemoveSupportedKeyTy
 	return _ExtensionManager.Contract.RemoveSupportedKeyTypes(&_ExtensionManager.TransactOpts, _extensionId, _keyTypes)
 }
 
+// RemoveSystemSupportedKeyTypesAndSigningAlgos is a paid mutator transaction binding the contract method 0x36d34083.
+//
+// Solidity: function removeSystemSupportedKeyTypesAndSigningAlgos(bytes32[] _keyTypes, bytes32[][] _signingAlgosByKeyType) returns()
+func (_ExtensionManager *ExtensionManagerTransactor) RemoveSystemSupportedKeyTypesAndSigningAlgos(opts *bind.TransactOpts, _keyTypes [][32]byte, _signingAlgosByKeyType [][][32]byte) (*types.Transaction, error) {
+	return _ExtensionManager.contract.Transact(opts, "removeSystemSupportedKeyTypesAndSigningAlgos", _keyTypes, _signingAlgosByKeyType)
+}
+
+// RemoveSystemSupportedKeyTypesAndSigningAlgos is a paid mutator transaction binding the contract method 0x36d34083.
+//
+// Solidity: function removeSystemSupportedKeyTypesAndSigningAlgos(bytes32[] _keyTypes, bytes32[][] _signingAlgosByKeyType) returns()
+func (_ExtensionManager *ExtensionManagerSession) RemoveSystemSupportedKeyTypesAndSigningAlgos(_keyTypes [][32]byte, _signingAlgosByKeyType [][][32]byte) (*types.Transaction, error) {
+	return _ExtensionManager.Contract.RemoveSystemSupportedKeyTypesAndSigningAlgos(&_ExtensionManager.TransactOpts, _keyTypes, _signingAlgosByKeyType)
+}
+
+// RemoveSystemSupportedKeyTypesAndSigningAlgos is a paid mutator transaction binding the contract method 0x36d34083.
+//
+// Solidity: function removeSystemSupportedKeyTypesAndSigningAlgos(bytes32[] _keyTypes, bytes32[][] _signingAlgosByKeyType) returns()
+func (_ExtensionManager *ExtensionManagerTransactorSession) RemoveSystemSupportedKeyTypesAndSigningAlgos(_keyTypes [][32]byte, _signingAlgosByKeyType [][][32]byte) (*types.Transaction, error) {
+	return _ExtensionManager.Contract.RemoveSystemSupportedKeyTypesAndSigningAlgos(&_ExtensionManager.TransactOpts, _keyTypes, _signingAlgosByKeyType)
+}
+
+// RemoveSystemSupportedPlatforms is a paid mutator transaction binding the contract method 0x97874fed.
+//
+// Solidity: function removeSystemSupportedPlatforms(bytes32[] _platforms) returns()
+func (_ExtensionManager *ExtensionManagerTransactor) RemoveSystemSupportedPlatforms(opts *bind.TransactOpts, _platforms [][32]byte) (*types.Transaction, error) {
+	return _ExtensionManager.contract.Transact(opts, "removeSystemSupportedPlatforms", _platforms)
+}
+
+// RemoveSystemSupportedPlatforms is a paid mutator transaction binding the contract method 0x97874fed.
+//
+// Solidity: function removeSystemSupportedPlatforms(bytes32[] _platforms) returns()
+func (_ExtensionManager *ExtensionManagerSession) RemoveSystemSupportedPlatforms(_platforms [][32]byte) (*types.Transaction, error) {
+	return _ExtensionManager.Contract.RemoveSystemSupportedPlatforms(&_ExtensionManager.TransactOpts, _platforms)
+}
+
+// RemoveSystemSupportedPlatforms is a paid mutator transaction binding the contract method 0x97874fed.
+//
+// Solidity: function removeSystemSupportedPlatforms(bytes32[] _platforms) returns()
+func (_ExtensionManager *ExtensionManagerTransactorSession) RemoveSystemSupportedPlatforms(_platforms [][32]byte) (*types.Transaction, error) {
+	return _ExtensionManager.Contract.RemoveSystemSupportedPlatforms(&_ExtensionManager.TransactOpts, _platforms)
+}
+
 // SetExtensionContracts is a paid mutator transaction binding the contract method 0x6df0108f.
 //
 // Solidity: function setExtensionContracts(uint256 _extensionId, address _teeExtensionStateVerifier, address _teeExtensionInstructionsSender) returns()
@@ -911,9 +953,9 @@ func (_ExtensionManager *ExtensionManagerTransactorSession) SetExtensionOperator
 	return _ExtensionManager.Contract.SetExtensionOperator(&_ExtensionManager.TransactOpts, _extensionId, _operator)
 }
 
-// ExtensionManagerCodeHashPlatformDisabledIterator is returned from FilterCodeHashPlatformDisabled and is used to iterate over the raw logs and unpacked data for CodeHashPlatformDisabled events raised by the ExtensionManager contract.
-type ExtensionManagerCodeHashPlatformDisabledIterator struct {
-	Event *ExtensionManagerCodeHashPlatformDisabled // Event containing the contract specifics and raw log
+// ExtensionManagerCodeHashPlatformsDisabledIterator is returned from FilterCodeHashPlatformsDisabled and is used to iterate over the raw logs and unpacked data for CodeHashPlatformsDisabled events raised by the ExtensionManager contract.
+type ExtensionManagerCodeHashPlatformsDisabledIterator struct {
+	Event *ExtensionManagerCodeHashPlatformsDisabled // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -927,7 +969,7 @@ type ExtensionManagerCodeHashPlatformDisabledIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *ExtensionManagerCodeHashPlatformDisabledIterator) Next() bool {
+func (it *ExtensionManagerCodeHashPlatformsDisabledIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -936,7 +978,7 @@ func (it *ExtensionManagerCodeHashPlatformDisabledIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(ExtensionManagerCodeHashPlatformDisabled)
+			it.Event = new(ExtensionManagerCodeHashPlatformsDisabled)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -951,7 +993,7 @@ func (it *ExtensionManagerCodeHashPlatformDisabledIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(ExtensionManagerCodeHashPlatformDisabled)
+		it.Event = new(ExtensionManagerCodeHashPlatformsDisabled)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -967,29 +1009,29 @@ func (it *ExtensionManagerCodeHashPlatformDisabledIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *ExtensionManagerCodeHashPlatformDisabledIterator) Error() error {
+func (it *ExtensionManagerCodeHashPlatformsDisabledIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *ExtensionManagerCodeHashPlatformDisabledIterator) Close() error {
+func (it *ExtensionManagerCodeHashPlatformsDisabledIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// ExtensionManagerCodeHashPlatformDisabled represents a CodeHashPlatformDisabled event raised by the ExtensionManager contract.
-type ExtensionManagerCodeHashPlatformDisabled struct {
+// ExtensionManagerCodeHashPlatformsDisabled represents a CodeHashPlatformsDisabled event raised by the ExtensionManager contract.
+type ExtensionManagerCodeHashPlatformsDisabled struct {
 	ExtensionId *big.Int
 	CodeHash    [32]byte
-	Platform    [32]byte
+	Platforms   [][32]byte
 	Raw         types.Log // Blockchain specific contextual infos
 }
 
-// FilterCodeHashPlatformDisabled is a free log retrieval operation binding the contract event 0xb7e18c4d8b0a9a0d658b8fd94ba32fd58527494df08bfcf74010b54518fb6777.
+// FilterCodeHashPlatformsDisabled is a free log retrieval operation binding the contract event 0xdd8d9ec0b6d8831220cbf2d573600b254a34a41b8968bfd7e929c89883b7ffb3.
 //
-// Solidity: event CodeHashPlatformDisabled(uint256 indexed extensionId, bytes32 indexed codeHash, bytes32 indexed platform)
-func (_ExtensionManager *ExtensionManagerFilterer) FilterCodeHashPlatformDisabled(opts *bind.FilterOpts, extensionId []*big.Int, codeHash [][32]byte, platform [][32]byte) (*ExtensionManagerCodeHashPlatformDisabledIterator, error) {
+// Solidity: event CodeHashPlatformsDisabled(uint256 indexed extensionId, bytes32 indexed codeHash, bytes32[] platforms)
+func (_ExtensionManager *ExtensionManagerFilterer) FilterCodeHashPlatformsDisabled(opts *bind.FilterOpts, extensionId []*big.Int, codeHash [][32]byte) (*ExtensionManagerCodeHashPlatformsDisabledIterator, error) {
 
 	var extensionIdRule []interface{}
 	for _, extensionIdItem := range extensionId {
@@ -999,22 +1041,18 @@ func (_ExtensionManager *ExtensionManagerFilterer) FilterCodeHashPlatformDisable
 	for _, codeHashItem := range codeHash {
 		codeHashRule = append(codeHashRule, codeHashItem)
 	}
-	var platformRule []interface{}
-	for _, platformItem := range platform {
-		platformRule = append(platformRule, platformItem)
-	}
 
-	logs, sub, err := _ExtensionManager.contract.FilterLogs(opts, "CodeHashPlatformDisabled", extensionIdRule, codeHashRule, platformRule)
+	logs, sub, err := _ExtensionManager.contract.FilterLogs(opts, "CodeHashPlatformsDisabled", extensionIdRule, codeHashRule)
 	if err != nil {
 		return nil, err
 	}
-	return &ExtensionManagerCodeHashPlatformDisabledIterator{contract: _ExtensionManager.contract, event: "CodeHashPlatformDisabled", logs: logs, sub: sub}, nil
+	return &ExtensionManagerCodeHashPlatformsDisabledIterator{contract: _ExtensionManager.contract, event: "CodeHashPlatformsDisabled", logs: logs, sub: sub}, nil
 }
 
-// WatchCodeHashPlatformDisabled is a free log subscription operation binding the contract event 0xb7e18c4d8b0a9a0d658b8fd94ba32fd58527494df08bfcf74010b54518fb6777.
+// WatchCodeHashPlatformsDisabled is a free log subscription operation binding the contract event 0xdd8d9ec0b6d8831220cbf2d573600b254a34a41b8968bfd7e929c89883b7ffb3.
 //
-// Solidity: event CodeHashPlatformDisabled(uint256 indexed extensionId, bytes32 indexed codeHash, bytes32 indexed platform)
-func (_ExtensionManager *ExtensionManagerFilterer) WatchCodeHashPlatformDisabled(opts *bind.WatchOpts, sink chan<- *ExtensionManagerCodeHashPlatformDisabled, extensionId []*big.Int, codeHash [][32]byte, platform [][32]byte) (event.Subscription, error) {
+// Solidity: event CodeHashPlatformsDisabled(uint256 indexed extensionId, bytes32 indexed codeHash, bytes32[] platforms)
+func (_ExtensionManager *ExtensionManagerFilterer) WatchCodeHashPlatformsDisabled(opts *bind.WatchOpts, sink chan<- *ExtensionManagerCodeHashPlatformsDisabled, extensionId []*big.Int, codeHash [][32]byte) (event.Subscription, error) {
 
 	var extensionIdRule []interface{}
 	for _, extensionIdItem := range extensionId {
@@ -1024,12 +1062,8 @@ func (_ExtensionManager *ExtensionManagerFilterer) WatchCodeHashPlatformDisabled
 	for _, codeHashItem := range codeHash {
 		codeHashRule = append(codeHashRule, codeHashItem)
 	}
-	var platformRule []interface{}
-	for _, platformItem := range platform {
-		platformRule = append(platformRule, platformItem)
-	}
 
-	logs, sub, err := _ExtensionManager.contract.WatchLogs(opts, "CodeHashPlatformDisabled", extensionIdRule, codeHashRule, platformRule)
+	logs, sub, err := _ExtensionManager.contract.WatchLogs(opts, "CodeHashPlatformsDisabled", extensionIdRule, codeHashRule)
 	if err != nil {
 		return nil, err
 	}
@@ -1039,8 +1073,8 @@ func (_ExtensionManager *ExtensionManagerFilterer) WatchCodeHashPlatformDisabled
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(ExtensionManagerCodeHashPlatformDisabled)
-				if err := _ExtensionManager.contract.UnpackLog(event, "CodeHashPlatformDisabled", log); err != nil {
+				event := new(ExtensionManagerCodeHashPlatformsDisabled)
+				if err := _ExtensionManager.contract.UnpackLog(event, "CodeHashPlatformsDisabled", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -1061,12 +1095,12 @@ func (_ExtensionManager *ExtensionManagerFilterer) WatchCodeHashPlatformDisabled
 	}), nil
 }
 
-// ParseCodeHashPlatformDisabled is a log parse operation binding the contract event 0xb7e18c4d8b0a9a0d658b8fd94ba32fd58527494df08bfcf74010b54518fb6777.
+// ParseCodeHashPlatformsDisabled is a log parse operation binding the contract event 0xdd8d9ec0b6d8831220cbf2d573600b254a34a41b8968bfd7e929c89883b7ffb3.
 //
-// Solidity: event CodeHashPlatformDisabled(uint256 indexed extensionId, bytes32 indexed codeHash, bytes32 indexed platform)
-func (_ExtensionManager *ExtensionManagerFilterer) ParseCodeHashPlatformDisabled(log types.Log) (*ExtensionManagerCodeHashPlatformDisabled, error) {
-	event := new(ExtensionManagerCodeHashPlatformDisabled)
-	if err := _ExtensionManager.contract.UnpackLog(event, "CodeHashPlatformDisabled", log); err != nil {
+// Solidity: event CodeHashPlatformsDisabled(uint256 indexed extensionId, bytes32 indexed codeHash, bytes32[] platforms)
+func (_ExtensionManager *ExtensionManagerFilterer) ParseCodeHashPlatformsDisabled(log types.Log) (*ExtensionManagerCodeHashPlatformsDisabled, error) {
+	event := new(ExtensionManagerCodeHashPlatformsDisabled)
+	if err := _ExtensionManager.contract.UnpackLog(event, "CodeHashPlatformsDisabled", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
@@ -2186,7 +2220,7 @@ type ExtensionManagerSystemSupportedKeyTypesAndSigningAlgosAdded struct {
 
 // FilterSystemSupportedKeyTypesAndSigningAlgosAdded is a free log retrieval operation binding the contract event 0xda8ce9e8e45bfb16c746599b6ad42edeef963bcf2fe5d4c84438154e0251ab37.
 //
-// Solidity: event SystemSupportedKeyTypesAndSigningAlgosAdded(bytes32[] keyTypes, bytes32[][] _signingAlgosByKeyType)
+// Solidity: event SystemSupportedKeyTypesAndSigningAlgosAdded(bytes32[] keyTypes, bytes32[][] signingAlgosByKeyType)
 func (_ExtensionManager *ExtensionManagerFilterer) FilterSystemSupportedKeyTypesAndSigningAlgosAdded(opts *bind.FilterOpts) (*ExtensionManagerSystemSupportedKeyTypesAndSigningAlgosAddedIterator, error) {
 
 	logs, sub, err := _ExtensionManager.contract.FilterLogs(opts, "SystemSupportedKeyTypesAndSigningAlgosAdded")
@@ -2198,7 +2232,7 @@ func (_ExtensionManager *ExtensionManagerFilterer) FilterSystemSupportedKeyTypes
 
 // WatchSystemSupportedKeyTypesAndSigningAlgosAdded is a free log subscription operation binding the contract event 0xda8ce9e8e45bfb16c746599b6ad42edeef963bcf2fe5d4c84438154e0251ab37.
 //
-// Solidity: event SystemSupportedKeyTypesAndSigningAlgosAdded(bytes32[] keyTypes, bytes32[][] _signingAlgosByKeyType)
+// Solidity: event SystemSupportedKeyTypesAndSigningAlgosAdded(bytes32[] keyTypes, bytes32[][] signingAlgosByKeyType)
 func (_ExtensionManager *ExtensionManagerFilterer) WatchSystemSupportedKeyTypesAndSigningAlgosAdded(opts *bind.WatchOpts, sink chan<- *ExtensionManagerSystemSupportedKeyTypesAndSigningAlgosAdded) (event.Subscription, error) {
 
 	logs, sub, err := _ExtensionManager.contract.WatchLogs(opts, "SystemSupportedKeyTypesAndSigningAlgosAdded")
@@ -2235,10 +2269,145 @@ func (_ExtensionManager *ExtensionManagerFilterer) WatchSystemSupportedKeyTypesA
 
 // ParseSystemSupportedKeyTypesAndSigningAlgosAdded is a log parse operation binding the contract event 0xda8ce9e8e45bfb16c746599b6ad42edeef963bcf2fe5d4c84438154e0251ab37.
 //
-// Solidity: event SystemSupportedKeyTypesAndSigningAlgosAdded(bytes32[] keyTypes, bytes32[][] _signingAlgosByKeyType)
+// Solidity: event SystemSupportedKeyTypesAndSigningAlgosAdded(bytes32[] keyTypes, bytes32[][] signingAlgosByKeyType)
 func (_ExtensionManager *ExtensionManagerFilterer) ParseSystemSupportedKeyTypesAndSigningAlgosAdded(log types.Log) (*ExtensionManagerSystemSupportedKeyTypesAndSigningAlgosAdded, error) {
 	event := new(ExtensionManagerSystemSupportedKeyTypesAndSigningAlgosAdded)
 	if err := _ExtensionManager.contract.UnpackLog(event, "SystemSupportedKeyTypesAndSigningAlgosAdded", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// ExtensionManagerSystemSupportedKeyTypesAndSigningAlgosRemovedIterator is returned from FilterSystemSupportedKeyTypesAndSigningAlgosRemoved and is used to iterate over the raw logs and unpacked data for SystemSupportedKeyTypesAndSigningAlgosRemoved events raised by the ExtensionManager contract.
+type ExtensionManagerSystemSupportedKeyTypesAndSigningAlgosRemovedIterator struct {
+	Event *ExtensionManagerSystemSupportedKeyTypesAndSigningAlgosRemoved // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *ExtensionManagerSystemSupportedKeyTypesAndSigningAlgosRemovedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(ExtensionManagerSystemSupportedKeyTypesAndSigningAlgosRemoved)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(ExtensionManagerSystemSupportedKeyTypesAndSigningAlgosRemoved)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *ExtensionManagerSystemSupportedKeyTypesAndSigningAlgosRemovedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *ExtensionManagerSystemSupportedKeyTypesAndSigningAlgosRemovedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// ExtensionManagerSystemSupportedKeyTypesAndSigningAlgosRemoved represents a SystemSupportedKeyTypesAndSigningAlgosRemoved event raised by the ExtensionManager contract.
+type ExtensionManagerSystemSupportedKeyTypesAndSigningAlgosRemoved struct {
+	KeyTypes              [][32]byte
+	SigningAlgosByKeyType [][][32]byte
+	Raw                   types.Log // Blockchain specific contextual infos
+}
+
+// FilterSystemSupportedKeyTypesAndSigningAlgosRemoved is a free log retrieval operation binding the contract event 0xe5caa6b87bbeed44ddbe6501527185c1ed3b72413ec402211ded5d3f7f3e3a42.
+//
+// Solidity: event SystemSupportedKeyTypesAndSigningAlgosRemoved(bytes32[] keyTypes, bytes32[][] signingAlgosByKeyType)
+func (_ExtensionManager *ExtensionManagerFilterer) FilterSystemSupportedKeyTypesAndSigningAlgosRemoved(opts *bind.FilterOpts) (*ExtensionManagerSystemSupportedKeyTypesAndSigningAlgosRemovedIterator, error) {
+
+	logs, sub, err := _ExtensionManager.contract.FilterLogs(opts, "SystemSupportedKeyTypesAndSigningAlgosRemoved")
+	if err != nil {
+		return nil, err
+	}
+	return &ExtensionManagerSystemSupportedKeyTypesAndSigningAlgosRemovedIterator{contract: _ExtensionManager.contract, event: "SystemSupportedKeyTypesAndSigningAlgosRemoved", logs: logs, sub: sub}, nil
+}
+
+// WatchSystemSupportedKeyTypesAndSigningAlgosRemoved is a free log subscription operation binding the contract event 0xe5caa6b87bbeed44ddbe6501527185c1ed3b72413ec402211ded5d3f7f3e3a42.
+//
+// Solidity: event SystemSupportedKeyTypesAndSigningAlgosRemoved(bytes32[] keyTypes, bytes32[][] signingAlgosByKeyType)
+func (_ExtensionManager *ExtensionManagerFilterer) WatchSystemSupportedKeyTypesAndSigningAlgosRemoved(opts *bind.WatchOpts, sink chan<- *ExtensionManagerSystemSupportedKeyTypesAndSigningAlgosRemoved) (event.Subscription, error) {
+
+	logs, sub, err := _ExtensionManager.contract.WatchLogs(opts, "SystemSupportedKeyTypesAndSigningAlgosRemoved")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(ExtensionManagerSystemSupportedKeyTypesAndSigningAlgosRemoved)
+				if err := _ExtensionManager.contract.UnpackLog(event, "SystemSupportedKeyTypesAndSigningAlgosRemoved", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseSystemSupportedKeyTypesAndSigningAlgosRemoved is a log parse operation binding the contract event 0xe5caa6b87bbeed44ddbe6501527185c1ed3b72413ec402211ded5d3f7f3e3a42.
+//
+// Solidity: event SystemSupportedKeyTypesAndSigningAlgosRemoved(bytes32[] keyTypes, bytes32[][] signingAlgosByKeyType)
+func (_ExtensionManager *ExtensionManagerFilterer) ParseSystemSupportedKeyTypesAndSigningAlgosRemoved(log types.Log) (*ExtensionManagerSystemSupportedKeyTypesAndSigningAlgosRemoved, error) {
+	event := new(ExtensionManagerSystemSupportedKeyTypesAndSigningAlgosRemoved)
+	if err := _ExtensionManager.contract.UnpackLog(event, "SystemSupportedKeyTypesAndSigningAlgosRemoved", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
@@ -2373,6 +2542,140 @@ func (_ExtensionManager *ExtensionManagerFilterer) WatchSystemSupportedPlatforms
 func (_ExtensionManager *ExtensionManagerFilterer) ParseSystemSupportedPlatformsAdded(log types.Log) (*ExtensionManagerSystemSupportedPlatformsAdded, error) {
 	event := new(ExtensionManagerSystemSupportedPlatformsAdded)
 	if err := _ExtensionManager.contract.UnpackLog(event, "SystemSupportedPlatformsAdded", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// ExtensionManagerSystemSupportedPlatformsRemovedIterator is returned from FilterSystemSupportedPlatformsRemoved and is used to iterate over the raw logs and unpacked data for SystemSupportedPlatformsRemoved events raised by the ExtensionManager contract.
+type ExtensionManagerSystemSupportedPlatformsRemovedIterator struct {
+	Event *ExtensionManagerSystemSupportedPlatformsRemoved // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *ExtensionManagerSystemSupportedPlatformsRemovedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(ExtensionManagerSystemSupportedPlatformsRemoved)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(ExtensionManagerSystemSupportedPlatformsRemoved)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *ExtensionManagerSystemSupportedPlatformsRemovedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *ExtensionManagerSystemSupportedPlatformsRemovedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// ExtensionManagerSystemSupportedPlatformsRemoved represents a SystemSupportedPlatformsRemoved event raised by the ExtensionManager contract.
+type ExtensionManagerSystemSupportedPlatformsRemoved struct {
+	Platforms [][32]byte
+	Raw       types.Log // Blockchain specific contextual infos
+}
+
+// FilterSystemSupportedPlatformsRemoved is a free log retrieval operation binding the contract event 0x2b7d8c76532f69efbf409e2c8b4bc7629822b4d4d822b409a2e19a72bbe7df4f.
+//
+// Solidity: event SystemSupportedPlatformsRemoved(bytes32[] platforms)
+func (_ExtensionManager *ExtensionManagerFilterer) FilterSystemSupportedPlatformsRemoved(opts *bind.FilterOpts) (*ExtensionManagerSystemSupportedPlatformsRemovedIterator, error) {
+
+	logs, sub, err := _ExtensionManager.contract.FilterLogs(opts, "SystemSupportedPlatformsRemoved")
+	if err != nil {
+		return nil, err
+	}
+	return &ExtensionManagerSystemSupportedPlatformsRemovedIterator{contract: _ExtensionManager.contract, event: "SystemSupportedPlatformsRemoved", logs: logs, sub: sub}, nil
+}
+
+// WatchSystemSupportedPlatformsRemoved is a free log subscription operation binding the contract event 0x2b7d8c76532f69efbf409e2c8b4bc7629822b4d4d822b409a2e19a72bbe7df4f.
+//
+// Solidity: event SystemSupportedPlatformsRemoved(bytes32[] platforms)
+func (_ExtensionManager *ExtensionManagerFilterer) WatchSystemSupportedPlatformsRemoved(opts *bind.WatchOpts, sink chan<- *ExtensionManagerSystemSupportedPlatformsRemoved) (event.Subscription, error) {
+
+	logs, sub, err := _ExtensionManager.contract.WatchLogs(opts, "SystemSupportedPlatformsRemoved")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(ExtensionManagerSystemSupportedPlatformsRemoved)
+				if err := _ExtensionManager.contract.UnpackLog(event, "SystemSupportedPlatformsRemoved", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseSystemSupportedPlatformsRemoved is a log parse operation binding the contract event 0x2b7d8c76532f69efbf409e2c8b4bc7629822b4d4d822b409a2e19a72bbe7df4f.
+//
+// Solidity: event SystemSupportedPlatformsRemoved(bytes32[] platforms)
+func (_ExtensionManager *ExtensionManagerFilterer) ParseSystemSupportedPlatformsRemoved(log types.Log) (*ExtensionManagerSystemSupportedPlatformsRemoved, error) {
+	event := new(ExtensionManagerSystemSupportedPlatformsRemoved)
+	if err := _ExtensionManager.contract.UnpackLog(event, "SystemSupportedPlatformsRemoved", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

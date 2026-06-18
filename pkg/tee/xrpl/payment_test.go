@@ -29,10 +29,8 @@ func TestPaymentTransactionMultisig(t *testing.T) {
 		Amount:           big.NewInt(10),
 		PaymentReference: crypto.Keccak256Hash([]byte("test")),
 		Nonce:            10,
-		SubNonce:         0,
 		MaxFee:           big.NewInt(10),
 		FeeSchedule:      []byte{0x27, 0x10, 0, 1},
-		BatchEndTs:       0,
 	}
 
 	tx, err := PaymentTxFromInstruction(instruction, 0)
@@ -59,10 +57,8 @@ func TestPaymentTxFromInstructionNullify(t *testing.T) {
 		Amount:           big.NewInt(1000),
 		PaymentReference: crypto.Keccak256Hash([]byte("nullify")),
 		Nonce:            5,
-		SubNonce:         0,
 		MaxFee:           big.NewInt(100),
 		FeeSchedule:      []byte{0xD8, 0xF0, 0, 1}, // -10000 bips, 1s delay
-		BatchEndTs:       0,
 	}
 
 	tx, err := PaymentTxFromInstruction(instruction, 0)
@@ -146,10 +142,8 @@ func TestPaymentTxFromInstructionRejects(t *testing.T) {
 		Amount:           big.NewInt(10),
 		PaymentReference: crypto.Keccak256Hash([]byte("test")),
 		Nonce:            10,
-		SubNonce:         0,
 		MaxFee:           big.NewInt(10),
 		FeeSchedule:      []byte{0x27, 0x10, 0, 1},
-		BatchEndTs:       0,
 	}
 
 	t.Run("nil Amount", func(t *testing.T) {

@@ -833,6 +833,30 @@
         "type": "bytes32"
       }
     ],
+    "name": "getWalletPublicKeys",
+    "outputs": [
+      {
+        "internalType": "uint64",
+        "name": "_multisigThreshold",
+        "type": "uint64"
+      },
+      {
+        "internalType": "bytes[]",
+        "name": "_publicKeys",
+        "type": "bytes[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_walletId",
+        "type": "bytes32"
+      }
+    ],
     "name": "receivingTeesAndKeys",
     "outputs": [
       {

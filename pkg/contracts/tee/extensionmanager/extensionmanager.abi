@@ -290,6 +290,17 @@
     "type": "error"
   },
   {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "platform",
+        "type": "bytes32"
+      }
+    ],
+    "name": "PlatformNotFound",
+    "type": "error"
+  },
+  {
     "inputs": [],
     "name": "ReservedExtensionIdAlreadyAssigned",
     "type": "error"
@@ -313,6 +324,22 @@
   {
     "inputs": [],
     "name": "SigningAlgoEmpty",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "keyType",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "signingAlgo",
+        "type": "bytes32"
+      }
+    ],
+    "name": "SigningAlgoNotFound",
     "type": "error"
   },
   {
@@ -367,13 +394,13 @@
         "type": "bytes32"
       },
       {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "platform",
-        "type": "bytes32"
+        "indexed": false,
+        "internalType": "bytes32[]",
+        "name": "platforms",
+        "type": "bytes32[]"
       }
     ],
-    "name": "CodeHashPlatformDisabled",
+    "name": "CodeHashPlatformsDisabled",
     "type": "event"
   },
   {
@@ -533,11 +560,30 @@
       {
         "indexed": false,
         "internalType": "bytes32[][]",
-        "name": "_signingAlgosByKeyType",
+        "name": "signingAlgosByKeyType",
         "type": "bytes32[][]"
       }
     ],
     "name": "SystemSupportedKeyTypesAndSigningAlgosAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes32[]",
+        "name": "keyTypes",
+        "type": "bytes32[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32[][]",
+        "name": "signingAlgosByKeyType",
+        "type": "bytes32[][]"
+      }
+    ],
+    "name": "SystemSupportedKeyTypesAndSigningAlgosRemoved",
     "type": "event"
   },
   {
@@ -551,6 +597,19 @@
       }
     ],
     "name": "SystemSupportedPlatformsAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes32[]",
+        "name": "platforms",
+        "type": "bytes32[]"
+      }
+    ],
+    "name": "SystemSupportedPlatformsRemoved",
     "type": "event"
   },
   {
@@ -731,12 +790,12 @@
         "type": "bytes32"
       },
       {
-        "internalType": "bytes32",
-        "name": "_platform",
-        "type": "bytes32"
+        "internalType": "bytes32[]",
+        "name": "_platforms",
+        "type": "bytes32[]"
       }
     ],
-    "name": "disableCodeHashPlatform",
+    "name": "disableCodeHashPlatforms",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1122,6 +1181,37 @@
       }
     ],
     "name": "removeSupportedKeyTypes",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32[]",
+        "name": "_keyTypes",
+        "type": "bytes32[]"
+      },
+      {
+        "internalType": "bytes32[][]",
+        "name": "_signingAlgosByKeyType",
+        "type": "bytes32[][]"
+      }
+    ],
+    "name": "removeSystemSupportedKeyTypesAndSigningAlgos",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32[]",
+        "name": "_platforms",
+        "type": "bytes32[]"
+      }
+    ],
+    "name": "removeSystemSupportedPlatforms",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

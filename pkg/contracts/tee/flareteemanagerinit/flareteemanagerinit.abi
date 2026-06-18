@@ -6,6 +6,11 @@
   },
   {
     "inputs": [],
+    "name": "DefaultFeeZero",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "GovernedAddressZero",
     "type": "error"
   },

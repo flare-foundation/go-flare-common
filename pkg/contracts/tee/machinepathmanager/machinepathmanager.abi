@@ -49,6 +49,11 @@
   },
   {
     "inputs": [],
+    "name": "InvalidGovernanceHash",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "InvalidMachinePath",
     "type": "error"
   },

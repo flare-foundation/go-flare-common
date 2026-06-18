@@ -926,6 +926,282 @@
       {
         "components": [
           {
+            "internalType": "bytes32",
+            "name": "genesisAnchorTxid",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "genesisAnchorVout",
+            "type": "uint32"
+          }
+        ],
+        "internalType": "struct IPMWMultisigUtxoConfigured.Anchor",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "pmwMultisigUtxoConfiguredAnchorStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "signingPolicySignatures",
+                "type": "bytes"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint8",
+                    "name": "v",
+                    "type": "uint8"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "r",
+                    "type": "bytes32"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "s",
+                    "type": "bytes32"
+                  }
+                ],
+                "internalType": "struct Signature[]",
+                "name": "teeSignatures",
+                "type": "tuple[]"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint8",
+                    "name": "v",
+                    "type": "uint8"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "r",
+                    "type": "bytes32"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "s",
+                    "type": "bytes32"
+                  }
+                ],
+                "internalType": "struct Signature[]",
+                "name": "cosignerSignatures",
+                "type": "tuple[]"
+              }
+            ],
+            "internalType": "struct IFdc2Verification.Fdc2Signatures",
+            "name": "signatures",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "attestationType",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "sourceId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint16",
+                "name": "thresholdBIPS",
+                "type": "uint16"
+              },
+              {
+                "internalType": "address",
+                "name": "proofOwner",
+                "type": "address"
+              },
+              {
+                "internalType": "address[]",
+                "name": "cosigners",
+                "type": "address[]"
+              },
+              {
+                "internalType": "uint64",
+                "name": "cosignersThreshold",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "timestamp",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct IFdc2Hub.Fdc2ResponseHeader",
+            "name": "header",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint32",
+                "name": "accountIndex",
+                "type": "uint32"
+              },
+              {
+                "internalType": "bytes[]",
+                "name": "publicKeys",
+                "type": "bytes[]"
+              },
+              {
+                "internalType": "uint64",
+                "name": "threshold",
+                "type": "uint64"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "bytes32",
+                    "name": "genesisAnchorTxid",
+                    "type": "bytes32"
+                  },
+                  {
+                    "internalType": "uint32",
+                    "name": "genesisAnchorVout",
+                    "type": "uint32"
+                  }
+                ],
+                "internalType": "struct IPMWMultisigUtxoConfigured.Anchor[]",
+                "name": "anchors",
+                "type": "tuple[]"
+              }
+            ],
+            "internalType": "struct IPMWMultisigUtxoConfigured.RequestBody",
+            "name": "requestBody",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "enum IPMWMultisigUtxoConfigured.PMWMultisigUtxoStatus",
+                "name": "status",
+                "type": "uint8"
+              },
+              {
+                "internalType": "string",
+                "name": "accountAddress",
+                "type": "string"
+              },
+              {
+                "internalType": "string[]",
+                "name": "anchorAddresses",
+                "type": "string[]"
+              }
+            ],
+            "internalType": "struct IPMWMultisigUtxoConfigured.ResponseBody",
+            "name": "responseBody",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct IPMWMultisigUtxoConfigured.Proof",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "pmwMultisigUtxoConfiguredProofStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint32",
+            "name": "accountIndex",
+            "type": "uint32"
+          },
+          {
+            "internalType": "bytes[]",
+            "name": "publicKeys",
+            "type": "bytes[]"
+          },
+          {
+            "internalType": "uint64",
+            "name": "threshold",
+            "type": "uint64"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "genesisAnchorTxid",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint32",
+                "name": "genesisAnchorVout",
+                "type": "uint32"
+              }
+            ],
+            "internalType": "struct IPMWMultisigUtxoConfigured.Anchor[]",
+            "name": "anchors",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct IPMWMultisigUtxoConfigured.RequestBody",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "pmwMultisigUtxoConfiguredRequestBodyStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "enum IPMWMultisigUtxoConfigured.PMWMultisigUtxoStatus",
+            "name": "status",
+            "type": "uint8"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          },
+          {
+            "internalType": "string[]",
+            "name": "anchorAddresses",
+            "type": "string[]"
+          }
+        ],
+        "internalType": "struct IPMWMultisigUtxoConfigured.ResponseBody",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "pmwMultisigUtxoConfiguredResponseBodyStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
             "components": [
               {
                 "internalType": "bytes",
@@ -1042,7 +1318,7 @@
               },
               {
                 "internalType": "uint64",
-                "name": "subNonce",
+                "name": "paymentId",
                 "type": "uint64"
               }
             ],
@@ -1149,7 +1425,7 @@
           },
           {
             "internalType": "uint64",
-            "name": "subNonce",
+            "name": "paymentId",
             "type": "uint64"
           }
         ],

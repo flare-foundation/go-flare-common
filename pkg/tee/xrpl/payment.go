@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/payments"
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/address"
 )
 
 // PaymentTxFromInstruction prepares a transaction from the Payment Instruction Message.
@@ -26,10 +27,15 @@ import (
 //   - the resulting tx is run through CheckNativePayment (CheckNullify for the nullify
 //     path) so the caller never gets back a structurally invalid blob.
 func PaymentTxFromInstruction(i payments.ITeePaymentsPaymentInstructionMessage, try int) (map[string]any, error) {
+	recipient, destinationTag, err := address.Normalize(i.RecipientAddress)
+	if err != nil {
+		return nil, fmt.Errorf("normalizing address: %w", err)
+	}
+
 	if i.Amount == nil {
 		return nil, errors.New("nil Amount")
 	}
-	if i.SenderAddress == i.RecipientAddress {
+	if i.SenderAddress == recipient {
 		return nil, errors.New("sender equals recipient")
 	}
 	if len(i.TokenId) != 0 {
@@ -47,6 +53,9 @@ func PaymentTxFromInstruction(i payments.ITeePaymentsPaymentInstructionMessage, 
 	tx["Amount"] = i.Amount.String()
 	tx["SigningPubKey"] = ""
 	tx["Sequence"] = uint32(i.Nonce) //nolint:gosec // XRPL Sequence is UInt32; on-chain Nonce bounded to fit
+	if destinationTag != nil {
+		tx["DestinationTag"] = *destinationTag
+	}
 
 	// [
 	//   {

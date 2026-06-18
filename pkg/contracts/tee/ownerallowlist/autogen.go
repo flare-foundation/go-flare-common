@@ -31,7 +31,7 @@ var (
 
 // OwnerAllowlistMetaData contains all meta data concerning the OwnerAllowlist contract.
 var OwnerAllowlistMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"AddressAlreadyInSet\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"AddressNotInSet\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AvailabilityCheckTimestampInvalid\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"cosigner\",\"type\":\"address\"}],\"name\":\"DuplicatedCosigner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ExtensionIdMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAddress\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAvailabilityCheckStatus\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"cosigner\",\"type\":\"address\"}],\"name\":\"InvalidCosigner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidDuration\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidGovernanceHash\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidInitialization\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidKeyType\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidNonce\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPublicKey\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidResponseData\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidSigningAlgo\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidThreshold\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidWalletStatus\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"}],\"name\":\"KeyTypeNotSupported\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LengthsMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoAddresses\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotInitializing\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\"}],\"name\":\"NotOwnerOrPauser\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\"}],\"name\":\"NotOwnerOrUnpauser\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExtensionOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExtensionOwnerOrOperator\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyGovernance\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwnerOrBackupManager\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProductionOrPausedStatus\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProposedOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OwnerNotAllowed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TeeMachineNotAvailable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"VersionNotSupported\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[],\"name\":\"AllExtensionOwnersAllowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[],\"name\":\"AllExtensionOwnersDisallowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"AllTeeMachineOwnersAllowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"AllTeeMachineOwnersDisallowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"AllTeeWalletProjectOwnersAllowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"AllTeeWalletProjectOwnersDisallowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedExtensionOwnersAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedExtensionOwnersRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedTeeMachineOwnersAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedTeeMachineOwnersRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedTeeWalletProjectOwnersAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedTeeWalletProjectOwnersRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"version\",\"type\":\"uint64\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"addAllowedExtensionOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"addAllowedTeeMachineOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"addAllowedTeeWalletProjectOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"allExtensionOwnersAllowed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_allAllowed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"allTeeMachineOwnersAllowed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_allAllowed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"allTeeWalletProjectOwnersAllowed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_allAllowed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"allowAllExtensionOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"allowAllTeeMachineOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"allowAllTeeWalletProjectOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"disallowAllExtensionOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"disallowAllTeeMachineOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"disallowAllTeeWalletProjectOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAllowedExtensionOwners\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"_allowedOwners\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getAllowedTeeMachineOwners\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"_allowedOwners\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getAllowedTeeWalletProjectOwners\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"_allowedOwners\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"isAllowedExtensionOwner\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_isAllowed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"isAllowedTeeMachineOwner\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_isAllowed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"isAllowedTeeWalletProjectOwner\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_isAllowed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"removeAllowedExtensionOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"removeAllowedTeeMachineOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"removeAllowedTeeWalletProjectOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"AddressAlreadyInSet\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"AddressNotInSet\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AvailabilityCheckTimestampInvalid\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"cosigner\",\"type\":\"address\"}],\"name\":\"DuplicatedCosigner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ExtensionIdMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAddress\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAvailabilityCheckStatus\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"cosigner\",\"type\":\"address\"}],\"name\":\"InvalidCosigner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidDuration\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidGovernanceHash\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidInitialization\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidKeyType\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidNonce\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPublicKey\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidResponseData\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidSigningAlgo\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidThreshold\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidWalletStatus\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"}],\"name\":\"KeyTypeNotSupported\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LengthsMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoAddresses\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotInitializing\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\"}],\"name\":\"NotOwnerOrPauser\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\"}],\"name\":\"NotOwnerOrUnpauser\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExtensionOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExtensionOwnerOrOperator\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyGovernance\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwnerOrBackupManager\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProductionOrPausedStatus\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProposedOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OwnerNotAllowed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TeeMachineNotAvailable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"VersionNotSupported\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[],\"name\":\"AllExtensionOwnersAllowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[],\"name\":\"AllExtensionOwnersDisallowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"AllTeeMachineOwnersAllowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"AllTeeMachineOwnersDisallowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"AllTeeWalletProjectOwnersAllowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"}],\"name\":\"AllTeeWalletProjectOwnersDisallowed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedExtensionOwnersAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedExtensionOwnersRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedTeeMachineOwnersAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedTeeMachineOwnersRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedTeeWalletProjectOwnersAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"owners\",\"type\":\"address[]\"}],\"name\":\"AllowedTeeWalletProjectOwnersRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"encodedCallHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"}],\"name\":\"GovernanceCallTimelocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"version\",\"type\":\"uint64\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"addAllowedExtensionOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"addAllowedTeeMachineOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"addAllowedTeeWalletProjectOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"allExtensionOwnersAllowed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_allAllowed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"allTeeMachineOwnersAllowed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_allAllowed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"allTeeWalletProjectOwnersAllowed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_allAllowed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"allowAllExtensionOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"allowAllTeeMachineOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"allowAllTeeWalletProjectOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"disallowAllExtensionOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"disallowAllTeeMachineOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"disallowAllTeeWalletProjectOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAllowedExtensionOwners\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"_allowedOwners\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getAllowedTeeMachineOwners\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"_allowedOwners\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getAllowedTeeWalletProjectOwners\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"_allowedOwners\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"isAllowedExtensionOwner\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_isAllowed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"isAllowedTeeMachineOwner\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_isAllowed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"isAllowedTeeWalletProjectOwner\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_isAllowed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"removeAllowedExtensionOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"removeAllowedTeeMachineOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_owners\",\"type\":\"address[]\"}],\"name\":\"removeAllowedTeeWalletProjectOwners\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // OwnerAllowlistABI is the input ABI used to generate the binding from.
@@ -1052,10 +1052,15 @@ type OwnerAllowlistAllTeeMachineOwnersAllowed struct {
 
 // FilterAllTeeMachineOwnersAllowed is a free log retrieval operation binding the contract event 0x1bc41c6dd61d3a656898250dfc58a14ddd4735f4480ae4c1581072ad19fcd8a5.
 //
-// Solidity: event AllTeeMachineOwnersAllowed(uint256 extensionId)
-func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllTeeMachineOwnersAllowed(opts *bind.FilterOpts) (*OwnerAllowlistAllTeeMachineOwnersAllowedIterator, error) {
+// Solidity: event AllTeeMachineOwnersAllowed(uint256 indexed extensionId)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllTeeMachineOwnersAllowed(opts *bind.FilterOpts, extensionId []*big.Int) (*OwnerAllowlistAllTeeMachineOwnersAllowedIterator, error) {
 
-	logs, sub, err := _OwnerAllowlist.contract.FilterLogs(opts, "AllTeeMachineOwnersAllowed")
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+
+	logs, sub, err := _OwnerAllowlist.contract.FilterLogs(opts, "AllTeeMachineOwnersAllowed", extensionIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -1064,10 +1069,15 @@ func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllTeeMachineOwnersAllowed(
 
 // WatchAllTeeMachineOwnersAllowed is a free log subscription operation binding the contract event 0x1bc41c6dd61d3a656898250dfc58a14ddd4735f4480ae4c1581072ad19fcd8a5.
 //
-// Solidity: event AllTeeMachineOwnersAllowed(uint256 extensionId)
-func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllTeeMachineOwnersAllowed(opts *bind.WatchOpts, sink chan<- *OwnerAllowlistAllTeeMachineOwnersAllowed) (event.Subscription, error) {
+// Solidity: event AllTeeMachineOwnersAllowed(uint256 indexed extensionId)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllTeeMachineOwnersAllowed(opts *bind.WatchOpts, sink chan<- *OwnerAllowlistAllTeeMachineOwnersAllowed, extensionId []*big.Int) (event.Subscription, error) {
 
-	logs, sub, err := _OwnerAllowlist.contract.WatchLogs(opts, "AllTeeMachineOwnersAllowed")
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+
+	logs, sub, err := _OwnerAllowlist.contract.WatchLogs(opts, "AllTeeMachineOwnersAllowed", extensionIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -1101,7 +1111,7 @@ func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllTeeMachineOwnersAllowed(o
 
 // ParseAllTeeMachineOwnersAllowed is a log parse operation binding the contract event 0x1bc41c6dd61d3a656898250dfc58a14ddd4735f4480ae4c1581072ad19fcd8a5.
 //
-// Solidity: event AllTeeMachineOwnersAllowed(uint256 extensionId)
+// Solidity: event AllTeeMachineOwnersAllowed(uint256 indexed extensionId)
 func (_OwnerAllowlist *OwnerAllowlistFilterer) ParseAllTeeMachineOwnersAllowed(log types.Log) (*OwnerAllowlistAllTeeMachineOwnersAllowed, error) {
 	event := new(OwnerAllowlistAllTeeMachineOwnersAllowed)
 	if err := _OwnerAllowlist.contract.UnpackLog(event, "AllTeeMachineOwnersAllowed", log); err != nil {
@@ -1186,10 +1196,15 @@ type OwnerAllowlistAllTeeMachineOwnersDisallowed struct {
 
 // FilterAllTeeMachineOwnersDisallowed is a free log retrieval operation binding the contract event 0x76fc91f6aa03fa961257e10347e87c3844fd0547a18ab3967b5a52db80c353d3.
 //
-// Solidity: event AllTeeMachineOwnersDisallowed(uint256 extensionId)
-func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllTeeMachineOwnersDisallowed(opts *bind.FilterOpts) (*OwnerAllowlistAllTeeMachineOwnersDisallowedIterator, error) {
+// Solidity: event AllTeeMachineOwnersDisallowed(uint256 indexed extensionId)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllTeeMachineOwnersDisallowed(opts *bind.FilterOpts, extensionId []*big.Int) (*OwnerAllowlistAllTeeMachineOwnersDisallowedIterator, error) {
 
-	logs, sub, err := _OwnerAllowlist.contract.FilterLogs(opts, "AllTeeMachineOwnersDisallowed")
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+
+	logs, sub, err := _OwnerAllowlist.contract.FilterLogs(opts, "AllTeeMachineOwnersDisallowed", extensionIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -1198,10 +1213,15 @@ func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllTeeMachineOwnersDisallow
 
 // WatchAllTeeMachineOwnersDisallowed is a free log subscription operation binding the contract event 0x76fc91f6aa03fa961257e10347e87c3844fd0547a18ab3967b5a52db80c353d3.
 //
-// Solidity: event AllTeeMachineOwnersDisallowed(uint256 extensionId)
-func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllTeeMachineOwnersDisallowed(opts *bind.WatchOpts, sink chan<- *OwnerAllowlistAllTeeMachineOwnersDisallowed) (event.Subscription, error) {
+// Solidity: event AllTeeMachineOwnersDisallowed(uint256 indexed extensionId)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllTeeMachineOwnersDisallowed(opts *bind.WatchOpts, sink chan<- *OwnerAllowlistAllTeeMachineOwnersDisallowed, extensionId []*big.Int) (event.Subscription, error) {
 
-	logs, sub, err := _OwnerAllowlist.contract.WatchLogs(opts, "AllTeeMachineOwnersDisallowed")
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+
+	logs, sub, err := _OwnerAllowlist.contract.WatchLogs(opts, "AllTeeMachineOwnersDisallowed", extensionIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -1235,7 +1255,7 @@ func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllTeeMachineOwnersDisallowe
 
 // ParseAllTeeMachineOwnersDisallowed is a log parse operation binding the contract event 0x76fc91f6aa03fa961257e10347e87c3844fd0547a18ab3967b5a52db80c353d3.
 //
-// Solidity: event AllTeeMachineOwnersDisallowed(uint256 extensionId)
+// Solidity: event AllTeeMachineOwnersDisallowed(uint256 indexed extensionId)
 func (_OwnerAllowlist *OwnerAllowlistFilterer) ParseAllTeeMachineOwnersDisallowed(log types.Log) (*OwnerAllowlistAllTeeMachineOwnersDisallowed, error) {
 	event := new(OwnerAllowlistAllTeeMachineOwnersDisallowed)
 	if err := _OwnerAllowlist.contract.UnpackLog(event, "AllTeeMachineOwnersDisallowed", log); err != nil {
@@ -1320,10 +1340,15 @@ type OwnerAllowlistAllTeeWalletProjectOwnersAllowed struct {
 
 // FilterAllTeeWalletProjectOwnersAllowed is a free log retrieval operation binding the contract event 0x1936686ee6942840bf2283355eb720261b36284a52b74604253556ee61c08854.
 //
-// Solidity: event AllTeeWalletProjectOwnersAllowed(uint256 extensionId)
-func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllTeeWalletProjectOwnersAllowed(opts *bind.FilterOpts) (*OwnerAllowlistAllTeeWalletProjectOwnersAllowedIterator, error) {
+// Solidity: event AllTeeWalletProjectOwnersAllowed(uint256 indexed extensionId)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllTeeWalletProjectOwnersAllowed(opts *bind.FilterOpts, extensionId []*big.Int) (*OwnerAllowlistAllTeeWalletProjectOwnersAllowedIterator, error) {
 
-	logs, sub, err := _OwnerAllowlist.contract.FilterLogs(opts, "AllTeeWalletProjectOwnersAllowed")
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+
+	logs, sub, err := _OwnerAllowlist.contract.FilterLogs(opts, "AllTeeWalletProjectOwnersAllowed", extensionIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -1332,10 +1357,15 @@ func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllTeeWalletProjectOwnersAl
 
 // WatchAllTeeWalletProjectOwnersAllowed is a free log subscription operation binding the contract event 0x1936686ee6942840bf2283355eb720261b36284a52b74604253556ee61c08854.
 //
-// Solidity: event AllTeeWalletProjectOwnersAllowed(uint256 extensionId)
-func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllTeeWalletProjectOwnersAllowed(opts *bind.WatchOpts, sink chan<- *OwnerAllowlistAllTeeWalletProjectOwnersAllowed) (event.Subscription, error) {
+// Solidity: event AllTeeWalletProjectOwnersAllowed(uint256 indexed extensionId)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllTeeWalletProjectOwnersAllowed(opts *bind.WatchOpts, sink chan<- *OwnerAllowlistAllTeeWalletProjectOwnersAllowed, extensionId []*big.Int) (event.Subscription, error) {
 
-	logs, sub, err := _OwnerAllowlist.contract.WatchLogs(opts, "AllTeeWalletProjectOwnersAllowed")
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+
+	logs, sub, err := _OwnerAllowlist.contract.WatchLogs(opts, "AllTeeWalletProjectOwnersAllowed", extensionIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -1369,7 +1399,7 @@ func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllTeeWalletProjectOwnersAll
 
 // ParseAllTeeWalletProjectOwnersAllowed is a log parse operation binding the contract event 0x1936686ee6942840bf2283355eb720261b36284a52b74604253556ee61c08854.
 //
-// Solidity: event AllTeeWalletProjectOwnersAllowed(uint256 extensionId)
+// Solidity: event AllTeeWalletProjectOwnersAllowed(uint256 indexed extensionId)
 func (_OwnerAllowlist *OwnerAllowlistFilterer) ParseAllTeeWalletProjectOwnersAllowed(log types.Log) (*OwnerAllowlistAllTeeWalletProjectOwnersAllowed, error) {
 	event := new(OwnerAllowlistAllTeeWalletProjectOwnersAllowed)
 	if err := _OwnerAllowlist.contract.UnpackLog(event, "AllTeeWalletProjectOwnersAllowed", log); err != nil {
@@ -1454,10 +1484,15 @@ type OwnerAllowlistAllTeeWalletProjectOwnersDisallowed struct {
 
 // FilterAllTeeWalletProjectOwnersDisallowed is a free log retrieval operation binding the contract event 0x1c6abd0ba2324be35a8b8dac7bef3bf25c5d2d2cc45c216ee3b38a82da6948e8.
 //
-// Solidity: event AllTeeWalletProjectOwnersDisallowed(uint256 extensionId)
-func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllTeeWalletProjectOwnersDisallowed(opts *bind.FilterOpts) (*OwnerAllowlistAllTeeWalletProjectOwnersDisallowedIterator, error) {
+// Solidity: event AllTeeWalletProjectOwnersDisallowed(uint256 indexed extensionId)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllTeeWalletProjectOwnersDisallowed(opts *bind.FilterOpts, extensionId []*big.Int) (*OwnerAllowlistAllTeeWalletProjectOwnersDisallowedIterator, error) {
 
-	logs, sub, err := _OwnerAllowlist.contract.FilterLogs(opts, "AllTeeWalletProjectOwnersDisallowed")
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+
+	logs, sub, err := _OwnerAllowlist.contract.FilterLogs(opts, "AllTeeWalletProjectOwnersDisallowed", extensionIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -1466,10 +1501,15 @@ func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllTeeWalletProjectOwnersDi
 
 // WatchAllTeeWalletProjectOwnersDisallowed is a free log subscription operation binding the contract event 0x1c6abd0ba2324be35a8b8dac7bef3bf25c5d2d2cc45c216ee3b38a82da6948e8.
 //
-// Solidity: event AllTeeWalletProjectOwnersDisallowed(uint256 extensionId)
-func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllTeeWalletProjectOwnersDisallowed(opts *bind.WatchOpts, sink chan<- *OwnerAllowlistAllTeeWalletProjectOwnersDisallowed) (event.Subscription, error) {
+// Solidity: event AllTeeWalletProjectOwnersDisallowed(uint256 indexed extensionId)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllTeeWalletProjectOwnersDisallowed(opts *bind.WatchOpts, sink chan<- *OwnerAllowlistAllTeeWalletProjectOwnersDisallowed, extensionId []*big.Int) (event.Subscription, error) {
 
-	logs, sub, err := _OwnerAllowlist.contract.WatchLogs(opts, "AllTeeWalletProjectOwnersDisallowed")
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+
+	logs, sub, err := _OwnerAllowlist.contract.WatchLogs(opts, "AllTeeWalletProjectOwnersDisallowed", extensionIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -1503,7 +1543,7 @@ func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllTeeWalletProjectOwnersDis
 
 // ParseAllTeeWalletProjectOwnersDisallowed is a log parse operation binding the contract event 0x1c6abd0ba2324be35a8b8dac7bef3bf25c5d2d2cc45c216ee3b38a82da6948e8.
 //
-// Solidity: event AllTeeWalletProjectOwnersDisallowed(uint256 extensionId)
+// Solidity: event AllTeeWalletProjectOwnersDisallowed(uint256 indexed extensionId)
 func (_OwnerAllowlist *OwnerAllowlistFilterer) ParseAllTeeWalletProjectOwnersDisallowed(log types.Log) (*OwnerAllowlistAllTeeWalletProjectOwnersDisallowed, error) {
 	event := new(OwnerAllowlistAllTeeWalletProjectOwnersDisallowed)
 	if err := _OwnerAllowlist.contract.UnpackLog(event, "AllTeeWalletProjectOwnersDisallowed", log); err != nil {
@@ -1857,10 +1897,15 @@ type OwnerAllowlistAllowedTeeMachineOwnersAdded struct {
 
 // FilterAllowedTeeMachineOwnersAdded is a free log retrieval operation binding the contract event 0xd392883c2acc8ffc90b60bb8783db156d990502913d5b159e209cd604475337c.
 //
-// Solidity: event AllowedTeeMachineOwnersAdded(uint256 extensionId, address[] owners)
-func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllowedTeeMachineOwnersAdded(opts *bind.FilterOpts) (*OwnerAllowlistAllowedTeeMachineOwnersAddedIterator, error) {
+// Solidity: event AllowedTeeMachineOwnersAdded(uint256 indexed extensionId, address[] owners)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllowedTeeMachineOwnersAdded(opts *bind.FilterOpts, extensionId []*big.Int) (*OwnerAllowlistAllowedTeeMachineOwnersAddedIterator, error) {
 
-	logs, sub, err := _OwnerAllowlist.contract.FilterLogs(opts, "AllowedTeeMachineOwnersAdded")
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+
+	logs, sub, err := _OwnerAllowlist.contract.FilterLogs(opts, "AllowedTeeMachineOwnersAdded", extensionIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -1869,10 +1914,15 @@ func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllowedTeeMachineOwnersAdde
 
 // WatchAllowedTeeMachineOwnersAdded is a free log subscription operation binding the contract event 0xd392883c2acc8ffc90b60bb8783db156d990502913d5b159e209cd604475337c.
 //
-// Solidity: event AllowedTeeMachineOwnersAdded(uint256 extensionId, address[] owners)
-func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllowedTeeMachineOwnersAdded(opts *bind.WatchOpts, sink chan<- *OwnerAllowlistAllowedTeeMachineOwnersAdded) (event.Subscription, error) {
+// Solidity: event AllowedTeeMachineOwnersAdded(uint256 indexed extensionId, address[] owners)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllowedTeeMachineOwnersAdded(opts *bind.WatchOpts, sink chan<- *OwnerAllowlistAllowedTeeMachineOwnersAdded, extensionId []*big.Int) (event.Subscription, error) {
 
-	logs, sub, err := _OwnerAllowlist.contract.WatchLogs(opts, "AllowedTeeMachineOwnersAdded")
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+
+	logs, sub, err := _OwnerAllowlist.contract.WatchLogs(opts, "AllowedTeeMachineOwnersAdded", extensionIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -1906,7 +1956,7 @@ func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllowedTeeMachineOwnersAdded
 
 // ParseAllowedTeeMachineOwnersAdded is a log parse operation binding the contract event 0xd392883c2acc8ffc90b60bb8783db156d990502913d5b159e209cd604475337c.
 //
-// Solidity: event AllowedTeeMachineOwnersAdded(uint256 extensionId, address[] owners)
+// Solidity: event AllowedTeeMachineOwnersAdded(uint256 indexed extensionId, address[] owners)
 func (_OwnerAllowlist *OwnerAllowlistFilterer) ParseAllowedTeeMachineOwnersAdded(log types.Log) (*OwnerAllowlistAllowedTeeMachineOwnersAdded, error) {
 	event := new(OwnerAllowlistAllowedTeeMachineOwnersAdded)
 	if err := _OwnerAllowlist.contract.UnpackLog(event, "AllowedTeeMachineOwnersAdded", log); err != nil {
@@ -1992,10 +2042,15 @@ type OwnerAllowlistAllowedTeeMachineOwnersRemoved struct {
 
 // FilterAllowedTeeMachineOwnersRemoved is a free log retrieval operation binding the contract event 0x8444f01824cfebbd6772bffe7855e88270c338f6879216e756f86cd54c53ddf6.
 //
-// Solidity: event AllowedTeeMachineOwnersRemoved(uint256 extensionId, address[] owners)
-func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllowedTeeMachineOwnersRemoved(opts *bind.FilterOpts) (*OwnerAllowlistAllowedTeeMachineOwnersRemovedIterator, error) {
+// Solidity: event AllowedTeeMachineOwnersRemoved(uint256 indexed extensionId, address[] owners)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllowedTeeMachineOwnersRemoved(opts *bind.FilterOpts, extensionId []*big.Int) (*OwnerAllowlistAllowedTeeMachineOwnersRemovedIterator, error) {
 
-	logs, sub, err := _OwnerAllowlist.contract.FilterLogs(opts, "AllowedTeeMachineOwnersRemoved")
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+
+	logs, sub, err := _OwnerAllowlist.contract.FilterLogs(opts, "AllowedTeeMachineOwnersRemoved", extensionIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2004,10 +2059,15 @@ func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllowedTeeMachineOwnersRemo
 
 // WatchAllowedTeeMachineOwnersRemoved is a free log subscription operation binding the contract event 0x8444f01824cfebbd6772bffe7855e88270c338f6879216e756f86cd54c53ddf6.
 //
-// Solidity: event AllowedTeeMachineOwnersRemoved(uint256 extensionId, address[] owners)
-func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllowedTeeMachineOwnersRemoved(opts *bind.WatchOpts, sink chan<- *OwnerAllowlistAllowedTeeMachineOwnersRemoved) (event.Subscription, error) {
+// Solidity: event AllowedTeeMachineOwnersRemoved(uint256 indexed extensionId, address[] owners)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllowedTeeMachineOwnersRemoved(opts *bind.WatchOpts, sink chan<- *OwnerAllowlistAllowedTeeMachineOwnersRemoved, extensionId []*big.Int) (event.Subscription, error) {
 
-	logs, sub, err := _OwnerAllowlist.contract.WatchLogs(opts, "AllowedTeeMachineOwnersRemoved")
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+
+	logs, sub, err := _OwnerAllowlist.contract.WatchLogs(opts, "AllowedTeeMachineOwnersRemoved", extensionIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2041,7 +2101,7 @@ func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllowedTeeMachineOwnersRemov
 
 // ParseAllowedTeeMachineOwnersRemoved is a log parse operation binding the contract event 0x8444f01824cfebbd6772bffe7855e88270c338f6879216e756f86cd54c53ddf6.
 //
-// Solidity: event AllowedTeeMachineOwnersRemoved(uint256 extensionId, address[] owners)
+// Solidity: event AllowedTeeMachineOwnersRemoved(uint256 indexed extensionId, address[] owners)
 func (_OwnerAllowlist *OwnerAllowlistFilterer) ParseAllowedTeeMachineOwnersRemoved(log types.Log) (*OwnerAllowlistAllowedTeeMachineOwnersRemoved, error) {
 	event := new(OwnerAllowlistAllowedTeeMachineOwnersRemoved)
 	if err := _OwnerAllowlist.contract.UnpackLog(event, "AllowedTeeMachineOwnersRemoved", log); err != nil {
@@ -2127,10 +2187,15 @@ type OwnerAllowlistAllowedTeeWalletProjectOwnersAdded struct {
 
 // FilterAllowedTeeWalletProjectOwnersAdded is a free log retrieval operation binding the contract event 0x60340c199493a9a48f50ae5af13ebefed3adeeb1c4f0a5476d59654680ffdb0d.
 //
-// Solidity: event AllowedTeeWalletProjectOwnersAdded(uint256 extensionId, address[] owners)
-func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllowedTeeWalletProjectOwnersAdded(opts *bind.FilterOpts) (*OwnerAllowlistAllowedTeeWalletProjectOwnersAddedIterator, error) {
+// Solidity: event AllowedTeeWalletProjectOwnersAdded(uint256 indexed extensionId, address[] owners)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllowedTeeWalletProjectOwnersAdded(opts *bind.FilterOpts, extensionId []*big.Int) (*OwnerAllowlistAllowedTeeWalletProjectOwnersAddedIterator, error) {
 
-	logs, sub, err := _OwnerAllowlist.contract.FilterLogs(opts, "AllowedTeeWalletProjectOwnersAdded")
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+
+	logs, sub, err := _OwnerAllowlist.contract.FilterLogs(opts, "AllowedTeeWalletProjectOwnersAdded", extensionIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2139,10 +2204,15 @@ func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllowedTeeWalletProjectOwne
 
 // WatchAllowedTeeWalletProjectOwnersAdded is a free log subscription operation binding the contract event 0x60340c199493a9a48f50ae5af13ebefed3adeeb1c4f0a5476d59654680ffdb0d.
 //
-// Solidity: event AllowedTeeWalletProjectOwnersAdded(uint256 extensionId, address[] owners)
-func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllowedTeeWalletProjectOwnersAdded(opts *bind.WatchOpts, sink chan<- *OwnerAllowlistAllowedTeeWalletProjectOwnersAdded) (event.Subscription, error) {
+// Solidity: event AllowedTeeWalletProjectOwnersAdded(uint256 indexed extensionId, address[] owners)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllowedTeeWalletProjectOwnersAdded(opts *bind.WatchOpts, sink chan<- *OwnerAllowlistAllowedTeeWalletProjectOwnersAdded, extensionId []*big.Int) (event.Subscription, error) {
 
-	logs, sub, err := _OwnerAllowlist.contract.WatchLogs(opts, "AllowedTeeWalletProjectOwnersAdded")
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+
+	logs, sub, err := _OwnerAllowlist.contract.WatchLogs(opts, "AllowedTeeWalletProjectOwnersAdded", extensionIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2176,7 +2246,7 @@ func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllowedTeeWalletProjectOwner
 
 // ParseAllowedTeeWalletProjectOwnersAdded is a log parse operation binding the contract event 0x60340c199493a9a48f50ae5af13ebefed3adeeb1c4f0a5476d59654680ffdb0d.
 //
-// Solidity: event AllowedTeeWalletProjectOwnersAdded(uint256 extensionId, address[] owners)
+// Solidity: event AllowedTeeWalletProjectOwnersAdded(uint256 indexed extensionId, address[] owners)
 func (_OwnerAllowlist *OwnerAllowlistFilterer) ParseAllowedTeeWalletProjectOwnersAdded(log types.Log) (*OwnerAllowlistAllowedTeeWalletProjectOwnersAdded, error) {
 	event := new(OwnerAllowlistAllowedTeeWalletProjectOwnersAdded)
 	if err := _OwnerAllowlist.contract.UnpackLog(event, "AllowedTeeWalletProjectOwnersAdded", log); err != nil {
@@ -2262,10 +2332,15 @@ type OwnerAllowlistAllowedTeeWalletProjectOwnersRemoved struct {
 
 // FilterAllowedTeeWalletProjectOwnersRemoved is a free log retrieval operation binding the contract event 0x676aa060014299ae54ae19d4e1fd6fe0b4681aad07cc8ddf7979673262e3fcac.
 //
-// Solidity: event AllowedTeeWalletProjectOwnersRemoved(uint256 extensionId, address[] owners)
-func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllowedTeeWalletProjectOwnersRemoved(opts *bind.FilterOpts) (*OwnerAllowlistAllowedTeeWalletProjectOwnersRemovedIterator, error) {
+// Solidity: event AllowedTeeWalletProjectOwnersRemoved(uint256 indexed extensionId, address[] owners)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllowedTeeWalletProjectOwnersRemoved(opts *bind.FilterOpts, extensionId []*big.Int) (*OwnerAllowlistAllowedTeeWalletProjectOwnersRemovedIterator, error) {
 
-	logs, sub, err := _OwnerAllowlist.contract.FilterLogs(opts, "AllowedTeeWalletProjectOwnersRemoved")
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+
+	logs, sub, err := _OwnerAllowlist.contract.FilterLogs(opts, "AllowedTeeWalletProjectOwnersRemoved", extensionIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2274,10 +2349,15 @@ func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterAllowedTeeWalletProjectOwne
 
 // WatchAllowedTeeWalletProjectOwnersRemoved is a free log subscription operation binding the contract event 0x676aa060014299ae54ae19d4e1fd6fe0b4681aad07cc8ddf7979673262e3fcac.
 //
-// Solidity: event AllowedTeeWalletProjectOwnersRemoved(uint256 extensionId, address[] owners)
-func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllowedTeeWalletProjectOwnersRemoved(opts *bind.WatchOpts, sink chan<- *OwnerAllowlistAllowedTeeWalletProjectOwnersRemoved) (event.Subscription, error) {
+// Solidity: event AllowedTeeWalletProjectOwnersRemoved(uint256 indexed extensionId, address[] owners)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllowedTeeWalletProjectOwnersRemoved(opts *bind.WatchOpts, sink chan<- *OwnerAllowlistAllowedTeeWalletProjectOwnersRemoved, extensionId []*big.Int) (event.Subscription, error) {
 
-	logs, sub, err := _OwnerAllowlist.contract.WatchLogs(opts, "AllowedTeeWalletProjectOwnersRemoved")
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+
+	logs, sub, err := _OwnerAllowlist.contract.WatchLogs(opts, "AllowedTeeWalletProjectOwnersRemoved", extensionIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2311,10 +2391,146 @@ func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchAllowedTeeWalletProjectOwner
 
 // ParseAllowedTeeWalletProjectOwnersRemoved is a log parse operation binding the contract event 0x676aa060014299ae54ae19d4e1fd6fe0b4681aad07cc8ddf7979673262e3fcac.
 //
-// Solidity: event AllowedTeeWalletProjectOwnersRemoved(uint256 extensionId, address[] owners)
+// Solidity: event AllowedTeeWalletProjectOwnersRemoved(uint256 indexed extensionId, address[] owners)
 func (_OwnerAllowlist *OwnerAllowlistFilterer) ParseAllowedTeeWalletProjectOwnersRemoved(log types.Log) (*OwnerAllowlistAllowedTeeWalletProjectOwnersRemoved, error) {
 	event := new(OwnerAllowlistAllowedTeeWalletProjectOwnersRemoved)
 	if err := _OwnerAllowlist.contract.UnpackLog(event, "AllowedTeeWalletProjectOwnersRemoved", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// OwnerAllowlistGovernanceCallTimelockedIterator is returned from FilterGovernanceCallTimelocked and is used to iterate over the raw logs and unpacked data for GovernanceCallTimelocked events raised by the OwnerAllowlist contract.
+type OwnerAllowlistGovernanceCallTimelockedIterator struct {
+	Event *OwnerAllowlistGovernanceCallTimelocked // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *OwnerAllowlistGovernanceCallTimelockedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(OwnerAllowlistGovernanceCallTimelocked)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(OwnerAllowlistGovernanceCallTimelocked)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *OwnerAllowlistGovernanceCallTimelockedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *OwnerAllowlistGovernanceCallTimelockedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// OwnerAllowlistGovernanceCallTimelocked represents a GovernanceCallTimelocked event raised by the OwnerAllowlist contract.
+type OwnerAllowlistGovernanceCallTimelocked struct {
+	EncodedCall           []byte
+	EncodedCallHash       [32]byte
+	AllowedAfterTimestamp *big.Int
+	Raw                   types.Log // Blockchain specific contextual infos
+}
+
+// FilterGovernanceCallTimelocked is a free log retrieval operation binding the contract event 0x8c02104dfc280f713854f25297de671710c544c58de69dbde8fb66974ce1ab9e.
+//
+// Solidity: event GovernanceCallTimelocked(bytes encodedCall, bytes32 encodedCallHash, uint256 allowedAfterTimestamp)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) FilterGovernanceCallTimelocked(opts *bind.FilterOpts) (*OwnerAllowlistGovernanceCallTimelockedIterator, error) {
+
+	logs, sub, err := _OwnerAllowlist.contract.FilterLogs(opts, "GovernanceCallTimelocked")
+	if err != nil {
+		return nil, err
+	}
+	return &OwnerAllowlistGovernanceCallTimelockedIterator{contract: _OwnerAllowlist.contract, event: "GovernanceCallTimelocked", logs: logs, sub: sub}, nil
+}
+
+// WatchGovernanceCallTimelocked is a free log subscription operation binding the contract event 0x8c02104dfc280f713854f25297de671710c544c58de69dbde8fb66974ce1ab9e.
+//
+// Solidity: event GovernanceCallTimelocked(bytes encodedCall, bytes32 encodedCallHash, uint256 allowedAfterTimestamp)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) WatchGovernanceCallTimelocked(opts *bind.WatchOpts, sink chan<- *OwnerAllowlistGovernanceCallTimelocked) (event.Subscription, error) {
+
+	logs, sub, err := _OwnerAllowlist.contract.WatchLogs(opts, "GovernanceCallTimelocked")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(OwnerAllowlistGovernanceCallTimelocked)
+				if err := _OwnerAllowlist.contract.UnpackLog(event, "GovernanceCallTimelocked", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseGovernanceCallTimelocked is a log parse operation binding the contract event 0x8c02104dfc280f713854f25297de671710c544c58de69dbde8fb66974ce1ab9e.
+//
+// Solidity: event GovernanceCallTimelocked(bytes encodedCall, bytes32 encodedCallHash, uint256 allowedAfterTimestamp)
+func (_OwnerAllowlist *OwnerAllowlistFilterer) ParseGovernanceCallTimelocked(log types.Log) (*OwnerAllowlistGovernanceCallTimelocked, error) {
+	event := new(OwnerAllowlistGovernanceCallTimelocked)
+	if err := _OwnerAllowlist.contract.UnpackLog(event, "GovernanceCallTimelocked", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

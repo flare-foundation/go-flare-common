@@ -29,15 +29,26 @@ var (
 	_ = abi.ConvertType
 )
 
+// ITeePaymentsRegistrySourceConfig is an auto generated low-level Go binding around an user-defined struct.
+type ITeePaymentsRegistrySourceConfig struct {
+	KeyType      [32]byte
+	OpType       [32]byte
+	PaymentModel uint8
+	TeePayments  common.Address
+}
+
 // ITeePaymentsRegistrySourceRegistration is an auto generated low-level Go binding around an user-defined struct.
 type ITeePaymentsRegistrySourceRegistration struct {
-	SourceId    [32]byte
-	TeePayments common.Address
+	KeyType      [32]byte
+	OpType       [32]byte
+	PaymentModel uint8
+	SourceId     [32]byte
+	TeePayments  common.Address
 }
 
 // TeePaymentsRegistryMetaData contains all meta data concerning the TeePaymentsRegistry contract.
 var TeePaymentsRegistryMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"}],\"name\":\"AddressEmptyCode\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AlreadyInProductionMode\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"ERC1967InvalidImplementation\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC1967NonPayable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FailedCall\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"GovernedAddressZero\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"GovernedAlreadyInitialized\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidInitialization\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotInitializing\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExecutor\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyGovernance\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"teePayments\",\"type\":\"address\"}],\"name\":\"SourceAlreadyRegistered\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"SourceIdZero\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"}],\"name\":\"SourceNotRegistered\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"teePayments\",\"type\":\"address\"}],\"name\":\"TeePaymentsNotContract\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TimelockInvalidSelector\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TimelockNotAllowedYet\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UUPSUnauthorizedCallContext\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"slot\",\"type\":\"bytes32\"}],\"name\":\"UUPSUnsupportedProxiableUUID\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"encodedCallHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"}],\"name\":\"GovernanceCallTimelocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"initialGovernance\",\"type\":\"address\"}],\"name\":\"GovernanceInitialised\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"governanceSettings\",\"type\":\"address\"}],\"name\":\"GovernedProductionModeEntered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"version\",\"type\":\"uint64\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"teePayments\",\"type\":\"address\"}],\"indexed\":false,\"internalType\":\"structITeePaymentsRegistry.SourceRegistration[]\",\"name\":\"registrations\",\"type\":\"tuple[]\"}],\"name\":\"SourcesRegistered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"sourceIds\",\"type\":\"bytes32[]\"}],\"name\":\"SourcesUnregistered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"encodedCallHash\",\"type\":\"bytes32\"}],\"name\":\"TimelockedGovernanceCallCanceled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"encodedCallHash\",\"type\":\"bytes32\"}],\"name\":\"TimelockedGovernanceCallExecuted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"Upgraded\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"UPGRADE_INTERFACE_VERSION\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_encodedCall\",\"type\":\"bytes\"}],\"name\":\"cancelGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_encodedCall\",\"type\":\"bytes\"}],\"name\":\"executeGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAddressUpdater\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getRegisteredSourceIds\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getRegisteredTeePaymentsContracts\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teePayments\",\"type\":\"address\"}],\"name\":\"getSourceIdsForTeePayments\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_sourceId\",\"type\":\"bytes32\"}],\"name\":\"getTeePaymentsForSource\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governance\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governanceSettings\",\"outputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"implementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"isExecutor\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_sourceId\",\"type\":\"bytes32\"}],\"name\":\"isSourceRegistered\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"productionMode\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"proxiableUUID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"teePayments\",\"type\":\"address\"}],\"internalType\":\"structITeePaymentsRegistry.SourceRegistration[]\",\"name\":\"_registrations\",\"type\":\"tuple[]\"}],\"name\":\"registerSources\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"switchToProductionMode\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_sourceIds\",\"type\":\"bytes32[]\"}],\"name\":\"unregisterSources\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_contractNameHashes\",\"type\":\"bytes32[]\"},{\"internalType\":\"address[]\",\"name\":\"_contractAddresses\",\"type\":\"address[]\"}],\"name\":\"updateContractAddresses\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newImplementation\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"upgradeToAndCall\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"}],\"name\":\"AddressEmptyCode\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AlreadyInProductionMode\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"ERC1967InvalidImplementation\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC1967NonPayable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FailedCall\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"GovernedAddressZero\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"GovernedAlreadyInitialized\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidInitialization\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotInitializing\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExecutor\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyGovernance\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"teePayments\",\"type\":\"address\"}],\"name\":\"SourceAlreadyRegistered\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"SourceIdZero\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"SourceKeyTypeZero\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"}],\"name\":\"SourceNotRegistered\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"SourceOpTypeZero\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"SourcePaymentModelUnknown\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"teePayments\",\"type\":\"address\"}],\"name\":\"TeePaymentsNotContract\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TimelockInvalidSelector\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TimelockNotAllowedYet\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UUPSUnauthorizedCallContext\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"slot\",\"type\":\"bytes32\"}],\"name\":\"UUPSUnsupportedProxiableUUID\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"teePayments\",\"type\":\"address\"},{\"internalType\":\"enumPaymentModel\",\"name\":\"expected\",\"type\":\"uint8\"},{\"internalType\":\"enumPaymentModel\",\"name\":\"actual\",\"type\":\"uint8\"}],\"name\":\"WrongPaymentModel\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"encodedCallHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"}],\"name\":\"GovernanceCallTimelocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"initialGovernance\",\"type\":\"address\"}],\"name\":\"GovernanceInitialised\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"governanceSettings\",\"type\":\"address\"}],\"name\":\"GovernedProductionModeEntered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"version\",\"type\":\"uint64\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"enumPaymentModel\",\"name\":\"paymentModel\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"teePayments\",\"type\":\"address\"}],\"indexed\":false,\"internalType\":\"structITeePaymentsRegistry.SourceRegistration[]\",\"name\":\"registrations\",\"type\":\"tuple[]\"}],\"name\":\"SourcesRegistered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"sourceIds\",\"type\":\"bytes32[]\"}],\"name\":\"SourcesUnregistered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"encodedCallHash\",\"type\":\"bytes32\"}],\"name\":\"TimelockedGovernanceCallCanceled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"encodedCallHash\",\"type\":\"bytes32\"}],\"name\":\"TimelockedGovernanceCallExecuted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"Upgraded\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"UPGRADE_INTERFACE_VERSION\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_encodedCall\",\"type\":\"bytes\"}],\"name\":\"cancelGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_encodedCall\",\"type\":\"bytes\"}],\"name\":\"executeGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAddressUpdater\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getRegisteredSourceIds\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getRegisteredTeePaymentsContracts\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_sourceId\",\"type\":\"bytes32\"}],\"name\":\"getSourceConfig\",\"outputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"enumPaymentModel\",\"name\":\"paymentModel\",\"type\":\"uint8\"},{\"internalType\":\"address\",\"name\":\"teePayments\",\"type\":\"address\"}],\"internalType\":\"structITeePaymentsRegistry.SourceConfig\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_teePayments\",\"type\":\"address\"}],\"name\":\"getSourceIdsForTeePayments\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_sourceId\",\"type\":\"bytes32\"}],\"name\":\"getSourceKeyTypeAndTeePayments\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"_keyType\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"_teePayments\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_sourceId\",\"type\":\"bytes32\"}],\"name\":\"getSourceOpTypeAndTeePayments\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"_opType\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"_teePayments\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_sourceId\",\"type\":\"bytes32\"}],\"name\":\"getSourcePaymentModel\",\"outputs\":[{\"internalType\":\"enumPaymentModel\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_sourceId\",\"type\":\"bytes32\"}],\"name\":\"getTeePaymentsForSource\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governance\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governanceSettings\",\"outputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"implementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"isExecutor\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_sourceId\",\"type\":\"bytes32\"}],\"name\":\"isSourceRegistered\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"productionMode\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"proxiableUUID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"enumPaymentModel\",\"name\":\"paymentModel\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"teePayments\",\"type\":\"address\"}],\"internalType\":\"structITeePaymentsRegistry.SourceRegistration[]\",\"name\":\"_registrations\",\"type\":\"tuple[]\"}],\"name\":\"registerSources\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"switchToProductionMode\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_sourceIds\",\"type\":\"bytes32[]\"}],\"name\":\"unregisterSources\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_contractNameHashes\",\"type\":\"bytes32[]\"},{\"internalType\":\"address[]\",\"name\":\"_contractAddresses\",\"type\":\"address[]\"}],\"name\":\"updateContractAddresses\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newImplementation\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"upgradeToAndCall\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}]",
 }
 
 // TeePaymentsRegistryABI is the input ABI used to generate the binding from.
@@ -310,6 +321,37 @@ func (_TeePaymentsRegistry *TeePaymentsRegistryCallerSession) GetRegisteredTeePa
 	return _TeePaymentsRegistry.Contract.GetRegisteredTeePaymentsContracts(&_TeePaymentsRegistry.CallOpts)
 }
 
+// GetSourceConfig is a free data retrieval call binding the contract method 0x9a5b5cfd.
+//
+// Solidity: function getSourceConfig(bytes32 _sourceId) view returns((bytes32,bytes32,uint8,address))
+func (_TeePaymentsRegistry *TeePaymentsRegistryCaller) GetSourceConfig(opts *bind.CallOpts, _sourceId [32]byte) (ITeePaymentsRegistrySourceConfig, error) {
+	var out []interface{}
+	err := _TeePaymentsRegistry.contract.Call(opts, &out, "getSourceConfig", _sourceId)
+
+	if err != nil {
+		return *new(ITeePaymentsRegistrySourceConfig), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(ITeePaymentsRegistrySourceConfig)).(*ITeePaymentsRegistrySourceConfig)
+
+	return out0, err
+
+}
+
+// GetSourceConfig is a free data retrieval call binding the contract method 0x9a5b5cfd.
+//
+// Solidity: function getSourceConfig(bytes32 _sourceId) view returns((bytes32,bytes32,uint8,address))
+func (_TeePaymentsRegistry *TeePaymentsRegistrySession) GetSourceConfig(_sourceId [32]byte) (ITeePaymentsRegistrySourceConfig, error) {
+	return _TeePaymentsRegistry.Contract.GetSourceConfig(&_TeePaymentsRegistry.CallOpts, _sourceId)
+}
+
+// GetSourceConfig is a free data retrieval call binding the contract method 0x9a5b5cfd.
+//
+// Solidity: function getSourceConfig(bytes32 _sourceId) view returns((bytes32,bytes32,uint8,address))
+func (_TeePaymentsRegistry *TeePaymentsRegistryCallerSession) GetSourceConfig(_sourceId [32]byte) (ITeePaymentsRegistrySourceConfig, error) {
+	return _TeePaymentsRegistry.Contract.GetSourceConfig(&_TeePaymentsRegistry.CallOpts, _sourceId)
+}
+
 // GetSourceIdsForTeePayments is a free data retrieval call binding the contract method 0xe4665bd0.
 //
 // Solidity: function getSourceIdsForTeePayments(address _teePayments) view returns(bytes32[])
@@ -339,6 +381,127 @@ func (_TeePaymentsRegistry *TeePaymentsRegistrySession) GetSourceIdsForTeePaymen
 // Solidity: function getSourceIdsForTeePayments(address _teePayments) view returns(bytes32[])
 func (_TeePaymentsRegistry *TeePaymentsRegistryCallerSession) GetSourceIdsForTeePayments(_teePayments common.Address) ([][32]byte, error) {
 	return _TeePaymentsRegistry.Contract.GetSourceIdsForTeePayments(&_TeePaymentsRegistry.CallOpts, _teePayments)
+}
+
+// GetSourceKeyTypeAndTeePayments is a free data retrieval call binding the contract method 0x828def57.
+//
+// Solidity: function getSourceKeyTypeAndTeePayments(bytes32 _sourceId) view returns(bytes32 _keyType, address _teePayments)
+func (_TeePaymentsRegistry *TeePaymentsRegistryCaller) GetSourceKeyTypeAndTeePayments(opts *bind.CallOpts, _sourceId [32]byte) (struct {
+	KeyType     [32]byte
+	TeePayments common.Address
+}, error) {
+	var out []interface{}
+	err := _TeePaymentsRegistry.contract.Call(opts, &out, "getSourceKeyTypeAndTeePayments", _sourceId)
+
+	outstruct := new(struct {
+		KeyType     [32]byte
+		TeePayments common.Address
+	})
+	if err != nil {
+		return *outstruct, err
+	}
+
+	outstruct.KeyType = *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
+	outstruct.TeePayments = *abi.ConvertType(out[1], new(common.Address)).(*common.Address)
+
+	return *outstruct, err
+
+}
+
+// GetSourceKeyTypeAndTeePayments is a free data retrieval call binding the contract method 0x828def57.
+//
+// Solidity: function getSourceKeyTypeAndTeePayments(bytes32 _sourceId) view returns(bytes32 _keyType, address _teePayments)
+func (_TeePaymentsRegistry *TeePaymentsRegistrySession) GetSourceKeyTypeAndTeePayments(_sourceId [32]byte) (struct {
+	KeyType     [32]byte
+	TeePayments common.Address
+}, error) {
+	return _TeePaymentsRegistry.Contract.GetSourceKeyTypeAndTeePayments(&_TeePaymentsRegistry.CallOpts, _sourceId)
+}
+
+// GetSourceKeyTypeAndTeePayments is a free data retrieval call binding the contract method 0x828def57.
+//
+// Solidity: function getSourceKeyTypeAndTeePayments(bytes32 _sourceId) view returns(bytes32 _keyType, address _teePayments)
+func (_TeePaymentsRegistry *TeePaymentsRegistryCallerSession) GetSourceKeyTypeAndTeePayments(_sourceId [32]byte) (struct {
+	KeyType     [32]byte
+	TeePayments common.Address
+}, error) {
+	return _TeePaymentsRegistry.Contract.GetSourceKeyTypeAndTeePayments(&_TeePaymentsRegistry.CallOpts, _sourceId)
+}
+
+// GetSourceOpTypeAndTeePayments is a free data retrieval call binding the contract method 0x274b42ba.
+//
+// Solidity: function getSourceOpTypeAndTeePayments(bytes32 _sourceId) view returns(bytes32 _opType, address _teePayments)
+func (_TeePaymentsRegistry *TeePaymentsRegistryCaller) GetSourceOpTypeAndTeePayments(opts *bind.CallOpts, _sourceId [32]byte) (struct {
+	OpType      [32]byte
+	TeePayments common.Address
+}, error) {
+	var out []interface{}
+	err := _TeePaymentsRegistry.contract.Call(opts, &out, "getSourceOpTypeAndTeePayments", _sourceId)
+
+	outstruct := new(struct {
+		OpType      [32]byte
+		TeePayments common.Address
+	})
+	if err != nil {
+		return *outstruct, err
+	}
+
+	outstruct.OpType = *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
+	outstruct.TeePayments = *abi.ConvertType(out[1], new(common.Address)).(*common.Address)
+
+	return *outstruct, err
+
+}
+
+// GetSourceOpTypeAndTeePayments is a free data retrieval call binding the contract method 0x274b42ba.
+//
+// Solidity: function getSourceOpTypeAndTeePayments(bytes32 _sourceId) view returns(bytes32 _opType, address _teePayments)
+func (_TeePaymentsRegistry *TeePaymentsRegistrySession) GetSourceOpTypeAndTeePayments(_sourceId [32]byte) (struct {
+	OpType      [32]byte
+	TeePayments common.Address
+}, error) {
+	return _TeePaymentsRegistry.Contract.GetSourceOpTypeAndTeePayments(&_TeePaymentsRegistry.CallOpts, _sourceId)
+}
+
+// GetSourceOpTypeAndTeePayments is a free data retrieval call binding the contract method 0x274b42ba.
+//
+// Solidity: function getSourceOpTypeAndTeePayments(bytes32 _sourceId) view returns(bytes32 _opType, address _teePayments)
+func (_TeePaymentsRegistry *TeePaymentsRegistryCallerSession) GetSourceOpTypeAndTeePayments(_sourceId [32]byte) (struct {
+	OpType      [32]byte
+	TeePayments common.Address
+}, error) {
+	return _TeePaymentsRegistry.Contract.GetSourceOpTypeAndTeePayments(&_TeePaymentsRegistry.CallOpts, _sourceId)
+}
+
+// GetSourcePaymentModel is a free data retrieval call binding the contract method 0xc4ffa436.
+//
+// Solidity: function getSourcePaymentModel(bytes32 _sourceId) view returns(uint8)
+func (_TeePaymentsRegistry *TeePaymentsRegistryCaller) GetSourcePaymentModel(opts *bind.CallOpts, _sourceId [32]byte) (uint8, error) {
+	var out []interface{}
+	err := _TeePaymentsRegistry.contract.Call(opts, &out, "getSourcePaymentModel", _sourceId)
+
+	if err != nil {
+		return *new(uint8), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(uint8)).(*uint8)
+
+	return out0, err
+
+}
+
+// GetSourcePaymentModel is a free data retrieval call binding the contract method 0xc4ffa436.
+//
+// Solidity: function getSourcePaymentModel(bytes32 _sourceId) view returns(uint8)
+func (_TeePaymentsRegistry *TeePaymentsRegistrySession) GetSourcePaymentModel(_sourceId [32]byte) (uint8, error) {
+	return _TeePaymentsRegistry.Contract.GetSourcePaymentModel(&_TeePaymentsRegistry.CallOpts, _sourceId)
+}
+
+// GetSourcePaymentModel is a free data retrieval call binding the contract method 0xc4ffa436.
+//
+// Solidity: function getSourcePaymentModel(bytes32 _sourceId) view returns(uint8)
+func (_TeePaymentsRegistry *TeePaymentsRegistryCallerSession) GetSourcePaymentModel(_sourceId [32]byte) (uint8, error) {
+	return _TeePaymentsRegistry.Contract.GetSourcePaymentModel(&_TeePaymentsRegistry.CallOpts, _sourceId)
 }
 
 // GetTeePaymentsForSource is a free data retrieval call binding the contract method 0x4c1db547.
@@ -652,23 +815,23 @@ func (_TeePaymentsRegistry *TeePaymentsRegistryTransactorSession) Initialize(_go
 	return _TeePaymentsRegistry.Contract.Initialize(&_TeePaymentsRegistry.TransactOpts, _governanceSettings, _initialGovernance, _addressUpdater)
 }
 
-// RegisterSources is a paid mutator transaction binding the contract method 0xcb8fecb2.
+// RegisterSources is a paid mutator transaction binding the contract method 0x42d8f760.
 //
-// Solidity: function registerSources((bytes32,address)[] _registrations) returns()
+// Solidity: function registerSources((bytes32,bytes32,uint8,bytes32,address)[] _registrations) returns()
 func (_TeePaymentsRegistry *TeePaymentsRegistryTransactor) RegisterSources(opts *bind.TransactOpts, _registrations []ITeePaymentsRegistrySourceRegistration) (*types.Transaction, error) {
 	return _TeePaymentsRegistry.contract.Transact(opts, "registerSources", _registrations)
 }
 
-// RegisterSources is a paid mutator transaction binding the contract method 0xcb8fecb2.
+// RegisterSources is a paid mutator transaction binding the contract method 0x42d8f760.
 //
-// Solidity: function registerSources((bytes32,address)[] _registrations) returns()
+// Solidity: function registerSources((bytes32,bytes32,uint8,bytes32,address)[] _registrations) returns()
 func (_TeePaymentsRegistry *TeePaymentsRegistrySession) RegisterSources(_registrations []ITeePaymentsRegistrySourceRegistration) (*types.Transaction, error) {
 	return _TeePaymentsRegistry.Contract.RegisterSources(&_TeePaymentsRegistry.TransactOpts, _registrations)
 }
 
-// RegisterSources is a paid mutator transaction binding the contract method 0xcb8fecb2.
+// RegisterSources is a paid mutator transaction binding the contract method 0x42d8f760.
 //
-// Solidity: function registerSources((bytes32,address)[] _registrations) returns()
+// Solidity: function registerSources((bytes32,bytes32,uint8,bytes32,address)[] _registrations) returns()
 func (_TeePaymentsRegistry *TeePaymentsRegistryTransactorSession) RegisterSources(_registrations []ITeePaymentsRegistrySourceRegistration) (*types.Transaction, error) {
 	return _TeePaymentsRegistry.Contract.RegisterSources(&_TeePaymentsRegistry.TransactOpts, _registrations)
 }
@@ -1368,9 +1531,9 @@ type TeePaymentsRegistrySourcesRegistered struct {
 	Raw           types.Log // Blockchain specific contextual infos
 }
 
-// FilterSourcesRegistered is a free log retrieval operation binding the contract event 0x1b652ae86c05b7c28a48232c6bc8cf307c19d0c8b1f4116fdea4ca63ce22cafe.
+// FilterSourcesRegistered is a free log retrieval operation binding the contract event 0x85fc5f8425e832b86e98e1be4443e21bffbffe10ad167287a82085b1c56ba99f.
 //
-// Solidity: event SourcesRegistered((bytes32,address)[] registrations)
+// Solidity: event SourcesRegistered((bytes32,bytes32,uint8,bytes32,address)[] registrations)
 func (_TeePaymentsRegistry *TeePaymentsRegistryFilterer) FilterSourcesRegistered(opts *bind.FilterOpts) (*TeePaymentsRegistrySourcesRegisteredIterator, error) {
 
 	logs, sub, err := _TeePaymentsRegistry.contract.FilterLogs(opts, "SourcesRegistered")
@@ -1380,9 +1543,9 @@ func (_TeePaymentsRegistry *TeePaymentsRegistryFilterer) FilterSourcesRegistered
 	return &TeePaymentsRegistrySourcesRegisteredIterator{contract: _TeePaymentsRegistry.contract, event: "SourcesRegistered", logs: logs, sub: sub}, nil
 }
 
-// WatchSourcesRegistered is a free log subscription operation binding the contract event 0x1b652ae86c05b7c28a48232c6bc8cf307c19d0c8b1f4116fdea4ca63ce22cafe.
+// WatchSourcesRegistered is a free log subscription operation binding the contract event 0x85fc5f8425e832b86e98e1be4443e21bffbffe10ad167287a82085b1c56ba99f.
 //
-// Solidity: event SourcesRegistered((bytes32,address)[] registrations)
+// Solidity: event SourcesRegistered((bytes32,bytes32,uint8,bytes32,address)[] registrations)
 func (_TeePaymentsRegistry *TeePaymentsRegistryFilterer) WatchSourcesRegistered(opts *bind.WatchOpts, sink chan<- *TeePaymentsRegistrySourcesRegistered) (event.Subscription, error) {
 
 	logs, sub, err := _TeePaymentsRegistry.contract.WatchLogs(opts, "SourcesRegistered")
@@ -1417,9 +1580,9 @@ func (_TeePaymentsRegistry *TeePaymentsRegistryFilterer) WatchSourcesRegistered(
 	}), nil
 }
 
-// ParseSourcesRegistered is a log parse operation binding the contract event 0x1b652ae86c05b7c28a48232c6bc8cf307c19d0c8b1f4116fdea4ca63ce22cafe.
+// ParseSourcesRegistered is a log parse operation binding the contract event 0x85fc5f8425e832b86e98e1be4443e21bffbffe10ad167287a82085b1c56ba99f.
 //
-// Solidity: event SourcesRegistered((bytes32,address)[] registrations)
+// Solidity: event SourcesRegistered((bytes32,bytes32,uint8,bytes32,address)[] registrations)
 func (_TeePaymentsRegistry *TeePaymentsRegistryFilterer) ParseSourcesRegistered(log types.Log) (*TeePaymentsRegistrySourcesRegistered, error) {
 	event := new(TeePaymentsRegistrySourcesRegistered)
 	if err := _TeePaymentsRegistry.contract.UnpackLog(event, "SourcesRegistered", log); err != nil {

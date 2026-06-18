@@ -222,6 +222,19 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "uint24",
+        "name": "teeOwnersPPM",
+        "type": "uint24"
+      }
+    ],
+    "name": "TeeOwnersPPMSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
         "internalType": "bytes32",
         "name": "encodedCallHash",
         "type": "bytes32"

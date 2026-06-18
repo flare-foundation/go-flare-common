@@ -542,7 +542,7 @@
             "type": "string"
           }
         ],
-        "internalType": "struct ITeePayments.PMWMultisigAccount",
+        "internalType": "struct ITeePaymentsBase.PMWMultisigAccount",
         "name": "_account",
         "type": "tuple"
       }
@@ -624,7 +624,7 @@
             "type": "string"
           }
         ],
-        "internalType": "struct ITeePayments.PMWMultisigAccount",
+        "internalType": "struct ITeePaymentsBase.PMWMultisigAccount",
         "name": "_account",
         "type": "tuple"
       }
@@ -883,7 +883,7 @@
             "type": "string"
           }
         ],
-        "internalType": "struct ITeePayments.PMWMultisigAccount",
+        "internalType": "struct ITeePaymentsBase.PMWMultisigAccount",
         "name": "_account",
         "type": "tuple"
       },
