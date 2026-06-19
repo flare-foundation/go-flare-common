@@ -49,7 +49,7 @@ func PaymentTxFromInstruction(i payments.ITeePaymentsPaymentInstructionMessage, 
 
 	tx["TransactionType"] = "Payment"
 	tx["Account"] = i.SenderAddress
-	tx["Destination"] = i.RecipientAddress
+	tx["Destination"] = recipient
 	tx["Amount"] = i.Amount.String()
 	tx["SigningPubKey"] = ""
 	tx["Sequence"] = uint32(i.Nonce) //nolint:gosec // XRPL Sequence is UInt32; on-chain Nonce bounded to fit

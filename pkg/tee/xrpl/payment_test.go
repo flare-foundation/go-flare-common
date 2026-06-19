@@ -10,6 +10,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/payments"
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/address"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -168,6 +169,71 @@ func TestPaymentTxFromInstructionRejects(t *testing.T) {
 		_, err := PaymentTxFromInstruction(i, 0)
 		require.Error(t, err)
 		require.Contains(t, err.Error(), "TokenId")
+	})
+}
+
+// TestPaymentTxFromInstructionXAddress verifies that an X-address recipient is
+// decomposed into a classic Destination plus the embedded DestinationTag, while
+// a no-tag X-address and a plain classic recipient carry no DestinationTag.
+func TestPaymentTxFromInstructionXAddress(t *testing.T) {
+	const classic = "rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe"
+
+	base := payments.ITeePaymentsPaymentInstructionMessage{
+		WalletId:         [32]byte{1},
+		TeeIdKeyIdPairs:  []payments.TeeIdKeyIdPair{},
+		SenderAddress:    "rGYYWKxT1XgNipUJouCq4cKiyAdq8xBoE9",
+		Amount:           big.NewInt(10),
+		PaymentReference: crypto.Keccak256Hash([]byte("xaddr")),
+		Nonce:            10,
+		MaxFee:           big.NewInt(10),
+		FeeSchedule:      []byte{0x27, 0x10, 0, 1},
+	}
+
+	t.Run("X-address with tag decomposes into Destination + DestinationTag", func(t *testing.T) {
+		tag := uint32(0x12345678)
+		x, err := address.ClassicToX(classic, &tag, false)
+		require.NoError(t, err)
+		require.NotEqual(t, classic, x, "sanity: X-address must differ from the classic form")
+
+		i := base
+		i.RecipientAddress = x
+
+		tx, err := PaymentTxFromInstruction(i, 0)
+		require.NoError(t, err)
+		require.Equal(t, classic, tx["Destination"], "Destination must be the classic address, not the X-address")
+		require.Equal(t, tag, tx["DestinationTag"])
+
+		require.NoError(t, CheckNativePayment(tx))
+		// The 47-char X-address cannot serialize as an AccountID; a correct
+		// decomposition into the classic Destination encodes cleanly.
+		blob, err := types.Encode(tx, true)
+		require.NoError(t, err)
+		require.NotEmpty(t, blob)
+	})
+
+	t.Run("X-address without tag sets no DestinationTag", func(t *testing.T) {
+		x, err := address.ClassicToX(classic, nil, false)
+		require.NoError(t, err)
+
+		i := base
+		i.RecipientAddress = x
+
+		tx, err := PaymentTxFromInstruction(i, 0)
+		require.NoError(t, err)
+		require.Equal(t, classic, tx["Destination"])
+		_, has := tx["DestinationTag"]
+		require.False(t, has, "an X-address with no tag must not set DestinationTag")
+	})
+
+	t.Run("classic recipient carries no DestinationTag", func(t *testing.T) {
+		i := base
+		i.RecipientAddress = classic
+
+		tx, err := PaymentTxFromInstruction(i, 0)
+		require.NoError(t, err)
+		require.Equal(t, classic, tx["Destination"])
+		_, has := tx["DestinationTag"]
+		require.False(t, has)
 	})
 }
 
