@@ -213,6 +213,16 @@
   },
   {
     "inputs": [],
+    "name": "TeeNotFound",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ThresholdNotMet",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "VersionNotSupported",
     "type": "error"
   },
@@ -311,6 +321,35 @@
       }
     ],
     "name": "calculateFeeByTeeIds",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "_fee",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_walletId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_opType",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_opCommand",
+        "type": "bytes32"
+      }
+    ],
+    "name": "calculateFeeByWalletId",
     "outputs": [
       {
         "internalType": "uint256",

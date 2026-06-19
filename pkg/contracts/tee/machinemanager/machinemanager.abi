@@ -339,11 +339,6 @@
   },
   {
     "inputs": [],
-    "name": "OnlyTeeReplicationContract",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "OperationCommandEmpty",
     "type": "error"
   },

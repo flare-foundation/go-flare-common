@@ -118,6 +118,11 @@
   },
   {
     "inputs": [],
+    "name": "PMWMultisigAccountNotRegistered",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "PaymentAmountZero",
     "type": "error"
   },
@@ -573,6 +578,42 @@
         "internalType": "address",
         "name": "_authorizationAddress",
         "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct ITeePaymentsBase.PMWMultisigAccount",
+        "name": "_account",
+        "type": "tuple"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_opCommand",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getPaymentFee",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "_fee",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",

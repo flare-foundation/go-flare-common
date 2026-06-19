@@ -186,68 +186,6 @@
       {
         "components": [
           {
-            "internalType": "bytes32",
-            "name": "walletId",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "sourceId",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "string",
-            "name": "accountAddress",
-            "type": "string"
-          },
-          {
-            "internalType": "uint256",
-            "name": "nonce",
-            "type": "uint256"
-          },
-          {
-            "components": [
-              {
-                "internalType": "address",
-                "name": "teeId",
-                "type": "address"
-              },
-              {
-                "internalType": "uint64",
-                "name": "keyId",
-                "type": "uint64"
-              }
-            ],
-            "internalType": "struct TeeIdKeyIdPair[]",
-            "name": "teeIdKeyIdPairs",
-            "type": "tuple[]"
-          },
-          {
-            "internalType": "uint256",
-            "name": "transactionLimit",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "dailyLimit",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct ITeePaymentsLimitsManager.SetPaymentLimitsMessage",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "name": "setPaymentLimitsStruct",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
             "internalType": "string",
             "name": "anchorAddress",
             "type": "string"

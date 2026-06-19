@@ -754,6 +754,25 @@
         "internalType": "bytes32",
         "name": "_walletId",
         "type": "bytes32"
+      }
+    ],
+    "name": "getReceivingTeeIds",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "_teeIds",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_walletId",
+        "type": "bytes32"
       },
       {
         "internalType": "uint64",

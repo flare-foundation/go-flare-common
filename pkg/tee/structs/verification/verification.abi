@@ -50,30 +50,5 @@
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "enum ISystemStateVerifier.TeeMachineStatus",
-            "name": "status",
-            "type": "uint8"
-          },
-          {
-            "internalType": "address",
-            "name": "initialTeeId",
-            "type": "address"
-          }
-        ],
-        "internalType": "struct ISystemStateVerifier.TeeSystemState",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "name": "teeSystemStateStruct",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
   }
 ]
