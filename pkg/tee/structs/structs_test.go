@@ -8,7 +8,6 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/machine"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/machinepath"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/payments"
-	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/replication"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/tee"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/verification"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/vrf"
@@ -26,8 +25,6 @@ func TestInit(t *testing.T) {
 	require.NotNil(t, machine.TeeMachineDataStructArg)
 	require.NotNil(t, machinepath.MachinePathStructArg)
 	require.NotNil(t, instructions.TeeInstructionParamsStructArg)
-	require.NotNil(t, replication.PauseForUpgradeStructArg)
-	require.NotNil(t, replication.ReplicateTeeMachineStructArg)
 	require.NotNil(t, verification.MessageArguments)
 	require.NotNil(t, vrf.MessageArguments)
 }
