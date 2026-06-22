@@ -27,11 +27,6 @@
   },
   {
     "inputs": [],
-    "name": "AnchorAddressZero",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "AnchorLimitExceeded",
     "type": "error"
   },
@@ -114,11 +109,6 @@
   },
   {
     "inputs": [],
-    "name": "LengthsMismatch",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "NotInitializing",
     "type": "error"
   },
@@ -144,7 +134,7 @@
   },
   {
     "inputs": [],
-    "name": "TimelockInvalidSelector",
+    "name": "TimelockCallNotFound",
     "type": "error"
   },
   {
@@ -955,11 +945,6 @@
                 "internalType": "string",
                 "name": "accountAddress",
                 "type": "string"
-              },
-              {
-                "internalType": "string[]",
-                "name": "anchorAddresses",
-                "type": "string[]"
               }
             ],
             "internalType": "struct IPMWMultisigUtxoConfigured.ResponseBody",

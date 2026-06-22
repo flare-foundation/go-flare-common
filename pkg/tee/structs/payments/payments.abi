@@ -186,11 +186,6 @@
       {
         "components": [
           {
-            "internalType": "string",
-            "name": "anchorAddress",
-            "type": "string"
-          },
-          {
             "internalType": "bytes32",
             "name": "genesisAnchorTxid",
             "type": "bytes32"
@@ -265,21 +260,6 @@
           {
             "internalType": "uint32",
             "name": "anchorIndex",
-            "type": "uint32"
-          },
-          {
-            "internalType": "string",
-            "name": "anchorAddress",
-            "type": "string"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "genesisAnchorTxid",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "uint32",
-            "name": "genesisAnchorVout",
             "type": "uint32"
           },
           {

@@ -6,12 +6,17 @@
   },
   {
     "inputs": [],
-    "name": "DegenerateInput",
+    "name": "GammaNotOnCurve",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "GammaNotOnCurve",
+    "name": "GammaXUnverifiable",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "HXUnverifiable",
     "type": "error"
   },
   {
@@ -42,6 +47,11 @@
   {
     "inputs": [],
     "name": "PkNotOnCurve",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "PkXUnverifiable",
     "type": "error"
   },
   {

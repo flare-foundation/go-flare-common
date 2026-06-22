@@ -135,7 +135,7 @@
   },
   {
     "inputs": [],
-    "name": "TimelockInvalidSelector",
+    "name": "TimelockCallNotFound",
     "type": "error"
   },
   {

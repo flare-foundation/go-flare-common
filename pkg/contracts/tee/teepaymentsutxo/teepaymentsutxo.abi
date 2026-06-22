@@ -215,7 +215,7 @@
   },
   {
     "inputs": [],
-    "name": "TimelockInvalidSelector",
+    "name": "TimelockCallNotFound",
     "type": "error"
   },
   {
@@ -270,7 +270,7 @@
         "type": "uint64"
       }
     ],
-    "name": "DefaultAnchorReuseDelaySet",
+    "name": "AnchorReuseDelaySet",
     "type": "event"
   },
   {
@@ -775,11 +775,6 @@
                 "internalType": "string",
                 "name": "accountAddress",
                 "type": "string"
-              },
-              {
-                "internalType": "string[]",
-                "name": "anchorAddresses",
-                "type": "string[]"
               }
             ],
             "internalType": "struct IPMWMultisigUtxoConfigured.ResponseBody",
@@ -954,11 +949,6 @@
                 "internalType": "string",
                 "name": "accountAddress",
                 "type": "string"
-              },
-              {
-                "internalType": "string[]",
-                "name": "anchorAddresses",
-                "type": "string[]"
               }
             ],
             "internalType": "struct IPMWMultisigUtxoConfigured.ResponseBody",
@@ -1076,11 +1066,6 @@
       {
         "components": [
           {
-            "internalType": "string",
-            "name": "anchorAddress",
-            "type": "string"
-          },
-          {
             "internalType": "bytes32",
             "name": "genesisAnchorTxid",
             "type": "bytes32"
@@ -1143,6 +1128,25 @@
   {
     "inputs": [
       {
+        "internalType": "bytes32",
+        "name": "_sourceId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getAnchorReuseDelay",
+    "outputs": [
+      {
+        "internalType": "uint64",
+        "name": "",
+        "type": "uint64"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "components": [
           {
             "internalType": "bytes32",
@@ -1189,6 +1193,105 @@
         "internalType": "struct ITeePaymentsBase.PMWMultisigAccount",
         "name": "_account",
         "type": "tuple"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_paymentId",
+        "type": "uint64"
+      }
+    ],
+    "name": "getBatchPaymentId",
+    "outputs": [
+      {
+        "internalType": "uint64",
+        "name": "_batchPaymentId",
+        "type": "uint64"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct ITeePaymentsBase.PMWMultisigAccount",
+        "name": "_account",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_batchPaymentId",
+        "type": "uint64"
+      }
+    ],
+    "name": "getBatchRecord",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint64",
+            "name": "nonce",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "batchEndTs",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "paymentCount",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint32",
+            "name": "anchorIndex",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint24",
+            "name": "rewardEpochId",
+            "type": "uint24"
+          }
+        ],
+        "internalType": "struct ITeePaymentsUtxo.BatchRecord",
+        "name": "_batch",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct ITeePaymentsBase.PMWMultisigAccount",
+        "name": "_account",
+        "type": "tuple"
       }
     ],
     "name": "getBatchSettings",
@@ -1201,25 +1304,6 @@
       {
         "internalType": "uint64",
         "name": "_batchDurationSeconds",
-        "type": "uint64"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_sourceId",
-        "type": "bytes32"
-      }
-    ],
-    "name": "getDefaultAnchorReuseDelay",
-    "outputs": [
-      {
-        "internalType": "uint64",
-        "name": "",
         "type": "uint64"
       }
     ],
@@ -1281,6 +1365,42 @@
         "internalType": "uint256",
         "name": "_fee",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct ITeePaymentsBase.PMWMultisigAccount",
+        "name": "_account",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_paymentId",
+        "type": "uint64"
+      }
+    ],
+    "name": "getPaymentHash",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_paymentHash",
+        "type": "bytes32"
       }
     ],
     "stateMutability": "view",
@@ -1634,6 +1754,24 @@
   {
     "inputs": [
       {
+        "internalType": "bytes32",
+        "name": "_sourceId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_anchorReuseDelaySeconds",
+        "type": "uint64"
+      }
+    ],
+    "name": "setAnchorReuseDelay",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "components": [
           {
             "internalType": "bytes32",
@@ -1662,24 +1800,6 @@
       }
     ],
     "name": "setBatchSettings",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_sourceId",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint64",
-        "name": "_anchorReuseDelaySeconds",
-        "type": "uint64"
-      }
-    ],
-    "name": "setDefaultAnchorReuseDelay",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

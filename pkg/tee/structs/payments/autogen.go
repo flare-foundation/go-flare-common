@@ -69,7 +69,6 @@ type ITeePaymentsPaymentInstructionMessage struct {
 
 // ITeePaymentsUtxoUtxoAnchorState is an auto generated low-level Go binding around an user-defined struct.
 type ITeePaymentsUtxoUtxoAnchorState struct {
-	AnchorAddress     string
 	GenesisAnchorTxid [32]byte
 	GenesisAnchorVout uint32
 	NextNonce         uint64
@@ -78,25 +77,22 @@ type ITeePaymentsUtxoUtxoAnchorState struct {
 
 // ITeePaymentsUtxoUtxoPaymentInstructionMessage is an auto generated low-level Go binding around an user-defined struct.
 type ITeePaymentsUtxoUtxoPaymentInstructionMessage struct {
-	WalletId          [32]byte
-	TeeIdKeyIdPairs   []TeeIdKeyIdPair
-	SourceId          [32]byte
-	AccountAddress    string
-	AccountIndex      uint32
-	AnchorIndex       uint32
-	AnchorAddress     string
-	GenesisAnchorTxid [32]byte
-	GenesisAnchorVout uint32
-	RecipientAddress  string
-	TokenId           []byte
-	Amount            *big.Int
-	MaxFee            *big.Int
-	FeeSchedule       []byte
-	PaymentReference  [32]byte
-	Nonce             uint64
-	PaymentId         uint64
-	BatchPaymentId    uint64
-	BatchEndTs        uint64
+	WalletId         [32]byte
+	TeeIdKeyIdPairs  []TeeIdKeyIdPair
+	SourceId         [32]byte
+	AccountAddress   string
+	AccountIndex     uint32
+	AnchorIndex      uint32
+	RecipientAddress string
+	TokenId          []byte
+	Amount           *big.Int
+	MaxFee           *big.Int
+	FeeSchedule      []byte
+	PaymentReference [32]byte
+	Nonce            uint64
+	PaymentId        uint64
+	BatchPaymentId   uint64
+	BatchEndTs       uint64
 }
 
 // TeeIdKeyIdPair is an auto generated low-level Go binding around an user-defined struct.
@@ -107,7 +103,7 @@ type TeeIdKeyIdPair struct {
 
 // TeePaymentsMetaData contains all meta data concerning the TeePayments contract.
 var TeePaymentsMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"}],\"internalType\":\"structTeeIdKeyIdPair[]\",\"name\":\"teeIdKeyIdPairs\",\"type\":\"tuple[]\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"senderAddress\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"tokenId\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"feeSchedule\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"paymentId\",\"type\":\"uint64\"}],\"internalType\":\"structITeePayments.PaymentInstructionMessage\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"paymentInstructionMessageStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"tokenId\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"}],\"internalType\":\"structITeePaymentsBase.PaymentInstruction\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"paymentInstructionStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePaymentsBase.PMWMultisigAccount\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"pmwMultisigAccountStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint256[]\",\"name\":\"maxFeePerPayment\",\"type\":\"uint256[]\"},{\"internalType\":\"int16[][]\",\"name\":\"factorsBIPSPerPayment\",\"type\":\"int16[][]\"},{\"internalType\":\"uint16[]\",\"name\":\"delaysSeconds\",\"type\":\"uint16[]\"}],\"internalType\":\"structITeePaymentsBase.ReissueFeeParams\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"reissueFeeParamsStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"anchorAddress\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"genesisAnchorTxid\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"genesisAnchorVout\",\"type\":\"uint32\"},{\"internalType\":\"uint64\",\"name\":\"nextNonce\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"availableAt\",\"type\":\"uint64\"}],\"internalType\":\"structITeePaymentsUtxo.UtxoAnchorState\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"utxoAnchorStateStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"}],\"internalType\":\"structTeeIdKeyIdPair[]\",\"name\":\"teeIdKeyIdPairs\",\"type\":\"tuple[]\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"},{\"internalType\":\"uint32\",\"name\":\"accountIndex\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"anchorIndex\",\"type\":\"uint32\"},{\"internalType\":\"string\",\"name\":\"anchorAddress\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"genesisAnchorTxid\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"genesisAnchorVout\",\"type\":\"uint32\"},{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"tokenId\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"feeSchedule\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"paymentId\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"batchPaymentId\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"batchEndTs\",\"type\":\"uint64\"}],\"internalType\":\"structITeePaymentsUtxo.UtxoPaymentInstructionMessage\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"utxoPaymentInstructionMessageStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"}],\"internalType\":\"structTeeIdKeyIdPair[]\",\"name\":\"teeIdKeyIdPairs\",\"type\":\"tuple[]\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"senderAddress\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"tokenId\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"feeSchedule\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"paymentId\",\"type\":\"uint64\"}],\"internalType\":\"structITeePayments.PaymentInstructionMessage\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"paymentInstructionMessageStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"tokenId\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"}],\"internalType\":\"structITeePaymentsBase.PaymentInstruction\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"paymentInstructionStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePaymentsBase.PMWMultisigAccount\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"pmwMultisigAccountStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint256[]\",\"name\":\"maxFeePerPayment\",\"type\":\"uint256[]\"},{\"internalType\":\"int16[][]\",\"name\":\"factorsBIPSPerPayment\",\"type\":\"int16[][]\"},{\"internalType\":\"uint16[]\",\"name\":\"delaysSeconds\",\"type\":\"uint16[]\"}],\"internalType\":\"structITeePaymentsBase.ReissueFeeParams\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"reissueFeeParamsStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"genesisAnchorTxid\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"genesisAnchorVout\",\"type\":\"uint32\"},{\"internalType\":\"uint64\",\"name\":\"nextNonce\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"availableAt\",\"type\":\"uint64\"}],\"internalType\":\"structITeePaymentsUtxo.UtxoAnchorState\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"utxoAnchorStateStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"}],\"internalType\":\"structTeeIdKeyIdPair[]\",\"name\":\"teeIdKeyIdPairs\",\"type\":\"tuple[]\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"},{\"internalType\":\"uint32\",\"name\":\"accountIndex\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"anchorIndex\",\"type\":\"uint32\"},{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"tokenId\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"feeSchedule\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"paymentId\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"batchPaymentId\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"batchEndTs\",\"type\":\"uint64\"}],\"internalType\":\"structITeePaymentsUtxo.UtxoPaymentInstructionMessage\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"utxoPaymentInstructionMessageStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // TeePaymentsABI is the input ABI used to generate the binding from.
@@ -340,44 +336,44 @@ func (_TeePayments *TeePaymentsTransactorSession) ReissueFeeParamsStruct(arg0 IT
 	return _TeePayments.Contract.ReissueFeeParamsStruct(&_TeePayments.TransactOpts, arg0)
 }
 
-// UtxoAnchorStateStruct is a paid mutator transaction binding the contract method 0xab92e1f4.
+// UtxoAnchorStateStruct is a paid mutator transaction binding the contract method 0x8ae285d3.
 //
-// Solidity: function utxoAnchorStateStruct((string,bytes32,uint32,uint64,uint64) ) returns()
+// Solidity: function utxoAnchorStateStruct((bytes32,uint32,uint64,uint64) ) returns()
 func (_TeePayments *TeePaymentsTransactor) UtxoAnchorStateStruct(opts *bind.TransactOpts, arg0 ITeePaymentsUtxoUtxoAnchorState) (*types.Transaction, error) {
 	return _TeePayments.contract.Transact(opts, "utxoAnchorStateStruct", arg0)
 }
 
-// UtxoAnchorStateStruct is a paid mutator transaction binding the contract method 0xab92e1f4.
+// UtxoAnchorStateStruct is a paid mutator transaction binding the contract method 0x8ae285d3.
 //
-// Solidity: function utxoAnchorStateStruct((string,bytes32,uint32,uint64,uint64) ) returns()
+// Solidity: function utxoAnchorStateStruct((bytes32,uint32,uint64,uint64) ) returns()
 func (_TeePayments *TeePaymentsSession) UtxoAnchorStateStruct(arg0 ITeePaymentsUtxoUtxoAnchorState) (*types.Transaction, error) {
 	return _TeePayments.Contract.UtxoAnchorStateStruct(&_TeePayments.TransactOpts, arg0)
 }
 
-// UtxoAnchorStateStruct is a paid mutator transaction binding the contract method 0xab92e1f4.
+// UtxoAnchorStateStruct is a paid mutator transaction binding the contract method 0x8ae285d3.
 //
-// Solidity: function utxoAnchorStateStruct((string,bytes32,uint32,uint64,uint64) ) returns()
+// Solidity: function utxoAnchorStateStruct((bytes32,uint32,uint64,uint64) ) returns()
 func (_TeePayments *TeePaymentsTransactorSession) UtxoAnchorStateStruct(arg0 ITeePaymentsUtxoUtxoAnchorState) (*types.Transaction, error) {
 	return _TeePayments.Contract.UtxoAnchorStateStruct(&_TeePayments.TransactOpts, arg0)
 }
 
-// UtxoPaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0xbee6dc6f.
+// UtxoPaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0x1995f2c6.
 //
-// Solidity: function utxoPaymentInstructionMessageStruct((bytes32,(address,uint64)[],bytes32,string,uint32,uint32,string,bytes32,uint32,string,bytes,uint256,uint256,bytes,bytes32,uint64,uint64,uint64,uint64) ) returns()
+// Solidity: function utxoPaymentInstructionMessageStruct((bytes32,(address,uint64)[],bytes32,string,uint32,uint32,string,bytes,uint256,uint256,bytes,bytes32,uint64,uint64,uint64,uint64) ) returns()
 func (_TeePayments *TeePaymentsTransactor) UtxoPaymentInstructionMessageStruct(opts *bind.TransactOpts, arg0 ITeePaymentsUtxoUtxoPaymentInstructionMessage) (*types.Transaction, error) {
 	return _TeePayments.contract.Transact(opts, "utxoPaymentInstructionMessageStruct", arg0)
 }
 
-// UtxoPaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0xbee6dc6f.
+// UtxoPaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0x1995f2c6.
 //
-// Solidity: function utxoPaymentInstructionMessageStruct((bytes32,(address,uint64)[],bytes32,string,uint32,uint32,string,bytes32,uint32,string,bytes,uint256,uint256,bytes,bytes32,uint64,uint64,uint64,uint64) ) returns()
+// Solidity: function utxoPaymentInstructionMessageStruct((bytes32,(address,uint64)[],bytes32,string,uint32,uint32,string,bytes,uint256,uint256,bytes,bytes32,uint64,uint64,uint64,uint64) ) returns()
 func (_TeePayments *TeePaymentsSession) UtxoPaymentInstructionMessageStruct(arg0 ITeePaymentsUtxoUtxoPaymentInstructionMessage) (*types.Transaction, error) {
 	return _TeePayments.Contract.UtxoPaymentInstructionMessageStruct(&_TeePayments.TransactOpts, arg0)
 }
 
-// UtxoPaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0xbee6dc6f.
+// UtxoPaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0x1995f2c6.
 //
-// Solidity: function utxoPaymentInstructionMessageStruct((bytes32,(address,uint64)[],bytes32,string,uint32,uint32,string,bytes32,uint32,string,bytes,uint256,uint256,bytes,bytes32,uint64,uint64,uint64,uint64) ) returns()
+// Solidity: function utxoPaymentInstructionMessageStruct((bytes32,(address,uint64)[],bytes32,string,uint32,uint32,string,bytes,uint256,uint256,bytes,bytes32,uint64,uint64,uint64,uint64) ) returns()
 func (_TeePayments *TeePaymentsTransactorSession) UtxoPaymentInstructionMessageStruct(arg0 ITeePaymentsUtxoUtxoPaymentInstructionMessage) (*types.Transaction, error) {
 	return _TeePayments.Contract.UtxoPaymentInstructionMessageStruct(&_TeePayments.TransactOpts, arg0)
 }

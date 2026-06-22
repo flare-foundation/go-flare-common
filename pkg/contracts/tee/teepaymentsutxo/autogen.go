@@ -71,9 +71,8 @@ type IPMWMultisigUtxoConfiguredRequestBody struct {
 
 // IPMWMultisigUtxoConfiguredResponseBody is an auto generated low-level Go binding around an user-defined struct.
 type IPMWMultisigUtxoConfiguredResponseBody struct {
-	Status          uint8
-	AccountAddress  string
-	AnchorAddresses []string
+	Status         uint8
+	AccountAddress string
 }
 
 // ITeePaymentsBasePMWMultisigAccount is an auto generated low-level Go binding around an user-defined struct.
@@ -98,9 +97,17 @@ type ITeePaymentsBaseReissueFeeParams struct {
 	DelaysSeconds         []uint16
 }
 
+// ITeePaymentsUtxoBatchRecord is an auto generated low-level Go binding around an user-defined struct.
+type ITeePaymentsUtxoBatchRecord struct {
+	Nonce         uint64
+	BatchEndTs    uint64
+	PaymentCount  uint64
+	AnchorIndex   uint32
+	RewardEpochId *big.Int
+}
+
 // ITeePaymentsUtxoUtxoAnchorState is an auto generated low-level Go binding around an user-defined struct.
 type ITeePaymentsUtxoUtxoAnchorState struct {
-	AnchorAddress     string
 	GenesisAnchorTxid [32]byte
 	GenesisAnchorVout uint32
 	NextNonce         uint64
@@ -116,7 +123,7 @@ type Signature struct {
 
 // TeePaymentsUtxoMetaData contains all meta data concerning the TeePaymentsUtxo contract.
 var TeePaymentsUtxoMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"AccountIndexMismatch\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"}],\"name\":\"AddressEmptyCode\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AlreadyInProductionMode\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AnchorIndexOutOfBounds\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AnchorMismatch\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint64\",\"name\":\"availableAt\",\"type\":\"uint64\"}],\"name\":\"AnchorNotReady\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AuthorizationAddressZero\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"BatchNotYetEnded\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"BatchSizeZero\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"ERC1967InvalidImplementation\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC1967NonPayable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FailedCall\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"GovernedAddressZero\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"GovernedAlreadyInitialized\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"InvalidFeeFactor\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidInitialization\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPaymentId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LengthsMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"MaxBatchSizeZero\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoActiveReplacement\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoNewAnchors\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoPaymentInstructions\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotInitializing\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyAuthorizationAddress\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExecutor\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyGovernance\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProductionOrPausedStatus\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlySystemExtensionId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyWalletOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"PMWMultisigAccountAddressAlreadySet\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"PMWMultisigAccountNotRegistered\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"PaymentAmountZero\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"PaymentHashMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"PaymentNotInBatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ReissueRewardEpochChanged\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ReplacementAlreadyFinalized\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ScheduledSignaturesUnsupported\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TimelockInvalidSelector\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TimelockNotAllowedYet\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UUPSUnauthorizedCallContext\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"slot\",\"type\":\"bytes32\"}],\"name\":\"UUPSUnsupportedProxiableUUID\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UnsupportedSourceId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"WalletNotInProduction\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"WrongKeyType\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"anchorReuseDelaySeconds\",\"type\":\"uint64\"}],\"name\":\"DefaultAnchorReuseDelaySet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"encodedCallHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"}],\"name\":\"GovernanceCallTimelocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"initialGovernance\",\"type\":\"address\"}],\"name\":\"GovernanceInitialised\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"governanceSettings\",\"type\":\"address\"}],\"name\":\"GovernedProductionModeEntered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"version\",\"type\":\"uint64\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"maxBatchSize\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"maxBatchDurationSeconds\",\"type\":\"uint64\"}],\"name\":\"MaxBatchSettingsSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"accountIndex\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"anchorCount\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"authorizationAddress\",\"type\":\"address\"}],\"name\":\"PMWMultisigUtxoAccountAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"encodedCallHash\",\"type\":\"bytes32\"}],\"name\":\"TimelockedGovernanceCallCanceled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"encodedCallHash\",\"type\":\"bytes32\"}],\"name\":\"TimelockedGovernanceCallExecuted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"Upgraded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"accountIndex\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"anchorCount\",\"type\":\"uint32\"}],\"name\":\"UtxoAnchorsAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"batchSize\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"batchDurationSeconds\",\"type\":\"uint64\"}],\"name\":\"UtxoBatchSettingsSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"accountHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"batchPaymentId\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"replacementId\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"firstPaymentId\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"paymentCount\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint256[]\",\"name\":\"blocks\",\"type\":\"uint256[]\"}],\"name\":\"UtxoReplacementReady\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"accountHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"batchPaymentId\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"replacementId\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"firstPaymentId\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"startBlock\",\"type\":\"uint256\"}],\"name\":\"UtxoReplacementStarted\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"UPGRADE_INTERFACE_VERSION\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"signingPolicySignatures\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"}],\"internalType\":\"structIFdc2Verification.Fdc2Signatures\",\"name\":\"signatures\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFdc2Hub.Fdc2ResponseHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"uint32\",\"name\":\"accountIndex\",\"type\":\"uint32\"},{\"internalType\":\"bytes[]\",\"name\":\"publicKeys\",\"type\":\"bytes[]\"},{\"internalType\":\"uint64\",\"name\":\"threshold\",\"type\":\"uint64\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"genesisAnchorTxid\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"genesisAnchorVout\",\"type\":\"uint32\"}],\"internalType\":\"structIPMWMultisigUtxoConfigured.Anchor[]\",\"name\":\"anchors\",\"type\":\"tuple[]\"}],\"internalType\":\"structIPMWMultisigUtxoConfigured.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumIPMWMultisigUtxoConfigured.PMWMultisigUtxoStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"},{\"internalType\":\"string[]\",\"name\":\"anchorAddresses\",\"type\":\"string[]\"}],\"internalType\":\"structIPMWMultisigUtxoConfigured.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structIPMWMultisigUtxoConfigured.Proof\",\"name\":\"_proof\",\"type\":\"tuple\"}],\"name\":\"addAnchors\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"components\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"signingPolicySignatures\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"}],\"internalType\":\"structIFdc2Verification.Fdc2Signatures\",\"name\":\"signatures\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFdc2Hub.Fdc2ResponseHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"uint32\",\"name\":\"accountIndex\",\"type\":\"uint32\"},{\"internalType\":\"bytes[]\",\"name\":\"publicKeys\",\"type\":\"bytes[]\"},{\"internalType\":\"uint64\",\"name\":\"threshold\",\"type\":\"uint64\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"genesisAnchorTxid\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"genesisAnchorVout\",\"type\":\"uint32\"}],\"internalType\":\"structIPMWMultisigUtxoConfigured.Anchor[]\",\"name\":\"anchors\",\"type\":\"tuple[]\"}],\"internalType\":\"structIPMWMultisigUtxoConfigured.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumIPMWMultisigUtxoConfigured.PMWMultisigUtxoStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"},{\"internalType\":\"string[]\",\"name\":\"anchorAddresses\",\"type\":\"string[]\"}],\"internalType\":\"structIPMWMultisigUtxoConfigured.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structIPMWMultisigUtxoConfigured.Proof\",\"name\":\"_proof\",\"type\":\"tuple\"},{\"internalType\":\"address\",\"name\":\"_authorizationAddress\",\"type\":\"address\"}],\"name\":\"addPMWMultisigAccount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_encodedCall\",\"type\":\"bytes\"}],\"name\":\"cancelGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_encodedCall\",\"type\":\"bytes\"}],\"name\":\"executeGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"flareSystemsManager\",\"outputs\":[{\"internalType\":\"contractIFlareSystemsManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"flareTeeManager\",\"outputs\":[{\"internalType\":\"contractIIFlareTeeManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAddressUpdater\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePaymentsBase.PMWMultisigAccount\",\"name\":\"_account\",\"type\":\"tuple\"},{\"internalType\":\"uint256\",\"name\":\"_anchorIndex\",\"type\":\"uint256\"}],\"name\":\"getAnchor\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"anchorAddress\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"genesisAnchorTxid\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"genesisAnchorVout\",\"type\":\"uint32\"},{\"internalType\":\"uint64\",\"name\":\"nextNonce\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"availableAt\",\"type\":\"uint64\"}],\"internalType\":\"structITeePaymentsUtxo.UtxoAnchorState\",\"name\":\"_anchor\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePaymentsBase.PMWMultisigAccount\",\"name\":\"_account\",\"type\":\"tuple\"}],\"name\":\"getAnchorCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePaymentsBase.PMWMultisigAccount\",\"name\":\"_account\",\"type\":\"tuple\"}],\"name\":\"getAuthorizationAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_authorizationAddress\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePaymentsBase.PMWMultisigAccount\",\"name\":\"_account\",\"type\":\"tuple\"}],\"name\":\"getBatchSettings\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"_batchSize\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"_batchDurationSeconds\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_sourceId\",\"type\":\"bytes32\"}],\"name\":\"getDefaultAnchorReuseDelay\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_sourceId\",\"type\":\"bytes32\"}],\"name\":\"getMaxBatchSettings\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"_maxBatchSize\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"_maxBatchDurationSeconds\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePaymentsBase.PMWMultisigAccount\",\"name\":\"_account\",\"type\":\"tuple\"},{\"internalType\":\"bytes32\",\"name\":\"_opCommand\",\"type\":\"bytes32\"}],\"name\":\"getPaymentFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_fee\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"getWalletAccounts\",\"outputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePaymentsBase.PMWMultisigAccount[]\",\"name\":\"\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePaymentsBase.PMWMultisigAccount\",\"name\":\"_account\",\"type\":\"tuple\"}],\"name\":\"getWalletId\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governance\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governanceSettings\",\"outputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"implementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"isExecutor\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePaymentsBase.PMWMultisigAccount\",\"name\":\"_account\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"tokenId\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"}],\"internalType\":\"structITeePaymentsBase.PaymentInstruction\",\"name\":\"_paymentInstruction\",\"type\":\"tuple\"},{\"internalType\":\"address\",\"name\":\"_claimBackAddress\",\"type\":\"address\"}],\"name\":\"pay\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"_paymentId\",\"type\":\"uint64\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"paymentModel\",\"outputs\":[{\"internalType\":\"enumPaymentModel\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"productionMode\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"proxiableUUID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePaymentsBase.PMWMultisigAccount\",\"name\":\"_account\",\"type\":\"tuple\"},{\"internalType\":\"uint64\",\"name\":\"_batchPaymentId\",\"type\":\"uint64\"},{\"components\":[{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"tokenId\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"}],\"internalType\":\"structITeePaymentsBase.PaymentInstruction[]\",\"name\":\"_paymentInstructions\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint256[]\",\"name\":\"maxFeePerPayment\",\"type\":\"uint256[]\"},{\"internalType\":\"int16[][]\",\"name\":\"factorsBIPSPerPayment\",\"type\":\"int16[][]\"},{\"internalType\":\"uint16[]\",\"name\":\"delaysSeconds\",\"type\":\"uint16[]\"}],\"internalType\":\"structITeePaymentsBase.ReissueFeeParams\",\"name\":\"_reissueFeeParams\",\"type\":\"tuple\"},{\"internalType\":\"address\",\"name\":\"_claimBackAddress\",\"type\":\"address\"}],\"name\":\"reissue\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_finalized\",\"type\":\"bool\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePaymentsBase.PMWMultisigAccount\",\"name\":\"_account\",\"type\":\"tuple\"},{\"internalType\":\"uint64\",\"name\":\"_batchSize\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"_batchDurationSeconds\",\"type\":\"uint64\"}],\"name\":\"setBatchSettings\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_anchorReuseDelaySeconds\",\"type\":\"uint64\"}],\"name\":\"setDefaultAnchorReuseDelay\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_maxBatchSize\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"_maxBatchDurationSeconds\",\"type\":\"uint64\"}],\"name\":\"setMaxBatchSettings\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"switchToProductionMode\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teePaymentsConfigVerifier\",\"outputs\":[{\"internalType\":\"contractITeePaymentsConfigVerifier\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teePaymentsFeeScheduleManager\",\"outputs\":[{\"internalType\":\"contractITeePaymentsFeeScheduleManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teePaymentsRegistry\",\"outputs\":[{\"internalType\":\"contractITeePaymentsRegistry\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_contractNameHashes\",\"type\":\"bytes32[]\"},{\"internalType\":\"address[]\",\"name\":\"_contractAddresses\",\"type\":\"address[]\"}],\"name\":\"updateContractAddresses\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newImplementation\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"upgradeToAndCall\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"AccountIndexMismatch\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"}],\"name\":\"AddressEmptyCode\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AlreadyInProductionMode\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AnchorIndexOutOfBounds\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AnchorMismatch\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint64\",\"name\":\"availableAt\",\"type\":\"uint64\"}],\"name\":\"AnchorNotReady\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AuthorizationAddressZero\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"BatchNotYetEnded\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"BatchSizeZero\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"ERC1967InvalidImplementation\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC1967NonPayable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FailedCall\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"GovernedAddressZero\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"GovernedAlreadyInitialized\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"InvalidFeeFactor\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidInitialization\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPaymentId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LengthsMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"MaxBatchSizeZero\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoActiveReplacement\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoNewAnchors\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoPaymentInstructions\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotInitializing\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyAuthorizationAddress\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExecutor\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyGovernance\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProductionOrPausedStatus\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlySystemExtensionId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyWalletOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"PMWMultisigAccountAddressAlreadySet\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"PMWMultisigAccountNotRegistered\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"PaymentAmountZero\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"PaymentHashMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"PaymentNotInBatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ReissueRewardEpochChanged\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ReplacementAlreadyFinalized\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ScheduledSignaturesUnsupported\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TimelockCallNotFound\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TimelockNotAllowedYet\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UUPSUnauthorizedCallContext\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"slot\",\"type\":\"bytes32\"}],\"name\":\"UUPSUnsupportedProxiableUUID\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UnsupportedSourceId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"WalletNotInProduction\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"WrongKeyType\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"anchorReuseDelaySeconds\",\"type\":\"uint64\"}],\"name\":\"AnchorReuseDelaySet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedCall\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"encodedCallHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"allowedAfterTimestamp\",\"type\":\"uint256\"}],\"name\":\"GovernanceCallTimelocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"initialGovernance\",\"type\":\"address\"}],\"name\":\"GovernanceInitialised\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"governanceSettings\",\"type\":\"address\"}],\"name\":\"GovernedProductionModeEntered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"version\",\"type\":\"uint64\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"maxBatchSize\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"maxBatchDurationSeconds\",\"type\":\"uint64\"}],\"name\":\"MaxBatchSettingsSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"accountIndex\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"anchorCount\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"authorizationAddress\",\"type\":\"address\"}],\"name\":\"PMWMultisigUtxoAccountAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"encodedCallHash\",\"type\":\"bytes32\"}],\"name\":\"TimelockedGovernanceCallCanceled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"encodedCallHash\",\"type\":\"bytes32\"}],\"name\":\"TimelockedGovernanceCallExecuted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"Upgraded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"accountIndex\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"anchorCount\",\"type\":\"uint32\"}],\"name\":\"UtxoAnchorsAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"batchSize\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"batchDurationSeconds\",\"type\":\"uint64\"}],\"name\":\"UtxoBatchSettingsSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"accountHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"batchPaymentId\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"replacementId\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"firstPaymentId\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"paymentCount\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint256[]\",\"name\":\"blocks\",\"type\":\"uint256[]\"}],\"name\":\"UtxoReplacementReady\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"accountHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"batchPaymentId\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"replacementId\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"firstPaymentId\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"startBlock\",\"type\":\"uint256\"}],\"name\":\"UtxoReplacementStarted\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"UPGRADE_INTERFACE_VERSION\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"signingPolicySignatures\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"}],\"internalType\":\"structIFdc2Verification.Fdc2Signatures\",\"name\":\"signatures\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFdc2Hub.Fdc2ResponseHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"uint32\",\"name\":\"accountIndex\",\"type\":\"uint32\"},{\"internalType\":\"bytes[]\",\"name\":\"publicKeys\",\"type\":\"bytes[]\"},{\"internalType\":\"uint64\",\"name\":\"threshold\",\"type\":\"uint64\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"genesisAnchorTxid\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"genesisAnchorVout\",\"type\":\"uint32\"}],\"internalType\":\"structIPMWMultisigUtxoConfigured.Anchor[]\",\"name\":\"anchors\",\"type\":\"tuple[]\"}],\"internalType\":\"structIPMWMultisigUtxoConfigured.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumIPMWMultisigUtxoConfigured.PMWMultisigUtxoStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structIPMWMultisigUtxoConfigured.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structIPMWMultisigUtxoConfigured.Proof\",\"name\":\"_proof\",\"type\":\"tuple\"}],\"name\":\"addAnchors\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"},{\"components\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"signingPolicySignatures\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"}],\"internalType\":\"structIFdc2Verification.Fdc2Signatures\",\"name\":\"signatures\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFdc2Hub.Fdc2ResponseHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"uint32\",\"name\":\"accountIndex\",\"type\":\"uint32\"},{\"internalType\":\"bytes[]\",\"name\":\"publicKeys\",\"type\":\"bytes[]\"},{\"internalType\":\"uint64\",\"name\":\"threshold\",\"type\":\"uint64\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"genesisAnchorTxid\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"genesisAnchorVout\",\"type\":\"uint32\"}],\"internalType\":\"structIPMWMultisigUtxoConfigured.Anchor[]\",\"name\":\"anchors\",\"type\":\"tuple[]\"}],\"internalType\":\"structIPMWMultisigUtxoConfigured.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumIPMWMultisigUtxoConfigured.PMWMultisigUtxoStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structIPMWMultisigUtxoConfigured.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structIPMWMultisigUtxoConfigured.Proof\",\"name\":\"_proof\",\"type\":\"tuple\"},{\"internalType\":\"address\",\"name\":\"_authorizationAddress\",\"type\":\"address\"}],\"name\":\"addPMWMultisigAccount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_encodedCall\",\"type\":\"bytes\"}],\"name\":\"cancelGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_encodedCall\",\"type\":\"bytes\"}],\"name\":\"executeGovernanceCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"flareSystemsManager\",\"outputs\":[{\"internalType\":\"contractIFlareSystemsManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"flareTeeManager\",\"outputs\":[{\"internalType\":\"contractIIFlareTeeManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAddressUpdater\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePaymentsBase.PMWMultisigAccount\",\"name\":\"_account\",\"type\":\"tuple\"},{\"internalType\":\"uint256\",\"name\":\"_anchorIndex\",\"type\":\"uint256\"}],\"name\":\"getAnchor\",\"outputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"genesisAnchorTxid\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"genesisAnchorVout\",\"type\":\"uint32\"},{\"internalType\":\"uint64\",\"name\":\"nextNonce\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"availableAt\",\"type\":\"uint64\"}],\"internalType\":\"structITeePaymentsUtxo.UtxoAnchorState\",\"name\":\"_anchor\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePaymentsBase.PMWMultisigAccount\",\"name\":\"_account\",\"type\":\"tuple\"}],\"name\":\"getAnchorCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_sourceId\",\"type\":\"bytes32\"}],\"name\":\"getAnchorReuseDelay\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePaymentsBase.PMWMultisigAccount\",\"name\":\"_account\",\"type\":\"tuple\"}],\"name\":\"getAuthorizationAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_authorizationAddress\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePaymentsBase.PMWMultisigAccount\",\"name\":\"_account\",\"type\":\"tuple\"},{\"internalType\":\"uint64\",\"name\":\"_paymentId\",\"type\":\"uint64\"}],\"name\":\"getBatchPaymentId\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"_batchPaymentId\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePaymentsBase.PMWMultisigAccount\",\"name\":\"_account\",\"type\":\"tuple\"},{\"internalType\":\"uint64\",\"name\":\"_batchPaymentId\",\"type\":\"uint64\"}],\"name\":\"getBatchRecord\",\"outputs\":[{\"components\":[{\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"batchEndTs\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"paymentCount\",\"type\":\"uint64\"},{\"internalType\":\"uint32\",\"name\":\"anchorIndex\",\"type\":\"uint32\"},{\"internalType\":\"uint24\",\"name\":\"rewardEpochId\",\"type\":\"uint24\"}],\"internalType\":\"structITeePaymentsUtxo.BatchRecord\",\"name\":\"_batch\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePaymentsBase.PMWMultisigAccount\",\"name\":\"_account\",\"type\":\"tuple\"}],\"name\":\"getBatchSettings\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"_batchSize\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"_batchDurationSeconds\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_sourceId\",\"type\":\"bytes32\"}],\"name\":\"getMaxBatchSettings\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"_maxBatchSize\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"_maxBatchDurationSeconds\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePaymentsBase.PMWMultisigAccount\",\"name\":\"_account\",\"type\":\"tuple\"},{\"internalType\":\"bytes32\",\"name\":\"_opCommand\",\"type\":\"bytes32\"}],\"name\":\"getPaymentFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_fee\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePaymentsBase.PMWMultisigAccount\",\"name\":\"_account\",\"type\":\"tuple\"},{\"internalType\":\"uint64\",\"name\":\"_paymentId\",\"type\":\"uint64\"}],\"name\":\"getPaymentHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"_paymentHash\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_walletId\",\"type\":\"bytes32\"}],\"name\":\"getWalletAccounts\",\"outputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePaymentsBase.PMWMultisigAccount[]\",\"name\":\"\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePaymentsBase.PMWMultisigAccount\",\"name\":\"_account\",\"type\":\"tuple\"}],\"name\":\"getWalletId\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governance\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governanceSettings\",\"outputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"implementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIGovernanceSettings\",\"name\":\"_governanceSettings\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_initialGovernance\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_addressUpdater\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"isExecutor\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePaymentsBase.PMWMultisigAccount\",\"name\":\"_account\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"tokenId\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"}],\"internalType\":\"structITeePaymentsBase.PaymentInstruction\",\"name\":\"_paymentInstruction\",\"type\":\"tuple\"},{\"internalType\":\"address\",\"name\":\"_claimBackAddress\",\"type\":\"address\"}],\"name\":\"pay\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"_paymentId\",\"type\":\"uint64\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"paymentModel\",\"outputs\":[{\"internalType\":\"enumPaymentModel\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"productionMode\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"proxiableUUID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePaymentsBase.PMWMultisigAccount\",\"name\":\"_account\",\"type\":\"tuple\"},{\"internalType\":\"uint64\",\"name\":\"_batchPaymentId\",\"type\":\"uint64\"},{\"components\":[{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"tokenId\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"}],\"internalType\":\"structITeePaymentsBase.PaymentInstruction[]\",\"name\":\"_paymentInstructions\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint256[]\",\"name\":\"maxFeePerPayment\",\"type\":\"uint256[]\"},{\"internalType\":\"int16[][]\",\"name\":\"factorsBIPSPerPayment\",\"type\":\"int16[][]\"},{\"internalType\":\"uint16[]\",\"name\":\"delaysSeconds\",\"type\":\"uint16[]\"}],\"internalType\":\"structITeePaymentsBase.ReissueFeeParams\",\"name\":\"_reissueFeeParams\",\"type\":\"tuple\"},{\"internalType\":\"address\",\"name\":\"_claimBackAddress\",\"type\":\"address\"}],\"name\":\"reissue\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_finalized\",\"type\":\"bool\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_anchorReuseDelaySeconds\",\"type\":\"uint64\"}],\"name\":\"setAnchorReuseDelay\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structITeePaymentsBase.PMWMultisigAccount\",\"name\":\"_account\",\"type\":\"tuple\"},{\"internalType\":\"uint64\",\"name\":\"_batchSize\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"_batchDurationSeconds\",\"type\":\"uint64\"}],\"name\":\"setBatchSettings\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_maxBatchSize\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"_maxBatchDurationSeconds\",\"type\":\"uint64\"}],\"name\":\"setMaxBatchSettings\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"switchToProductionMode\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teePaymentsConfigVerifier\",\"outputs\":[{\"internalType\":\"contractITeePaymentsConfigVerifier\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teePaymentsFeeScheduleManager\",\"outputs\":[{\"internalType\":\"contractITeePaymentsFeeScheduleManager\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"teePaymentsRegistry\",\"outputs\":[{\"internalType\":\"contractITeePaymentsRegistry\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"_contractNameHashes\",\"type\":\"bytes32[]\"},{\"internalType\":\"address[]\",\"name\":\"_contractAddresses\",\"type\":\"address[]\"}],\"name\":\"updateContractAddresses\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newImplementation\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"upgradeToAndCall\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}]",
 }
 
 // TeePaymentsUtxoABI is the input ABI used to generate the binding from.
@@ -391,7 +398,7 @@ func (_TeePaymentsUtxo *TeePaymentsUtxoCallerSession) GetAddressUpdater() (commo
 
 // GetAnchor is a free data retrieval call binding the contract method 0xaf278814.
 //
-// Solidity: function getAnchor((bytes32,string) _account, uint256 _anchorIndex) view returns((string,bytes32,uint32,uint64,uint64) _anchor)
+// Solidity: function getAnchor((bytes32,string) _account, uint256 _anchorIndex) view returns((bytes32,uint32,uint64,uint64) _anchor)
 func (_TeePaymentsUtxo *TeePaymentsUtxoCaller) GetAnchor(opts *bind.CallOpts, _account ITeePaymentsBasePMWMultisigAccount, _anchorIndex *big.Int) (ITeePaymentsUtxoUtxoAnchorState, error) {
 	var out []interface{}
 	err := _TeePaymentsUtxo.contract.Call(opts, &out, "getAnchor", _account, _anchorIndex)
@@ -408,14 +415,14 @@ func (_TeePaymentsUtxo *TeePaymentsUtxoCaller) GetAnchor(opts *bind.CallOpts, _a
 
 // GetAnchor is a free data retrieval call binding the contract method 0xaf278814.
 //
-// Solidity: function getAnchor((bytes32,string) _account, uint256 _anchorIndex) view returns((string,bytes32,uint32,uint64,uint64) _anchor)
+// Solidity: function getAnchor((bytes32,string) _account, uint256 _anchorIndex) view returns((bytes32,uint32,uint64,uint64) _anchor)
 func (_TeePaymentsUtxo *TeePaymentsUtxoSession) GetAnchor(_account ITeePaymentsBasePMWMultisigAccount, _anchorIndex *big.Int) (ITeePaymentsUtxoUtxoAnchorState, error) {
 	return _TeePaymentsUtxo.Contract.GetAnchor(&_TeePaymentsUtxo.CallOpts, _account, _anchorIndex)
 }
 
 // GetAnchor is a free data retrieval call binding the contract method 0xaf278814.
 //
-// Solidity: function getAnchor((bytes32,string) _account, uint256 _anchorIndex) view returns((string,bytes32,uint32,uint64,uint64) _anchor)
+// Solidity: function getAnchor((bytes32,string) _account, uint256 _anchorIndex) view returns((bytes32,uint32,uint64,uint64) _anchor)
 func (_TeePaymentsUtxo *TeePaymentsUtxoCallerSession) GetAnchor(_account ITeePaymentsBasePMWMultisigAccount, _anchorIndex *big.Int) (ITeePaymentsUtxoUtxoAnchorState, error) {
 	return _TeePaymentsUtxo.Contract.GetAnchor(&_TeePaymentsUtxo.CallOpts, _account, _anchorIndex)
 }
@@ -451,6 +458,37 @@ func (_TeePaymentsUtxo *TeePaymentsUtxoCallerSession) GetAnchorCount(_account IT
 	return _TeePaymentsUtxo.Contract.GetAnchorCount(&_TeePaymentsUtxo.CallOpts, _account)
 }
 
+// GetAnchorReuseDelay is a free data retrieval call binding the contract method 0x2b57cf73.
+//
+// Solidity: function getAnchorReuseDelay(bytes32 _sourceId) view returns(uint64)
+func (_TeePaymentsUtxo *TeePaymentsUtxoCaller) GetAnchorReuseDelay(opts *bind.CallOpts, _sourceId [32]byte) (uint64, error) {
+	var out []interface{}
+	err := _TeePaymentsUtxo.contract.Call(opts, &out, "getAnchorReuseDelay", _sourceId)
+
+	if err != nil {
+		return *new(uint64), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(uint64)).(*uint64)
+
+	return out0, err
+
+}
+
+// GetAnchorReuseDelay is a free data retrieval call binding the contract method 0x2b57cf73.
+//
+// Solidity: function getAnchorReuseDelay(bytes32 _sourceId) view returns(uint64)
+func (_TeePaymentsUtxo *TeePaymentsUtxoSession) GetAnchorReuseDelay(_sourceId [32]byte) (uint64, error) {
+	return _TeePaymentsUtxo.Contract.GetAnchorReuseDelay(&_TeePaymentsUtxo.CallOpts, _sourceId)
+}
+
+// GetAnchorReuseDelay is a free data retrieval call binding the contract method 0x2b57cf73.
+//
+// Solidity: function getAnchorReuseDelay(bytes32 _sourceId) view returns(uint64)
+func (_TeePaymentsUtxo *TeePaymentsUtxoCallerSession) GetAnchorReuseDelay(_sourceId [32]byte) (uint64, error) {
+	return _TeePaymentsUtxo.Contract.GetAnchorReuseDelay(&_TeePaymentsUtxo.CallOpts, _sourceId)
+}
+
 // GetAuthorizationAddress is a free data retrieval call binding the contract method 0x410642e0.
 //
 // Solidity: function getAuthorizationAddress((bytes32,string) _account) view returns(address _authorizationAddress)
@@ -480,6 +518,68 @@ func (_TeePaymentsUtxo *TeePaymentsUtxoSession) GetAuthorizationAddress(_account
 // Solidity: function getAuthorizationAddress((bytes32,string) _account) view returns(address _authorizationAddress)
 func (_TeePaymentsUtxo *TeePaymentsUtxoCallerSession) GetAuthorizationAddress(_account ITeePaymentsBasePMWMultisigAccount) (common.Address, error) {
 	return _TeePaymentsUtxo.Contract.GetAuthorizationAddress(&_TeePaymentsUtxo.CallOpts, _account)
+}
+
+// GetBatchPaymentId is a free data retrieval call binding the contract method 0x41952376.
+//
+// Solidity: function getBatchPaymentId((bytes32,string) _account, uint64 _paymentId) view returns(uint64 _batchPaymentId)
+func (_TeePaymentsUtxo *TeePaymentsUtxoCaller) GetBatchPaymentId(opts *bind.CallOpts, _account ITeePaymentsBasePMWMultisigAccount, _paymentId uint64) (uint64, error) {
+	var out []interface{}
+	err := _TeePaymentsUtxo.contract.Call(opts, &out, "getBatchPaymentId", _account, _paymentId)
+
+	if err != nil {
+		return *new(uint64), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(uint64)).(*uint64)
+
+	return out0, err
+
+}
+
+// GetBatchPaymentId is a free data retrieval call binding the contract method 0x41952376.
+//
+// Solidity: function getBatchPaymentId((bytes32,string) _account, uint64 _paymentId) view returns(uint64 _batchPaymentId)
+func (_TeePaymentsUtxo *TeePaymentsUtxoSession) GetBatchPaymentId(_account ITeePaymentsBasePMWMultisigAccount, _paymentId uint64) (uint64, error) {
+	return _TeePaymentsUtxo.Contract.GetBatchPaymentId(&_TeePaymentsUtxo.CallOpts, _account, _paymentId)
+}
+
+// GetBatchPaymentId is a free data retrieval call binding the contract method 0x41952376.
+//
+// Solidity: function getBatchPaymentId((bytes32,string) _account, uint64 _paymentId) view returns(uint64 _batchPaymentId)
+func (_TeePaymentsUtxo *TeePaymentsUtxoCallerSession) GetBatchPaymentId(_account ITeePaymentsBasePMWMultisigAccount, _paymentId uint64) (uint64, error) {
+	return _TeePaymentsUtxo.Contract.GetBatchPaymentId(&_TeePaymentsUtxo.CallOpts, _account, _paymentId)
+}
+
+// GetBatchRecord is a free data retrieval call binding the contract method 0x7729adb4.
+//
+// Solidity: function getBatchRecord((bytes32,string) _account, uint64 _batchPaymentId) view returns((uint64,uint64,uint64,uint32,uint24) _batch)
+func (_TeePaymentsUtxo *TeePaymentsUtxoCaller) GetBatchRecord(opts *bind.CallOpts, _account ITeePaymentsBasePMWMultisigAccount, _batchPaymentId uint64) (ITeePaymentsUtxoBatchRecord, error) {
+	var out []interface{}
+	err := _TeePaymentsUtxo.contract.Call(opts, &out, "getBatchRecord", _account, _batchPaymentId)
+
+	if err != nil {
+		return *new(ITeePaymentsUtxoBatchRecord), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(ITeePaymentsUtxoBatchRecord)).(*ITeePaymentsUtxoBatchRecord)
+
+	return out0, err
+
+}
+
+// GetBatchRecord is a free data retrieval call binding the contract method 0x7729adb4.
+//
+// Solidity: function getBatchRecord((bytes32,string) _account, uint64 _batchPaymentId) view returns((uint64,uint64,uint64,uint32,uint24) _batch)
+func (_TeePaymentsUtxo *TeePaymentsUtxoSession) GetBatchRecord(_account ITeePaymentsBasePMWMultisigAccount, _batchPaymentId uint64) (ITeePaymentsUtxoBatchRecord, error) {
+	return _TeePaymentsUtxo.Contract.GetBatchRecord(&_TeePaymentsUtxo.CallOpts, _account, _batchPaymentId)
+}
+
+// GetBatchRecord is a free data retrieval call binding the contract method 0x7729adb4.
+//
+// Solidity: function getBatchRecord((bytes32,string) _account, uint64 _batchPaymentId) view returns((uint64,uint64,uint64,uint32,uint24) _batch)
+func (_TeePaymentsUtxo *TeePaymentsUtxoCallerSession) GetBatchRecord(_account ITeePaymentsBasePMWMultisigAccount, _batchPaymentId uint64) (ITeePaymentsUtxoBatchRecord, error) {
+	return _TeePaymentsUtxo.Contract.GetBatchRecord(&_TeePaymentsUtxo.CallOpts, _account, _batchPaymentId)
 }
 
 // GetBatchSettings is a free data retrieval call binding the contract method 0xb96c3c8f.
@@ -525,37 +625,6 @@ func (_TeePaymentsUtxo *TeePaymentsUtxoCallerSession) GetBatchSettings(_account 
 	BatchDurationSeconds uint64
 }, error) {
 	return _TeePaymentsUtxo.Contract.GetBatchSettings(&_TeePaymentsUtxo.CallOpts, _account)
-}
-
-// GetDefaultAnchorReuseDelay is a free data retrieval call binding the contract method 0x69738527.
-//
-// Solidity: function getDefaultAnchorReuseDelay(bytes32 _sourceId) view returns(uint64)
-func (_TeePaymentsUtxo *TeePaymentsUtxoCaller) GetDefaultAnchorReuseDelay(opts *bind.CallOpts, _sourceId [32]byte) (uint64, error) {
-	var out []interface{}
-	err := _TeePaymentsUtxo.contract.Call(opts, &out, "getDefaultAnchorReuseDelay", _sourceId)
-
-	if err != nil {
-		return *new(uint64), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(uint64)).(*uint64)
-
-	return out0, err
-
-}
-
-// GetDefaultAnchorReuseDelay is a free data retrieval call binding the contract method 0x69738527.
-//
-// Solidity: function getDefaultAnchorReuseDelay(bytes32 _sourceId) view returns(uint64)
-func (_TeePaymentsUtxo *TeePaymentsUtxoSession) GetDefaultAnchorReuseDelay(_sourceId [32]byte) (uint64, error) {
-	return _TeePaymentsUtxo.Contract.GetDefaultAnchorReuseDelay(&_TeePaymentsUtxo.CallOpts, _sourceId)
-}
-
-// GetDefaultAnchorReuseDelay is a free data retrieval call binding the contract method 0x69738527.
-//
-// Solidity: function getDefaultAnchorReuseDelay(bytes32 _sourceId) view returns(uint64)
-func (_TeePaymentsUtxo *TeePaymentsUtxoCallerSession) GetDefaultAnchorReuseDelay(_sourceId [32]byte) (uint64, error) {
-	return _TeePaymentsUtxo.Contract.GetDefaultAnchorReuseDelay(&_TeePaymentsUtxo.CallOpts, _sourceId)
 }
 
 // GetMaxBatchSettings is a free data retrieval call binding the contract method 0xf6cc38e1.
@@ -632,6 +701,37 @@ func (_TeePaymentsUtxo *TeePaymentsUtxoSession) GetPaymentFee(_account ITeePayme
 // Solidity: function getPaymentFee((bytes32,string) _account, bytes32 _opCommand) view returns(uint256 _fee)
 func (_TeePaymentsUtxo *TeePaymentsUtxoCallerSession) GetPaymentFee(_account ITeePaymentsBasePMWMultisigAccount, _opCommand [32]byte) (*big.Int, error) {
 	return _TeePaymentsUtxo.Contract.GetPaymentFee(&_TeePaymentsUtxo.CallOpts, _account, _opCommand)
+}
+
+// GetPaymentHash is a free data retrieval call binding the contract method 0x0079dfe8.
+//
+// Solidity: function getPaymentHash((bytes32,string) _account, uint64 _paymentId) view returns(bytes32 _paymentHash)
+func (_TeePaymentsUtxo *TeePaymentsUtxoCaller) GetPaymentHash(opts *bind.CallOpts, _account ITeePaymentsBasePMWMultisigAccount, _paymentId uint64) ([32]byte, error) {
+	var out []interface{}
+	err := _TeePaymentsUtxo.contract.Call(opts, &out, "getPaymentHash", _account, _paymentId)
+
+	if err != nil {
+		return *new([32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
+
+	return out0, err
+
+}
+
+// GetPaymentHash is a free data retrieval call binding the contract method 0x0079dfe8.
+//
+// Solidity: function getPaymentHash((bytes32,string) _account, uint64 _paymentId) view returns(bytes32 _paymentHash)
+func (_TeePaymentsUtxo *TeePaymentsUtxoSession) GetPaymentHash(_account ITeePaymentsBasePMWMultisigAccount, _paymentId uint64) ([32]byte, error) {
+	return _TeePaymentsUtxo.Contract.GetPaymentHash(&_TeePaymentsUtxo.CallOpts, _account, _paymentId)
+}
+
+// GetPaymentHash is a free data retrieval call binding the contract method 0x0079dfe8.
+//
+// Solidity: function getPaymentHash((bytes32,string) _account, uint64 _paymentId) view returns(bytes32 _paymentHash)
+func (_TeePaymentsUtxo *TeePaymentsUtxoCallerSession) GetPaymentHash(_account ITeePaymentsBasePMWMultisigAccount, _paymentId uint64) ([32]byte, error) {
+	return _TeePaymentsUtxo.Contract.GetPaymentHash(&_TeePaymentsUtxo.CallOpts, _account, _paymentId)
 }
 
 // GetWalletAccounts is a free data retrieval call binding the contract method 0x3a54c1b0.
@@ -1006,44 +1106,44 @@ func (_TeePaymentsUtxo *TeePaymentsUtxoCallerSession) TeePaymentsRegistry() (com
 	return _TeePaymentsUtxo.Contract.TeePaymentsRegistry(&_TeePaymentsUtxo.CallOpts)
 }
 
-// AddAnchors is a paid mutator transaction binding the contract method 0xb3fa02b3.
+// AddAnchors is a paid mutator transaction binding the contract method 0x22344637.
 //
-// Solidity: function addAnchors(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(uint32,bytes[],uint64,(bytes32,uint32)[]),(uint8,string,string[])) _proof) returns()
+// Solidity: function addAnchors(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(uint32,bytes[],uint64,(bytes32,uint32)[]),(uint8,string)) _proof) returns()
 func (_TeePaymentsUtxo *TeePaymentsUtxoTransactor) AddAnchors(opts *bind.TransactOpts, _proof IPMWMultisigUtxoConfiguredProof) (*types.Transaction, error) {
 	return _TeePaymentsUtxo.contract.Transact(opts, "addAnchors", _proof)
 }
 
-// AddAnchors is a paid mutator transaction binding the contract method 0xb3fa02b3.
+// AddAnchors is a paid mutator transaction binding the contract method 0x22344637.
 //
-// Solidity: function addAnchors(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(uint32,bytes[],uint64,(bytes32,uint32)[]),(uint8,string,string[])) _proof) returns()
+// Solidity: function addAnchors(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(uint32,bytes[],uint64,(bytes32,uint32)[]),(uint8,string)) _proof) returns()
 func (_TeePaymentsUtxo *TeePaymentsUtxoSession) AddAnchors(_proof IPMWMultisigUtxoConfiguredProof) (*types.Transaction, error) {
 	return _TeePaymentsUtxo.Contract.AddAnchors(&_TeePaymentsUtxo.TransactOpts, _proof)
 }
 
-// AddAnchors is a paid mutator transaction binding the contract method 0xb3fa02b3.
+// AddAnchors is a paid mutator transaction binding the contract method 0x22344637.
 //
-// Solidity: function addAnchors(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(uint32,bytes[],uint64,(bytes32,uint32)[]),(uint8,string,string[])) _proof) returns()
+// Solidity: function addAnchors(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(uint32,bytes[],uint64,(bytes32,uint32)[]),(uint8,string)) _proof) returns()
 func (_TeePaymentsUtxo *TeePaymentsUtxoTransactorSession) AddAnchors(_proof IPMWMultisigUtxoConfiguredProof) (*types.Transaction, error) {
 	return _TeePaymentsUtxo.Contract.AddAnchors(&_TeePaymentsUtxo.TransactOpts, _proof)
 }
 
-// AddPMWMultisigAccount is a paid mutator transaction binding the contract method 0x2a0524b6.
+// AddPMWMultisigAccount is a paid mutator transaction binding the contract method 0x87233bdc.
 //
-// Solidity: function addPMWMultisigAccount(bytes32 _walletId, ((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(uint32,bytes[],uint64,(bytes32,uint32)[]),(uint8,string,string[])) _proof, address _authorizationAddress) returns()
+// Solidity: function addPMWMultisigAccount(bytes32 _walletId, ((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(uint32,bytes[],uint64,(bytes32,uint32)[]),(uint8,string)) _proof, address _authorizationAddress) returns()
 func (_TeePaymentsUtxo *TeePaymentsUtxoTransactor) AddPMWMultisigAccount(opts *bind.TransactOpts, _walletId [32]byte, _proof IPMWMultisigUtxoConfiguredProof, _authorizationAddress common.Address) (*types.Transaction, error) {
 	return _TeePaymentsUtxo.contract.Transact(opts, "addPMWMultisigAccount", _walletId, _proof, _authorizationAddress)
 }
 
-// AddPMWMultisigAccount is a paid mutator transaction binding the contract method 0x2a0524b6.
+// AddPMWMultisigAccount is a paid mutator transaction binding the contract method 0x87233bdc.
 //
-// Solidity: function addPMWMultisigAccount(bytes32 _walletId, ((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(uint32,bytes[],uint64,(bytes32,uint32)[]),(uint8,string,string[])) _proof, address _authorizationAddress) returns()
+// Solidity: function addPMWMultisigAccount(bytes32 _walletId, ((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(uint32,bytes[],uint64,(bytes32,uint32)[]),(uint8,string)) _proof, address _authorizationAddress) returns()
 func (_TeePaymentsUtxo *TeePaymentsUtxoSession) AddPMWMultisigAccount(_walletId [32]byte, _proof IPMWMultisigUtxoConfiguredProof, _authorizationAddress common.Address) (*types.Transaction, error) {
 	return _TeePaymentsUtxo.Contract.AddPMWMultisigAccount(&_TeePaymentsUtxo.TransactOpts, _walletId, _proof, _authorizationAddress)
 }
 
-// AddPMWMultisigAccount is a paid mutator transaction binding the contract method 0x2a0524b6.
+// AddPMWMultisigAccount is a paid mutator transaction binding the contract method 0x87233bdc.
 //
-// Solidity: function addPMWMultisigAccount(bytes32 _walletId, ((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(uint32,bytes[],uint64,(bytes32,uint32)[]),(uint8,string,string[])) _proof, address _authorizationAddress) returns()
+// Solidity: function addPMWMultisigAccount(bytes32 _walletId, ((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(uint32,bytes[],uint64,(bytes32,uint32)[]),(uint8,string)) _proof, address _authorizationAddress) returns()
 func (_TeePaymentsUtxo *TeePaymentsUtxoTransactorSession) AddPMWMultisigAccount(_walletId [32]byte, _proof IPMWMultisigUtxoConfiguredProof, _authorizationAddress common.Address) (*types.Transaction, error) {
 	return _TeePaymentsUtxo.Contract.AddPMWMultisigAccount(&_TeePaymentsUtxo.TransactOpts, _walletId, _proof, _authorizationAddress)
 }
@@ -1153,6 +1253,27 @@ func (_TeePaymentsUtxo *TeePaymentsUtxoTransactorSession) Reissue(_account ITeeP
 	return _TeePaymentsUtxo.Contract.Reissue(&_TeePaymentsUtxo.TransactOpts, _account, _batchPaymentId, _paymentInstructions, _reissueFeeParams, _claimBackAddress)
 }
 
+// SetAnchorReuseDelay is a paid mutator transaction binding the contract method 0x729a0c5a.
+//
+// Solidity: function setAnchorReuseDelay(bytes32 _sourceId, uint64 _anchorReuseDelaySeconds) returns()
+func (_TeePaymentsUtxo *TeePaymentsUtxoTransactor) SetAnchorReuseDelay(opts *bind.TransactOpts, _sourceId [32]byte, _anchorReuseDelaySeconds uint64) (*types.Transaction, error) {
+	return _TeePaymentsUtxo.contract.Transact(opts, "setAnchorReuseDelay", _sourceId, _anchorReuseDelaySeconds)
+}
+
+// SetAnchorReuseDelay is a paid mutator transaction binding the contract method 0x729a0c5a.
+//
+// Solidity: function setAnchorReuseDelay(bytes32 _sourceId, uint64 _anchorReuseDelaySeconds) returns()
+func (_TeePaymentsUtxo *TeePaymentsUtxoSession) SetAnchorReuseDelay(_sourceId [32]byte, _anchorReuseDelaySeconds uint64) (*types.Transaction, error) {
+	return _TeePaymentsUtxo.Contract.SetAnchorReuseDelay(&_TeePaymentsUtxo.TransactOpts, _sourceId, _anchorReuseDelaySeconds)
+}
+
+// SetAnchorReuseDelay is a paid mutator transaction binding the contract method 0x729a0c5a.
+//
+// Solidity: function setAnchorReuseDelay(bytes32 _sourceId, uint64 _anchorReuseDelaySeconds) returns()
+func (_TeePaymentsUtxo *TeePaymentsUtxoTransactorSession) SetAnchorReuseDelay(_sourceId [32]byte, _anchorReuseDelaySeconds uint64) (*types.Transaction, error) {
+	return _TeePaymentsUtxo.Contract.SetAnchorReuseDelay(&_TeePaymentsUtxo.TransactOpts, _sourceId, _anchorReuseDelaySeconds)
+}
+
 // SetBatchSettings is a paid mutator transaction binding the contract method 0xd302be77.
 //
 // Solidity: function setBatchSettings((bytes32,string) _account, uint64 _batchSize, uint64 _batchDurationSeconds) returns()
@@ -1172,27 +1293,6 @@ func (_TeePaymentsUtxo *TeePaymentsUtxoSession) SetBatchSettings(_account ITeePa
 // Solidity: function setBatchSettings((bytes32,string) _account, uint64 _batchSize, uint64 _batchDurationSeconds) returns()
 func (_TeePaymentsUtxo *TeePaymentsUtxoTransactorSession) SetBatchSettings(_account ITeePaymentsBasePMWMultisigAccount, _batchSize uint64, _batchDurationSeconds uint64) (*types.Transaction, error) {
 	return _TeePaymentsUtxo.Contract.SetBatchSettings(&_TeePaymentsUtxo.TransactOpts, _account, _batchSize, _batchDurationSeconds)
-}
-
-// SetDefaultAnchorReuseDelay is a paid mutator transaction binding the contract method 0xabe2259e.
-//
-// Solidity: function setDefaultAnchorReuseDelay(bytes32 _sourceId, uint64 _anchorReuseDelaySeconds) returns()
-func (_TeePaymentsUtxo *TeePaymentsUtxoTransactor) SetDefaultAnchorReuseDelay(opts *bind.TransactOpts, _sourceId [32]byte, _anchorReuseDelaySeconds uint64) (*types.Transaction, error) {
-	return _TeePaymentsUtxo.contract.Transact(opts, "setDefaultAnchorReuseDelay", _sourceId, _anchorReuseDelaySeconds)
-}
-
-// SetDefaultAnchorReuseDelay is a paid mutator transaction binding the contract method 0xabe2259e.
-//
-// Solidity: function setDefaultAnchorReuseDelay(bytes32 _sourceId, uint64 _anchorReuseDelaySeconds) returns()
-func (_TeePaymentsUtxo *TeePaymentsUtxoSession) SetDefaultAnchorReuseDelay(_sourceId [32]byte, _anchorReuseDelaySeconds uint64) (*types.Transaction, error) {
-	return _TeePaymentsUtxo.Contract.SetDefaultAnchorReuseDelay(&_TeePaymentsUtxo.TransactOpts, _sourceId, _anchorReuseDelaySeconds)
-}
-
-// SetDefaultAnchorReuseDelay is a paid mutator transaction binding the contract method 0xabe2259e.
-//
-// Solidity: function setDefaultAnchorReuseDelay(bytes32 _sourceId, uint64 _anchorReuseDelaySeconds) returns()
-func (_TeePaymentsUtxo *TeePaymentsUtxoTransactorSession) SetDefaultAnchorReuseDelay(_sourceId [32]byte, _anchorReuseDelaySeconds uint64) (*types.Transaction, error) {
-	return _TeePaymentsUtxo.Contract.SetDefaultAnchorReuseDelay(&_TeePaymentsUtxo.TransactOpts, _sourceId, _anchorReuseDelaySeconds)
 }
 
 // SetMaxBatchSettings is a paid mutator transaction binding the contract method 0xcb42368a.
@@ -1279,9 +1379,9 @@ func (_TeePaymentsUtxo *TeePaymentsUtxoTransactorSession) UpgradeToAndCall(_newI
 	return _TeePaymentsUtxo.Contract.UpgradeToAndCall(&_TeePaymentsUtxo.TransactOpts, _newImplementation, _data)
 }
 
-// TeePaymentsUtxoDefaultAnchorReuseDelaySetIterator is returned from FilterDefaultAnchorReuseDelaySet and is used to iterate over the raw logs and unpacked data for DefaultAnchorReuseDelaySet events raised by the TeePaymentsUtxo contract.
-type TeePaymentsUtxoDefaultAnchorReuseDelaySetIterator struct {
-	Event *TeePaymentsUtxoDefaultAnchorReuseDelaySet // Event containing the contract specifics and raw log
+// TeePaymentsUtxoAnchorReuseDelaySetIterator is returned from FilterAnchorReuseDelaySet and is used to iterate over the raw logs and unpacked data for AnchorReuseDelaySet events raised by the TeePaymentsUtxo contract.
+type TeePaymentsUtxoAnchorReuseDelaySetIterator struct {
+	Event *TeePaymentsUtxoAnchorReuseDelaySet // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -1295,7 +1395,7 @@ type TeePaymentsUtxoDefaultAnchorReuseDelaySetIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *TeePaymentsUtxoDefaultAnchorReuseDelaySetIterator) Next() bool {
+func (it *TeePaymentsUtxoAnchorReuseDelaySetIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -1304,7 +1404,7 @@ func (it *TeePaymentsUtxoDefaultAnchorReuseDelaySetIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(TeePaymentsUtxoDefaultAnchorReuseDelaySet)
+			it.Event = new(TeePaymentsUtxoAnchorReuseDelaySet)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -1319,7 +1419,7 @@ func (it *TeePaymentsUtxoDefaultAnchorReuseDelaySetIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(TeePaymentsUtxoDefaultAnchorReuseDelaySet)
+		it.Event = new(TeePaymentsUtxoAnchorReuseDelaySet)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -1335,52 +1435,52 @@ func (it *TeePaymentsUtxoDefaultAnchorReuseDelaySetIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *TeePaymentsUtxoDefaultAnchorReuseDelaySetIterator) Error() error {
+func (it *TeePaymentsUtxoAnchorReuseDelaySetIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *TeePaymentsUtxoDefaultAnchorReuseDelaySetIterator) Close() error {
+func (it *TeePaymentsUtxoAnchorReuseDelaySetIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// TeePaymentsUtxoDefaultAnchorReuseDelaySet represents a DefaultAnchorReuseDelaySet event raised by the TeePaymentsUtxo contract.
-type TeePaymentsUtxoDefaultAnchorReuseDelaySet struct {
+// TeePaymentsUtxoAnchorReuseDelaySet represents a AnchorReuseDelaySet event raised by the TeePaymentsUtxo contract.
+type TeePaymentsUtxoAnchorReuseDelaySet struct {
 	SourceId                [32]byte
 	AnchorReuseDelaySeconds uint64
 	Raw                     types.Log // Blockchain specific contextual infos
 }
 
-// FilterDefaultAnchorReuseDelaySet is a free log retrieval operation binding the contract event 0x92a7abeb13b7d1b4fd7ae54df522f9e39d8ba9864bbe8b28f1daf260797ba9b9.
+// FilterAnchorReuseDelaySet is a free log retrieval operation binding the contract event 0x9f975fcc9c42abc9c9315131eea85081c274554dff20fb50919e99ebe4178a39.
 //
-// Solidity: event DefaultAnchorReuseDelaySet(bytes32 indexed sourceId, uint64 anchorReuseDelaySeconds)
-func (_TeePaymentsUtxo *TeePaymentsUtxoFilterer) FilterDefaultAnchorReuseDelaySet(opts *bind.FilterOpts, sourceId [][32]byte) (*TeePaymentsUtxoDefaultAnchorReuseDelaySetIterator, error) {
+// Solidity: event AnchorReuseDelaySet(bytes32 indexed sourceId, uint64 anchorReuseDelaySeconds)
+func (_TeePaymentsUtxo *TeePaymentsUtxoFilterer) FilterAnchorReuseDelaySet(opts *bind.FilterOpts, sourceId [][32]byte) (*TeePaymentsUtxoAnchorReuseDelaySetIterator, error) {
 
 	var sourceIdRule []interface{}
 	for _, sourceIdItem := range sourceId {
 		sourceIdRule = append(sourceIdRule, sourceIdItem)
 	}
 
-	logs, sub, err := _TeePaymentsUtxo.contract.FilterLogs(opts, "DefaultAnchorReuseDelaySet", sourceIdRule)
+	logs, sub, err := _TeePaymentsUtxo.contract.FilterLogs(opts, "AnchorReuseDelaySet", sourceIdRule)
 	if err != nil {
 		return nil, err
 	}
-	return &TeePaymentsUtxoDefaultAnchorReuseDelaySetIterator{contract: _TeePaymentsUtxo.contract, event: "DefaultAnchorReuseDelaySet", logs: logs, sub: sub}, nil
+	return &TeePaymentsUtxoAnchorReuseDelaySetIterator{contract: _TeePaymentsUtxo.contract, event: "AnchorReuseDelaySet", logs: logs, sub: sub}, nil
 }
 
-// WatchDefaultAnchorReuseDelaySet is a free log subscription operation binding the contract event 0x92a7abeb13b7d1b4fd7ae54df522f9e39d8ba9864bbe8b28f1daf260797ba9b9.
+// WatchAnchorReuseDelaySet is a free log subscription operation binding the contract event 0x9f975fcc9c42abc9c9315131eea85081c274554dff20fb50919e99ebe4178a39.
 //
-// Solidity: event DefaultAnchorReuseDelaySet(bytes32 indexed sourceId, uint64 anchorReuseDelaySeconds)
-func (_TeePaymentsUtxo *TeePaymentsUtxoFilterer) WatchDefaultAnchorReuseDelaySet(opts *bind.WatchOpts, sink chan<- *TeePaymentsUtxoDefaultAnchorReuseDelaySet, sourceId [][32]byte) (event.Subscription, error) {
+// Solidity: event AnchorReuseDelaySet(bytes32 indexed sourceId, uint64 anchorReuseDelaySeconds)
+func (_TeePaymentsUtxo *TeePaymentsUtxoFilterer) WatchAnchorReuseDelaySet(opts *bind.WatchOpts, sink chan<- *TeePaymentsUtxoAnchorReuseDelaySet, sourceId [][32]byte) (event.Subscription, error) {
 
 	var sourceIdRule []interface{}
 	for _, sourceIdItem := range sourceId {
 		sourceIdRule = append(sourceIdRule, sourceIdItem)
 	}
 
-	logs, sub, err := _TeePaymentsUtxo.contract.WatchLogs(opts, "DefaultAnchorReuseDelaySet", sourceIdRule)
+	logs, sub, err := _TeePaymentsUtxo.contract.WatchLogs(opts, "AnchorReuseDelaySet", sourceIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -1390,8 +1490,8 @@ func (_TeePaymentsUtxo *TeePaymentsUtxoFilterer) WatchDefaultAnchorReuseDelaySet
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(TeePaymentsUtxoDefaultAnchorReuseDelaySet)
-				if err := _TeePaymentsUtxo.contract.UnpackLog(event, "DefaultAnchorReuseDelaySet", log); err != nil {
+				event := new(TeePaymentsUtxoAnchorReuseDelaySet)
+				if err := _TeePaymentsUtxo.contract.UnpackLog(event, "AnchorReuseDelaySet", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -1412,12 +1512,12 @@ func (_TeePaymentsUtxo *TeePaymentsUtxoFilterer) WatchDefaultAnchorReuseDelaySet
 	}), nil
 }
 
-// ParseDefaultAnchorReuseDelaySet is a log parse operation binding the contract event 0x92a7abeb13b7d1b4fd7ae54df522f9e39d8ba9864bbe8b28f1daf260797ba9b9.
+// ParseAnchorReuseDelaySet is a log parse operation binding the contract event 0x9f975fcc9c42abc9c9315131eea85081c274554dff20fb50919e99ebe4178a39.
 //
-// Solidity: event DefaultAnchorReuseDelaySet(bytes32 indexed sourceId, uint64 anchorReuseDelaySeconds)
-func (_TeePaymentsUtxo *TeePaymentsUtxoFilterer) ParseDefaultAnchorReuseDelaySet(log types.Log) (*TeePaymentsUtxoDefaultAnchorReuseDelaySet, error) {
-	event := new(TeePaymentsUtxoDefaultAnchorReuseDelaySet)
-	if err := _TeePaymentsUtxo.contract.UnpackLog(event, "DefaultAnchorReuseDelaySet", log); err != nil {
+// Solidity: event AnchorReuseDelaySet(bytes32 indexed sourceId, uint64 anchorReuseDelaySeconds)
+func (_TeePaymentsUtxo *TeePaymentsUtxoFilterer) ParseAnchorReuseDelaySet(log types.Log) (*TeePaymentsUtxoAnchorReuseDelaySet, error) {
+	event := new(TeePaymentsUtxoAnchorReuseDelaySet)
+	if err := _TeePaymentsUtxo.contract.UnpackLog(event, "AnchorReuseDelaySet", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

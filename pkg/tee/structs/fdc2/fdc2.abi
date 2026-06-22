@@ -1098,11 +1098,6 @@
                 "internalType": "string",
                 "name": "accountAddress",
                 "type": "string"
-              },
-              {
-                "internalType": "string[]",
-                "name": "anchorAddresses",
-                "type": "string[]"
               }
             ],
             "internalType": "struct IPMWMultisigUtxoConfigured.ResponseBody",
@@ -1180,11 +1175,6 @@
             "internalType": "string",
             "name": "accountAddress",
             "type": "string"
-          },
-          {
-            "internalType": "string[]",
-            "name": "anchorAddresses",
-            "type": "string[]"
           }
         ],
         "internalType": "struct IPMWMultisigUtxoConfigured.ResponseBody",

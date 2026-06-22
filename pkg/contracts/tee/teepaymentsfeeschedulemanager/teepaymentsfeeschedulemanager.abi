@@ -167,6 +167,11 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "OnlySystemExtensionId",
+    "type": "error"
+  },
+  {
     "inputs": [
       {
         "internalType": "bytes32",
@@ -179,7 +184,7 @@
   },
   {
     "inputs": [],
-    "name": "TimelockInvalidSelector",
+    "name": "TimelockCallNotFound",
     "type": "error"
   },
   {

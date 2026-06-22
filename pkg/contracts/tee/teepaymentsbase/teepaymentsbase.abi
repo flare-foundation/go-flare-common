@@ -123,7 +123,7 @@
   },
   {
     "inputs": [],
-    "name": "TimelockInvalidSelector",
+    "name": "TimelockCallNotFound",
     "type": "error"
   },
   {
@@ -405,6 +405,42 @@
         "internalType": "uint256",
         "name": "_fee",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct ITeePaymentsBase.PMWMultisigAccount",
+        "name": "_account",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_paymentId",
+        "type": "uint64"
+      }
+    ],
+    "name": "getPaymentHash",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_paymentHash",
+        "type": "bytes32"
       }
     ],
     "stateMutability": "view",
