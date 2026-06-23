@@ -63,6 +63,11 @@
   },
   {
     "inputs": [],
+    "name": "InvalidRecipientAddress",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "LengthsMismatch",
     "type": "error"
   },
@@ -279,6 +284,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "addressValidator",
+    "outputs": [
+      {
+        "internalType": "contract IAddressValidator",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "bytes",
@@ -302,19 +320,6 @@
     "name": "executeGovernanceCall",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "flareSystemsManager",
-    "outputs": [
-      {
-        "internalType": "contract IFlareSystemsManager",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -369,6 +374,37 @@
         "internalType": "address",
         "name": "_authorizationAddress",
         "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct ITeePaymentsBase.PMWMultisigAccount",
+        "name": "_account",
+        "type": "tuple"
+      }
+    ],
+    "name": "getNextPaymentId",
+    "outputs": [
+      {
+        "internalType": "uint64",
+        "name": "_nextPaymentId",
+        "type": "uint64"
       }
     ],
     "stateMutability": "view",
@@ -804,19 +840,6 @@
     "outputs": [
       {
         "internalType": "contract ITeePaymentsConfigVerifier",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "teePaymentsFeeScheduleManager",
-    "outputs": [
-      {
-        "internalType": "contract ITeePaymentsFeeScheduleManager",
         "name": "",
         "type": "address"
       }

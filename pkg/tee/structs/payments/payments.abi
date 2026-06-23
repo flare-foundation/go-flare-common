@@ -4,6 +4,46 @@
       {
         "components": [
           {
+            "internalType": "uint64",
+            "name": "nonce",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "batchEndTs",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "paymentCount",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint32",
+            "name": "anchorIndex",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint24",
+            "name": "rewardEpochId",
+            "type": "uint24"
+          }
+        ],
+        "internalType": "struct ITeePaymentsUtxo.BatchRecord",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "batchRecordStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
             "internalType": "bytes32",
             "name": "walletId",
             "type": "bytes32"

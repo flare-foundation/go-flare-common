@@ -603,12 +603,12 @@
               },
               {
                 "internalType": "uint64",
-                "name": "fromNonce",
+                "name": "firstPaymentId",
                 "type": "uint64"
               },
               {
                 "internalType": "uint64",
-                "name": "toNonce",
+                "name": "batchCount",
                 "type": "uint64"
               },
               {
@@ -623,6 +623,11 @@
           },
           {
             "components": [
+              {
+                "internalType": "uint64",
+                "name": "lastPaymentId",
+                "type": "uint64"
+              },
               {
                 "internalType": "uint256",
                 "name": "actualFee",
@@ -665,12 +670,12 @@
           },
           {
             "internalType": "uint64",
-            "name": "fromNonce",
+            "name": "firstPaymentId",
             "type": "uint64"
           },
           {
             "internalType": "uint64",
-            "name": "toNonce",
+            "name": "batchCount",
             "type": "uint64"
           },
           {
@@ -693,6 +698,11 @@
     "inputs": [
       {
         "components": [
+          {
+            "internalType": "uint64",
+            "name": "lastPaymentId",
+            "type": "uint64"
+          },
           {
             "internalType": "uint256",
             "name": "actualFee",
@@ -1303,11 +1313,6 @@
               },
               {
                 "internalType": "uint64",
-                "name": "nonce",
-                "type": "uint64"
-              },
-              {
-                "internalType": "uint64",
                 "name": "paymentId",
                 "type": "uint64"
               }
@@ -1407,11 +1412,6 @@
             "internalType": "string",
             "name": "senderAddress",
             "type": "string"
-          },
-          {
-            "internalType": "uint64",
-            "name": "nonce",
-            "type": "uint64"
           },
           {
             "internalType": "uint64",
