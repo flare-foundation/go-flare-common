@@ -33,6 +33,7 @@ const (
 	PMWPaymentStatus             AttestationType = "PMWPaymentStatus"
 	PMWMultisigAccountConfigured AttestationType = "PMWMultisigAccountConfigured"
 	PMWFeeProof                  AttestationType = "PMWFeeProof"
+	PMWMultisigUtxoConfigured    AttestationType = "PMWMultisigUtxoConfigured"
 )
 
 var attestationTypes = []AttestationType{
@@ -40,6 +41,7 @@ var attestationTypes = []AttestationType{
 	PMWPaymentStatus,
 	PMWMultisigAccountConfigured,
 	PMWFeeProof,
+	PMWMultisigUtxoConfigured,
 }
 
 // i-th method correspond to a method in TeeDataConnectorStruct interface whose
@@ -49,6 +51,7 @@ var attestationTypeMethods = []string{
 	"pmwPaymentStatus",
 	"pmwMultisigAccountConfigured",
 	"pmwFeeProof",
+	"pmwMultisigUtxoConfigured",
 }
 
 type AttestationArguments struct {
