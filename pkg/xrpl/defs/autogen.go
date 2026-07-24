@@ -12,6 +12,8 @@ const (
 	Hash160      XType = 17
 	Hash192      XType = 21
 	Hash256      XType = 5
+	Hash384      XType = 22
+	Hash512      XType = 23
 	Int32        XType = 10
 	Int64        XType = 11
 	Issue        XType = 24
@@ -25,8 +27,6 @@ const (
 	Transaction  XType = 10001
 	UInt16       XType = 1
 	UInt32       XType = 2
-	UInt384      XType = 22
-	UInt512      XType = 23
 	UInt64       XType = 3
 	UInt8        XType = 16
 	UInt96       XType = 20
@@ -116,13 +116,6 @@ var TxTypeToValue = map[string]int32{
 }
 
 var NameToField = map[string]Field{
-	"Generic": {
-		IsSerialized:   false,
-		IsSigningField: false,
-		IsVLEncoded:    false,
-		Nth:            0,
-		Type:           Unknown,
-	},
 	"Invalid": {
 		IsSerialized:   false,
 		IsSigningField: false,
@@ -157,6 +150,13 @@ var NameToField = map[string]Field{
 		IsVLEncoded:    false,
 		Nth:            259,
 		Type:           Amount,
+	},
+	"Generic": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            0,
+		Type:           Unknown,
 	},
 	"LedgerEntryType": {
 		IsSerialized:   true,
@@ -1171,6 +1171,13 @@ var NameToField = map[string]Field{
 		IsSigningField: true,
 		IsVLEncoded:    false,
 		Nth:            38,
+		Type:           Hash256,
+	},
+	"ReferenceHolding": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            39,
 		Type:           Hash256,
 	},
 	"hash": {
@@ -2438,6 +2445,20 @@ var NameToField = map[string]Field{
 		IsSigningField: true,
 		IsVLEncoded:    false,
 		Nth:            2,
+		Type:           Hash192,
+	},
+	"TakerPaysMPT": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            3,
+		Type:           Hash192,
+	},
+	"TakerGetsMPT": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            4,
 		Type:           Hash192,
 	},
 	"LockingChainIssue": {

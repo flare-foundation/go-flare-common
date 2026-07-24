@@ -14,6 +14,10 @@ func TestIDDecode(t *testing.T) {
 		if !field.IsSerialized {
 			continue
 		}
+		// sentinels (e.g. Generic) are flagged serialized but carry no wire ID
+		if field.Nth <= 0 || field.Type <= 0 {
+			continue
+		}
 
 		id, err := field.ID()
 		require.NoError(t, err, field)
