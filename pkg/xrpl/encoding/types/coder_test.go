@@ -354,3 +354,74 @@ func TestDecodeEncode(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, blob, encoded)
 }
+
+// TestUInt64Base10Fields asserts base10 UInt64 fields (MPT amounts) encode from
+// and decode to decimal (rippled/xrpl.js canonical), while other UInt64 fields
+// stay hex. Golden bytes are the field id followed by the 8-byte big-endian value.
+func TestUInt64Base10Fields(t *testing.T) {
+	t.Run("encode", func(t *testing.T) {
+		cases := []struct {
+			name, field, value, want string
+		}{
+			{"MPTAmount decimal", "MPTAmount", "100", "301A0000000000000064"},
+			{"MPTAmount 0x hex extension", "MPTAmount", "0x64", "301A0000000000000064"},
+			{"MPTAmount zero", "MPTAmount", "0", "301A0000000000000000"},
+			{"MaximumAmount max uint64", "MaximumAmount", "18446744073709551615", "3018FFFFFFFFFFFFFFFF"},
+			{"OwnerNode stays hex", "OwnerNode", "64", "340000000000000064"},
+		}
+		for _, c := range cases {
+			enc, err := Encode(map[string]any{c.field: c.value}, false)
+			require.NoError(t, err, c.name)
+			require.Equal(t, c.want, strings.ToUpper(hex.EncodeToString(enc)), c.name)
+		}
+	})
+
+	t.Run("decode", func(t *testing.T) {
+		cases := []struct {
+			name, blob, field, want string
+		}{
+			{"MPTAmount to decimal", "301A0000000000000064", "MPTAmount", "100"},
+			{"MaximumAmount to decimal", "3018FFFFFFFFFFFFFFFF", "MaximumAmount", "18446744073709551615"},
+			{"OwnerNode stays hex", "340000000000000064", "OwnerNode", "64"},
+		}
+		for _, c := range cases {
+			blob, err := hex.DecodeString(c.blob)
+			require.NoError(t, err, c.name)
+			decoded, err := Decode(blob)
+			require.NoError(t, err, c.name)
+			require.Equal(t, c.want, decoded[c.field], c.name)
+		}
+	})
+
+	t.Run("round-trip", func(t *testing.T) {
+		obj := map[string]any{"MPTAmount": "1234567890123"}
+		enc, err := Encode(obj, false)
+		require.NoError(t, err)
+		dec, err := Decode(enc)
+		require.NoError(t, err)
+		require.Equal(t, obj, dec)
+		enc2, err := Encode(dec, false)
+		require.NoError(t, err)
+		require.Equal(t, enc, enc2)
+	})
+
+	t.Run("reject non-decimal without 0x prefix", func(t *testing.T) {
+		_, err := Encode(map[string]any{"MPTAmount": "1A"}, false)
+		require.Error(t, err)
+	})
+
+	// A nested base10 field must convert too — the transform lives in the
+	// recursive encodeInner/decodeNext chokepoints, not the top level.
+	t.Run("nested base10 field round-trips as decimal", func(t *testing.T) {
+		obj := map[string]any{
+			"Memos": []any{
+				map[string]any{"Memo": map[string]any{"MPTAmount": "100"}},
+			},
+		}
+		enc, err := Encode(obj, false)
+		require.NoError(t, err)
+		dec, err := Decode(enc)
+		require.NoError(t, err)
+		require.Equal(t, obj, dec)
+	})
+}

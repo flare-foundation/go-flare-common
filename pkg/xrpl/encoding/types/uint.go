@@ -146,9 +146,8 @@ type UInt64 struct {
 }
 
 // ToBytes serializes values of UInt64 fields. String values are parsed as hex
-// (with optional 0x prefix) to match rippled's canonical JSON. MPT-specific
-// SMdBaseTen fields (MaximumAmount, OutstandingAmount, MPTAmount, LockedAmount)
-// are not specially handled here yet.
+// (with optional 0x prefix). base10 fields (MPT amounts) arrive here as a uint64:
+// encodeInner converts their decimal string form before calling this coder.
 func (*UInt64) ToBytes(value any, _ bool) ([]byte, error) {
 	var valueUint uint64
 	var err error
@@ -175,7 +174,8 @@ func (*UInt64) ToBytes(value any, _ bool) ([]byte, error) {
 	return out, nil
 }
 
-// ToJSON reads 8 bytes and returns them as an uppercase hex string (rippled canonical form).
+// ToJSON reads 8 bytes and returns them as an uppercase hex string. base10 fields
+// (MPT amounts) are reformatted to a decimal string by decodeNext.
 func (*UInt64) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	const l = 8
 	v := make([]byte, l)
@@ -191,6 +191,46 @@ func (*UInt64) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 	value := binary.BigEndian.Uint64(v)
 
 	return strings.ToUpper(strconv.FormatUint(value, 16)), nil
+}
+
+// base10UInt64Fields are the UInt64 fields rippled serializes in base 10 — those
+// flagged sMD_BaseTen in rippled's sfields.macro; all other UInt64 fields use base 16.
+// ConfidentialOutstandingAmount is develop-only (XLS-96) and harmless to list
+// before it appears in the definitions.
+var base10UInt64Fields = map[string]bool{
+	"MaximumAmount":                 true,
+	"OutstandingAmount":             true,
+	"MPTAmount":                     true,
+	"LockedAmount":                  true,
+	"ConfidentialOutstandingAmount": true,
+}
+
+// isBase10UInt64 reports whether name is a base10-serialized UInt64 field.
+func isBase10UInt64(name string) bool {
+	return base10UInt64Fields[name]
+}
+
+// parseBase10UInt64 parses a base10 field's string value: decimal, or hex when
+// 0x-prefixed. The 0x form is a go-flare-common extension — rippled accepts decimal only.
+func parseBase10UInt64(s string) (uint64, error) {
+	if rest, ok := strings.CutPrefix(s, "0x"); ok {
+		return strconv.ParseUint(rest, 16, 64)
+	}
+	return strconv.ParseUint(s, 10, 64)
+}
+
+// base10FormatUInt64 converts the UInt64 coder's hex-string output to the decimal
+// string rippled/xrpl.js emit for base10 fields.
+func base10FormatUInt64(hexValue any) (string, error) {
+	s, ok := hexValue.(string)
+	if !ok {
+		return "", fmt.Errorf("expected hex string, got %T", hexValue)
+	}
+	u, err := strconv.ParseUint(s, 16, 64)
+	if err != nil {
+		return "", fmt.Errorf("parsing hex %q: %w", s, err)
+	}
+	return strconv.FormatUint(u, 10), nil
 }
 
 // convertInt64 converts a value of a number type to int64.

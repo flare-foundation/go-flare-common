@@ -227,6 +227,18 @@ func encodeInner(name string, value any, signing bool) ([]byte, error) {
 		return []byte{}, nil
 	}
 
+	// base10 UInt64 fields (MPT amounts) arrive as decimal strings; the raw
+	// UInt64 coder parses strings as hex, so convert to uint64 here first.
+	if field.Type == defs.UInt64 && isBase10UInt64(name) {
+		if s, ok := value.(string); ok {
+			u, err := parseBase10UInt64(s)
+			if err != nil {
+				return nil, fmt.Errorf("invalid base10 value %q: %w", s, err)
+			}
+			value = u
+		}
+	}
+
 	encoder, err := typeCoder(field.Type)
 	if err != nil {
 		return nil, fmt.Errorf("no encoder: %w", err)
@@ -351,6 +363,15 @@ func decodeNext(b *bytes.Buffer, depth int) (string, any, error) {
 		value, err = Uint16ToTxType(value)
 		if err != nil {
 			return "", nil, fmt.Errorf("invalid tx type: %w", err)
+		}
+	}
+
+	// base10 UInt64 fields decode to a decimal string, matching rippled/xrpl.js;
+	// the coder itself returned an uppercase hex string.
+	if idPair.T == defs.UInt64 && isBase10UInt64(fName) {
+		value, err = base10FormatUInt64(value)
+		if err != nil {
+			return "", nil, fmt.Errorf("base10 field %s: %w", fName, err)
 		}
 	}
 
