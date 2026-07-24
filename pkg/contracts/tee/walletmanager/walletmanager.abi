@@ -296,6 +296,16 @@
   },
   {
     "inputs": [],
+    "name": "TooManyAdmins",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TooManyCosigners",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "VersionNotSupported",
     "type": "error"
   },

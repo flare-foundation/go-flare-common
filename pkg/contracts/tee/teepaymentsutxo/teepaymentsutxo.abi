@@ -1789,6 +1789,11 @@
         "type": "tuple"
       },
       {
+        "internalType": "bool",
+        "name": "_startNew",
+        "type": "bool"
+      },
+      {
         "internalType": "address",
         "name": "_claimBackAddress",
         "type": "address"

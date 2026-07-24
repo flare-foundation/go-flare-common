@@ -29,6 +29,13 @@ var (
 	_ = abi.ConvertType
 )
 
+// IMachinePathManagerApproval is an auto generated low-level Go binding around an user-defined struct.
+type IMachinePathManagerApproval struct {
+	Signer      common.Address
+	BlockNumber uint64
+	SafeNonce   uint32
+}
+
 // IMachinePathManagerMachinePath is an auto generated low-level Go binding around an user-defined struct.
 type IMachinePathManagerMachinePath struct {
 	SourceTeeIds      []common.Address
@@ -44,7 +51,7 @@ type Signature struct {
 
 // MachinePathManagerMetaData contains all meta data concerning the MachinePathManager contract.
 var MachinePathManagerMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"name\":\"DestinationTeeIdAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ECDSAInvalidSignature\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"length\",\"type\":\"uint256\"}],\"name\":\"ECDSAInvalidSignatureLength\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"name\":\"ECDSAInvalidSignatureS\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ExtensionIdMismatch\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"}],\"name\":\"GovernanceHashZero\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidGovernanceHash\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidMachinePath\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidNonce\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ListAlreadyFinalized\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ListAlreadySigned\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ListNotFinalized\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoActiveMachinePathList\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoDestinationTeeIds\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoPaths\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoSourceTeeIds\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExtensionOwnerOrOperator\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SignerAlreadySigned\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SourceTeeIdAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TeeNotFound\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UnrecognizedSigner\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"involvedGovernanceHashes\",\"type\":\"bytes32[]\"}],\"name\":\"MachinePathListFinalized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"signer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"countedGovernanceHashes\",\"type\":\"bytes32[]\"}],\"name\":\"MachinePathListSignatureAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"}],\"name\":\"MachinePathListSigned\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"}],\"name\":\"MachinePathListStarted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"address[]\",\"name\":\"sourceTeeIds\",\"type\":\"address[]\"},{\"internalType\":\"address[]\",\"name\":\"destinationTeeIds\",\"type\":\"address[]\"}],\"indexed\":false,\"internalType\":\"structIMachinePathManager.MachinePath[]\",\"name\":\"paths\",\"type\":\"tuple[]\"}],\"name\":\"MachinePathsAdded\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"address[]\",\"name\":\"sourceTeeIds\",\"type\":\"address[]\"},{\"internalType\":\"address[]\",\"name\":\"destinationTeeIds\",\"type\":\"address[]\"}],\"internalType\":\"structIMachinePathManager.MachinePath[]\",\"name\":\"_paths\",\"type\":\"tuple[]\"}],\"name\":\"addMachinePaths\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"createNewMachinePathList\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"}],\"name\":\"finalizeMachinePathList\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getActiveMachinePathListNonce\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"}],\"name\":\"getMachinePathList\",\"outputs\":[{\"components\":[{\"internalType\":\"address[]\",\"name\":\"sourceTeeIds\",\"type\":\"address[]\"},{\"internalType\":\"address[]\",\"name\":\"destinationTeeIds\",\"type\":\"address[]\"}],\"internalType\":\"structIMachinePathManager.MachinePath[]\",\"name\":\"_paths\",\"type\":\"tuple[]\"},{\"internalType\":\"bytes32[]\",\"name\":\"_involvedGovernanceHashes\",\"type\":\"bytes32[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"_signatures\",\"type\":\"tuple[]\"},{\"internalType\":\"bool\",\"name\":\"_signed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"}],\"name\":\"getMachinePathListMessageHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_governanceHash\",\"type\":\"bytes32\"}],\"name\":\"getMachinePathListSignatureCount\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getMachinePathListsCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"}],\"name\":\"isMachinePathListFinalized\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"}],\"name\":\"isMachinePathListSigned\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_sourceTeeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_destinationTeeId\",\"type\":\"address\"}],\"name\":\"isMachinePathValid\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature\",\"name\":\"_signature\",\"type\":\"tuple\"}],\"name\":\"signMachinePathList\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"name\":\"DestinationTeeIdAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ECDSAInvalidSignature\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"length\",\"type\":\"uint256\"}],\"name\":\"ECDSAInvalidSignatureLength\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"name\":\"ECDSAInvalidSignatureS\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ExtensionIdMismatch\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"}],\"name\":\"GovernanceHashZero\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidGovernanceHash\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidMachinePath\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidNonce\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ListAlreadyFinalized\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ListNotFinalized\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"MessageHashMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoActiveMachinePathList\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoDestinationTeeIds\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoPaths\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoSourceTeeIds\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExtensionOwnerOrOperator\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SafeGovernanceStale\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SignerAlreadySigned\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SourceTeeIdAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TeeNotFound\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UnrecognizedSigner\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"safe\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"safeNonce\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"satisfiedGovernanceHashes\",\"type\":\"bytes32[]\"}],\"name\":\"MachinePathListApproved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"involvedGovernanceHashes\",\"type\":\"bytes32[]\"}],\"name\":\"MachinePathListFinalized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"signer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes32[]\",\"name\":\"countedGovernanceHashes\",\"type\":\"bytes32[]\"}],\"name\":\"MachinePathListSignatureAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"}],\"name\":\"MachinePathListSigned\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"}],\"name\":\"MachinePathListStarted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"address[]\",\"name\":\"sourceTeeIds\",\"type\":\"address[]\"},{\"internalType\":\"address[]\",\"name\":\"destinationTeeIds\",\"type\":\"address[]\"}],\"indexed\":false,\"internalType\":\"structIMachinePathManager.MachinePath[]\",\"name\":\"paths\",\"type\":\"tuple[]\"}],\"name\":\"MachinePathsAdded\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"address[]\",\"name\":\"sourceTeeIds\",\"type\":\"address[]\"},{\"internalType\":\"address[]\",\"name\":\"destinationTeeIds\",\"type\":\"address[]\"}],\"internalType\":\"structIMachinePathManager.MachinePath[]\",\"name\":\"_paths\",\"type\":\"tuple[]\"}],\"name\":\"addMachinePaths\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_messageHash\",\"type\":\"bytes32\"}],\"name\":\"approveMachinePathList\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"createNewMachinePathList\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"}],\"name\":\"finalizeMachinePathList\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getActiveMachinePathListNonce\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"}],\"name\":\"getMachinePathList\",\"outputs\":[{\"components\":[{\"internalType\":\"address[]\",\"name\":\"sourceTeeIds\",\"type\":\"address[]\"},{\"internalType\":\"address[]\",\"name\":\"destinationTeeIds\",\"type\":\"address[]\"}],\"internalType\":\"structIMachinePathManager.MachinePath[]\",\"name\":\"_paths\",\"type\":\"tuple[]\"},{\"internalType\":\"bytes32[]\",\"name\":\"_involvedGovernanceHashes\",\"type\":\"bytes32[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"_signatures\",\"type\":\"tuple[]\"},{\"internalType\":\"bool\",\"name\":\"_signed\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"}],\"name\":\"getMachinePathListApprovals\",\"outputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"signer\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"blockNumber\",\"type\":\"uint64\"},{\"internalType\":\"uint32\",\"name\":\"safeNonce\",\"type\":\"uint32\"}],\"internalType\":\"structIMachinePathManager.Approval[]\",\"name\":\"_approvals\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"}],\"name\":\"getMachinePathListMessageHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_governanceHash\",\"type\":\"bytes32\"}],\"name\":\"getMachinePathListSignatureCount\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getMachinePathListsCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"}],\"name\":\"isMachinePathListFinalized\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_governanceHash\",\"type\":\"bytes32\"}],\"name\":\"isMachinePathListSafeApproved\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"}],\"name\":\"isMachinePathListSigned\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_sourceTeeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_destinationTeeId\",\"type\":\"address\"}],\"name\":\"isMachinePathValid\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature\",\"name\":\"_signature\",\"type\":\"tuple\"}],\"name\":\"signMachinePathList\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // MachinePathManagerABI is the input ABI used to generate the binding from.
@@ -279,6 +286,37 @@ func (_MachinePathManager *MachinePathManagerCallerSession) GetMachinePathList(_
 	return _MachinePathManager.Contract.GetMachinePathList(&_MachinePathManager.CallOpts, _extensionId, _nonce)
 }
 
+// GetMachinePathListApprovals is a free data retrieval call binding the contract method 0xfd41976f.
+//
+// Solidity: function getMachinePathListApprovals(uint256 _extensionId, uint256 _nonce) view returns((address,uint64,uint32)[] _approvals)
+func (_MachinePathManager *MachinePathManagerCaller) GetMachinePathListApprovals(opts *bind.CallOpts, _extensionId *big.Int, _nonce *big.Int) ([]IMachinePathManagerApproval, error) {
+	var out []interface{}
+	err := _MachinePathManager.contract.Call(opts, &out, "getMachinePathListApprovals", _extensionId, _nonce)
+
+	if err != nil {
+		return *new([]IMachinePathManagerApproval), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([]IMachinePathManagerApproval)).(*[]IMachinePathManagerApproval)
+
+	return out0, err
+
+}
+
+// GetMachinePathListApprovals is a free data retrieval call binding the contract method 0xfd41976f.
+//
+// Solidity: function getMachinePathListApprovals(uint256 _extensionId, uint256 _nonce) view returns((address,uint64,uint32)[] _approvals)
+func (_MachinePathManager *MachinePathManagerSession) GetMachinePathListApprovals(_extensionId *big.Int, _nonce *big.Int) ([]IMachinePathManagerApproval, error) {
+	return _MachinePathManager.Contract.GetMachinePathListApprovals(&_MachinePathManager.CallOpts, _extensionId, _nonce)
+}
+
+// GetMachinePathListApprovals is a free data retrieval call binding the contract method 0xfd41976f.
+//
+// Solidity: function getMachinePathListApprovals(uint256 _extensionId, uint256 _nonce) view returns((address,uint64,uint32)[] _approvals)
+func (_MachinePathManager *MachinePathManagerCallerSession) GetMachinePathListApprovals(_extensionId *big.Int, _nonce *big.Int) ([]IMachinePathManagerApproval, error) {
+	return _MachinePathManager.Contract.GetMachinePathListApprovals(&_MachinePathManager.CallOpts, _extensionId, _nonce)
+}
+
 // GetMachinePathListMessageHash is a free data retrieval call binding the contract method 0xb27f4702.
 //
 // Solidity: function getMachinePathListMessageHash(uint256 _extensionId, uint256 _nonce) view returns(bytes32)
@@ -403,6 +441,37 @@ func (_MachinePathManager *MachinePathManagerCallerSession) IsMachinePathListFin
 	return _MachinePathManager.Contract.IsMachinePathListFinalized(&_MachinePathManager.CallOpts, _extensionId, _nonce)
 }
 
+// IsMachinePathListSafeApproved is a free data retrieval call binding the contract method 0x489fec55.
+//
+// Solidity: function isMachinePathListSafeApproved(uint256 _extensionId, uint256 _nonce, bytes32 _governanceHash) view returns(bool)
+func (_MachinePathManager *MachinePathManagerCaller) IsMachinePathListSafeApproved(opts *bind.CallOpts, _extensionId *big.Int, _nonce *big.Int, _governanceHash [32]byte) (bool, error) {
+	var out []interface{}
+	err := _MachinePathManager.contract.Call(opts, &out, "isMachinePathListSafeApproved", _extensionId, _nonce, _governanceHash)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// IsMachinePathListSafeApproved is a free data retrieval call binding the contract method 0x489fec55.
+//
+// Solidity: function isMachinePathListSafeApproved(uint256 _extensionId, uint256 _nonce, bytes32 _governanceHash) view returns(bool)
+func (_MachinePathManager *MachinePathManagerSession) IsMachinePathListSafeApproved(_extensionId *big.Int, _nonce *big.Int, _governanceHash [32]byte) (bool, error) {
+	return _MachinePathManager.Contract.IsMachinePathListSafeApproved(&_MachinePathManager.CallOpts, _extensionId, _nonce, _governanceHash)
+}
+
+// IsMachinePathListSafeApproved is a free data retrieval call binding the contract method 0x489fec55.
+//
+// Solidity: function isMachinePathListSafeApproved(uint256 _extensionId, uint256 _nonce, bytes32 _governanceHash) view returns(bool)
+func (_MachinePathManager *MachinePathManagerCallerSession) IsMachinePathListSafeApproved(_extensionId *big.Int, _nonce *big.Int, _governanceHash [32]byte) (bool, error) {
+	return _MachinePathManager.Contract.IsMachinePathListSafeApproved(&_MachinePathManager.CallOpts, _extensionId, _nonce, _governanceHash)
+}
+
 // IsMachinePathListSigned is a free data retrieval call binding the contract method 0x70838db9.
 //
 // Solidity: function isMachinePathListSigned(uint256 _extensionId, uint256 _nonce) view returns(bool)
@@ -486,6 +555,27 @@ func (_MachinePathManager *MachinePathManagerTransactorSession) AddMachinePaths(
 	return _MachinePathManager.Contract.AddMachinePaths(&_MachinePathManager.TransactOpts, _extensionId, _nonce, _paths)
 }
 
+// ApproveMachinePathList is a paid mutator transaction binding the contract method 0x1def5f18.
+//
+// Solidity: function approveMachinePathList(uint256 _extensionId, uint256 _nonce, bytes32 _messageHash) returns()
+func (_MachinePathManager *MachinePathManagerTransactor) ApproveMachinePathList(opts *bind.TransactOpts, _extensionId *big.Int, _nonce *big.Int, _messageHash [32]byte) (*types.Transaction, error) {
+	return _MachinePathManager.contract.Transact(opts, "approveMachinePathList", _extensionId, _nonce, _messageHash)
+}
+
+// ApproveMachinePathList is a paid mutator transaction binding the contract method 0x1def5f18.
+//
+// Solidity: function approveMachinePathList(uint256 _extensionId, uint256 _nonce, bytes32 _messageHash) returns()
+func (_MachinePathManager *MachinePathManagerSession) ApproveMachinePathList(_extensionId *big.Int, _nonce *big.Int, _messageHash [32]byte) (*types.Transaction, error) {
+	return _MachinePathManager.Contract.ApproveMachinePathList(&_MachinePathManager.TransactOpts, _extensionId, _nonce, _messageHash)
+}
+
+// ApproveMachinePathList is a paid mutator transaction binding the contract method 0x1def5f18.
+//
+// Solidity: function approveMachinePathList(uint256 _extensionId, uint256 _nonce, bytes32 _messageHash) returns()
+func (_MachinePathManager *MachinePathManagerTransactorSession) ApproveMachinePathList(_extensionId *big.Int, _nonce *big.Int, _messageHash [32]byte) (*types.Transaction, error) {
+	return _MachinePathManager.Contract.ApproveMachinePathList(&_MachinePathManager.TransactOpts, _extensionId, _nonce, _messageHash)
+}
+
 // CreateNewMachinePathList is a paid mutator transaction binding the contract method 0x07ae64b2.
 //
 // Solidity: function createNewMachinePathList(uint256 _extensionId) returns(uint256 _nonce)
@@ -547,6 +637,170 @@ func (_MachinePathManager *MachinePathManagerSession) SignMachinePathList(_exten
 // Solidity: function signMachinePathList(uint256 _extensionId, uint256 _nonce, (uint8,bytes32,bytes32) _signature) returns()
 func (_MachinePathManager *MachinePathManagerTransactorSession) SignMachinePathList(_extensionId *big.Int, _nonce *big.Int, _signature Signature) (*types.Transaction, error) {
 	return _MachinePathManager.Contract.SignMachinePathList(&_MachinePathManager.TransactOpts, _extensionId, _nonce, _signature)
+}
+
+// MachinePathManagerMachinePathListApprovedIterator is returned from FilterMachinePathListApproved and is used to iterate over the raw logs and unpacked data for MachinePathListApproved events raised by the MachinePathManager contract.
+type MachinePathManagerMachinePathListApprovedIterator struct {
+	Event *MachinePathManagerMachinePathListApproved // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *MachinePathManagerMachinePathListApprovedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(MachinePathManagerMachinePathListApproved)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(MachinePathManagerMachinePathListApproved)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *MachinePathManagerMachinePathListApprovedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *MachinePathManagerMachinePathListApprovedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// MachinePathManagerMachinePathListApproved represents a MachinePathListApproved event raised by the MachinePathManager contract.
+type MachinePathManagerMachinePathListApproved struct {
+	ExtensionId               *big.Int
+	Nonce                     *big.Int
+	Safe                      common.Address
+	SafeNonce                 uint32
+	SatisfiedGovernanceHashes [][32]byte
+	Raw                       types.Log // Blockchain specific contextual infos
+}
+
+// FilterMachinePathListApproved is a free log retrieval operation binding the contract event 0x0df033a4c9c22a3244462b926255b3458d1d0e5f4f6781390cf9d382b90f3010.
+//
+// Solidity: event MachinePathListApproved(uint256 indexed extensionId, uint256 indexed nonce, address indexed safe, uint32 safeNonce, bytes32[] satisfiedGovernanceHashes)
+func (_MachinePathManager *MachinePathManagerFilterer) FilterMachinePathListApproved(opts *bind.FilterOpts, extensionId []*big.Int, nonce []*big.Int, safe []common.Address) (*MachinePathManagerMachinePathListApprovedIterator, error) {
+
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+	var nonceRule []interface{}
+	for _, nonceItem := range nonce {
+		nonceRule = append(nonceRule, nonceItem)
+	}
+	var safeRule []interface{}
+	for _, safeItem := range safe {
+		safeRule = append(safeRule, safeItem)
+	}
+
+	logs, sub, err := _MachinePathManager.contract.FilterLogs(opts, "MachinePathListApproved", extensionIdRule, nonceRule, safeRule)
+	if err != nil {
+		return nil, err
+	}
+	return &MachinePathManagerMachinePathListApprovedIterator{contract: _MachinePathManager.contract, event: "MachinePathListApproved", logs: logs, sub: sub}, nil
+}
+
+// WatchMachinePathListApproved is a free log subscription operation binding the contract event 0x0df033a4c9c22a3244462b926255b3458d1d0e5f4f6781390cf9d382b90f3010.
+//
+// Solidity: event MachinePathListApproved(uint256 indexed extensionId, uint256 indexed nonce, address indexed safe, uint32 safeNonce, bytes32[] satisfiedGovernanceHashes)
+func (_MachinePathManager *MachinePathManagerFilterer) WatchMachinePathListApproved(opts *bind.WatchOpts, sink chan<- *MachinePathManagerMachinePathListApproved, extensionId []*big.Int, nonce []*big.Int, safe []common.Address) (event.Subscription, error) {
+
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+	var nonceRule []interface{}
+	for _, nonceItem := range nonce {
+		nonceRule = append(nonceRule, nonceItem)
+	}
+	var safeRule []interface{}
+	for _, safeItem := range safe {
+		safeRule = append(safeRule, safeItem)
+	}
+
+	logs, sub, err := _MachinePathManager.contract.WatchLogs(opts, "MachinePathListApproved", extensionIdRule, nonceRule, safeRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(MachinePathManagerMachinePathListApproved)
+				if err := _MachinePathManager.contract.UnpackLog(event, "MachinePathListApproved", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseMachinePathListApproved is a log parse operation binding the contract event 0x0df033a4c9c22a3244462b926255b3458d1d0e5f4f6781390cf9d382b90f3010.
+//
+// Solidity: event MachinePathListApproved(uint256 indexed extensionId, uint256 indexed nonce, address indexed safe, uint32 safeNonce, bytes32[] satisfiedGovernanceHashes)
+func (_MachinePathManager *MachinePathManagerFilterer) ParseMachinePathListApproved(log types.Log) (*MachinePathManagerMachinePathListApproved, error) {
+	event := new(MachinePathManagerMachinePathListApproved)
+	if err := _MachinePathManager.contract.UnpackLog(event, "MachinePathListApproved", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
 }
 
 // MachinePathManagerMachinePathListFinalizedIterator is returned from FilterMachinePathListFinalized and is used to iterate over the raw logs and unpacked data for MachinePathListFinalized events raised by the MachinePathManager contract.

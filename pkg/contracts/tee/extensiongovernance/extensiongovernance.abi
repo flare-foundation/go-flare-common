@@ -249,6 +249,43 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "extensionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "governanceHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "safe",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address[]",
+        "name": "signers",
+        "type": "address[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "signersThreshold",
+        "type": "uint64"
+      }
+    ],
+    "name": "NewTeeSafeGovernanceSet",
+    "type": "event"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -267,6 +304,11 @@
         "internalType": "uint64",
         "name": "_signersThreshold",
         "type": "uint64"
+      },
+      {
+        "internalType": "address",
+        "name": "_safe",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -315,6 +357,11 @@
         "internalType": "uint64",
         "name": "_signersThreshold",
         "type": "uint64"
+      },
+      {
+        "internalType": "address",
+        "name": "_safe",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -416,6 +463,24 @@
       }
     ],
     "name": "setNewTeeGovernance",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extensionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_safe",
+        "type": "address"
+      }
+    ],
+    "name": "setNewTeeGovernanceSafe",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

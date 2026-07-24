@@ -279,11 +279,6 @@
   },
   {
     "inputs": [],
-    "name": "UnsupportedRewardEpochId",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "VersionNotSupported",
     "type": "error"
   },

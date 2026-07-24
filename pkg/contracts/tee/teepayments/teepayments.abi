@@ -138,6 +138,11 @@
   },
   {
     "inputs": [],
+    "name": "StartNewRequired",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "TimelockCallNotFound",
     "type": "error"
   },
@@ -1049,6 +1054,11 @@
         "internalType": "struct ITeePaymentsBase.ReissueFeeParams",
         "name": "_reissueFeeParams",
         "type": "tuple"
+      },
+      {
+        "internalType": "bool",
+        "name": "_startNew",
+        "type": "bool"
       },
       {
         "internalType": "address",

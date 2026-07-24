@@ -31,7 +31,7 @@ var (
 
 // ExtensionGovernanceMetaData contains all meta data concerning the ExtensionGovernance contract.
 var ExtensionGovernanceMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"AddressAlreadyInSet\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"AddressNotInSet\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AvailabilityCheckTimestampInvalid\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"cosigner\",\"type\":\"address\"}],\"name\":\"DuplicatedCosigner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ExtensionIdMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAddress\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAvailabilityCheckStatus\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"cosigner\",\"type\":\"address\"}],\"name\":\"InvalidCosigner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidDuration\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidGovernanceHash\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidKeyType\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidNonce\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPublicKey\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidResponseData\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidSigner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidSigningAlgo\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidThreshold\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidWalletStatus\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"}],\"name\":\"KeyTypeNotSupported\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LengthsMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoAddresses\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoSigners\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\"}],\"name\":\"NotOwnerOrPauser\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\"}],\"name\":\"NotOwnerOrUnpauser\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExtensionOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExtensionOwnerOrOperator\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwnerOrBackupManager\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProductionOrPausedStatus\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProposedOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OwnerNotAllowed\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"signer\",\"type\":\"address\"}],\"name\":\"SignerAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TeeMachineNotAvailable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"VersionNotSupported\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"governanceHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"signers\",\"type\":\"address[]\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"signersThreshold\",\"type\":\"uint64\"}],\"name\":\"NewTeeGovernanceSet\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getLatestTeeGovernance\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"_signers\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"_signersThreshold\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getLatestTeeGovernanceHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_governanceHash\",\"type\":\"bytes32\"}],\"name\":\"getTeeGovernance\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"_signers\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"_signersThreshold\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_governanceHash\",\"type\":\"bytes32\"}],\"name\":\"getTeeGovernanceThreshold\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_governanceHash\",\"type\":\"bytes32\"}],\"name\":\"isGovernanceHashValid\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_governanceHash\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"_signer\",\"type\":\"address\"}],\"name\":\"isTeeGovernanceSigner\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_signers\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"_signersThreshold\",\"type\":\"uint64\"}],\"name\":\"setNewTeeGovernance\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"AddressAlreadyInSet\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"AddressNotInSet\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AvailabilityCheckTimestampInvalid\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"cosigner\",\"type\":\"address\"}],\"name\":\"DuplicatedCosigner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ExtensionIdMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAddress\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAvailabilityCheckStatus\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"cosigner\",\"type\":\"address\"}],\"name\":\"InvalidCosigner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidDuration\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidGovernanceHash\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidKeyType\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidNonce\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPublicKey\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidResponseData\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidSigner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidSigningAlgo\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidThreshold\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidWalletStatus\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"keyType\",\"type\":\"bytes32\"}],\"name\":\"KeyTypeNotSupported\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LengthsMismatch\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoAddresses\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoSigners\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\"}],\"name\":\"NotOwnerOrPauser\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\"}],\"name\":\"NotOwnerOrUnpauser\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExtensionOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyExtensionOwnerOrOperator\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwnerOrBackupManager\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProductionOrPausedStatus\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyProposedOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OwnerNotAllowed\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"signer\",\"type\":\"address\"}],\"name\":\"SignerAlreadyExists\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TeeMachineNotAvailable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"VersionNotSupported\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"governanceHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"signers\",\"type\":\"address[]\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"signersThreshold\",\"type\":\"uint64\"}],\"name\":\"NewTeeGovernanceSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"extensionId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"governanceHash\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"safe\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"signers\",\"type\":\"address[]\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"signersThreshold\",\"type\":\"uint64\"}],\"name\":\"NewTeeSafeGovernanceSet\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getLatestTeeGovernance\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"_signers\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"_signersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"address\",\"name\":\"_safe\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"}],\"name\":\"getLatestTeeGovernanceHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_governanceHash\",\"type\":\"bytes32\"}],\"name\":\"getTeeGovernance\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"_signers\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"_signersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"address\",\"name\":\"_safe\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_governanceHash\",\"type\":\"bytes32\"}],\"name\":\"getTeeGovernanceThreshold\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_governanceHash\",\"type\":\"bytes32\"}],\"name\":\"isGovernanceHashValid\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_governanceHash\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"_signer\",\"type\":\"address\"}],\"name\":\"isTeeGovernanceSigner\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address[]\",\"name\":\"_signers\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"_signersThreshold\",\"type\":\"uint64\"}],\"name\":\"setNewTeeGovernance\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_extensionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_safe\",\"type\":\"address\"}],\"name\":\"setNewTeeGovernanceSafe\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // ExtensionGovernanceABI is the input ABI used to generate the binding from.
@@ -182,10 +182,11 @@ func (_ExtensionGovernance *ExtensionGovernanceTransactorRaw) Transact(opts *bin
 
 // GetLatestTeeGovernance is a free data retrieval call binding the contract method 0x3e7bd5d4.
 //
-// Solidity: function getLatestTeeGovernance(uint256 _extensionId) view returns(address[] _signers, uint64 _signersThreshold)
+// Solidity: function getLatestTeeGovernance(uint256 _extensionId) view returns(address[] _signers, uint64 _signersThreshold, address _safe)
 func (_ExtensionGovernance *ExtensionGovernanceCaller) GetLatestTeeGovernance(opts *bind.CallOpts, _extensionId *big.Int) (struct {
 	Signers          []common.Address
 	SignersThreshold uint64
+	Safe             common.Address
 }, error) {
 	var out []interface{}
 	err := _ExtensionGovernance.contract.Call(opts, &out, "getLatestTeeGovernance", _extensionId)
@@ -193,6 +194,7 @@ func (_ExtensionGovernance *ExtensionGovernanceCaller) GetLatestTeeGovernance(op
 	outstruct := new(struct {
 		Signers          []common.Address
 		SignersThreshold uint64
+		Safe             common.Address
 	})
 	if err != nil {
 		return *outstruct, err
@@ -200,6 +202,7 @@ func (_ExtensionGovernance *ExtensionGovernanceCaller) GetLatestTeeGovernance(op
 
 	outstruct.Signers = *abi.ConvertType(out[0], new([]common.Address)).(*[]common.Address)
 	outstruct.SignersThreshold = *abi.ConvertType(out[1], new(uint64)).(*uint64)
+	outstruct.Safe = *abi.ConvertType(out[2], new(common.Address)).(*common.Address)
 
 	return *outstruct, err
 
@@ -207,20 +210,22 @@ func (_ExtensionGovernance *ExtensionGovernanceCaller) GetLatestTeeGovernance(op
 
 // GetLatestTeeGovernance is a free data retrieval call binding the contract method 0x3e7bd5d4.
 //
-// Solidity: function getLatestTeeGovernance(uint256 _extensionId) view returns(address[] _signers, uint64 _signersThreshold)
+// Solidity: function getLatestTeeGovernance(uint256 _extensionId) view returns(address[] _signers, uint64 _signersThreshold, address _safe)
 func (_ExtensionGovernance *ExtensionGovernanceSession) GetLatestTeeGovernance(_extensionId *big.Int) (struct {
 	Signers          []common.Address
 	SignersThreshold uint64
+	Safe             common.Address
 }, error) {
 	return _ExtensionGovernance.Contract.GetLatestTeeGovernance(&_ExtensionGovernance.CallOpts, _extensionId)
 }
 
 // GetLatestTeeGovernance is a free data retrieval call binding the contract method 0x3e7bd5d4.
 //
-// Solidity: function getLatestTeeGovernance(uint256 _extensionId) view returns(address[] _signers, uint64 _signersThreshold)
+// Solidity: function getLatestTeeGovernance(uint256 _extensionId) view returns(address[] _signers, uint64 _signersThreshold, address _safe)
 func (_ExtensionGovernance *ExtensionGovernanceCallerSession) GetLatestTeeGovernance(_extensionId *big.Int) (struct {
 	Signers          []common.Address
 	SignersThreshold uint64
+	Safe             common.Address
 }, error) {
 	return _ExtensionGovernance.Contract.GetLatestTeeGovernance(&_ExtensionGovernance.CallOpts, _extensionId)
 }
@@ -258,10 +263,11 @@ func (_ExtensionGovernance *ExtensionGovernanceCallerSession) GetLatestTeeGovern
 
 // GetTeeGovernance is a free data retrieval call binding the contract method 0x090f2bfb.
 //
-// Solidity: function getTeeGovernance(uint256 _extensionId, bytes32 _governanceHash) view returns(address[] _signers, uint64 _signersThreshold)
+// Solidity: function getTeeGovernance(uint256 _extensionId, bytes32 _governanceHash) view returns(address[] _signers, uint64 _signersThreshold, address _safe)
 func (_ExtensionGovernance *ExtensionGovernanceCaller) GetTeeGovernance(opts *bind.CallOpts, _extensionId *big.Int, _governanceHash [32]byte) (struct {
 	Signers          []common.Address
 	SignersThreshold uint64
+	Safe             common.Address
 }, error) {
 	var out []interface{}
 	err := _ExtensionGovernance.contract.Call(opts, &out, "getTeeGovernance", _extensionId, _governanceHash)
@@ -269,6 +275,7 @@ func (_ExtensionGovernance *ExtensionGovernanceCaller) GetTeeGovernance(opts *bi
 	outstruct := new(struct {
 		Signers          []common.Address
 		SignersThreshold uint64
+		Safe             common.Address
 	})
 	if err != nil {
 		return *outstruct, err
@@ -276,6 +283,7 @@ func (_ExtensionGovernance *ExtensionGovernanceCaller) GetTeeGovernance(opts *bi
 
 	outstruct.Signers = *abi.ConvertType(out[0], new([]common.Address)).(*[]common.Address)
 	outstruct.SignersThreshold = *abi.ConvertType(out[1], new(uint64)).(*uint64)
+	outstruct.Safe = *abi.ConvertType(out[2], new(common.Address)).(*common.Address)
 
 	return *outstruct, err
 
@@ -283,20 +291,22 @@ func (_ExtensionGovernance *ExtensionGovernanceCaller) GetTeeGovernance(opts *bi
 
 // GetTeeGovernance is a free data retrieval call binding the contract method 0x090f2bfb.
 //
-// Solidity: function getTeeGovernance(uint256 _extensionId, bytes32 _governanceHash) view returns(address[] _signers, uint64 _signersThreshold)
+// Solidity: function getTeeGovernance(uint256 _extensionId, bytes32 _governanceHash) view returns(address[] _signers, uint64 _signersThreshold, address _safe)
 func (_ExtensionGovernance *ExtensionGovernanceSession) GetTeeGovernance(_extensionId *big.Int, _governanceHash [32]byte) (struct {
 	Signers          []common.Address
 	SignersThreshold uint64
+	Safe             common.Address
 }, error) {
 	return _ExtensionGovernance.Contract.GetTeeGovernance(&_ExtensionGovernance.CallOpts, _extensionId, _governanceHash)
 }
 
 // GetTeeGovernance is a free data retrieval call binding the contract method 0x090f2bfb.
 //
-// Solidity: function getTeeGovernance(uint256 _extensionId, bytes32 _governanceHash) view returns(address[] _signers, uint64 _signersThreshold)
+// Solidity: function getTeeGovernance(uint256 _extensionId, bytes32 _governanceHash) view returns(address[] _signers, uint64 _signersThreshold, address _safe)
 func (_ExtensionGovernance *ExtensionGovernanceCallerSession) GetTeeGovernance(_extensionId *big.Int, _governanceHash [32]byte) (struct {
 	Signers          []common.Address
 	SignersThreshold uint64
+	Safe             common.Address
 }, error) {
 	return _ExtensionGovernance.Contract.GetTeeGovernance(&_ExtensionGovernance.CallOpts, _extensionId, _governanceHash)
 }
@@ -413,6 +423,27 @@ func (_ExtensionGovernance *ExtensionGovernanceSession) SetNewTeeGovernance(_ext
 // Solidity: function setNewTeeGovernance(uint256 _extensionId, address[] _signers, uint64 _signersThreshold) returns()
 func (_ExtensionGovernance *ExtensionGovernanceTransactorSession) SetNewTeeGovernance(_extensionId *big.Int, _signers []common.Address, _signersThreshold uint64) (*types.Transaction, error) {
 	return _ExtensionGovernance.Contract.SetNewTeeGovernance(&_ExtensionGovernance.TransactOpts, _extensionId, _signers, _signersThreshold)
+}
+
+// SetNewTeeGovernanceSafe is a paid mutator transaction binding the contract method 0x0e8d6fd5.
+//
+// Solidity: function setNewTeeGovernanceSafe(uint256 _extensionId, address _safe) returns()
+func (_ExtensionGovernance *ExtensionGovernanceTransactor) SetNewTeeGovernanceSafe(opts *bind.TransactOpts, _extensionId *big.Int, _safe common.Address) (*types.Transaction, error) {
+	return _ExtensionGovernance.contract.Transact(opts, "setNewTeeGovernanceSafe", _extensionId, _safe)
+}
+
+// SetNewTeeGovernanceSafe is a paid mutator transaction binding the contract method 0x0e8d6fd5.
+//
+// Solidity: function setNewTeeGovernanceSafe(uint256 _extensionId, address _safe) returns()
+func (_ExtensionGovernance *ExtensionGovernanceSession) SetNewTeeGovernanceSafe(_extensionId *big.Int, _safe common.Address) (*types.Transaction, error) {
+	return _ExtensionGovernance.Contract.SetNewTeeGovernanceSafe(&_ExtensionGovernance.TransactOpts, _extensionId, _safe)
+}
+
+// SetNewTeeGovernanceSafe is a paid mutator transaction binding the contract method 0x0e8d6fd5.
+//
+// Solidity: function setNewTeeGovernanceSafe(uint256 _extensionId, address _safe) returns()
+func (_ExtensionGovernance *ExtensionGovernanceTransactorSession) SetNewTeeGovernanceSafe(_extensionId *big.Int, _safe common.Address) (*types.Transaction, error) {
+	return _ExtensionGovernance.Contract.SetNewTeeGovernanceSafe(&_ExtensionGovernance.TransactOpts, _extensionId, _safe)
 }
 
 // ExtensionGovernanceNewTeeGovernanceSetIterator is returned from FilterNewTeeGovernanceSet and is used to iterate over the raw logs and unpacked data for NewTeeGovernanceSet events raised by the ExtensionGovernance contract.
@@ -564,6 +595,162 @@ func (_ExtensionGovernance *ExtensionGovernanceFilterer) WatchNewTeeGovernanceSe
 func (_ExtensionGovernance *ExtensionGovernanceFilterer) ParseNewTeeGovernanceSet(log types.Log) (*ExtensionGovernanceNewTeeGovernanceSet, error) {
 	event := new(ExtensionGovernanceNewTeeGovernanceSet)
 	if err := _ExtensionGovernance.contract.UnpackLog(event, "NewTeeGovernanceSet", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// ExtensionGovernanceNewTeeSafeGovernanceSetIterator is returned from FilterNewTeeSafeGovernanceSet and is used to iterate over the raw logs and unpacked data for NewTeeSafeGovernanceSet events raised by the ExtensionGovernance contract.
+type ExtensionGovernanceNewTeeSafeGovernanceSetIterator struct {
+	Event *ExtensionGovernanceNewTeeSafeGovernanceSet // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *ExtensionGovernanceNewTeeSafeGovernanceSetIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(ExtensionGovernanceNewTeeSafeGovernanceSet)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(ExtensionGovernanceNewTeeSafeGovernanceSet)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *ExtensionGovernanceNewTeeSafeGovernanceSetIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *ExtensionGovernanceNewTeeSafeGovernanceSetIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// ExtensionGovernanceNewTeeSafeGovernanceSet represents a NewTeeSafeGovernanceSet event raised by the ExtensionGovernance contract.
+type ExtensionGovernanceNewTeeSafeGovernanceSet struct {
+	ExtensionId      *big.Int
+	GovernanceHash   [32]byte
+	Safe             common.Address
+	Signers          []common.Address
+	SignersThreshold uint64
+	Raw              types.Log // Blockchain specific contextual infos
+}
+
+// FilterNewTeeSafeGovernanceSet is a free log retrieval operation binding the contract event 0x515ea14f568a649157e98eb71e88f6b2b53f22c1ecad84f342d21fb30c84ae44.
+//
+// Solidity: event NewTeeSafeGovernanceSet(uint256 indexed extensionId, bytes32 indexed governanceHash, address safe, address[] signers, uint64 signersThreshold)
+func (_ExtensionGovernance *ExtensionGovernanceFilterer) FilterNewTeeSafeGovernanceSet(opts *bind.FilterOpts, extensionId []*big.Int, governanceHash [][32]byte) (*ExtensionGovernanceNewTeeSafeGovernanceSetIterator, error) {
+
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+	var governanceHashRule []interface{}
+	for _, governanceHashItem := range governanceHash {
+		governanceHashRule = append(governanceHashRule, governanceHashItem)
+	}
+
+	logs, sub, err := _ExtensionGovernance.contract.FilterLogs(opts, "NewTeeSafeGovernanceSet", extensionIdRule, governanceHashRule)
+	if err != nil {
+		return nil, err
+	}
+	return &ExtensionGovernanceNewTeeSafeGovernanceSetIterator{contract: _ExtensionGovernance.contract, event: "NewTeeSafeGovernanceSet", logs: logs, sub: sub}, nil
+}
+
+// WatchNewTeeSafeGovernanceSet is a free log subscription operation binding the contract event 0x515ea14f568a649157e98eb71e88f6b2b53f22c1ecad84f342d21fb30c84ae44.
+//
+// Solidity: event NewTeeSafeGovernanceSet(uint256 indexed extensionId, bytes32 indexed governanceHash, address safe, address[] signers, uint64 signersThreshold)
+func (_ExtensionGovernance *ExtensionGovernanceFilterer) WatchNewTeeSafeGovernanceSet(opts *bind.WatchOpts, sink chan<- *ExtensionGovernanceNewTeeSafeGovernanceSet, extensionId []*big.Int, governanceHash [][32]byte) (event.Subscription, error) {
+
+	var extensionIdRule []interface{}
+	for _, extensionIdItem := range extensionId {
+		extensionIdRule = append(extensionIdRule, extensionIdItem)
+	}
+	var governanceHashRule []interface{}
+	for _, governanceHashItem := range governanceHash {
+		governanceHashRule = append(governanceHashRule, governanceHashItem)
+	}
+
+	logs, sub, err := _ExtensionGovernance.contract.WatchLogs(opts, "NewTeeSafeGovernanceSet", extensionIdRule, governanceHashRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(ExtensionGovernanceNewTeeSafeGovernanceSet)
+				if err := _ExtensionGovernance.contract.UnpackLog(event, "NewTeeSafeGovernanceSet", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseNewTeeSafeGovernanceSet is a log parse operation binding the contract event 0x515ea14f568a649157e98eb71e88f6b2b53f22c1ecad84f342d21fb30c84ae44.
+//
+// Solidity: event NewTeeSafeGovernanceSet(uint256 indexed extensionId, bytes32 indexed governanceHash, address safe, address[] signers, uint64 signersThreshold)
+func (_ExtensionGovernance *ExtensionGovernanceFilterer) ParseNewTeeSafeGovernanceSet(log types.Log) (*ExtensionGovernanceNewTeeSafeGovernanceSet, error) {
+	event := new(ExtensionGovernanceNewTeeSafeGovernanceSet)
+	if err := _ExtensionGovernance.contract.UnpackLog(event, "NewTeeSafeGovernanceSet", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
