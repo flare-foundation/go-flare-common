@@ -178,7 +178,8 @@ func validatePaymentMemos(decoded map[string]any) error {
 		return fmt.Errorf("invalid Memos shape: %T", memosAny)
 	}
 
-	serialized, err := types.STArray.ToBytes(memos, true)
+	// rippled measures the unfiltered serialization (STArray::add is WithAllFields)
+	serialized, err := types.STArray.ToBytes(memos, false)
 	if err != nil {
 		return fmt.Errorf("re-serializing Memos: %w", err)
 	}

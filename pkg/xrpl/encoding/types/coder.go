@@ -210,7 +210,10 @@ func lengthDecode(b *bytes.Buffer) (int, error) {
 }
 
 // encodeInner encodes value according to definition that corresponds to its name.
-// If the field is not serialized or the signing is false and the field is not a signing field, empty byte slice is returned.
+// If the field is not serialized, or signing is true and the field is not a signing
+// field, an empty byte slice is returned. The signing filter is one-shot: it applies
+// to this field only, never inside nested STObject/STArray values — rippled
+// (STObject::add recurses WithAllFields) and xrpl.js filter only at the top level.
 func encodeInner(name string, value any, signing bool) ([]byte, error) {
 	field, ok := defs.NameToField[name]
 	if !ok {
@@ -244,7 +247,8 @@ func encodeInner(name string, value any, signing bool) ([]byte, error) {
 		return nil, fmt.Errorf("no encoder: %w", err)
 	}
 
-	valueBytes, err := encoder.ToBytes(value, signing)
+	// nested containers encode in full — the signing filter never recurses
+	valueBytes, err := encoder.ToBytes(value, false)
 	if err != nil {
 		return nil, err
 	}
