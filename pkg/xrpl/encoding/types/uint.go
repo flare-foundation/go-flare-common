@@ -194,9 +194,7 @@ func (*UInt64) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 }
 
 // base10UInt64Fields are the UInt64 fields rippled serializes in base 10 — those
-// flagged sMD_BaseTen in rippled's sfields.macro; all other UInt64 fields use base 16.
-// ConfidentialOutstandingAmount is develop-only (XLS-96) and harmless to list
-// before it appears in the definitions.
+// flagged kSmdBaseTen in rippled's sfields.macro; all other UInt64 fields use base 16.
 var base10UInt64Fields = map[string]bool{
 	"MaximumAmount":                 true,
 	"OutstandingAmount":             true,

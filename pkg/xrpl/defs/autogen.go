@@ -12,8 +12,6 @@ const (
 	Hash160      XType = 17
 	Hash192      XType = 21
 	Hash256      XType = 5
-	Hash384      XType = 22
-	Hash512      XType = 23
 	Int32        XType = 10
 	Int64        XType = 11
 	Issue        XType = 24
@@ -27,6 +25,8 @@ const (
 	Transaction  XType = 10001
 	UInt16       XType = 1
 	UInt32       XType = 2
+	UInt384      XType = 22
+	UInt512      XType = 23
 	UInt64       XType = 3
 	UInt8        XType = 16
 	UInt96       XType = 20
@@ -51,6 +51,11 @@ var TxTypeToValue = map[string]int32{
 	"CheckCash":                         17,
 	"CheckCreate":                       16,
 	"Clawback":                          30,
+	"ConfidentialMPTClawback":           89,
+	"ConfidentialMPTConvert":            85,
+	"ConfidentialMPTConvertBack":        87,
+	"ConfidentialMPTMergeInbox":         86,
+	"ConfidentialMPTSend":               88,
 	"CredentialAccept":                  59,
 	"CredentialCreate":                  58,
 	"CredentialDelete":                  60,
@@ -96,6 +101,8 @@ var TxTypeToValue = map[string]int32{
 	"SetFee":                            101,
 	"SetRegularKey":                     5,
 	"SignerListSet":                     12,
+	"SponsorshipSet":                    91,
+	"SponsorshipTransfer":               90,
 	"TicketCreate":                      10,
 	"TrustSet":                          20,
 	"UNLModify":                         102,
@@ -116,6 +123,13 @@ var TxTypeToValue = map[string]int32{
 }
 
 var NameToField = map[string]Field{
+	"Generic": {
+		IsSerialized:   false,
+		IsSigningField: false,
+		IsVLEncoded:    false,
+		Nth:            0,
+		Type:           Unknown,
+	},
 	"Invalid": {
 		IsSerialized:   false,
 		IsSigningField: false,
@@ -150,13 +164,6 @@ var NameToField = map[string]Field{
 		IsVLEncoded:    false,
 		Nth:            259,
 		Type:           Amount,
-	},
-	"Generic": {
-		IsSerialized:   true,
-		IsSigningField: true,
-		IsVLEncoded:    false,
-		Nth:            0,
-		Type:           Unknown,
 	},
 	"LedgerEntryType": {
 		IsSerialized:   true,
@@ -711,6 +718,48 @@ var NameToField = map[string]Field{
 		Nth:            68,
 		Type:           UInt32,
 	},
+	"ConfidentialBalanceVersion": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            69,
+		Type:           UInt32,
+	},
+	"SponsoredOwnerCount": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            70,
+		Type:           UInt32,
+	},
+	"SponsoringOwnerCount": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            71,
+		Type:           UInt32,
+	},
+	"SponsoringAccountCount": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            72,
+		Type:           UInt32,
+	},
+	"RemainingOwnerCount": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            73,
+		Type:           UInt32,
+	},
+	"SponsorFlags": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            74,
+		Type:           UInt32,
+	},
 	"IndexNext": {
 		IsSerialized:   true,
 		IsSigningField: true,
@@ -912,6 +961,20 @@ var NameToField = map[string]Field{
 		IsSigningField: true,
 		IsVLEncoded:    false,
 		Nth:            31,
+		Type:           UInt64,
+	},
+	"ConfidentialOutstandingAmount": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            32,
+		Type:           UInt64,
+	},
+	"SponseeNode": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            33,
 		Type:           UInt64,
 	},
 	"EmailHash": {
@@ -1180,6 +1243,20 @@ var NameToField = map[string]Field{
 		Nth:            39,
 		Type:           Hash256,
 	},
+	"BlindingFactor": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            40,
+		Type:           Hash256,
+	},
+	"ObjectID": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            41,
+		Type:           Hash256,
+	},
 	"hash": {
 		IsSerialized:   false,
 		IsSigningField: false,
@@ -1381,6 +1458,20 @@ var NameToField = map[string]Field{
 		IsSigningField: true,
 		IsVLEncoded:    false,
 		Nth:            31,
+		Type:           Amount,
+	},
+	"FeeAmount": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            32,
+		Type:           Amount,
+	},
+	"MaxFee": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            33,
 		Type:           Amount,
 	},
 	"PublicKey": {
@@ -1593,6 +1684,111 @@ var NameToField = map[string]Field{
 		Nth:            31,
 		Type:           Blob,
 	},
+	"ConfidentialBalanceInbox": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    true,
+		Nth:            32,
+		Type:           Blob,
+	},
+	"ConfidentialBalanceSpending": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    true,
+		Nth:            33,
+		Type:           Blob,
+	},
+	"IssuerEncryptedBalance": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    true,
+		Nth:            34,
+		Type:           Blob,
+	},
+	"IssuerEncryptionKey": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    true,
+		Nth:            35,
+		Type:           Blob,
+	},
+	"HolderEncryptionKey": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    true,
+		Nth:            36,
+		Type:           Blob,
+	},
+	"ZKProof": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    true,
+		Nth:            37,
+		Type:           Blob,
+	},
+	"HolderEncryptedAmount": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    true,
+		Nth:            38,
+		Type:           Blob,
+	},
+	"IssuerEncryptedAmount": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    true,
+		Nth:            39,
+		Type:           Blob,
+	},
+	"SenderEncryptedAmount": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    true,
+		Nth:            40,
+		Type:           Blob,
+	},
+	"DestinationEncryptedAmount": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    true,
+		Nth:            41,
+		Type:           Blob,
+	},
+	"AuditorEncryptedBalance": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    true,
+		Nth:            42,
+		Type:           Blob,
+	},
+	"AuditorEncryptedAmount": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    true,
+		Nth:            43,
+		Type:           Blob,
+	},
+	"AuditorEncryptionKey": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    true,
+		Nth:            44,
+		Type:           Blob,
+	},
+	"AmountCommitment": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    true,
+		Nth:            45,
+		Type:           Blob,
+	},
+	"BalanceCommitment": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    true,
+		Nth:            46,
+		Type:           Blob,
+	},
 	"Account": {
 		IsSerialized:   true,
 		IsSigningField: true,
@@ -1738,6 +1934,41 @@ var NameToField = map[string]Field{
 		IsSigningField: true,
 		IsVLEncoded:    true,
 		Nth:            26,
+		Type:           AccountID,
+	},
+	"Sponsor": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    true,
+		Nth:            27,
+		Type:           AccountID,
+	},
+	"HighSponsor": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    true,
+		Nth:            28,
+		Type:           AccountID,
+	},
+	"LowSponsor": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    true,
+		Nth:            29,
+		Type:           AccountID,
+	},
+	"CounterpartySponsor": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    true,
+		Nth:            30,
+		Type:           AccountID,
+	},
+	"Sponsee": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    true,
+		Nth:            31,
 		Type:           AccountID,
 	},
 	"Number": {
@@ -2111,6 +2342,13 @@ var NameToField = map[string]Field{
 		Nth:            37,
 		Type:           STObject,
 	},
+	"SponsorSignature": {
+		IsSerialized:   true,
+		IsSigningField: false,
+		IsVLEncoded:    false,
+		Nth:            38,
+		Type:           STObject,
+	},
 	"Signers": {
 		IsSerialized:   true,
 		IsSigningField: false,
@@ -2326,6 +2564,13 @@ var NameToField = map[string]Field{
 		IsSigningField: true,
 		IsVLEncoded:    false,
 		Nth:            5,
+		Type:           UInt8,
+	},
+	"LEVersion": {
+		IsSerialized:   true,
+		IsSigningField: true,
+		IsVLEncoded:    false,
+		Nth:            6,
 		Type:           UInt8,
 	},
 	"TickSize": {

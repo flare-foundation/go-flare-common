@@ -9,10 +9,10 @@ import (
 // XType represents an XRPL binary serialization type code.
 type XType int16
 
-// Deprecated: upstream renamed UInt384/UInt512 to Hash384/Hash512 (same codes 22/23); kept as aliases.
+// Deprecated: rippled names these UInt384/UInt512 (same codes 22/23); kept as aliases.
 const (
-	UInt384 = Hash384
-	UInt512 = Hash512
+	Hash384 = UInt384
+	Hash512 = UInt512
 )
 
 // Field describes the serialization properties of an XRPL protocol field.

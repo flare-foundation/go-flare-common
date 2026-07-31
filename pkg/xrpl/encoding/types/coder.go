@@ -98,7 +98,7 @@ func typeCoder(xt defs.XType) (Coder, error) {
 		return Hash192, nil
 	case defs.Transaction:
 		return nil, &UnsupportedError{xt}
-	case defs.Hash512:
+	case defs.UInt512:
 		return nil, &UnsupportedError{xt}
 	case defs.UInt8:
 		return &UInt8{}, nil
@@ -116,7 +116,7 @@ func typeCoder(xt defs.XType) (Coder, error) {
 		return nil, &UnsupportedError{xt}
 	case defs.PathSet:
 		return &PathSet{}, nil
-	case defs.Hash384:
+	case defs.UInt384:
 		return nil, &UnsupportedError{xt}
 	case defs.Blob:
 		return Blob, nil
