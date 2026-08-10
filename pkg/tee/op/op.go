@@ -50,8 +50,9 @@ const (
 	UpdatePolicy       Command = "UPDATE_POLICY"
 	SetMachinePathList Command = "SET_MACHINE_PATH_LIST"
 
-	Pay     Command = "PAY"
-	Reissue Command = "REISSUE"
+	KeyBinding Command = "KEY_BINDING"
+	Pay        Command = "PAY"
+	Reissue    Command = "REISSUE"
 
 	Prove Command = "PROVE"
 )
@@ -93,6 +94,11 @@ var validSystemPairs = map[Type]map[Command]bool{
 	BTC: {
 		Pay:     true,
 		Reissue: true,
+		// Provisions the wallet's multisig binding. Separate from key
+		// generation because the binding cannot exist yet at that point: each
+		// machine generates independently, and the full xpub set only exists
+		// once every key has been confirmed on chain.
+		KeyBinding: true,
 	},
 	FDC2: {
 		Prove: true,
