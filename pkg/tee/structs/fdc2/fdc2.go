@@ -34,6 +34,10 @@ const (
 	PMWMultisigAccountConfigured AttestationType = "PMWMultisigAccountConfigured"
 	PMWFeeProof                  AttestationType = "PMWFeeProof"
 	PMWMultisigUtxoConfigured    AttestationType = "PMWMultisigUtxoConfigured"
+	// PMWUtxoProposalCheck is CSP's proposal predicate: the data providers
+	// decide, before any signature exists, which of several competing
+	// transactions fills a batch.
+	PMWUtxoProposalCheck AttestationType = "PMWUtxoProposalCheck"
 )
 
 var attestationTypes = []AttestationType{
@@ -42,6 +46,7 @@ var attestationTypes = []AttestationType{
 	PMWMultisigAccountConfigured,
 	PMWFeeProof,
 	PMWMultisigUtxoConfigured,
+	PMWUtxoProposalCheck,
 }
 
 // i-th method correspond to a method in TeeDataConnectorStruct interface whose
@@ -52,6 +57,7 @@ var attestationTypeMethods = []string{
 	"pmwMultisigAccountConfigured",
 	"pmwFeeProof",
 	"pmwMultisigUtxoConfigured",
+	"pmwUtxoProposalCheck",
 }
 
 type AttestationArguments struct {
