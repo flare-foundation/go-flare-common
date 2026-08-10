@@ -16,6 +16,10 @@ func boundPair(t *testing.T) (csp.Envelope, csp.Instruction) {
 	h, err := e.Hash(testChainID)
 	require.NoError(t, err)
 	return e, csp.Instruction{
+		TeeIDKeyIDPairs: []csp.TeeIDKeyIDPair{
+			{TeeID: common.HexToAddress("0xA11CE"), KeyID: 1},
+			{TeeID: common.HexToAddress("0xB0B"), KeyID: 2},
+		},
 		WalletID:         e.WalletID,
 		SourceID:         e.SourceID,
 		AccountIndex:     e.AccountIndex,
@@ -69,4 +73,18 @@ func TestBindEnvelopeRejectsIdentityMismatch(t *testing.T) {
 	e, in := boundPair(t)
 	in.Attempt++ // hash still matches the envelope; the identity no longer does
 	assert.Error(t, in.BindEnvelope(e, testChainID))
+}
+
+func TestKeysForSelectsThisMachine(t *testing.T) {
+	me := common.HexToAddress("0xA11CE")
+	other := common.HexToAddress("0xB0B")
+	in := csp.Instruction{TeeIDKeyIDPairs: []csp.TeeIDKeyIDPair{
+		{TeeID: other, KeyID: 1},
+		{TeeID: me, KeyID: 7},
+		{TeeID: other, KeyID: 2},
+	}}
+	assert.Equal(t, []uint64{7}, in.KeysFor(me))
+	// A machine that is not a signer for this wallet gets nothing, so it
+	// declines rather than hunting for a key it was never asked to use.
+	assert.Empty(t, in.KeysFor(common.HexToAddress("0xDEAD")))
 }

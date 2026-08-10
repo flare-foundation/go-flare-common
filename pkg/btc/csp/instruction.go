@@ -17,6 +17,10 @@ import (
 // bytes to this decision. Splitting it that way keeps an unbounded transaction
 // off chain while still making the binding checkable by anyone holding both.
 type Instruction struct {
+	// TeeIDKeyIDPairs says which machine holds which key for this wallet. A
+	// machine filters it for its own id to learn which key to sign with — the
+	// same shape TeePayments carries, so the machine-side lookup is unchanged.
+	TeeIDKeyIDPairs  []TeeIDKeyIDPair
 	WalletID         [32]byte
 	SourceID         [32]byte
 	AccountIndex     uint32
@@ -31,10 +35,20 @@ type Instruction struct {
 	Proposer         common.Address
 }
 
+// TeeIDKeyIDPair binds a machine to one of its keys.
+type TeeIDKeyIDPair struct {
+	TeeID common.Address
+	KeyID uint64
+}
+
 var instructionArgs abi.Arguments
 
 func init() {
 	ty, err := abi.NewType("tuple", "", []abi.ArgumentMarshaling{
+		{Name: "teeIdKeyIdPairs", Type: "tuple[]", Components: []abi.ArgumentMarshaling{
+			{Name: "teeId", Type: "address"},
+			{Name: "keyId", Type: "uint64"},
+		}},
 		{Name: "walletId", Type: "bytes32"},
 		{Name: "sourceId", Type: "bytes32"},
 		{Name: "accountIndex", Type: "uint32"},
@@ -54,7 +68,13 @@ func init() {
 	instructionArgs = abi.Arguments{{Type: ty}}
 }
 
+type abiPair struct {
+	TeeID common.Address `abi:"teeId"`
+	KeyID uint64         `abi:"keyId"`
+}
+
 type abiInstruction struct {
+	TeeIDKeyIDPairs  []abiPair      `abi:"teeIdKeyIdPairs"`
 	WalletID         [32]byte       `abi:"walletId"`
 	SourceID         [32]byte       `abi:"sourceId"`
 	AccountIndex     uint32         `abi:"accountIndex"`
@@ -72,7 +92,12 @@ type abiInstruction struct {
 // EncodeInstruction is the mirror of DecodeInstruction, used by tests and by
 // anything simulating the channel.
 func EncodeInstruction(i Instruction) ([]byte, error) {
+	pairs := make([]abiPair, len(i.TeeIDKeyIDPairs))
+	for n, p := range i.TeeIDKeyIDPairs {
+		pairs[n] = abiPair(p)
+	}
 	b, err := instructionArgs.Pack(abiInstruction{
+		TeeIDKeyIDPairs:  pairs,
 		WalletID:         i.WalletID,
 		SourceID:         i.SourceID,
 		AccountIndex:     i.AccountIndex,
@@ -105,7 +130,7 @@ func DecodeInstruction(b []byte) (Instruction, error) {
 	if !ok || raw == nil {
 		return Instruction{}, errors.New("instruction did not convert to the expected shape")
 	}
-	return Instruction{
+	out := Instruction{
 		WalletID:         raw.WalletID,
 		SourceID:         raw.SourceID,
 		AccountIndex:     raw.AccountIndex,
@@ -118,7 +143,12 @@ func DecodeInstruction(b []byte) (Instruction, error) {
 		ProposalHash:     raw.ProposalHash,
 		Txid:             raw.Txid,
 		Proposer:         raw.Proposer,
-	}, nil
+	}
+	out.TeeIDKeyIDPairs = make([]TeeIDKeyIDPair, len(raw.TeeIDKeyIDPairs))
+	for n, p := range raw.TeeIDKeyIDPairs {
+		out.TeeIDKeyIDPairs[n] = TeeIDKeyIDPair(p)
+	}
+	return out, nil
 }
 
 // BindEnvelope checks that an envelope fetched from the DAL is the one this
@@ -145,4 +175,19 @@ func (i Instruction) BindEnvelope(e Envelope, chainID uint64) error {
 		return errors.New("envelope identity does not match the instruction")
 	}
 	return nil
+}
+
+// KeysFor returns the key ids this machine holds for the wallet.
+//
+// A machine that appears in no pair is not a signer for this wallet, which is a
+// routing mistake rather than a failure: it should decline rather than search
+// its storage for a key it was never asked to use.
+func (i Instruction) KeysFor(teeID common.Address) []uint64 {
+	out := make([]uint64, 0, 1)
+	for _, p := range i.TeeIDKeyIDPairs {
+		if p.TeeID == teeID {
+			out = append(out, p.KeyID)
+		}
+	}
+	return out
 }
