@@ -64,6 +64,16 @@
   },
   {
     "inputs": [],
+    "name": "InvalidSignatureType",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidSignaturesLength",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "ListAlreadyFinalized",
     "type": "error"
   },
@@ -104,6 +114,16 @@
   },
   {
     "inputs": [],
+    "name": "SafeApprovalAlreadyConfirmed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "SafeApprovalNotRecorded",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "SafeGovernanceStale",
     "type": "error"
   },
@@ -120,6 +140,27 @@
   {
     "inputs": [],
     "name": "TeeNotFound",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "required",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "counted",
+        "type": "uint256"
+      }
+    ],
+    "name": "ThresholdNotReached",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "UnorderedSignatures",
     "type": "error"
   },
   {
@@ -187,6 +228,43 @@
       }
     ],
     "name": "MachinePathListFinalized",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "extensionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "nonce",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "governanceHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "safe",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "safeNonce",
+        "type": "uint256"
+      }
+    ],
+    "name": "MachinePathListSafeApprovalConfirmed",
     "type": "event"
   },
   {
@@ -349,6 +427,39 @@
       }
     ],
     "name": "approveMachinePathList",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extensionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_nonce",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_governanceHash",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_safeNonce",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_signatures",
+        "type": "bytes"
+      }
+    ],
+    "name": "confirmMachinePathListSafeApproval",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -537,6 +648,47 @@
         "internalType": "bytes32",
         "name": "",
         "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_extensionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_nonce",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_governanceHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getMachinePathListSafeApprovalArtifact",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "safeNonce",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes",
+            "name": "signatures",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct IMachinePathManager.SafeApprovalArtifact",
+        "name": "_artifact",
+        "type": "tuple"
       }
     ],
     "stateMutability": "view",

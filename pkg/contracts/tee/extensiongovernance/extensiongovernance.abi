@@ -197,6 +197,11 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "SafeDomainSeparatorMismatch",
+    "type": "error"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
