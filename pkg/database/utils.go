@@ -32,20 +32,37 @@ type Config struct {
 	Username   string     `toml:"username" envconfig:"DB_USERNAME"`
 	Password   string     `toml:"password" envconfig:"DB_PASSWORD"`
 	LogQueries bool       `toml:"log_queries"`
+	TLS        TLSConfig  `toml:"tls"`
 	Pool       PoolConfig `toml:"pool"`
 }
 
-// Connect returns a gorm.DB specified in the config.
-func Connect(cfg *Config) (*gorm.DB, error) {
-	dbConfig := mysql.Config{
+// mysqlConfig translates cfg into the driver config the DSN is built from.
+func mysqlConfig(cfg *Config) (mysql.Config, error) {
+	tlsName, err := resolveTLS(cfg.TLS)
+	if err != nil {
+		return mysql.Config{}, fmt.Errorf("tls: %w", err)
+	}
+	return mysql.Config{
 		User:                 cfg.Username,
 		Passwd:               cfg.Password,
 		Net:                  "tcp",
 		Addr:                 fmt.Sprintf("%s:%d", cfg.Host, cfg.Port),
 		DBName:               cfg.Database,
+		TLSConfig:            tlsName,
 		AllowNativePasswords: true,
 		ParseTime:            true,
+	}, nil
+}
+
+// Connect returns a gorm.DB specified in the config.
+// An invalid cfg.TLS fails before any connection attempt.
+func Connect(cfg *Config) (*gorm.DB, error) {
+	dbConfig, err := mysqlConfig(cfg)
+	if err != nil {
+		return nil, fmt.Errorf("configuring mysql connection: %w", err)
 	}
+	// gorm.Open parses the DSN and clones any registered TLS config; the registry entry must not outlive Connect.
+	defer deregisterTLS(dbConfig.TLSConfig)
 
 	var gormLogLevel gormLogger.LogLevel
 	if cfg.LogQueries {
