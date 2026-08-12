@@ -43,6 +43,7 @@ func out(script []byte, v int64) Output { return Output{PkScript: script, Value:
 
 // prefix builds the fixed [anchor, P2A, nonce] output prefix.
 func prefix(t *testing.T, nonce uint64) []Output {
+	t.Helper()
 	return []Output{
 		out(pkScript(0x01), 1000),     // [0] anchor
 		out(pkScript(0x02), 330),      // [1] P2A

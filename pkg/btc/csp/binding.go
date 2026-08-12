@@ -3,6 +3,7 @@ package csp
 import (
 	"errors"
 	"fmt"
+	"slices"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
@@ -90,12 +91,7 @@ func EncodeBinding(b Binding) ([]byte, error) {
 	if err := b.Validate(); err != nil {
 		return nil, err
 	}
-	out, err := bindingArgs.Pack(abiBinding{
-		WalletID:    b.WalletID,
-		Network:     b.Network,
-		Threshold:   b.Threshold,
-		ParentXpubs: b.ParentXpubs,
-	})
+	out, err := bindingArgs.Pack(abiBinding(b))
 	if err != nil {
 		return nil, fmt.Errorf("encoding binding: %w", err)
 	}
@@ -132,12 +128,7 @@ func DecodeBinding(raw []byte) (Binding, error) {
 // machine confirms it is being provisioned for a wallet it actually holds a key
 // for.
 func (b Binding) Contains(xpub string) bool {
-	for _, x := range b.ParentXpubs {
-		if x == xpub {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(b.ParentXpubs, xpub)
 }
 
 // BindingWalletID reads just the wallet id, for callers routing before decode.
