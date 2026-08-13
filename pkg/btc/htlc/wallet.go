@@ -26,19 +26,30 @@ type Terms struct {
 }
 
 // ForWallet builds an escrow's witness script and address from a wallet's
-// ACCOUNT-level xpubs and the terms a proposal carries.
+// PUBLISHED PARENT xpubs and the terms a proposal carries.
 //
 // This is the one function a signer, a verifier and a proposer all call, so
 // that "the escrow at these terms" means one script to all three. Deriving it
 // twice from prose is how the three drift.
+//
+// It takes PARENT keys and applies the account step itself, deliberately. The
+// published key is at the wallet level and the account is a non-hardened child,
+// so a caller holding parent keys and a caller holding account keys derive
+// different addresses from the same terms — and both look correct in isolation.
+// Taking the account index as an argument removes the choice.
 func ForWallet(
-	accountXpubs []string,
+	parentXpubs []string,
+	accountIndex uint32,
 	threshold int,
 	terms Terms,
 	params *chaincfg.Params,
 ) (witnessScript []byte, addr btcutil.Address, err error) {
-	if threshold < 1 || threshold > len(accountXpubs) {
-		return nil, nil, fmt.Errorf("threshold %d is not a k of %d", threshold, len(accountXpubs))
+	if threshold < 1 || threshold > len(parentXpubs) {
+		return nil, nil, fmt.Errorf("threshold %d is not a k of %d", threshold, len(parentXpubs))
+	}
+	accountXpubs, err := address.DeriveAccountXpubs(parentXpubs, accountIndex, params)
+	if err != nil {
+		return nil, nil, fmt.Errorf("deriving account xpubs: %w", err)
 	}
 	// The same derivation the wallet's ordinary addresses use, so the timeout
 	// branch is spendable by exactly the quorum that governs the wallet.
