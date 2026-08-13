@@ -1587,6 +1587,11 @@
       "internalType": "uint64",
       "name": "score",
       "type": "uint64"
+     },
+     {
+      "internalType": "uint32",
+      "name": "paymentCount",
+      "type": "uint32"
      }
     ],
     "internalType": "struct IPMWUtxoProposalCheck.ResponseBody",
@@ -1703,6 +1708,11 @@
           "internalType": "uint64",
           "name": "score",
           "type": "uint64"
+         },
+         {
+          "internalType": "uint32",
+          "name": "paymentCount",
+          "type": "uint32"
          }
         ],
         "internalType": "struct IPMWUtxoProposalCheck.ResponseBody",
