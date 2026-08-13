@@ -17,9 +17,9 @@ func batch(t *testing.T, groups, perGroup int, change bool) csp.Envelope {
 	tx.AddTxOut(wire.NewTxOut(10_000, []byte{0x00, 0x20})) // anchor
 	tx.AddTxOut(wire.NewTxOut(330, []byte{0x51, 0x02}))    // P2A
 	tx.AddTxOut(wire.NewTxOut(0, []byte{0x6a, 0x0c}))      // nonce OP_RETURN
-	for g := 0; g < groups; g++ {
+	for range groups {
 		tx.AddTxOut(wire.NewTxOut(0, []byte{0x6a, 0x20})) // reference OP_RETURN opens the group
-		for k := 0; k < perGroup; k++ {
+		for range perGroup {
 			tx.AddTxOut(wire.NewTxOut(1000, []byte{0x00, 0x14}))
 		}
 	}
