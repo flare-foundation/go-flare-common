@@ -58,6 +58,34 @@ type Input struct {
 	// Chain is 0 for external, 1 for internal (change), per BIP-32.
 	Chain uint8
 	Index uint32
+	// IsEscrow marks an input whose witness script is the envelope's ESCROW
+	// script rather than the plain k-of-n multisig at (Chain, Index).
+	//
+	// The coordinates still name the KEY each signer uses — the escrow's
+	// timeout branch is the wallet's own k-of-n — so this changes which script
+	// is committed to, not who may spend. Without it a signer would compute a
+	// sighash over the wrong script and produce a signature no one can use.
+	IsEscrow bool
+}
+
+// Escrow is the HTLC an ESCROW_CREATE pays into or an ESCROW_RECLAIM spends.
+//
+// Carried in the envelope, so it is covered by the proposal hash and therefore
+// by everything the chain finalized. A signer rebuilds the script from these
+// three fields plus its OWN provisioned keys — the multisig half never comes
+// from the proposal, which is what keeps the no-signing-oracle property: a
+// proposal naming keys the wallet does not hold cannot produce a spendable
+// script, because those keys are not the ones used.
+type Escrow struct {
+	// PreimageHash is SHA256(preimage) for the hash path.
+	PreimageHash [32]byte
+	// CustodianPubKey is the compressed key that can take the hash path.
+	CustodianPubKey []byte
+	// Timeout is the UNIX timestamp after which the wallet may reclaim.
+	Timeout uint64
+	// Chain and Index locate the multisig keys of the TIMEOUT branch.
+	Chain uint8
+	Index uint32
 }
 
 // Envelope is the proposal object.
@@ -81,6 +109,10 @@ type Envelope struct {
 	RawUnsignedTx      []byte
 	Inputs             []Input
 	ProposerAddress    common.Address
+	// Escrow is present only for the ESCROW instruction kinds. A zero value
+	// means the proposal creates or spends no HTLC, which is every payment and
+	// every consolidation.
+	Escrow Escrow
 }
 
 // envelopeArgs is the ABI type tuple. Field order matches the struct, and the
@@ -108,8 +140,16 @@ func init() {
 			{Name: "valueSat", Type: "uint64"},
 			{Name: "chain", Type: "uint8"},
 			{Name: "index", Type: "uint32"},
+			{Name: "isEscrow", Type: "bool"},
 		}},
 		{Name: "proposerAddress", Type: "address"},
+		{Name: "escrow", Type: "tuple", Components: []abi.ArgumentMarshaling{
+			{Name: "preimageHash", Type: "bytes32"},
+			{Name: "custodianPubKey", Type: "bytes"},
+			{Name: "timeout", Type: "uint64"},
+			{Name: "chain", Type: "uint8"},
+			{Name: "index", Type: "uint32"},
+		}},
 	})
 	if err != nil {
 		panic("building envelope ABI type: " + err.Error())
@@ -124,6 +164,16 @@ type abiInput struct {
 	ValueSat uint64   `abi:"valueSat"`
 	Chain    uint8    `abi:"chain"`
 	Index    uint32   `abi:"index"`
+	IsEscrow bool     `abi:"isEscrow"`
+}
+
+// abiEscrow mirrors Escrow with the field tags abi.Pack expects.
+type abiEscrow struct {
+	PreimageHash    [32]byte `abi:"preimageHash"`
+	CustodianPubKey []byte   `abi:"custodianPubKey"`
+	Timeout         uint64   `abi:"timeout"`
+	Chain           uint8    `abi:"chain"`
+	Index           uint32   `abi:"index"`
 }
 
 type abiEnvelope struct {
@@ -141,6 +191,7 @@ type abiEnvelope struct {
 	RawUnsignedTx      []byte         `abi:"rawUnsignedTx"`
 	Inputs             []abiInput     `abi:"inputs"`
 	ProposerAddress    common.Address `abi:"proposerAddress"`
+	Escrow             abiEscrow      `abi:"escrow"`
 }
 
 // Validate rejects envelopes that are structurally unusable. It is called by
@@ -155,9 +206,33 @@ func (e Envelope) Validate() error {
 	if len(e.Inputs) > MaxInputs {
 		return fmt.Errorf("%d inputs exceeds the %d cap", len(e.Inputs), MaxInputs)
 	}
+	escrowInputs := 0
 	for i, in := range e.Inputs {
 		if in.Chain > 1 {
 			return fmt.Errorf("input %d has chain %d, want 0 (external) or 1 (internal)", i, in.Chain)
+		}
+		if in.IsEscrow {
+			escrowInputs++
+			if i == 0 {
+				return errors.New("input 0 is the anchor and can never be an escrow output")
+			}
+		}
+	}
+	if escrowInputs > 1 {
+		return fmt.Errorf("%d escrow inputs; one instruction reclaims one escrow", escrowInputs)
+	}
+	// Terms without an output to apply them to, or an input with no terms to
+	// rebuild its script from, are both unusable rather than merely odd.
+	hasTerms := e.Escrow.Timeout != 0 || e.Escrow.PreimageHash != [32]byte{} || len(e.Escrow.CustodianPubKey) > 0
+	if escrowInputs == 1 && !hasTerms {
+		return errors.New("an escrow input needs the escrow terms to rebuild its witness script")
+	}
+	if hasTerms {
+		if len(e.Escrow.CustodianPubKey) != 33 {
+			return fmt.Errorf("escrow custodian key is %d bytes, want a 33-byte compressed key", len(e.Escrow.CustodianPubKey))
+		}
+		if e.Escrow.Chain > 1 {
+			return fmt.Errorf("escrow multisig chain is %d, want 0 or 1", e.Escrow.Chain)
 		}
 	}
 	return nil
@@ -187,6 +262,7 @@ func (e Envelope) Encode() ([]byte, error) {
 		RawUnsignedTx:      e.RawUnsignedTx,
 		Inputs:             ins,
 		ProposerAddress:    e.ProposerAddress,
+		Escrow:             abiEscrow(e.Escrow),
 	})
 	if err != nil {
 		return nil, fmt.Errorf("encoding envelope: %w", err)
@@ -241,6 +317,7 @@ func Decode(b []byte) (Envelope, error) {
 		Attempt:            raw.Attempt,
 		RawUnsignedTx:      raw.RawUnsignedTx,
 		ProposerAddress:    raw.ProposerAddress,
+		Escrow:             Escrow(raw.Escrow),
 	}
 	out.Inputs = make([]Input, len(raw.Inputs))
 	for i, in := range raw.Inputs {
