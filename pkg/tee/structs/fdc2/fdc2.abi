@@ -1315,6 +1315,11 @@
         "internalType": "uint64",
         "name": "paymentId",
         "type": "uint64"
+       },
+       {
+        "internalType": "bytes32",
+        "name": "transactionId",
+        "type": "bytes32"
        }
       ],
       "internalType": "struct IPMWPaymentStatus.RequestBody",
@@ -1417,6 +1422,11 @@
       "internalType": "uint64",
       "name": "paymentId",
       "type": "uint64"
+     },
+     {
+      "internalType": "bytes32",
+      "name": "transactionId",
+      "type": "bytes32"
      }
     ],
     "internalType": "struct IPMWPaymentStatus.RequestBody",
