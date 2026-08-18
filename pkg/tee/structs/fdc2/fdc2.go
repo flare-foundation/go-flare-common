@@ -38,6 +38,13 @@ const (
 	// decide, before any signature exists, which of several competing
 	// transactions fills a batch.
 	PMWUtxoProposalCheck AttestationType = "PMWUtxoProposalCheck"
+	// BtcDeposit proves that one OUTPUT of one confirmed Bitcoin transaction paid
+	// the address a wallet derives at a reserved index. It is the deposit
+	// counterpart of PMWPaymentStatus: that type proves a payment a
+	// protocol-managed wallet MADE, this one proves a payment it RECEIVED, and
+	// the receiving address is the identity — Bitcoin has no destination tag, so
+	// the index the address derives from is what says who to credit.
+	BtcDeposit AttestationType = "BtcDeposit"
 )
 
 var attestationTypes = []AttestationType{
@@ -47,6 +54,7 @@ var attestationTypes = []AttestationType{
 	PMWFeeProof,
 	PMWMultisigUtxoConfigured,
 	PMWUtxoProposalCheck,
+	BtcDeposit,
 }
 
 // i-th method correspond to a method in TeeDataConnectorStruct interface whose
@@ -58,6 +66,7 @@ var attestationTypeMethods = []string{
 	"pmwFeeProof",
 	"pmwMultisigUtxoConfigured",
 	"pmwUtxoProposalCheck",
+	"btcDeposit",
 }
 
 type AttestationArguments struct {
