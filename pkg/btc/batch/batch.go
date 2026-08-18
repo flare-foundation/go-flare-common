@@ -8,16 +8,17 @@
 //	[0]   next anchor UTXO (chain continuation)
 //	[1]   P2A fee-bump output (BIP-433)
 //	[2]   nonce OP_RETURN: OP_RETURN <FLR\0><uint64 big-endian nonce>
-//	[3…]  payment groups, in instruction order, then an optional change output
+//	[3…]  payment groups, in instruction order, then the change outputs (0, 1 or
+//	      several — see ParseBatchWithChange)
 //
 // Payment-group grammar (parsed left-to-right from index 3): an OP_RETURN opens a
 // new group (its payload is that payment's reference); the value outputs that
-// follow attach to the current group until the next OP_RETURN. The transaction's
-// trailing change output, if any, lands in the last group's outputs — it is not
-// separated here because the matcher (Match) filters a group's outputs by the
+// follow attach to the current group until the next OP_RETURN. Trailing change
+// outputs land in the last group unless the caller supplies the change script
+// (ParseBatchWithChange) — the matcher (Match) filters a group's outputs by the
 // expected recipient, and the grammar guarantees a recipient script is never the
-// change script, so change is naturally excluded. This keeps the parser free of
-// the wallet's change-address derivation.
+// change script, so change is excluded either way. Keeping the change script
+// optional keeps the parser usable by callers that cannot derive it.
 //
 // The parser operates on a neutral []Output slice so callers can feed it either a
 // live transaction (via FromMsgTx) or reconstructed outputs (e.g. from an indexer
@@ -75,6 +76,10 @@ type Group struct {
 type Batch struct {
 	Nonce  uint64  // batch nonce from the index-2 OP_RETURN
 	Groups []Group // payment groups in instruction order (output[3]…)
+	// Change holds the outputs paying the wallet's own change script, in
+	// transaction order, when the caller supplied that script. Empty otherwise —
+	// change then stays in the last group, which is what Match already tolerates.
+	Change []Output
 }
 
 // FromMsgTx projects a wire transaction's outputs into the neutral []Output form
@@ -104,6 +109,26 @@ func ParseNonce(outputs []Output) (uint64, error) {
 // validates layout only (not against any Flare instruction). A returned error
 // means the outputs do not match the PMW batch layout.
 func ParseBatch(outputs []Output) (*Batch, error) {
+	return ParseBatchWithChange(outputs, nil)
+}
+
+// ParseBatchWithChange parses outputs the same way, but routes every output
+// paying changeScript into Batch.Change instead of the current group.
+//
+// WHY A CALLER WOULD WANT THAT. Change is identified by its SCRIPT, never by its
+// position or by how many outputs there are. A batch may emit SEVERAL change
+// outputs — sized on the denomination ladder — so that the confirmed pool it
+// leaves behind is wide enough for the next batch to fund itself without
+// spending an unconfirmed coin (which BIP-431 forbids for a batch that must stay
+// fee-bumpable). Change-blind parsing folds those outputs into the last group,
+// where they are merely ignored by Match; that is fine for reading a payment,
+// and not fine for judging a proposal, because "this group carries value that
+// does not pay its recipient" is exactly the check that catches a batch paying
+// someone else.
+//
+// changeScript nil parses exactly as before, so callers that do not know the
+// wallet's change address are unaffected.
+func ParseBatchWithChange(outputs []Output, changeScript []byte) (*Batch, error) {
 	nonce, err := ParseNonce(outputs)
 	if err != nil {
 		return nil, err
@@ -116,6 +141,10 @@ func ParseBatch(outputs []Output) (*Batch, error) {
 		if ref, ok := opReturnData(out.PkScript); ok {
 			b.Groups = append(b.Groups, Group{Reference: ref})
 			curIdx = len(b.Groups) - 1
+			continue
+		}
+		if len(changeScript) > 0 && bytes.Equal(out.PkScript, changeScript) {
+			b.Change = append(b.Change, Output{PkScript: out.PkScript, Value: out.Value})
 			continue
 		}
 		if curIdx < 0 {

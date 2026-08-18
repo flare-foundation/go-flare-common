@@ -148,3 +148,63 @@ func TestFromMsgTx(t *testing.T) {
 	require.Equal(t, refA, b.Groups[0].Reference)
 	require.Len(t, b.Groups[0].Outputs, 1)
 }
+
+func TestParseBatchWithChangeSeparatesChange(t *testing.T) {
+	recipA := pkScript(0xAA)
+	change := pkScript(0xFF)
+
+	// Two change outputs, the shape a batch takes when it is replenishing the
+	// confirmed pool it leaves for its successor.
+	outs := append(prefix(t, 7),
+		out(opReturn(t, refA), 0),
+		out(recipA, 1000),
+		out(change, 250),
+		out(change, 400),
+	)
+
+	b, err := ParseBatchWithChange(outs, change)
+	require.NoError(t, err)
+	require.Len(t, b.Groups, 1)
+	require.Len(t, b.Groups[0].Outputs, 1) // the recipient only
+	require.Len(t, b.Change, 2)
+	require.Equal(t, int64(250), b.Change[0].Value)
+	require.Equal(t, int64(400), b.Change[1].Value)
+}
+
+// A K=0 group is the reference OP_RETURN standing alone. Change-blind parsing
+// puts the trailing change inside it, and a caller that reads "this group holds
+// outputs" as "it paid someone other than its recipient" then rejects an honest
+// batch. Change-aware parsing is what keeps that check meaningful.
+func TestParseBatchWithChangeLeavesAK0GroupEmpty(t *testing.T) {
+	change := pkScript(0xFF)
+	outs := append(prefix(t, 8),
+		out(opReturn(t, refA), 0),
+		out(change, 900),
+	)
+
+	blind, err := ParseBatch(outs)
+	require.NoError(t, err)
+	require.Len(t, blind.Groups[0].Outputs, 1) // change absorbed into the group
+
+	aware, err := ParseBatchWithChange(outs, change)
+	require.NoError(t, err)
+	require.Empty(t, aware.Groups[0].Outputs) // genuinely K=0
+	require.Len(t, aware.Change, 1)
+}
+
+func TestParseBatchWithChangeNilIsUnchanged(t *testing.T) {
+	recipA := pkScript(0xAA)
+	change := pkScript(0xFF)
+	outs := append(prefix(t, 9),
+		out(opReturn(t, refA), 0),
+		out(recipA, 1000),
+		out(change, 250),
+	)
+
+	withNil, err := ParseBatchWithChange(outs, nil)
+	require.NoError(t, err)
+	plain, err := ParseBatch(outs)
+	require.NoError(t, err)
+	require.Equal(t, plain, withNil)
+	require.Empty(t, withNil.Change)
+}
