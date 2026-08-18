@@ -1617,11 +1617,65 @@
  {
   "inputs": [
    {
+    "name": "",
+    "type": "tuple",
+    "internalType": "struct IPMWUtxoProposalCheck.Proof",
     "components": [
      {
-      "internalType": "bytes32[]",
-      "name": "merkleProof",
-      "type": "bytes32[]"
+      "components": [
+       {
+        "internalType": "bytes",
+        "name": "signingPolicySignatures",
+        "type": "bytes"
+       },
+       {
+        "components": [
+         {
+          "internalType": "uint8",
+          "name": "v",
+          "type": "uint8"
+         },
+         {
+          "internalType": "bytes32",
+          "name": "r",
+          "type": "bytes32"
+         },
+         {
+          "internalType": "bytes32",
+          "name": "s",
+          "type": "bytes32"
+         }
+        ],
+        "internalType": "struct Signature[]",
+        "name": "teeSignatures",
+        "type": "tuple[]"
+       },
+       {
+        "components": [
+         {
+          "internalType": "uint8",
+          "name": "v",
+          "type": "uint8"
+         },
+         {
+          "internalType": "bytes32",
+          "name": "r",
+          "type": "bytes32"
+         },
+         {
+          "internalType": "bytes32",
+          "name": "s",
+          "type": "bytes32"
+         }
+        ],
+        "internalType": "struct Signature[]",
+        "name": "cosignerSignatures",
+        "type": "tuple[]"
+       }
+      ],
+      "internalType": "struct IFdc2Verification.Fdc2Signatures",
+      "name": "signatures",
+      "type": "tuple"
      },
      {
       "components": [
@@ -1636,108 +1690,120 @@
         "type": "bytes32"
        },
        {
+        "internalType": "uint16",
+        "name": "thresholdBIPS",
+        "type": "uint16"
+       },
+       {
+        "internalType": "address",
+        "name": "proofOwner",
+        "type": "address"
+       },
+       {
+        "internalType": "address[]",
+        "name": "cosigners",
+        "type": "address[]"
+       },
+       {
         "internalType": "uint64",
-        "name": "votingRound",
+        "name": "cosignersThreshold",
         "type": "uint64"
        },
        {
         "internalType": "uint64",
-        "name": "lowestUsedTimestamp",
+        "name": "timestamp",
         "type": "uint64"
-       },
-       {
-        "components": [
-         {
-          "internalType": "bytes32",
-          "name": "walletId",
-          "type": "bytes32"
-         },
-         {
-          "internalType": "uint32",
-          "name": "accountIndex",
-          "type": "uint32"
-         },
-         {
-          "internalType": "uint64",
-          "name": "sequencePosition",
-          "type": "uint64"
-         },
-         {
-          "internalType": "uint32",
-          "name": "attempt",
-          "type": "uint32"
-         },
-         {
-          "internalType": "uint64",
-          "name": "eligibleGeneration",
-          "type": "uint64"
-         },
-         {
-          "internalType": "bytes32",
-          "name": "proposalHash",
-          "type": "bytes32"
-         }
-        ],
-        "internalType": "struct IPMWUtxoProposalCheck.RequestBody",
-        "name": "requestBody",
-        "type": "tuple"
-       },
-       {
-        "components": [
-         {
-          "internalType": "address",
-          "name": "proposerAddress",
-          "type": "address"
-         },
-         {
-          "internalType": "uint32",
-          "name": "anchorIndex",
-          "type": "uint32"
-         },
-         {
-          "internalType": "uint64",
-          "name": "nonce",
-          "type": "uint64"
-         },
-         {
-          "internalType": "bytes32",
-          "name": "txid",
-          "type": "bytes32"
-         },
-         {
-          "internalType": "bytes32",
-          "name": "nextAnchorTxid",
-          "type": "bytes32"
-         },
-         {
-          "internalType": "uint32",
-          "name": "nextAnchorVout",
-          "type": "uint32"
-         },
-         {
-          "internalType": "uint64",
-          "name": "score",
-          "type": "uint64"
-         },
-         {
-          "internalType": "uint32",
-          "name": "paymentCount",
-          "type": "uint32"
-         }
-        ],
-        "internalType": "struct IPMWUtxoProposalCheck.ResponseBody",
-        "name": "responseBody",
-        "type": "tuple"
        }
       ],
-      "internalType": "struct IPMWUtxoProposalCheck.Response",
-      "name": "data",
+      "internalType": "struct IFdc2Hub.Fdc2ResponseHeader",
+      "name": "header",
+      "type": "tuple"
+     },
+     {
+      "components": [
+       {
+        "internalType": "bytes32",
+        "name": "walletId",
+        "type": "bytes32"
+       },
+       {
+        "internalType": "uint32",
+        "name": "accountIndex",
+        "type": "uint32"
+       },
+       {
+        "internalType": "uint64",
+        "name": "sequencePosition",
+        "type": "uint64"
+       },
+       {
+        "internalType": "uint32",
+        "name": "attempt",
+        "type": "uint32"
+       },
+       {
+        "internalType": "uint64",
+        "name": "eligibleGeneration",
+        "type": "uint64"
+       },
+       {
+        "internalType": "bytes32",
+        "name": "proposalHash",
+        "type": "bytes32"
+       }
+      ],
+      "internalType": "struct IPMWUtxoProposalCheck.RequestBody",
+      "name": "requestBody",
+      "type": "tuple"
+     },
+     {
+      "components": [
+       {
+        "internalType": "address",
+        "name": "proposerAddress",
+        "type": "address"
+       },
+       {
+        "internalType": "uint32",
+        "name": "anchorIndex",
+        "type": "uint32"
+       },
+       {
+        "internalType": "uint64",
+        "name": "nonce",
+        "type": "uint64"
+       },
+       {
+        "internalType": "bytes32",
+        "name": "txid",
+        "type": "bytes32"
+       },
+       {
+        "internalType": "bytes32",
+        "name": "nextAnchorTxid",
+        "type": "bytes32"
+       },
+       {
+        "internalType": "uint32",
+        "name": "nextAnchorVout",
+        "type": "uint32"
+       },
+       {
+        "internalType": "uint64",
+        "name": "score",
+        "type": "uint64"
+       },
+       {
+        "internalType": "uint32",
+        "name": "paymentCount",
+        "type": "uint32"
+       }
+      ],
+      "internalType": "struct IPMWUtxoProposalCheck.ResponseBody",
+      "name": "responseBody",
       "type": "tuple"
      }
-    ],
-    "internalType": "struct IPMWUtxoProposalCheck.Proof",
-    "name": "",
-    "type": "tuple"
+    ]
    }
   ],
   "name": "pmwUtxoProposalCheckProofStruct",
