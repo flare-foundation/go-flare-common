@@ -1925,6 +1925,11 @@
                 "internalType": "uint64",
                 "name": "confirmations",
                 "type": "uint64"
+              },
+              {
+                "internalType": "bytes",
+                "name": "memo",
+                "type": "bytes"
               }
             ],
             "internalType": "struct IBtcDeposit.ResponseBody",
@@ -2030,6 +2035,11 @@
             "internalType": "uint64",
             "name": "confirmations",
             "type": "uint64"
+          },
+          {
+            "internalType": "bytes",
+            "name": "memo",
+            "type": "bytes"
           }
         ],
         "internalType": "struct IBtcDeposit.ResponseBody",
