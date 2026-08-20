@@ -42,6 +42,11 @@ func (sp *SigningPolicy) Hash() []byte {
 	return Hash(sp.rawBytes)
 }
 
+// HashWithChainID returns the source-bound hash of the signing policy, see [HashWithChainID].
+func (sp *SigningPolicy) HashWithChainID(chainID uint64) []byte {
+	return HashWithChainID(chainID, sp.rawBytes)
+}
+
 // NewSigningPolicy creates a SigningPolicy from a SigningPolicyInitialized event.
 //
 // Mapping from submitAddress to signingPolicyAddress can be added if needed.
@@ -187,4 +192,18 @@ func Hash(b []byte) []byte {
 		hash = crypto.Keccak256(hash, b[i*block:(i+1)*block])
 	}
 	return hash
+}
+
+// HashWithChainID computes the source-bound hash of a signing policy from signingPolicyBytes:
+// keccak256(uint256(chainID) ‖ signingPolicyBytes), a single keccak over the exact encoded
+// bytes with no padding.
+//
+// This is what Relay contracts that bind a source chain id store and verify, so a policy minted
+// for another network is rejected even under a fully overlapping voter set. Use [Hash] for relays
+// deployed before the source binding.
+func HashWithChainID(chainID uint64, b []byte) []byte {
+	var chainIDBytes [32]byte
+	binary.BigEndian.PutUint64(chainIDBytes[24:], chainID)
+
+	return crypto.Keccak256(chainIDBytes[:], b)
 }
