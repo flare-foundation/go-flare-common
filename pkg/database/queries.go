@@ -259,7 +259,10 @@ func fetchTransactionsByAddressAndSelectorTimestamp(ctx context.Context, db *gor
 	return transactions, nil
 }
 
-// FetchTransactionsByAddressAndSelectorBlockNumber fetches all transactions matching ToAddress and FunctionSel from block number range (From, To], order by timestamp.
+// FetchTransactionsByAddressAndSelectorBlockNumber fetches all successful transactions matching ToAddress and FunctionSel from block number range (From, To], order by timestamp.
+//
+// Reverted transactions are excluded: every caller credits signer weight from the
+// calldata, and a reverted call proves nothing the contract accepted.
 func FetchTransactionsByAddressAndSelectorBlockNumber(ctx context.Context, db *gorm.DB, params TxParams) ([]Transaction, error) {
 	return RetryWrapper(fetchTransactionsByAddressAndSelectorBlockNumber, "fetching transactions")(ctx, db, params)
 }
@@ -268,7 +271,7 @@ func fetchTransactionsByAddressAndSelectorBlockNumber(ctx context.Context, db *g
 	var transactions []Transaction
 
 	err := db.WithContext(ctx).Where(
-		"to_address = ? AND function_sig = ? AND block_number > ? AND block_number <= ?",
+		"to_address = ? AND function_sig = ? AND status = 1 AND block_number > ? AND block_number <= ?",
 		hex.EncodeToString(params.ToAddress[:]), // encodes without 0x prefix and without checksum
 		hex.EncodeToString(params.FunctionSel[:]),
 		params.From,
