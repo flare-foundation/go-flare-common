@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/flare-foundation/go-flare-common/pkg/database"
 	"github.com/flare-foundation/go-flare-common/pkg/policy"
 	"github.com/stretchr/testify/require"
@@ -188,9 +189,47 @@ func TestHash(t *testing.T) {
 	rawBytes, err := hex.DecodeString(rawHex)
 	require.NoError(t, err)
 
+	// legacy chained fold — retired on chain by RLY-23, still what the old Relay
+	// stores for reward epochs below the new Relay's initialRewardEpochId.
 	const expectedHashHex = "0x96986bfe5ffa787b6d33f4b16b3d40d5a46f38972c271771ddbe47fb142a0363"
 
 	expectedHash := common.HexToHash(expectedHashHex)
 
 	require.Equal(t, expectedHash[:], policy.Hash(rawBytes))
+
+	// Same preimage under the new scheme, so the diff between the two vectors is
+	// exactly the scheme. Evaluated from the Solidity of Relay.sol setSigningPolicy,
+	// keccak256(abi.encodePacked(sourceChainId, signingPolicyBytes)), with
+	// sourceChainId 14 (Flare).
+	const expectedChainBoundHex = "0x1a81e6e4a01d783bb49f5fc40ee7d2b5af07839550f860adf97772a84ada6630"
+
+	expectedChainBound := common.HexToHash(expectedChainBoundHex)
+
+	require.Equal(t, expectedChainBound[:], policy.ChainBoundHash(14, rawBytes))
+	require.NotEqual(t, expectedHash[:], policy.ChainBoundHash(14, rawBytes))
+}
+
+func TestChainBoundHash(t *testing.T) {
+	// 43 + 22*1: the shortest real policy, one voter. Exercises the no-padding
+	// property — Hash would round this up to 64 bytes, ChainBoundHash must not.
+	rawBytes := make([]byte, 43+22)
+	for i := range rawBytes {
+		rawBytes[i] = byte(i)
+	}
+
+	t.Run("hashes the preimage exactly, without padding", func(t *testing.T) {
+		// keccak256(32-byte chain id word || rawBytes), built without reusing
+		// ChainBoundHash's own word construction.
+		word := common.LeftPadBytes(big.NewInt(14).Bytes(), 32)
+		preimage := append(word, rawBytes...) //nolint:gocritic // deliberate copy
+		require.Len(t, preimage, 32+43+22)
+
+		require.Equal(t, crypto.Keccak256(preimage), policy.ChainBoundHash(14, rawBytes))
+		require.NotEqual(t, policy.Hash(rawBytes), policy.ChainBoundHash(14, rawBytes))
+	})
+
+	t.Run("binds the chain", func(t *testing.T) {
+		require.NotEqual(t, policy.ChainBoundHash(14, rawBytes), policy.ChainBoundHash(16, rawBytes))
+		require.NotEqual(t, policy.ChainBoundHash(0, rawBytes), policy.ChainBoundHash(14, rawBytes))
+	})
 }
