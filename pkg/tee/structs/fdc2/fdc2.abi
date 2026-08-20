@@ -2051,5 +2051,322 @@
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "transactionId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "sourceAddress",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "receivingAddress",
+            "type": "string"
+          },
+          {
+            "internalType": "uint16",
+            "name": "minConfirmations",
+            "type": "uint16"
+          }
+        ],
+        "internalType": "struct IBtcPayment.RequestBody",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "btcPaymentRequestBodyStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint8",
+            "name": "status",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "transactionId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "sourceAddress",
+            "type": "string"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "sourceAddressHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "receivingAddress",
+            "type": "string"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "receivingAddressHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "paymentReference",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "receivedAmountSats",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "spentAmountSats",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint64",
+            "name": "blockNumber",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "blockTimestamp",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "confirmations",
+            "type": "uint64"
+          }
+        ],
+        "internalType": "struct IBtcPayment.ResponseBody",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "btcPaymentResponseBodyStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "signingPolicySignatures",
+                "type": "bytes"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint8",
+                    "name": "v",
+                    "type": "uint8"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "r",
+                    "type": "bytes32"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "s",
+                    "type": "bytes32"
+                  }
+                ],
+                "internalType": "struct Signature[]",
+                "name": "teeSignatures",
+                "type": "tuple[]"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint8",
+                    "name": "v",
+                    "type": "uint8"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "r",
+                    "type": "bytes32"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "s",
+                    "type": "bytes32"
+                  }
+                ],
+                "internalType": "struct Signature[]",
+                "name": "cosignerSignatures",
+                "type": "tuple[]"
+              }
+            ],
+            "internalType": "struct IFdc2Verification.Fdc2Signatures",
+            "name": "signatures",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "attestationType",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "sourceId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint16",
+                "name": "thresholdBIPS",
+                "type": "uint16"
+              },
+              {
+                "internalType": "address",
+                "name": "proofOwner",
+                "type": "address"
+              },
+              {
+                "internalType": "address[]",
+                "name": "cosigners",
+                "type": "address[]"
+              },
+              {
+                "internalType": "uint64",
+                "name": "cosignersThreshold",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "timestamp",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct IFdc2Hub.Fdc2ResponseHeader",
+            "name": "header",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "transactionId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "string",
+                "name": "sourceAddress",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "receivingAddress",
+                "type": "string"
+              },
+              {
+                "internalType": "uint16",
+                "name": "minConfirmations",
+                "type": "uint16"
+              }
+            ],
+            "internalType": "struct IBtcPayment.RequestBody",
+            "name": "requestBody",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint8",
+                "name": "status",
+                "type": "uint8"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "transactionId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "string",
+                "name": "sourceAddress",
+                "type": "string"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "sourceAddressHash",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "string",
+                "name": "receivingAddress",
+                "type": "string"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "receivingAddressHash",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "paymentReference",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint256",
+                "name": "receivedAmountSats",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "spentAmountSats",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint64",
+                "name": "blockNumber",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "blockTimestamp",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "confirmations",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct IBtcPayment.ResponseBody",
+            "name": "responseBody",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct IBtcPayment.Proof",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "btcPaymentProofStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   }
 ]
