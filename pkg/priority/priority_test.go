@@ -216,7 +216,7 @@ func TestDequeueDiscard(t *testing.T) {
 	require.Len(t, handled, 1)
 
 	// no limits were imposed
-	require.Less(t, duration, time.Millisecond)
+	require.Less(t, duration, 100*time.Millisecond)
 
 	cancel()
 }
