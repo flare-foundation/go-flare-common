@@ -9,6 +9,9 @@ cd "$(dirname "$0")"
 #   structs   go to pkg/tee/structs/<name>/<name>.abi
 # For contracts, <name> is the lowercased contract name with any "Facet" suffix dropped.
 # For structs,   <name> is the lowercased contract name with any "Structs" suffix dropped.
+#
+# Contracts listed in BIN_CONTRACTS additionally get their deployment bytecode
+# written to <name>.bin, for abigen --bin (deployable bindings).
 
 CONTRACTS=(
   "tee/implementation/TeePayments.sol/TeePayments.json"
@@ -53,6 +56,12 @@ STRUCTS=(
   "fdc2/structs/Fdc2Structs.sol/Fdc2Structs.json"
 )
 
+# Contracts that additionally need deployment bytecode extracted to <name>.bin.
+# Entries must match a value in CONTRACTS.
+BIN_CONTRACTS=(
+  "tee/implementation/VrfVerifier.sol/VrfVerifier.json"
+)
+
 lower() {
   echo "$1" | tr '[:upper:]' '[:lower:]'
 }
@@ -76,12 +85,45 @@ extract() {
   fi
 }
 
+# needsBin reports whether the given CONTRACTS entry is listed in BIN_CONTRACTS.
+needsBin() {
+  local entry="$1" b
+  for b in ${BIN_CONTRACTS[@]+"${BIN_CONTRACTS[@]}"}; do
+    [ "$b" = "$entry" ] && return 0
+  done
+  return 1
+}
+
+# extractBin writes the artifact's deployment bytecode (0x-prefixed, no trailing
+# newline) to the output file, matching what abigen --bin expects.
+extractBin() {
+  local input_file="../../fsp/flare-smart-contracts-v2/artifacts/contracts/$1"
+  local output_file="$2"
+
+  if [ -f "$input_file" ]; then
+    mkdir -p "$(dirname "$output_file")"
+    local bin
+    bin="$(jq -r '.bytecode' "$input_file")"
+    if [ "$bin" = "null" ] || [ -z "$bin" ]; then
+      echo "Missing .bytecode in $input_file" >&2
+      return 1
+    fi
+    printf '%s' "$bin" > "$output_file"
+    echo "Extracted bytecode from $input_file → $output_file"
+  else
+    echo "File not found: $input_file"
+  fi
+}
+
 for entry in "${CONTRACTS[@]}"; do
   json="${entry##*/}"
   name="$(lower "${json%.json}")"
   name="${name%facet}"
   scope="${entry%%/*}"
   extract "$entry" "pkg/contracts/${scope}/${name}/${name}.abi"
+  if needsBin "$entry"; then
+    extractBin "$entry" "pkg/contracts/${scope}/${name}/${name}.bin"
+  fi
 done
 
 for entry in "${STRUCTS[@]}"; do

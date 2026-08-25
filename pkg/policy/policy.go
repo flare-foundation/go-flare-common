@@ -37,9 +37,13 @@ func (sp *SigningPolicy) RawBytes() []byte {
 	return sp.rawBytes
 }
 
-// Hash returns hash of the signing policy.
-func (sp *SigningPolicy) Hash() []byte {
-	return Hash(sp.rawBytes)
+// ChainBoundHash returns the signing policy's source-bound hash for chainID.
+//
+// There is deliberately no no-arg variant: the two schemes are indistinguishable
+// 32-byte values, so every call site must name the one it means. For the legacy
+// scheme call Hash(sp.RawBytes()).
+func (sp *SigningPolicy) ChainBoundHash(chainID uint64) []byte {
+	return ChainBoundHash(chainID, sp.rawBytes)
 }
 
 // NewSigningPolicy creates a SigningPolicy from a SigningPolicyInitialized event.
@@ -166,9 +170,15 @@ func FromRawBytes(b []byte) (*SigningPolicy, int, error) {
 	}, p, nil
 }
 
-// Hash computes hash of a signing policy from signingPolicyBytes.
+// Hash computes the legacy chained-fold hash of a signing policy from
+// signingPolicyBytes.
 //
 // Inputs shorter than 64 bytes are right-zero-padded to two 32-byte blocks.
+//
+// Retired on chain by RLY-23 in favour of ChainBoundHash, but still the correct
+// answer for reward epochs below the new Relay's initialRewardEpochId, which
+// toSigningPolicyHash delegates to the old Relay. No TEE component computes it
+// any more — it is kept for consumers outside that stack.
 func Hash(b []byte) []byte {
 	const block = 32
 	minLen := 2 * block
@@ -187,4 +197,22 @@ func Hash(b []byte) []byte {
 		hash = crypto.Keccak256(hash, b[i*block:(i+1)*block])
 	}
 	return hash
+}
+
+// ChainBoundHash returns keccak256(chainID || signingPolicyBytes) — the hash the
+// Relay stores and returns from toSigningPolicyHash for reward epochs at or above
+// its initialRewardEpochId, and therefore the hash data providers sign.
+//
+// Must stay byte-identical to Relay.sol's
+// keccak256(abi.encodePacked(sourceChainId, signingPolicyBytes)): one keccak over
+// the 32-byte source chain id followed by the raw 43 + 22*n encoding. Unlike Hash
+// there is no padding — b is hashed exactly as given.
+//
+// chainID is the Relay's sourceChainId, which equals block.chainid on a home
+// deployment (Relay.initialize enforces it).
+func ChainBoundHash(chainID uint64, b []byte) []byte {
+	var chainIDWord [32]byte
+	binary.BigEndian.PutUint64(chainIDWord[24:], chainID)
+
+	return crypto.Keccak256(chainIDWord[:], b)
 }
