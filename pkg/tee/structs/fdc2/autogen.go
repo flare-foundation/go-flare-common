@@ -242,7 +242,7 @@ type IPMWUtxoProposalCheckRequestBody struct {
 	SequencePosition   uint64
 	Attempt            uint32
 	EligibleGeneration uint64
-	ProposalHash       [32]byte
+	PackageHash        [32]byte
 }
 
 // IPMWUtxoProposalCheckResponse is an auto generated low-level Go binding around an user-defined struct.
