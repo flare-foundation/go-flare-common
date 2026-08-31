@@ -70,9 +70,14 @@ const opReturn = 0x6a
 //
 // The batch grammar fixes outputs [0..2] as the anchor, the P2A and the nonce
 // OP_RETURN. Everything after is a sequence of payment groups, each OPENED by a
-// reference OP_RETURN, with at most one change output last. So the number of
-// OP_RETURNs past index 2 is the number of payments — and change, never an
-// OP_RETURN, cannot be miscounted as one.
+// reference OP_RETURN, with up to MaxChangeOutputs change outputs closing the
+// transaction. So the number of OP_RETURNs past index 2 is the number of
+// payments — and change, never an OP_RETURN, cannot be miscounted as one,
+// however many change outputs there are.
+//
+// That last clause is why this count survived the change rule going from "at
+// most one" to "up to eight" (ER-60): the count keys on OP_RETURNs, not on
+// position, so splitting change never moved a group boundary.
 //
 // This is what binds the envelope's declared PaymentCount to the transaction.
 // The count decides the range the chain marks settled, so without this check a
