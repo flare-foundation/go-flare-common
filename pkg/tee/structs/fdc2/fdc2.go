@@ -44,6 +44,15 @@ const (
 	// protocol-managed wallet MADE, this one proves a payment it RECEIVED, and
 	// the receiving address is the identity — Bitcoin has no destination tag, so
 	// the index the address derives from is what says who to credit.
+	//
+	// It also REPORTS one input, on request. `inputIndex` names an input and the
+	// response carries that input's prevout address plus the distinct sighash
+	// bytes on its signatures; 0xFFFF means "do not look" and leaves the input
+	// fields empty. The sighash set is in the response rather than assumed
+	// because only SIGHASH_ALL commits the signer to the outputs — a consumer
+	// meaning "that address approved THIS transaction" must require exactly
+	// [0x01], and an empty set (nothing parsable) must fail that test. There is
+	// deliberately no 0x00 sentinel: 0x00 is a valid sighash byte under BIP-341.
 	BtcDeposit AttestationType = "BtcDeposit"
 	// BtcPayment proves that one named Bitcoin address paid another in one
 	// confirmed transaction: the amount received, what left the payer, the

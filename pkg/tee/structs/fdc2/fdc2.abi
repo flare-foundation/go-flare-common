@@ -1878,6 +1878,11 @@
                 "internalType": "uint16",
                 "name": "minConfirmations",
                 "type": "uint16"
+              },
+              {
+                "internalType": "uint16",
+                "name": "inputIndex",
+                "type": "uint16"
               }
             ],
             "internalType": "struct IBtcDeposit.RequestBody",
@@ -1930,6 +1935,21 @@
                 "internalType": "bytes",
                 "name": "memo",
                 "type": "bytes"
+              },
+              {
+                "internalType": "string",
+                "name": "inputAddress",
+                "type": "string"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "inputAddressHash",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes",
+                "name": "inputSighashTypes",
+                "type": "bytes"
               }
             ],
             "internalType": "struct IBtcDeposit.ResponseBody",
@@ -1979,6 +1999,11 @@
           {
             "internalType": "uint16",
             "name": "minConfirmations",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "inputIndex",
             "type": "uint16"
           }
         ],
@@ -2039,6 +2064,21 @@
           {
             "internalType": "bytes",
             "name": "memo",
+            "type": "bytes"
+          },
+          {
+            "internalType": "string",
+            "name": "inputAddress",
+            "type": "string"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "inputAddressHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "inputSighashTypes",
             "type": "bytes"
           }
         ],
