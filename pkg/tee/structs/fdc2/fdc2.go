@@ -54,27 +54,6 @@ const (
 	// [0x01], and an empty set (nothing parsable) must fail that test. There is
 	// deliberately no 0x00 sentinel: 0x00 is a valid sighash byte under BIP-341.
 	BtcDeposit AttestationType = "BtcDeposit"
-	// BtcPayment proves that one named Bitcoin address paid another in one
-	// confirmed transaction: the amount received, what left the payer, the
-	// transaction's OP_RETURN reference, and the block it sits in.
-	//
-	// WHY IT IS NOT PMWPaymentStatus, WHICH LOOKS LIKE THE SAME FACT. That type
-	// proves a payment a PROTOCOL-MANAGED WALLET made, and it proves it by
-	// resolving the payment to its batch, recomputing the batch instruction id,
-	// and matching the output group against the instruction the channel emitted.
-	// Every step of that needs the payer to be a channel account. A Core Vault
-	// is not one and cannot become one — a channel account's keys are generated
-	// inside TEE machines (WalletKeyManagerFacet.addKey requires a machine in
-	// PRODUCTION) and a vault's keys are held by human custodians, which is the
-	// separate custody a vault exists to provide.
-	//
-	// So this type proves the weaker, chain-only fact, and the machines attest
-	// it as OBSERVERS rather than as custodians: nothing about proving a Bitcoin
-	// payment requires controlling the wallet that made it. The payer is named
-	// in the REQUEST and checked against the inputs' prevouts, because a
-	// transaction has many inputs and "who sent it" is otherwise not a question
-	// Bitcoin answers.
-	BtcPayment AttestationType = "BtcPayment"
 )
 
 var attestationTypes = []AttestationType{
@@ -85,7 +64,6 @@ var attestationTypes = []AttestationType{
 	PMWMultisigUtxoConfigured,
 	PMWUtxoProposalCheck,
 	BtcDeposit,
-	BtcPayment,
 }
 
 // i-th method correspond to a method in TeeDataConnectorStruct interface whose
@@ -98,7 +76,6 @@ var attestationTypeMethods = []string{
 	"pmwMultisigUtxoConfigured",
 	"pmwUtxoProposalCheck",
 	"btcDeposit",
-	"btcPayment",
 }
 
 type AttestationArguments struct {

@@ -62,13 +62,6 @@ func TestEveryRegisteredTypeEncodes(t *testing.T) {
 			IBtcDepositRequestBody{},
 			IBtcDepositResponseBody{Amount: big.NewInt(0)},
 		},
-		BtcPayment: {
-			IBtcPaymentRequestBody{},
-			IBtcPaymentResponseBody{
-				ReceivedAmountSats: big.NewInt(0),
-				SpentAmountSats:    big.NewInt(0),
-			},
-		},
 	}
 
 	require.Len(t, bodies, len(attestationTypes),
