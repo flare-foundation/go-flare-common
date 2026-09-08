@@ -11,11 +11,22 @@ import (
 var opCommands = []op.Command{
 	op.Pay,
 	op.Reissue,
+	op.EscrowCreate,
+	op.EscrowReclaim,
+	op.Consolidate,
 }
 
 // i-th method correspond to a method in TeePaymentStruct interface whose
 // input is the type of message emitted with i-th opCommands.
+//
+// The UTXO channel emits ONE message shape for every instruction kind — settle
+// encodes a `UtxoCspInstructionMessage` whatever the batch does — so the escrow
+// and consolidation commands share the payment message's arguments rather than
+// having any of their own.
 var methods = []string{
+	"paymentInstructionMessageStruct",
+	"paymentInstructionMessageStruct",
+	"paymentInstructionMessageStruct",
 	"paymentInstructionMessageStruct",
 	"paymentInstructionMessageStruct",
 }

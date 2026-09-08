@@ -54,6 +54,17 @@ const (
 	Pay        Command = "PAY"
 	Reissue    Command = "REISSUE"
 
+	// The UTXO channel's maintenance kinds. A batch that creates an HTLC
+	// escrow, one that spends it back through its timeout branch, and one that
+	// merges the wallet's own coins are all ordinary batches to a signer — the
+	// same anchor in, anchor out, nonce OP_RETURN shape, signed over the same
+	// BIP-143 sighash. They are separate COMMANDS because the contract
+	// dispatches them separately, and because a payer authorized to queue
+	// payments must not thereby be able to escrow the wallet's funds.
+	EscrowCreate  Command = "ESCROW_CREATE"
+	EscrowReclaim Command = "ESCROW_RECLAIM"
+	Consolidate   Command = "CONSOLIDATE"
+
 	Prove Command = "PROVE"
 )
 
@@ -94,6 +105,13 @@ var validSystemPairs = map[Type]map[Command]bool{
 	BTC: {
 		Pay:     true,
 		Reissue: true,
+		// The channel dispatches these under their own commands; without them
+		// here the pair is not a valid system pair, the instruction is never
+		// routed, and NOTHING says so — the batch simply settles on chain and no
+		// machine ever answers for it.
+		EscrowCreate:  true,
+		EscrowReclaim: true,
+		Consolidate:   true,
 		// Provisions the wallet's multisig binding. Separate from key
 		// generation because the binding cannot exist yet at that point: each
 		// machine generates independently, and the full xpub set only exists
