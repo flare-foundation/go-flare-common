@@ -1972,6 +1972,163 @@
       {
         "components": [
           {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "signingPolicySignatures",
+                "type": "bytes"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint8",
+                    "name": "v",
+                    "type": "uint8"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "r",
+                    "type": "bytes32"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "s",
+                    "type": "bytes32"
+                  }
+                ],
+                "internalType": "struct Signature[]",
+                "name": "teeSignatures",
+                "type": "tuple[]"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint8",
+                    "name": "v",
+                    "type": "uint8"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "r",
+                    "type": "bytes32"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "s",
+                    "type": "bytes32"
+                  }
+                ],
+                "internalType": "struct Signature[]",
+                "name": "cosignerSignatures",
+                "type": "tuple[]"
+              }
+            ],
+            "internalType": "struct IFdc2Verification.Fdc2Signatures",
+            "name": "signatures",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "attestationType",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "sourceId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint16",
+                "name": "thresholdBIPS",
+                "type": "uint16"
+              },
+              {
+                "internalType": "address",
+                "name": "proofOwner",
+                "type": "address"
+              },
+              {
+                "internalType": "address[]",
+                "name": "cosigners",
+                "type": "address[]"
+              },
+              {
+                "internalType": "uint64",
+                "name": "cosignersThreshold",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "timestamp",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct IFdc2Hub.Fdc2ResponseHeader",
+            "name": "header",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "walletRegistry",
+                "type": "address"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "walletId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint32",
+                "name": "accountIndex",
+                "type": "uint32"
+              },
+              {
+                "internalType": "uint32",
+                "name": "derivationIndex",
+                "type": "uint32"
+              }
+            ],
+            "internalType": "struct IBtcDeposit.RequestBody",
+            "name": "requestBody",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "receivingAddress",
+                "type": "string"
+              }
+            ],
+            "internalType": "struct IBtcDeposit.ResponseBody",
+            "name": "responseBody",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct IBtcDeposit.Proof",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "btcWalletAddressProofStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "walletRegistry",
+            "type": "address"
+          },
+          {
             "internalType": "bytes32",
             "name": "walletId",
             "type": "bytes32"
@@ -1985,7 +2142,42 @@
             "internalType": "uint32",
             "name": "derivationIndex",
             "type": "uint32"
-          },
+          }
+        ],
+        "internalType": "struct btcWalletAddressRequestBodyStruct",
+        "name": "btcWalletAddressRequestBodyStruct",
+        "type": "tuple"
+      }
+    ],
+    "name": "btcWalletAddressRequestBodyStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "receivingAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct btcWalletAddressResponseBodyStruct",
+        "name": "btcWalletAddressResponseBodyStruct",
+        "type": "tuple"
+      }
+    ],
+    "name": "btcWalletAddressResponseBodyStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
           {
             "internalType": "bytes32",
             "name": "transactionId",
@@ -1995,6 +2187,11 @@
             "internalType": "uint16",
             "name": "outputIndex",
             "type": "uint16"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "receivingAddressHash",
+            "type": "bytes32"
           },
           {
             "internalType": "uint16",
@@ -2022,29 +2219,14 @@
       {
         "components": [
           {
-            "internalType": "uint8",
-            "name": "status",
-            "type": "uint8"
-          },
-          {
-            "internalType": "string",
-            "name": "receivingAddress",
-            "type": "string"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "receivingAddressHash",
-            "type": "bytes32"
-          },
-          {
             "internalType": "uint256",
             "name": "amount",
             "type": "uint256"
           },
           {
-            "internalType": "bytes32",
-            "name": "transactionId",
-            "type": "bytes32"
+            "internalType": "bytes",
+            "name": "memo",
+            "type": "bytes"
           },
           {
             "internalType": "uint64",
@@ -2060,11 +2242,6 @@
             "internalType": "uint64",
             "name": "confirmations",
             "type": "uint64"
-          },
-          {
-            "internalType": "bytes",
-            "name": "memo",
-            "type": "bytes"
           },
           {
             "internalType": "string",

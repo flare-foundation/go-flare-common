@@ -62,6 +62,10 @@ func TestEveryRegisteredTypeEncodes(t *testing.T) {
 			IBtcDepositRequestBody{},
 			IBtcDepositResponseBody{Amount: big.NewInt(0)},
 		},
+		BtcWalletAddress: {
+			IBtcWalletAddressRequestBody{},
+			IBtcWalletAddressResponseBody{},
+		},
 	}
 
 	require.Len(t, bodies, len(attestationTypes),
@@ -96,12 +100,10 @@ func TestBtcDepositBodiesRoundTrip(t *testing.T) {
 
 	t.Run("request", func(t *testing.T) {
 		want := IBtcDepositRequestBody{
-			WalletId:         [32]byte{1},
-			AccountIndex:     2,
-			DerivationIndex:  3,
-			TransactionId:    [32]byte{4},
-			OutputIndex:      5,
-			MinConfirmations: 6,
+			TransactionId:        [32]byte{4},
+			OutputIndex:          5,
+			ReceivingAddressHash: [32]byte{8},
+			MinConfirmations:     6,
 			// 0xFFFF is "do not look at the inputs", which is what every caller
 			// wanting only the deposit fact sends; a real index is the value the
 			// round trip has to preserve.
@@ -112,17 +114,13 @@ func TestBtcDepositBodiesRoundTrip(t *testing.T) {
 
 	t.Run("response", func(t *testing.T) {
 		want := IBtcDepositResponseBody{
-			Status:               0,
-			ReceivingAddress:     "bcrt1qrecipient",
-			ReceivingAddressHash: [32]byte{8},
-			Amount:               big.NewInt(9),
-			TransactionId:        [32]byte{10},
-			BlockNumber:          11,
-			BlockTimestamp:       12,
-			Confirmations:        13,
-			Memo:                 []byte{14, 15},
-			InputAddress:         "bcrt1qpayer",
-			InputAddressHash:     [32]byte{16},
+			Amount:           big.NewInt(9),
+			Memo:             []byte{14, 15},
+			BlockNumber:      11,
+			BlockTimestamp:   12,
+			Confirmations:    13,
+			InputAddress:     "bcrt1qpayer",
+			InputAddressHash: [32]byte{16},
 			// Two distinct sighash bytes: the mixed-signature case that a single
 			// reported byte would hide.
 			InputSighashTypes: []byte{0x01, 0x02},
