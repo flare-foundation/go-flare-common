@@ -68,6 +68,16 @@ func TestValidate(t *testing.T) {
 			wantErr: "non-public address",
 		},
 		{
+			name:    "site-local IPv6",
+			url:     "http://[fec0::1]/path",
+			wantErr: "non-public address",
+		},
+		{
+			name:    "6to4 IPv6",
+			url:     "http://[2002:7f00:1::1]/path",
+			wantErr: "non-public address",
+		},
+		{
 			name:    "empty host",
 			url:     "http:///path",
 			wantErr: "empty host",
@@ -120,6 +130,37 @@ func TestIsPublicIP(t *testing.T) {
 		{"reserved 240", "240.0.0.1", false},
 		{"public v4", "93.184.216.34", true},
 		{"public v6", "2606:2800:220:1:248:1893:25c8:1946", true},
+		// IPv4 special-use and mapped forms.
+		{"6to4 relay anycast", "192.88.99.1", false},
+		{"v4-mapped loopback", "::ffff:127.0.0.1", false},
+		{"v4-mapped private", "::ffff:10.0.0.1", false},
+		{"v4-mapped public", "::ffff:93.184.216.34", true},
+		// IPv6 outside 2000::/3.
+		{"v4-compatible loopback", "::127.0.0.1", false},
+		{"NAT64 well-known prefix", "64:ff9b::7f00:1", false},
+		{"NAT64 local-use prefix", "64:ff9b:1::1", false},
+		{"discard prefix", "100::1", false},
+		{"dummy prefix", "100:0:0:1::1", false},
+		{"below 2000::/3", "1fff::1", false},
+		{"above 2000::/3", "4000::1", false},
+		{"SRv6 SIDs", "5f00::1", false},
+		{"ULA", "fd00::1", false},
+		{"link-local v6", "fe80::1", false},
+		{"site-local v6", "fec0::1", false},
+		{"site-local v6 upper", "feff:ffff::1", false},
+		{"multicast v6", "ff02::1", false},
+		// IPv6 special-use inside 2000::/3.
+		{"Teredo", "2001::1", false},
+		{"benchmarking v6", "2001:2::1", false},
+		{"ORCHID", "2001:10::1", false},
+		{"ORCHIDv2 is globally reachable", "2001:20::1", true},
+		{"documentation 2001:db8", "2001:db8::1", false},
+		{"6to4 embedding loopback", "2002:7f00:1::1", false},
+		{"documentation 3fff", "3fff::1", false},
+		// 2000::/3 boundaries and another public host.
+		{"2000::/3 lower bound", "2000::1", true},
+		{"2000::/3 upper bound", "3fff:ffff::1", true},
+		{"public v6 2a00", "2a00:1450:4001:80b::200e", true},
 	}
 
 	for _, tt := range tests {

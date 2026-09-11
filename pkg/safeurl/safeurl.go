@@ -161,16 +161,18 @@ func checkRedirect(req *http.Request, via []*http.Request) error {
 //     resolvable to a carrier's internal infrastructure.
 //   - 0.0.0.0/8: "this network" (RFC 1122). The all-zeros address is
 //     IsUnspecified, but any other 0.x.x.x is also reserved and not routable.
-//   - 192.0.0.0/24, 192.0.2.0/24, 198.18.0.0/15, 198.51.100.0/24,
-//     203.0.113.0/24, 240.0.0.0/4: IANA special-use ranges.
-//   - 64:ff9b::/96 (IPv4-IPv6 well-known prefix), 64:ff9b:1::/48: IPv4
-//     translation.
+//   - 192.0.0.0/24, 192.0.2.0/24, 192.88.99.0/24, 198.18.0.0/15,
+//     198.51.100.0/24, 203.0.113.0/24, 240.0.0.0/4: IANA special-use ranges.
+//   - IPv6 special-use ranges inside 2000::/3: Teredo, 6to4, ORCHID,
+//     benchmarking, documentation. Everything outside 2000::/3 (NAT64,
+//     discard, SRv6, site-local, ...) is rejected by globalUnicastV6 instead.
 var nonPublicCIDRs = func() []*net.IPNet {
 	specs := []string{
 		"100.64.0.0/10",   // CGNAT
 		"0.0.0.0/8",       // "this network"
 		"192.0.0.0/24",    // IETF protocol assignments
 		"192.0.2.0/24",    // TEST-NET-1
+		"192.88.99.0/24",  // deprecated 6to4 relay anycast
 		"198.18.0.0/15",   // benchmarking
 		"198.51.100.0/24", // TEST-NET-2
 		"203.0.113.0/24",  // TEST-NET-3
@@ -178,9 +180,12 @@ var nonPublicCIDRs = func() []*net.IPNet {
 		// Note: do not add "::ffff:0:0/96" — Go's net.IP represents all
 		// IPv4 addresses in that range internally, so it would match every
 		// public IPv4 host.
-		"64:ff9b::/96",   // IPv4-IPv6 well-known prefix
-		"64:ff9b:1::/48", // IPv4-IPv6 local-use prefix
-		"100::/64",       // Discard prefix
+		"2001::/32",     // Teredo
+		"2001:2::/48",   // benchmarking
+		"2001:10::/28",  // ORCHID (deprecated)
+		"2001:db8::/32", // documentation
+		"2002::/16",     // 6to4 — embeds an arbitrary IPv4 address
+		"3fff::/20",     // documentation
 	}
 	out := make([]*net.IPNet, 0, len(specs))
 	for _, s := range specs {
@@ -192,7 +197,12 @@ var nonPublicCIDRs = func() []*net.IPNet {
 	return out
 }()
 
+// globalUnicastV6 is the only block IANA allocates for IPv6 global unicast
+// (RFC 4291 §2.5.4); every other IPv6 address is reserved or link/site scoped.
+var globalUnicastV6 = &net.IPNet{IP: net.ParseIP("2000::"), Mask: net.CIDRMask(3, 128)}
+
 // isPublicIP returns true if the IP is a globally routable unicast address.
+// IPv6 addresses must fall inside 2000::/3.
 func isPublicIP(ip net.IP) bool {
 	if ip.IsLoopback() ||
 		ip.IsPrivate() ||
@@ -200,6 +210,10 @@ func isPublicIP(ip net.IP) bool {
 		ip.IsLinkLocalMulticast() ||
 		ip.IsUnspecified() ||
 		ip.IsMulticast() {
+		return false
+	}
+	// To4 is nil only for native IPv6; IPv4-mapped forms are IPv4 to every check.
+	if ip.To4() == nil && !globalUnicastV6.Contains(ip) {
 		return false
 	}
 	for _, cidr := range nonPublicCIDRs {
