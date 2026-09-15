@@ -45,11 +45,12 @@ func boundPair(t *testing.T) ([]byte, csp.Instruction) {
 		AccountIndex:     e.AccountIndex,
 		SequencePosition: e.SequencePosition,
 		Attempt:          e.Attempt,
-		AnchorIndex:      e.AnchorIndex,
-		Nonce:            e.Nonce,
 		PackageHash:      h,
-		Txid:             common.HexToHash("0xfeed"),
-		Proposer:         e.ProposerAddress,
+		// The COMMITMENT, not a txid. The instruction is chain-neutral and the
+		// facts it stands for — the lane, the nonce, the transaction — are the
+		// execution plane's, so the same helper the verifier uses builds it.
+		ChainCommitmentHash: common.Hash(csp.CommitmentOf(e).CommitmentHash()),
+		Proposer:            e.ProposerAddress,
 	}
 }
 
@@ -79,7 +80,6 @@ func TestBindPackageRejectsAnUnsignedProposal(t *testing.T) {
 	in := csp.Instruction{
 		WalletID: e.WalletID, SourceID: e.SourceID, AccountIndex: e.AccountIndex,
 		SequencePosition: e.SequencePosition, Attempt: e.Attempt,
-		AnchorIndex: e.AnchorIndex, Nonce: e.Nonce,
 		PackageHash: crypto.Keccak256Hash(encoded),
 	}
 	_, err = in.BindPackage(encoded, testChainID)
@@ -105,7 +105,6 @@ func TestBindPackageRejectsAnotherPartysSignature(t *testing.T) {
 	in := csp.Instruction{
 		WalletID: e.WalletID, SourceID: e.SourceID, AccountIndex: e.AccountIndex,
 		SequencePosition: e.SequencePosition, Attempt: e.Attempt,
-		AnchorIndex: e.AnchorIndex, Nonce: e.Nonce,
 		PackageHash: crypto.Keccak256Hash(raw),
 	}
 	_, err = in.BindPackage(raw, testChainID)

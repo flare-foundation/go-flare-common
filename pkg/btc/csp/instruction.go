@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/accounts"
+	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 )
@@ -28,13 +28,21 @@ type Instruction struct {
 	AccountIndex     uint32
 	SequencePosition uint64
 	Attempt          uint32
-	AnchorIndex      uint32
-	Nonce            uint64
 	FromPaymentID    uint64
 	ToPaymentID      uint64
 	PackageHash      common.Hash
-	Txid             common.Hash
-	Proposer         common.Address
+	// ChainCommitmentHash replaces Txid, and the replacement is the whole of the
+	// control plane's chain-neutrality: the instruction commits to Bitcoin's
+	// facts without naming any of them, so a rail with no anchor chains and no
+	// pre-signature txid carries the same message. The facts themselves are on
+	// the execution plane, and a signer that needs them reads the envelope it
+	// was going to sign anyway.
+	//
+	// THE WORD IS THE ONE TXID OCCUPIED. Both are bytes32, so a consumer that
+	// kept reading it as a txid gets a hash that looks like one and refers to no
+	// transaction.
+	ChainCommitmentHash common.Hash
+	Proposer            common.Address
 }
 
 // TeeIDKeyIDPair binds a machine to one of its keys.
@@ -56,12 +64,10 @@ func init() {
 		{Name: "accountIndex", Type: "uint32"},
 		{Name: "sequencePosition", Type: "uint64"},
 		{Name: "attempt", Type: "uint32"},
-		{Name: "anchorIndex", Type: "uint32"},
-		{Name: "nonce", Type: "uint64"},
 		{Name: "fromPaymentId", Type: "uint64"},
 		{Name: "toPaymentId", Type: "uint64"},
 		{Name: "packageHash", Type: "bytes32"},
-		{Name: "txid", Type: "bytes32"},
+		{Name: "chainCommitmentHash", Type: "bytes32"},
 		{Name: "proposer", Type: "address"},
 	})
 	if err != nil {
@@ -76,19 +82,17 @@ type abiPair struct {
 }
 
 type abiInstruction struct {
-	TeeIDKeyIDPairs  []abiPair      `abi:"teeIdKeyIdPairs"`
-	WalletID         [32]byte       `abi:"walletId"`
-	SourceID         [32]byte       `abi:"sourceId"`
-	AccountIndex     uint32         `abi:"accountIndex"`
-	SequencePosition uint64         `abi:"sequencePosition"`
-	Attempt          uint32         `abi:"attempt"`
-	AnchorIndex      uint32         `abi:"anchorIndex"`
-	Nonce            uint64         `abi:"nonce"`
-	FromPaymentID    uint64         `abi:"fromPaymentId"`
-	ToPaymentID      uint64         `abi:"toPaymentId"`
-	PackageHash      [32]byte       `abi:"packageHash"`
-	Txid             [32]byte       `abi:"txid"`
-	Proposer         common.Address `abi:"proposer"`
+	TeeIDKeyIDPairs     []abiPair      `abi:"teeIdKeyIdPairs"`
+	WalletID            [32]byte       `abi:"walletId"`
+	SourceID            [32]byte       `abi:"sourceId"`
+	AccountIndex        uint32         `abi:"accountIndex"`
+	SequencePosition    uint64         `abi:"sequencePosition"`
+	Attempt             uint32         `abi:"attempt"`
+	FromPaymentID       uint64         `abi:"fromPaymentId"`
+	ToPaymentID         uint64         `abi:"toPaymentId"`
+	PackageHash         [32]byte       `abi:"packageHash"`
+	ChainCommitmentHash [32]byte       `abi:"chainCommitmentHash"`
+	Proposer            common.Address `abi:"proposer"`
 }
 
 // EncodeInstruction is the mirror of DecodeInstruction, used by tests and by
@@ -99,19 +103,17 @@ func EncodeInstruction(i Instruction) ([]byte, error) {
 		pairs[n] = abiPair(p)
 	}
 	b, err := instructionArgs.Pack(abiInstruction{
-		TeeIDKeyIDPairs:  pairs,
-		WalletID:         i.WalletID,
-		SourceID:         i.SourceID,
-		AccountIndex:     i.AccountIndex,
-		SequencePosition: i.SequencePosition,
-		Attempt:          i.Attempt,
-		AnchorIndex:      i.AnchorIndex,
-		Nonce:            i.Nonce,
-		FromPaymentID:    i.FromPaymentID,
-		ToPaymentID:      i.ToPaymentID,
-		PackageHash:      i.PackageHash,
-		Txid:             i.Txid,
-		Proposer:         i.Proposer,
+		TeeIDKeyIDPairs:     pairs,
+		WalletID:            i.WalletID,
+		SourceID:            i.SourceID,
+		AccountIndex:        i.AccountIndex,
+		SequencePosition:    i.SequencePosition,
+		Attempt:             i.Attempt,
+		FromPaymentID:       i.FromPaymentID,
+		ToPaymentID:         i.ToPaymentID,
+		PackageHash:         i.PackageHash,
+		ChainCommitmentHash: i.ChainCommitmentHash,
+		Proposer:            i.Proposer,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("encoding instruction: %w", err)
@@ -133,18 +135,16 @@ func DecodeInstruction(b []byte) (Instruction, error) {
 		return Instruction{}, errors.New("instruction did not convert to the expected shape")
 	}
 	out := Instruction{
-		WalletID:         raw.WalletID,
-		SourceID:         raw.SourceID,
-		AccountIndex:     raw.AccountIndex,
-		SequencePosition: raw.SequencePosition,
-		Attempt:          raw.Attempt,
-		AnchorIndex:      raw.AnchorIndex,
-		Nonce:            raw.Nonce,
-		FromPaymentID:    raw.FromPaymentID,
-		ToPaymentID:      raw.ToPaymentID,
-		PackageHash:      raw.PackageHash,
-		Txid:             raw.Txid,
-		Proposer:         raw.Proposer,
+		WalletID:            raw.WalletID,
+		SourceID:            raw.SourceID,
+		AccountIndex:        raw.AccountIndex,
+		SequencePosition:    raw.SequencePosition,
+		Attempt:             raw.Attempt,
+		FromPaymentID:       raw.FromPaymentID,
+		ToPaymentID:         raw.ToPaymentID,
+		PackageHash:         raw.PackageHash,
+		ChainCommitmentHash: raw.ChainCommitmentHash,
+		Proposer:            raw.Proposer,
 	}
 	out.TeeIDKeyIDPairs = make([]TeeIDKeyIDPair, len(raw.TeeIDKeyIDPairs))
 	for n, p := range raw.TeeIDKeyIDPairs {
