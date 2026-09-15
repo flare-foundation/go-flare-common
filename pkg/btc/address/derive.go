@@ -11,7 +11,7 @@
 // (m/87'/coin'/account, recommended for multisig) and the legacy BIP-44 path.
 //
 // Account derivation is NON-HARDENED (2026-06-22, aligns with the deployed
-// flare-smart-contracts-v2 UTXO model — IPMWMultisigUtxoConfigured /
+// flare-smart-contracts-v2 UTXO model — IBtcAccountConfigured /
 // docs/specs/FCC/Payments.md). The TEEs publish ONE wallet-level (parent) xpub
 // at m/87'/coin'; the account-level xpub is its non-hardened child at
 // accountIndex (DeriveAccountXpubs), and every leaf address is then derived
@@ -156,7 +156,7 @@ func Derive(
 // account-level xpubs by applying a single NON-HARDENED CKDpub step at
 // accountIndex (2026-06-22, aligns with the deployed flare-smart-contracts-v2
 // UTXO model — the account-level keys are the non-hardened children of the
-// parent xpubs at accountIndex, per IPMWMultisigUtxoConfigured /
+// parent xpubs at accountIndex, per IBtcAccountConfigured /
 // docs/specs/FCC/Payments.md).
 //
 // Each input must be a wallet-level (parent) xpub, i.e. one level above the

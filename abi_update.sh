@@ -4,22 +4,21 @@ set -euo pipefail
 # Resolve paths relative to this script so it works from any CWD.
 cd "$(dirname "$0")"
 
+# Where the compiled artifacts come from. Overridable so a regeneration can read a
+# worktree of another branch without switching the shared checkout everything builds from.
+ARTIFACTS_ROOT="${ARTIFACTS_ROOT:-../../fsp/flare-smart-contracts-v2/artifacts/contracts}"
+
 # Source artifacts. Output path is derived from the contract name:
 #   contracts go to pkg/contracts/<scope>/<name>/<name>.abi
 #   structs   go to pkg/tee/structs/<name>/<name>.abi
-# For contracts, <name> is the lowercased contract name with any "Facet" suffix dropped.
+# For contracts, <name> is the lowercased contract name with any "Facet" suffix and
+# any leading "II" (aggregate interface) dropped.
 # For structs,   <name> is the lowercased contract name with any "Structs" suffix dropped.
 #
 # Contracts listed in BIN_CONTRACTS additionally get their deployment bytecode
 # written to <name>.bin, for abigen --bin (deployable bindings).
 
 CONTRACTS=(
-  "tee/implementation/TeePayments.sol/TeePayments.json"
-  "tee/implementation/TeePaymentsBase.sol/TeePaymentsBase.json"
-  "tee/implementation/TeePaymentsConfigVerifier.sol/TeePaymentsConfigVerifier.json"
-  "tee/implementation/TeePaymentsFeeScheduleManager.sol/TeePaymentsFeeScheduleManager.json"
-  "tee/implementation/TeePaymentsRegistry.sol/TeePaymentsRegistry.json"
-  "tee/implementation/TeePaymentsUtxo.sol/TeePaymentsUtxo.json"
   "tee/implementation/TeeRewardOffersManager.sol/TeeRewardOffersManager.json"
   "tee/implementation/VrfVerifier.sol/VrfVerifier.json"
   "tee/facets/DiamondGovernanceFacet.sol/DiamondGovernanceFacet.json"
@@ -42,13 +41,14 @@ CONTRACTS=(
   "tee/facets/WalletProjectPauseFacet.sol/WalletProjectPauseFacet.json"
   "fdc2/implementation/Fdc2Hub.sol/Fdc2Hub.json"
   "fdc2/implementation/Fdc2RequestFeeConfigurations.sol/Fdc2RequestFeeConfigurations.json"
+  "tee/interface/IIWalletPayments.sol/IIWalletPayments.json"
 )
 
 STRUCTS=(
   "tee/structs/TeeInstructionsStructs.sol/TeeInstructionsStructs.json"
   "tee/structs/TeeMachinePathStructs.sol/TeeMachinePathStructs.json"
   "tee/structs/TeeMachineStructs.sol/TeeMachineStructs.json"
-  "tee/structs/TeePaymentsStructs.sol/TeePaymentsStructs.json"
+  "tee/structs/WalletPaymentsStructs.sol/WalletPaymentsStructs.json"
   "tee/structs/TeeStructs.sol/TeeStructs.json"
   "tee/structs/TeeVerificationStructs.sol/TeeVerificationStructs.json"
   "tee/structs/TeeVrfStructs.sol/TeeVrfStructs.json"
@@ -67,7 +67,7 @@ lower() {
 }
 
 extract() {
-  local input_file="../../fsp/flare-smart-contracts-v2/artifacts/contracts/$1"
+  local input_file="$ARTIFACTS_ROOT/$1"
   local output_file="$2"
 
   if [ -f "$input_file" ]; then
@@ -97,7 +97,7 @@ needsBin() {
 # extractBin writes the artifact's deployment bytecode (0x-prefixed, no trailing
 # newline) to the output file, matching what abigen --bin expects.
 extractBin() {
-  local input_file="../../fsp/flare-smart-contracts-v2/artifacts/contracts/$1"
+  local input_file="$ARTIFACTS_ROOT/$1"
   local output_file="$2"
 
   if [ -f "$input_file" ]; then
@@ -119,6 +119,8 @@ for entry in "${CONTRACTS[@]}"; do
   json="${entry##*/}"
   name="$(lower "${json%.json}")"
   name="${name%facet}"
+  # An aggregate interface is named II<Thing>; the binding is about <Thing>.
+  name="${name#ii}"
   scope="${entry%%/*}"
   extract "$entry" "pkg/contracts/${scope}/${name}/${name}.abi"
   if needsBin "$entry"; then

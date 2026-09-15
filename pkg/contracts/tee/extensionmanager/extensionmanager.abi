@@ -358,6 +358,11 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "TimelockValueNotAllowed",
+    "type": "error"
+  },
+  {
     "inputs": [
       {
         "internalType": "bytes32",

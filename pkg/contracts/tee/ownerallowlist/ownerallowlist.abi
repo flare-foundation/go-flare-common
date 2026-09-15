@@ -208,6 +208,11 @@
   },
   {
     "inputs": [],
+    "name": "TimelockValueNotAllowed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "VersionNotSupported",
     "type": "error"
   },

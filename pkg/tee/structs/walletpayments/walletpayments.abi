@@ -1,0 +1,416 @@
+[
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "genesisTxid",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "genesisVout",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint64",
+            "name": "nextNonce",
+            "type": "uint64"
+          }
+        ],
+        "internalType": "struct IBtcAccounts.BtcAnchor",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "btcAnchorStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint32",
+            "name": "anchorIndex",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint64",
+            "name": "nonce",
+            "type": "uint64"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "txid",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "nextAnchorTxid",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "nextAnchorVout",
+            "type": "uint32"
+          }
+        ],
+        "internalType": "struct IBtcAccounts.BtcProposalCommitment",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "btcProposalCommitmentStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "teeId",
+                "type": "address"
+              },
+              {
+                "internalType": "uint64",
+                "name": "keyId",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct TeeIdKeyIdPair[]",
+            "name": "teeIdKeyIdPairs",
+            "type": "tuple[]"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "walletId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "accountIndex",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint64",
+            "name": "sequencePosition",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint32",
+            "name": "attempt",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint64",
+            "name": "fromPaymentId",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "toPaymentId",
+            "type": "uint64"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "packageHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "chainCommitmentHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "address",
+            "name": "proposer",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct ICspSettlement.CspInstructionMessage",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "cspInstructionMessageStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "walletId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          },
+          {
+            "internalType": "uint32",
+            "name": "accountIndex",
+            "type": "uint32"
+          },
+          {
+            "internalType": "string",
+            "name": "recipientAddress",
+            "type": "string"
+          },
+          {
+            "internalType": "bytes",
+            "name": "tokenId",
+            "type": "bytes"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maxFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes",
+            "name": "feeSchedule",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "paymentReference",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint64",
+            "name": "paymentId",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "batchPaymentId",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "batchEndTs",
+            "type": "uint64"
+          }
+        ],
+        "internalType": "struct ICspSettlement.CspPaymentInstructionMessage",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "cspPaymentInstructionMessageStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "walletId",
+            "type": "bytes32"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "teeId",
+                "type": "address"
+              },
+              {
+                "internalType": "uint64",
+                "name": "keyId",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct TeeIdKeyIdPair[]",
+            "name": "teeIdKeyIdPairs",
+            "type": "tuple[]"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "senderAddress",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "recipientAddress",
+            "type": "string"
+          },
+          {
+            "internalType": "bytes",
+            "name": "tokenId",
+            "type": "bytes"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maxFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes",
+            "name": "feeSchedule",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "paymentReference",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint64",
+            "name": "nonce",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "paymentId",
+            "type": "uint64"
+          }
+        ],
+        "internalType": "struct IPayments.PaymentInstructionMessage",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "paymentInstructionMessageStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "recipientAddress",
+            "type": "string"
+          },
+          {
+            "internalType": "bytes",
+            "name": "tokenId",
+            "type": "bytes"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maxFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "paymentReference",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct PaymentInstruction",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "paymentInstructionStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256[]",
+            "name": "maxFeePerPayment",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "int16[][]",
+            "name": "factorsBIPSPerPayment",
+            "type": "int16[][]"
+          },
+          {
+            "internalType": "uint16[]",
+            "name": "delaysSeconds",
+            "type": "uint16[]"
+          }
+        ],
+        "internalType": "struct ReissueFeeParams",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "reissueFeeParamsStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct WalletAccount",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "walletAccountStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

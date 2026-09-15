@@ -492,7 +492,7 @@ func DeriveV1PathPrefix(params *chaincfg.Params, accountIndex uint32) (string, e
 // Derive also enforces. Each xpub must be published at the WALLET (parent)
 // level, i.e. BIP-32 depth 2 (m/purpose'/coin'): the account level is a
 // NON-HARDENED child at accountIndex (2026-06-22, aligns with the deployed
-// flare-smart-contracts-v2 UTXO model — IPMWMultisigUtxoConfigured publishes
+// flare-smart-contracts-v2 UTXO model — IBtcAccountConfigured publishes
 // wallet-level parent xpubs). The v1 derivation table requires depth 2 so
 // DeriveV1ScriptParameters / DeriveAccountXpubs produce a coherent derivation
 // chain. Validating here catches mis-bound attestations before any

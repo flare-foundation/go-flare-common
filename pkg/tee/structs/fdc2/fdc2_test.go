@@ -19,7 +19,7 @@ import (
 // encode cannot produce a proof at all.
 //
 // That is not hypothetical: `packageHash` was renamed on
-// IPMWUtxoProposalCheckRequestBody without the matching rename in fdc2.abi, and
+// ICspProposalCheckRequestBody without the matching rename in fdc2.abi, and
 // for weeks every attempt to encode that request body failed with "field
 // proposalHash for tuple not found in the given struct".
 //
@@ -33,30 +33,30 @@ func TestEveryRegisteredTypeEncodes(t *testing.T) {
 			ITeeAvailabilityCheckRequestBody{},
 			ITeeAvailabilityCheckResponseBody{},
 		},
-		PMWPaymentStatus: {
-			IPMWPaymentStatusRequestBody{},
-			IPMWPaymentStatusResponseBody{
+		WalletPaymentStatus: {
+			IWalletPaymentStatusRequestBody{},
+			IWalletPaymentStatusResponseBody{
 				Amount:         big.NewInt(0),
 				MaxFee:         big.NewInt(0),
 				ReceivedAmount: big.NewInt(0),
 				TransactionFee: big.NewInt(0),
 			},
 		},
-		PMWMultisigAccountConfigured: {
-			IPMWMultisigAccountConfiguredRequestBody{},
-			IPMWMultisigAccountConfiguredResponseBody{},
+		NativeNonceAccountConfigured: {
+			INativeNonceAccountConfiguredRequestBody{},
+			INativeNonceAccountConfiguredResponseBody{},
 		},
-		PMWFeeProof: {
-			IPMWFeeProofRequestBody{},
-			IPMWFeeProofResponseBody{ActualFee: big.NewInt(0), EstimatedFee: big.NewInt(0)},
+		WalletFeeProof: {
+			IWalletFeeProofRequestBody{},
+			IWalletFeeProofResponseBody{ActualFee: big.NewInt(0), EstimatedFee: big.NewInt(0)},
 		},
-		PMWMultisigUtxoConfigured: {
-			IPMWMultisigUtxoConfiguredRequestBody{},
-			IPMWMultisigUtxoConfiguredResponseBody{},
+		BtcAccountConfigured: {
+			IBtcAccountConfiguredRequestBody{},
+			IBtcAccountConfiguredResponseBody{},
 		},
-		PMWUtxoProposalCheck: {
-			IPMWUtxoProposalCheckRequestBody{},
-			IPMWUtxoProposalCheckResponseBody{},
+		CspProposalCheck: {
+			ICspProposalCheckRequestBody{},
+			ICspProposalCheckResponseBody{},
 		},
 		BtcDeposit: {
 			IBtcDepositRequestBody{},

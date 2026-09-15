@@ -98,6 +98,11 @@
   },
   {
     "inputs": [],
+    "name": "TimelockValueNotAllowed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "TypeAndSourceCombinationNotSupported",
     "type": "error"
   },
@@ -300,7 +305,7 @@
     ],
     "name": "executeGovernanceCall",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
