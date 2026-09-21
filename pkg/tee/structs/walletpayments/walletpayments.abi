@@ -34,6 +34,41 @@
       {
         "components": [
           {
+            "internalType": "bytes32",
+            "name": "preimageHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint64",
+            "name": "amount",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "expiresAt",
+            "type": "uint64"
+          },
+          {
+            "internalType": "bytes",
+            "name": "counterpartyPubKey",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct IBtcEscrows.BtcEscrowTerms",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "btcEscrowTermsStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
             "internalType": "uint32",
             "name": "anchorIndex",
             "type": "uint32"
@@ -44,6 +79,11 @@
             "type": "uint64"
           },
           {
+            "internalType": "uint32",
+            "name": "nextAnchorVout",
+            "type": "uint32"
+          },
+          {
             "internalType": "bytes32",
             "name": "txid",
             "type": "bytes32"
@@ -52,11 +92,6 @@
             "internalType": "bytes32",
             "name": "nextAnchorTxid",
             "type": "bytes32"
-          },
-          {
-            "internalType": "uint32",
-            "name": "nextAnchorVout",
-            "type": "uint32"
           }
         ],
         "internalType": "struct IBtcAccounts.BtcProposalCommitment",
@@ -196,11 +231,6 @@
             "type": "uint256"
           },
           {
-            "internalType": "bytes",
-            "name": "feeSchedule",
-            "type": "bytes"
-          },
-          {
             "internalType": "bytes32",
             "name": "paymentReference",
             "type": "bytes32"
@@ -214,19 +244,14 @@
             "internalType": "uint64",
             "name": "batchPaymentId",
             "type": "uint64"
-          },
-          {
-            "internalType": "uint64",
-            "name": "batchEndTs",
-            "type": "uint64"
           }
         ],
-        "internalType": "struct ICspSettlement.CspPaymentInstructionMessage",
+        "internalType": "struct ICspSettlement.CspPaymentRecord",
         "name": "",
         "type": "tuple"
       }
     ],
-    "name": "cspPaymentInstructionMessageStruct",
+    "name": "cspPaymentRecordStruct",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -409,6 +434,133 @@
       }
     ],
     "name": "walletAccountStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "walletId",
+            "type": "bytes32"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "teeId",
+                "type": "address"
+              },
+              {
+                "internalType": "uint64",
+                "name": "keyId",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct TeeIdKeyIdPair[]",
+            "name": "teeIdKeyIdPairs",
+            "type": "tuple[]"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "senderAddress",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "destination",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "preimageHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint64",
+            "name": "cancelAfter",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maxFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint64",
+            "name": "nonce",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "paymentId",
+            "type": "uint64"
+          },
+          {
+            "internalType": "bool",
+            "name": "nullified",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct IXrpEscrows.XrpEscrowCreateMessage",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "xrpEscrowCreateMessageStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "preimageHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint64",
+            "name": "expiresAt",
+            "type": "uint64"
+          },
+          {
+            "internalType": "string",
+            "name": "destination",
+            "type": "string"
+          },
+          {
+            "internalType": "bool",
+            "name": "nullified",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct IXrpEscrows.XrpEscrowTerms",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "xrpEscrowTermsStruct",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

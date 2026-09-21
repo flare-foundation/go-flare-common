@@ -20,22 +20,30 @@ import (
 // lives here rather than in either of them: the proposer builds the struct for
 // calldata, the verifier hashes it into the response, and a disagreement would
 // surface as `CommitmentMismatch` on a proposal that is in fact correct.
+// FIELD ORDER IS THE CONTRACT'S, and it is load-bearing twice over: it is the
+// storage packing the owners chose — uint32, uint64, uint32 share one 32-byte
+// slot, then the two bytes32 take one each — AND it is the order
+// `abi.encode` hashes, so a struct written in a more natural order produces a
+// different chainCommitmentHash and every proposal is refused with
+// CommitmentMismatch, a revert that accuses the proposal rather than the
+// encoding.
 type BtcProposalCommitment struct {
 	AnchorIndex    uint32
 	Nonce          uint64
+	NextAnchorVout uint32
 	Txid           [32]byte
 	NextAnchorTxid [32]byte
-	NextAnchorVout uint32
 }
 
 // commitmentArgs mirrors `abi.encode(BtcProposalCommitment)` — five static words,
-// in declaration order. Built once; the types cannot fail to parse.
+// in DECLARATION order, which is the contract's. Built once; the types cannot
+// fail to parse.
 var commitmentArgs = func() abi.Arguments {
 	u32, _ := abi.NewType("uint32", "", nil)
 	u64, _ := abi.NewType("uint64", "", nil)
 	b32, _ := abi.NewType("bytes32", "", nil)
 	return abi.Arguments{
-		{Type: u32}, {Type: u64}, {Type: b32}, {Type: b32}, {Type: u32},
+		{Type: u32}, {Type: u64}, {Type: u32}, {Type: b32}, {Type: b32},
 	}
 }()
 
@@ -43,7 +51,7 @@ var commitmentArgs = func() abi.Arguments {
 // attested response carries as `chainCommitmentHash`.
 func (c BtcProposalCommitment) CommitmentHash() [32]byte {
 	packed, err := commitmentArgs.Pack(
-		c.AnchorIndex, c.Nonce, c.Txid, c.NextAnchorTxid, c.NextAnchorVout,
+		c.AnchorIndex, c.Nonce, c.NextAnchorVout, c.Txid, c.NextAnchorTxid,
 	)
 	if err != nil {
 		// Every field is a static type built from constants above, so packing

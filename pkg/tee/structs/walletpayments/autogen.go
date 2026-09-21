@@ -40,9 +40,17 @@ type IBtcAccountsBtcAnchor struct {
 type IBtcAccountsBtcProposalCommitment struct {
 	AnchorIndex    uint32
 	Nonce          uint64
+	NextAnchorVout uint32
 	Txid           [32]byte
 	NextAnchorTxid [32]byte
-	NextAnchorVout uint32
+}
+
+// IBtcEscrowsBtcEscrowTerms is an auto generated low-level Go binding around an user-defined struct.
+type IBtcEscrowsBtcEscrowTerms struct {
+	PreimageHash       [32]byte
+	Amount             uint64
+	ExpiresAt          uint64
+	CounterpartyPubKey []byte
 }
 
 // ICspSettlementCspInstructionMessage is an auto generated low-level Go binding around an user-defined struct.
@@ -60,8 +68,8 @@ type ICspSettlementCspInstructionMessage struct {
 	Proposer            common.Address
 }
 
-// ICspSettlementCspPaymentInstructionMessage is an auto generated low-level Go binding around an user-defined struct.
-type ICspSettlementCspPaymentInstructionMessage struct {
+// ICspSettlementCspPaymentRecord is an auto generated low-level Go binding around an user-defined struct.
+type ICspSettlementCspPaymentRecord struct {
 	WalletId         [32]byte
 	SourceId         [32]byte
 	AccountAddress   string
@@ -70,11 +78,9 @@ type ICspSettlementCspPaymentInstructionMessage struct {
 	TokenId          []byte
 	Amount           *big.Int
 	MaxFee           *big.Int
-	FeeSchedule      []byte
 	PaymentReference [32]byte
 	PaymentId        uint64
 	BatchPaymentId   uint64
-	BatchEndTs       uint64
 }
 
 // IPaymentsPaymentInstructionMessage is an auto generated low-level Go binding around an user-defined struct.
@@ -91,6 +97,31 @@ type IPaymentsPaymentInstructionMessage struct {
 	PaymentReference [32]byte
 	Nonce            uint64
 	PaymentId        uint64
+}
+
+// IXrpEscrowsXrpEscrowCreateMessage is an auto generated low-level Go binding around an user-defined struct.
+type IXrpEscrowsXrpEscrowCreateMessage struct {
+	WalletId        [32]byte
+	TeeIdKeyIdPairs []TeeIdKeyIdPair
+	SourceId        [32]byte
+	SenderAddress   string
+	Destination     string
+	Amount          *big.Int
+	PreimageHash    [32]byte
+	CancelAfter     uint64
+	MaxFee          *big.Int
+	Nonce           uint64
+	PaymentId       uint64
+	Nullified       bool
+}
+
+// IXrpEscrowsXrpEscrowTerms is an auto generated low-level Go binding around an user-defined struct.
+type IXrpEscrowsXrpEscrowTerms struct {
+	PreimageHash [32]byte
+	Amount       *big.Int
+	ExpiresAt    uint64
+	Destination  string
+	Nullified    bool
 }
 
 // PaymentInstruction is an auto generated low-level Go binding around an user-defined struct.
@@ -123,7 +154,7 @@ type WalletAccount struct {
 
 // WalletPaymentsMetaData contains all meta data concerning the WalletPayments contract.
 var WalletPaymentsMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"genesisTxid\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"genesisVout\",\"type\":\"uint32\"},{\"internalType\":\"uint64\",\"name\":\"nextNonce\",\"type\":\"uint64\"}],\"internalType\":\"structIBtcAccounts.BtcAnchor\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"btcAnchorStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint32\",\"name\":\"anchorIndex\",\"type\":\"uint32\"},{\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"txid\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"nextAnchorTxid\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"nextAnchorVout\",\"type\":\"uint32\"}],\"internalType\":\"structIBtcAccounts.BtcProposalCommitment\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"btcProposalCommitmentStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"}],\"internalType\":\"structTeeIdKeyIdPair[]\",\"name\":\"teeIdKeyIdPairs\",\"type\":\"tuple[]\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"accountIndex\",\"type\":\"uint32\"},{\"internalType\":\"uint64\",\"name\":\"sequencePosition\",\"type\":\"uint64\"},{\"internalType\":\"uint32\",\"name\":\"attempt\",\"type\":\"uint32\"},{\"internalType\":\"uint64\",\"name\":\"fromPaymentId\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"toPaymentId\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"packageHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"chainCommitmentHash\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"proposer\",\"type\":\"address\"}],\"internalType\":\"structICspSettlement.CspInstructionMessage\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"cspInstructionMessageStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"},{\"internalType\":\"uint32\",\"name\":\"accountIndex\",\"type\":\"uint32\"},{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"tokenId\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"feeSchedule\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"paymentId\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"batchPaymentId\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"batchEndTs\",\"type\":\"uint64\"}],\"internalType\":\"structICspSettlement.CspPaymentInstructionMessage\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"cspPaymentInstructionMessageStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"}],\"internalType\":\"structTeeIdKeyIdPair[]\",\"name\":\"teeIdKeyIdPairs\",\"type\":\"tuple[]\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"senderAddress\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"tokenId\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"feeSchedule\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"paymentId\",\"type\":\"uint64\"}],\"internalType\":\"structIPayments.PaymentInstructionMessage\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"paymentInstructionMessageStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"tokenId\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"}],\"internalType\":\"structPaymentInstruction\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"paymentInstructionStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint256[]\",\"name\":\"maxFeePerPayment\",\"type\":\"uint256[]\"},{\"internalType\":\"int16[][]\",\"name\":\"factorsBIPSPerPayment\",\"type\":\"int16[][]\"},{\"internalType\":\"uint16[]\",\"name\":\"delaysSeconds\",\"type\":\"uint16[]\"}],\"internalType\":\"structReissueFeeParams\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"reissueFeeParamsStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structWalletAccount\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"walletAccountStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"genesisTxid\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"genesisVout\",\"type\":\"uint32\"},{\"internalType\":\"uint64\",\"name\":\"nextNonce\",\"type\":\"uint64\"}],\"internalType\":\"structIBtcAccounts.BtcAnchor\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"btcAnchorStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"preimageHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"amount\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"expiresAt\",\"type\":\"uint64\"},{\"internalType\":\"bytes\",\"name\":\"counterpartyPubKey\",\"type\":\"bytes\"}],\"internalType\":\"structIBtcEscrows.BtcEscrowTerms\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"btcEscrowTermsStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint32\",\"name\":\"anchorIndex\",\"type\":\"uint32\"},{\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"},{\"internalType\":\"uint32\",\"name\":\"nextAnchorVout\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"txid\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"nextAnchorTxid\",\"type\":\"bytes32\"}],\"internalType\":\"structIBtcAccounts.BtcProposalCommitment\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"btcProposalCommitmentStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"}],\"internalType\":\"structTeeIdKeyIdPair[]\",\"name\":\"teeIdKeyIdPairs\",\"type\":\"tuple[]\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"accountIndex\",\"type\":\"uint32\"},{\"internalType\":\"uint64\",\"name\":\"sequencePosition\",\"type\":\"uint64\"},{\"internalType\":\"uint32\",\"name\":\"attempt\",\"type\":\"uint32\"},{\"internalType\":\"uint64\",\"name\":\"fromPaymentId\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"toPaymentId\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"packageHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"chainCommitmentHash\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"proposer\",\"type\":\"address\"}],\"internalType\":\"structICspSettlement.CspInstructionMessage\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"cspInstructionMessageStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"},{\"internalType\":\"uint32\",\"name\":\"accountIndex\",\"type\":\"uint32\"},{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"tokenId\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"paymentId\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"batchPaymentId\",\"type\":\"uint64\"}],\"internalType\":\"structICspSettlement.CspPaymentRecord\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"cspPaymentRecordStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"}],\"internalType\":\"structTeeIdKeyIdPair[]\",\"name\":\"teeIdKeyIdPairs\",\"type\":\"tuple[]\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"senderAddress\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"tokenId\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"feeSchedule\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"paymentId\",\"type\":\"uint64\"}],\"internalType\":\"structIPayments.PaymentInstructionMessage\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"paymentInstructionMessageStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"tokenId\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"}],\"internalType\":\"structPaymentInstruction\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"paymentInstructionStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint256[]\",\"name\":\"maxFeePerPayment\",\"type\":\"uint256[]\"},{\"internalType\":\"int16[][]\",\"name\":\"factorsBIPSPerPayment\",\"type\":\"int16[][]\"},{\"internalType\":\"uint16[]\",\"name\":\"delaysSeconds\",\"type\":\"uint16[]\"}],\"internalType\":\"structReissueFeeParams\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"reissueFeeParamsStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structWalletAccount\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"walletAccountStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"keyId\",\"type\":\"uint64\"}],\"internalType\":\"structTeeIdKeyIdPair[]\",\"name\":\"teeIdKeyIdPairs\",\"type\":\"tuple[]\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"senderAddress\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"destination\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"preimageHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"cancelAfter\",\"type\":\"uint64\"},{\"internalType\":\"uint256\",\"name\":\"maxFee\",\"type\":\"uint256\"},{\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"paymentId\",\"type\":\"uint64\"},{\"internalType\":\"bool\",\"name\":\"nullified\",\"type\":\"bool\"}],\"internalType\":\"structIXrpEscrows.XrpEscrowCreateMessage\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"xrpEscrowCreateMessageStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"preimageHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint64\",\"name\":\"expiresAt\",\"type\":\"uint64\"},{\"internalType\":\"string\",\"name\":\"destination\",\"type\":\"string\"},{\"internalType\":\"bool\",\"name\":\"nullified\",\"type\":\"bool\"}],\"internalType\":\"structIXrpEscrows.XrpEscrowTerms\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"xrpEscrowTermsStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // WalletPaymentsABI is the input ABI used to generate the binding from.
@@ -293,23 +324,44 @@ func (_WalletPayments *WalletPaymentsTransactorSession) BtcAnchorStruct(arg0 IBt
 	return _WalletPayments.Contract.BtcAnchorStruct(&_WalletPayments.TransactOpts, arg0)
 }
 
-// BtcProposalCommitmentStruct is a paid mutator transaction binding the contract method 0xe11635ff.
+// BtcEscrowTermsStruct is a paid mutator transaction binding the contract method 0xb8f4b596.
 //
-// Solidity: function btcProposalCommitmentStruct((uint32,uint64,bytes32,bytes32,uint32) ) returns()
+// Solidity: function btcEscrowTermsStruct((bytes32,uint64,uint64,bytes) ) returns()
+func (_WalletPayments *WalletPaymentsTransactor) BtcEscrowTermsStruct(opts *bind.TransactOpts, arg0 IBtcEscrowsBtcEscrowTerms) (*types.Transaction, error) {
+	return _WalletPayments.contract.Transact(opts, "btcEscrowTermsStruct", arg0)
+}
+
+// BtcEscrowTermsStruct is a paid mutator transaction binding the contract method 0xb8f4b596.
+//
+// Solidity: function btcEscrowTermsStruct((bytes32,uint64,uint64,bytes) ) returns()
+func (_WalletPayments *WalletPaymentsSession) BtcEscrowTermsStruct(arg0 IBtcEscrowsBtcEscrowTerms) (*types.Transaction, error) {
+	return _WalletPayments.Contract.BtcEscrowTermsStruct(&_WalletPayments.TransactOpts, arg0)
+}
+
+// BtcEscrowTermsStruct is a paid mutator transaction binding the contract method 0xb8f4b596.
+//
+// Solidity: function btcEscrowTermsStruct((bytes32,uint64,uint64,bytes) ) returns()
+func (_WalletPayments *WalletPaymentsTransactorSession) BtcEscrowTermsStruct(arg0 IBtcEscrowsBtcEscrowTerms) (*types.Transaction, error) {
+	return _WalletPayments.Contract.BtcEscrowTermsStruct(&_WalletPayments.TransactOpts, arg0)
+}
+
+// BtcProposalCommitmentStruct is a paid mutator transaction binding the contract method 0x646116c4.
+//
+// Solidity: function btcProposalCommitmentStruct((uint32,uint64,uint32,bytes32,bytes32) ) returns()
 func (_WalletPayments *WalletPaymentsTransactor) BtcProposalCommitmentStruct(opts *bind.TransactOpts, arg0 IBtcAccountsBtcProposalCommitment) (*types.Transaction, error) {
 	return _WalletPayments.contract.Transact(opts, "btcProposalCommitmentStruct", arg0)
 }
 
-// BtcProposalCommitmentStruct is a paid mutator transaction binding the contract method 0xe11635ff.
+// BtcProposalCommitmentStruct is a paid mutator transaction binding the contract method 0x646116c4.
 //
-// Solidity: function btcProposalCommitmentStruct((uint32,uint64,bytes32,bytes32,uint32) ) returns()
+// Solidity: function btcProposalCommitmentStruct((uint32,uint64,uint32,bytes32,bytes32) ) returns()
 func (_WalletPayments *WalletPaymentsSession) BtcProposalCommitmentStruct(arg0 IBtcAccountsBtcProposalCommitment) (*types.Transaction, error) {
 	return _WalletPayments.Contract.BtcProposalCommitmentStruct(&_WalletPayments.TransactOpts, arg0)
 }
 
-// BtcProposalCommitmentStruct is a paid mutator transaction binding the contract method 0xe11635ff.
+// BtcProposalCommitmentStruct is a paid mutator transaction binding the contract method 0x646116c4.
 //
-// Solidity: function btcProposalCommitmentStruct((uint32,uint64,bytes32,bytes32,uint32) ) returns()
+// Solidity: function btcProposalCommitmentStruct((uint32,uint64,uint32,bytes32,bytes32) ) returns()
 func (_WalletPayments *WalletPaymentsTransactorSession) BtcProposalCommitmentStruct(arg0 IBtcAccountsBtcProposalCommitment) (*types.Transaction, error) {
 	return _WalletPayments.Contract.BtcProposalCommitmentStruct(&_WalletPayments.TransactOpts, arg0)
 }
@@ -335,25 +387,25 @@ func (_WalletPayments *WalletPaymentsTransactorSession) CspInstructionMessageStr
 	return _WalletPayments.Contract.CspInstructionMessageStruct(&_WalletPayments.TransactOpts, arg0)
 }
 
-// CspPaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0x838681de.
+// CspPaymentRecordStruct is a paid mutator transaction binding the contract method 0x73ee5ab8.
 //
-// Solidity: function cspPaymentInstructionMessageStruct((bytes32,bytes32,string,uint32,string,bytes,uint256,uint256,bytes,bytes32,uint64,uint64,uint64) ) returns()
-func (_WalletPayments *WalletPaymentsTransactor) CspPaymentInstructionMessageStruct(opts *bind.TransactOpts, arg0 ICspSettlementCspPaymentInstructionMessage) (*types.Transaction, error) {
-	return _WalletPayments.contract.Transact(opts, "cspPaymentInstructionMessageStruct", arg0)
+// Solidity: function cspPaymentRecordStruct((bytes32,bytes32,string,uint32,string,bytes,uint256,uint256,bytes32,uint64,uint64) ) returns()
+func (_WalletPayments *WalletPaymentsTransactor) CspPaymentRecordStruct(opts *bind.TransactOpts, arg0 ICspSettlementCspPaymentRecord) (*types.Transaction, error) {
+	return _WalletPayments.contract.Transact(opts, "cspPaymentRecordStruct", arg0)
 }
 
-// CspPaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0x838681de.
+// CspPaymentRecordStruct is a paid mutator transaction binding the contract method 0x73ee5ab8.
 //
-// Solidity: function cspPaymentInstructionMessageStruct((bytes32,bytes32,string,uint32,string,bytes,uint256,uint256,bytes,bytes32,uint64,uint64,uint64) ) returns()
-func (_WalletPayments *WalletPaymentsSession) CspPaymentInstructionMessageStruct(arg0 ICspSettlementCspPaymentInstructionMessage) (*types.Transaction, error) {
-	return _WalletPayments.Contract.CspPaymentInstructionMessageStruct(&_WalletPayments.TransactOpts, arg0)
+// Solidity: function cspPaymentRecordStruct((bytes32,bytes32,string,uint32,string,bytes,uint256,uint256,bytes32,uint64,uint64) ) returns()
+func (_WalletPayments *WalletPaymentsSession) CspPaymentRecordStruct(arg0 ICspSettlementCspPaymentRecord) (*types.Transaction, error) {
+	return _WalletPayments.Contract.CspPaymentRecordStruct(&_WalletPayments.TransactOpts, arg0)
 }
 
-// CspPaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0x838681de.
+// CspPaymentRecordStruct is a paid mutator transaction binding the contract method 0x73ee5ab8.
 //
-// Solidity: function cspPaymentInstructionMessageStruct((bytes32,bytes32,string,uint32,string,bytes,uint256,uint256,bytes,bytes32,uint64,uint64,uint64) ) returns()
-func (_WalletPayments *WalletPaymentsTransactorSession) CspPaymentInstructionMessageStruct(arg0 ICspSettlementCspPaymentInstructionMessage) (*types.Transaction, error) {
-	return _WalletPayments.Contract.CspPaymentInstructionMessageStruct(&_WalletPayments.TransactOpts, arg0)
+// Solidity: function cspPaymentRecordStruct((bytes32,bytes32,string,uint32,string,bytes,uint256,uint256,bytes32,uint64,uint64) ) returns()
+func (_WalletPayments *WalletPaymentsTransactorSession) CspPaymentRecordStruct(arg0 ICspSettlementCspPaymentRecord) (*types.Transaction, error) {
+	return _WalletPayments.Contract.CspPaymentRecordStruct(&_WalletPayments.TransactOpts, arg0)
 }
 
 // PaymentInstructionMessageStruct is a paid mutator transaction binding the contract method 0x4b311981.
@@ -438,4 +490,46 @@ func (_WalletPayments *WalletPaymentsSession) WalletAccountStruct(arg0 WalletAcc
 // Solidity: function walletAccountStruct((bytes32,string) ) returns()
 func (_WalletPayments *WalletPaymentsTransactorSession) WalletAccountStruct(arg0 WalletAccount) (*types.Transaction, error) {
 	return _WalletPayments.Contract.WalletAccountStruct(&_WalletPayments.TransactOpts, arg0)
+}
+
+// XrpEscrowCreateMessageStruct is a paid mutator transaction binding the contract method 0x76c2575b.
+//
+// Solidity: function xrpEscrowCreateMessageStruct((bytes32,(address,uint64)[],bytes32,string,string,uint256,bytes32,uint64,uint256,uint64,uint64,bool) ) returns()
+func (_WalletPayments *WalletPaymentsTransactor) XrpEscrowCreateMessageStruct(opts *bind.TransactOpts, arg0 IXrpEscrowsXrpEscrowCreateMessage) (*types.Transaction, error) {
+	return _WalletPayments.contract.Transact(opts, "xrpEscrowCreateMessageStruct", arg0)
+}
+
+// XrpEscrowCreateMessageStruct is a paid mutator transaction binding the contract method 0x76c2575b.
+//
+// Solidity: function xrpEscrowCreateMessageStruct((bytes32,(address,uint64)[],bytes32,string,string,uint256,bytes32,uint64,uint256,uint64,uint64,bool) ) returns()
+func (_WalletPayments *WalletPaymentsSession) XrpEscrowCreateMessageStruct(arg0 IXrpEscrowsXrpEscrowCreateMessage) (*types.Transaction, error) {
+	return _WalletPayments.Contract.XrpEscrowCreateMessageStruct(&_WalletPayments.TransactOpts, arg0)
+}
+
+// XrpEscrowCreateMessageStruct is a paid mutator transaction binding the contract method 0x76c2575b.
+//
+// Solidity: function xrpEscrowCreateMessageStruct((bytes32,(address,uint64)[],bytes32,string,string,uint256,bytes32,uint64,uint256,uint64,uint64,bool) ) returns()
+func (_WalletPayments *WalletPaymentsTransactorSession) XrpEscrowCreateMessageStruct(arg0 IXrpEscrowsXrpEscrowCreateMessage) (*types.Transaction, error) {
+	return _WalletPayments.Contract.XrpEscrowCreateMessageStruct(&_WalletPayments.TransactOpts, arg0)
+}
+
+// XrpEscrowTermsStruct is a paid mutator transaction binding the contract method 0xaf6d2f4c.
+//
+// Solidity: function xrpEscrowTermsStruct((bytes32,uint256,uint64,string,bool) ) returns()
+func (_WalletPayments *WalletPaymentsTransactor) XrpEscrowTermsStruct(opts *bind.TransactOpts, arg0 IXrpEscrowsXrpEscrowTerms) (*types.Transaction, error) {
+	return _WalletPayments.contract.Transact(opts, "xrpEscrowTermsStruct", arg0)
+}
+
+// XrpEscrowTermsStruct is a paid mutator transaction binding the contract method 0xaf6d2f4c.
+//
+// Solidity: function xrpEscrowTermsStruct((bytes32,uint256,uint64,string,bool) ) returns()
+func (_WalletPayments *WalletPaymentsSession) XrpEscrowTermsStruct(arg0 IXrpEscrowsXrpEscrowTerms) (*types.Transaction, error) {
+	return _WalletPayments.Contract.XrpEscrowTermsStruct(&_WalletPayments.TransactOpts, arg0)
+}
+
+// XrpEscrowTermsStruct is a paid mutator transaction binding the contract method 0xaf6d2f4c.
+//
+// Solidity: function xrpEscrowTermsStruct((bytes32,uint256,uint64,string,bool) ) returns()
+func (_WalletPayments *WalletPaymentsTransactorSession) XrpEscrowTermsStruct(arg0 IXrpEscrowsXrpEscrowTerms) (*types.Transaction, error) {
+	return _WalletPayments.Contract.XrpEscrowTermsStruct(&_WalletPayments.TransactOpts, arg0)
 }

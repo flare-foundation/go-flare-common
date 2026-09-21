@@ -66,6 +66,31 @@
   },
   {
     "inputs": [],
+    "name": "BtcEscrowAlreadyReclaimed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "BtcEscrowNotExpired",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "BtcEscrowNotFound",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "BtcEscrowNotSettled",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "CannotNullifyPayment",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "CommitmentMismatch",
     "type": "error"
   },
@@ -102,7 +127,7 @@
   },
   {
     "inputs": [],
-    "name": "EscrowCreateCannotOverride",
+    "name": "EscrowProfileNotSet",
     "type": "error"
   },
   {
@@ -174,17 +199,17 @@
   },
   {
     "inputs": [],
+    "name": "InvalidBtcEscrowProfile",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "InvalidBtcEscrowTerms",
     "type": "error"
   },
   {
     "inputs": [],
     "name": "InvalidCspSourceSettings",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "InvalidEmitterKind",
     "type": "error"
   },
   {
@@ -267,6 +292,11 @@
   },
   {
     "inputs": [],
+    "name": "InvalidXrpEscrowTerms",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "LaneMismatch",
     "type": "error"
   },
@@ -282,22 +312,22 @@
   },
   {
     "inputs": [],
+    "name": "MaxFeeTooLarge",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "MaxFeeZero",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "NoNewAnchors",
     "type": "error"
   },
   {
     "inputs": [],
     "name": "NonceMismatch",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "NotAnEscrowKind",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "NotAuthorizedEmitter",
     "type": "error"
   },
   {
@@ -362,6 +392,16 @@
   },
   {
     "inputs": [],
+    "name": "OperationAlreadyNullified",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OperationNotSupported",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "OverrideAlreadyPending",
     "type": "error"
   },
@@ -409,6 +449,17 @@
       }
     ],
     "name": "SourceAlreadyRegistered",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
+    "name": "SourceChainKeyTypeMismatch",
     "type": "error"
   },
   {
@@ -584,6 +635,22 @@
     "type": "error"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint8",
+        "name": "expectedNetwork",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint8",
+        "name": "actualNetwork",
+        "type": "uint8"
+      }
+    ],
+    "name": "WalletNetworkMismatch",
+    "type": "error"
+  },
+  {
     "inputs": [],
     "name": "WalletNotInProduction",
     "type": "error"
@@ -591,6 +658,11 @@
   {
     "inputs": [],
     "name": "WrongKeyType",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "XrpEscrowNotFound",
     "type": "error"
   },
   {
@@ -868,6 +940,117 @@
       },
       {
         "indexed": true,
+        "internalType": "uint64",
+        "name": "paymentId",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "sequencePosition",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum ICspInstructions.InstructionKind",
+        "name": "kind",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "preimageHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "amount",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "expiresAt",
+        "type": "uint64"
+      }
+    ],
+    "name": "BtcEscrowEmitted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "walletId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint32",
+        "name": "accountIndex",
+        "type": "uint32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "counterpartyPubKey",
+        "type": "bytes"
+      }
+    ],
+    "name": "BtcEscrowProfileSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "walletId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint32",
+        "name": "accountIndex",
+        "type": "uint32"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint64",
+        "name": "paymentId",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "createPaymentId",
+        "type": "uint64"
+      }
+    ],
+    "name": "BtcEscrowReclaimEmitted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "walletId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint32",
+        "name": "accountIndex",
+        "type": "uint32"
+      },
+      {
+        "indexed": true,
         "internalType": "bytes32",
         "name": "opCommand",
         "type": "bytes32"
@@ -1082,86 +1265,6 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "walletId",
-        "type": "bytes32"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint32",
-        "name": "accountIndex",
-        "type": "uint32"
-      },
-      {
-        "indexed": false,
-        "internalType": "enum ICspInstructions.InstructionKind",
-        "name": "kind",
-        "type": "uint8"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "emitter",
-        "type": "address"
-      }
-    ],
-    "name": "EmitterAuthorized",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "walletId",
-        "type": "bytes32"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint32",
-        "name": "accountIndex",
-        "type": "uint32"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint64",
-        "name": "sequencePosition",
-        "type": "uint64"
-      },
-      {
-        "indexed": false,
-        "internalType": "enum ICspInstructions.InstructionKind",
-        "name": "kind",
-        "type": "uint8"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes32",
-        "name": "preimageHash",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint64",
-        "name": "timeout",
-        "type": "uint64"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint64",
-        "name": "amountSat",
-        "type": "uint64"
-      }
-    ],
-    "name": "EscrowEmitted",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
         "indexed": false,
         "internalType": "bytes32[]",
         "name": "sourceIds",
@@ -1282,7 +1385,19 @@
       {
         "indexed": false,
         "internalType": "uint64",
+        "name": "paymentId",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
         "name": "emittedAt",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "maxFee",
         "type": "uint64"
       }
     ],
@@ -1385,6 +1500,43 @@
       }
     ],
     "name": "NativeNonceAccountAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "walletId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint32",
+        "name": "accountIndex",
+        "type": "uint32"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint64",
+        "name": "sequencePosition",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "paymentId",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint32",
+        "name": "attempt",
+        "type": "uint32"
+      }
+    ],
+    "name": "OperationNullified",
     "type": "event"
   },
   {
@@ -1818,11 +1970,6 @@
             "internalType": "enum ISourceConfig.ChainKind",
             "name": "chainKind",
             "type": "uint8"
-          },
-          {
-            "internalType": "enum ISourceConfig.Network",
-            "name": "network",
-            "type": "uint8"
           }
         ],
         "indexed": false,
@@ -1858,6 +2005,81 @@
       }
     ],
     "name": "TimelockedGovernanceCallExecuted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "walletId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint64",
+        "name": "paymentId",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "reissueNumber",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "maxFee",
+        "type": "uint256"
+      }
+    ],
+    "name": "XrpEscrowInstructed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "walletId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint64",
+        "name": "paymentId",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "reissueNumber",
+        "type": "uint64"
+      }
+    ],
+    "name": "XrpEscrowNullified",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "walletId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "destination",
+        "type": "string"
+      }
+    ],
+    "name": "XrpEscrowProfileSet",
     "type": "event"
   },
   {
@@ -2383,41 +2605,6 @@
   {
     "inputs": [
       {
-        "components": [
-          {
-            "internalType": "bytes32",
-            "name": "sourceId",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "string",
-            "name": "accountAddress",
-            "type": "string"
-          }
-        ],
-        "internalType": "struct WalletAccount",
-        "name": "_account",
-        "type": "tuple"
-      },
-      {
-        "internalType": "enum ICspInstructions.InstructionKind",
-        "name": "_kind",
-        "type": "uint8"
-      },
-      {
-        "internalType": "address",
-        "name": "_emitter",
-        "type": "address"
-      }
-    ],
-    "name": "authorizeEmitter",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "bytes",
         "name": "_encodedCall",
         "type": "bytes"
@@ -2507,17 +2694,85 @@
         "internalType": "enum ICspInstructions.EmissionMode",
         "name": "_mode",
         "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_maxFee",
+        "type": "uint256"
       }
     ],
     "name": "consolidate",
     "outputs": [
       {
         "internalType": "uint64",
-        "name": "_sequencePosition",
+        "name": "_paymentId",
         "type": "uint64"
       }
     ],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct WalletAccount",
+        "name": "_account",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "preimageHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint64",
+            "name": "expiresAt",
+            "type": "uint64"
+          }
+        ],
+        "internalType": "struct IEscrows.EscrowTerms",
+        "name": "_terms",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_maxFee",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_claimBackAddress",
+        "type": "address"
+      }
+    ],
+    "name": "createEscrow",
+    "outputs": [
+      {
+        "internalType": "uint64",
+        "name": "_paymentId",
+        "type": "uint64"
+      }
+    ],
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -2570,84 +2825,6 @@
     ],
     "name": "diamondCut",
     "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "bytes32",
-            "name": "sourceId",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "string",
-            "name": "accountAddress",
-            "type": "string"
-          }
-        ],
-        "internalType": "struct WalletAccount",
-        "name": "_account",
-        "type": "tuple"
-      },
-      {
-        "internalType": "enum ICspInstructions.InstructionKind",
-        "name": "_kind",
-        "type": "uint8"
-      },
-      {
-        "components": [
-          {
-            "internalType": "bytes32",
-            "name": "preimageHash",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "bytes",
-            "name": "counterpartyPubKey",
-            "type": "bytes"
-          },
-          {
-            "internalType": "uint64",
-            "name": "timeout",
-            "type": "uint64"
-          },
-          {
-            "internalType": "uint64",
-            "name": "amountSat",
-            "type": "uint64"
-          },
-          {
-            "internalType": "uint8",
-            "name": "chain",
-            "type": "uint8"
-          },
-          {
-            "internalType": "uint32",
-            "name": "index",
-            "type": "uint32"
-          }
-        ],
-        "internalType": "struct IBtcAccounts.BtcEscrowTerms",
-        "name": "_terms",
-        "type": "tuple"
-      },
-      {
-        "internalType": "enum ICspInstructions.EmissionMode",
-        "name": "_mode",
-        "type": "uint8"
-      }
-    ],
-    "name": "escrow",
-    "outputs": [
-      {
-        "internalType": "uint64",
-        "name": "_sequencePosition",
-        "type": "uint64"
-      }
-    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -2968,6 +3145,11 @@
             "type": "uint64"
           },
           {
+            "internalType": "uint32",
+            "name": "nextAnchorVout",
+            "type": "uint32"
+          },
+          {
             "internalType": "bytes32",
             "name": "txid",
             "type": "bytes32"
@@ -2976,11 +3158,6 @@
             "internalType": "bytes32",
             "name": "nextAnchorTxid",
             "type": "bytes32"
-          },
-          {
-            "internalType": "uint32",
-            "name": "nextAnchorVout",
-            "type": "uint32"
           }
         ],
         "internalType": "struct IBtcAccounts.BtcProposalCommitment",
@@ -3510,6 +3687,136 @@
       },
       {
         "internalType": "uint64",
+        "name": "_paymentId",
+        "type": "uint64"
+      }
+    ],
+    "name": "getBtcEscrow",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "preimageHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint64",
+            "name": "amount",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "expiresAt",
+            "type": "uint64"
+          },
+          {
+            "internalType": "bytes",
+            "name": "counterpartyPubKey",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct IBtcEscrows.BtcEscrowTerms",
+        "name": "_terms",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct WalletAccount",
+        "name": "_account",
+        "type": "tuple"
+      }
+    ],
+    "name": "getBtcEscrowProfile",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "_counterpartyPubKey",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct WalletAccount",
+        "name": "_account",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_createPaymentId",
+        "type": "uint64"
+      }
+    ],
+    "name": "getBtcEscrowReclaim",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "_reclaimed",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_reclaimPaymentId",
+        "type": "uint64"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct WalletAccount",
+        "name": "_account",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint64",
         "name": "_sequencePosition",
         "type": "uint64"
       }
@@ -3524,32 +3831,22 @@
             "type": "bytes32"
           },
           {
+            "internalType": "uint64",
+            "name": "amount",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "expiresAt",
+            "type": "uint64"
+          },
+          {
             "internalType": "bytes",
             "name": "counterpartyPubKey",
             "type": "bytes"
-          },
-          {
-            "internalType": "uint64",
-            "name": "timeout",
-            "type": "uint64"
-          },
-          {
-            "internalType": "uint64",
-            "name": "amountSat",
-            "type": "uint64"
-          },
-          {
-            "internalType": "uint8",
-            "name": "chain",
-            "type": "uint8"
-          },
-          {
-            "internalType": "uint32",
-            "name": "index",
-            "type": "uint32"
           }
         ],
-        "internalType": "struct IBtcAccounts.BtcEscrowTerms",
+        "internalType": "struct IBtcEscrows.BtcEscrowTerms",
         "name": "_terms",
         "type": "tuple"
       }
@@ -3643,6 +3940,16 @@
             "type": "uint32"
           },
           {
+            "internalType": "uint64",
+            "name": "graceEndsAt",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint32",
+            "name": "paymentCount",
+            "type": "uint32"
+          },
+          {
             "internalType": "bytes32",
             "name": "packageHash",
             "type": "bytes32"
@@ -3661,16 +3968,6 @@
             "internalType": "uint64",
             "name": "score",
             "type": "uint64"
-          },
-          {
-            "internalType": "uint64",
-            "name": "graceEndsAt",
-            "type": "uint64"
-          },
-          {
-            "internalType": "uint32",
-            "name": "paymentCount",
-            "type": "uint32"
           }
         ],
         "internalType": "struct ICspProposals.Leader",
@@ -3690,6 +3987,11 @@
             "type": "uint64"
           },
           {
+            "internalType": "uint32",
+            "name": "nextAnchorVout",
+            "type": "uint32"
+          },
+          {
             "internalType": "bytes32",
             "name": "txid",
             "type": "bytes32"
@@ -3698,11 +4000,6 @@
             "internalType": "bytes32",
             "name": "nextAnchorTxid",
             "type": "bytes32"
-          },
-          {
-            "internalType": "uint32",
-            "name": "nextAnchorVout",
-            "type": "uint32"
           }
         ],
         "internalType": "struct IBtcAccounts.BtcProposalCommitment",
@@ -3753,6 +4050,11 @@
             "type": "uint64"
           },
           {
+            "internalType": "uint32",
+            "name": "nextAnchorVout",
+            "type": "uint32"
+          },
+          {
             "internalType": "bytes32",
             "name": "txid",
             "type": "bytes32"
@@ -3761,11 +4063,6 @@
             "internalType": "bytes32",
             "name": "nextAnchorTxid",
             "type": "bytes32"
-          },
-          {
-            "internalType": "uint32",
-            "name": "nextAnchorVout",
-            "type": "uint32"
           }
         ],
         "internalType": "struct IBtcAccounts.BtcProposalCommitment",
@@ -3970,17 +4267,34 @@
         "type": "tuple"
       },
       {
-        "internalType": "enum ICspInstructions.InstructionKind",
-        "name": "_kind",
-        "type": "uint8"
+        "internalType": "uint64",
+        "name": "_paymentId",
+        "type": "uint64"
       }
     ],
-    "name": "getEmitter",
+    "name": "getEscrow",
     "outputs": [
       {
-        "internalType": "address",
-        "name": "_emitter",
-        "type": "address"
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "preimageHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint64",
+            "name": "expiresAt",
+            "type": "uint64"
+          }
+        ],
+        "internalType": "struct IEscrows.EscrowTerms",
+        "name": "_terms",
+        "type": "tuple"
       }
     ],
     "stateMutability": "view",
@@ -4250,6 +4564,16 @@
             "type": "uint32"
           },
           {
+            "internalType": "uint64",
+            "name": "graceEndsAt",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint32",
+            "name": "paymentCount",
+            "type": "uint32"
+          },
+          {
             "internalType": "bytes32",
             "name": "packageHash",
             "type": "bytes32"
@@ -4268,21 +4592,24 @@
             "internalType": "uint64",
             "name": "score",
             "type": "uint64"
-          },
-          {
-            "internalType": "uint64",
-            "name": "graceEndsAt",
-            "type": "uint64"
-          },
-          {
-            "internalType": "uint32",
-            "name": "paymentCount",
-            "type": "uint32"
           }
         ],
         "internalType": "struct ICspProposals.Leader",
         "name": "_leader",
         "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getNetwork",
+    "outputs": [
+      {
+        "internalType": "enum ISourceConfig.Network",
+        "name": "_network",
+        "type": "uint8"
       }
     ],
     "stateMutability": "view",
@@ -4412,6 +4739,47 @@
         "internalType": "uint64[]",
         "name": "_nullifiedPaymentIds",
         "type": "uint64[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct WalletAccount",
+        "name": "_account",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_paymentId",
+        "type": "uint64"
+      }
+    ],
+    "name": "getOperationSequencePosition",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "_isOperation",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_sequencePosition",
+        "type": "uint64"
       }
     ],
     "stateMutability": "view",
@@ -4847,11 +5215,6 @@
             "type": "uint8"
           },
           {
-            "internalType": "enum ISourceConfig.Network",
-            "name": "network",
-            "type": "uint8"
-          },
-          {
             "internalType": "bool",
             "name": "registered",
             "type": "bool"
@@ -4982,6 +5345,100 @@
         "internalType": "enum RegistryKind",
         "name": "_kind",
         "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct WalletAccount",
+        "name": "_account",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_paymentId",
+        "type": "uint64"
+      }
+    ],
+    "name": "getXrpEscrow",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "preimageHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint64",
+            "name": "expiresAt",
+            "type": "uint64"
+          },
+          {
+            "internalType": "string",
+            "name": "destination",
+            "type": "string"
+          },
+          {
+            "internalType": "bool",
+            "name": "nullified",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct IXrpEscrows.XrpEscrowTerms",
+        "name": "_terms",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct WalletAccount",
+        "name": "_account",
+        "type": "tuple"
+      }
+    ],
+    "name": "getXrpEscrowProfile",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "_destination",
+        "type": "string"
       }
     ],
     "stateMutability": "view",
@@ -5246,6 +5703,52 @@
         "type": "tuple"
       },
       {
+        "internalType": "uint64",
+        "name": "_paymentId",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_maxFee",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_claimBackAddress",
+        "type": "address"
+      }
+    ],
+    "name": "nullifyOperation",
+    "outputs": [
+      {
+        "internalType": "uint32",
+        "name": "_attempt",
+        "type": "uint32"
+      }
+    ],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct WalletAccount",
+        "name": "_account",
+        "type": "tuple"
+      },
+      {
         "components": [
           {
             "internalType": "string",
@@ -5325,6 +5828,52 @@
         "internalType": "struct WalletAccount",
         "name": "_account",
         "type": "tuple"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_createPaymentId",
+        "type": "uint64"
+      },
+      {
+        "internalType": "enum ICspInstructions.EmissionMode",
+        "name": "_mode",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_maxFee",
+        "type": "uint256"
+      }
+    ],
+    "name": "reclaimEscrow",
+    "outputs": [
+      {
+        "internalType": "uint64",
+        "name": "_paymentId",
+        "type": "uint64"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct WalletAccount",
+        "name": "_account",
+        "type": "tuple"
       }
     ],
     "name": "refreshEligibleGeneration",
@@ -5359,11 +5908,6 @@
           {
             "internalType": "enum ISourceConfig.ChainKind",
             "name": "chainKind",
-            "type": "uint8"
-          },
-          {
-            "internalType": "enum ISourceConfig.Network",
-            "name": "network",
             "type": "uint8"
           }
         ],
@@ -5498,16 +6042,21 @@
       },
       {
         "internalType": "uint64",
-        "name": "_sequencePosition",
+        "name": "_paymentId",
         "type": "uint64"
       },
       {
-        "internalType": "uint64",
+        "internalType": "uint256",
         "name": "_maxFee",
-        "type": "uint64"
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_claimBackAddress",
+        "type": "address"
       }
     ],
-    "name": "reissueInstruction",
+    "name": "reissueOperation",
     "outputs": [
       {
         "internalType": "uint32",
@@ -5515,7 +6064,7 @@
         "type": "uint32"
       }
     ],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -5739,6 +6288,36 @@
   {
     "inputs": [
       {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct WalletAccount",
+        "name": "_account",
+        "type": "tuple"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_counterpartyPubKey",
+        "type": "bytes"
+      }
+    ],
+    "name": "setBtcEscrowProfile",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "bytes32",
         "name": "_sourceId",
         "type": "bytes32"
@@ -5919,6 +6498,36 @@
       }
     ],
     "name": "setSourcesEnabled",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct WalletAccount",
+        "name": "_account",
+        "type": "tuple"
+      },
+      {
+        "internalType": "string",
+        "name": "_destination",
+        "type": "string"
+      }
+    ],
+    "name": "setXrpEscrowProfile",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
