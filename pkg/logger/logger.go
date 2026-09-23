@@ -15,15 +15,24 @@ import (
 	"io"
 	"os"
 	"sync/atomic"
+	"time"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
+// Formats of the log output.
 const (
-	timeFormat = "[01-02|15:04:05.000]"
+	// FormatConsole is one readable line per entry, coloured when standard
+	// output is a terminal.
+	FormatConsole = "console"
+	// FormatJSON is one JSON object per entry, for log shippers.
+	FormatJSON = "json"
 )
+
+// timeLayout is ISO 8601 in UTC with millisecond precision.
+const timeLayout = "2006-01-02T15:04:05.000Z07:00"
 
 // state is one configured logger: base carries no caller skip and is what
 // Logger and With hand out, pkg skips this package's wrapper functions.
@@ -44,7 +53,8 @@ func pkg() *zap.SugaredLogger {
 
 // Config holds logger configuration for output level, file, and console settings.
 type Config struct {
-	Level       string `toml:"level"` // valid values are: DEBUG, INFO, WARN, ERROR, DPANIC, PANIC, FATAL (zap)
+	Level       string `toml:"level"`  // valid values are: DEBUG, INFO, WARN, ERROR, DPANIC, PANIC, FATAL (zap)
+	Format      string `toml:"format"` // FormatConsole (default) or FormatJSON
 	File        string `toml:"file"`
 	MaxFileSize int    `toml:"max_file_size"` // megabytes; 0 → lumberjack default (100 MB)
 	MaxBackups  int    `toml:"max_backups"`   // rotated files retained on disk; 0 → defaultMaxBackups
@@ -62,10 +72,12 @@ const (
 // DefaultConfig returns the default logger configuration.
 //
 //	Level: "DEBUG"
+//	Format: FormatConsole
 //	Console: true
 func DefaultConfig() Config {
 	return Config{
 		Level:   "DEBUG",
+		Format:  FormatConsole,
 		Console: true,
 	}
 }
@@ -103,9 +115,18 @@ func createState(config Config) *state {
 	}
 	atom := zap.NewAtomicLevelAt(level)
 
+	format := config.Format
+	if format == "" {
+		format = FormatConsole
+	}
+	formatKnown := format == FormatConsole || format == FormatJSON
+	if !formatKnown {
+		format = FormatConsole
+	}
+
 	cores := make([]zapcore.Core, 0)
 	if config.Console {
-		cores = append(cores, createConsoleLoggerCore(atom))
+		cores = append(cores, createStdoutCore(format, atom))
 	}
 	if len(config.File) > 0 {
 		cores = append(cores, createFileLoggerCore(config, atom))
@@ -124,6 +145,9 @@ func createState(config Config) *state {
 
 	if parseErr != nil {
 		s.base.Errorw("Invalid logger level, falling back to DEBUG", "level", config.Level)
+	}
+	if !formatKnown {
+		s.base.Errorw("Invalid logger format, falling back to console", "format", config.Format)
 	}
 	return s
 }
@@ -155,14 +179,34 @@ func createFileLoggerCore(config Config, atom zap.AtomicLevel) zapcore.Core {
 		MaxBackups: maxBackups,
 		MaxAge:     maxAge,
 	})
-	encoderCfg := zap.NewProductionEncoderConfig()
-	encoderCfg.EncodeLevel = fileLevelEncoder
-	encoderCfg.EncodeTime = zapcore.TimeEncoderOfLayout(timeFormat)
+	encoderCfg := encoderConfig()
+	encoderCfg.EncodeLevel = plainLevelEncoder
 	return zapcore.NewCore(
 		zapcore.NewConsoleEncoder(encoderCfg),
 		w,
 		atom,
 	)
+}
+
+func encoderConfig() zapcore.EncoderConfig {
+	cfg := zap.NewProductionEncoderConfig()
+	// Timestamps are written in UTC whatever the host's zone.
+	cfg.EncodeTime = func(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
+		enc.AppendString(t.UTC().Format(timeLayout))
+	}
+
+	return cfg
+}
+
+// isTerminal reports whether f is a character device, which is what a
+// terminal is and a pipe or a file is not.
+func isTerminal(f *os.File) bool {
+	info, err := f.Stat()
+	if err != nil {
+		return false
+	}
+
+	return info.Mode()&os.ModeCharDevice != 0
 }
 
 type noSyncWriter struct {
@@ -173,15 +217,25 @@ func (n noSyncWriter) Sync() error {
 	return nil
 }
 
-func createConsoleLoggerCore(atom zap.AtomicLevel) zapcore.Core {
-	encoderCfg := zap.NewProductionEncoderConfig()
-	encoderCfg.EncodeLevel = consoleColorLevelEncoder
-	encoderCfg.EncodeTime = zapcore.TimeEncoderOfLayout(timeFormat)
-	return zapcore.NewCore(
-		zapcore.NewConsoleEncoder(encoderCfg),
-		noSyncWriter{os.Stdout},
-		atom,
-	)
+// createStdoutCore writes to standard output in the given format. The
+// console format is coloured only when standard output is a terminal, so
+// container logs stay plain text.
+func createStdoutCore(format string, atom zap.AtomicLevel) zapcore.Core {
+	cfg := encoderConfig()
+	out := noSyncWriter{os.Stdout}
+
+	if format == FormatJSON {
+		cfg.EncodeLevel = zapcore.LowercaseLevelEncoder
+
+		return zapcore.NewCore(zapcore.NewJSONEncoder(cfg), out, atom)
+	}
+
+	cfg.EncodeLevel = plainLevelEncoder
+	if isTerminal(os.Stdout) {
+		cfg.EncodeLevel = consoleColorLevelEncoder
+	}
+
+	return zapcore.NewCore(zapcore.NewConsoleEncoder(cfg), out, atom)
 }
 
 func consoleColorLevelEncoder(l zapcore.Level, enc zapcore.PrimitiveArrayEncoder) {
@@ -192,7 +246,7 @@ func consoleColorLevelEncoder(l zapcore.Level, enc zapcore.PrimitiveArrayEncoder
 	enc.AppendString(s)
 }
 
-func fileLevelEncoder(l zapcore.Level, enc zapcore.PrimitiveArrayEncoder) {
+func plainLevelEncoder(l zapcore.Level, enc zapcore.PrimitiveArrayEncoder) {
 	enc.AppendString(l.CapitalString())
 }
 

@@ -1,8 +1,10 @@
 package logger
 
 import (
+	"encoding/json"
 	"io"
 	"os"
+	"regexp"
 	"strings"
 	"testing"
 
@@ -61,4 +63,46 @@ func TestCallerIsTheCallSite(t *testing.T) {
 	for line := range strings.SplitSeq(strings.TrimSpace(out), "\n") {
 		require.Contains(t, line, "output_test.go", "caller must be the call site, not logger.go: %s", line)
 	}
+}
+
+var isoTimestamp = regexp.MustCompile(`^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$`)
+
+func TestJSONFormat(t *testing.T) {
+	out := captureStdout(t, func() {
+		Set(Config{Level: "INFO", Format: FormatJSON, Console: true})
+		With("voting_round", 12345).Infow("Round submitted", "contract", "submit1")
+	})
+
+	lines := strings.Split(strings.TrimSpace(out), "\n")
+	require.Len(t, lines, 1, "one object per line, got %q", out)
+
+	var line map[string]any
+	require.NoError(t, json.Unmarshal([]byte(lines[0]), &line))
+
+	require.Equal(t, "info", line["level"], "lowercase level name")
+	require.Equal(t, "Round submitted", line["msg"])
+	require.EqualValues(t, 12345, line["voting_round"], "With field is a top-level key")
+	require.Equal(t, "submit1", line["contract"])
+	require.Regexp(t, isoTimestamp, line["ts"], "ISO 8601 UTC timestamp")
+	require.Contains(t, line["caller"], "output_test.go")
+}
+
+func TestConsoleFormatIsPlainWhenNotATerminal(t *testing.T) {
+	out := captureStdout(t, func() {
+		Set(Config{Level: "INFO", Console: true})
+		Infow("Round submitted", "voting_round", 12345)
+	})
+
+	require.NotContains(t, out, "\033[", "no colour escapes on a pipe")
+	require.Contains(t, out, "INFO")
+	require.Regexp(t, `^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z\t`, out, "ISO 8601 UTC timestamp")
+}
+
+func TestUnknownFormatFallsBackToConsole(t *testing.T) {
+	out := captureStdout(t, func() {
+		Set(Config{Level: "INFO", Format: "xml", Console: true})
+	})
+
+	require.Contains(t, out, "Invalid logger format")
+	require.Contains(t, out, `"format": "xml"`)
 }
