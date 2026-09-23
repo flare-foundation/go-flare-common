@@ -2,6 +2,7 @@ package logger
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 	"os"
 	"path/filepath"
@@ -124,4 +125,14 @@ func TestDeprecatedFileOptionWarnsAndStillWritesStdout(t *testing.T) {
 	content, err := os.ReadFile(file)
 	require.NoError(t, err)
 	require.Contains(t, string(content), "Round submitted", "the file is still written this release")
+}
+
+func TestErrorLineHasNoStackTrace(t *testing.T) {
+	out := captureStdout(t, func() {
+		Set(Config{Level: "INFO", Format: FormatJSON})
+		Errorw("Submit failed", "error", errors.New("nonce too low"))
+	})
+
+	require.Len(t, strings.Split(strings.TrimSpace(out), "\n"), 1, "one line per event")
+	require.NotContains(t, out, "stacktrace")
 }

@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - Standard output is always written. `Console` is ignored.
 - `File` and the rotation options are deprecated and log a warning when set. The file is still written this release.
 - `SyncFileLogger` no longer logs.
+- Stack traces are attached to PANIC lines only. An ERROR or FATAL line is one line.
 
 ### Fixed
 

@@ -144,9 +144,11 @@ func createState(config Config) *state {
 		cores = append(cores, createFileLoggerCore(config, atom))
 	}
 
+	// Stack traces are kept for panics only: an ERROR or FATAL line is one
+	// event, its fields say what failed, and a shipper reads it as one line.
 	core := zapcore.NewTee(cores...)
 	base := zap.New(core,
-		zap.AddStacktrace(zap.ErrorLevel),
+		zap.AddStacktrace(zap.PanicLevel),
 		zap.AddCaller(),
 	).Sugar()
 
