@@ -1,4 +1,14 @@
-// Package logger provides a structured logging framework built on top of zap with console and file output support.
+// Package logger is the shared logger of Flare's Go services, built on zap.
+//
+// Messages an operator searches for are fixed, and their identifiers travel
+// as fields:
+//
+//	logger.Infow("round submitted", "voting_round", 12345, "protocol_id", 100)
+//
+// Fields shared by every line of a unit of work are attached once:
+//
+//	log := logger.With("voting_round", 12345)
+//	log.Infow("round submitted")
 package logger
 
 import (
@@ -15,14 +25,21 @@ const (
 	timeFormat = "[01-02|15:04:05.000]"
 )
 
-var loggerPtr atomic.Pointer[zap.SugaredLogger]
-
-func init() {
-	loggerPtr.Store(createSugared(DefaultConfig()))
+// state is one configured logger: base carries no caller skip and is what
+// Logger and With hand out, pkg skips this package's wrapper functions.
+type state struct {
+	base *zap.SugaredLogger
+	pkg  *zap.SugaredLogger
 }
 
-func current() *zap.SugaredLogger {
-	return loggerPtr.Load()
+var current atomic.Pointer[state]
+
+func init() {
+	current.Store(createState(DefaultConfig()))
+}
+
+func pkg() *zap.SugaredLogger {
+	return current.Load().pkg
 }
 
 // Config holds logger configuration for output level, file, and console settings.
@@ -53,18 +70,25 @@ func DefaultConfig() Config {
 	}
 }
 
-// Logger returns the global sugared logger instance.
+// Logger returns the configured logger for direct use. Lines it writes
+// report their caller correctly.
 func Logger() *zap.SugaredLogger {
-	return current()
+	return current.Load().base
+}
+
+// With returns a logger that adds the given fields to every line. Attach the
+// fields of a unit of work once, here, rather than at every call.
+func With(keysAndValues ...any) *zap.SugaredLogger {
+	return Logger().With(keysAndValues...)
 }
 
 // Set configures logger according to Config. Safe to call concurrently
 // with logging calls.
 func Set(cfg Config) {
-	loggerPtr.Store(createSugared(cfg))
+	current.Store(createState(cfg))
 }
 
-func createSugared(config Config) *zap.SugaredLogger {
+func createState(config Config) *state {
 	// Resolve level first so AtomicLevel is correctly populated from the start;
 	// otherwise the cores enable Info-and-above until SetLevel runs.
 	level, err := zapcore.ParseLevel(config.Level)
@@ -88,18 +112,20 @@ func createSugared(config Config) *zap.SugaredLogger {
 	}
 
 	core := zapcore.NewTee(cores...)
-	logger := zap.New(core,
+	base := zap.New(core,
 		zap.AddStacktrace(zap.ErrorLevel),
 		zap.AddCaller(),
-		zap.AddCallerSkip(1),
-	)
+	).Sugar()
 
-	sugared := logger.Sugar()
+	s := &state{
+		base: base,
+		pkg:  base.WithOptions(zap.AddCallerSkip(1)),
+	}
 
 	if parseErr != nil {
-		sugared.Errorf("invalid logger level %q; falling back to DEBUG", config.Level)
+		s.base.Errorw("Invalid logger level, falling back to DEBUG", "level", config.Level)
 	}
-	return sugared
+	return s
 }
 
 // SyncFileLogger flushes buffered log entries. It calls Sync on every configured
@@ -107,7 +133,7 @@ func createSugared(config Config) *zap.SugaredLogger {
 // practice this only flushes the file writer. It is automatically called during
 // fatal or panic log events; call it manually if you need to flush at other points.
 func SyncFileLogger() {
-	l := current()
+	l := Logger()
 	l.Infof("Syncing file logger.")
 	if err := l.Sync(); err != nil {
 		l.Infof("Failed to sync logger: %v", err)
@@ -170,24 +196,60 @@ func fileLevelEncoder(l zapcore.Level, enc zapcore.PrimitiveArrayEncoder) {
 	enc.AppendString(l.CapitalString())
 }
 
+// Debugw logs a message with key-value fields at DEBUG level.
+func Debugw(msg string, keysAndValues ...any) {
+	pkg().Debugw(msg, keysAndValues...)
+}
+
+// Infow logs a message with key-value fields at INFO level.
+func Infow(msg string, keysAndValues ...any) {
+	pkg().Infow(msg, keysAndValues...)
+}
+
+// Warnw logs a message with key-value fields at WARN level.
+func Warnw(msg string, keysAndValues ...any) {
+	pkg().Warnw(msg, keysAndValues...)
+}
+
+// Errorw logs a message with key-value fields at ERROR level.
+func Errorw(msg string, keysAndValues ...any) {
+	pkg().Errorw(msg, keysAndValues...)
+}
+
+// Panicw logs a message with key-value fields at PANIC level and panics.
+//
+// Defers will be executed.
+func Panicw(msg string, keysAndValues ...any) {
+	SyncFileLogger()
+	pkg().Panicw(msg, keysAndValues...)
+}
+
+// Fatalw logs a message with key-value fields at FATAL level and calls os.Exit.
+//
+// Defers will not be executed.
+func Fatalw(msg string, keysAndValues ...any) {
+	SyncFileLogger()
+	pkg().Fatalw(msg, keysAndValues...)
+}
+
 // Debugf formats the message and logs it at DEBUG level.
 func Debugf(msg string, args ...any) {
-	current().Debugf(msg, args...)
+	pkg().Debugf(msg, args...)
 }
 
 // Infof formats the message and logs it at INFO level.
 func Infof(msg string, args ...any) {
-	current().Infof(msg, args...)
+	pkg().Infof(msg, args...)
 }
 
 // Warnf formats the message and logs it at WARN level.
 func Warnf(msg string, args ...any) {
-	current().Warnf(msg, args...)
+	pkg().Warnf(msg, args...)
 }
 
 // Errorf formats the message and logs it at ERROR level.
 func Errorf(msg string, args ...any) {
-	current().Errorf(msg, args...)
+	pkg().Errorf(msg, args...)
 }
 
 // Panicf formats the message and logs it at PANIC level and panics.
@@ -195,7 +257,7 @@ func Errorf(msg string, args ...any) {
 // Defers will be executed.
 func Panicf(msg string, args ...any) {
 	SyncFileLogger()
-	current().Panicf(msg, args...)
+	pkg().Panicf(msg, args...)
 }
 
 // Fatalf formats the message and logs it at FATAL level and calls os.Exit.
@@ -203,27 +265,27 @@ func Panicf(msg string, args ...any) {
 // Defers will not be executed.
 func Fatalf(msg string, args ...any) {
 	SyncFileLogger()
-	current().Fatalf(msg, args...)
+	pkg().Fatalf(msg, args...)
 }
 
 // Debug logs arguments at DEBUG level.
 func Debug(args ...any) {
-	current().Debug(args...)
+	pkg().Debug(args...)
 }
 
 // Info logs arguments at INFO level.
 func Info(args ...any) {
-	current().Info(args...)
+	pkg().Info(args...)
 }
 
 // Warn logs arguments at WARN level.
 func Warn(args ...any) {
-	current().Warn(args...)
+	pkg().Warn(args...)
 }
 
 // Error logs arguments at ERROR level.
 func Error(args ...any) {
-	current().Error(args...)
+	pkg().Error(args...)
 }
 
 // Panic logs arguments at PANIC level and panics.
@@ -231,7 +293,7 @@ func Error(args ...any) {
 // Defers will be executed.
 func Panic(args ...any) {
 	SyncFileLogger()
-	current().Panic(args...)
+	pkg().Panic(args...)
 }
 
 // Fatal logs arguments at FATAL level and calls os.Exit.
@@ -239,5 +301,5 @@ func Panic(args ...any) {
 // Defers will not be executed.
 func Fatal(args ...any) {
 	SyncFileLogger()
-	current().Fatal(args...)
+	pkg().Fatal(args...)
 }

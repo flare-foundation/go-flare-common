@@ -15,18 +15,24 @@ type Nop struct{}
 
 func (Nop) Debug(_ ...any)            {}
 func (Nop) Debugf(_ string, _ ...any) {}
+func (Nop) Debugw(_ string, _ ...any) {}
 
 func (Nop) Info(_ ...any)            {}
 func (Nop) Infof(_ string, _ ...any) {}
+func (Nop) Infow(_ string, _ ...any) {}
 
 func (Nop) Warn(_ ...any)            {}
 func (Nop) Warnf(_ string, _ ...any) {}
+func (Nop) Warnw(_ string, _ ...any) {}
 
 func (Nop) Error(_ ...any)            {}
 func (Nop) Errorf(_ string, _ ...any) {}
+func (Nop) Errorw(_ string, _ ...any) {}
 
 func (Nop) Panic(args ...any)                 { panic(fmt.Sprint(args...)) }
 func (Nop) Panicf(format string, args ...any) { panic(fmt.Sprintf(format, args...)) }
+func (Nop) Panicw(msg string, _ ...any)       { panic(msg) }
 
 func (Nop) Fatal(args ...any)                 { panic(fmt.Sprint(args...)) }
 func (Nop) Fatalf(format string, args ...any) { panic(fmt.Sprintf(format, args...)) }
+func (Nop) Fatalw(msg string, _ ...any)       { panic(msg) }
