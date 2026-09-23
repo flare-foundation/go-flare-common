@@ -224,6 +224,13 @@ func (i Instruction) bindIdentity(e Envelope, sig []byte, chainID uint64) error 
 		e.SequencePosition != i.SequencePosition || e.Attempt != i.Attempt {
 		return errors.New("envelope identity does not match the instruction")
 	}
+	// The SOURCE is part of the account's identity — the chain keys an account
+	// by (sourceId, account) — and the envelope's source decides which network
+	// its keys are read under. The instruction's comes from the chain, so it is
+	// the one that wins.
+	if e.SourceID != i.SourceID {
+		return errors.New("envelope names a different source than the instruction")
+	}
 	return nil
 }
 

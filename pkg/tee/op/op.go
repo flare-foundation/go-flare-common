@@ -50,9 +50,8 @@ const (
 	UpdatePolicy       Command = "UPDATE_POLICY"
 	SetMachinePathList Command = "SET_MACHINE_PATH_LIST"
 
-	KeyBinding Command = "KEY_BINDING"
-	Pay        Command = "PAY"
-	Reissue    Command = "REISSUE"
+	Pay     Command = "PAY"
+	Reissue Command = "REISSUE"
 
 	// The UTXO channel's maintenance kinds. A batch that creates an HTLC
 	// escrow, one that spends it back through its timeout branch, and one that
@@ -112,11 +111,6 @@ var validSystemPairs = map[Type]map[Command]bool{
 		EscrowCreate:  true,
 		EscrowReclaim: true,
 		Consolidate:   true,
-		// Provisions the wallet's multisig binding. Separate from key
-		// generation because the binding cannot exist yet at that point: each
-		// machine generates independently, and the full xpub set only exists
-		// once every key has been confirmed on chain.
-		KeyBinding: true,
 	},
 	FDC2: {
 		Prove: true,
