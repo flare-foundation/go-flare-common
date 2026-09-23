@@ -39,7 +39,13 @@ func newWallet(t *testing.T, n, k int, salt byte) wallet {
 		for j := range seed {
 			seed[j] = byte(i*7+j+1) ^ salt
 		}
-		m, err := hdkeychain.NewMaster(seed, params)
+		root, err := hdkeychain.NewMaster(seed, params)
+		require.NoError(t, err)
+		// The PUBLISHED level, m/87'/1' — what a machine registers and what an
+		// envelope's ParentXpubs carries.
+		purpose, err := root.Derive(hdkeychain.HardenedKeyStart + 87)
+		require.NoError(t, err)
+		m, err := purpose.Derive(hdkeychain.HardenedKeyStart + csp.CoinTypeTestnet)
 		require.NoError(t, err)
 		pub, err := m.Neuter()
 		require.NoError(t, err)
@@ -82,12 +88,25 @@ func spendable(t *testing.T, w wallet, valueSat int64) (csp.Envelope, []byte) {
 	require.NoError(t, err)
 
 	return csp.Envelope{
-		Version: 1, AccountIndex: 0, RawUnsignedTx: buf,
+		Version: csp.EnvelopeVersion, CoinType: csp.CoinTypeTestnet,
+		Threshold: uint8(w.k), ParentXpubs: rawXpubs(t, w.parents),
+		AccountIndex: 0, RawUnsignedTx: buf,
 		Inputs: []csp.Input{{
 			Txid: [32]byte(prev), Vout: 0, ValueSat: uint64(valueSat),
 			Chain: uint8(address.External), Index: 0,
 		}},
 	}, script
+}
+
+func rawXpubs(t *testing.T, parents []string) [][]byte {
+	t.Helper()
+	out := make([][]byte, len(parents))
+	for i, p := range parents {
+		raw, err := csp.DecodeXpub(p)
+		require.NoError(t, err)
+		out[i] = raw
+	}
+	return out
 }
 
 func serializeNoWitness(tx *wire.MsgTx) ([]byte, error) {
@@ -154,9 +173,7 @@ func TestAssembledWitnessSatisfiesTheScript(t *testing.T) {
 		signAll(t, w, env, script, 2),
 	}
 
-	tx, txid, err := witness.Assemble(env, witness.Wallet{
-		ParentXpubs: w.parents, Threshold: 2, Params: params,
-	}, answers)
+	tx, txid, err := witness.Assemble(env, answers)
 	require.NoError(t, err)
 	assert.NotEqual(t, [32]byte{}, txid)
 
@@ -177,9 +194,7 @@ func TestBelowThresholdIsNotAssembled(t *testing.T) {
 	w := newWallet(t, 3, 2, 0x00)
 	env, script := spendable(t, w, 100_000)
 
-	_, _, err := witness.Assemble(env, witness.Wallet{
-		ParentXpubs: w.parents, Threshold: 2, Params: params,
-	}, []witness.Answer{signAll(t, w, env, script, 1)})
+	_, _, err := witness.Assemble(env, []witness.Answer{signAll(t, w, env, script, 1)})
 
 	require.ErrorIs(t, err, witness.ErrNotEnoughSignatures)
 }
@@ -190,9 +205,7 @@ func TestExtraSignaturesAreTrimmed(t *testing.T) {
 	w := newWallet(t, 3, 2, 0x00)
 	env, script := spendable(t, w, 100_000)
 
-	tx, _, err := witness.Assemble(env, witness.Wallet{
-		ParentXpubs: w.parents, Threshold: 2, Params: params,
-	}, []witness.Answer{
+	tx, _, err := witness.Assemble(env, []witness.Answer{
 		signAll(t, w, env, script, 0),
 		signAll(t, w, env, script, 1),
 		signAll(t, w, env, script, 2),
@@ -224,9 +237,7 @@ func TestForeignSignatureIsRejected(t *testing.T) {
 		signAll(t, w, env, script, 0),
 		signAll(t, other, env, script, 0),
 	}
-	_, _, err := witness.Assemble(env, witness.Wallet{
-		ParentXpubs: w.parents, Threshold: 2, Params: params,
-	}, answers)
+	_, _, err := witness.Assemble(env, answers)
 	require.Error(t, err)
 	assert.Contains(t, err.Error(), "not in the wallet's script")
 }
@@ -243,9 +254,23 @@ func TestCorruptSignatureIsRejected(t *testing.T) {
 	// Flip a byte inside the DER body, keeping it parseable.
 	bad.Signatures[0].Signature[len(bad.Signatures[0].Signature)-1] ^= 0x01
 
-	_, _, err := witness.Assemble(env, witness.Wallet{
-		ParentXpubs: w.parents, Threshold: 2, Params: params,
-	}, []witness.Answer{signAll(t, w, env, script, 0), bad})
+	_, _, err := witness.Assemble(env, []witness.Answer{signAll(t, w, env, script, 0), bad})
 	require.Error(t, err)
 	assert.Contains(t, err.Error(), "does not verify")
+}
+
+// The envelope is the facilitator's only source of keys, so a package naming a
+// different signer set must not assemble into the real wallet's witness: the
+// scripts derived from the wrong keys do not match the signatures' sighash.
+func TestAssemblyUsesTheEnvelopesKeys(t *testing.T) {
+	w := newWallet(t, 3, 2, 0x00)
+	other := newWallet(t, 3, 2, 0xA5)
+	env, script := spendable(t, w, 100_000)
+	answers := []witness.Answer{signAll(t, w, env, script, 0), signAll(t, w, env, script, 1)}
+
+	swapped := env
+	swapped.ParentXpubs = rawXpubs(t, other.parents)
+	_, _, err := witness.Assemble(swapped, answers)
+	require.ErrorContains(t, err, "is not in the wallet's script",
+		"signatures by the real wallet's keys were placed in another wallet's script")
 }

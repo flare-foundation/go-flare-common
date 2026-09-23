@@ -143,6 +143,15 @@ func TestBindPackageRejectsIdentityMismatch(t *testing.T) {
 	assert.Error(t, err)
 }
 
+// The chain keys an account by (sourceId, account), so an envelope for another
+// source is not the one decided even when every other identity field agrees.
+func TestBindPackageRejectsSourceMismatch(t *testing.T) {
+	raw, in := boundPair(t)
+	in.SourceID[0] ^= 0xff
+	_, err := in.BindPackage(raw, testChainID)
+	assert.ErrorContains(t, err, "different source")
+}
+
 func TestKeysForSelectsThisMachine(t *testing.T) {
 	me := common.HexToAddress("0xA11CE")
 	other := common.HexToAddress("0xB0B")

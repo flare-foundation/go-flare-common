@@ -59,7 +59,7 @@ type Answer struct {
 }
 
 // Wallet is what assembly needs to know about the signer set. All of it is
-// public and all of it comes from the chain.
+// public, and it is read out of the finalized envelope (WalletOf).
 type Wallet struct {
 	// ParentXpubs are the wallet's published keys, at the wallet level.
 	ParentXpubs []string
@@ -68,14 +68,35 @@ type Wallet struct {
 	Params    *chaincfg.Params
 }
 
+// WalletOf reads the signer set out of the envelope.
+//
+// The envelope is the ONLY source. Assembly used to take a configured wallet,
+// which made the facilitator a third holder of the keys beside the verifier and
+// the machines — agreeing with them by coincidence. The set in a finalized
+// package is the one the data providers checked against the registry, and the
+// package is fetched by the hash the chain finalized, so it is also the set the
+// machines signed under.
+func WalletOf(env csp.Envelope) (Wallet, error) {
+	params, err := env.KeyParams()
+	if err != nil {
+		return Wallet{}, err
+	}
+	return Wallet{ParentXpubs: env.XpubStrings(), Threshold: int(env.Threshold), Params: params}, nil
+}
+
 // Assemble builds the witness for every input and returns the signed
-// transaction and its txid.
+// transaction and its txid. The signer set comes from the envelope (WalletOf).
 //
 // Every signature is VERIFIED against the sighash before it is used. An
 // unverified one would produce a witness the mempool rejects with a message
 // about the script, which sends whoever reads it to entirely the wrong place.
-func Assemble(env csp.Envelope, w Wallet, answers []Answer) (*wire.MsgTx, [32]byte, error) {
+func Assemble(env csp.Envelope, answers []Answer) (*wire.MsgTx, [32]byte, error) {
 	var txid [32]byte
+
+	w, err := WalletOf(env)
+	if err != nil {
+		return nil, txid, fmt.Errorf("reading the signer set: %w", err)
+	}
 
 	tx, err := csp.Tx(env)
 	if err != nil {

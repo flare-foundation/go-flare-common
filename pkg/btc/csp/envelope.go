@@ -28,16 +28,65 @@
 // removes, because the disagreement is about the value rather than its
 // serialization. The account is (walletID, accountIndex); recipients live
 // inside RawUnsignedTx as raw scriptPubKeys.
+//
+// # What changed in version 2: the wallet's shape travels with the proposal
+//
+// The signer set — k, the n parent xpubs and the SLIP-44 coin type they were
+// published under — is carried in the envelope rather than provisioned to each
+// consumer separately. Before, three parties held three copies from three
+// sources: the verifier read the registry, the machines held a KEY_BINDING an
+// authorised sender wrote, and the facilitator was configured. They agreed only
+// because nothing had made them disagree.
+//
+// Carrying the keys does not let a proposer choose them. The FDC2 verifier
+// requires them to equal the registry's, so a proposal naming any other set
+// fails the vote; once it is finalized, the package hash binds exactly the set
+// the data providers checked. Inputs remain COORDINATES — every party still
+// derives each script itself, from these keys — which is what keeps a proposer
+// from supplying a script.
 package csp
 
 import (
+	"encoding/binary"
 	"errors"
 	"fmt"
 
+	"github.com/btcsuite/btcd/btcutil/base58"
+	"github.com/btcsuite/btcd/btcutil/hdkeychain"
+	"github.com/btcsuite/btcd/chaincfg"
+	"github.com/btcsuite/btcd/chaincfg/chainhash"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/flare-foundation/go-flare-common/pkg/signing"
+)
+
+// EnvelopeVersion is the only version this package encodes or accepts.
+// Version 2 added the wallet's shape (coinType, threshold, parentXpubs); a
+// version-1 package no longer decodes, because its hash commits to a tuple
+// that no longer exists.
+const EnvelopeVersion uint16 = 2
+
+// MaxSigners is OP_CHECKMULTISIG's consensus limit on n.
+const MaxSigners = 20
+
+// XpubLen is the BIP-32 serialization of an extended key: version(4) ‖
+// depth(1) ‖ parent fingerprint(4) ‖ child number(4) ‖ chain code(32) ‖
+// key(33). Carried raw rather than as base58: fixed width, no case or checksum
+// ambiguity in the hash preimage.
+const XpubLen = 78
+
+// parentXpubDepth is the depth of the published wallet-level key m/87'/coin'.
+const parentXpubDepth = 2
+
+// SLIP-44 coin types this package accepts. Every Bitcoin test network shares 1,
+// and shares the tpub version bytes with it.
+const (
+	CoinTypeBitcoin   uint32 = 0
+	CoinTypeTestnet   uint32 = 1
+	hardenedKeyStart  uint32 = 0x80000000
+	mainnetPubVersion uint32 = 0x0488b21e // xpub
+	testnetPubVersion uint32 = 0x043587cf // tpub (testnet3, signet, regtest)
 )
 
 // MaxInputs bounds the input array so a malformed envelope cannot be used to
@@ -95,10 +144,20 @@ type Escrow struct {
 // by derivation. This is a serialization choice, not a transaction-type choice:
 // every transaction in this design is SegWit.
 type Envelope struct {
-	Version            uint16
-	WalletID           [32]byte
-	SourceID           [32]byte
-	AccountIndex       uint32
+	Version  uint16
+	SourceID [32]byte
+	// CoinType is the SLIP-44 coin type the parent xpubs sit under: every
+	// ParentXpubs entry is m/87'/CoinType'. It fixes the key path a machine
+	// signs with, and Validate checks it against each xpub's own child number.
+	CoinType     uint32
+	WalletID     [32]byte
+	AccountIndex uint32
+	// Threshold is k in the k-of-n.
+	Threshold uint8
+	// ParentXpubs are the wallet's n published keys, raw XpubLen bytes each, in
+	// REGISTRY order. Order does not change any script — BIP-67 sorts the leaf
+	// keys — but it is committed, so it has one canonical value.
+	ParentXpubs        [][]byte
 	SequencePosition   uint64
 	EligibleGeneration uint64
 	InstructionType    uint8
@@ -123,9 +182,12 @@ var envelopeArgs abi.Arguments
 func init() {
 	tupleTy, err := abi.NewType("tuple", "", []abi.ArgumentMarshaling{
 		{Name: "version", Type: "uint16"},
-		{Name: "walletId", Type: "bytes32"},
 		{Name: "sourceId", Type: "bytes32"},
+		{Name: "coinType", Type: "uint32"},
+		{Name: "walletId", Type: "bytes32"},
 		{Name: "accountIndex", Type: "uint32"},
+		{Name: "threshold", Type: "uint8"},
+		{Name: "parentXpubs", Type: "bytes[]"},
 		{Name: "sequencePosition", Type: "uint64"},
 		{Name: "eligibleGeneration", Type: "uint64"},
 		{Name: "instructionType", Type: "uint8"},
@@ -178,9 +240,12 @@ type abiEscrow struct {
 
 type abiEnvelope struct {
 	Version            uint16         `abi:"version"`
-	WalletID           [32]byte       `abi:"walletId"`
 	SourceID           [32]byte       `abi:"sourceId"`
+	CoinType           uint32         `abi:"coinType"`
+	WalletID           [32]byte       `abi:"walletId"`
 	AccountIndex       uint32         `abi:"accountIndex"`
+	Threshold          uint8          `abi:"threshold"`
+	ParentXpubs        [][]byte       `abi:"parentXpubs"`
 	SequencePosition   uint64         `abi:"sequencePosition"`
 	EligibleGeneration uint64         `abi:"eligibleGeneration"`
 	InstructionType    uint8          `abi:"instructionType"`
@@ -197,6 +262,12 @@ type abiEnvelope struct {
 // Validate rejects envelopes that are structurally unusable. It is called by
 // Encode, so no caller can hash something it would refuse.
 func (e Envelope) Validate() error {
+	if e.Version != EnvelopeVersion {
+		return fmt.Errorf("envelope version %d, want %d", e.Version, EnvelopeVersion)
+	}
+	if err := e.validateSigners(); err != nil {
+		return err
+	}
 	if len(e.RawUnsignedTx) == 0 {
 		return errors.New("rawUnsignedTx is empty")
 	}
@@ -249,9 +320,12 @@ func (e Envelope) Encode() ([]byte, error) {
 	}
 	packed, err := envelopeArgs.Pack(abiEnvelope{
 		Version:            e.Version,
-		WalletID:           e.WalletID,
 		SourceID:           e.SourceID,
+		CoinType:           e.CoinType,
+		WalletID:           e.WalletID,
 		AccountIndex:       e.AccountIndex,
+		Threshold:          e.Threshold,
+		ParentXpubs:        e.ParentXpubs,
 		SequencePosition:   e.SequencePosition,
 		EligibleGeneration: e.EligibleGeneration,
 		InstructionType:    e.InstructionType,
@@ -305,9 +379,12 @@ func Decode(b []byte) (Envelope, error) {
 	}
 	out := Envelope{
 		Version:            raw.Version,
-		WalletID:           raw.WalletID,
 		SourceID:           raw.SourceID,
+		CoinType:           raw.CoinType,
+		WalletID:           raw.WalletID,
 		AccountIndex:       raw.AccountIndex,
+		Threshold:          raw.Threshold,
+		ParentXpubs:        raw.ParentXpubs,
 		SequencePosition:   raw.SequencePosition,
 		EligibleGeneration: raw.EligibleGeneration,
 		InstructionType:    raw.InstructionType,
@@ -339,4 +416,126 @@ func Decode(b []byte) (Envelope, error) {
 		}
 	}
 	return out, nil
+}
+
+// validateSigners checks the wallet's shape is one a k-of-n P2WSH can have, and
+// that every key is a PUBLIC wallet-level key under the declared coin type.
+//
+// The last part is what makes CoinType more than a label: an xpub records its
+// own child number, so m/87'/0' and m/87'/1' keys are told apart by their bytes
+// and a coin type that disagrees with them is refused here rather than
+// discovered as a key the machine cannot find.
+func (e Envelope) validateSigners() error {
+	var wantVersion uint32
+	switch e.CoinType {
+	case CoinTypeBitcoin:
+		wantVersion = mainnetPubVersion
+	case CoinTypeTestnet:
+		wantVersion = testnetPubVersion
+	default:
+		return fmt.Errorf("coin type %d is not supported", e.CoinType)
+	}
+	n := len(e.ParentXpubs)
+	if n == 0 {
+		return errors.New("envelope names no signers")
+	}
+	if n > MaxSigners {
+		return fmt.Errorf("%d signers exceeds the OP_CHECKMULTISIG limit of %d", n, MaxSigners)
+	}
+	if e.Threshold < 1 || int(e.Threshold) > n {
+		return fmt.Errorf("threshold %d is not a k of %d", e.Threshold, n)
+	}
+	seen := make(map[string]struct{}, n)
+	for i, x := range e.ParentXpubs {
+		if len(x) != XpubLen {
+			return fmt.Errorf("parentXpubs[%d] is %d bytes, want %d", i, len(x), XpubLen)
+		}
+		if v := binary.BigEndian.Uint32(x[0:4]); v != wantVersion {
+			return fmt.Errorf("parentXpubs[%d] has version %#08x, want %#08x for coin type %d",
+				i, v, wantVersion, e.CoinType)
+		}
+		if x[4] != parentXpubDepth {
+			return fmt.Errorf("parentXpubs[%d] is at depth %d, want %d (m/87'/coin')", i, x[4], parentXpubDepth)
+		}
+		if c := binary.BigEndian.Uint32(x[9:13]); c != hardenedKeyStart+e.CoinType {
+			return fmt.Errorf("parentXpubs[%d] is child %#x, want %d' for coin type %d",
+				i, c, e.CoinType, e.CoinType)
+		}
+		if x[45] != 0x02 && x[45] != 0x03 {
+			return fmt.Errorf("parentXpubs[%d] does not carry a compressed public key", i)
+		}
+		if _, dup := seen[string(x)]; dup {
+			return fmt.Errorf("parentXpubs[%d] repeats an earlier signer", i)
+		}
+		seen[string(x)] = struct{}{}
+	}
+	return nil
+}
+
+// XpubStrings returns ParentXpubs in their base58check form, in the same
+// order — the form pkg/btc/address derives from.
+func (e Envelope) XpubStrings() []string {
+	out := make([]string, len(e.ParentXpubs))
+	for i, x := range e.ParentXpubs {
+		out[i] = EncodeXpub(x)
+	}
+	return out
+}
+
+// EncodeXpub is base58check over a raw XpubLen serialization.
+func EncodeXpub(raw []byte) string {
+	sum := chainhash.DoubleHashB(raw)
+	return base58.Encode(append(append([]byte{}, raw...), sum[:4]...))
+}
+
+// DecodeXpub parses a base58 extended PUBLIC key into its raw serialization,
+// the form ParentXpubs carries. A private key is refused: it would put a
+// secret into a hash preimage that is published.
+func DecodeXpub(s string) ([]byte, error) {
+	k, err := hdkeychain.NewKeyFromString(s)
+	if err != nil {
+		return nil, fmt.Errorf("parsing extended key: %w", err)
+	}
+	if k.IsPrivate() {
+		return nil, errors.New("an extended PRIVATE key cannot be a signer entry")
+	}
+	decoded := base58.Decode(s)
+	if len(decoded) != XpubLen+4 {
+		return nil, fmt.Errorf("extended key decodes to %d bytes, want %d", len(decoded), XpubLen+4)
+	}
+	return decoded[:XpubLen], nil
+}
+
+// KeyParams returns chain parameters whose extended-key version bytes match
+// CoinType. It is for KEY handling — deriving, checking version bytes — and not
+// for address encoding: every test network shares coin type 1 and tpub, but
+// not the bech32 HRP, so anything that renders an address needs its own
+// network, not this.
+func (e Envelope) KeyParams() (*chaincfg.Params, error) {
+	return KeyParamsForCoinType(e.CoinType)
+}
+
+// KeyParamsForCoinType is KeyParams without an envelope.
+func KeyParamsForCoinType(coinType uint32) (*chaincfg.Params, error) {
+	switch coinType {
+	case CoinTypeBitcoin:
+		return &chaincfg.MainNetParams, nil
+	case CoinTypeTestnet:
+		return &chaincfg.TestNet3Params, nil
+	default:
+		return nil, fmt.Errorf("coin type %d is not supported", coinType)
+	}
+}
+
+// CoinTypeFor is the SLIP-44 coin type of a Bitcoin network: 0 on mainnet, 1 on
+// every test network.
+func CoinTypeFor(params *chaincfg.Params) (uint32, error) {
+	switch params.Net {
+	case chaincfg.MainNetParams.Net:
+		return CoinTypeBitcoin, nil
+	case chaincfg.TestNet3Params.Net, chaincfg.SigNetParams.Net, chaincfg.RegressionNetParams.Net:
+		return CoinTypeTestnet, nil
+	default:
+		return 0, fmt.Errorf("network %q has no coin type here", params.Name)
+	}
 }
