@@ -51,15 +51,25 @@ func pkg() *zap.SugaredLogger {
 	return current.Load().pkg
 }
 
-// Config holds logger configuration for output level, file, and console settings.
+// Config holds the logger configuration.
 type Config struct {
-	Level       string `toml:"level"`  // valid values are: DEBUG, INFO, WARN, ERROR, DPANIC, PANIC, FATAL (zap)
-	Format      string `toml:"format"` // FormatConsole (default) or FormatJSON
+	Level  string `toml:"level"`  // valid values are: DEBUG, INFO, WARN, ERROR, DPANIC, PANIC, FATAL (zap)
+	Format string `toml:"format"` // FormatConsole (default) or FormatJSON
+
+	// File writes a copy of the log to a rotated file.
+	//
+	// Deprecated: services log to standard output only and leave retention
+	// to the runtime. Setting File logs a warning. MaxFileSize, MaxBackups
+	// and MaxAgeDays size the rotation and are deprecated with it.
 	File        string `toml:"file"`
 	MaxFileSize int    `toml:"max_file_size"` // megabytes; 0 → lumberjack default (100 MB)
 	MaxBackups  int    `toml:"max_backups"`   // rotated files retained on disk; 0 → defaultMaxBackups
 	MaxAgeDays  int    `toml:"max_age_days"`  // max age of rotated files; 0 → defaultMaxAgeDays
-	Console     bool   `toml:"console"`
+
+	// Console used to switch standard output on and off.
+	//
+	// Deprecated: standard output is always written. The field is ignored.
+	Console bool `toml:"console"`
 }
 
 const (
@@ -73,12 +83,10 @@ const (
 //
 //	Level: "DEBUG"
 //	Format: FormatConsole
-//	Console: true
 func DefaultConfig() Config {
 	return Config{
-		Level:   "DEBUG",
-		Format:  FormatConsole,
-		Console: true,
+		Level:  "DEBUG",
+		Format: FormatConsole,
 	}
 }
 
@@ -98,6 +106,13 @@ func With(keysAndValues ...any) *zap.SugaredLogger {
 // with logging calls.
 func Set(cfg Config) {
 	current.Store(createState(cfg))
+
+	if cfg.File != "" {
+		Warnw(
+			"Deprecated logger file output is set: services log to standard output only, remove the file, max_file_size, max_backups and max_age_days options",
+			"file", cfg.File,
+		)
+	}
 }
 
 func createState(config Config) *state {
@@ -124,10 +139,7 @@ func createState(config Config) *state {
 		format = FormatConsole
 	}
 
-	cores := make([]zapcore.Core, 0)
-	if config.Console {
-		cores = append(cores, createStdoutCore(format, atom))
-	}
+	cores := []zapcore.Core{createStdoutCore(format, atom)}
 	if len(config.File) > 0 {
 		cores = append(cores, createFileLoggerCore(config, atom))
 	}
@@ -152,16 +164,11 @@ func createState(config Config) *state {
 	return s
 }
 
-// SyncFileLogger flushes buffered log entries. It calls Sync on every configured
-// core, but the console core uses noSyncWriter (whose Sync is a no-op), so in
-// practice this only flushes the file writer. It is automatically called during
-// fatal or panic log events; call it manually if you need to flush at other points.
+// SyncFileLogger flushes buffered log entries. Standard output is
+// unbuffered, so this matters only when the deprecated file output is set.
+// It is called before the process exits on a FATAL or PANIC line.
 func SyncFileLogger() {
-	l := Logger()
-	l.Infof("Syncing file logger.")
-	if err := l.Sync(); err != nil {
-		l.Infof("Failed to sync logger: %v", err)
-	}
+	_ = Logger().Sync()
 }
 
 func createFileLoggerCore(config Config, atom zap.AtomicLevel) zapcore.Core {

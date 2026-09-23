@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 	"testing"
@@ -40,7 +41,7 @@ func captureStdout(t *testing.T, fn func()) string {
 
 func TestStructuredFunctionsCarryFields(t *testing.T) {
 	out := captureStdout(t, func() {
-		Set(Config{Level: "INFO", Console: true})
+		Set(Config{Level: "INFO"})
 		Infow("Round submitted", "voting_round", 12345)
 		With("protocol_id", 100).Infow("Round finalised")
 	})
@@ -55,7 +56,7 @@ func TestStructuredFunctionsCarryFields(t *testing.T) {
 
 func TestCallerIsTheCallSite(t *testing.T) {
 	out := captureStdout(t, func() {
-		Set(Config{Level: "INFO", Console: true})
+		Set(Config{Level: "INFO"})
 		Infow("Via package function")
 		Logger().Infow("Via Logger")
 	})
@@ -69,7 +70,7 @@ var isoTimestamp = regexp.MustCompile(`^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{
 
 func TestJSONFormat(t *testing.T) {
 	out := captureStdout(t, func() {
-		Set(Config{Level: "INFO", Format: FormatJSON, Console: true})
+		Set(Config{Level: "INFO", Format: FormatJSON})
 		With("voting_round", 12345).Infow("Round submitted", "contract", "submit1")
 	})
 
@@ -89,7 +90,7 @@ func TestJSONFormat(t *testing.T) {
 
 func TestConsoleFormatIsPlainWhenNotATerminal(t *testing.T) {
 	out := captureStdout(t, func() {
-		Set(Config{Level: "INFO", Console: true})
+		Set(Config{Level: "INFO"})
 		Infow("Round submitted", "voting_round", 12345)
 	})
 
@@ -100,9 +101,27 @@ func TestConsoleFormatIsPlainWhenNotATerminal(t *testing.T) {
 
 func TestUnknownFormatFallsBackToConsole(t *testing.T) {
 	out := captureStdout(t, func() {
-		Set(Config{Level: "INFO", Format: "xml", Console: true})
+		Set(Config{Level: "INFO", Format: "xml"})
 	})
 
 	require.Contains(t, out, "Invalid logger format")
 	require.Contains(t, out, `"format": "xml"`)
+}
+
+func TestDeprecatedFileOptionWarnsAndStillWritesStdout(t *testing.T) {
+	file := filepath.Join(t.TempDir(), "service.log")
+
+	out := captureStdout(t, func() {
+		Set(Config{Level: "INFO", File: file})
+		Infow("Round submitted")
+		SyncFileLogger()
+	})
+
+	require.Contains(t, out, "Deprecated logger file output is set")
+	require.Contains(t, out, "Round submitted", "standard output is always written")
+	require.NotContains(t, out, "Syncing file logger", "sync is silent")
+
+	content, err := os.ReadFile(file)
+	require.NoError(t, err)
+	require.Contains(t, string(content), "Round submitted", "the file is still written this release")
 }

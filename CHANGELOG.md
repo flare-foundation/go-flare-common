@@ -14,6 +14,9 @@ All notable changes to this project will be documented in this file.
 
 - Timestamps are ISO 8601 in UTC with millisecond precision in both formats.
 - The console format is coloured only when standard output is a terminal, so container logs are plain text.
+- Standard output is always written. `Console` is ignored.
+- `File` and the rotation options are deprecated and log a warning when set. The file is still written this release.
+- `SyncFileLogger` no longer logs.
 
 ### Fixed
 
