@@ -134,10 +134,11 @@ type Input struct {
 //
 // Carried in the envelope, so it is covered by the proposal hash and therefore
 // by everything the chain finalized. A signer rebuilds the script from these
-// three fields plus its OWN provisioned keys — the multisig half never comes
-// from the proposal, which is what keeps the no-signing-oracle property: a
-// proposal naming keys the wallet does not hold cannot produce a spendable
-// script, because those keys are not the ones used.
+// fields plus the envelope's signer set — never from a script the proposal
+// supplies. The multisig half is therefore the wallet's own: the verifier
+// required ParentXpubs to equal the registry's before the hash was finalized,
+// and a machine signs only if its own key is among them, so a proposal naming
+// keys the wallet does not hold is refused before any signature exists.
 type Escrow struct {
 	// PreimageHash is SHA256(preimage) for the hash path.
 	PreimageHash [32]byte
