@@ -206,6 +206,43 @@ func TestValidateRejectsUnusableEnvelopes(t *testing.T) {
 	}
 }
 
+// withBytesAt returns a copy of key with b written at off.
+func withBytesAt(key []byte, off int, b ...byte) []byte {
+	out := append([]byte{}, key...)
+	copy(out[off:], b)
+	return out
+}
+
+// A signer is its public key. Each variant below carries ParentXpubs[0]'s point
+// under other bytes Validate does not constrain, and is a valid key on its own;
+// beside ParentXpubs[0] it is the same key holder in a second slot.
+func TestSignerIsThePublicKey(t *testing.T) {
+	x0 := sample().ParentXpubs[0]
+	variants := map[string][]byte{
+		"different chain code":         withBytesAt(x0, 13, bytes.Repeat([]byte{0x5a}, 32)...),
+		"different parent fingerprint": withBytesAt(x0, 5, 0xde, 0xad, 0xbe, 0xef),
+		"different fingerprint and chain code": withBytesAt(
+			withBytesAt(x0, 5, 0xde, 0xad, 0xbe, 0xef), 13, bytes.Repeat([]byte{0x5a}, 32)...),
+	}
+	for name, v := range variants {
+		alone := sample()
+		alone.ParentXpubs[0] = v
+		require.NoError(t, alone.Validate(), "%s: the variant is not a valid key by itself", name)
+
+		twice := sample()
+		twice.ParentXpubs[2] = v
+		assert.ErrorContains(t, twice.Validate(), "repeats an earlier signer", "%s: Validate", name)
+		_, err := twice.Encode()
+		assert.Error(t, err, "%s: Encode accepted it - Validate must gate Encode", name)
+	}
+
+	// The converse: everything but the point equal to ParentXpubs[0] is a
+	// different signer.
+	e := sample()
+	e.ParentXpubs[2] = withBytesAt(x0, 45, e.ParentXpubs[2][45:]...)
+	require.NoError(t, e.Validate(), "two keys differing only in the point were refused")
+}
+
 // A base58 key round-trips through the raw form without change, and a private
 // key is refused: it would put a secret into a published hash preimage.
 func TestXpubEncoding(t *testing.T) {
