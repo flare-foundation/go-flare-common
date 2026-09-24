@@ -287,15 +287,15 @@ func TestValidateV1_RejectsXpubsThreshold(t *testing.T) {
 }
 
 // respell serializes an xpub carrying keyOf's public key and every other field
-// of rest, with edit (if any) applied to the chain code, parent fingerprint and
-// child number.
-func respell(t *testing.T, keyOf, rest string, edit func(chainCode, parentFP []byte, child *uint32)) string {
+// of rest, with edit (if any) applied to the compressed key, chain code, parent
+// fingerprint and child number.
+func respell(t *testing.T, keyOf, rest string, edit func(pub, chainCode, parentFP []byte, child *uint32)) string {
 	t.Helper()
 	k, err := hdkeychain.NewKeyFromString(keyOf)
 	if err != nil {
 		t.Fatalf("parse %s: %v", keyOf, err)
 	}
-	pub, err := k.ECPubKey()
+	pk, err := k.ECPubKey()
 	if err != nil {
 		t.Fatalf("pubkey of %s: %v", keyOf, err)
 	}
@@ -303,29 +303,34 @@ func respell(t *testing.T, keyOf, rest string, edit func(chainCode, parentFP []b
 	if err != nil {
 		t.Fatalf("parse %s: %v", rest, err)
 	}
+	pub := pk.SerializeCompressed()
 	chainCode := r.ChainCode()
 	parentFP := binary.BigEndian.AppendUint32(nil, r.ParentFingerprint())
 	child := r.ChildIndex()
 	if edit != nil {
-		edit(chainCode, parentFP, &child)
+		edit(pub, chainCode, parentFP, &child)
 	}
-	return hdkeychain.NewExtendedKey(r.Version(), pub.SerializeCompressed(), chainCode, parentFP, r.Depth(), child, false).String()
+	return hdkeychain.NewExtendedKey(r.Version(), pub, chainCode, parentFP, r.Depth(), child, false).String()
 }
 
 // TestValidateV1_SignerIsThePublicKey pins what the duplicate-signer rule
-// compares: the public key, not the serialization. Each variant carries
-// good[0]'s key under a chain code, parent fingerprint or child number that
-// ValidateV1 does not constrain, and is accepted in good[0]'s place; beside
-// good[0] it is the same key holder in a second slot, and is refused.
+// compares: the public key up to sign, not the serialization. Each variant
+// carries good[0]'s X coordinate under a chain code, parent fingerprint, child
+// number or parity byte that ValidateV1 does not constrain, and is accepted in
+// good[0]'s place; beside good[0] it is the same key holder in a second slot,
+// and is refused. The negated variants flip the parity byte: -P, whose private
+// key is the negation of P's.
 func TestValidateV1_SignerIsThePublicKey(t *testing.T) {
 	good := validV1Xpubs()
 	variants := []struct {
 		name string
-		edit func(chainCode, parentFP []byte, child *uint32)
+		edit func(pub, chainCode, parentFP []byte, child *uint32)
 	}{
-		{"different chain code", func(cc, _ []byte, _ *uint32) { cc[0] ^= 0xff }},
-		{"different parent fingerprint", func(_, fp []byte, _ *uint32) { fp[0] ^= 0xff }},
-		{"different child number", func(_, _ []byte, c *uint32) { *c ^= 1 }},
+		{"different chain code", func(_, cc, _ []byte, _ *uint32) { cc[0] ^= 0xff }},
+		{"different parent fingerprint", func(_, _, fp []byte, _ *uint32) { fp[0] ^= 0xff }},
+		{"different child number", func(_, _, _ []byte, c *uint32) { *c ^= 1 }},
+		{"negated key", func(pub, _, _ []byte, _ *uint32) { pub[0] ^= 0x01 }},
+		{"negated key, different chain code", func(pub, cc, _ []byte, _ *uint32) { pub[0] ^= 0x01; cc[0] ^= 0xff }},
 	}
 	for _, v := range variants {
 		t.Run(v.name, func(t *testing.T) {
@@ -348,7 +353,7 @@ func TestValidateV1_SignerIsThePublicKey(t *testing.T) {
 			}
 			err := twice.ValidateV1(&chaincfg.MainNetParams)
 			if err == nil {
-				t.Fatal("expected reject: xpubs[2] carries xpubs[0]'s public key")
+				t.Fatal("expected reject: xpubs[2] carries xpubs[0]'s X coordinate")
 			}
 			if !strings.Contains(err.Error(), "xpubs[2] duplicates xpubs[0]") {
 				t.Errorf("error %q does not name the repeated signer", err)
@@ -356,15 +361,24 @@ func TestValidateV1_SignerIsThePublicKey(t *testing.T) {
 		})
 	}
 
-	// The converse: every field but the key equal to good[0]'s is a different
-	// signer.
+	// The converse: every field but the X coordinate equal to good[0]'s, parity
+	// byte included, is a different signer.
+	k0, err := hdkeychain.NewKeyFromString(good[0])
+	if err != nil {
+		t.Fatalf("parse good[0]: %v", err)
+	}
+	pub0, err := k0.ECPubKey()
+	if err != nil {
+		t.Fatalf("pubkey of good[0]: %v", err)
+	}
+	parity := func(pub, _, _ []byte, _ *uint32) { pub[0] = pub0.SerializeCompressed()[0] }
 	b := &BtcAccountConfigured{
-		Xpubs:     []string{good[0], good[1], respell(t, good[2], good[0], nil)},
+		Xpubs:     []string{good[0], good[1], respell(t, good[2], good[0], parity)},
 		Threshold: 2,
 		Anchors:   defaultAnchorSet(),
 	}
 	if err := b.ValidateV1(&chaincfg.MainNetParams); err != nil {
-		t.Fatalf("two xpubs differing only in the public key were refused: %v", err)
+		t.Fatalf("two xpubs differing only in the X coordinate were refused: %v", err)
 	}
 }
 

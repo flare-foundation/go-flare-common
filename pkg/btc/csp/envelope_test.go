@@ -213,9 +213,11 @@ func withBytesAt(key []byte, off int, b ...byte) []byte {
 	return out
 }
 
-// A signer is its public key. Each variant below carries ParentXpubs[0]'s point
-// under other bytes Validate does not constrain, and is a valid key on its own;
-// beside ParentXpubs[0] it is the same key holder in a second slot.
+// A signer is its public key up to sign. Each variant below carries
+// ParentXpubs[0]'s X coordinate under other bytes Validate does not constrain,
+// and is a valid key on its own; beside ParentXpubs[0] it is the same key holder
+// in a second slot. The negated variants flip the parity byte: -P, whose
+// private key is the negation of P's.
 func TestSignerIsThePublicKey(t *testing.T) {
 	x0 := sample().ParentXpubs[0]
 	variants := map[string][]byte{
@@ -223,8 +225,15 @@ func TestSignerIsThePublicKey(t *testing.T) {
 		"different parent fingerprint": withBytesAt(x0, 5, 0xde, 0xad, 0xbe, 0xef),
 		"different fingerprint and chain code": withBytesAt(
 			withBytesAt(x0, 5, 0xde, 0xad, 0xbe, 0xef), 13, bytes.Repeat([]byte{0x5a}, 32)...),
+		"negated point": withBytesAt(x0, 45, x0[45]^0x01),
+		"negated point, different chain code": withBytesAt(
+			withBytesAt(x0, 45, x0[45]^0x01), 13, bytes.Repeat([]byte{0x5a}, 32)...),
 	}
 	for name, v := range variants {
+		// Validate reads only the parity byte, so parse the key to show the
+		// variant is a point on the curve.
+		_, err := hdkeychain.NewKeyFromString(csp.EncodeXpub(v))
+		require.NoError(t, err, "%s: the variant is not a key", name)
 		alone := sample()
 		alone.ParentXpubs[0] = v
 		require.NoError(t, alone.Validate(), "%s: the variant is not a valid key by itself", name)
@@ -232,15 +241,15 @@ func TestSignerIsThePublicKey(t *testing.T) {
 		twice := sample()
 		twice.ParentXpubs[2] = v
 		assert.ErrorContains(t, twice.Validate(), "repeats an earlier signer", "%s: Validate", name)
-		_, err := twice.Encode()
+		_, err = twice.Encode()
 		assert.Error(t, err, "%s: Encode accepted it - Validate must gate Encode", name)
 	}
 
-	// The converse: everything but the point equal to ParentXpubs[0] is a
-	// different signer.
+	// The converse: everything but the X coordinate equal to ParentXpubs[0],
+	// parity byte included, is a different signer.
 	e := sample()
-	e.ParentXpubs[2] = withBytesAt(x0, 45, e.ParentXpubs[2][45:]...)
-	require.NoError(t, e.Validate(), "two keys differing only in the point were refused")
+	e.ParentXpubs[2] = withBytesAt(x0, 46, e.ParentXpubs[2][46:]...)
+	require.NoError(t, e.Validate(), "two keys differing only in the X coordinate were refused")
 }
 
 // A base58 key round-trips through the raw form without change, and a private
