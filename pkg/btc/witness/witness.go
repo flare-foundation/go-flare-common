@@ -75,7 +75,9 @@ type Wallet struct {
 // the machines — agreeing with them by coincidence. The set in a finalized
 // package is the one the data providers checked against the registry, and the
 // package is fetched by the hash the chain finalized, so it is also the set the
-// machines signed under.
+// machines signed under. The key parameters follow the coin the keys name in
+// their own child numbers (csp.Envelope.CoinType); the envelope has no field
+// for it.
 func WalletOf(env csp.Envelope) (Wallet, error) {
 	params, err := env.KeyParams()
 	if err != nil {

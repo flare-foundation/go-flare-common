@@ -88,8 +88,8 @@ func spendable(t *testing.T, w wallet, valueSat int64) (csp.Envelope, []byte) {
 	require.NoError(t, err)
 
 	return csp.Envelope{
-		Version: csp.EnvelopeVersion, CoinType: csp.CoinTypeTestnet,
-		Threshold: uint8(w.k), ParentXpubs: rawXpubs(t, w.parents),
+		Version:   csp.EnvelopeVersion,
+		Threshold: uint32(w.k), ParentXpubs: rawXpubs(t, w.parents),
 		AccountIndex: 0, RawUnsignedTx: buf,
 		Inputs: []csp.Input{{
 			Txid: [32]byte(prev), Vout: 0, ValueSat: uint64(valueSat),
