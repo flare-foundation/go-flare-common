@@ -445,20 +445,25 @@ func (e Envelope) validateSigners() error {
 	if _, err := e.CoinType(); err != nil {
 		return err
 	}
-	// A signer is its public key, bytes 45–78, and not the whole serialization.
-	// A k-of-n is genuine only if its n signers are n key holders, and two
-	// entries with one public key are one holder whatever else differs: the
-	// chain code is public, so whoever holds the private key derives the
-	// children of both, and comparing all 78 bytes would let one party fill two
-	// slots. The leaf checks in pkg/btc/address and pkg/btc/htlc cannot catch
-	// it, because a different chain code derives different children. A point
-	// has one compressed encoding, so equal keys are equal bytes here.
+	// A signer is its public key up to sign — the X coordinate, bytes 46–78 —
+	// and not the whole serialization. A k-of-n is genuine only if its n
+	// signers are n key holders, and two entries sharing an X coordinate are
+	// one holder whatever else differs. With one point under a different chain
+	// code, whoever holds the private key derives the children of both, since
+	// the chain code is public. P and -P differ only in the parity byte, and
+	// their private keys are d and -d, so whoever holds one holds the other.
+	// Comparing all 78 bytes, or all 33 of the point, would let one party fill
+	// two slots, and the leaf checks in pkg/btc/address and pkg/btc/htlc catch
+	// neither, because both pairs derive different children. An X coordinate
+	// has one encoding, so equal keys are equal bytes here. One holder behind
+	// two unrelated keys is invisible to any comparison; that is the
+	// registry's to prevent.
 	seen := make(map[string]struct{}, n)
 	for i, x := range e.ParentXpubs {
 		if x[45] != 0x02 && x[45] != 0x03 {
 			return fmt.Errorf("parentXpubs[%d] does not carry a compressed public key", i)
 		}
-		pub := string(x[45:])
+		pub := string(x[46:])
 		if _, dup := seen[pub]; dup {
 			return fmt.Errorf("parentXpubs[%d] repeats an earlier signer", i)
 		}

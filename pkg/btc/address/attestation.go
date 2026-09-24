@@ -554,19 +554,23 @@ func validateXpubsAndThreshold(xpubs []string, threshold int, params *chaincfg.P
 		if ci, want := key.ChildIndex(), hdkeychain.HardenedKeyStart+coin; ci != want {
 			return fmt.Errorf("attestation: xpubs[%d] is published under child number %d, not coin %d' (%d): the wallet-level key on %s is m/87'/%d'", i, ci, coin, want, params.Name, coin)
 		}
-		// Reject duplicate signers, comparing the PUBLIC KEY alone. A k-of-n is
-		// genuine only if its n signers are n key holders, and two xpubs with
-		// one public key are one holder whatever else differs: the chain code
-		// is public, so whoever holds the private key derives the children of
-		// both, and comparing the whole serialization (version, depth,
-		// fingerprint, child number, chain code) would let one party fill two
-		// slots. Derive's leaf check and pkg/btc/htlc's cannot catch it, because
-		// a different chain code derives different children.
+		// Reject duplicate signers, comparing the PUBLIC KEY UP TO SIGN — its X
+		// coordinate — alone. A k-of-n is genuine only if its n signers are n
+		// key holders, and two xpubs sharing an X coordinate are one holder
+		// whatever else differs. With one public key, whoever holds the private
+		// key derives the children of both, since the chain code is public, so
+		// comparing the whole serialization (version, depth, fingerprint, child
+		// number, chain code) would let one party fill two slots. A key and its
+		// negation differ only in the parity byte, and their private keys are d
+		// and -d, so whoever holds one holds the other. Derive's leaf check and
+		// pkg/btc/htlc's catch neither, because both pairs derive different
+		// children. One holder behind two unrelated keys is invisible to any
+		// comparison; that is the registry's to prevent.
 		pub, err := key.ECPubKey()
 		if err != nil {
 			return fmt.Errorf("attestation: xpubs[%d]: %w", i, err)
 		}
-		norm := string(pub.SerializeCompressed())
+		norm := string(pub.SerializeCompressed()[1:])
 		if j, dup := seen[norm]; dup {
 			return fmt.Errorf("attestation: xpubs[%d] duplicates xpubs[%d]; every signer must be a distinct key", i, j)
 		}
