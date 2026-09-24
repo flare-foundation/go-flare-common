@@ -554,13 +554,19 @@ func validateXpubsAndThreshold(xpubs []string, threshold int, params *chaincfg.P
 		if ci, want := key.ChildIndex(), hdkeychain.HardenedKeyStart+coin; ci != want {
 			return fmt.Errorf("attestation: xpubs[%d] is published under child number %d, not coin %d' (%d): the wallet-level key on %s is m/87'/%d'", i, ci, coin, want, params.Name, coin)
 		}
-		// Reject duplicate signers. A repeated key collapses signer
-		// independence — a k-of-n with duplicates can be satisfied by fewer
-		// than k independent parties, so it is not a genuine k-of-n multisig.
-		// Distinct parent xpubs yield distinct derived leaf pubkeys, so this
-		// suffices; Derive additionally guards the derived set. Normalized via
-		// canonical re-serialization so encoding variants cannot slip through.
-		norm := key.String()
+		// Reject duplicate signers, comparing the PUBLIC KEY alone. A k-of-n is
+		// genuine only if its n signers are n key holders, and two xpubs with
+		// one public key are one holder whatever else differs: the chain code
+		// is public, so whoever holds the private key derives the children of
+		// both, and comparing the whole serialization (version, depth,
+		// fingerprint, child number, chain code) would let one party fill two
+		// slots. Derive's leaf check and pkg/btc/htlc's cannot catch it, because
+		// a different chain code derives different children.
+		pub, err := key.ECPubKey()
+		if err != nil {
+			return fmt.Errorf("attestation: xpubs[%d]: %w", i, err)
+		}
+		norm := string(pub.SerializeCompressed())
 		if j, dup := seen[norm]; dup {
 			return fmt.Errorf("attestation: xpubs[%d] duplicates xpubs[%d]; every signer must be a distinct key", i, j)
 		}

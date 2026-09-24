@@ -445,15 +445,24 @@ func (e Envelope) validateSigners() error {
 	if _, err := e.CoinType(); err != nil {
 		return err
 	}
+	// A signer is its public key, bytes 45–78, and not the whole serialization.
+	// A k-of-n is genuine only if its n signers are n key holders, and two
+	// entries with one public key are one holder whatever else differs: the
+	// chain code is public, so whoever holds the private key derives the
+	// children of both, and comparing all 78 bytes would let one party fill two
+	// slots. The leaf checks in pkg/btc/address and pkg/btc/htlc cannot catch
+	// it, because a different chain code derives different children. A point
+	// has one compressed encoding, so equal keys are equal bytes here.
 	seen := make(map[string]struct{}, n)
 	for i, x := range e.ParentXpubs {
 		if x[45] != 0x02 && x[45] != 0x03 {
 			return fmt.Errorf("parentXpubs[%d] does not carry a compressed public key", i)
 		}
-		if _, dup := seen[string(x)]; dup {
+		pub := string(x[45:])
+		if _, dup := seen[pub]; dup {
 			return fmt.Errorf("parentXpubs[%d] repeats an earlier signer", i)
 		}
-		seen[string(x)] = struct{}{}
+		seen[pub] = struct{}{}
 	}
 	return nil
 }
