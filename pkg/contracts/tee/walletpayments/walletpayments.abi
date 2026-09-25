@@ -66,6 +66,11 @@
   },
   {
     "inputs": [],
+    "name": "BtcConsensusParamsNotSet",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "BtcEscrowAlreadyReclaimed",
     "type": "error"
   },
@@ -122,12 +127,22 @@
   },
   {
     "inputs": [],
+    "name": "EmptyProposerList",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "EmptyScheduleNotAllowed",
     "type": "error"
   },
   {
     "inputs": [],
     "name": "EscrowProfileNotSet",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "EscrowsNotEnabled",
     "type": "error"
   },
   {
@@ -199,12 +214,22 @@
   },
   {
     "inputs": [],
+    "name": "InvalidBtcConsensusParams",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "InvalidBtcEscrowProfile",
     "type": "error"
   },
   {
     "inputs": [],
     "name": "InvalidBtcEscrowTerms",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidBtcWalletParams",
     "type": "error"
   },
   {
@@ -671,6 +696,53 @@
       {
         "indexed": true,
         "internalType": "bytes32",
+        "name": "walletId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint32",
+        "name": "accountIndex",
+        "type": "uint32"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint64",
+            "name": "batchDeadlineSeconds",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint32",
+            "name": "maxOutputsPerPayment",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint8",
+            "name": "maxChangeOutputs",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "scoreFreeChangeOutputs",
+            "type": "uint8"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct IBtcParams.BtcWalletParams",
+        "name": "params",
+        "type": "tuple"
+      }
+    ],
+    "name": "AccountBtcWalletParamsSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
         "name": "projectId",
         "type": "bytes32"
       },
@@ -929,6 +1001,97 @@
       {
         "indexed": true,
         "internalType": "bytes32",
+        "name": "sourceId",
+        "type": "bytes32"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint16",
+            "name": "ruleVersion",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint64",
+            "name": "minPaymentAmountSat",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "batchDeadlineSeconds",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint32",
+            "name": "dustRelayFeeSatPerKvB",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint8",
+            "name": "maxChangeOutputs",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "scoreImprovementBias",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "scoreImprovementClamp",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "scoreFreeChangeOutputs",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint16",
+            "name": "maxSweptInputs",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint32",
+            "name": "minFundingConfirmations",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "anchorSpendDepth",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "feeRateFloorBIPS",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "feeRateCeilingBIPS",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "maxOutputsPerPayment",
+            "type": "uint32"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct IBtcParams.BtcConsensusParams",
+        "name": "params",
+        "type": "tuple"
+      }
+    ],
+    "name": "BtcConsensusParamsSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
         "name": "walletId",
         "type": "bytes32"
       },
@@ -1108,16 +1271,6 @@
             "internalType": "uint16",
             "name": "proposalThresholdBIPS",
             "type": "uint16"
-          },
-          {
-            "internalType": "uint32",
-            "name": "maxPaymentsPerInstruction",
-            "type": "uint32"
-          },
-          {
-            "internalType": "uint64",
-            "name": "minPaymentAmount",
-            "type": "uint64"
           },
           {
             "internalType": "uint8",
@@ -1623,6 +1776,47 @@
         "type": "bytes32"
       },
       {
+        "components": [
+          {
+            "internalType": "uint64",
+            "name": "batchDeadlineSeconds",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint32",
+            "name": "maxOutputsPerPayment",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint8",
+            "name": "maxChangeOutputs",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "scoreFreeChangeOutputs",
+            "type": "uint8"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct IBtcParams.BtcWalletParams",
+        "name": "params",
+        "type": "tuple"
+      }
+    ],
+    "name": "ProjectBtcWalletParamsSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "projectId",
+        "type": "bytes32"
+      },
+      {
         "indexed": true,
         "internalType": "bytes32",
         "name": "sourceId",
@@ -1667,25 +1861,6 @@
       }
     ],
     "name": "ProjectFeeScheduleSet",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "projectId",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "internalType": "bool",
-        "name": "open",
-        "type": "bool"
-      }
-    ],
-    "name": "ProjectProposersOpenSet",
     "type": "event"
   },
   {
@@ -1920,6 +2095,31 @@
       }
     ],
     "name": "SigningRequested",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "sourceId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "custodianWallets",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "teeWallets",
+        "type": "bool"
+      }
+    ],
+    "name": "SourceEscrowsEnabled",
     "type": "event"
   },
   {
@@ -3216,6 +3416,59 @@
         "type": "tuple"
       }
     ],
+    "name": "getAccountBtcWalletParams",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint64",
+            "name": "batchDeadlineSeconds",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint32",
+            "name": "maxOutputsPerPayment",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint8",
+            "name": "maxChangeOutputs",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "scoreFreeChangeOutputs",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct IBtcParams.BtcWalletParams",
+        "name": "_params",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct WalletAccount",
+        "name": "_account",
+        "type": "tuple"
+      }
+    ],
     "name": "getAccountFeeSchedule",
     "outputs": [
       {
@@ -3669,6 +3922,97 @@
   {
     "inputs": [
       {
+        "internalType": "bytes32",
+        "name": "_sourceId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getBtcConsensusParams",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint16",
+            "name": "ruleVersion",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint64",
+            "name": "minPaymentAmountSat",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "batchDeadlineSeconds",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint32",
+            "name": "dustRelayFeeSatPerKvB",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint8",
+            "name": "maxChangeOutputs",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "scoreImprovementBias",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "scoreImprovementClamp",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "scoreFreeChangeOutputs",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint16",
+            "name": "maxSweptInputs",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint32",
+            "name": "minFundingConfirmations",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "anchorSpendDepth",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "feeRateFloorBIPS",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "feeRateCeilingBIPS",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "maxOutputsPerPayment",
+            "type": "uint32"
+          }
+        ],
+        "internalType": "struct IBtcParams.BtcConsensusParams",
+        "name": "_params",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "components": [
           {
             "internalType": "bytes32",
@@ -4028,6 +4372,109 @@
         "internalType": "struct WalletAccount",
         "name": "_account",
         "type": "tuple"
+      }
+    ],
+    "name": "getBtcParams",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint16",
+            "name": "ruleVersion",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint64",
+            "name": "minPaymentAmountSat",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "batchDeadlineSeconds",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint32",
+            "name": "dustRelayFeeSatPerKvB",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint8",
+            "name": "maxChangeOutputs",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "scoreImprovementBias",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "scoreImprovementClamp",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "scoreFreeChangeOutputs",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint16",
+            "name": "maxSweptInputs",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint32",
+            "name": "minFundingConfirmations",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "anchorSpendDepth",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "feeRateFloorBIPS",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "feeRateCeilingBIPS",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "maxOutputsPerPayment",
+            "type": "uint32"
+          }
+        ],
+        "internalType": "struct IBtcParams.BtcConsensusParams",
+        "name": "_params",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct WalletAccount",
+        "name": "_account",
+        "type": "tuple"
       },
       {
         "internalType": "uint64",
@@ -4140,16 +4587,6 @@
             "internalType": "uint16",
             "name": "proposalThresholdBIPS",
             "type": "uint16"
-          },
-          {
-            "internalType": "uint32",
-            "name": "maxPaymentsPerInstruction",
-            "type": "uint32"
-          },
-          {
-            "internalType": "uint64",
-            "name": "minPaymentAmount",
-            "type": "uint64"
           },
           {
             "internalType": "uint8",
@@ -4906,6 +5343,47 @@
         "internalType": "bytes32",
         "name": "_projectId",
         "type": "bytes32"
+      }
+    ],
+    "name": "getProjectBtcWalletParams",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint64",
+            "name": "batchDeadlineSeconds",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint32",
+            "name": "maxOutputsPerPayment",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint8",
+            "name": "maxChangeOutputs",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "scoreFreeChangeOutputs",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct IBtcParams.BtcWalletParams",
+        "name": "_params",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_projectId",
+        "type": "bytes32"
       },
       {
         "internalType": "bytes32",
@@ -5223,6 +5701,16 @@
             "internalType": "bool",
             "name": "enabled",
             "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "custodianEscrows",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "teeEscrows",
+            "type": "bool"
           }
         ],
         "internalType": "struct ISourceConfig.Source",
@@ -5509,47 +5997,6 @@
   {
     "inputs": [
       {
-        "components": [
-          {
-            "internalType": "bytes32",
-            "name": "sourceId",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "string",
-            "name": "accountAddress",
-            "type": "string"
-          }
-        ],
-        "internalType": "struct WalletAccount",
-        "name": "_account",
-        "type": "tuple"
-      },
-      {
-        "internalType": "address",
-        "name": "_proposer",
-        "type": "address"
-      },
-      {
-        "internalType": "uint64",
-        "name": "_generation",
-        "type": "uint64"
-      }
-    ],
-    "name": "isAllowedProposerAt",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "address",
         "name": "_address",
         "type": "address"
@@ -5596,25 +6043,6 @@
       {
         "internalType": "bool",
         "name": "_isOperation",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_projectId",
-        "type": "bytes32"
-      }
-    ],
-    "name": "isProjectProposersOpen",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "_open",
         "type": "bool"
       }
     ],
@@ -5866,31 +6294,6 @@
             "type": "bytes32"
           },
           {
-            "internalType": "string",
-            "name": "accountAddress",
-            "type": "string"
-          }
-        ],
-        "internalType": "struct WalletAccount",
-        "name": "_account",
-        "type": "tuple"
-      }
-    ],
-    "name": "refreshEligibleGeneration",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "bytes32",
-            "name": "sourceId",
-            "type": "bytes32"
-          },
-          {
             "internalType": "bytes32",
             "name": "keyType",
             "type": "bytes32"
@@ -6070,6 +6473,82 @@
   {
     "inputs": [
       {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct WalletAccount",
+        "name": "_account",
+        "type": "tuple"
+      }
+    ],
+    "name": "removeAccountBtcWalletParams",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct WalletAccount",
+        "name": "_account",
+        "type": "tuple"
+      }
+    ],
+    "name": "removeAccountProposers",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_projectId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "removeProjectBtcWalletParams",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_projectId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "removeProjectProposers",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "_walletRegistry",
         "type": "address"
@@ -6235,6 +6714,58 @@
       {
         "components": [
           {
+            "internalType": "uint64",
+            "name": "batchDeadlineSeconds",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint32",
+            "name": "maxOutputsPerPayment",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint8",
+            "name": "maxChangeOutputs",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "scoreFreeChangeOutputs",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct IBtcParams.BtcWalletParams",
+        "name": "_params",
+        "type": "tuple"
+      }
+    ],
+    "name": "setAccountBtcWalletParams",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct WalletAccount",
+        "name": "_account",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
             "internalType": "int16",
             "name": "factorBIPS",
             "type": "int16"
@@ -6281,6 +6812,96 @@
       }
     ],
     "name": "setAccountProposers",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_sourceId",
+        "type": "bytes32"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint16",
+            "name": "ruleVersion",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint64",
+            "name": "minPaymentAmountSat",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "batchDeadlineSeconds",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint32",
+            "name": "dustRelayFeeSatPerKvB",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint8",
+            "name": "maxChangeOutputs",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "scoreImprovementBias",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "scoreImprovementClamp",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "scoreFreeChangeOutputs",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint16",
+            "name": "maxSweptInputs",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint32",
+            "name": "minFundingConfirmations",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "anchorSpendDepth",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "feeRateFloorBIPS",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "feeRateCeilingBIPS",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "maxOutputsPerPayment",
+            "type": "uint32"
+          }
+        ],
+        "internalType": "struct IBtcParams.BtcConsensusParams",
+        "name": "_params",
+        "type": "tuple"
+      }
+    ],
+    "name": "setBtcConsensusParams",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -6338,16 +6959,6 @@
             "internalType": "uint16",
             "name": "proposalThresholdBIPS",
             "type": "uint16"
-          },
-          {
-            "internalType": "uint32",
-            "name": "maxPaymentsPerInstruction",
-            "type": "uint32"
-          },
-          {
-            "internalType": "uint64",
-            "name": "minPaymentAmount",
-            "type": "uint64"
           },
           {
             "internalType": "uint8",
@@ -6408,6 +7019,46 @@
         "type": "bytes32"
       },
       {
+        "components": [
+          {
+            "internalType": "uint64",
+            "name": "batchDeadlineSeconds",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint32",
+            "name": "maxOutputsPerPayment",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint8",
+            "name": "maxChangeOutputs",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "scoreFreeChangeOutputs",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct IBtcParams.BtcWalletParams",
+        "name": "_params",
+        "type": "tuple"
+      }
+    ],
+    "name": "setProjectBtcWalletParams",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_projectId",
+        "type": "bytes32"
+      },
+      {
         "internalType": "bytes32",
         "name": "_sourceId",
         "type": "bytes32"
@@ -6456,17 +7107,12 @@
   {
     "inputs": [
       {
-        "internalType": "bytes32",
-        "name": "_projectId",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bool",
-        "name": "_open",
-        "type": "bool"
+        "internalType": "string",
+        "name": "_url",
+        "type": "string"
       }
     ],
-    "name": "setProjectProposersOpen",
+    "name": "setProposerUrl",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -6474,12 +7120,22 @@
   {
     "inputs": [
       {
-        "internalType": "string",
-        "name": "_url",
-        "type": "string"
+        "internalType": "bytes32",
+        "name": "_sourceId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bool",
+        "name": "_custodianWallets",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "_teeWallets",
+        "type": "bool"
       }
     ],
-    "name": "setProposerUrl",
+    "name": "setSourceEscrowsEnabled",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
