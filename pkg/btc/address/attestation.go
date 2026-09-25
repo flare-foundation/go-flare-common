@@ -7,6 +7,7 @@ import (
 
 	"github.com/btcsuite/btcd/btcutil/hdkeychain"
 	"github.com/btcsuite/btcd/chaincfg"
+	"github.com/btcsuite/btcd/wire"
 	"golang.org/x/crypto/sha3"
 )
 
@@ -246,11 +247,23 @@ const (
 // value is not carried here either — the verifier reads it from the on-chain
 // UTXO and checks it against MinAnchorValueSat.
 //
-// Txid is the genesis funding txid in *display* (big-endian) byte order —
-// same convention as the wire-format BtcAccountConfigured request.
+// Txid is the genesis funding txid in INTERNAL byte order: the order its bytes
+// take in a spending input's outpoint and in a chainhash.Hash, the reverse of
+// what bitcoind and block explorers print. The BtcAccountConfigured request
+// carries it in that order, and so do the anchors the contract stores and the
+// registry returns, as every Bitcoin txid held as bytes32 is. Display order
+// belongs only at a boundary — a bitcoind RPC argument such as gettxout's txid,
+// or a log line — and is converted there, once. String renders it.
 type AnchorBinding struct {
 	Txid [32]byte
 	Vout uint32
+}
+
+// String renders the outpoint as bitcoind and explorers print it,
+// "<display-order txid>:<vout>", so a txid in an error or a log line can be
+// looked up as written.
+func (a AnchorBinding) String() string {
+	return wire.OutPoint{Hash: a.Txid, Index: a.Vout}.String()
 }
 
 // ValidateAnchorSet enforces the invariant on the Anchors set:
@@ -286,7 +299,7 @@ func ValidateAnchorSet(anchors []AnchorBinding) error {
 	seen := make(map[AnchorBinding]int, n)
 	for i, a := range anchors {
 		if j, dup := seen[a]; dup {
-			return fmt.Errorf("attestation: anchors[%d] and anchors[%d] reference the same outpoint %x:%d; every anchor chain must be backed by a distinct UTXO", j, i, a.Txid, a.Vout)
+			return fmt.Errorf("attestation: anchors[%d] and anchors[%d] reference the same outpoint %s; every anchor chain must be backed by a distinct UTXO", j, i, a)
 		}
 		seen[a] = i
 	}
@@ -326,7 +339,7 @@ func ValidateAnchorGrowth(prev, next []AnchorBinding) error {
 	}
 	for i := range prev {
 		if next[i] != prev[i] {
-			return fmt.Errorf("attestation: anchor chain %d is immutable: re-attested outpoint %x:%d differs from the registered %x:%d (growth is append-only — no reindex/replace/remove of a registered chain, open-question #33)", i, next[i].Txid, next[i].Vout, prev[i].Txid, prev[i].Vout)
+			return fmt.Errorf("attestation: anchor chain %d is immutable: re-attested outpoint %s differs from the registered %s (growth is append-only — no reindex/replace/remove of a registered chain, open-question #33)", i, next[i], prev[i])
 		}
 	}
 	return nil

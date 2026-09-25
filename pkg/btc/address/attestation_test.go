@@ -2,6 +2,7 @@ package address
 
 import (
 	"bytes"
+	"encoding/hex"
 	"strings"
 	"testing"
 
@@ -621,6 +622,65 @@ func TestValidateAnchorSet_RejectsDuplicateOutpoint(t *testing.T) {
 	if !strings.Contains(err.Error(), "distinct UTXO") {
 		t.Errorf("error %q does not flag the distinctness rule", err)
 	}
+}
+
+// genesisTxidDisplay is the mainnet genesis coinbase txid as bitcoind and
+// block explorers print it.
+const genesisTxidDisplay = "4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"
+
+// genesisTxidInternal is the same txid in internal byte order, taken from
+// hashing the serialized transaction rather than from reversing the string, so
+// the tests below do not share their conversion with the code they check.
+func genesisTxidInternal() [32]byte {
+	return [32]byte(chaincfg.MainNetParams.GenesisBlock.Transactions[0].TxHash())
+}
+
+func TestAnchorBinding_StringIsDisplayOrder(t *testing.T) {
+	a := AnchorBinding{Txid: genesisTxidInternal(), Vout: 3}
+	if got, want := a.String(), genesisTxidDisplay+":3"; got != want {
+		t.Fatalf("String() = %q, want %q", got, want)
+	}
+
+	// The mistake a caller makes by hex-decoding an RPC txid without reversing
+	// it: the binding then names a transaction that does not exist, and must
+	// neither equal nor render as the real one.
+	var display [32]byte
+	if _, err := hex.Decode(display[:], []byte(genesisTxidDisplay)); err != nil {
+		t.Fatal(err)
+	}
+	wrong := AnchorBinding{Txid: display, Vout: 3}
+	if wrong == a || wrong.String() == a.String() {
+		t.Fatalf("a display-order Txid reads as the internal one: %s", wrong)
+	}
+}
+
+// TestAnchorErrors_NameDisplayTxid: Txid holds internal order, so printing its
+// bytes as they lie would give a reader a txid no explorer or bitcoind knows.
+// Both anchor-set errors must name the outpoint in display order.
+func TestAnchorErrors_NameDisplayTxid(t *testing.T) {
+	genesis := AnchorBinding{Txid: genesisTxidInternal(), Vout: 0}
+	internalHex := hex.EncodeToString(genesis.Txid[:])
+
+	check := func(t *testing.T, err error) {
+		t.Helper()
+		if err == nil {
+			t.Fatal("expected a reject")
+		}
+		if !strings.Contains(err.Error(), genesisTxidDisplay+":0") {
+			t.Errorf("error %q does not name the outpoint in display order", err)
+		}
+		if strings.Contains(err.Error(), internalHex) {
+			t.Errorf("error %q names the txid in internal order", err)
+		}
+	}
+
+	t.Run("duplicate", func(t *testing.T) {
+		check(t, ValidateAnchorSet([]AnchorBinding{genesis, genesis}))
+	})
+	t.Run("immutable", func(t *testing.T) {
+		replaced := []AnchorBinding{{Txid: [32]byte{0xbb}, Vout: 1}}
+		check(t, ValidateAnchorGrowth([]AnchorBinding{genesis}, replaced))
+	})
 }
 
 // Note: per-anchor value is no longer validated by ValidateAnchorSet — the
