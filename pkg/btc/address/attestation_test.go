@@ -348,11 +348,13 @@ func respell(t *testing.T, keyOf, rest string, edit func(pub, chainCode, parentF
 
 // TestValidateV1_SignerIsThePublicKey pins what the duplicate-signer rule
 // compares: the public key up to sign, not the serialization. Each variant
-// carries good[0]'s X coordinate under a chain code, parent fingerprint, child
-// number or parity byte that ValidateV1 does not constrain, and is accepted in
-// good[0]'s place; beside good[0] it is the same key holder in a second slot,
-// and is refused. The negated variants flip the parity byte: -P, whose private
-// key is the negation of P's.
+// carries good[0]'s X coordinate under a chain code, parent fingerprint or
+// parity byte that ValidateV1 does not constrain, and is accepted in good[0]'s
+// place; beside good[0] it is the same key holder in a second slot, and is
+// refused. The negated variants flip the parity byte: -P, whose private key is
+// the negation of P's. The child number is not among them: ValidateV1 requires
+// it to be the network's coin, so a respelled one is refused alone
+// (TestValidateV1_RejectsAnotherCoin).
 func TestValidateV1_SignerIsThePublicKey(t *testing.T) {
 	good := validV1Xpubs()
 	variants := []struct {
@@ -361,7 +363,6 @@ func TestValidateV1_SignerIsThePublicKey(t *testing.T) {
 	}{
 		{"different chain code", func(_, cc, _ []byte, _ *uint32) { cc[0] ^= 0xff }},
 		{"different parent fingerprint", func(_, _, fp []byte, _ *uint32) { fp[0] ^= 0xff }},
-		{"different child number", func(_, _, _ []byte, c *uint32) { *c ^= 1 }},
 		{"negated key", func(pub, _, _ []byte, _ *uint32) { pub[0] ^= 0x01 }},
 		{"negated key, different chain code", func(pub, cc, _ []byte, _ *uint32) { pub[0] ^= 0x01; cc[0] ^= 0xff }},
 	}
