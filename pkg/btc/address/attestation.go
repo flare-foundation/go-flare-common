@@ -526,6 +526,10 @@ func validateXpubsAndThreshold(xpubs []string, threshold int, params *chaincfg.P
 	if threshold < 1 || threshold > n {
 		return fmt.Errorf("attestation: threshold %d out of range for n=%d (must satisfy 1 ≤ k ≤ n)", threshold, n)
 	}
+	coin, err := bip87CoinType(params)
+	if err != nil {
+		return err
+	}
 	seen := make(map[string]int, n)
 	for i, xs := range xpubs {
 		key, err := hdkeychain.NewKeyFromString(xs)
@@ -540,6 +544,15 @@ func validateXpubsAndThreshold(xpubs []string, threshold int, params *chaincfg.P
 		}
 		if d := key.Depth(); d != 2 {
 			return fmt.Errorf("attestation: xpubs[%d] is at BIP-32 depth %d, expected wallet-level (parent) depth 2 (m/purpose'/coin'); the account level is a non-hardened child at accountIndex", i, d)
+		}
+		// The depth says the level; the child number says WHICH coin. A key at
+		// m/87'/0' re-serialized as a tpub passes the version check on a test
+		// network and is still a mainnet key: the coin level is hardened, so it is
+		// the child number, not the version bytes, that separates one network's
+		// keys from another's. The chain holds a wallet's key type to the
+		// deployment's network, and the key type names this coin.
+		if ci, want := key.ChildIndex(), hdkeychain.HardenedKeyStart+coin; ci != want {
+			return fmt.Errorf("attestation: xpubs[%d] is published under child number %d, not coin %d' (%d): the wallet-level key on %s is m/87'/%d'", i, ci, coin, want, params.Name, coin)
 		}
 		// Reject duplicate signers. A repeated key collapses signer
 		// independence — a k-of-n with duplicates can be satisfied by fewer

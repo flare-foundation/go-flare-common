@@ -189,13 +189,17 @@ func xpubAtDepth(t *testing.T, params *chaincfg.Params, hardened ...uint32) stri
 // depth-2 counterpart of derive_test.go's account-level generateTestXpubs.
 func generateTestParentXpubs(t *testing.T, params *chaincfg.Params, n int) []string {
 	t.Helper()
+	coin, err := bip87CoinType(params)
+	if err != nil {
+		t.Fatalf("coin for %s: %v", params.Name, err)
+	}
 	out := make([]string, n)
 	for i := range n {
 		k, err := hdkeychain.NewMaster(bytes.Repeat([]byte{byte(i + 1)}, 32), params)
 		if err != nil {
 			t.Fatalf("master[%d]: %v", i, err)
 		}
-		for _, h := range []uint32{87, 0} { // m/87'/0' — wallet (parent) level
+		for _, h := range []uint32{87, coin} { // m/87'/coin' — wallet (parent) level, the network's coin
 			if k, err = k.Derive(hdkeychain.HardenedKeyStart + h); err != nil {
 				t.Fatalf("derive %d': %v", h, err)
 			}
@@ -207,6 +211,34 @@ func generateTestParentXpubs(t *testing.T, params *chaincfg.Params, n int) []str
 		out[i] = xpub.String()
 	}
 	return out
+}
+
+// TestValidateV1_RejectsAnotherCoin: a key at the right depth and under the
+// network's version bytes is still refused when its child number is another
+// coin. m/87'/0' re-serialized as a tpub is a MAINNET key, and on a test
+// network it would put mainnet keys behind a test wallet.
+func TestValidateV1_RejectsAnotherCoin(t *testing.T) {
+	params := &chaincfg.RegressionNetParams
+	keys := generateTestParentXpubs(t, params, 3)
+	k, err := hdkeychain.NewMaster(bytes.Repeat([]byte{9}, 32), params)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, h := range []uint32{87, 0} { // coin 0' under a tpub
+		if k, err = k.Derive(hdkeychain.HardenedKeyStart + h); err != nil {
+			t.Fatal(err)
+		}
+	}
+	pub, err := k.Neuter()
+	if err != nil {
+		t.Fatal(err)
+	}
+	keys[1] = pub.String()
+	b := &BtcAccountConfigured{AccountIndex: 0, Xpubs: keys, Threshold: 2, Anchors: defaultAnchorSet()}
+	err = b.ValidateV1(params)
+	if err == nil || !strings.Contains(err.Error(), "not coin 1'") {
+		t.Fatalf("a coin-0' key passed on regtest: %v", err)
+	}
 }
 
 // TestValidateXpubs_RejectsNonParentLevelDepth pins the per-key depth check
