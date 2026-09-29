@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
+	"math/big"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -91,9 +93,8 @@ func TestAmountDecodeEncode(t *testing.T) {
 	}
 }
 
-// TestMPTReservedBitsRejected verifies that rippled rejects any
-// MPT indicator byte with a reserved bit set. The decoder must too, or it
-// silently accepts blobs that wouldn't be valid on the ledger.
+// TestMPTReservedBitsRejected verifies that only the MPT indicator bytes
+// rippled emits (0x20 and 0x60) decode.
 func TestMPTReservedBitsRejected(t *testing.T) {
 	// 32-byte body: 8 bytes value + 24 bytes mpt_issuance_id.
 	body := make([]byte, 32)
@@ -874,6 +875,34 @@ func TestAmountDecodingXRPL(t *testing.T) {
 			hexInput:   "20000000000000000000002403c84a0a28e0190e208e982c352bbd5006600555cf",
 			expectJSON: `{"mpt_issuance_id":"00002403C84A0A28E0190E208E982C352BBD5006600555CF","value":"0"}`,
 		},
+		// normalised exponent 127, the last one below the 0x20 bit
+		{
+			name:       "IOU 1e45",
+			hexInput:   "dfc38d7ea4c6800000000000000000000000000055534400000000000000000000000000000000000000000000000001",
+			expectJSON: `{"currency":"USD","issuer":"rrrrrrrrrrrrrrrrrrrrBZbvji","value":"1e+45"}`,
+		},
+		// normalised exponent 128 sets 0x20 in the first byte
+		{
+			name:       "IOU 1e46",
+			hexInput:   "e0038d7ea4c6800000000000000000000000000055534400000000000000000000000000000000000000000000000001",
+			expectJSON: `{"currency":"USD","issuer":"rrrrrrrrrrrrrrrrrrrrBZbvji","value":"1e+46"}`,
+		},
+		{
+			name:       "IOU -1e46",
+			hexInput:   "a0038d7ea4c6800000000000000000000000000055534400000000000000000000000000000000000000000000000001",
+			expectJSON: `{"currency":"USD","issuer":"rrrrrrrrrrrrrrrrrrrrBZbvji","value":"-1e+46"}`,
+		},
+		// xrpl.js data-driven-tests.json values_tests: USD 1e77
+		{
+			name:       "IOU 1e77",
+			hexInput:   "e7c38d7ea4c6800000000000000000000000000055534400000000000000000000000000000000000000000000000001",
+			expectJSON: `{"currency":"USD","issuer":"rrrrrrrrrrrrrrrrrrrrBZbvji","value":"1e+77"}`,
+		},
+		{
+			name:       "IOU max 9999999999999999e80",
+			hexInput:   "ec6386f26fc0ffff00000000000000000000000055534400000000000000000000000000000000000000000000000001",
+			expectJSON: `{"currency":"USD","issuer":"rrrrrrrrrrrrrrrrrrrrBZbvji","value":"9.999999999999999e+95"}`,
+		},
 	}
 
 	for _, test := range tests {
@@ -901,21 +930,25 @@ func TestAmountDecodingXRPL(t *testing.T) {
 
 func TestAmountDecodingXRPLErrors(t *testing.T) {
 	tests := []struct {
-		name     string
-		hexInput string
+		name        string
+		hexInput    string
+		errContains string
 	}{
 		// rippled STAmount.cpp:137-139 negative zero is not canonical; a bare XRP negative must be rejected
 		{
 			name:     "XRP negative rejected",
 			hexInput: "0000000000000001",
 		},
-		// rippled treats firstByte with both token and MPT bits set as reserved.
-		// Accepting this lets the stray 0x20 bit corrupt the IOU exponent in
-		// tokenToJSON (real exponent acquires +31 because 0x20 lands inside
-		// the exponent mask). The first byte must be rejected up front.
+		// rippled STAmount.cpp: a zero IOU must have offset bits exactly 512
 		{
-			name:     "reserved token+MPT bit combination rejected",
-			hexInput: "a000000000000000d4c44364c5bb000000000000000000000000000055534400000000000000000000000000000000000000000000000001",
+			name:        "IOU zero with exponent bits set rejected",
+			hexInput:    "a00000000000000000000000000000000000000055534400000000000000000000000000000000000000000000000001",
+			errContains: "non-canonical IOU zero",
+		},
+		{
+			name:        "IOU zero with sign bit set rejected",
+			hexInput:    "c00000000000000000000000000000000000000055534400000000000000000000000000000000000000000000000001",
+			errContains: "non-canonical IOU zero",
 		},
 		// IOU canonical-form rules (rippled STAmount): non-zero significand must be
 		// in [10^15, 10^16-1] and normalised exponent in [1, 177]. Below: a token
@@ -943,7 +976,36 @@ func TestAmountDecodingXRPLErrors(t *testing.T) {
 			buffer := bytes.NewBuffer(raw)
 			_, err = Amount.ToJSON(buffer, 0)
 			require.Error(t, err)
+			if test.errContains != "" {
+				require.ErrorContains(t, err, test.errContains)
+			}
 		})
+	}
+}
+
+func TestTokenAmountExponentRange(t *testing.T) {
+	for exp := -96; exp <= 80; exp++ {
+		for _, mantissa := range []string{"1000000000000000", "-9999999999999999"} {
+			value := fmt.Sprintf("%se%d", mantissa, exp)
+			encoded, err := Amount.ToBytes(map[string]any{"currency": "USD", "value": value, "issuer": "rrrrrrrrrrrrrrrrrrrrBZbvji"}, false)
+			require.NoError(t, err, value)
+
+			buffer := bytes.NewBuffer(encoded)
+			decoded, err := Amount.ToJSON(buffer, 0)
+			require.NoError(t, err, value)
+			require.Zero(t, buffer.Len(), value)
+
+			obj, ok := decoded.(map[string]any)
+			require.True(t, ok, value)
+			decodedValue, ok := obj["value"].(string)
+			require.True(t, ok, value)
+
+			want, ok := new(big.Rat).SetString(value)
+			require.True(t, ok, value)
+			got, ok := new(big.Rat).SetString(decodedValue)
+			require.True(t, ok, value)
+			require.Zero(t, want.Cmp(got), "%s decoded as %s", value, decodedValue)
+		}
 	}
 }
 
