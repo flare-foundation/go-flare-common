@@ -146,6 +146,11 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "Fdc2ProofPolicyNotSet",
+    "type": "error"
+  },
+  {
     "inputs": [
       {
         "internalType": "bytes32",
@@ -235,6 +240,11 @@
   {
     "inputs": [],
     "name": "InvalidCspSourceSettings",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidFdc2ProofPolicy",
     "type": "error"
   },
   {
@@ -551,6 +561,17 @@
       }
     ],
     "name": "SourceModelChainMismatch",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
+    "name": "SourceNetworkKeyTypeMismatch",
     "type": "error"
   },
   {
@@ -1073,12 +1094,7 @@
           },
           {
             "internalType": "uint16",
-            "name": "feeRateFloorBIPS",
-            "type": "uint16"
-          },
-          {
-            "internalType": "uint16",
-            "name": "feeRateCeilingBIPS",
+            "name": "feeFloorBIPS",
             "type": "uint16"
           }
         ],
@@ -1268,16 +1284,6 @@
             "type": "uint16"
           },
           {
-            "internalType": "uint16",
-            "name": "requiredTeeSignatures",
-            "type": "uint16"
-          },
-          {
-            "internalType": "uint16",
-            "name": "proposalThresholdBIPS",
-            "type": "uint16"
-          },
-          {
             "internalType": "uint8",
             "name": "proposerRedundancy",
             "type": "uint8"
@@ -1417,6 +1423,31 @@
       }
     ],
     "name": "EligibleAdvanced",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint16",
+            "name": "requiredTeeSignatures",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "thresholdBIPS",
+            "type": "uint16"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct IFdc2ProofPolicy.ProofPolicy",
+        "name": "policy",
+        "type": "tuple"
+      }
+    ],
+    "name": "Fdc2ProofPolicySet",
     "type": "event"
   },
   {
@@ -4018,12 +4049,7 @@
           },
           {
             "internalType": "uint16",
-            "name": "feeRateFloorBIPS",
-            "type": "uint16"
-          },
-          {
-            "internalType": "uint16",
-            "name": "feeRateCeilingBIPS",
+            "name": "feeFloorBIPS",
             "type": "uint16"
           }
         ],
@@ -4455,12 +4481,7 @@
           },
           {
             "internalType": "uint16",
-            "name": "feeRateFloorBIPS",
-            "type": "uint16"
-          },
-          {
-            "internalType": "uint16",
-            "name": "feeRateCeilingBIPS",
+            "name": "feeFloorBIPS",
             "type": "uint16"
           }
         ],
@@ -4591,16 +4612,6 @@
           {
             "internalType": "uint16",
             "name": "finalizationGraceSeconds",
-            "type": "uint16"
-          },
-          {
-            "internalType": "uint16",
-            "name": "requiredTeeSignatures",
-            "type": "uint16"
-          },
-          {
-            "internalType": "uint16",
-            "name": "proposalThresholdBIPS",
             "type": "uint16"
           },
           {
@@ -4746,6 +4757,31 @@
         ],
         "internalType": "struct IEscrows.EscrowTerms",
         "name": "_terms",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getFdc2ProofPolicy",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint16",
+            "name": "requiredTeeSignatures",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "thresholdBIPS",
+            "type": "uint16"
+          }
+        ],
+        "internalType": "struct IFdc2ProofPolicy.ProofPolicy",
+        "name": "_policy",
         "type": "tuple"
       }
     ],
@@ -6616,9 +6652,9 @@
         "type": "tuple[]"
       },
       {
-        "internalType": "address",
-        "name": "_testOnTeeId",
-        "type": "address"
+        "internalType": "address[]",
+        "name": "_teeIds",
+        "type": "address[]"
       },
       {
         "internalType": "address",
@@ -6659,9 +6695,9 @@
         "type": "string"
       },
       {
-        "internalType": "address",
-        "name": "_testOnTeeId",
-        "type": "address"
+        "internalType": "address[]",
+        "name": "_teeIds",
+        "type": "address[]"
       },
       {
         "internalType": "address",
@@ -6922,12 +6958,7 @@
           },
           {
             "internalType": "uint16",
-            "name": "feeRateFloorBIPS",
-            "type": "uint16"
-          },
-          {
-            "internalType": "uint16",
-            "name": "feeRateCeilingBIPS",
+            "name": "feeFloorBIPS",
             "type": "uint16"
           }
         ],
@@ -6986,16 +7017,6 @@
             "type": "uint16"
           },
           {
-            "internalType": "uint16",
-            "name": "requiredTeeSignatures",
-            "type": "uint16"
-          },
-          {
-            "internalType": "uint16",
-            "name": "proposalThresholdBIPS",
-            "type": "uint16"
-          },
-          {
             "internalType": "uint8",
             "name": "proposerRedundancy",
             "type": "uint8"
@@ -7012,6 +7033,31 @@
       }
     ],
     "name": "setCspSourceSettings",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint16",
+            "name": "requiredTeeSignatures",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "thresholdBIPS",
+            "type": "uint16"
+          }
+        ],
+        "internalType": "struct IFdc2ProofPolicy.ProofPolicy",
+        "name": "_policy",
+        "type": "tuple"
+      }
+    ],
+    "name": "setFdc2ProofPolicy",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
