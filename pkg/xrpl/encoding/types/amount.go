@@ -46,16 +46,9 @@ const (
 )
 
 const (
-	// typeBitMask covers the two high bits that disambiguate XRP / IOU / MPT
-	// amounts. The four possible values of (firstByte & typeBitMask) are:
-	//   0b00000000 → XRP (xrpType)
-	//   0b10000000 → IOU token (tokenType)
-	//   0b00100000 → MPT (mptType)
-	//   0b10100000 → reserved; rippled rejects, so do we.
-	typeBitMask uint8 = 0b10100000
-	xrpType     uint8 = 0b00000000
-	tokenType   uint8 = 0b10000000
-	mptType     uint8 = 0b00100000
+	notXRPBitMask uint8 = 0b10000000
+	// mptBitMask marks MPT only when notXRPBitMask is clear; in an IOU it is the top exponent bit.
+	mptBitMask uint8 = 0b00100000
 
 	signBitMask        uint8 = 0b01000000
 	signedValueBitMask uint8 = 0b01111111
@@ -97,20 +90,13 @@ func (a *amount) ToJSON(b *bytes.Buffer, _ int) (any, error) {
 		return nil, fmt.Errorf("reading first byte: %w", err)
 	}
 
-	amountType := firstByte & typeBitMask
-
-	switch amountType {
-	case xrpType:
-		return xrpToJSON(firstByte, b)
-	case tokenType:
+	switch {
+	case firstByte&notXRPBitMask != 0:
 		return tokenToJSON(firstByte, b)
-	case mptType:
+	case firstByte&mptBitMask != 0:
 		return mptToJSON(firstByte, b)
 	default:
-		// amountType == 0b10100000 — both token and MPT bits set. rippled
-		// treats this as reserved and rejects; mishandling it lets the stray
-		// 0x20 bit corrupt the IOU exponent in tokenToJSON.
-		return nil, fmt.Errorf("reserved amount type bits set: firstByte %#x", firstByte)
+		return xrpToJSON(firstByte, b)
 	}
 }
 
@@ -360,10 +346,9 @@ func deserializeTokenAmount(a []byte) (string, error) {
 	val := number & significantMask
 
 	if val == 0 {
-		// Canonical zero: significand and exponent bits both zero. rippled
-		// rejects "-0", non-zero-exponent zero, etc.
-		if exponentNormalized != 0 {
-			return "", fmt.Errorf("non-canonical IOU zero: exponent bits set (%d)", exponentNormalized)
+		// rippled accepts only 0x8000000000000000 as an IOU zero.
+		if exponentNormalized != 0 || firstByte&signBitMask != 0 {
+			return "", fmt.Errorf("non-canonical IOU zero: %#016x", number)
 		}
 	} else {
 		if int64(exponentNormalized) < minNormalizedExponent || int64(exponentNormalized) > maxNormalizedExponent {
@@ -477,11 +462,8 @@ func tokenToJSON(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
 }
 
 func mptToJSON(firstByte byte, b *bytes.Buffer) (map[string]any, error) {
-	// rippled STAmount construction rejects any MPT indicator byte with a
-	// reserved bit set. Valid bytes are exactly 0x20 (negative MPT) and
-	// 0x60 (positive MPT). Accepting unspecified bit
-	// patterns drifts from rippled and risks consensus mismatch on decode.
-	if firstByte&^(typeBitMask|signBitMask) != 0 {
+	// rippled only emits 0x20 (negative) and 0x60 (positive).
+	if firstByte&^(mptBitMask|signBitMask) != 0 {
 		return nil, fmt.Errorf("mpt indicator byte 0x%02x has reserved bits set", firstByte)
 	}
 
