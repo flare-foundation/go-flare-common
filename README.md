@@ -22,7 +22,9 @@ Contains the following packages:
 - queue: channel implementation of a priority queue with two lanes
 - random: cryptographic random value generation utilities
 - retry: retried execution of a function
+- safe: offline verification of Safe (Gnosis Safe) EIP-712 transaction signatures
 - safeurl: HTTP client utilities that guard against SSRF attacks
+- signing: domain-prefixed payload hashing for signed protocol messages
 - storage: an implementation of a cyclic storage
 - tee
   - attestation: working with JWT tokens carrying Google Cloud TEE attestations
@@ -44,5 +46,7 @@ Contains the following packages:
   - signing: signing of XRPL transactions
     - ed25519
     - secp256k1
+    - seed: decoding rippled-native family seeds
     - signer: working with XRPL signer items
+    - utils: preparing transaction messages for signing
   - transactions: XRPL transaction construction and validation
