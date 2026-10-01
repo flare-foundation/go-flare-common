@@ -163,7 +163,15 @@ const ProposerSigLen = 65
 // The bare-envelope form is still decoded, without a signature, because some
 // lookups are hints rather than authorities. Callers that must not accept an
 // unsigned proposal check for a nil signature themselves.
+//
+// The package of a confirmed-attempt proposal is refused with
+// ErrConfirmedAttempt: it is well-formed and carries no transaction, which a
+// caller that signs, carries or accounts for transactions must not mistake for
+// a malformed package (see SplitConfirmedAttemptPackage).
 func SplitPackage(raw []byte) (Envelope, []byte, error) {
+	if IsConfirmedAttemptPackage(raw) {
+		return Envelope{}, nil, ErrConfirmedAttempt
+	}
 	if len(raw) > ProposerSigLen {
 		if env, err := Decode(raw[:len(raw)-ProposerSigLen]); err == nil {
 			return env, raw[len(raw)-ProposerSigLen:], nil

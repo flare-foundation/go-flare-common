@@ -15,3 +15,15 @@ func FuzzDecodeDoesNotPanic(f *testing.F) {
 		_, _ = Decode(data)
 	})
 }
+
+// DecodeConfirmedAttempt and the package helpers take the same open-DAL bytes.
+func FuzzDecodeConfirmedAttemptDoesNotPanic(f *testing.F) {
+	f.Add([]byte{})
+	f.Add(make([]byte, ConfirmedAttemptLen))
+	f.Add(append(ConfirmedAttemptTag.Bytes(), make([]byte, ConfirmedAttemptLen+ProposerSigLen-32)...))
+	f.Fuzz(func(t *testing.T, data []byte) {
+		_, _ = DecodeConfirmedAttempt(data)
+		_, _, _ = SplitConfirmedAttemptPackage(data)
+		_, _, _ = SplitPackage(data)
+	})
+}
