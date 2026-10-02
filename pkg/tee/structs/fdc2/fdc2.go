@@ -69,6 +69,15 @@ const (
 	// from the contract that stored the binding, rather than deriving it
 	// off-chain and hoping they matched.
 	BtcWalletAddress AttestationType = "BtcWalletAddress"
+	// WalletOperationStatus proves the outcome of one OPERATION of a Bitcoin
+	// CSP account — a consolidation, an escrow create or an escrow reclaim —
+	// named by its payment id: which attempt the source chain carried, whether
+	// the escrow output was created and where, and whether its HTLC was spent
+	// and by which path (btc-planning ER-118). WalletPaymentStatus cannot
+	// answer it: an operation has no payment record, and its attempts are
+	// mutually exclusive transactions of which a void one only rolls the
+	// anchor.
+	WalletOperationStatus AttestationType = "WalletOperationStatus"
 )
 
 var attestationTypes = []AttestationType{
@@ -80,6 +89,7 @@ var attestationTypes = []AttestationType{
 	CspProposalCheck,
 	BtcDeposit,
 	BtcWalletAddress,
+	WalletOperationStatus,
 }
 
 // i-th method correspond to a method in TeeDataConnectorStruct interface whose
@@ -93,6 +103,7 @@ var attestationTypeMethods = []string{
 	"cspProposalCheck",
 	"btcDeposit",
 	"btcWalletAddress",
+	"walletOperationStatus",
 }
 
 type AttestationArguments struct {

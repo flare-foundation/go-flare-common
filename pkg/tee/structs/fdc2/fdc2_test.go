@@ -48,7 +48,11 @@ func TestEveryRegisteredTypeEncodes(t *testing.T) {
 		},
 		WalletFeeProof: {
 			IWalletFeeProofRequestBody{},
-			IWalletFeeProofResponseBody{ActualFee: big.NewInt(0), EstimatedFee: big.NewInt(0)},
+			IWalletFeeProofResponseBody{
+				Positions:     []IWalletFeeProofPositionFee{{TransactionFee: big.NewInt(0), AuthorisedFee: big.NewInt(0)}},
+				ActualFee:     big.NewInt(0),
+				AuthorisedFee: big.NewInt(0),
+			},
 		},
 		BtcAccountConfigured: {
 			IBtcAccountConfiguredRequestBody{},
@@ -65,6 +69,10 @@ func TestEveryRegisteredTypeEncodes(t *testing.T) {
 		BtcWalletAddress: {
 			IBtcWalletAddressRequestBody{},
 			IBtcWalletAddressResponseBody{},
+		},
+		WalletOperationStatus: {
+			IWalletOperationStatusRequestBody{},
+			IWalletOperationStatusResponseBody{TransactionFee: big.NewInt(0), ReclaimFee: big.NewInt(0)},
 		},
 	}
 
