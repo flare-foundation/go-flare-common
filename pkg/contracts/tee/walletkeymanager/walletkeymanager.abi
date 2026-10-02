@@ -44,6 +44,11 @@
   },
   {
     "inputs": [],
+    "name": "DuplicatedWalletKey",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "ECDSAInvalidSignature",
     "type": "error"
   },
@@ -302,6 +307,11 @@
   {
     "inputs": [],
     "name": "VersionNotSupported",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "WalletLevelKeyRequired",
     "type": "error"
   },
   {

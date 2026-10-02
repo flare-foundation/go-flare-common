@@ -266,23 +266,6 @@
             "type": "bytes32"
           },
           {
-            "components": [
-              {
-                "internalType": "address",
-                "name": "teeId",
-                "type": "address"
-              },
-              {
-                "internalType": "uint64",
-                "name": "keyId",
-                "type": "uint64"
-              }
-            ],
-            "internalType": "struct TeeIdKeyIdPair[]",
-            "name": "teeIdKeyIdPairs",
-            "type": "tuple[]"
-          },
-          {
             "internalType": "bytes32",
             "name": "sourceId",
             "type": "bytes32"

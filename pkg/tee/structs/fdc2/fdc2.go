@@ -30,25 +30,69 @@ type AttestationType string
 
 const (
 	AvailabilityCheck            AttestationType = "TeeAvailabilityCheck"
-	PMWPaymentStatus             AttestationType = "PMWPaymentStatus"
-	PMWMultisigAccountConfigured AttestationType = "PMWMultisigAccountConfigured"
-	PMWFeeProof                  AttestationType = "PMWFeeProof"
+	WalletPaymentStatus             AttestationType = "WalletPaymentStatus"
+	NativeNonceAccountConfigured AttestationType = "NativeNonceAccountConfigured"
+	WalletFeeProof                  AttestationType = "WalletFeeProof"
+	BtcAccountConfigured    AttestationType = "BtcAccountConfigured"
+	// CspProposalCheck is CSP's proposal predicate: the data providers
+	// decide, before any signature exists, which of several competing
+	// transactions fills a batch.
+	CspProposalCheck AttestationType = "CspProposalCheck"
+	// BtcDeposit proves that one OUTPUT of one confirmed Bitcoin transaction paid
+	// the address a wallet derives at a reserved index. It is the deposit
+	// counterpart of WalletPaymentStatus: that type proves a payment a
+	// protocol-managed wallet MADE, this one proves a payment it RECEIVED, and
+	// the receiving address is the identity — Bitcoin has no destination tag, so
+	// the index the address derives from is what says who to credit.
+	//
+	// It also REPORTS one input, on request. `inputIndex` names an input and the
+	// response carries that input's prevout address plus the distinct sighash
+	// bytes on its signatures; 0xFFFF means "do not look" and leaves the input
+	// fields empty. The sighash set is in the response rather than assumed
+	// because only SIGHASH_ALL commits the signer to the outputs — a consumer
+	// meaning "that address approved THIS transaction" must require exactly
+	// [0x01], and an empty set (nothing parsable) must fail that test. There is
+	// deliberately no 0x00 sentinel: 0x00 is a valid sighash byte under BIP-341.
+	BtcDeposit AttestationType = "BtcDeposit"
+	// BtcWalletAddress proves the Bitcoin address that
+	// (walletId, accountIndex, derivationIndex) derives to, and is the ONLY
+	// attestation type that reads wallet keys from a registry.
+	//
+	// BtcDeposit used to carry that triple and derive the address on every
+	// deposit, which made a Bitcoin observation depend on a registry, an RPC and
+	// a key read to answer a question whose answer never changes. An address
+	// derives from keys and an index and neither moves, so it is proven once
+	// here and stored; a deposit then names the address by hash and reads no
+	// Flare at all (btc-planning ER-81).
+	//
+	// The address comes back as a STRING so a depositor can read where to pay
+	// from the contract that stored the binding, rather than deriving it
+	// off-chain and hoping they matched.
+	BtcWalletAddress AttestationType = "BtcWalletAddress"
 )
 
 var attestationTypes = []AttestationType{
 	AvailabilityCheck,
-	PMWPaymentStatus,
-	PMWMultisigAccountConfigured,
-	PMWFeeProof,
+	WalletPaymentStatus,
+	NativeNonceAccountConfigured,
+	WalletFeeProof,
+	BtcAccountConfigured,
+	CspProposalCheck,
+	BtcDeposit,
+	BtcWalletAddress,
 }
 
 // i-th method correspond to a method in TeeDataConnectorStruct interface whose
 // input is the proof type of i-th attestation type.
 var attestationTypeMethods = []string{
 	"availabilityCheck",
-	"pmwPaymentStatus",
-	"pmwMultisigAccountConfigured",
-	"pmwFeeProof",
+	"walletPaymentStatus",
+	"nativeNonceAccountConfigured",
+	"walletFeeProof",
+	"btcAccountConfigured",
+	"cspProposalCheck",
+	"btcDeposit",
+	"btcWalletAddress",
 }
 
 type AttestationArguments struct {
