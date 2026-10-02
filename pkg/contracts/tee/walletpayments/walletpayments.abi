@@ -56,6 +56,16 @@
   },
   {
     "inputs": [],
+    "name": "AttemptConfirmed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "AttemptNotSettled",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "AttemptSuperseded",
     "type": "error"
   },
@@ -97,6 +107,11 @@
   {
     "inputs": [],
     "name": "CommitmentMismatch",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ConfirmedAttemptMismatch",
     "type": "error"
   },
   {
@@ -358,6 +373,11 @@
   {
     "inputs": [],
     "name": "NoNewAnchors",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NoPendingReset",
     "type": "error"
   },
   {
@@ -1216,6 +1236,49 @@
       }
     ],
     "name": "BtcEscrowReclaimEmitted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "walletId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint32",
+        "name": "accountIndex",
+        "type": "uint32"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint64",
+        "name": "sequencePosition",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint32",
+        "name": "attempt",
+        "type": "uint32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint32",
+        "name": "supersededAttempt",
+        "type": "uint32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "txid",
+        "type": "bytes32"
+      }
+    ],
+    "name": "ConfirmedAttemptSettled",
     "type": "event"
   },
   {
@@ -3387,6 +3450,205 @@
         "components": [
           {
             "internalType": "uint32",
+            "name": "attempt",
+            "type": "uint32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "txid",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct IBtcAccounts.BtcConfirmedAttemptCommitment",
+        "name": "_commitment",
+        "type": "tuple"
+      }
+    ],
+    "name": "finalizeConfirmedAttempt",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "signingPolicySignatures",
+                "type": "bytes"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint8",
+                    "name": "v",
+                    "type": "uint8"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "r",
+                    "type": "bytes32"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "s",
+                    "type": "bytes32"
+                  }
+                ],
+                "internalType": "struct Signature[]",
+                "name": "teeSignatures",
+                "type": "tuple[]"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "uint8",
+                    "name": "v",
+                    "type": "uint8"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "r",
+                    "type": "bytes32"
+                  },
+                  {
+                    "internalType": "bytes32",
+                    "name": "s",
+                    "type": "bytes32"
+                  }
+                ],
+                "internalType": "struct Signature[]",
+                "name": "cosignerSignatures",
+                "type": "tuple[]"
+              }
+            ],
+            "internalType": "struct IFdc2Verification.Fdc2Signatures",
+            "name": "signatures",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "attestationType",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "sourceId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint16",
+                "name": "thresholdBIPS",
+                "type": "uint16"
+              },
+              {
+                "internalType": "address",
+                "name": "proofOwner",
+                "type": "address"
+              },
+              {
+                "internalType": "address[]",
+                "name": "cosigners",
+                "type": "address[]"
+              },
+              {
+                "internalType": "uint64",
+                "name": "cosignersThreshold",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "timestamp",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct IFdc2Hub.Fdc2ResponseHeader",
+            "name": "header",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "walletRegistry",
+                "type": "address"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "walletId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint32",
+                "name": "accountIndex",
+                "type": "uint32"
+              },
+              {
+                "internalType": "uint64",
+                "name": "sequencePosition",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint32",
+                "name": "attempt",
+                "type": "uint32"
+              },
+              {
+                "internalType": "uint64",
+                "name": "eligibleGeneration",
+                "type": "uint64"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "packageHash",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct ICspProposalCheck.RequestBody",
+            "name": "requestBody",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "proposerAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "uint64",
+                "name": "score",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint32",
+                "name": "paymentCount",
+                "type": "uint32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "chainCommitmentHash",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct ICspProposalCheck.ResponseBody",
+            "name": "responseBody",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct ICspProposalCheck.Proof",
+        "name": "_proof",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint32",
             "name": "anchorIndex",
             "type": "uint32"
           },
@@ -4551,6 +4813,47 @@
         "internalType": "struct IBtcAccounts.BtcProposalCommitment",
         "name": "_commitment",
         "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct WalletAccount",
+        "name": "_account",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_sequencePosition",
+        "type": "uint64"
+      }
+    ],
+    "name": "getConfirmedAttempt",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "_confirmed",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint32",
+        "name": "_attempt",
+        "type": "uint32"
       }
     ],
     "stateMutability": "view",
