@@ -129,7 +129,7 @@ func Set(cfg Config) {
 	global.Store(l)
 
 	if keys := retiredKeys(cfg); len(keys) > 0 {
-		l.record(skip, slog.LevelInfo, "Ignoring logger keys that no longer do anything", "keys", strings.Join(keys, " "))
+		l.record(skip, slog.LevelInfo, "Ignoring deprecated logger keys", "keys", strings.Join(keys, " "))
 	}
 }
 

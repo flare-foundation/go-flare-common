@@ -148,7 +148,7 @@ func TestFileKeysAreIgnoredAndNamed(t *testing.T) {
 		Infow("Round submitted")
 	})
 
-	require.Contains(t, out, src+`	Ignoring logger keys that no longer do anything	keys="file max_file_size max_backups max_age_days console"`,
+	require.Contains(t, out, src+`	Ignoring deprecated logger keys	keys="file max_file_size max_backups max_age_days console"`,
 		"the line is about the caller's configuration, so it reports the caller")
 	require.Contains(t, out, "Round submitted")
 	require.NoFileExists(t, file)
