@@ -22,8 +22,11 @@ var (
 	PMWWalletBackup    Prefix = mustStringBytes32("PMW_WALLET_BACKUP")
 	PMWKeySplit        Prefix = mustStringBytes32("PMW_KEY_SPLIT")
 	ProxyActionResult  Prefix = mustStringBytes32("PROXY_ACTION_RESULT")
-	ProxyTeeInfo       Prefix = mustStringBytes32("PROXY_TEE_INFO")
-	ProxyVoteReceipt   Prefix = mustStringBytes32("PROXY_VOTE_RECEIPT")
+	// CSPProposal domain-separates the hash of a UTXO proposal envelope, so a
+	// proposalHash can never collide with another hash in the system.
+	CSPProposal      Prefix = mustStringBytes32("CSP_PROPOSAL")
+	ProxyTeeInfo     Prefix = mustStringBytes32("PROXY_TEE_INFO")
+	ProxyVoteReceipt Prefix = mustStringBytes32("PROXY_VOTE_RECEIPT")
 )
 
 func mustStringBytes32(s string) [32]byte {
