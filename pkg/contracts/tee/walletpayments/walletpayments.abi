@@ -56,7 +56,7 @@
   },
   {
     "inputs": [],
-    "name": "AttemptConfirmed",
+    "name": "AttemptAlreadyConfirmed",
     "type": "error"
   },
   {
@@ -4002,6 +4002,47 @@
         "internalType": "uint64",
         "name": "_sequencePosition",
         "type": "uint64"
+      },
+      {
+        "internalType": "uint32",
+        "name": "_attempt",
+        "type": "uint32"
+      }
+    ],
+    "name": "getAttemptNullifiedPaymentIds",
+    "outputs": [
+      {
+        "internalType": "uint64[]",
+        "name": "_paymentIds",
+        "type": "uint64[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct WalletAccount",
+        "name": "_account",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_sequencePosition",
+        "type": "uint64"
       }
     ],
     "name": "getAttempts",
@@ -4607,6 +4648,11 @@
             "type": "uint32"
           },
           {
+            "internalType": "enum ICspProposals.ProposalKind",
+            "name": "kind",
+            "type": "uint8"
+          },
+          {
             "internalType": "bytes32",
             "name": "packageHash",
             "type": "bytes32"
@@ -4625,6 +4671,11 @@
             "internalType": "uint64",
             "name": "score",
             "type": "uint64"
+          },
+          {
+            "internalType": "uint32",
+            "name": "confirmedAttempt",
+            "type": "uint32"
           }
         ],
         "internalType": "struct ICspProposals.Leader",
@@ -5326,6 +5377,42 @@
       },
       {
         "internalType": "uint64",
+        "name": "_sequencePosition",
+        "type": "uint64"
+      }
+    ],
+    "name": "getLatestAttemptNullifiedPaymentIds",
+    "outputs": [
+      {
+        "internalType": "uint64[]",
+        "name": "_nullifiedPaymentIds",
+        "type": "uint64[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct WalletAccount",
+        "name": "_account",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint64",
         "name": "_generation",
         "type": "uint64"
       }
@@ -5365,6 +5452,11 @@
             "type": "uint32"
           },
           {
+            "internalType": "enum ICspProposals.ProposalKind",
+            "name": "kind",
+            "type": "uint8"
+          },
+          {
             "internalType": "bytes32",
             "name": "packageHash",
             "type": "bytes32"
@@ -5383,6 +5475,11 @@
             "internalType": "uint64",
             "name": "score",
             "type": "uint64"
+          },
+          {
+            "internalType": "uint32",
+            "name": "confirmedAttempt",
+            "type": "uint32"
           }
         ],
         "internalType": "struct ICspProposals.Leader",
@@ -5494,42 +5591,6 @@
         "internalType": "uint64",
         "name": "_nextUnconsumedPaymentId",
         "type": "uint64"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "bytes32",
-            "name": "sourceId",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "string",
-            "name": "accountAddress",
-            "type": "string"
-          }
-        ],
-        "internalType": "struct WalletAccount",
-        "name": "_account",
-        "type": "tuple"
-      },
-      {
-        "internalType": "uint64",
-        "name": "_sequencePosition",
-        "type": "uint64"
-      }
-    ],
-    "name": "getNullifiedPaymentIds",
-    "outputs": [
-      {
-        "internalType": "uint64[]",
-        "name": "_nullifiedPaymentIds",
-        "type": "uint64[]"
       }
     ],
     "stateMutability": "view",
