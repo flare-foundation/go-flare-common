@@ -254,6 +254,11 @@
   },
   {
     "inputs": [],
+    "name": "InvalidBtcEscrowReclaimMargin",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "InvalidBtcEscrowTerms",
     "type": "error"
   },
@@ -1251,6 +1256,25 @@
       }
     ],
     "name": "BtcEscrowReclaimEmitted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "sourceId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint32",
+        "name": "marginSeconds",
+        "type": "uint32"
+      }
+    ],
+    "name": "BtcEscrowReclaimMarginSet",
     "type": "event"
   },
   {
@@ -4817,6 +4841,25 @@
   {
     "inputs": [
       {
+        "internalType": "bytes32",
+        "name": "_sourceId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getBtcEscrowReclaimMargin",
+    "outputs": [
+      {
+        "internalType": "uint32",
+        "name": "_marginSeconds",
+        "type": "uint32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "components": [
           {
             "internalType": "bytes32",
@@ -7723,6 +7766,24 @@
       }
     ],
     "name": "setBtcEscrowProfile",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_sourceId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint32",
+        "name": "_marginSeconds",
+        "type": "uint32"
+      }
+    ],
+    "name": "setBtcEscrowReclaimMargin",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
