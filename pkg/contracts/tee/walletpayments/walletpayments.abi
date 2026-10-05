@@ -1136,6 +1136,21 @@
             "internalType": "uint16",
             "name": "feeFloorBIPS",
             "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "feeEstimateTargetBlocks",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "feeRateMinBIPS",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "feeRateMaxBIPS",
+            "type": "uint16"
           }
         ],
         "indexed": false,
@@ -4657,6 +4672,21 @@
             "internalType": "uint16",
             "name": "feeFloorBIPS",
             "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "feeEstimateTargetBlocks",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "feeRateMinBIPS",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "feeRateMaxBIPS",
+            "type": "uint16"
           }
         ],
         "internalType": "struct IBtcParams.BtcConsensusParams",
@@ -5158,6 +5188,21 @@
           {
             "internalType": "uint16",
             "name": "feeFloorBIPS",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "feeEstimateTargetBlocks",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "feeRateMinBIPS",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "feeRateMaxBIPS",
             "type": "uint16"
           }
         ],
@@ -7727,6 +7772,21 @@
           {
             "internalType": "uint16",
             "name": "feeFloorBIPS",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "feeEstimateTargetBlocks",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "feeRateMinBIPS",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "feeRateMaxBIPS",
             "type": "uint16"
           }
         ],
