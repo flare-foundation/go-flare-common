@@ -1,5 +1,24 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Structured logging on the standard library's `log/slog`: `Debugw`, `Infow`, `Warnw`, `Errorw`, `Panicw`, `Fatalw` and `With`, on the package and on `*logger.Log`.
+  `[logger] format` selects `console` (default) or `json`, and `level` takes DEBUG, INFO, WARN, ERROR or FATAL.
+  `NO_COLOR` turns off console colour.
+
+### Deprecated
+
+- File logging. `file`, `max_file_size`, `max_backups`, `max_age_days` and `console` are accepted and ignored, and `SyncFileLogger` does nothing.
+  Services write to standard output, and the container runtime handles retention and rotation.
+
+### Changed
+
+- **Breaking:** `Logger()` returns `*logger.Log` instead of `*zap.SugaredLogger`, and the zap and lumberjack dependencies are gone.
+  Callers using zap methods must update, and `WithOptions(zap.AddCallerSkip(...))` is no longer needed for correct source locations.
+- `Nop.Fatal`, `Nop.Fatalf` and `Nop.Fatalw` exit with 1 instead of panicking, as the real logger does.
+
 ## [v1.3.0](https://github.com/flare-foundation/go-flare-common/tree/v1.3.0) - 2026-09-30
 
 ### Added

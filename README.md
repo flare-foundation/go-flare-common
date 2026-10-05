@@ -14,7 +14,7 @@ Contains the following packages:
 - encoding: signature encoding and transformation for Flare protocol finalization
 - events: parsing event logs as stored in Flare's c-chain indexer database
 - heapt: generically typed heap implementation based on "container/heap"
-- logger: logging solution
+- logger: structured logging to standard output in console or JSON format
 - merkle: Merkle tree implementation as used by Flare's protocols
 - payload: working with transaction inputs for Submission smart contract
 - policy: storing and parsing signing policies

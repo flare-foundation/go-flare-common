@@ -1,243 +1,369 @@
-// Package logger provides a structured logging framework built on top of zap with console and file output support.
+// Package logger provides console and JSON logging for Flare's Go services,
+// using log/slog.
+//
+// Logs are written to standard output only. The container runtime should
+// handle retention and rotation. The default is console output at DEBUG level,
+// use Set to change the format or minimum level.
+//
+// Always use structured logging, including for DEBUG messages. Use the
+// functions ending in w, keep the message fixed, and put variable values
+// in fields so entries can be searched and filtered consistently:
+//
+//	logger.Infow("Round submitted", "voting_round", 12345, "protocol_id", 100)
+//
+// Structured functions accept key-value pairs or slog.Attr values after the
+// message. Top-level fields named time, level, msg or source are prefixed with
+// logged_ to keep them separate from log metadata.
+//
+// Use With to include the same fields in several entries:
+//
+//	log := logger.With("voting_round", 12345)
+//	log.Infow("Round submitted")
+//
+// Printf functions (ending in f) and print functions (without a suffix) are
+// retained for compatibility. Do not use them in new or updated logging code.
+//
+// Fatalw logs and exits with status 1. Panicw logs and panics, allowing
+// deferred functions to run.
 package logger
 
 import (
-	"io"
+	"context"
+	"fmt"
+	"log/slog"
 	"os"
+	"path/filepath"
+	"runtime"
+	"slices"
+	"strconv"
+	"strings"
 	"sync/atomic"
-
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
-	"gopkg.in/natefinch/lumberjack.v2"
+	"time"
 )
 
+// Supported output formats.
 const (
-	timeFormat = "[01-02|15:04:05.000]"
+	// FormatConsole writes time, level, source and message separated by tabs,
+	// followed by key=value fields. Set NO_COLOR to a nonempty value to disable color.
+	FormatConsole = "console"
+	// FormatJSON writes one JSON object per entry, with lowercase levels,
+	// UTC timestamps at millisecond precision and durations in milliseconds.
+	FormatJSON = "json"
 )
 
-var loggerPtr atomic.Pointer[zap.SugaredLogger]
+// LevelFatal is the log level used by both Fatal and Panic calls.
+const LevelFatal = slog.LevelError + 4
+
+// timeLayout is ISO 8601 in UTC with millisecond precision.
+const timeLayout = "2006-01-02T15:04:05.000Z07:00"
+
+// loggedPrefix is added to field names that conflict with log metadata.
+const loggedPrefix = "logged_"
+
+// Config sets the minimum log level and output format.
+// Deprecated fields allow older TOML configurations to load but have no effect.
+type Config struct {
+	Level  string `toml:"level"`  // DEBUG (default), INFO, WARN, ERROR or FATAL
+	Format string `toml:"format"` // FormatConsole (default) or FormatJSON
+
+	File        string `toml:"file"`          // Deprecated: ignored; logs go to standard output.
+	MaxFileSize int    `toml:"max_file_size"` // Deprecated: ignored; file rotation is no longer supported.
+	MaxBackups  int    `toml:"max_backups"`   // Deprecated: ignored; file rotation is no longer supported.
+	MaxAgeDays  int    `toml:"max_age_days"`  // Deprecated: ignored; file rotation is no longer supported.
+	Console     bool   `toml:"console"`       // Deprecated: ignored; use Format to select the output format.
+}
+
+// DefaultConfig returns a configuration with DEBUG level and console output.
+func DefaultConfig() Config {
+	return Config{Level: "DEBUG", Format: FormatConsole}
+}
+
+// Log is a logger with a configured output and optional shared fields.
+// It is safe to use from multiple goroutines.
+type Log struct {
+	s *slog.Logger
+}
+
+var global atomic.Pointer[Log]
 
 func init() {
-	loggerPtr.Store(createSugared(DefaultConfig()))
+	l, _ := newLog(DefaultConfig())
+	global.Store(l)
 }
 
-func current() *zap.SugaredLogger {
-	return loggerPtr.Load()
-}
-
-// Config holds logger configuration for output level, file, and console settings.
-type Config struct {
-	Level       string `toml:"level"` // valid values are: DEBUG, INFO, WARN, ERROR, DPANIC, PANIC, FATAL (zap)
-	File        string `toml:"file"`
-	MaxFileSize int    `toml:"max_file_size"` // megabytes; 0 → lumberjack default (100 MB)
-	MaxBackups  int    `toml:"max_backups"`   // rotated files retained on disk; 0 → defaultMaxBackups
-	MaxAgeDays  int    `toml:"max_age_days"`  // max age of rotated files; 0 → defaultMaxAgeDays
-	Console     bool   `toml:"console"`
-}
-
-const (
-	// Defensive caps applied when Config.MaxBackups / MaxAgeDays are unset; without
-	// them lumberjack retains every rotated file forever, leaking disk on long-running services.
-	defaultMaxBackups = 10
-	defaultMaxAgeDays = 30
-)
-
-// DefaultConfig returns the default logger configuration.
-//
-//	Level: "DEBUG"
-//	Console: true
-func DefaultConfig() Config {
-	return Config{
-		Level:   "DEBUG",
-		Console: true,
-	}
-}
-
-// Logger returns the global sugared logger instance.
-func Logger() *zap.SugaredLogger {
-	return current()
-}
-
-// Set configures logger according to Config. Safe to call concurrently
-// with logging calls.
-func Set(cfg Config) {
-	loggerPtr.Store(createSugared(cfg))
-}
-
-func createSugared(config Config) *zap.SugaredLogger {
-	// Resolve level first so AtomicLevel is correctly populated from the start;
-	// otherwise the cores enable Info-and-above until SetLevel runs.
-	level, err := zapcore.ParseLevel(config.Level)
-	parseErr := err
+// newLog returns a logger for cfg. An unknown level or format is an error.
+func newLog(cfg Config) (*Log, error) {
+	level, err := parseLevel(cfg.Level)
 	if err != nil {
-		// Fall back to DEBUG (the DefaultConfig level) rather than the
-		// zero value of zapcore.Level (which is InfoLevel). Silently
-		// downgrading to INFO would drop messages the operator likely
-		// intended to see; DEBUG keeps everything visible — including
-		// the subsequent parse-error log.
-		level = zapcore.DebugLevel
-	}
-	atom := zap.NewAtomicLevelAt(level)
-
-	cores := make([]zapcore.Core, 0)
-	if config.Console {
-		cores = append(cores, createConsoleLoggerCore(atom))
-	}
-	if len(config.File) > 0 {
-		cores = append(cores, createFileLoggerCore(config, atom))
+		return nil, err
 	}
 
-	core := zapcore.NewTee(cores...)
-	logger := zap.New(core,
-		zap.AddStacktrace(zap.ErrorLevel),
-		zap.AddCaller(),
-		zap.AddCallerSkip(1),
-	)
-
-	sugared := logger.Sugar()
-
-	if parseErr != nil {
-		sugared.Errorf("invalid logger level %q; falling back to DEBUG", config.Level)
+	var h slog.Handler
+	switch cfg.Format {
+	case FormatJSON:
+		h = slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: level, AddSource: true, ReplaceAttr: replaceAttr})
+	case FormatConsole, "":
+		h = newConsoleHandler(os.Stdout, level, useColor())
+	default:
+		return nil, fmt.Errorf("unknown logger format %q, want %q or %q", cfg.Format, FormatConsole, FormatJSON)
 	}
-	return sugared
+
+	return &Log{s: slog.New(h)}, nil
 }
 
-// SyncFileLogger flushes buffered log entries. It calls Sync on every configured
-// core, but the console core uses noSyncWriter (whose Sync is a no-op), so in
-// practice this only flushes the file writer. It is automatically called during
-// fatal or panic log events; call it manually if you need to flush at other points.
-func SyncFileLogger() {
-	l := current()
-	l.Infof("Syncing file logger.")
-	if err := l.Sync(); err != nil {
-		l.Infof("Failed to sync logger: %v", err)
+// Set replaces the package logger with one configured by cfg. If cfg is
+// invalid, it keeps the current logger and logs an ERROR message if that level
+// is enabled. Existing Log values keep their configuration.
+//
+// Set is safe to call while other goroutines are logging.
+func Set(cfg Config) {
+	// Attribute configuration messages to the caller of Set.
+	const skip = 3 // runtime.Callers, record, Set
+
+	l, err := newLog(cfg)
+	if err != nil {
+		Logger().record(skip, slog.LevelError, "Invalid logger configuration, keeping the previous one", "error", err)
+		return
+	}
+
+	global.Store(l)
+
+	if keys := retiredKeys(cfg); len(keys) > 0 {
+		l.record(skip, slog.LevelInfo, "Ignoring deprecated logger keys", "keys", strings.Join(keys, " "))
 	}
 }
 
-func createFileLoggerCore(config Config, atom zap.AtomicLevel) zapcore.Core {
-	maxBackups := config.MaxBackups
-	if maxBackups == 0 {
-		maxBackups = defaultMaxBackups
+// retiredKeys lists deprecated settings with nonzero values.
+func retiredKeys(cfg Config) []string {
+	var keys []string
+	if cfg.File != "" {
+		keys = append(keys, "file")
 	}
-	maxAge := config.MaxAgeDays
-	if maxAge == 0 {
-		maxAge = defaultMaxAgeDays
+	if cfg.MaxFileSize != 0 {
+		keys = append(keys, "max_file_size")
 	}
-	w := zapcore.AddSync(&lumberjack.Logger{
-		Filename:   config.File,
-		MaxSize:    config.MaxFileSize,
-		MaxBackups: maxBackups,
-		MaxAge:     maxAge,
+	if cfg.MaxBackups != 0 {
+		keys = append(keys, "max_backups")
+	}
+	if cfg.MaxAgeDays != 0 {
+		keys = append(keys, "max_age_days")
+	}
+	if cfg.Console {
+		keys = append(keys, "console")
+	}
+
+	return keys
+}
+
+// Logger returns the current package logger. A later call to Set does not
+// change the returned logger.
+func Logger() *Log {
+	return global.Load()
+}
+
+// Deprecated: this function does nothing. Logs go directly to standard output
+// and do not need flushing.
+func SyncFileLogger() {}
+
+// With returns a copy of the current package logger with fields added to every
+// entry. Arguments are key-value pairs or slog.Attr values. Top-level fields
+// named time, level, msg or source get a logged_ prefix, including fields
+// from unnamed groups and slog.LogValuer values.
+func With(keysAndValues ...any) *Log {
+	return Logger().With(keysAndValues...)
+}
+
+// With returns a copy of l with additional fields, leaving l unchanged.
+// Arguments and field names follow the same rules as [With].
+func (l *Log) With(keysAndValues ...any) *Log {
+	// Parse and rename shared fields once, when the logger is created.
+	var parsed slog.Record
+	parsed.Add(keysAndValues...)
+	parsed = renameReserved(parsed)
+
+	fields := make([]any, 0, parsed.NumAttrs())
+	parsed.Attrs(func(a slog.Attr) bool {
+		fields = append(fields, a)
+
+		return true
 	})
-	encoderCfg := zap.NewProductionEncoderConfig()
-	encoderCfg.EncodeLevel = fileLevelEncoder
-	encoderCfg.EncodeTime = zapcore.TimeEncoderOfLayout(timeFormat)
-	return zapcore.NewCore(
-		zapcore.NewConsoleEncoder(encoderCfg),
-		w,
-		atom,
-	)
+
+	return &Log{s: l.s.With(fields...)}
 }
 
-type noSyncWriter struct {
-	io.Writer
-}
-
-func (n noSyncWriter) Sync() error {
-	return nil
-}
-
-func createConsoleLoggerCore(atom zap.AtomicLevel) zapcore.Core {
-	encoderCfg := zap.NewProductionEncoderConfig()
-	encoderCfg.EncodeLevel = consoleColorLevelEncoder
-	encoderCfg.EncodeTime = zapcore.TimeEncoderOfLayout(timeFormat)
-	return zapcore.NewCore(
-		zapcore.NewConsoleEncoder(encoderCfg),
-		noSyncWriter{os.Stdout},
-		atom,
-	)
-}
-
-func consoleColorLevelEncoder(l zapcore.Level, enc zapcore.PrimitiveArrayEncoder) {
-	s, ok := levelToCapitalColorString[l]
-	if !ok {
-		s = unknownLevelColor.Wrap(l.CapitalString())
+func parseLevel(s string) (slog.Level, error) {
+	// Match DefaultConfig when the level is omitted.
+	if s == "" {
+		return slog.LevelDebug, nil
 	}
-	enc.AppendString(s)
+
+	switch strings.ToUpper(s) {
+	case "FATAL", "PANIC", "DPANIC": // Accept legacy zap levels as FATAL.
+		return LevelFatal, nil
+	}
+
+	var level slog.Level
+	if err := level.UnmarshalText([]byte(s)); err != nil {
+		return 0, fmt.Errorf("unknown logger level %q, want DEBUG, INFO, WARN, ERROR or FATAL", s)
+	}
+
+	return level, nil
 }
 
-func fileLevelEncoder(l zapcore.Level, enc zapcore.PrimitiveArrayEncoder) {
-	enc.AppendString(l.CapitalString())
+// Console output uses color unless NO_COLOR is nonempty, even when redirected.
+func useColor() bool {
+	return os.Getenv("NO_COLOR") == ""
 }
 
-// Debugf formats the message and logs it at DEBUG level.
-func Debugf(msg string, args ...any) {
-	current().Debugf(msg, args...)
+// replaceAttr formats JSON levels and source locations, and converts time and
+// duration fields to the shared log format. Reserved names are handled earlier.
+func replaceAttr(groups []string, a slog.Attr) slog.Attr {
+	if len(groups) == 0 {
+		switch a.Key {
+		case slog.LevelKey:
+			if level, ok := a.Value.Any().(slog.Level); ok {
+				return slog.String(a.Key, strings.ToLower(levelName(level)))
+			}
+		case slog.SourceKey:
+			if src, ok := a.Value.Any().(*slog.Source); ok {
+				return slog.String(a.Key, sourceRef(src.File, src.Line))
+			}
+		}
+	}
+
+	// Use UTC with millisecond precision for both metadata and caller fields.
+	if a.Value.Kind() == slog.KindTime {
+		return slog.String(a.Key, a.Value.Time().UTC().Format(timeLayout))
+	}
+
+	// Convert slog's nanoseconds to milliseconds to match the NestJS services.
+	if a.Value.Kind() == slog.KindDuration {
+		return slog.Float64(a.Key, float64(a.Value.Duration())/float64(time.Millisecond))
+	}
+
+	return a
 }
 
-// Infof formats the message and logs it at INFO level.
-func Infof(msg string, args ...any) {
-	current().Infof(msg, args...)
+// reservedKeys lists names used by log metadata. Rename conflicting caller
+// fields before the handler processes them.
+var reservedKeys = map[string]bool{
+	slog.TimeKey:    true,
+	slog.LevelKey:   true,
+	slog.MessageKey: true,
+	slog.SourceKey:  true,
 }
 
-// Warnf formats the message and logs it at WARN level.
-func Warnf(msg string, args ...any) {
-	current().Warnf(msg, args...)
+// renameReserved resolves values and renames conflicting fields before they
+// reach the handler. It returns the original record when no changes are needed.
+func renameReserved(r slog.Record) slog.Record {
+	rewrite := false
+	r.Attrs(func(a slog.Attr) bool {
+		rewrite = needsRewrite(a)
+
+		return !rewrite
+	})
+
+	if !rewrite {
+		return r
+	}
+
+	renamed := slog.NewRecord(r.Time, r.Level, r.Message, r.PC)
+	r.Attrs(func(a slog.Attr) bool {
+		renamed.AddAttrs(rewriteAttr(a))
+
+		return true
+	})
+
+	return renamed
 }
 
-// Errorf formats the message and logs it at ERROR level.
-func Errorf(msg string, args ...any) {
-	current().Errorf(msg, args...)
+// needsRewrite checks for reserved names and unresolved LogValuer values.
+// A LogValuer may return an unnamed group containing reserved names.
+func needsRewrite(a slog.Attr) bool {
+	if a.Value.Kind() == slog.KindLogValuer {
+		return true
+	}
+
+	// Unnamed groups are inlined, so their fields share the parent's namespace.
+	if a.Key == "" && a.Value.Kind() == slog.KindGroup {
+		return slices.ContainsFunc(a.Value.Group(), needsRewrite)
+	}
+
+	return reservedKeys[a.Key]
 }
 
-// Panicf formats the message and logs it at PANIC level and panics.
-//
-// Defers will be executed.
-func Panicf(msg string, args ...any) {
-	SyncFileLogger()
-	current().Panicf(msg, args...)
+// rewriteAttr resolves a value and renames reserved keys, including those in
+// unnamed groups. Passing the resolved value prevents the handler from calling
+// LogValue again.
+func rewriteAttr(a slog.Attr) slog.Attr {
+	a.Value = a.Value.Resolve()
+
+	if a.Key == "" && a.Value.Kind() == slog.KindGroup {
+		group := a.Value.Group()
+		inner := make([]slog.Attr, len(group))
+		for i, field := range group {
+			inner[i] = rewriteAttr(field)
+		}
+
+		return slog.Attr{Key: a.Key, Value: slog.GroupValue(inner...)}
+	}
+
+	if reservedKeys[a.Key] {
+		a.Key = loggedPrefix + a.Key
+	}
+
+	return a
 }
 
-// Fatalf formats the message and logs it at FATAL level and calls os.Exit.
-//
-// Defers will not be executed.
-func Fatalf(msg string, args ...any) {
-	SyncFileLogger()
-	current().Fatalf(msg, args...)
+// sourceRef formats a source location as package/file.go:line.
+func sourceRef(file string, line int) string {
+	return filepath.Base(filepath.Dir(file)) + "/" + filepath.Base(file) + ":" + strconv.Itoa(line)
 }
 
-// Debug logs arguments at DEBUG level.
-func Debug(args ...any) {
-	current().Debug(args...)
+// levelName adds FATAL to slog's standard level names.
+func levelName(level slog.Level) string {
+	if level >= LevelFatal {
+		return "FATAL"
+	}
+
+	return level.String()
 }
 
-// Info logs arguments at INFO level.
-func Info(args ...any) {
-	current().Info(args...)
+// log records the file and line number of the user's logging call.
+func (l *Log) log(level slog.Level, msg string, keysAndValues ...any) {
+	// Skip runtime.Callers, record, log, and the public logging function.
+	l.record(4, level, msg, keysAndValues...)
 }
 
-// Warn logs arguments at WARN level.
-func Warn(args ...any) {
-	current().Warn(args...)
+// record writes an entry if its level is enabled. skip selects the caller
+// frame using runtime.Callers.
+func (l *Log) record(skip int, level slog.Level, msg string, keysAndValues ...any) {
+	ctx := context.Background()
+	if !l.s.Enabled(ctx, level) {
+		return
+	}
+
+	var pcs [1]uintptr
+	runtime.Callers(skip, pcs[:])
+	r := slog.NewRecord(time.Now(), level, msg, pcs[0])
+	r.Add(keysAndValues...)
+	_ = l.s.Handler().Handle(ctx, renameReserved(r))
 }
 
-// Error logs arguments at ERROR level.
-func Error(args ...any) {
-	current().Error(args...)
+// logf and logPrint skip argument formatting when the level is disabled.
+func (l *Log) logf(level slog.Level, format string, args ...any) {
+	if !l.s.Enabled(context.Background(), level) {
+		return
+	}
+
+	// Skip runtime.Callers, record, logf, and the public logging function.
+	l.record(4, level, fmt.Sprintf(format, args...))
 }
 
-// Panic logs arguments at PANIC level and panics.
-//
-// Defers will be executed.
-func Panic(args ...any) {
-	SyncFileLogger()
-	current().Panic(args...)
-}
+func (l *Log) logPrint(level slog.Level, args ...any) {
+	if !l.s.Enabled(context.Background(), level) {
+		return
+	}
 
-// Fatal logs arguments at FATAL level and calls os.Exit.
-//
-// Defers will not be executed.
-func Fatal(args ...any) {
-	SyncFileLogger()
-	current().Fatal(args...)
+	l.record(4, level, fmt.Sprint(args...))
 }
