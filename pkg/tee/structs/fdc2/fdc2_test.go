@@ -126,7 +126,6 @@ func TestBtcDepositBodiesRoundTrip(t *testing.T) {
 			Memo:             []byte{14, 15},
 			BlockNumber:      11,
 			BlockTimestamp:   12,
-			Confirmations:    13,
 			InputAddress:     "bcrt1qpayer",
 			InputAddressHash: [32]byte{16},
 			// Two distinct sighash bytes: the mixed-signature case that a single
