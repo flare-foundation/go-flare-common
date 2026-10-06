@@ -7,10 +7,12 @@
 - Structured logging on the standard library's `log/slog`: `Debugw`, `Infow`, `Warnw`, `Errorw`, `Panicw`, `Fatalw` and `With`, on the package and on `*logger.Log`.
   `[logger] format` selects `console` (default) or `json`, and `level` takes DEBUG, INFO, WARN, ERROR or FATAL.
   `NO_COLOR` turns off console colour.
+- Contract bindings generated with `abigen --v2` in `contracts/v2/...`, mirroring the v1 bindings in `contracts/...`.
 
 ### Deprecated
 
-- File logging. `file`, `max_file_size`, `max_backups`, `max_age_days` and `console` are accepted and ignored, and `SyncFileLogger` does nothing.
+- File logging.
+  `file`, `max_file_size`, `max_backups`, `max_age_days` and `console` are accepted and ignored, and `SyncFileLogger` does nothing.
   Services write to standard output, and the container runtime handles retention and rotation.
 
 ### Changed

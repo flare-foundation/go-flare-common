@@ -9,6 +9,7 @@ Contains the following packages:
 - abicoder: generic ABI encoding and decoding utilities
 - call: HTTP POST request utilities with retry support
 - contracts: [abigen](https://geth.ethereum.org/docs/tools/abigen) bindings for Flare contracts
+  - v2: the same bindings generated with `abigen --v2` (see [Contract bindings](pkg/contracts/README.md))
 - convert: type conversion utilities for common Go and Ethereum types
 - database: connecting to and reading from the Flare's c-chain indexer database
 - encoding: signature encoding and transformation for Flare protocol finalization
