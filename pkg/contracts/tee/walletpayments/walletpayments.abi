@@ -167,11 +167,6 @@
   },
   {
     "inputs": [],
-    "name": "FeeProofMismatch",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "FeeProofRangeInvalid",
     "type": "error"
   },
@@ -250,11 +245,6 @@
   {
     "inputs": [],
     "name": "InvalidBtcEscrowProfile",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "InvalidBtcEscrowReclaimMargin",
     "type": "error"
   },
   {
@@ -1151,6 +1141,11 @@
             "internalType": "uint16",
             "name": "feeRateMaxBIPS",
             "type": "uint16"
+          },
+          {
+            "internalType": "uint32",
+            "name": "escrowReclaimMarginSeconds",
+            "type": "uint32"
           }
         ],
         "indexed": false,
@@ -1271,25 +1266,6 @@
       }
     ],
     "name": "BtcEscrowReclaimEmitted",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "sourceId",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint32",
-        "name": "marginSeconds",
-        "type": "uint32"
-      }
-    ],
-    "name": "BtcEscrowReclaimMarginSet",
     "type": "event"
   },
   {
@@ -3151,33 +3127,6 @@
           {
             "components": [
               {
-                "components": [
-                  {
-                    "internalType": "uint32",
-                    "name": "confirmedAttempt",
-                    "type": "uint32"
-                  },
-                  {
-                    "internalType": "bytes32",
-                    "name": "transactionId",
-                    "type": "bytes32"
-                  },
-                  {
-                    "internalType": "uint256",
-                    "name": "transactionFee",
-                    "type": "uint256"
-                  },
-                  {
-                    "internalType": "uint256",
-                    "name": "authorisedFee",
-                    "type": "uint256"
-                  }
-                ],
-                "internalType": "struct IWalletFeeProof.PositionFee[]",
-                "name": "positions",
-                "type": "tuple[]"
-              },
-              {
                 "internalType": "uint256",
                 "name": "actualFee",
                 "type": "uint256"
@@ -4687,6 +4636,11 @@
             "internalType": "uint16",
             "name": "feeRateMaxBIPS",
             "type": "uint16"
+          },
+          {
+            "internalType": "uint32",
+            "name": "escrowReclaimMarginSeconds",
+            "type": "uint32"
           }
         ],
         "internalType": "struct IBtcParams.BtcConsensusParams",
@@ -4863,25 +4817,6 @@
         "internalType": "uint64",
         "name": "_reclaimPaymentId",
         "type": "uint64"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_sourceId",
-        "type": "bytes32"
-      }
-    ],
-    "name": "getBtcEscrowReclaimMargin",
-    "outputs": [
-      {
-        "internalType": "uint32",
-        "name": "_marginSeconds",
-        "type": "uint32"
       }
     ],
     "stateMutability": "view",
@@ -5204,6 +5139,11 @@
             "internalType": "uint16",
             "name": "feeRateMaxBIPS",
             "type": "uint16"
+          },
+          {
+            "internalType": "uint32",
+            "name": "escrowReclaimMarginSeconds",
+            "type": "uint32"
           }
         ],
         "internalType": "struct IBtcParams.BtcConsensusParams",
@@ -7788,6 +7728,11 @@
             "internalType": "uint16",
             "name": "feeRateMaxBIPS",
             "type": "uint16"
+          },
+          {
+            "internalType": "uint32",
+            "name": "escrowReclaimMarginSeconds",
+            "type": "uint32"
           }
         ],
         "internalType": "struct IBtcParams.BtcConsensusParams",
@@ -7826,24 +7771,6 @@
       }
     ],
     "name": "setBtcEscrowProfile",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_sourceId",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint32",
-        "name": "_marginSeconds",
-        "type": "uint32"
-      }
-    ],
-    "name": "setBtcEscrowReclaimMargin",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

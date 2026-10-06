@@ -49,7 +49,6 @@ func TestEveryRegisteredTypeEncodes(t *testing.T) {
 		WalletFeeProof: {
 			IWalletFeeProofRequestBody{},
 			IWalletFeeProofResponseBody{
-				Positions:     []IWalletFeeProofPositionFee{{TransactionFee: big.NewInt(0), AuthorisedFee: big.NewInt(0)}},
 				ActualFee:     big.NewInt(0),
 				AuthorisedFee: big.NewInt(0),
 			},
@@ -108,14 +107,16 @@ func TestBtcDepositBodiesRoundTrip(t *testing.T) {
 
 	t.Run("request", func(t *testing.T) {
 		want := IBtcDepositRequestBody{
-			TransactionId:        [32]byte{4},
-			OutputIndex:          5,
+			TransactionId: [32]byte{4},
+			// Both indices are 32 bits, as an outpoint's is on the wire: a value
+			// past 65535 has to survive the round trip.
+			OutputIndex:          70_000,
 			ReceivingAddressHash: [32]byte{8},
 			MinConfirmations:     6,
-			// 0xFFFF is "do not look at the inputs", which is what every caller
+			// 0xFFFFFFFF is "do not look at the inputs", which is what every caller
 			// wanting only the deposit fact sends; a real index is the value the
 			// round trip has to preserve.
-			InputIndex: 7,
+			InputIndex: 65_536,
 		}
 		require.Equal(t, want, roundTrip[IBtcDepositRequestBody](t, args.Request, want))
 	})

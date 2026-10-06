@@ -731,9 +731,9 @@
                 "type": "bytes32"
               },
               {
-                "internalType": "uint16",
+                "internalType": "uint32",
                 "name": "outputIndex",
-                "type": "uint16"
+                "type": "uint32"
               },
               {
                 "internalType": "bytes32",
@@ -746,9 +746,9 @@
                 "type": "uint16"
               },
               {
-                "internalType": "uint16",
+                "internalType": "uint32",
                 "name": "inputIndex",
-                "type": "uint16"
+                "type": "uint32"
               }
             ],
             "internalType": "struct IBtcDeposit.RequestBody",
@@ -818,9 +818,9 @@
             "type": "bytes32"
           },
           {
-            "internalType": "uint16",
+            "internalType": "uint32",
             "name": "outputIndex",
-            "type": "uint16"
+            "type": "uint32"
           },
           {
             "internalType": "bytes32",
@@ -833,9 +833,9 @@
             "type": "uint16"
           },
           {
-            "internalType": "uint16",
+            "internalType": "uint32",
             "name": "inputIndex",
-            "type": "uint16"
+            "type": "uint32"
           }
         ],
         "internalType": "struct IBtcDeposit.RequestBody",
@@ -1716,41 +1716,6 @@
       {
         "components": [
           {
-            "internalType": "uint32",
-            "name": "confirmedAttempt",
-            "type": "uint32"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "transactionId",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "uint256",
-            "name": "transactionFee",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "authorisedFee",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct IWalletFeeProof.PositionFee",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "name": "walletFeeProofPositionFeeStruct",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
             "components": [
               {
                 "internalType": "bytes",
@@ -1878,33 +1843,6 @@
           {
             "components": [
               {
-                "components": [
-                  {
-                    "internalType": "uint32",
-                    "name": "confirmedAttempt",
-                    "type": "uint32"
-                  },
-                  {
-                    "internalType": "bytes32",
-                    "name": "transactionId",
-                    "type": "bytes32"
-                  },
-                  {
-                    "internalType": "uint256",
-                    "name": "transactionFee",
-                    "type": "uint256"
-                  },
-                  {
-                    "internalType": "uint256",
-                    "name": "authorisedFee",
-                    "type": "uint256"
-                  }
-                ],
-                "internalType": "struct IWalletFeeProof.PositionFee[]",
-                "name": "positions",
-                "type": "tuple[]"
-              },
-              {
                 "internalType": "uint256",
                 "name": "actualFee",
                 "type": "uint256"
@@ -1969,33 +1907,6 @@
     "inputs": [
       {
         "components": [
-          {
-            "components": [
-              {
-                "internalType": "uint32",
-                "name": "confirmedAttempt",
-                "type": "uint32"
-              },
-              {
-                "internalType": "bytes32",
-                "name": "transactionId",
-                "type": "bytes32"
-              },
-              {
-                "internalType": "uint256",
-                "name": "transactionFee",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "authorisedFee",
-                "type": "uint256"
-              }
-            ],
-            "internalType": "struct IWalletFeeProof.PositionFee[]",
-            "name": "positions",
-            "type": "tuple[]"
-          },
           {
             "internalType": "uint256",
             "name": "actualFee",

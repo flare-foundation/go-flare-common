@@ -30,10 +30,10 @@ type AttestationType string
 
 const (
 	AvailabilityCheck            AttestationType = "TeeAvailabilityCheck"
-	WalletPaymentStatus             AttestationType = "WalletPaymentStatus"
+	WalletPaymentStatus          AttestationType = "WalletPaymentStatus"
 	NativeNonceAccountConfigured AttestationType = "NativeNonceAccountConfigured"
-	WalletFeeProof                  AttestationType = "WalletFeeProof"
-	BtcAccountConfigured    AttestationType = "BtcAccountConfigured"
+	WalletFeeProof               AttestationType = "WalletFeeProof"
+	BtcAccountConfigured         AttestationType = "BtcAccountConfigured"
 	// CspProposalCheck is CSP's proposal predicate: the data providers
 	// decide, before any signature exists, which of several competing
 	// transactions fills a batch.
@@ -47,7 +47,7 @@ const (
 	//
 	// It also REPORTS one input, on request. `inputIndex` names an input and the
 	// response carries that input's prevout address plus the distinct sighash
-	// bytes on its signatures; 0xFFFF means "do not look" and leaves the input
+	// bytes on its signatures; 0xFFFFFFFF means "do not look" and leaves the input
 	// fields empty. The sighash set is in the response rather than assumed
 	// because only SIGHASH_ALL commits the signer to the outputs — a consumer
 	// meaning "that address approved THIS transaction" must require exactly
