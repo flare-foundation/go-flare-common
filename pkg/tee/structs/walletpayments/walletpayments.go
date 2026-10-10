@@ -20,7 +20,7 @@ var opCommands = []op.Command{
 // is the message type emitted with the i-th opCommand.
 //
 // The CSP control plane emits ONE message shape for every instruction kind —
-// settle encodes a `CspPaymentInstructionMessage` whatever the batch does — so
+// settle encodes a `CspInstructionMessage` whatever the batch does — so
 // escrow and consolidation share the payment message's arguments rather than
 // having any of their own. This map is the ACCOUNT model's (`IPayments`); the
 // CSP tuple is resolved separately where it is decoded, because the two planes

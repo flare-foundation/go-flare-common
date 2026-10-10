@@ -32,51 +32,60 @@ const (
 	AvailabilityCheck            AttestationType = "TeeAvailabilityCheck"
 	WalletPaymentStatus          AttestationType = "WalletPaymentStatus"
 	NativeNonceAccountConfigured AttestationType = "NativeNonceAccountConfigured"
-	WalletFeeProof               AttestationType = "WalletFeeProof"
-	BtcAccountConfigured         AttestationType = "BtcAccountConfigured"
+	// WalletSettlement proves a range of an account's instructions settled on
+	// the source chain — firstSequencePosition and the count after it on a CSP
+	// account — and reports two totals for it: what the confirmed transactions
+	// cost the wallet (on Bitcoin the miner fee plus the 330-sat P2A output) and
+	// what the confirmed attempts were authorised to spend, plus every position
+	// that took more than one attempt. The diamond's verifyWalletSettlement
+	// moves the account's confirmed position with it (SequenceConfirmed).
+	WalletSettlement     AttestationType = "WalletSettlement"
+	BtcAccountConfigured AttestationType = "BtcAccountConfigured"
 	// CspProposalCheck is CSP's proposal predicate: the data providers
 	// decide, before any signature exists, which of several competing
 	// transactions fills a batch.
 	CspProposalCheck AttestationType = "CspProposalCheck"
-	// BtcDeposit proves that one OUTPUT of one confirmed Bitcoin transaction paid
-	// the address a wallet derives at a reserved index. It is the deposit
-	// counterpart of WalletPaymentStatus: that type proves a payment a
-	// protocol-managed wallet MADE, this one proves a payment it RECEIVED, and
-	// the receiving address is the identity — Bitcoin has no destination tag, so
-	// the index the address derives from is what says who to credit.
+	// WalletDeposit proves that one OUTPUT of one confirmed transaction paid
+	// receivingAddress — on Bitcoin an address a wallet derives at a reserved
+	// index — in the asset tokenId names (empty: the chain's native asset, the
+	// only one accepted so far). It is the deposit counterpart of
+	// WalletPaymentStatus: that type proves a payment a protocol-managed wallet
+	// MADE, this one proves a payment it RECEIVED, and the receiving address is
+	// the identity — Bitcoin has no destination tag, so the index the address
+	// derives from is what says who to credit.
 	//
 	// It also REPORTS one input, on request. `inputIndex` names an input and the
 	// response carries that input's prevout address plus the distinct sighash
 	// bytes on its signatures; 0xFFFFFFFF means "do not look" and leaves the input
-	// fields empty. The sighash set is in the response rather than assumed
+	// fields empty (on XRPL both indices are 0). The sighash set is in the response rather than assumed
 	// because only SIGHASH_ALL commits the signer to the outputs — a consumer
 	// meaning "that address approved THIS transaction" must require exactly
 	// [0x01], and an empty set (nothing parsable) must fail that test. There is
 	// deliberately no 0x00 sentinel: 0x00 is a valid sighash byte under BIP-341.
-	BtcDeposit AttestationType = "BtcDeposit"
+	WalletDeposit AttestationType = "WalletDeposit"
 	// BtcWalletAddress proves the Bitcoin address that
 	// (walletId, accountIndex, derivationIndex) derives to, and is the ONLY
 	// attestation type that reads wallet keys from a registry.
 	//
-	// BtcDeposit used to carry that triple and derive the address on every
+	// The deposit type used to carry that triple and derive the address on every
 	// deposit, which made a Bitcoin observation depend on a registry, an RPC and
 	// a key read to answer a question whose answer never changes. An address
 	// derives from keys and an index and neither moves, so it is proven once
-	// here and stored; a deposit then names the address by hash and reads no
+	// here and stored; a deposit then names the address itself and reads no
 	// Flare at all (btc-planning ER-81).
 	//
 	// The address comes back as a STRING so a depositor can read where to pay
 	// from the contract that stored the binding, rather than deriving it
 	// off-chain and hoping they matched.
 	BtcWalletAddress AttestationType = "BtcWalletAddress"
-	// WalletOperationStatus proves the outcome of one OPERATION of a Bitcoin
-	// CSP account — a consolidation, an escrow create or an escrow reclaim —
-	// named by its payment id: which attempt the source chain carried, whether
-	// the escrow output was created and where, and whether its HTLC was spent
-	// and by which path (btc-planning ER-118). WalletPaymentStatus cannot
-	// answer it: an operation has no payment record, and its attempts are
-	// mutually exclusive transactions of which a void one only rolls the
-	// anchor.
+	// WalletOperationStatus proves the outcome of one OPERATION of a wallet
+	// account — a consolidation, an escrow create or an escrow reclaim on
+	// Bitcoin, an escrow on XRPL — named by its operation id (the sequence
+	// position on a Bitcoin CSP account, the payment id on XRPL): its kind,
+	// the escrowed asset and amount, whether it was nullified, its transaction
+	// and exact fee, and for an escrow create, given the transaction that spent
+	// the escrow, how the escrow ended (rescued by the counterparty or
+	// reclaimed by the wallet).
 	WalletOperationStatus AttestationType = "WalletOperationStatus"
 )
 
@@ -84,10 +93,10 @@ var attestationTypes = []AttestationType{
 	AvailabilityCheck,
 	WalletPaymentStatus,
 	NativeNonceAccountConfigured,
-	WalletFeeProof,
+	WalletSettlement,
 	BtcAccountConfigured,
 	CspProposalCheck,
-	BtcDeposit,
+	WalletDeposit,
 	BtcWalletAddress,
 	WalletOperationStatus,
 }
@@ -98,10 +107,10 @@ var attestationTypeMethods = []string{
 	"availabilityCheck",
 	"walletPaymentStatus",
 	"nativeNonceAccountConfigured",
-	"walletFeeProof",
+	"walletSettlement",
 	"btcAccountConfigured",
 	"cspProposalCheck",
-	"btcDeposit",
+	"walletDeposit",
 	"btcWalletAddress",
 	"walletOperationStatus",
 }
