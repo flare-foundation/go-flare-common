@@ -112,6 +112,9 @@ var confirmedAttemptArgs = func() abi.Arguments {
 // the open attempt — the one a reissue opened last — is the highest. The open
 // one is therefore at least 1.
 func (c ConfirmedAttempt) Validate() error {
+	if c.SequencePosition == 0 {
+		return errors.New("sequence position 0 names no instruction; positions start at 1")
+	}
 	if c.Attempt == 0 {
 		return errors.New("attempt 0 is never open behind a reissue")
 	}

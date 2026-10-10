@@ -176,6 +176,9 @@ func TestValidateRejectsUnusableEnvelopes(t *testing.T) {
 		"empty tx":        func(e *csp.Envelope) { e.RawUnsignedTx = nil },
 		"bad chain value": func(e *csp.Envelope) { e.Inputs[0].Chain = 2 },
 
+		// Positions start at 1; 0 means "none" wherever the channel reads one.
+		"position 0": func(e *csp.Envelope) { e.SequencePosition = 0 },
+
 		// Version 2 is the only one: a v1 package commits to a tuple that no
 		// longer exists.
 		"version 1": func(e *csp.Envelope) { e.Version = 1 },

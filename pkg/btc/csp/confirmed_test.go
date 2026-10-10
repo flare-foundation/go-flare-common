@@ -91,6 +91,7 @@ func TestConfirmedAttemptValidate(t *testing.T) {
 		"an attempt after the open one":            func(c *csp.ConfirmedAttempt) { c.ConfirmedAttempt = c.Attempt + 1 },
 		"a zero txid":                              func(c *csp.ConfirmedAttempt) { c.Txid = [32]byte{} },
 		"no proposer":                              func(c *csp.ConfirmedAttempt) { c.ProposerAddress = common.Address{} },
+		"position 0, which names no instruction":   func(c *csp.ConfirmedAttempt) { c.SequencePosition = 0 },
 	}
 	for name, mutate := range cases {
 		c := confirmedSample()

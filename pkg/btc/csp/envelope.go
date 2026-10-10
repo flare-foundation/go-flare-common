@@ -281,6 +281,11 @@ func (e Envelope) Validate() error {
 	if e.Version != EnvelopeVersion {
 		return fmt.Errorf("envelope version %d, want %d", e.Version, EnvelopeVersion)
 	}
+	// Positions start at 1 on the channel; 0 means "none" everywhere it is
+	// read, so an envelope for position 0 fills no instruction.
+	if e.SequencePosition == 0 {
+		return errors.New("sequence position 0 names no instruction; positions start at 1")
+	}
 	if len(e.RawUnsignedTx) == 0 {
 		return errors.New("rawUnsignedTx is empty")
 	}
