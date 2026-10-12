@@ -1657,9 +1657,9 @@
       },
       {
         "indexed": false,
-        "internalType": "uint64",
+        "internalType": "uint128",
         "name": "maxFee",
-        "type": "uint64"
+        "type": "uint128"
       }
     ],
     "name": "InstructionEmitted",
@@ -1860,15 +1860,15 @@
       },
       {
         "indexed": false,
-        "internalType": "uint64",
+        "internalType": "uint128",
         "name": "amount",
-        "type": "uint64"
+        "type": "uint128"
       },
       {
         "indexed": false,
-        "internalType": "uint64",
+        "internalType": "uint128",
         "name": "maxFee",
-        "type": "uint64"
+        "type": "uint128"
       },
       {
         "indexed": false,
@@ -2169,9 +2169,9 @@
       },
       {
         "indexed": false,
-        "internalType": "uint64",
+        "internalType": "uint128",
         "name": "maxFee",
-        "type": "uint64"
+        "type": "uint128"
       }
     ],
     "name": "ReissueEmitted",
@@ -5527,6 +5527,42 @@
         "internalType": "struct WalletAccount",
         "name": "_account",
         "type": "tuple"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_sequencePosition",
+        "type": "uint64"
+      }
+    ],
+    "name": "getNextPaymentIdAfter",
+    "outputs": [
+      {
+        "internalType": "uint64",
+        "name": "_nextPaymentId",
+        "type": "uint64"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "accountAddress",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct WalletAccount",
+        "name": "_account",
+        "type": "tuple"
       }
     ],
     "name": "getNextSequencePosition",
@@ -5923,14 +5959,14 @@
             "type": "bytes"
           },
           {
-            "internalType": "uint64",
+            "internalType": "uint128",
             "name": "amount",
-            "type": "uint64"
+            "type": "uint128"
           },
           {
-            "internalType": "uint64",
+            "internalType": "uint128",
             "name": "maxFee",
-            "type": "uint64"
+            "type": "uint128"
           },
           {
             "internalType": "bytes32",
@@ -5991,14 +6027,14 @@
             "type": "bytes"
           },
           {
-            "internalType": "uint64",
+            "internalType": "uint128",
             "name": "amount",
-            "type": "uint64"
+            "type": "uint128"
           },
           {
-            "internalType": "uint64",
+            "internalType": "uint128",
             "name": "maxFee",
-            "type": "uint64"
+            "type": "uint128"
           },
           {
             "internalType": "bytes32",

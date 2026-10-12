@@ -1876,16 +1876,6 @@
                 "internalType": "enum IWalletOperationStatus.OperationResolution",
                 "name": "resolution",
                 "type": "uint8"
-              },
-              {
-                "internalType": "uint64",
-                "name": "resolutionBlockNumber",
-                "type": "uint64"
-              },
-              {
-                "internalType": "uint64",
-                "name": "resolutionBlockTimestamp",
-                "type": "uint64"
               }
             ],
             "internalType": "struct IWalletOperationStatus.ResponseBody",
@@ -1986,16 +1976,6 @@
             "internalType": "enum IWalletOperationStatus.OperationResolution",
             "name": "resolution",
             "type": "uint8"
-          },
-          {
-            "internalType": "uint64",
-            "name": "resolutionBlockNumber",
-            "type": "uint64"
-          },
-          {
-            "internalType": "uint64",
-            "name": "resolutionBlockTimestamp",
-            "type": "uint64"
           }
         ],
         "internalType": "struct IWalletOperationStatus.ResponseBody",
