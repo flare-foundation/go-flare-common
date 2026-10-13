@@ -137,7 +137,7 @@ func value(v slog.Value) string {
 	var s string
 	switch v.Kind() {
 	case slog.KindDuration:
-		s = v.Duration().String()
+		s = roundDuration(v.Duration()).String()
 	case slog.KindTime:
 		s = v.Time().UTC().Format(timeLayout)
 	default:

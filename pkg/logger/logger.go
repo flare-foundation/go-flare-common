@@ -236,9 +236,10 @@ func replaceAttr(groups []string, a slog.Attr) slog.Attr {
 		return slog.String(a.Key, a.Value.Time().UTC().Format(timeLayout))
 	}
 
-	// Convert slog's nanoseconds to milliseconds to match the NestJS services.
+	// Convert slog's nanoseconds to milliseconds to match the NestJS services,
+	// keeping microsecond detail.
 	if a.Value.Kind() == slog.KindDuration {
-		return slog.Float64(a.Key, float64(a.Value.Duration())/float64(time.Millisecond))
+		return slog.Float64(a.Key, float64(a.Value.Duration().Round(time.Microsecond))/float64(time.Millisecond))
 	}
 
 	return a
@@ -318,6 +319,16 @@ func rewriteAttr(a slog.Attr) slog.Attr {
 // sourceRef formats a source location as package/file.go:line.
 func sourceRef(file string, line int) string {
 	return filepath.Base(filepath.Dir(file)) + "/" + filepath.Base(file) + ":" + strconv.Itoa(line)
+}
+
+// roundDuration keeps the digits a reader uses: milliseconds from a second
+// up, microseconds below.
+func roundDuration(d time.Duration) time.Duration {
+	if d >= time.Second || d <= -time.Second {
+		return d.Round(time.Millisecond)
+	}
+
+	return d.Round(time.Microsecond)
 }
 
 // levelName adds FATAL to slog's standard level names.

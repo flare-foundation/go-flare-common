@@ -259,18 +259,14 @@ func TestJSONTimestampsAreMilliseconds(t *testing.T) {
 	require.Equal(t, "1970-01-01T00:00:00.987Z", rpc["asked_at"])
 }
 
-// JSON durations use milliseconds, including fractional values.
+// JSON durations use milliseconds, rounded to whole microseconds.
 func TestJSONDurationsAreMilliseconds(t *testing.T) {
 	out := captureStdout(t, func() {
 		Set(Config{Level: "INFO", Format: FormatJSON})
-		Infow("Tip read", "took", 1500*time.Millisecond, "parse", 240*time.Microsecond)
+		Infow("Tip read", "took", 1423528535*time.Nanosecond, "parse", 240312*time.Nanosecond)
 	})
 
-	var line map[string]any
-	require.NoError(t, json.Unmarshal([]byte(strings.TrimSpace(out)), &line))
-
-	require.InDelta(t, 1500.0, line["took"], 0.0001)
-	require.InDelta(t, 0.24, line["parse"], 0.0001, "a sub-millisecond duration keeps its detail")
+	require.Contains(t, out, `"took":1423.529,"parse":0.24}`)
 }
 
 // Fields attached once through With are renamed once, not on every line.
@@ -459,6 +455,18 @@ func TestConsoleFieldsAreKeyValue(t *testing.T) {
 	})
 
 	require.Contains(t, out, "\tTip read\tchain_id=14 rpc.target=node:9650 rpc.took=1.5s at=1970-01-01T00:00:00.000Z\n")
+}
+
+// Console durations keep milliseconds from a second up and microseconds below.
+func TestConsoleRoundsDurations(t *testing.T) {
+	t.Setenv("NO_COLOR", "1")
+
+	out := captureStdout(t, func() {
+		Set(Config{Level: "INFO"})
+		Infow("Batch indexed", "took", 1423528535*time.Nanosecond, "fetch", 12345678*time.Nanosecond, "parse", 845312*time.Nanosecond)
+	})
+
+	require.Contains(t, out, "\tBatch indexed\ttook=1.424s fetch=12.346ms parse=845µs\n")
 }
 
 func TestConsoleQuotesValuesThatNeedIt(t *testing.T) {

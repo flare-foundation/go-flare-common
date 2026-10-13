@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Logged durations are rounded.
+  Console keeps milliseconds from a second up and microseconds below, `took=1.424s` instead of `took=1.423528535s`.
+  `json` keeps whole microseconds, `"took":1423.529`.
+
 ## [v1.4.0](https://github.com/flare-foundation/go-flare-common/tree/v1.4.0) - 2026-10-13
 
 ### Structured logging on log/slog
