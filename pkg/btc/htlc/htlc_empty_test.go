@@ -11,7 +11,7 @@ import (
 // TestBuildScript_RejectsEmptyMultisigKeys pins that BuildScript
 // refuses an empty multisigKeys slice. Without an explicit assertion the
 // only protection is the implicit "threshold > len(multisigKeys)" check
-// (threshold ≥ 1 by spec invariant, len == 0 ⇒ rejected) — but a future
+// (threshold ≥ 1 by invariant, len == 0 ⇒ rejected) — but a future
 // refactor that allowed threshold=0 or skipped the range check would
 // silently emit an unspendable timeout branch.
 func TestBuildScript_RejectsEmptyMultisigKeys(t *testing.T) {

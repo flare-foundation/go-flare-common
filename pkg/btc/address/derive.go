@@ -1,25 +1,22 @@
-// Package btcaddr provides reusable Bitcoin address derivation and script
-// construction utilities for the Flare BTC infrastructure.
+// Package address derives the Bitcoin addresses of a Flare-managed wallet and
+// validates the BtcAccountConfigured attestation that binds a wallet's keys
+// and anchor UTXOs.
 //
-// It implements the spec's P2WSH k-of-n multisig address derivation from
-// docs/shared/wallet-and-address-derivation.md, combining BIP-32 child
-// derivation, BIP-67 lex sorting, BIP-141 P2WSH witness script hashing,
-// and BIP-173 Bech32 encoding.
+// Every address is a P2WSH k-of-n multisig: BIP-32 child derivation from n
+// extended public keys, BIP-67 lexicographic key sorting, a BIP-141 witness
+// script hash and BIP-173 Bech32 encoding.
 //
 // Derive is path-agnostic: it consumes account-level xpubs and the leaf
-// chain/index, so the same code works for the spec's BIP-87 path
+// chain/index, so the same code works for the BIP-87 path
 // (m/87'/coin'/account, recommended for multisig) and the legacy BIP-44 path.
 //
-// Account derivation is NON-HARDENED (2026-06-22, aligns with the deployed
-// flare-smart-contracts-v2 UTXO model — IBtcAccountConfigured /
-// docs/specs/FCC/Payments.md). The TEEs publish ONE wallet-level (parent) xpub
-// at m/87'/coin'; the account-level xpub is its non-hardened child at
-// accountIndex (DeriveAccountXpubs), and every leaf address is then derived
-// from that account-level xpub via Derive. A single published parent xpub
-// therefore serves all accountIndex values with no per-account attestation.
-// The hardened-account boundary was deliberately dropped: any child-key leak
-// already forces a full TEE rotation, so the boundary bought no real
-// protection (see docs/inputs/2026-06-22-non-hardened-account-derivation.md).
+// Account derivation is NON-HARDENED. The signers publish ONE wallet-level
+// (parent) xpub at m/87'/coin'; the account-level xpub is its non-hardened
+// child at accountIndex (DeriveAccountXpubs), and every leaf address is then
+// derived from that account-level xpub via Derive. A single published parent
+// xpub therefore serves all accountIndex values with no per-account
+// attestation. A hardened account boundary would buy no real protection: a
+// leaked child key already forces a full rotation of the signers' keys.
 package address
 
 import (
@@ -126,7 +123,7 @@ func Derive(
 	// AddInt64 picks OP_1..OP_16 for k/n in 1..16 and a minimal scriptNum
 	// push for 17..20 — both canonical for CHECKMULTISIG. A naïve
 	// byte(OP_1-1+x) encoding would emit OP_NOP (0x61) for x=17 and break
-	// at n>16 (see open-question #14: n up to 20 is supported).
+	// at n>16, and n up to 20 is supported.
 	builder := txscript.NewScriptBuilder()
 	// OP_1..OP_16 cover threshold in 1..16; AddInt64 falls back to a minimal
 	// integer push for values above 16 (up to the n ≤ 20 cap checked above).
@@ -154,16 +151,13 @@ func Derive(
 
 // DeriveAccountXpubs maps the published wallet-level (parent) xpubs to their
 // account-level xpubs by applying a single NON-HARDENED CKDpub step at
-// accountIndex (2026-06-22, aligns with the deployed flare-smart-contracts-v2
-// UTXO model — the account-level keys are the non-hardened children of the
-// parent xpubs at accountIndex, per IBtcAccountConfigured /
-// docs/specs/FCC/Payments.md).
+// accountIndex, as IBtcAccountConfigured defines the account-level keys.
 //
 // Each input must be a wallet-level (parent) xpub, i.e. one level above the
 // account (BIP-87 m/87'/coin'); the returned strings are the account-level
 // xpubs (m/87'/coin'/accountIndex) that Derive consumes for leaf addresses.
 // accountIndex must be in the BIP-32 non-hardened range (< 2^31) — the account
-// level is no longer hardened, so it is derivable from the public parent xpub
+// level is not hardened, so it is derivable from the public parent xpub
 // alone, which is exactly what lets one published parent serve every account.
 func DeriveAccountXpubs(
 	parentXpubs []string,
@@ -197,7 +191,7 @@ func DeriveAccountXpubs(
 // ValidateDerivationPath verifies that path is `<prefix>/<chain>/<leafIndex>`
 // where chain is "0" (external) or "1" (internal/change) and leafIndex is a
 // canonical decimal in [0, 2^31). The prefix is the account-level shape
-// validated separately at attestation time (see Attestation.ValidateV1); this
+// validated separately at attestation time (see BtcAccountConfigured.ValidateV1); this
 // helper only checks the per-UTXO leaf segment.
 //
 // If prefix is empty, ValidateDerivationPath returns nil — callers in legacy

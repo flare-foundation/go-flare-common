@@ -21,7 +21,8 @@ import (
 type Instruction struct {
 	// TeeIDKeyIDPairs says which machine holds which key for this wallet. A
 	// machine filters it for its own id to learn which key to sign with — the
-	// same shape TeePayments carries, so the machine-side lookup is unchanged.
+	// same shape WalletPayments carries for its other payment models, so the
+	// machine-side lookup is unchanged.
 	TeeIDKeyIDPairs  []TeeIDKeyIDPair
 	WalletID         [32]byte
 	SourceID         [32]byte

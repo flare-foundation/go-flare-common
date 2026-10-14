@@ -13,7 +13,7 @@ import (
 )
 
 // generateTestXpubs produces n deterministic account-level xpubs at the
-// non-hardened account m/87'/0'/0 (BIP-87, 2026-06-22 model) from fixed seeds:
+// non-hardened account m/87'/0'/0 (BIP-87) from fixed seeds:
 // two hardened levels to the wallet-level parent m/87'/0', then the
 // NON-hardened account child via DeriveAccountXpubs — the production shape.
 // Reproducible across test runs.
@@ -48,7 +48,7 @@ func generateTestXpubs(t *testing.T, params *chaincfg.Params, n int) []string {
 
 // TestDeriveAccountXpubs_NonHardenedStep proves the account-level xpub is the
 // NON-HARDENED CKDpub child of the published wallet-level (parent) xpub at
-// accountIndex (2026-06-22 UTXO-model alignment), and that the resulting
+// accountIndex, and that the resulting
 // account xpub feeds Derive to a real address. Also pins the hardened-range
 // rejection (accountIndex >= 2^31 cannot be derived from a public parent).
 func TestDeriveAccountXpubs_NonHardenedStep(t *testing.T) {
@@ -191,7 +191,7 @@ func TestDerive_DeterministicAndDifferentIndices(t *testing.T) {
 
 // generateLegacyBIP44Xpubs is the BIP-44 counterpart of generateTestXpubs:
 // it derives at m/44'/0'/0' instead of m/87'/0'/0. Used to pin the back-compat
-// claim in docs/shared/wallet-and-address-derivation.md that pre-BIP-87 wallets
+// claim that pre-BIP-87 wallets
 // (with derivationPathPrefix = m/44'/0'/accountIndex') still work through the
 // derive stack unchanged. The Derive function takes xpubs as bytes — it does
 // not see the path — so this test guards against any future change that would
@@ -382,7 +382,7 @@ func TestDerive_KnownAnswerAddress(t *testing.T) {
 }
 
 // independentP2WSHAddress derives the sorted k-of-n P2WSH address the same way
-// the spec defines it but WITHOUT reusing Derive's script-building path: it
+// BIP-67/BIP-141 define it but WITHOUT reusing Derive's script-building path: it
 // CKDpubs each account xpub to (chain, leaf), BIP-67 sorts the compressed
 // pubkeys, hand-assembles `OP_k <pk...> OP_n OP_CHECKMULTISIG` as raw bytes,
 // SHA256s it, and bech32-encodes the witness-v0 program.
@@ -434,8 +434,8 @@ func independentP2WSHAddress(t *testing.T, acctXpubs []string, k int, chain Chai
 // TestDerive_LargeN exercises the n=17..20 range that triggers the
 // AddInt64 minimal scriptNum push path (vs. OP_1..OP_16). A regression
 // to byte(OP_1-1+x) would emit OP_NOP (0x61) for n=17, OP_VER (0x62)
-// for n=18, etc., yielding an unspendable script. See open-question #14
-// (n up to 20 supported) and the matching fix in htlc.go.
+// for n=18, etc., yielding an unspendable script. n up to 20 is supported;
+// see the matching fix in htlc.go.
 func TestDerive_LargeN(t *testing.T) {
 	params := &chaincfg.RegressionNetParams
 

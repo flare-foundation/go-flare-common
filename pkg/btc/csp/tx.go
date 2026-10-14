@@ -76,7 +76,7 @@ const opReturn = 0x6a
 // however many change outputs there are.
 //
 // That last clause is why this count survived the change rule going from "at
-// most one" to "up to eight" (ER-60): the count keys on OP_RETURNs, not on
+// most one" to "up to eight": the count keys on OP_RETURNs, not on
 // position, so splitting change never moved a group boundary.
 //
 // This is what binds the envelope's declared PaymentCount to the transaction.

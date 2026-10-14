@@ -48,9 +48,9 @@ const minTimeout int64 = 500_000_000
 //	    OP_k <sortedMultisigKeys...> OP_n OP_CHECKMULTISIG
 //	OP_ENDIF
 //
-// The OP_SIZE preimage-length check (added in 2026-05 to align with the
-// miniscript form) prevents non-32-byte preimage forgeries; the spec
-// always uses 32-byte SHA256 preimages, so this is a tightening of
+// The OP_SIZE preimage-length check (which aligns the script with the
+// miniscript form) prevents non-32-byte preimage forgeries; escrows
+// always use 32-byte SHA256 preimages, so this is a tightening of
 // invariants, not a behavior change.
 //
 // The miniscript form gives static-analysis guarantees (type-checking,
@@ -63,8 +63,7 @@ const minTimeout int64 = 500_000_000
 // BIP-110's `OP_IF`/`OP_NOTIF` ban applies only to Tapscript, so the
 // OP_IF/OP_ELSE branching used here is exempt. If this HTLC is ever
 // migrated to Tapscript, split the two spend paths into separate
-// tapleaves instead of branching with OP_IF inside one leaf — see
-// docs/shared/bip-tracking.md §"BIP-110 / BIP-444".
+// tapleaves instead of branching with OP_IF inside one leaf.
 //
 // preimageHash is SHA256(preimage), 32 bytes.
 // custodianPubKey is the compressed public key of the custodian (33 bytes).
@@ -119,7 +118,7 @@ func BuildScript(
 	}
 	// Duplicate-key check: k-of-n with duplicates effectively reduces the
 	// threshold (one signer's key, multiplied, can produce k "distinct"
-	// signature slots). The spec assumes n distinct signers.
+	// signature slots), so the n signers must be distinct.
 	for i := 0; i < len(multisigKeys); i++ {
 		for j := i + 1; j < len(multisigKeys); j++ {
 			if bytes.Equal(multisigKeys[i], multisigKeys[j]) {
@@ -175,8 +174,7 @@ func PreimageHash(preimage [32]byte) [32]byte {
 }
 
 // HashPathWitness returns the canonical P2WSH witness stack for the
-// HTLC hash path (IF branch — custodian emergency claim), per the normative
-// encoding in docs/components/core-vault-btc.md §"Normative spend-path encodings":
+// HTLC hash path (IF branch — custodian emergency claim):
 //
 //	[0] <custodianSig>  DER-encoded + sighash byte (caller appends 0x01 for SIGHASH_ALL)
 //	[1] <preimage>      exactly 32 bytes
@@ -195,8 +193,7 @@ func HashPathWitness(sig []byte, preimage [32]byte, witnessScript []byte) [][]by
 }
 
 // TimeoutPathWitness returns the canonical P2WSH witness stack for the
-// HTLC timeout path (ELSE branch — vault reclaim after CLTV), per the normative
-// encoding in docs/components/core-vault-btc.md §"Normative spend-path encodings":
+// HTLC timeout path (ELSE branch — vault reclaim after CLTV):
 //
 //	[0]     <empty>         BIP-147 NULLDUMMY (OP_CHECKMULTISIG off-by-one)
 //	[1..k]  <sig_i>         k DER-encoded signatures + sighash byte, BIP-67 order
