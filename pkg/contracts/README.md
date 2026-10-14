@@ -38,6 +38,7 @@ Outside `tee`, each package binds the contract of the same name, except:
 Most `tee` packages bind a `<Name>Facet` of the `FlareTeeManager` diamond (EIP-2535), so call them at the diamond's address.
 The exceptions are `flareteemanagerinit`, the diamond's init contract, and `teepayments*`, `teerewardoffersmanager` and `vrfverifier`, which are standalone contracts.
 Of these, `teepaymentsbase` is only the abstract base of `teepayments` and `teepaymentsutxo`, so it has no address of its own.
+`walletpayments` binds `IIWalletPayments`, the aggregate interface of the separate WalletPayments diamond, so call it at that diamond's address.
 
 ## Deploying
 

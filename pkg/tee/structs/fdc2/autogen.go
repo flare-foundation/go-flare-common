@@ -29,6 +29,80 @@ var (
 	_ = abi.ConvertType
 )
 
+// IBtcAccountConfiguredAnchor is an auto generated low-level Go binding around an user-defined struct.
+type IBtcAccountConfiguredAnchor struct {
+	GenesisAnchorTxid [32]byte
+	GenesisAnchorVout uint32
+}
+
+// IBtcAccountConfiguredProof is an auto generated low-level Go binding around an user-defined struct.
+type IBtcAccountConfiguredProof struct {
+	Signatures   IFdc2VerificationFdc2Signatures
+	Header       IFdc2HubFdc2ResponseHeader
+	RequestBody  IBtcAccountConfiguredRequestBody
+	ResponseBody IBtcAccountConfiguredResponseBody
+}
+
+// IBtcAccountConfiguredRequestBody is an auto generated low-level Go binding around an user-defined struct.
+type IBtcAccountConfiguredRequestBody struct {
+	AccountIndex uint32
+	PublicKeys   [][]byte
+	Threshold    uint64
+	Anchors      []IBtcAccountConfiguredAnchor
+}
+
+// IBtcAccountConfiguredResponseBody is an auto generated low-level Go binding around an user-defined struct.
+type IBtcAccountConfiguredResponseBody struct {
+	Status         uint8
+	AccountAddress string
+}
+
+// IBtcWalletAddressProof is an auto generated low-level Go binding around an user-defined struct.
+type IBtcWalletAddressProof struct {
+	Signatures   IFdc2VerificationFdc2Signatures
+	Header       IFdc2HubFdc2ResponseHeader
+	RequestBody  IBtcWalletAddressRequestBody
+	ResponseBody IBtcWalletAddressResponseBody
+}
+
+// IBtcWalletAddressRequestBody is an auto generated low-level Go binding around an user-defined struct.
+type IBtcWalletAddressRequestBody struct {
+	WalletRegistry  common.Address
+	WalletId        [32]byte
+	AccountIndex    uint32
+	DerivationIndex uint32
+}
+
+// IBtcWalletAddressResponseBody is an auto generated low-level Go binding around an user-defined struct.
+type IBtcWalletAddressResponseBody struct {
+	ReceivingAddress string
+}
+
+// ICspProposalCheckProof is an auto generated low-level Go binding around an user-defined struct.
+type ICspProposalCheckProof struct {
+	Signatures   IFdc2VerificationFdc2Signatures
+	Header       IFdc2HubFdc2ResponseHeader
+	RequestBody  ICspProposalCheckRequestBody
+	ResponseBody ICspProposalCheckResponseBody
+}
+
+// ICspProposalCheckRequestBody is an auto generated low-level Go binding around an user-defined struct.
+type ICspProposalCheckRequestBody struct {
+	SenderAddress      string
+	SequencePosition   uint64
+	Attempt            uint32
+	EligibleGeneration uint64
+	PackageHash        [32]byte
+}
+
+// ICspProposalCheckResponseBody is an auto generated low-level Go binding around an user-defined struct.
+type ICspProposalCheckResponseBody struct {
+	ProposerAddress     common.Address
+	Score               uint64
+	PaymentCount        uint32
+	ChainCommitmentHash [32]byte
+}
+
 // IFdc2HubFdc2AttestationRequest is an auto generated low-level Go binding around an user-defined struct.
 type IFdc2HubFdc2AttestationRequest struct {
 	Header      IFdc2HubFdc2RequestHeader
@@ -61,108 +135,25 @@ type IFdc2VerificationFdc2Signatures struct {
 	CosignerSignatures      []Signature
 }
 
-// IPMWFeeProofProof is an auto generated low-level Go binding around an user-defined struct.
-type IPMWFeeProofProof struct {
+// INativeNonceAccountConfiguredProof is an auto generated low-level Go binding around an user-defined struct.
+type INativeNonceAccountConfiguredProof struct {
 	Signatures   IFdc2VerificationFdc2Signatures
 	Header       IFdc2HubFdc2ResponseHeader
-	RequestBody  IPMWFeeProofRequestBody
-	ResponseBody IPMWFeeProofResponseBody
+	RequestBody  INativeNonceAccountConfiguredRequestBody
+	ResponseBody INativeNonceAccountConfiguredResponseBody
 }
 
-// IPMWFeeProofRequestBody is an auto generated low-level Go binding around an user-defined struct.
-type IPMWFeeProofRequestBody struct {
-	OpType         [32]byte
-	SenderAddress  string
-	FirstPaymentId uint64
-	BatchCount     uint64
-	UntilTimestamp uint64
-}
-
-// IPMWFeeProofResponseBody is an auto generated low-level Go binding around an user-defined struct.
-type IPMWFeeProofResponseBody struct {
-	LastPaymentId uint64
-	ActualFee     *big.Int
-	EstimatedFee  *big.Int
-}
-
-// IPMWMultisigAccountConfiguredProof is an auto generated low-level Go binding around an user-defined struct.
-type IPMWMultisigAccountConfiguredProof struct {
-	Signatures   IFdc2VerificationFdc2Signatures
-	Header       IFdc2HubFdc2ResponseHeader
-	RequestBody  IPMWMultisigAccountConfiguredRequestBody
-	ResponseBody IPMWMultisigAccountConfiguredResponseBody
-}
-
-// IPMWMultisigAccountConfiguredRequestBody is an auto generated low-level Go binding around an user-defined struct.
-type IPMWMultisigAccountConfiguredRequestBody struct {
+// INativeNonceAccountConfiguredRequestBody is an auto generated low-level Go binding around an user-defined struct.
+type INativeNonceAccountConfiguredRequestBody struct {
 	AccountAddress string
 	PublicKeys     [][]byte
 	Threshold      uint64
 }
 
-// IPMWMultisigAccountConfiguredResponseBody is an auto generated low-level Go binding around an user-defined struct.
-type IPMWMultisigAccountConfiguredResponseBody struct {
+// INativeNonceAccountConfiguredResponseBody is an auto generated low-level Go binding around an user-defined struct.
+type INativeNonceAccountConfiguredResponseBody struct {
 	Status   uint8
 	Sequence uint64
-}
-
-// IPMWMultisigUtxoConfiguredAnchor is an auto generated low-level Go binding around an user-defined struct.
-type IPMWMultisigUtxoConfiguredAnchor struct {
-	GenesisAnchorTxid [32]byte
-	GenesisAnchorVout uint32
-}
-
-// IPMWMultisigUtxoConfiguredProof is an auto generated low-level Go binding around an user-defined struct.
-type IPMWMultisigUtxoConfiguredProof struct {
-	Signatures   IFdc2VerificationFdc2Signatures
-	Header       IFdc2HubFdc2ResponseHeader
-	RequestBody  IPMWMultisigUtxoConfiguredRequestBody
-	ResponseBody IPMWMultisigUtxoConfiguredResponseBody
-}
-
-// IPMWMultisigUtxoConfiguredRequestBody is an auto generated low-level Go binding around an user-defined struct.
-type IPMWMultisigUtxoConfiguredRequestBody struct {
-	AccountIndex uint32
-	PublicKeys   [][]byte
-	Threshold    uint64
-	Anchors      []IPMWMultisigUtxoConfiguredAnchor
-}
-
-// IPMWMultisigUtxoConfiguredResponseBody is an auto generated low-level Go binding around an user-defined struct.
-type IPMWMultisigUtxoConfiguredResponseBody struct {
-	Status         uint8
-	AccountAddress string
-}
-
-// IPMWPaymentStatusProof is an auto generated low-level Go binding around an user-defined struct.
-type IPMWPaymentStatusProof struct {
-	Signatures   IFdc2VerificationFdc2Signatures
-	Header       IFdc2HubFdc2ResponseHeader
-	RequestBody  IPMWPaymentStatusRequestBody
-	ResponseBody IPMWPaymentStatusResponseBody
-}
-
-// IPMWPaymentStatusRequestBody is an auto generated low-level Go binding around an user-defined struct.
-type IPMWPaymentStatusRequestBody struct {
-	OpType        [32]byte
-	SenderAddress string
-	PaymentId     uint64
-}
-
-// IPMWPaymentStatusResponseBody is an auto generated low-level Go binding around an user-defined struct.
-type IPMWPaymentStatusResponseBody struct {
-	RecipientAddress  string
-	TokenId           []byte
-	Amount            *big.Int
-	MaxFee            *big.Int
-	PaymentReference  [32]byte
-	TransactionStatus uint8
-	RevertReason      string
-	ReceivedAmount    *big.Int
-	TransactionFee    *big.Int
-	TransactionId     [32]byte
-	BlockNumber       uint64
-	BlockTimestamp    uint64
 }
 
 // ITeeAvailabilityCheckProof is an auto generated low-level Go binding around an user-defined struct.
@@ -201,6 +192,124 @@ type ITeeAvailabilityCheckTeeState struct {
 	StateVersion       [32]byte
 }
 
+// IWalletDepositProof is an auto generated low-level Go binding around an user-defined struct.
+type IWalletDepositProof struct {
+	Signatures   IFdc2VerificationFdc2Signatures
+	Header       IFdc2HubFdc2ResponseHeader
+	RequestBody  IWalletDepositRequestBody
+	ResponseBody IWalletDepositResponseBody
+}
+
+// IWalletDepositRequestBody is an auto generated low-level Go binding around an user-defined struct.
+type IWalletDepositRequestBody struct {
+	TransactionId    [32]byte
+	OutputIndex      uint32
+	ReceivingAddress string
+	TokenId          []byte
+	MinConfirmations uint16
+	InputIndex       uint32
+}
+
+// IWalletDepositResponseBody is an auto generated low-level Go binding around an user-defined struct.
+type IWalletDepositResponseBody struct {
+	Amount            *big.Int
+	Memo              []byte
+	BlockNumber       uint64
+	BlockTimestamp    uint64
+	InputAddress      string
+	InputAddressHash  [32]byte
+	InputSighashTypes []byte
+}
+
+// IWalletOperationStatusProof is an auto generated low-level Go binding around an user-defined struct.
+type IWalletOperationStatusProof struct {
+	Signatures   IFdc2VerificationFdc2Signatures
+	Header       IFdc2HubFdc2ResponseHeader
+	RequestBody  IWalletOperationStatusRequestBody
+	ResponseBody IWalletOperationStatusResponseBody
+}
+
+// IWalletOperationStatusRequestBody is an auto generated low-level Go binding around an user-defined struct.
+type IWalletOperationStatusRequestBody struct {
+	OpType                  [32]byte
+	SenderAddress           string
+	OperationId             uint64
+	ResolutionTransactionId [32]byte
+}
+
+// IWalletOperationStatusResponseBody is an auto generated low-level Go binding around an user-defined struct.
+type IWalletOperationStatusResponseBody struct {
+	Kind           uint8
+	TokenId        []byte
+	Amount         *big.Int
+	Nullified      bool
+	TransactionFee *big.Int
+	TransactionId  [32]byte
+	BlockNumber    uint64
+	BlockTimestamp uint64
+	Resolution     uint8
+}
+
+// IWalletPaymentStatusProof is an auto generated low-level Go binding around an user-defined struct.
+type IWalletPaymentStatusProof struct {
+	Signatures   IFdc2VerificationFdc2Signatures
+	Header       IFdc2HubFdc2ResponseHeader
+	RequestBody  IWalletPaymentStatusRequestBody
+	ResponseBody IWalletPaymentStatusResponseBody
+}
+
+// IWalletPaymentStatusRequestBody is an auto generated low-level Go binding around an user-defined struct.
+type IWalletPaymentStatusRequestBody struct {
+	OpType        [32]byte
+	SenderAddress string
+	PaymentId     uint64
+}
+
+// IWalletPaymentStatusResponseBody is an auto generated low-level Go binding around an user-defined struct.
+type IWalletPaymentStatusResponseBody struct {
+	RecipientAddress  string
+	TokenId           []byte
+	Amount            *big.Int
+	MaxFee            *big.Int
+	PaymentReference  [32]byte
+	TransactionStatus uint8
+	RevertReason      string
+	ReceivedAmount    *big.Int
+	TransactionFee    *big.Int
+	TransactionId     [32]byte
+	BlockNumber       uint64
+	BlockTimestamp    uint64
+}
+
+// IWalletSettlementPositionAttempts is an auto generated low-level Go binding around an user-defined struct.
+type IWalletSettlementPositionAttempts struct {
+	SequencePosition uint64
+	AttemptCount     uint32
+}
+
+// IWalletSettlementProof is an auto generated low-level Go binding around an user-defined struct.
+type IWalletSettlementProof struct {
+	Signatures   IFdc2VerificationFdc2Signatures
+	Header       IFdc2HubFdc2ResponseHeader
+	RequestBody  IWalletSettlementRequestBody
+	ResponseBody IWalletSettlementResponseBody
+}
+
+// IWalletSettlementRequestBody is an auto generated low-level Go binding around an user-defined struct.
+type IWalletSettlementRequestBody struct {
+	OpType                [32]byte
+	SenderAddress         string
+	FirstSequencePosition uint64
+	Count                 uint64
+}
+
+// IWalletSettlementResponseBody is an auto generated low-level Go binding around an user-defined struct.
+type IWalletSettlementResponseBody struct {
+	ActualFee             *big.Int
+	AuthorisedFee         *big.Int
+	MultiAttemptPositions []IWalletSettlementPositionAttempts
+}
+
 // Signature is an auto generated low-level Go binding around an user-defined struct.
 type Signature struct {
 	V uint8
@@ -210,7 +319,7 @@ type Signature struct {
 
 // Fdc2MetaData contains all meta data concerning the Fdc2 contract.
 var Fdc2MetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"signingPolicySignatures\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"}],\"internalType\":\"structIFdc2Verification.Fdc2Signatures\",\"name\":\"signatures\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFdc2Hub.Fdc2ResponseHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"teeProxyId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"challenge\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeAvailabilityCheck.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumITeeAvailabilityCheck.AvailabilityCheckStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"uint64\",\"name\":\"teeTimestamp\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"initialSigningPolicyId\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"lastSigningPolicyId\",\"type\":\"uint32\"},{\"components\":[{\"internalType\":\"bytes\",\"name\":\"systemState\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"systemStateVersion\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"state\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"stateVersion\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeAvailabilityCheck.TeeState\",\"name\":\"state\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Proof\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"availabilityCheckProofStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"teeProxyId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"challenge\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeAvailabilityCheck.RequestBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"availabilityCheckRequestBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"enumITeeAvailabilityCheck.AvailabilityCheckStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"uint64\",\"name\":\"teeTimestamp\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"initialSigningPolicyId\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"lastSigningPolicyId\",\"type\":\"uint32\"},{\"components\":[{\"internalType\":\"bytes\",\"name\":\"systemState\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"systemStateVersion\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"state\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"stateVersion\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeAvailabilityCheck.TeeState\",\"name\":\"state\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.ResponseBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"availabilityCheckResponseBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"systemState\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"systemStateVersion\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"state\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"stateVersion\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeAvailabilityCheck.TeeState\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"availabilityCheckTeeStateStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"}],\"internalType\":\"structIFdc2Hub.Fdc2RequestHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"internalType\":\"bytes\",\"name\":\"requestBody\",\"type\":\"bytes\"}],\"internalType\":\"structIFdc2Hub.Fdc2AttestationRequest\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"fdc2AttestationRequestStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"}],\"internalType\":\"structIFdc2Hub.Fdc2RequestHeader\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"fdc2RequestHeaderStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFdc2Hub.Fdc2ResponseHeader\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"fdc2ResponseHeaderStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"signingPolicySignatures\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"}],\"internalType\":\"structIFdc2Verification.Fdc2Signatures\",\"name\":\"signatures\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFdc2Hub.Fdc2ResponseHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"senderAddress\",\"type\":\"string\"},{\"internalType\":\"uint64\",\"name\":\"firstPaymentId\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"batchCount\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"untilTimestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIPMWFeeProof.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"uint64\",\"name\":\"lastPaymentId\",\"type\":\"uint64\"},{\"internalType\":\"uint256\",\"name\":\"actualFee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"estimatedFee\",\"type\":\"uint256\"}],\"internalType\":\"structIPMWFeeProof.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structIPMWFeeProof.Proof\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"pmwFeeProofProofStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"senderAddress\",\"type\":\"string\"},{\"internalType\":\"uint64\",\"name\":\"firstPaymentId\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"batchCount\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"untilTimestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIPMWFeeProof.RequestBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"pmwFeeProofRequestBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint64\",\"name\":\"lastPaymentId\",\"type\":\"uint64\"},{\"internalType\":\"uint256\",\"name\":\"actualFee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"estimatedFee\",\"type\":\"uint256\"}],\"internalType\":\"structIPMWFeeProof.ResponseBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"pmwFeeProofResponseBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"signingPolicySignatures\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"}],\"internalType\":\"structIFdc2Verification.Fdc2Signatures\",\"name\":\"signatures\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFdc2Hub.Fdc2ResponseHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"},{\"internalType\":\"bytes[]\",\"name\":\"publicKeys\",\"type\":\"bytes[]\"},{\"internalType\":\"uint64\",\"name\":\"threshold\",\"type\":\"uint64\"}],\"internalType\":\"structIPMWMultisigAccountConfigured.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumIPMWMultisigAccountConfigured.PMWMultisigAccountStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"uint64\",\"name\":\"sequence\",\"type\":\"uint64\"}],\"internalType\":\"structIPMWMultisigAccountConfigured.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structIPMWMultisigAccountConfigured.Proof\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"pmwMultisigAccountConfiguredProofStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"},{\"internalType\":\"bytes[]\",\"name\":\"publicKeys\",\"type\":\"bytes[]\"},{\"internalType\":\"uint64\",\"name\":\"threshold\",\"type\":\"uint64\"}],\"internalType\":\"structIPMWMultisigAccountConfigured.RequestBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"pmwMultisigAccountConfiguredRequestBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"enumIPMWMultisigAccountConfigured.PMWMultisigAccountStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"uint64\",\"name\":\"sequence\",\"type\":\"uint64\"}],\"internalType\":\"structIPMWMultisigAccountConfigured.ResponseBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"pmwMultisigAccountConfiguredResponseBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"genesisAnchorTxid\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"genesisAnchorVout\",\"type\":\"uint32\"}],\"internalType\":\"structIPMWMultisigUtxoConfigured.Anchor\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"pmwMultisigUtxoConfiguredAnchorStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"signingPolicySignatures\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"}],\"internalType\":\"structIFdc2Verification.Fdc2Signatures\",\"name\":\"signatures\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFdc2Hub.Fdc2ResponseHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"uint32\",\"name\":\"accountIndex\",\"type\":\"uint32\"},{\"internalType\":\"bytes[]\",\"name\":\"publicKeys\",\"type\":\"bytes[]\"},{\"internalType\":\"uint64\",\"name\":\"threshold\",\"type\":\"uint64\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"genesisAnchorTxid\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"genesisAnchorVout\",\"type\":\"uint32\"}],\"internalType\":\"structIPMWMultisigUtxoConfigured.Anchor[]\",\"name\":\"anchors\",\"type\":\"tuple[]\"}],\"internalType\":\"structIPMWMultisigUtxoConfigured.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumIPMWMultisigUtxoConfigured.PMWMultisigUtxoStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structIPMWMultisigUtxoConfigured.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structIPMWMultisigUtxoConfigured.Proof\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"pmwMultisigUtxoConfiguredProofStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint32\",\"name\":\"accountIndex\",\"type\":\"uint32\"},{\"internalType\":\"bytes[]\",\"name\":\"publicKeys\",\"type\":\"bytes[]\"},{\"internalType\":\"uint64\",\"name\":\"threshold\",\"type\":\"uint64\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"genesisAnchorTxid\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"genesisAnchorVout\",\"type\":\"uint32\"}],\"internalType\":\"structIPMWMultisigUtxoConfigured.Anchor[]\",\"name\":\"anchors\",\"type\":\"tuple[]\"}],\"internalType\":\"structIPMWMultisigUtxoConfigured.RequestBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"pmwMultisigUtxoConfiguredRequestBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"enumIPMWMultisigUtxoConfigured.PMWMultisigUtxoStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structIPMWMultisigUtxoConfigured.ResponseBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"pmwMultisigUtxoConfiguredResponseBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"signingPolicySignatures\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"}],\"internalType\":\"structIFdc2Verification.Fdc2Signatures\",\"name\":\"signatures\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFdc2Hub.Fdc2ResponseHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"senderAddress\",\"type\":\"string\"},{\"internalType\":\"uint64\",\"name\":\"paymentId\",\"type\":\"uint64\"}],\"internalType\":\"structIPMWPaymentStatus.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"tokenId\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"},{\"internalType\":\"uint8\",\"name\":\"transactionStatus\",\"type\":\"uint8\"},{\"internalType\":\"string\",\"name\":\"revertReason\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"receivedAmount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"transactionFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"transactionId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"blockNumber\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"blockTimestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIPMWPaymentStatus.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structIPMWPaymentStatus.Proof\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"pmwPaymentStatusProofStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"senderAddress\",\"type\":\"string\"},{\"internalType\":\"uint64\",\"name\":\"paymentId\",\"type\":\"uint64\"}],\"internalType\":\"structIPMWPaymentStatus.RequestBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"pmwPaymentStatusRequestBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"tokenId\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"},{\"internalType\":\"uint8\",\"name\":\"transactionStatus\",\"type\":\"uint8\"},{\"internalType\":\"string\",\"name\":\"revertReason\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"receivedAmount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"transactionFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"transactionId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"blockNumber\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"blockTimestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIPMWPaymentStatus.ResponseBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"pmwPaymentStatusResponseBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"signingPolicySignatures\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"}],\"internalType\":\"structIFdc2Verification.Fdc2Signatures\",\"name\":\"signatures\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFdc2Hub.Fdc2ResponseHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"teeProxyId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"challenge\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeAvailabilityCheck.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumITeeAvailabilityCheck.AvailabilityCheckStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"uint64\",\"name\":\"teeTimestamp\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"initialSigningPolicyId\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"lastSigningPolicyId\",\"type\":\"uint32\"},{\"components\":[{\"internalType\":\"bytes\",\"name\":\"systemState\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"systemStateVersion\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"state\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"stateVersion\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeAvailabilityCheck.TeeState\",\"name\":\"state\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.Proof\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"availabilityCheckProofStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"teeProxyId\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"url\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"challenge\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeAvailabilityCheck.RequestBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"availabilityCheckRequestBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"enumITeeAvailabilityCheck.AvailabilityCheckStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"uint64\",\"name\":\"teeTimestamp\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"codeHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"platform\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"initialSigningPolicyId\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"lastSigningPolicyId\",\"type\":\"uint32\"},{\"components\":[{\"internalType\":\"bytes\",\"name\":\"systemState\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"systemStateVersion\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"state\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"stateVersion\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeAvailabilityCheck.TeeState\",\"name\":\"state\",\"type\":\"tuple\"}],\"internalType\":\"structITeeAvailabilityCheck.ResponseBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"availabilityCheckResponseBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"systemState\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"systemStateVersion\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"state\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"stateVersion\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeAvailabilityCheck.TeeState\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"availabilityCheckTeeStateStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"genesisAnchorTxid\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"genesisAnchorVout\",\"type\":\"uint32\"}],\"internalType\":\"structIBtcAccountConfigured.Anchor\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"btcAccountConfiguredAnchorStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"signingPolicySignatures\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"}],\"internalType\":\"structIFdc2Verification.Fdc2Signatures\",\"name\":\"signatures\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFdc2Hub.Fdc2ResponseHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"uint32\",\"name\":\"accountIndex\",\"type\":\"uint32\"},{\"internalType\":\"bytes[]\",\"name\":\"publicKeys\",\"type\":\"bytes[]\"},{\"internalType\":\"uint64\",\"name\":\"threshold\",\"type\":\"uint64\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"genesisAnchorTxid\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"genesisAnchorVout\",\"type\":\"uint32\"}],\"internalType\":\"structIBtcAccountConfigured.Anchor[]\",\"name\":\"anchors\",\"type\":\"tuple[]\"}],\"internalType\":\"structIBtcAccountConfigured.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumIBtcAccountConfigured.BtcAccountStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structIBtcAccountConfigured.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structIBtcAccountConfigured.Proof\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"btcAccountConfiguredProofStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint32\",\"name\":\"accountIndex\",\"type\":\"uint32\"},{\"internalType\":\"bytes[]\",\"name\":\"publicKeys\",\"type\":\"bytes[]\"},{\"internalType\":\"uint64\",\"name\":\"threshold\",\"type\":\"uint64\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"genesisAnchorTxid\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"genesisAnchorVout\",\"type\":\"uint32\"}],\"internalType\":\"structIBtcAccountConfigured.Anchor[]\",\"name\":\"anchors\",\"type\":\"tuple[]\"}],\"internalType\":\"structIBtcAccountConfigured.RequestBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"btcAccountConfiguredRequestBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"enumIBtcAccountConfigured.BtcAccountStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"}],\"internalType\":\"structIBtcAccountConfigured.ResponseBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"btcAccountConfiguredResponseBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"signingPolicySignatures\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"}],\"internalType\":\"structIFdc2Verification.Fdc2Signatures\",\"name\":\"signatures\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFdc2Hub.Fdc2ResponseHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"walletRegistry\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"accountIndex\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"derivationIndex\",\"type\":\"uint32\"}],\"internalType\":\"structIBtcWalletAddress.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"string\",\"name\":\"receivingAddress\",\"type\":\"string\"}],\"internalType\":\"structIBtcWalletAddress.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structIBtcWalletAddress.Proof\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"btcWalletAddressProofStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"walletRegistry\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"accountIndex\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"derivationIndex\",\"type\":\"uint32\"}],\"internalType\":\"structIBtcWalletAddress.RequestBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"btcWalletAddressRequestBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"receivingAddress\",\"type\":\"string\"}],\"internalType\":\"structIBtcWalletAddress.ResponseBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"btcWalletAddressResponseBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"signingPolicySignatures\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"}],\"internalType\":\"structIFdc2Verification.Fdc2Signatures\",\"name\":\"signatures\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFdc2Hub.Fdc2ResponseHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"string\",\"name\":\"senderAddress\",\"type\":\"string\"},{\"internalType\":\"uint64\",\"name\":\"sequencePosition\",\"type\":\"uint64\"},{\"internalType\":\"uint32\",\"name\":\"attempt\",\"type\":\"uint32\"},{\"internalType\":\"uint64\",\"name\":\"eligibleGeneration\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"packageHash\",\"type\":\"bytes32\"}],\"internalType\":\"structICspProposalCheck.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"proposerAddress\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"score\",\"type\":\"uint64\"},{\"internalType\":\"uint32\",\"name\":\"paymentCount\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"chainCommitmentHash\",\"type\":\"bytes32\"}],\"internalType\":\"structICspProposalCheck.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structICspProposalCheck.Proof\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"cspProposalCheckProofStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"senderAddress\",\"type\":\"string\"},{\"internalType\":\"uint64\",\"name\":\"sequencePosition\",\"type\":\"uint64\"},{\"internalType\":\"uint32\",\"name\":\"attempt\",\"type\":\"uint32\"},{\"internalType\":\"uint64\",\"name\":\"eligibleGeneration\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"packageHash\",\"type\":\"bytes32\"}],\"internalType\":\"structICspProposalCheck.RequestBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"cspProposalCheckRequestBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"proposerAddress\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"score\",\"type\":\"uint64\"},{\"internalType\":\"uint32\",\"name\":\"paymentCount\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"chainCommitmentHash\",\"type\":\"bytes32\"}],\"internalType\":\"structICspProposalCheck.ResponseBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"cspProposalCheckResponseBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"}],\"internalType\":\"structIFdc2Hub.Fdc2RequestHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"internalType\":\"bytes\",\"name\":\"requestBody\",\"type\":\"bytes\"}],\"internalType\":\"structIFdc2Hub.Fdc2AttestationRequest\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"fdc2AttestationRequestStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"}],\"internalType\":\"structIFdc2Hub.Fdc2RequestHeader\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"fdc2RequestHeaderStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFdc2Hub.Fdc2ResponseHeader\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"fdc2ResponseHeaderStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"signingPolicySignatures\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"}],\"internalType\":\"structIFdc2Verification.Fdc2Signatures\",\"name\":\"signatures\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFdc2Hub.Fdc2ResponseHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"},{\"internalType\":\"bytes[]\",\"name\":\"publicKeys\",\"type\":\"bytes[]\"},{\"internalType\":\"uint64\",\"name\":\"threshold\",\"type\":\"uint64\"}],\"internalType\":\"structINativeNonceAccountConfigured.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumINativeNonceAccountConfigured.NativeNonceAccountStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"uint64\",\"name\":\"sequence\",\"type\":\"uint64\"}],\"internalType\":\"structINativeNonceAccountConfigured.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structINativeNonceAccountConfigured.Proof\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"nativeNonceAccountConfiguredProofStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"accountAddress\",\"type\":\"string\"},{\"internalType\":\"bytes[]\",\"name\":\"publicKeys\",\"type\":\"bytes[]\"},{\"internalType\":\"uint64\",\"name\":\"threshold\",\"type\":\"uint64\"}],\"internalType\":\"structINativeNonceAccountConfigured.RequestBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"nativeNonceAccountConfiguredRequestBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"enumINativeNonceAccountConfigured.NativeNonceAccountStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"uint64\",\"name\":\"sequence\",\"type\":\"uint64\"}],\"internalType\":\"structINativeNonceAccountConfigured.ResponseBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"nativeNonceAccountConfiguredResponseBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"signingPolicySignatures\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"}],\"internalType\":\"structIFdc2Verification.Fdc2Signatures\",\"name\":\"signatures\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFdc2Hub.Fdc2ResponseHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"transactionId\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"outputIndex\",\"type\":\"uint32\"},{\"internalType\":\"string\",\"name\":\"receivingAddress\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"tokenId\",\"type\":\"bytes\"},{\"internalType\":\"uint16\",\"name\":\"minConfirmations\",\"type\":\"uint16\"},{\"internalType\":\"uint32\",\"name\":\"inputIndex\",\"type\":\"uint32\"}],\"internalType\":\"structIWalletDeposit.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"memo\",\"type\":\"bytes\"},{\"internalType\":\"uint64\",\"name\":\"blockNumber\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"blockTimestamp\",\"type\":\"uint64\"},{\"internalType\":\"string\",\"name\":\"inputAddress\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"inputAddressHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"inputSighashTypes\",\"type\":\"bytes\"}],\"internalType\":\"structIWalletDeposit.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structIWalletDeposit.Proof\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"walletDepositProofStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"transactionId\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"outputIndex\",\"type\":\"uint32\"},{\"internalType\":\"string\",\"name\":\"receivingAddress\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"tokenId\",\"type\":\"bytes\"},{\"internalType\":\"uint16\",\"name\":\"minConfirmations\",\"type\":\"uint16\"},{\"internalType\":\"uint32\",\"name\":\"inputIndex\",\"type\":\"uint32\"}],\"internalType\":\"structIWalletDeposit.RequestBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"walletDepositRequestBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"memo\",\"type\":\"bytes\"},{\"internalType\":\"uint64\",\"name\":\"blockNumber\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"blockTimestamp\",\"type\":\"uint64\"},{\"internalType\":\"string\",\"name\":\"inputAddress\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"inputAddressHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"inputSighashTypes\",\"type\":\"bytes\"}],\"internalType\":\"structIWalletDeposit.ResponseBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"walletDepositResponseBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"signingPolicySignatures\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"}],\"internalType\":\"structIFdc2Verification.Fdc2Signatures\",\"name\":\"signatures\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFdc2Hub.Fdc2ResponseHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"senderAddress\",\"type\":\"string\"},{\"internalType\":\"uint64\",\"name\":\"operationId\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"resolutionTransactionId\",\"type\":\"bytes32\"}],\"internalType\":\"structIWalletOperationStatus.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"enumIWalletOperationStatus.OperationKind\",\"name\":\"kind\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"tokenId\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"nullified\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"transactionFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"transactionId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"blockNumber\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"blockTimestamp\",\"type\":\"uint64\"},{\"internalType\":\"enumIWalletOperationStatus.OperationResolution\",\"name\":\"resolution\",\"type\":\"uint8\"}],\"internalType\":\"structIWalletOperationStatus.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structIWalletOperationStatus.Proof\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"walletOperationStatusProofStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"senderAddress\",\"type\":\"string\"},{\"internalType\":\"uint64\",\"name\":\"operationId\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"resolutionTransactionId\",\"type\":\"bytes32\"}],\"internalType\":\"structIWalletOperationStatus.RequestBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"walletOperationStatusRequestBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"enumIWalletOperationStatus.OperationKind\",\"name\":\"kind\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"tokenId\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"nullified\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"transactionFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"transactionId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"blockNumber\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"blockTimestamp\",\"type\":\"uint64\"},{\"internalType\":\"enumIWalletOperationStatus.OperationResolution\",\"name\":\"resolution\",\"type\":\"uint8\"}],\"internalType\":\"structIWalletOperationStatus.ResponseBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"walletOperationStatusResponseBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"signingPolicySignatures\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"}],\"internalType\":\"structIFdc2Verification.Fdc2Signatures\",\"name\":\"signatures\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFdc2Hub.Fdc2ResponseHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"senderAddress\",\"type\":\"string\"},{\"internalType\":\"uint64\",\"name\":\"paymentId\",\"type\":\"uint64\"}],\"internalType\":\"structIWalletPaymentStatus.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"tokenId\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"},{\"internalType\":\"uint8\",\"name\":\"transactionStatus\",\"type\":\"uint8\"},{\"internalType\":\"string\",\"name\":\"revertReason\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"receivedAmount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"transactionFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"transactionId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"blockNumber\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"blockTimestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIWalletPaymentStatus.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structIWalletPaymentStatus.Proof\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"walletPaymentStatusProofStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"senderAddress\",\"type\":\"string\"},{\"internalType\":\"uint64\",\"name\":\"paymentId\",\"type\":\"uint64\"}],\"internalType\":\"structIWalletPaymentStatus.RequestBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"walletPaymentStatusRequestBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"recipientAddress\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"tokenId\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"paymentReference\",\"type\":\"bytes32\"},{\"internalType\":\"uint8\",\"name\":\"transactionStatus\",\"type\":\"uint8\"},{\"internalType\":\"string\",\"name\":\"revertReason\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"receivedAmount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"transactionFee\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"transactionId\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"blockNumber\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"blockTimestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIWalletPaymentStatus.ResponseBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"walletPaymentStatusResponseBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint64\",\"name\":\"sequencePosition\",\"type\":\"uint64\"},{\"internalType\":\"uint32\",\"name\":\"attemptCount\",\"type\":\"uint32\"}],\"internalType\":\"structIWalletSettlement.PositionAttempts\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"walletSettlementPositionAttemptsStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"components\":[{\"internalType\":\"bytes\",\"name\":\"signingPolicySignatures\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"teeSignatures\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"r\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"s\",\"type\":\"bytes32\"}],\"internalType\":\"structSignature[]\",\"name\":\"cosignerSignatures\",\"type\":\"tuple[]\"}],\"internalType\":\"structIFdc2Verification.Fdc2Signatures\",\"name\":\"signatures\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"attestationType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"thresholdBIPS\",\"type\":\"uint16\"},{\"internalType\":\"address\",\"name\":\"proofOwner\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structIFdc2Hub.Fdc2ResponseHeader\",\"name\":\"header\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"senderAddress\",\"type\":\"string\"},{\"internalType\":\"uint64\",\"name\":\"firstSequencePosition\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"count\",\"type\":\"uint64\"}],\"internalType\":\"structIWalletSettlement.RequestBody\",\"name\":\"requestBody\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"actualFee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"authorisedFee\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"uint64\",\"name\":\"sequencePosition\",\"type\":\"uint64\"},{\"internalType\":\"uint32\",\"name\":\"attemptCount\",\"type\":\"uint32\"}],\"internalType\":\"structIWalletSettlement.PositionAttempts[]\",\"name\":\"multiAttemptPositions\",\"type\":\"tuple[]\"}],\"internalType\":\"structIWalletSettlement.ResponseBody\",\"name\":\"responseBody\",\"type\":\"tuple\"}],\"internalType\":\"structIWalletSettlement.Proof\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"walletSettlementProofStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"senderAddress\",\"type\":\"string\"},{\"internalType\":\"uint64\",\"name\":\"firstSequencePosition\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"count\",\"type\":\"uint64\"}],\"internalType\":\"structIWalletSettlement.RequestBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"walletSettlementRequestBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"actualFee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"authorisedFee\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"uint64\",\"name\":\"sequencePosition\",\"type\":\"uint64\"},{\"internalType\":\"uint32\",\"name\":\"attemptCount\",\"type\":\"uint32\"}],\"internalType\":\"structIWalletSettlement.PositionAttempts[]\",\"name\":\"multiAttemptPositions\",\"type\":\"tuple[]\"}],\"internalType\":\"structIWalletSettlement.ResponseBody\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"walletSettlementResponseBodyStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // Fdc2ABI is the input ABI used to generate the binding from.
@@ -443,6 +552,216 @@ func (_Fdc2 *Fdc2TransactorSession) AvailabilityCheckTeeStateStruct(arg0 ITeeAva
 	return _Fdc2.Contract.AvailabilityCheckTeeStateStruct(&_Fdc2.TransactOpts, arg0)
 }
 
+// BtcAccountConfiguredAnchorStruct is a paid mutator transaction binding the contract method 0xda332262.
+//
+// Solidity: function btcAccountConfiguredAnchorStruct((bytes32,uint32) ) returns()
+func (_Fdc2 *Fdc2Transactor) BtcAccountConfiguredAnchorStruct(opts *bind.TransactOpts, arg0 IBtcAccountConfiguredAnchor) (*types.Transaction, error) {
+	return _Fdc2.contract.Transact(opts, "btcAccountConfiguredAnchorStruct", arg0)
+}
+
+// BtcAccountConfiguredAnchorStruct is a paid mutator transaction binding the contract method 0xda332262.
+//
+// Solidity: function btcAccountConfiguredAnchorStruct((bytes32,uint32) ) returns()
+func (_Fdc2 *Fdc2Session) BtcAccountConfiguredAnchorStruct(arg0 IBtcAccountConfiguredAnchor) (*types.Transaction, error) {
+	return _Fdc2.Contract.BtcAccountConfiguredAnchorStruct(&_Fdc2.TransactOpts, arg0)
+}
+
+// BtcAccountConfiguredAnchorStruct is a paid mutator transaction binding the contract method 0xda332262.
+//
+// Solidity: function btcAccountConfiguredAnchorStruct((bytes32,uint32) ) returns()
+func (_Fdc2 *Fdc2TransactorSession) BtcAccountConfiguredAnchorStruct(arg0 IBtcAccountConfiguredAnchor) (*types.Transaction, error) {
+	return _Fdc2.Contract.BtcAccountConfiguredAnchorStruct(&_Fdc2.TransactOpts, arg0)
+}
+
+// BtcAccountConfiguredProofStruct is a paid mutator transaction binding the contract method 0xea3e8eb5.
+//
+// Solidity: function btcAccountConfiguredProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(uint32,bytes[],uint64,(bytes32,uint32)[]),(uint8,string)) ) returns()
+func (_Fdc2 *Fdc2Transactor) BtcAccountConfiguredProofStruct(opts *bind.TransactOpts, arg0 IBtcAccountConfiguredProof) (*types.Transaction, error) {
+	return _Fdc2.contract.Transact(opts, "btcAccountConfiguredProofStruct", arg0)
+}
+
+// BtcAccountConfiguredProofStruct is a paid mutator transaction binding the contract method 0xea3e8eb5.
+//
+// Solidity: function btcAccountConfiguredProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(uint32,bytes[],uint64,(bytes32,uint32)[]),(uint8,string)) ) returns()
+func (_Fdc2 *Fdc2Session) BtcAccountConfiguredProofStruct(arg0 IBtcAccountConfiguredProof) (*types.Transaction, error) {
+	return _Fdc2.Contract.BtcAccountConfiguredProofStruct(&_Fdc2.TransactOpts, arg0)
+}
+
+// BtcAccountConfiguredProofStruct is a paid mutator transaction binding the contract method 0xea3e8eb5.
+//
+// Solidity: function btcAccountConfiguredProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(uint32,bytes[],uint64,(bytes32,uint32)[]),(uint8,string)) ) returns()
+func (_Fdc2 *Fdc2TransactorSession) BtcAccountConfiguredProofStruct(arg0 IBtcAccountConfiguredProof) (*types.Transaction, error) {
+	return _Fdc2.Contract.BtcAccountConfiguredProofStruct(&_Fdc2.TransactOpts, arg0)
+}
+
+// BtcAccountConfiguredRequestBodyStruct is a paid mutator transaction binding the contract method 0x391598c2.
+//
+// Solidity: function btcAccountConfiguredRequestBodyStruct((uint32,bytes[],uint64,(bytes32,uint32)[]) ) returns()
+func (_Fdc2 *Fdc2Transactor) BtcAccountConfiguredRequestBodyStruct(opts *bind.TransactOpts, arg0 IBtcAccountConfiguredRequestBody) (*types.Transaction, error) {
+	return _Fdc2.contract.Transact(opts, "btcAccountConfiguredRequestBodyStruct", arg0)
+}
+
+// BtcAccountConfiguredRequestBodyStruct is a paid mutator transaction binding the contract method 0x391598c2.
+//
+// Solidity: function btcAccountConfiguredRequestBodyStruct((uint32,bytes[],uint64,(bytes32,uint32)[]) ) returns()
+func (_Fdc2 *Fdc2Session) BtcAccountConfiguredRequestBodyStruct(arg0 IBtcAccountConfiguredRequestBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.BtcAccountConfiguredRequestBodyStruct(&_Fdc2.TransactOpts, arg0)
+}
+
+// BtcAccountConfiguredRequestBodyStruct is a paid mutator transaction binding the contract method 0x391598c2.
+//
+// Solidity: function btcAccountConfiguredRequestBodyStruct((uint32,bytes[],uint64,(bytes32,uint32)[]) ) returns()
+func (_Fdc2 *Fdc2TransactorSession) BtcAccountConfiguredRequestBodyStruct(arg0 IBtcAccountConfiguredRequestBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.BtcAccountConfiguredRequestBodyStruct(&_Fdc2.TransactOpts, arg0)
+}
+
+// BtcAccountConfiguredResponseBodyStruct is a paid mutator transaction binding the contract method 0x035333d4.
+//
+// Solidity: function btcAccountConfiguredResponseBodyStruct((uint8,string) ) returns()
+func (_Fdc2 *Fdc2Transactor) BtcAccountConfiguredResponseBodyStruct(opts *bind.TransactOpts, arg0 IBtcAccountConfiguredResponseBody) (*types.Transaction, error) {
+	return _Fdc2.contract.Transact(opts, "btcAccountConfiguredResponseBodyStruct", arg0)
+}
+
+// BtcAccountConfiguredResponseBodyStruct is a paid mutator transaction binding the contract method 0x035333d4.
+//
+// Solidity: function btcAccountConfiguredResponseBodyStruct((uint8,string) ) returns()
+func (_Fdc2 *Fdc2Session) BtcAccountConfiguredResponseBodyStruct(arg0 IBtcAccountConfiguredResponseBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.BtcAccountConfiguredResponseBodyStruct(&_Fdc2.TransactOpts, arg0)
+}
+
+// BtcAccountConfiguredResponseBodyStruct is a paid mutator transaction binding the contract method 0x035333d4.
+//
+// Solidity: function btcAccountConfiguredResponseBodyStruct((uint8,string) ) returns()
+func (_Fdc2 *Fdc2TransactorSession) BtcAccountConfiguredResponseBodyStruct(arg0 IBtcAccountConfiguredResponseBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.BtcAccountConfiguredResponseBodyStruct(&_Fdc2.TransactOpts, arg0)
+}
+
+// BtcWalletAddressProofStruct is a paid mutator transaction binding the contract method 0xd124a2e7.
+//
+// Solidity: function btcWalletAddressProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(address,bytes32,uint32,uint32),(string)) ) returns()
+func (_Fdc2 *Fdc2Transactor) BtcWalletAddressProofStruct(opts *bind.TransactOpts, arg0 IBtcWalletAddressProof) (*types.Transaction, error) {
+	return _Fdc2.contract.Transact(opts, "btcWalletAddressProofStruct", arg0)
+}
+
+// BtcWalletAddressProofStruct is a paid mutator transaction binding the contract method 0xd124a2e7.
+//
+// Solidity: function btcWalletAddressProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(address,bytes32,uint32,uint32),(string)) ) returns()
+func (_Fdc2 *Fdc2Session) BtcWalletAddressProofStruct(arg0 IBtcWalletAddressProof) (*types.Transaction, error) {
+	return _Fdc2.Contract.BtcWalletAddressProofStruct(&_Fdc2.TransactOpts, arg0)
+}
+
+// BtcWalletAddressProofStruct is a paid mutator transaction binding the contract method 0xd124a2e7.
+//
+// Solidity: function btcWalletAddressProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(address,bytes32,uint32,uint32),(string)) ) returns()
+func (_Fdc2 *Fdc2TransactorSession) BtcWalletAddressProofStruct(arg0 IBtcWalletAddressProof) (*types.Transaction, error) {
+	return _Fdc2.Contract.BtcWalletAddressProofStruct(&_Fdc2.TransactOpts, arg0)
+}
+
+// BtcWalletAddressRequestBodyStruct is a paid mutator transaction binding the contract method 0xefc943ea.
+//
+// Solidity: function btcWalletAddressRequestBodyStruct((address,bytes32,uint32,uint32) ) returns()
+func (_Fdc2 *Fdc2Transactor) BtcWalletAddressRequestBodyStruct(opts *bind.TransactOpts, arg0 IBtcWalletAddressRequestBody) (*types.Transaction, error) {
+	return _Fdc2.contract.Transact(opts, "btcWalletAddressRequestBodyStruct", arg0)
+}
+
+// BtcWalletAddressRequestBodyStruct is a paid mutator transaction binding the contract method 0xefc943ea.
+//
+// Solidity: function btcWalletAddressRequestBodyStruct((address,bytes32,uint32,uint32) ) returns()
+func (_Fdc2 *Fdc2Session) BtcWalletAddressRequestBodyStruct(arg0 IBtcWalletAddressRequestBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.BtcWalletAddressRequestBodyStruct(&_Fdc2.TransactOpts, arg0)
+}
+
+// BtcWalletAddressRequestBodyStruct is a paid mutator transaction binding the contract method 0xefc943ea.
+//
+// Solidity: function btcWalletAddressRequestBodyStruct((address,bytes32,uint32,uint32) ) returns()
+func (_Fdc2 *Fdc2TransactorSession) BtcWalletAddressRequestBodyStruct(arg0 IBtcWalletAddressRequestBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.BtcWalletAddressRequestBodyStruct(&_Fdc2.TransactOpts, arg0)
+}
+
+// BtcWalletAddressResponseBodyStruct is a paid mutator transaction binding the contract method 0x11565336.
+//
+// Solidity: function btcWalletAddressResponseBodyStruct((string) ) returns()
+func (_Fdc2 *Fdc2Transactor) BtcWalletAddressResponseBodyStruct(opts *bind.TransactOpts, arg0 IBtcWalletAddressResponseBody) (*types.Transaction, error) {
+	return _Fdc2.contract.Transact(opts, "btcWalletAddressResponseBodyStruct", arg0)
+}
+
+// BtcWalletAddressResponseBodyStruct is a paid mutator transaction binding the contract method 0x11565336.
+//
+// Solidity: function btcWalletAddressResponseBodyStruct((string) ) returns()
+func (_Fdc2 *Fdc2Session) BtcWalletAddressResponseBodyStruct(arg0 IBtcWalletAddressResponseBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.BtcWalletAddressResponseBodyStruct(&_Fdc2.TransactOpts, arg0)
+}
+
+// BtcWalletAddressResponseBodyStruct is a paid mutator transaction binding the contract method 0x11565336.
+//
+// Solidity: function btcWalletAddressResponseBodyStruct((string) ) returns()
+func (_Fdc2 *Fdc2TransactorSession) BtcWalletAddressResponseBodyStruct(arg0 IBtcWalletAddressResponseBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.BtcWalletAddressResponseBodyStruct(&_Fdc2.TransactOpts, arg0)
+}
+
+// CspProposalCheckProofStruct is a paid mutator transaction binding the contract method 0x5ce25596.
+//
+// Solidity: function cspProposalCheckProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(string,uint64,uint32,uint64,bytes32),(address,uint64,uint32,bytes32)) ) returns()
+func (_Fdc2 *Fdc2Transactor) CspProposalCheckProofStruct(opts *bind.TransactOpts, arg0 ICspProposalCheckProof) (*types.Transaction, error) {
+	return _Fdc2.contract.Transact(opts, "cspProposalCheckProofStruct", arg0)
+}
+
+// CspProposalCheckProofStruct is a paid mutator transaction binding the contract method 0x5ce25596.
+//
+// Solidity: function cspProposalCheckProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(string,uint64,uint32,uint64,bytes32),(address,uint64,uint32,bytes32)) ) returns()
+func (_Fdc2 *Fdc2Session) CspProposalCheckProofStruct(arg0 ICspProposalCheckProof) (*types.Transaction, error) {
+	return _Fdc2.Contract.CspProposalCheckProofStruct(&_Fdc2.TransactOpts, arg0)
+}
+
+// CspProposalCheckProofStruct is a paid mutator transaction binding the contract method 0x5ce25596.
+//
+// Solidity: function cspProposalCheckProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(string,uint64,uint32,uint64,bytes32),(address,uint64,uint32,bytes32)) ) returns()
+func (_Fdc2 *Fdc2TransactorSession) CspProposalCheckProofStruct(arg0 ICspProposalCheckProof) (*types.Transaction, error) {
+	return _Fdc2.Contract.CspProposalCheckProofStruct(&_Fdc2.TransactOpts, arg0)
+}
+
+// CspProposalCheckRequestBodyStruct is a paid mutator transaction binding the contract method 0xb78fa222.
+//
+// Solidity: function cspProposalCheckRequestBodyStruct((string,uint64,uint32,uint64,bytes32) ) returns()
+func (_Fdc2 *Fdc2Transactor) CspProposalCheckRequestBodyStruct(opts *bind.TransactOpts, arg0 ICspProposalCheckRequestBody) (*types.Transaction, error) {
+	return _Fdc2.contract.Transact(opts, "cspProposalCheckRequestBodyStruct", arg0)
+}
+
+// CspProposalCheckRequestBodyStruct is a paid mutator transaction binding the contract method 0xb78fa222.
+//
+// Solidity: function cspProposalCheckRequestBodyStruct((string,uint64,uint32,uint64,bytes32) ) returns()
+func (_Fdc2 *Fdc2Session) CspProposalCheckRequestBodyStruct(arg0 ICspProposalCheckRequestBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.CspProposalCheckRequestBodyStruct(&_Fdc2.TransactOpts, arg0)
+}
+
+// CspProposalCheckRequestBodyStruct is a paid mutator transaction binding the contract method 0xb78fa222.
+//
+// Solidity: function cspProposalCheckRequestBodyStruct((string,uint64,uint32,uint64,bytes32) ) returns()
+func (_Fdc2 *Fdc2TransactorSession) CspProposalCheckRequestBodyStruct(arg0 ICspProposalCheckRequestBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.CspProposalCheckRequestBodyStruct(&_Fdc2.TransactOpts, arg0)
+}
+
+// CspProposalCheckResponseBodyStruct is a paid mutator transaction binding the contract method 0x4e0df24b.
+//
+// Solidity: function cspProposalCheckResponseBodyStruct((address,uint64,uint32,bytes32) ) returns()
+func (_Fdc2 *Fdc2Transactor) CspProposalCheckResponseBodyStruct(opts *bind.TransactOpts, arg0 ICspProposalCheckResponseBody) (*types.Transaction, error) {
+	return _Fdc2.contract.Transact(opts, "cspProposalCheckResponseBodyStruct", arg0)
+}
+
+// CspProposalCheckResponseBodyStruct is a paid mutator transaction binding the contract method 0x4e0df24b.
+//
+// Solidity: function cspProposalCheckResponseBodyStruct((address,uint64,uint32,bytes32) ) returns()
+func (_Fdc2 *Fdc2Session) CspProposalCheckResponseBodyStruct(arg0 ICspProposalCheckResponseBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.CspProposalCheckResponseBodyStruct(&_Fdc2.TransactOpts, arg0)
+}
+
+// CspProposalCheckResponseBodyStruct is a paid mutator transaction binding the contract method 0x4e0df24b.
+//
+// Solidity: function cspProposalCheckResponseBodyStruct((address,uint64,uint32,bytes32) ) returns()
+func (_Fdc2 *Fdc2TransactorSession) CspProposalCheckResponseBodyStruct(arg0 ICspProposalCheckResponseBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.CspProposalCheckResponseBodyStruct(&_Fdc2.TransactOpts, arg0)
+}
+
 // Fdc2AttestationRequestStruct is a paid mutator transaction binding the contract method 0xdfce7e8c.
 //
 // Solidity: function fdc2AttestationRequestStruct(((bytes32,bytes32,uint16,address),bytes) ) returns()
@@ -506,275 +825,338 @@ func (_Fdc2 *Fdc2TransactorSession) Fdc2ResponseHeaderStruct(arg0 IFdc2HubFdc2Re
 	return _Fdc2.Contract.Fdc2ResponseHeaderStruct(&_Fdc2.TransactOpts, arg0)
 }
 
-// PmwFeeProofProofStruct is a paid mutator transaction binding the contract method 0xa2fc04c5.
+// NativeNonceAccountConfiguredProofStruct is a paid mutator transaction binding the contract method 0x1b4bf46c.
 //
-// Solidity: function pmwFeeProofProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(bytes32,string,uint64,uint64,uint64),(uint64,uint256,uint256)) ) returns()
-func (_Fdc2 *Fdc2Transactor) PmwFeeProofProofStruct(opts *bind.TransactOpts, arg0 IPMWFeeProofProof) (*types.Transaction, error) {
-	return _Fdc2.contract.Transact(opts, "pmwFeeProofProofStruct", arg0)
+// Solidity: function nativeNonceAccountConfiguredProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(string,bytes[],uint64),(uint8,uint64)) ) returns()
+func (_Fdc2 *Fdc2Transactor) NativeNonceAccountConfiguredProofStruct(opts *bind.TransactOpts, arg0 INativeNonceAccountConfiguredProof) (*types.Transaction, error) {
+	return _Fdc2.contract.Transact(opts, "nativeNonceAccountConfiguredProofStruct", arg0)
 }
 
-// PmwFeeProofProofStruct is a paid mutator transaction binding the contract method 0xa2fc04c5.
+// NativeNonceAccountConfiguredProofStruct is a paid mutator transaction binding the contract method 0x1b4bf46c.
 //
-// Solidity: function pmwFeeProofProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(bytes32,string,uint64,uint64,uint64),(uint64,uint256,uint256)) ) returns()
-func (_Fdc2 *Fdc2Session) PmwFeeProofProofStruct(arg0 IPMWFeeProofProof) (*types.Transaction, error) {
-	return _Fdc2.Contract.PmwFeeProofProofStruct(&_Fdc2.TransactOpts, arg0)
+// Solidity: function nativeNonceAccountConfiguredProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(string,bytes[],uint64),(uint8,uint64)) ) returns()
+func (_Fdc2 *Fdc2Session) NativeNonceAccountConfiguredProofStruct(arg0 INativeNonceAccountConfiguredProof) (*types.Transaction, error) {
+	return _Fdc2.Contract.NativeNonceAccountConfiguredProofStruct(&_Fdc2.TransactOpts, arg0)
 }
 
-// PmwFeeProofProofStruct is a paid mutator transaction binding the contract method 0xa2fc04c5.
+// NativeNonceAccountConfiguredProofStruct is a paid mutator transaction binding the contract method 0x1b4bf46c.
 //
-// Solidity: function pmwFeeProofProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(bytes32,string,uint64,uint64,uint64),(uint64,uint256,uint256)) ) returns()
-func (_Fdc2 *Fdc2TransactorSession) PmwFeeProofProofStruct(arg0 IPMWFeeProofProof) (*types.Transaction, error) {
-	return _Fdc2.Contract.PmwFeeProofProofStruct(&_Fdc2.TransactOpts, arg0)
+// Solidity: function nativeNonceAccountConfiguredProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(string,bytes[],uint64),(uint8,uint64)) ) returns()
+func (_Fdc2 *Fdc2TransactorSession) NativeNonceAccountConfiguredProofStruct(arg0 INativeNonceAccountConfiguredProof) (*types.Transaction, error) {
+	return _Fdc2.Contract.NativeNonceAccountConfiguredProofStruct(&_Fdc2.TransactOpts, arg0)
 }
 
-// PmwFeeProofRequestBodyStruct is a paid mutator transaction binding the contract method 0x362fe99f.
+// NativeNonceAccountConfiguredRequestBodyStruct is a paid mutator transaction binding the contract method 0x1d7c6400.
 //
-// Solidity: function pmwFeeProofRequestBodyStruct((bytes32,string,uint64,uint64,uint64) ) returns()
-func (_Fdc2 *Fdc2Transactor) PmwFeeProofRequestBodyStruct(opts *bind.TransactOpts, arg0 IPMWFeeProofRequestBody) (*types.Transaction, error) {
-	return _Fdc2.contract.Transact(opts, "pmwFeeProofRequestBodyStruct", arg0)
+// Solidity: function nativeNonceAccountConfiguredRequestBodyStruct((string,bytes[],uint64) ) returns()
+func (_Fdc2 *Fdc2Transactor) NativeNonceAccountConfiguredRequestBodyStruct(opts *bind.TransactOpts, arg0 INativeNonceAccountConfiguredRequestBody) (*types.Transaction, error) {
+	return _Fdc2.contract.Transact(opts, "nativeNonceAccountConfiguredRequestBodyStruct", arg0)
 }
 
-// PmwFeeProofRequestBodyStruct is a paid mutator transaction binding the contract method 0x362fe99f.
+// NativeNonceAccountConfiguredRequestBodyStruct is a paid mutator transaction binding the contract method 0x1d7c6400.
 //
-// Solidity: function pmwFeeProofRequestBodyStruct((bytes32,string,uint64,uint64,uint64) ) returns()
-func (_Fdc2 *Fdc2Session) PmwFeeProofRequestBodyStruct(arg0 IPMWFeeProofRequestBody) (*types.Transaction, error) {
-	return _Fdc2.Contract.PmwFeeProofRequestBodyStruct(&_Fdc2.TransactOpts, arg0)
+// Solidity: function nativeNonceAccountConfiguredRequestBodyStruct((string,bytes[],uint64) ) returns()
+func (_Fdc2 *Fdc2Session) NativeNonceAccountConfiguredRequestBodyStruct(arg0 INativeNonceAccountConfiguredRequestBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.NativeNonceAccountConfiguredRequestBodyStruct(&_Fdc2.TransactOpts, arg0)
 }
 
-// PmwFeeProofRequestBodyStruct is a paid mutator transaction binding the contract method 0x362fe99f.
+// NativeNonceAccountConfiguredRequestBodyStruct is a paid mutator transaction binding the contract method 0x1d7c6400.
 //
-// Solidity: function pmwFeeProofRequestBodyStruct((bytes32,string,uint64,uint64,uint64) ) returns()
-func (_Fdc2 *Fdc2TransactorSession) PmwFeeProofRequestBodyStruct(arg0 IPMWFeeProofRequestBody) (*types.Transaction, error) {
-	return _Fdc2.Contract.PmwFeeProofRequestBodyStruct(&_Fdc2.TransactOpts, arg0)
+// Solidity: function nativeNonceAccountConfiguredRequestBodyStruct((string,bytes[],uint64) ) returns()
+func (_Fdc2 *Fdc2TransactorSession) NativeNonceAccountConfiguredRequestBodyStruct(arg0 INativeNonceAccountConfiguredRequestBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.NativeNonceAccountConfiguredRequestBodyStruct(&_Fdc2.TransactOpts, arg0)
 }
 
-// PmwFeeProofResponseBodyStruct is a paid mutator transaction binding the contract method 0xcf03b2e3.
+// NativeNonceAccountConfiguredResponseBodyStruct is a paid mutator transaction binding the contract method 0x3adb48ea.
 //
-// Solidity: function pmwFeeProofResponseBodyStruct((uint64,uint256,uint256) ) returns()
-func (_Fdc2 *Fdc2Transactor) PmwFeeProofResponseBodyStruct(opts *bind.TransactOpts, arg0 IPMWFeeProofResponseBody) (*types.Transaction, error) {
-	return _Fdc2.contract.Transact(opts, "pmwFeeProofResponseBodyStruct", arg0)
+// Solidity: function nativeNonceAccountConfiguredResponseBodyStruct((uint8,uint64) ) returns()
+func (_Fdc2 *Fdc2Transactor) NativeNonceAccountConfiguredResponseBodyStruct(opts *bind.TransactOpts, arg0 INativeNonceAccountConfiguredResponseBody) (*types.Transaction, error) {
+	return _Fdc2.contract.Transact(opts, "nativeNonceAccountConfiguredResponseBodyStruct", arg0)
 }
 
-// PmwFeeProofResponseBodyStruct is a paid mutator transaction binding the contract method 0xcf03b2e3.
+// NativeNonceAccountConfiguredResponseBodyStruct is a paid mutator transaction binding the contract method 0x3adb48ea.
 //
-// Solidity: function pmwFeeProofResponseBodyStruct((uint64,uint256,uint256) ) returns()
-func (_Fdc2 *Fdc2Session) PmwFeeProofResponseBodyStruct(arg0 IPMWFeeProofResponseBody) (*types.Transaction, error) {
-	return _Fdc2.Contract.PmwFeeProofResponseBodyStruct(&_Fdc2.TransactOpts, arg0)
+// Solidity: function nativeNonceAccountConfiguredResponseBodyStruct((uint8,uint64) ) returns()
+func (_Fdc2 *Fdc2Session) NativeNonceAccountConfiguredResponseBodyStruct(arg0 INativeNonceAccountConfiguredResponseBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.NativeNonceAccountConfiguredResponseBodyStruct(&_Fdc2.TransactOpts, arg0)
 }
 
-// PmwFeeProofResponseBodyStruct is a paid mutator transaction binding the contract method 0xcf03b2e3.
+// NativeNonceAccountConfiguredResponseBodyStruct is a paid mutator transaction binding the contract method 0x3adb48ea.
 //
-// Solidity: function pmwFeeProofResponseBodyStruct((uint64,uint256,uint256) ) returns()
-func (_Fdc2 *Fdc2TransactorSession) PmwFeeProofResponseBodyStruct(arg0 IPMWFeeProofResponseBody) (*types.Transaction, error) {
-	return _Fdc2.Contract.PmwFeeProofResponseBodyStruct(&_Fdc2.TransactOpts, arg0)
+// Solidity: function nativeNonceAccountConfiguredResponseBodyStruct((uint8,uint64) ) returns()
+func (_Fdc2 *Fdc2TransactorSession) NativeNonceAccountConfiguredResponseBodyStruct(arg0 INativeNonceAccountConfiguredResponseBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.NativeNonceAccountConfiguredResponseBodyStruct(&_Fdc2.TransactOpts, arg0)
 }
 
-// PmwMultisigAccountConfiguredProofStruct is a paid mutator transaction binding the contract method 0x1cfce1b7.
+// WalletDepositProofStruct is a paid mutator transaction binding the contract method 0xb5e19d5c.
 //
-// Solidity: function pmwMultisigAccountConfiguredProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(string,bytes[],uint64),(uint8,uint64)) ) returns()
-func (_Fdc2 *Fdc2Transactor) PmwMultisigAccountConfiguredProofStruct(opts *bind.TransactOpts, arg0 IPMWMultisigAccountConfiguredProof) (*types.Transaction, error) {
-	return _Fdc2.contract.Transact(opts, "pmwMultisigAccountConfiguredProofStruct", arg0)
+// Solidity: function walletDepositProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(bytes32,uint32,string,bytes,uint16,uint32),(uint256,bytes,uint64,uint64,string,bytes32,bytes)) ) returns()
+func (_Fdc2 *Fdc2Transactor) WalletDepositProofStruct(opts *bind.TransactOpts, arg0 IWalletDepositProof) (*types.Transaction, error) {
+	return _Fdc2.contract.Transact(opts, "walletDepositProofStruct", arg0)
 }
 
-// PmwMultisigAccountConfiguredProofStruct is a paid mutator transaction binding the contract method 0x1cfce1b7.
+// WalletDepositProofStruct is a paid mutator transaction binding the contract method 0xb5e19d5c.
 //
-// Solidity: function pmwMultisigAccountConfiguredProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(string,bytes[],uint64),(uint8,uint64)) ) returns()
-func (_Fdc2 *Fdc2Session) PmwMultisigAccountConfiguredProofStruct(arg0 IPMWMultisigAccountConfiguredProof) (*types.Transaction, error) {
-	return _Fdc2.Contract.PmwMultisigAccountConfiguredProofStruct(&_Fdc2.TransactOpts, arg0)
+// Solidity: function walletDepositProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(bytes32,uint32,string,bytes,uint16,uint32),(uint256,bytes,uint64,uint64,string,bytes32,bytes)) ) returns()
+func (_Fdc2 *Fdc2Session) WalletDepositProofStruct(arg0 IWalletDepositProof) (*types.Transaction, error) {
+	return _Fdc2.Contract.WalletDepositProofStruct(&_Fdc2.TransactOpts, arg0)
 }
 
-// PmwMultisigAccountConfiguredProofStruct is a paid mutator transaction binding the contract method 0x1cfce1b7.
+// WalletDepositProofStruct is a paid mutator transaction binding the contract method 0xb5e19d5c.
 //
-// Solidity: function pmwMultisigAccountConfiguredProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(string,bytes[],uint64),(uint8,uint64)) ) returns()
-func (_Fdc2 *Fdc2TransactorSession) PmwMultisigAccountConfiguredProofStruct(arg0 IPMWMultisigAccountConfiguredProof) (*types.Transaction, error) {
-	return _Fdc2.Contract.PmwMultisigAccountConfiguredProofStruct(&_Fdc2.TransactOpts, arg0)
+// Solidity: function walletDepositProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(bytes32,uint32,string,bytes,uint16,uint32),(uint256,bytes,uint64,uint64,string,bytes32,bytes)) ) returns()
+func (_Fdc2 *Fdc2TransactorSession) WalletDepositProofStruct(arg0 IWalletDepositProof) (*types.Transaction, error) {
+	return _Fdc2.Contract.WalletDepositProofStruct(&_Fdc2.TransactOpts, arg0)
 }
 
-// PmwMultisigAccountConfiguredRequestBodyStruct is a paid mutator transaction binding the contract method 0xc801f3d6.
+// WalletDepositRequestBodyStruct is a paid mutator transaction binding the contract method 0xe1c4851d.
 //
-// Solidity: function pmwMultisigAccountConfiguredRequestBodyStruct((string,bytes[],uint64) ) returns()
-func (_Fdc2 *Fdc2Transactor) PmwMultisigAccountConfiguredRequestBodyStruct(opts *bind.TransactOpts, arg0 IPMWMultisigAccountConfiguredRequestBody) (*types.Transaction, error) {
-	return _Fdc2.contract.Transact(opts, "pmwMultisigAccountConfiguredRequestBodyStruct", arg0)
+// Solidity: function walletDepositRequestBodyStruct((bytes32,uint32,string,bytes,uint16,uint32) ) returns()
+func (_Fdc2 *Fdc2Transactor) WalletDepositRequestBodyStruct(opts *bind.TransactOpts, arg0 IWalletDepositRequestBody) (*types.Transaction, error) {
+	return _Fdc2.contract.Transact(opts, "walletDepositRequestBodyStruct", arg0)
 }
 
-// PmwMultisigAccountConfiguredRequestBodyStruct is a paid mutator transaction binding the contract method 0xc801f3d6.
+// WalletDepositRequestBodyStruct is a paid mutator transaction binding the contract method 0xe1c4851d.
 //
-// Solidity: function pmwMultisigAccountConfiguredRequestBodyStruct((string,bytes[],uint64) ) returns()
-func (_Fdc2 *Fdc2Session) PmwMultisigAccountConfiguredRequestBodyStruct(arg0 IPMWMultisigAccountConfiguredRequestBody) (*types.Transaction, error) {
-	return _Fdc2.Contract.PmwMultisigAccountConfiguredRequestBodyStruct(&_Fdc2.TransactOpts, arg0)
+// Solidity: function walletDepositRequestBodyStruct((bytes32,uint32,string,bytes,uint16,uint32) ) returns()
+func (_Fdc2 *Fdc2Session) WalletDepositRequestBodyStruct(arg0 IWalletDepositRequestBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.WalletDepositRequestBodyStruct(&_Fdc2.TransactOpts, arg0)
 }
 
-// PmwMultisigAccountConfiguredRequestBodyStruct is a paid mutator transaction binding the contract method 0xc801f3d6.
+// WalletDepositRequestBodyStruct is a paid mutator transaction binding the contract method 0xe1c4851d.
 //
-// Solidity: function pmwMultisigAccountConfiguredRequestBodyStruct((string,bytes[],uint64) ) returns()
-func (_Fdc2 *Fdc2TransactorSession) PmwMultisigAccountConfiguredRequestBodyStruct(arg0 IPMWMultisigAccountConfiguredRequestBody) (*types.Transaction, error) {
-	return _Fdc2.Contract.PmwMultisigAccountConfiguredRequestBodyStruct(&_Fdc2.TransactOpts, arg0)
+// Solidity: function walletDepositRequestBodyStruct((bytes32,uint32,string,bytes,uint16,uint32) ) returns()
+func (_Fdc2 *Fdc2TransactorSession) WalletDepositRequestBodyStruct(arg0 IWalletDepositRequestBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.WalletDepositRequestBodyStruct(&_Fdc2.TransactOpts, arg0)
 }
 
-// PmwMultisigAccountConfiguredResponseBodyStruct is a paid mutator transaction binding the contract method 0xe9681a8f.
+// WalletDepositResponseBodyStruct is a paid mutator transaction binding the contract method 0x45bf6fda.
 //
-// Solidity: function pmwMultisigAccountConfiguredResponseBodyStruct((uint8,uint64) ) returns()
-func (_Fdc2 *Fdc2Transactor) PmwMultisigAccountConfiguredResponseBodyStruct(opts *bind.TransactOpts, arg0 IPMWMultisigAccountConfiguredResponseBody) (*types.Transaction, error) {
-	return _Fdc2.contract.Transact(opts, "pmwMultisigAccountConfiguredResponseBodyStruct", arg0)
+// Solidity: function walletDepositResponseBodyStruct((uint256,bytes,uint64,uint64,string,bytes32,bytes) ) returns()
+func (_Fdc2 *Fdc2Transactor) WalletDepositResponseBodyStruct(opts *bind.TransactOpts, arg0 IWalletDepositResponseBody) (*types.Transaction, error) {
+	return _Fdc2.contract.Transact(opts, "walletDepositResponseBodyStruct", arg0)
 }
 
-// PmwMultisigAccountConfiguredResponseBodyStruct is a paid mutator transaction binding the contract method 0xe9681a8f.
+// WalletDepositResponseBodyStruct is a paid mutator transaction binding the contract method 0x45bf6fda.
 //
-// Solidity: function pmwMultisigAccountConfiguredResponseBodyStruct((uint8,uint64) ) returns()
-func (_Fdc2 *Fdc2Session) PmwMultisigAccountConfiguredResponseBodyStruct(arg0 IPMWMultisigAccountConfiguredResponseBody) (*types.Transaction, error) {
-	return _Fdc2.Contract.PmwMultisigAccountConfiguredResponseBodyStruct(&_Fdc2.TransactOpts, arg0)
+// Solidity: function walletDepositResponseBodyStruct((uint256,bytes,uint64,uint64,string,bytes32,bytes) ) returns()
+func (_Fdc2 *Fdc2Session) WalletDepositResponseBodyStruct(arg0 IWalletDepositResponseBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.WalletDepositResponseBodyStruct(&_Fdc2.TransactOpts, arg0)
 }
 
-// PmwMultisigAccountConfiguredResponseBodyStruct is a paid mutator transaction binding the contract method 0xe9681a8f.
+// WalletDepositResponseBodyStruct is a paid mutator transaction binding the contract method 0x45bf6fda.
 //
-// Solidity: function pmwMultisigAccountConfiguredResponseBodyStruct((uint8,uint64) ) returns()
-func (_Fdc2 *Fdc2TransactorSession) PmwMultisigAccountConfiguredResponseBodyStruct(arg0 IPMWMultisigAccountConfiguredResponseBody) (*types.Transaction, error) {
-	return _Fdc2.Contract.PmwMultisigAccountConfiguredResponseBodyStruct(&_Fdc2.TransactOpts, arg0)
+// Solidity: function walletDepositResponseBodyStruct((uint256,bytes,uint64,uint64,string,bytes32,bytes) ) returns()
+func (_Fdc2 *Fdc2TransactorSession) WalletDepositResponseBodyStruct(arg0 IWalletDepositResponseBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.WalletDepositResponseBodyStruct(&_Fdc2.TransactOpts, arg0)
 }
 
-// PmwMultisigUtxoConfiguredAnchorStruct is a paid mutator transaction binding the contract method 0x5448a34d.
+// WalletOperationStatusProofStruct is a paid mutator transaction binding the contract method 0xea013ca0.
 //
-// Solidity: function pmwMultisigUtxoConfiguredAnchorStruct((bytes32,uint32) ) returns()
-func (_Fdc2 *Fdc2Transactor) PmwMultisigUtxoConfiguredAnchorStruct(opts *bind.TransactOpts, arg0 IPMWMultisigUtxoConfiguredAnchor) (*types.Transaction, error) {
-	return _Fdc2.contract.Transact(opts, "pmwMultisigUtxoConfiguredAnchorStruct", arg0)
+// Solidity: function walletOperationStatusProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(bytes32,string,uint64,bytes32),(uint8,bytes,uint256,bool,uint256,bytes32,uint64,uint64,uint8)) ) returns()
+func (_Fdc2 *Fdc2Transactor) WalletOperationStatusProofStruct(opts *bind.TransactOpts, arg0 IWalletOperationStatusProof) (*types.Transaction, error) {
+	return _Fdc2.contract.Transact(opts, "walletOperationStatusProofStruct", arg0)
 }
 
-// PmwMultisigUtxoConfiguredAnchorStruct is a paid mutator transaction binding the contract method 0x5448a34d.
+// WalletOperationStatusProofStruct is a paid mutator transaction binding the contract method 0xea013ca0.
 //
-// Solidity: function pmwMultisigUtxoConfiguredAnchorStruct((bytes32,uint32) ) returns()
-func (_Fdc2 *Fdc2Session) PmwMultisigUtxoConfiguredAnchorStruct(arg0 IPMWMultisigUtxoConfiguredAnchor) (*types.Transaction, error) {
-	return _Fdc2.Contract.PmwMultisigUtxoConfiguredAnchorStruct(&_Fdc2.TransactOpts, arg0)
+// Solidity: function walletOperationStatusProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(bytes32,string,uint64,bytes32),(uint8,bytes,uint256,bool,uint256,bytes32,uint64,uint64,uint8)) ) returns()
+func (_Fdc2 *Fdc2Session) WalletOperationStatusProofStruct(arg0 IWalletOperationStatusProof) (*types.Transaction, error) {
+	return _Fdc2.Contract.WalletOperationStatusProofStruct(&_Fdc2.TransactOpts, arg0)
 }
 
-// PmwMultisigUtxoConfiguredAnchorStruct is a paid mutator transaction binding the contract method 0x5448a34d.
+// WalletOperationStatusProofStruct is a paid mutator transaction binding the contract method 0xea013ca0.
 //
-// Solidity: function pmwMultisigUtxoConfiguredAnchorStruct((bytes32,uint32) ) returns()
-func (_Fdc2 *Fdc2TransactorSession) PmwMultisigUtxoConfiguredAnchorStruct(arg0 IPMWMultisigUtxoConfiguredAnchor) (*types.Transaction, error) {
-	return _Fdc2.Contract.PmwMultisigUtxoConfiguredAnchorStruct(&_Fdc2.TransactOpts, arg0)
+// Solidity: function walletOperationStatusProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(bytes32,string,uint64,bytes32),(uint8,bytes,uint256,bool,uint256,bytes32,uint64,uint64,uint8)) ) returns()
+func (_Fdc2 *Fdc2TransactorSession) WalletOperationStatusProofStruct(arg0 IWalletOperationStatusProof) (*types.Transaction, error) {
+	return _Fdc2.Contract.WalletOperationStatusProofStruct(&_Fdc2.TransactOpts, arg0)
 }
 
-// PmwMultisigUtxoConfiguredProofStruct is a paid mutator transaction binding the contract method 0x6ef98adf.
+// WalletOperationStatusRequestBodyStruct is a paid mutator transaction binding the contract method 0x98c6d7b9.
 //
-// Solidity: function pmwMultisigUtxoConfiguredProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(uint32,bytes[],uint64,(bytes32,uint32)[]),(uint8,string)) ) returns()
-func (_Fdc2 *Fdc2Transactor) PmwMultisigUtxoConfiguredProofStruct(opts *bind.TransactOpts, arg0 IPMWMultisigUtxoConfiguredProof) (*types.Transaction, error) {
-	return _Fdc2.contract.Transact(opts, "pmwMultisigUtxoConfiguredProofStruct", arg0)
+// Solidity: function walletOperationStatusRequestBodyStruct((bytes32,string,uint64,bytes32) ) returns()
+func (_Fdc2 *Fdc2Transactor) WalletOperationStatusRequestBodyStruct(opts *bind.TransactOpts, arg0 IWalletOperationStatusRequestBody) (*types.Transaction, error) {
+	return _Fdc2.contract.Transact(opts, "walletOperationStatusRequestBodyStruct", arg0)
 }
 
-// PmwMultisigUtxoConfiguredProofStruct is a paid mutator transaction binding the contract method 0x6ef98adf.
+// WalletOperationStatusRequestBodyStruct is a paid mutator transaction binding the contract method 0x98c6d7b9.
 //
-// Solidity: function pmwMultisigUtxoConfiguredProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(uint32,bytes[],uint64,(bytes32,uint32)[]),(uint8,string)) ) returns()
-func (_Fdc2 *Fdc2Session) PmwMultisigUtxoConfiguredProofStruct(arg0 IPMWMultisigUtxoConfiguredProof) (*types.Transaction, error) {
-	return _Fdc2.Contract.PmwMultisigUtxoConfiguredProofStruct(&_Fdc2.TransactOpts, arg0)
+// Solidity: function walletOperationStatusRequestBodyStruct((bytes32,string,uint64,bytes32) ) returns()
+func (_Fdc2 *Fdc2Session) WalletOperationStatusRequestBodyStruct(arg0 IWalletOperationStatusRequestBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.WalletOperationStatusRequestBodyStruct(&_Fdc2.TransactOpts, arg0)
 }
 
-// PmwMultisigUtxoConfiguredProofStruct is a paid mutator transaction binding the contract method 0x6ef98adf.
+// WalletOperationStatusRequestBodyStruct is a paid mutator transaction binding the contract method 0x98c6d7b9.
 //
-// Solidity: function pmwMultisigUtxoConfiguredProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(uint32,bytes[],uint64,(bytes32,uint32)[]),(uint8,string)) ) returns()
-func (_Fdc2 *Fdc2TransactorSession) PmwMultisigUtxoConfiguredProofStruct(arg0 IPMWMultisigUtxoConfiguredProof) (*types.Transaction, error) {
-	return _Fdc2.Contract.PmwMultisigUtxoConfiguredProofStruct(&_Fdc2.TransactOpts, arg0)
+// Solidity: function walletOperationStatusRequestBodyStruct((bytes32,string,uint64,bytes32) ) returns()
+func (_Fdc2 *Fdc2TransactorSession) WalletOperationStatusRequestBodyStruct(arg0 IWalletOperationStatusRequestBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.WalletOperationStatusRequestBodyStruct(&_Fdc2.TransactOpts, arg0)
 }
 
-// PmwMultisigUtxoConfiguredRequestBodyStruct is a paid mutator transaction binding the contract method 0x2b098e31.
+// WalletOperationStatusResponseBodyStruct is a paid mutator transaction binding the contract method 0x1faeda3f.
 //
-// Solidity: function pmwMultisigUtxoConfiguredRequestBodyStruct((uint32,bytes[],uint64,(bytes32,uint32)[]) ) returns()
-func (_Fdc2 *Fdc2Transactor) PmwMultisigUtxoConfiguredRequestBodyStruct(opts *bind.TransactOpts, arg0 IPMWMultisigUtxoConfiguredRequestBody) (*types.Transaction, error) {
-	return _Fdc2.contract.Transact(opts, "pmwMultisigUtxoConfiguredRequestBodyStruct", arg0)
+// Solidity: function walletOperationStatusResponseBodyStruct((uint8,bytes,uint256,bool,uint256,bytes32,uint64,uint64,uint8) ) returns()
+func (_Fdc2 *Fdc2Transactor) WalletOperationStatusResponseBodyStruct(opts *bind.TransactOpts, arg0 IWalletOperationStatusResponseBody) (*types.Transaction, error) {
+	return _Fdc2.contract.Transact(opts, "walletOperationStatusResponseBodyStruct", arg0)
 }
 
-// PmwMultisigUtxoConfiguredRequestBodyStruct is a paid mutator transaction binding the contract method 0x2b098e31.
+// WalletOperationStatusResponseBodyStruct is a paid mutator transaction binding the contract method 0x1faeda3f.
 //
-// Solidity: function pmwMultisigUtxoConfiguredRequestBodyStruct((uint32,bytes[],uint64,(bytes32,uint32)[]) ) returns()
-func (_Fdc2 *Fdc2Session) PmwMultisigUtxoConfiguredRequestBodyStruct(arg0 IPMWMultisigUtxoConfiguredRequestBody) (*types.Transaction, error) {
-	return _Fdc2.Contract.PmwMultisigUtxoConfiguredRequestBodyStruct(&_Fdc2.TransactOpts, arg0)
+// Solidity: function walletOperationStatusResponseBodyStruct((uint8,bytes,uint256,bool,uint256,bytes32,uint64,uint64,uint8) ) returns()
+func (_Fdc2 *Fdc2Session) WalletOperationStatusResponseBodyStruct(arg0 IWalletOperationStatusResponseBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.WalletOperationStatusResponseBodyStruct(&_Fdc2.TransactOpts, arg0)
 }
 
-// PmwMultisigUtxoConfiguredRequestBodyStruct is a paid mutator transaction binding the contract method 0x2b098e31.
+// WalletOperationStatusResponseBodyStruct is a paid mutator transaction binding the contract method 0x1faeda3f.
 //
-// Solidity: function pmwMultisigUtxoConfiguredRequestBodyStruct((uint32,bytes[],uint64,(bytes32,uint32)[]) ) returns()
-func (_Fdc2 *Fdc2TransactorSession) PmwMultisigUtxoConfiguredRequestBodyStruct(arg0 IPMWMultisigUtxoConfiguredRequestBody) (*types.Transaction, error) {
-	return _Fdc2.Contract.PmwMultisigUtxoConfiguredRequestBodyStruct(&_Fdc2.TransactOpts, arg0)
+// Solidity: function walletOperationStatusResponseBodyStruct((uint8,bytes,uint256,bool,uint256,bytes32,uint64,uint64,uint8) ) returns()
+func (_Fdc2 *Fdc2TransactorSession) WalletOperationStatusResponseBodyStruct(arg0 IWalletOperationStatusResponseBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.WalletOperationStatusResponseBodyStruct(&_Fdc2.TransactOpts, arg0)
 }
 
-// PmwMultisigUtxoConfiguredResponseBodyStruct is a paid mutator transaction binding the contract method 0x19f96f49.
+// WalletPaymentStatusProofStruct is a paid mutator transaction binding the contract method 0x046ccdf2.
 //
-// Solidity: function pmwMultisigUtxoConfiguredResponseBodyStruct((uint8,string) ) returns()
-func (_Fdc2 *Fdc2Transactor) PmwMultisigUtxoConfiguredResponseBodyStruct(opts *bind.TransactOpts, arg0 IPMWMultisigUtxoConfiguredResponseBody) (*types.Transaction, error) {
-	return _Fdc2.contract.Transact(opts, "pmwMultisigUtxoConfiguredResponseBodyStruct", arg0)
+// Solidity: function walletPaymentStatusProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(bytes32,string,uint64),(string,bytes,uint256,uint256,bytes32,uint8,string,uint256,uint256,bytes32,uint64,uint64)) ) returns()
+func (_Fdc2 *Fdc2Transactor) WalletPaymentStatusProofStruct(opts *bind.TransactOpts, arg0 IWalletPaymentStatusProof) (*types.Transaction, error) {
+	return _Fdc2.contract.Transact(opts, "walletPaymentStatusProofStruct", arg0)
 }
 
-// PmwMultisigUtxoConfiguredResponseBodyStruct is a paid mutator transaction binding the contract method 0x19f96f49.
+// WalletPaymentStatusProofStruct is a paid mutator transaction binding the contract method 0x046ccdf2.
 //
-// Solidity: function pmwMultisigUtxoConfiguredResponseBodyStruct((uint8,string) ) returns()
-func (_Fdc2 *Fdc2Session) PmwMultisigUtxoConfiguredResponseBodyStruct(arg0 IPMWMultisigUtxoConfiguredResponseBody) (*types.Transaction, error) {
-	return _Fdc2.Contract.PmwMultisigUtxoConfiguredResponseBodyStruct(&_Fdc2.TransactOpts, arg0)
+// Solidity: function walletPaymentStatusProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(bytes32,string,uint64),(string,bytes,uint256,uint256,bytes32,uint8,string,uint256,uint256,bytes32,uint64,uint64)) ) returns()
+func (_Fdc2 *Fdc2Session) WalletPaymentStatusProofStruct(arg0 IWalletPaymentStatusProof) (*types.Transaction, error) {
+	return _Fdc2.Contract.WalletPaymentStatusProofStruct(&_Fdc2.TransactOpts, arg0)
 }
 
-// PmwMultisigUtxoConfiguredResponseBodyStruct is a paid mutator transaction binding the contract method 0x19f96f49.
+// WalletPaymentStatusProofStruct is a paid mutator transaction binding the contract method 0x046ccdf2.
 //
-// Solidity: function pmwMultisigUtxoConfiguredResponseBodyStruct((uint8,string) ) returns()
-func (_Fdc2 *Fdc2TransactorSession) PmwMultisigUtxoConfiguredResponseBodyStruct(arg0 IPMWMultisigUtxoConfiguredResponseBody) (*types.Transaction, error) {
-	return _Fdc2.Contract.PmwMultisigUtxoConfiguredResponseBodyStruct(&_Fdc2.TransactOpts, arg0)
+// Solidity: function walletPaymentStatusProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(bytes32,string,uint64),(string,bytes,uint256,uint256,bytes32,uint8,string,uint256,uint256,bytes32,uint64,uint64)) ) returns()
+func (_Fdc2 *Fdc2TransactorSession) WalletPaymentStatusProofStruct(arg0 IWalletPaymentStatusProof) (*types.Transaction, error) {
+	return _Fdc2.Contract.WalletPaymentStatusProofStruct(&_Fdc2.TransactOpts, arg0)
 }
 
-// PmwPaymentStatusProofStruct is a paid mutator transaction binding the contract method 0x3cd030e1.
+// WalletPaymentStatusRequestBodyStruct is a paid mutator transaction binding the contract method 0xb8864d40.
 //
-// Solidity: function pmwPaymentStatusProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(bytes32,string,uint64),(string,bytes,uint256,uint256,bytes32,uint8,string,uint256,uint256,bytes32,uint64,uint64)) ) returns()
-func (_Fdc2 *Fdc2Transactor) PmwPaymentStatusProofStruct(opts *bind.TransactOpts, arg0 IPMWPaymentStatusProof) (*types.Transaction, error) {
-	return _Fdc2.contract.Transact(opts, "pmwPaymentStatusProofStruct", arg0)
+// Solidity: function walletPaymentStatusRequestBodyStruct((bytes32,string,uint64) ) returns()
+func (_Fdc2 *Fdc2Transactor) WalletPaymentStatusRequestBodyStruct(opts *bind.TransactOpts, arg0 IWalletPaymentStatusRequestBody) (*types.Transaction, error) {
+	return _Fdc2.contract.Transact(opts, "walletPaymentStatusRequestBodyStruct", arg0)
 }
 
-// PmwPaymentStatusProofStruct is a paid mutator transaction binding the contract method 0x3cd030e1.
+// WalletPaymentStatusRequestBodyStruct is a paid mutator transaction binding the contract method 0xb8864d40.
 //
-// Solidity: function pmwPaymentStatusProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(bytes32,string,uint64),(string,bytes,uint256,uint256,bytes32,uint8,string,uint256,uint256,bytes32,uint64,uint64)) ) returns()
-func (_Fdc2 *Fdc2Session) PmwPaymentStatusProofStruct(arg0 IPMWPaymentStatusProof) (*types.Transaction, error) {
-	return _Fdc2.Contract.PmwPaymentStatusProofStruct(&_Fdc2.TransactOpts, arg0)
+// Solidity: function walletPaymentStatusRequestBodyStruct((bytes32,string,uint64) ) returns()
+func (_Fdc2 *Fdc2Session) WalletPaymentStatusRequestBodyStruct(arg0 IWalletPaymentStatusRequestBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.WalletPaymentStatusRequestBodyStruct(&_Fdc2.TransactOpts, arg0)
 }
 
-// PmwPaymentStatusProofStruct is a paid mutator transaction binding the contract method 0x3cd030e1.
+// WalletPaymentStatusRequestBodyStruct is a paid mutator transaction binding the contract method 0xb8864d40.
 //
-// Solidity: function pmwPaymentStatusProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(bytes32,string,uint64),(string,bytes,uint256,uint256,bytes32,uint8,string,uint256,uint256,bytes32,uint64,uint64)) ) returns()
-func (_Fdc2 *Fdc2TransactorSession) PmwPaymentStatusProofStruct(arg0 IPMWPaymentStatusProof) (*types.Transaction, error) {
-	return _Fdc2.Contract.PmwPaymentStatusProofStruct(&_Fdc2.TransactOpts, arg0)
+// Solidity: function walletPaymentStatusRequestBodyStruct((bytes32,string,uint64) ) returns()
+func (_Fdc2 *Fdc2TransactorSession) WalletPaymentStatusRequestBodyStruct(arg0 IWalletPaymentStatusRequestBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.WalletPaymentStatusRequestBodyStruct(&_Fdc2.TransactOpts, arg0)
 }
 
-// PmwPaymentStatusRequestBodyStruct is a paid mutator transaction binding the contract method 0x248bba56.
+// WalletPaymentStatusResponseBodyStruct is a paid mutator transaction binding the contract method 0x8abc1d0e.
 //
-// Solidity: function pmwPaymentStatusRequestBodyStruct((bytes32,string,uint64) ) returns()
-func (_Fdc2 *Fdc2Transactor) PmwPaymentStatusRequestBodyStruct(opts *bind.TransactOpts, arg0 IPMWPaymentStatusRequestBody) (*types.Transaction, error) {
-	return _Fdc2.contract.Transact(opts, "pmwPaymentStatusRequestBodyStruct", arg0)
+// Solidity: function walletPaymentStatusResponseBodyStruct((string,bytes,uint256,uint256,bytes32,uint8,string,uint256,uint256,bytes32,uint64,uint64) ) returns()
+func (_Fdc2 *Fdc2Transactor) WalletPaymentStatusResponseBodyStruct(opts *bind.TransactOpts, arg0 IWalletPaymentStatusResponseBody) (*types.Transaction, error) {
+	return _Fdc2.contract.Transact(opts, "walletPaymentStatusResponseBodyStruct", arg0)
 }
 
-// PmwPaymentStatusRequestBodyStruct is a paid mutator transaction binding the contract method 0x248bba56.
+// WalletPaymentStatusResponseBodyStruct is a paid mutator transaction binding the contract method 0x8abc1d0e.
 //
-// Solidity: function pmwPaymentStatusRequestBodyStruct((bytes32,string,uint64) ) returns()
-func (_Fdc2 *Fdc2Session) PmwPaymentStatusRequestBodyStruct(arg0 IPMWPaymentStatusRequestBody) (*types.Transaction, error) {
-	return _Fdc2.Contract.PmwPaymentStatusRequestBodyStruct(&_Fdc2.TransactOpts, arg0)
+// Solidity: function walletPaymentStatusResponseBodyStruct((string,bytes,uint256,uint256,bytes32,uint8,string,uint256,uint256,bytes32,uint64,uint64) ) returns()
+func (_Fdc2 *Fdc2Session) WalletPaymentStatusResponseBodyStruct(arg0 IWalletPaymentStatusResponseBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.WalletPaymentStatusResponseBodyStruct(&_Fdc2.TransactOpts, arg0)
 }
 
-// PmwPaymentStatusRequestBodyStruct is a paid mutator transaction binding the contract method 0x248bba56.
+// WalletPaymentStatusResponseBodyStruct is a paid mutator transaction binding the contract method 0x8abc1d0e.
 //
-// Solidity: function pmwPaymentStatusRequestBodyStruct((bytes32,string,uint64) ) returns()
-func (_Fdc2 *Fdc2TransactorSession) PmwPaymentStatusRequestBodyStruct(arg0 IPMWPaymentStatusRequestBody) (*types.Transaction, error) {
-	return _Fdc2.Contract.PmwPaymentStatusRequestBodyStruct(&_Fdc2.TransactOpts, arg0)
+// Solidity: function walletPaymentStatusResponseBodyStruct((string,bytes,uint256,uint256,bytes32,uint8,string,uint256,uint256,bytes32,uint64,uint64) ) returns()
+func (_Fdc2 *Fdc2TransactorSession) WalletPaymentStatusResponseBodyStruct(arg0 IWalletPaymentStatusResponseBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.WalletPaymentStatusResponseBodyStruct(&_Fdc2.TransactOpts, arg0)
 }
 
-// PmwPaymentStatusResponseBodyStruct is a paid mutator transaction binding the contract method 0xc18329f2.
+// WalletSettlementPositionAttemptsStruct is a paid mutator transaction binding the contract method 0xfa840e94.
 //
-// Solidity: function pmwPaymentStatusResponseBodyStruct((string,bytes,uint256,uint256,bytes32,uint8,string,uint256,uint256,bytes32,uint64,uint64) ) returns()
-func (_Fdc2 *Fdc2Transactor) PmwPaymentStatusResponseBodyStruct(opts *bind.TransactOpts, arg0 IPMWPaymentStatusResponseBody) (*types.Transaction, error) {
-	return _Fdc2.contract.Transact(opts, "pmwPaymentStatusResponseBodyStruct", arg0)
+// Solidity: function walletSettlementPositionAttemptsStruct((uint64,uint32) ) returns()
+func (_Fdc2 *Fdc2Transactor) WalletSettlementPositionAttemptsStruct(opts *bind.TransactOpts, arg0 IWalletSettlementPositionAttempts) (*types.Transaction, error) {
+	return _Fdc2.contract.Transact(opts, "walletSettlementPositionAttemptsStruct", arg0)
 }
 
-// PmwPaymentStatusResponseBodyStruct is a paid mutator transaction binding the contract method 0xc18329f2.
+// WalletSettlementPositionAttemptsStruct is a paid mutator transaction binding the contract method 0xfa840e94.
 //
-// Solidity: function pmwPaymentStatusResponseBodyStruct((string,bytes,uint256,uint256,bytes32,uint8,string,uint256,uint256,bytes32,uint64,uint64) ) returns()
-func (_Fdc2 *Fdc2Session) PmwPaymentStatusResponseBodyStruct(arg0 IPMWPaymentStatusResponseBody) (*types.Transaction, error) {
-	return _Fdc2.Contract.PmwPaymentStatusResponseBodyStruct(&_Fdc2.TransactOpts, arg0)
+// Solidity: function walletSettlementPositionAttemptsStruct((uint64,uint32) ) returns()
+func (_Fdc2 *Fdc2Session) WalletSettlementPositionAttemptsStruct(arg0 IWalletSettlementPositionAttempts) (*types.Transaction, error) {
+	return _Fdc2.Contract.WalletSettlementPositionAttemptsStruct(&_Fdc2.TransactOpts, arg0)
 }
 
-// PmwPaymentStatusResponseBodyStruct is a paid mutator transaction binding the contract method 0xc18329f2.
+// WalletSettlementPositionAttemptsStruct is a paid mutator transaction binding the contract method 0xfa840e94.
 //
-// Solidity: function pmwPaymentStatusResponseBodyStruct((string,bytes,uint256,uint256,bytes32,uint8,string,uint256,uint256,bytes32,uint64,uint64) ) returns()
-func (_Fdc2 *Fdc2TransactorSession) PmwPaymentStatusResponseBodyStruct(arg0 IPMWPaymentStatusResponseBody) (*types.Transaction, error) {
-	return _Fdc2.Contract.PmwPaymentStatusResponseBodyStruct(&_Fdc2.TransactOpts, arg0)
+// Solidity: function walletSettlementPositionAttemptsStruct((uint64,uint32) ) returns()
+func (_Fdc2 *Fdc2TransactorSession) WalletSettlementPositionAttemptsStruct(arg0 IWalletSettlementPositionAttempts) (*types.Transaction, error) {
+	return _Fdc2.Contract.WalletSettlementPositionAttemptsStruct(&_Fdc2.TransactOpts, arg0)
+}
+
+// WalletSettlementProofStruct is a paid mutator transaction binding the contract method 0xa26f027f.
+//
+// Solidity: function walletSettlementProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(bytes32,string,uint64,uint64),(uint256,uint256,(uint64,uint32)[])) ) returns()
+func (_Fdc2 *Fdc2Transactor) WalletSettlementProofStruct(opts *bind.TransactOpts, arg0 IWalletSettlementProof) (*types.Transaction, error) {
+	return _Fdc2.contract.Transact(opts, "walletSettlementProofStruct", arg0)
+}
+
+// WalletSettlementProofStruct is a paid mutator transaction binding the contract method 0xa26f027f.
+//
+// Solidity: function walletSettlementProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(bytes32,string,uint64,uint64),(uint256,uint256,(uint64,uint32)[])) ) returns()
+func (_Fdc2 *Fdc2Session) WalletSettlementProofStruct(arg0 IWalletSettlementProof) (*types.Transaction, error) {
+	return _Fdc2.Contract.WalletSettlementProofStruct(&_Fdc2.TransactOpts, arg0)
+}
+
+// WalletSettlementProofStruct is a paid mutator transaction binding the contract method 0xa26f027f.
+//
+// Solidity: function walletSettlementProofStruct(((bytes,(uint8,bytes32,bytes32)[],(uint8,bytes32,bytes32)[]),(bytes32,bytes32,uint16,address,address[],uint64,uint64),(bytes32,string,uint64,uint64),(uint256,uint256,(uint64,uint32)[])) ) returns()
+func (_Fdc2 *Fdc2TransactorSession) WalletSettlementProofStruct(arg0 IWalletSettlementProof) (*types.Transaction, error) {
+	return _Fdc2.Contract.WalletSettlementProofStruct(&_Fdc2.TransactOpts, arg0)
+}
+
+// WalletSettlementRequestBodyStruct is a paid mutator transaction binding the contract method 0x9f7e9000.
+//
+// Solidity: function walletSettlementRequestBodyStruct((bytes32,string,uint64,uint64) ) returns()
+func (_Fdc2 *Fdc2Transactor) WalletSettlementRequestBodyStruct(opts *bind.TransactOpts, arg0 IWalletSettlementRequestBody) (*types.Transaction, error) {
+	return _Fdc2.contract.Transact(opts, "walletSettlementRequestBodyStruct", arg0)
+}
+
+// WalletSettlementRequestBodyStruct is a paid mutator transaction binding the contract method 0x9f7e9000.
+//
+// Solidity: function walletSettlementRequestBodyStruct((bytes32,string,uint64,uint64) ) returns()
+func (_Fdc2 *Fdc2Session) WalletSettlementRequestBodyStruct(arg0 IWalletSettlementRequestBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.WalletSettlementRequestBodyStruct(&_Fdc2.TransactOpts, arg0)
+}
+
+// WalletSettlementRequestBodyStruct is a paid mutator transaction binding the contract method 0x9f7e9000.
+//
+// Solidity: function walletSettlementRequestBodyStruct((bytes32,string,uint64,uint64) ) returns()
+func (_Fdc2 *Fdc2TransactorSession) WalletSettlementRequestBodyStruct(arg0 IWalletSettlementRequestBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.WalletSettlementRequestBodyStruct(&_Fdc2.TransactOpts, arg0)
+}
+
+// WalletSettlementResponseBodyStruct is a paid mutator transaction binding the contract method 0x999dd7bb.
+//
+// Solidity: function walletSettlementResponseBodyStruct((uint256,uint256,(uint64,uint32)[]) ) returns()
+func (_Fdc2 *Fdc2Transactor) WalletSettlementResponseBodyStruct(opts *bind.TransactOpts, arg0 IWalletSettlementResponseBody) (*types.Transaction, error) {
+	return _Fdc2.contract.Transact(opts, "walletSettlementResponseBodyStruct", arg0)
+}
+
+// WalletSettlementResponseBodyStruct is a paid mutator transaction binding the contract method 0x999dd7bb.
+//
+// Solidity: function walletSettlementResponseBodyStruct((uint256,uint256,(uint64,uint32)[]) ) returns()
+func (_Fdc2 *Fdc2Session) WalletSettlementResponseBodyStruct(arg0 IWalletSettlementResponseBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.WalletSettlementResponseBodyStruct(&_Fdc2.TransactOpts, arg0)
+}
+
+// WalletSettlementResponseBodyStruct is a paid mutator transaction binding the contract method 0x999dd7bb.
+//
+// Solidity: function walletSettlementResponseBodyStruct((uint256,uint256,(uint64,uint32)[]) ) returns()
+func (_Fdc2 *Fdc2TransactorSession) WalletSettlementResponseBodyStruct(arg0 IWalletSettlementResponseBody) (*types.Transaction, error) {
+	return _Fdc2.Contract.WalletSettlementResponseBodyStruct(&_Fdc2.TransactOpts, arg0)
 }
