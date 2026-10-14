@@ -277,6 +277,11 @@
   },
   {
     "inputs": [],
+    "name": "NoOutstandingChallenge",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "NoTeeMachinesSpecified",
     "type": "error"
   },
@@ -400,6 +405,19 @@
       }
     ],
     "name": "AvailabilityCheckValidityExtended",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "teeId",
+        "type": "address"
+      }
+    ],
+    "name": "ChallengeInvalidated",
     "type": "event"
   },
   {

@@ -198,6 +198,11 @@
     "type": "error"
   },
   {
+    "inputs": [],
+    "name": "TimelockValueNotAllowed",
+    "type": "error"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -434,7 +439,7 @@
     ],
     "name": "executeGovernanceCall",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
