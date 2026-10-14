@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- `abicoder.ErrTruncated`.
+
+### Changed
+
+- **Behavioral:** `abicoder.Decode` and `DecodeTo` check the encoding's layout before decoding: data whose offsets aren't where the encoder puts them fails with `ErrNonCanonical`, and data too short with `ErrTruncated` instead of go-ethereum's error.
+- **Behavioral:** `abicoder` refuses integers out of range for widths go-ethereum doesn't range-check, such as `uint128`, and refuses zero-length fixed arrays, empty tuples and arrays too large to encode as unsupported, whatever the data.
+- `abicoder`'s round-trip error no longer prints the input.
+
+### Security
+
+- `abicoder`: offsets aliasing one region no longer make decoding allocate per alias.
+  v1.3.0 guarded `string` only, so `bytes[]` and nested arrays could still turn about 150 KB into gigabytes.
+
 ## [v1.4.0](https://github.com/flare-foundation/go-flare-common/tree/v1.4.0) - 2026-10-13
 
 ### Structured logging on log/slog

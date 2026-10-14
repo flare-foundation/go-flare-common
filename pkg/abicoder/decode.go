@@ -35,34 +35,26 @@ func DecodeTo[T any](arg abi.Argument, data []byte, dest *T) error {
 //
 // T's array lengths and struct field counts must match the ABI argument, else
 // ErrShapeMismatch is returned; tuple-to-struct mapping is positional by index
-// and ignores field names. Non-canonical encodings (including offset aliasing,
-// see ErrNonCanonical) are rejected. When T is an interface no shape check is
+// and ignores field names. Data that isn't the canonical encoding of a value
+// is rejected with ErrNonCanonical, and data too short for one with
+// ErrTruncated, both before decoding. When T is an interface no shape check is
 // performed and tuples decode to go-ethereum's json-tagged anonymous struct.
 func Decode[T any](arg abi.Argument, data []byte) (t T, err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			e, ok := r.(error)
-			if ok {
-				err = fmt.Errorf("recovered panic: %w", e)
-			} else {
-				err = fmt.Errorf("recovered panic non error: %v", r)
-			}
-		}
-	}()
+	defer recoverError(&err)
 
 	if err := checkArgType(arg.Type); err != nil {
+		return t, err
+	}
+
+	args := abi.Arguments{arg}
+
+	if err := checkLayout(args, data); err != nil {
 		return t, err
 	}
 
 	if err := checkShape[T](arg.Type); err != nil {
 		return t, err
 	}
-
-	if exceedsStringBudget(arg.Type, data) {
-		return t, ErrNonCanonical
-	}
-
-	args := abi.Arguments{arg}
 
 	decodedSlice, err := args.Unpack(data)
 	if err != nil {
@@ -86,14 +78,15 @@ func Decode[T any](arg abi.Argument, data []byte) (t T, err error) {
 }
 
 // checkEncodeDecode encodes decodedSlice using args and compares it to data.
+// Its errors never quote data, which may be secret.
 func checkEncodeDecode(args *abi.Arguments, data []byte, decodedSlice []any) error {
 	encoded, err := args.Pack(decodedSlice...)
 	if err != nil {
-		return err
+		return fmt.Errorf("re-encoding the decoded values: %w", err)
 	}
 
 	if !bytes.Equal(data, encoded) {
-		return fmt.Errorf("initial data not equal to decoded and encoded data %v, %v", data, encoded)
+		return fmt.Errorf("%w: re-encoding the decoded values gives other bytes", ErrNonCanonical)
 	}
 
 	return nil

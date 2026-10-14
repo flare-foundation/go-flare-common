@@ -15,16 +15,7 @@ import (
 // abi.Arguments.Pack panics on some malformed inputs (e.g. a nil *big.Int),
 // which the deferred recover surfaces as an error.
 func Encode(arg abi.Argument, data any) (encoded []byte, err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			e, ok := r.(error)
-			if ok {
-				err = fmt.Errorf("recovered panic: %w", e)
-			} else {
-				err = fmt.Errorf("recovered panic non error: %v", r)
-			}
-		}
-	}()
+	defer recoverError(&err)
 
 	if err := checkArgType(arg.Type); err != nil {
 		return nil, err
