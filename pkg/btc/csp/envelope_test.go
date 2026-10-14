@@ -66,6 +66,8 @@ func sample() csp.Envelope {
 		ProposerAddress: common.HexToAddress("0xA11CE"),
 		ParentXpubs:     signerXpubs(3, csp.CoinTypeTestnet, &chaincfg.RegressionNetParams),
 		Threshold:       2,
+		WalletRegistry:  common.HexToAddress("0x7EE"),
+		AccountHash:     csp.AccountHashOf([32]byte([]byte("BTC\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00")), "bcrt1qanchor"),
 	}
 }
 
@@ -128,6 +130,20 @@ func TestEveryFieldChangesTheHash(t *testing.T) {
 		"input.index":        func(e *csp.Envelope) { e.Inputs[0].Index++ },
 		"input.count":        func(e *csp.Envelope) { e.Inputs = e.Inputs[:1] },
 		"proposerAddress":    func(e *csp.Envelope) { e.ProposerAddress = common.HexToAddress("0xB0B") },
+		"walletRegistry":     func(e *csp.Envelope) { e.WalletRegistry = common.HexToAddress("0xC057") },
+		"accountHash":        func(e *csp.Envelope) { e.AccountHash[0] ^= 0xff },
+		"escrow.preimageHash": func(e *csp.Envelope) {
+			e.Escrow = escrowTerms()
+			e.Escrow.PreimageHash[0] ^= 0xff
+		},
+		"escrow.counterpartyPubKey": func(e *csp.Envelope) {
+			e.Escrow = escrowTerms()
+			e.Escrow.CounterpartyPubKey = append([]byte{0x03}, e.Escrow.CounterpartyPubKey[1:]...)
+		},
+		"escrow.expiresAt": func(e *csp.Envelope) {
+			e.Escrow = escrowTerms()
+			e.Escrow.ExpiresAt++
+		},
 	}
 
 	for name, mutate := range mutations {
@@ -179,10 +195,33 @@ func TestValidateRejectsUnusableEnvelopes(t *testing.T) {
 		// Positions start at 1; 0 means "none" wherever the channel reads one.
 		"position 0": func(e *csp.Envelope) { e.SequencePosition = 0 },
 
-		// Version 2 is the only one: a v1 package commits to a tuple that no
-		// longer exists.
+		// Version 3 is the only one: an older package commits to a tuple that
+		// no longer exists.
 		"version 1": func(e *csp.Envelope) { e.Version = 1 },
-		"version 3": func(e *csp.Envelope) { e.Version = 3 },
+		"version 2": func(e *csp.Envelope) { e.Version = 2 },
+		"version 4": func(e *csp.Envelope) { e.Version = 4 },
+
+		// The account in the chain's terms.
+		"no wallet registry": func(e *csp.Envelope) { e.WalletRegistry = common.Address{} },
+		"no account hash":    func(e *csp.Envelope) { e.AccountHash = [32]byte{} },
+
+		// An escrow input is at the timeout branch's fixed coordinates, and
+		// needs the terms to rebuild its script.
+		"escrow input elsewhere": func(e *csp.Envelope) {
+			e.Escrow = escrowTerms()
+			e.Inputs[1] = csp.Input{Txid: [32]byte{0x22}, Vout: 1, ValueSat: 1_000, Chain: 1, Index: 5, IsEscrow: true}
+		},
+		"escrow input without terms": func(e *csp.Envelope) {
+			e.Inputs[1] = csp.Input{Txid: [32]byte{0x22}, Vout: 1, ValueSat: 1_000, Chain: 1, Index: 0, IsEscrow: true}
+		},
+		"escrow input as the anchor": func(e *csp.Envelope) {
+			e.Escrow = escrowTerms()
+			e.Inputs[0] = csp.Input{Txid: [32]byte{0x11}, ValueSat: 1_000, Chain: 1, Index: 0, IsEscrow: true}
+		},
+		"short counterparty key": func(e *csp.Envelope) {
+			e.Escrow = escrowTerms()
+			e.Escrow.CounterpartyPubKey = e.Escrow.CounterpartyPubKey[:32]
+		},
 
 		// The wallet's shape.
 		"no signers":        func(e *csp.Envelope) { e.ParentXpubs = nil },
@@ -208,6 +247,38 @@ func TestValidateRejectsUnusableEnvelopes(t *testing.T) {
 		assert.Error(t, err, "%s: Encode accepted it - Validate must gate Encode", name)
 	}
 }
+
+// escrowTerms is a valid set of escrow terms.
+func escrowTerms() csp.Escrow {
+	return csp.Escrow{
+		PreimageHash:       [32]byte{0x33},
+		CounterpartyPubKey: append([]byte{0x02}, bytes.Repeat([]byte{0xcc}, 32)...),
+		ExpiresAt:          1_900_000_000,
+	}
+}
+
+// The escrow input passes at the fixed coordinates — the refusal above is
+// about where it is, not that it is there.
+func TestEscrowInputAtTheTimeoutCoordinates(t *testing.T) {
+	e := sample()
+	e.Escrow = escrowTerms()
+	e.Inputs[1] = csp.Input{Txid: [32]byte{0x22}, Vout: 1, ValueSat: 1_000,
+		Chain: csp.EscrowTimeoutChain, Index: csp.EscrowTimeoutIndex, IsEscrow: true}
+	require.NoError(t, e.Validate())
+}
+
+// AccountHashOf is the diamond's toAccountHash: keccak256(abi.encode(bytes32,
+// string)), checked against `cast keccak $(cast abi-encode "f(bytes32,string)"
+// 0x4254430000000000000000000000000000000000000000000000000000000000
+// bcrt1qanchor)`.
+func TestAccountHashOf(t *testing.T) {
+	var source [32]byte
+	copy(source[:], "BTC")
+	got := csp.AccountHashOf(source, "bcrt1qanchor")
+	assert.Equal(t, accountHashVector, common.Hash(got).Hex())
+}
+
+const accountHashVector = "0x310e3b504099b279d5502b9e89f0691ed9a56286e3e799185ca5d9a5c4b76524"
 
 // withBytesAt returns a copy of key with b written at off.
 func withBytesAt(key []byte, off int, b ...byte) []byte {
@@ -376,7 +447,6 @@ func layoutFixture() csp.Envelope {
 	}
 	var source [32]byte
 	copy(source[:], "BTC")
-	custodian := append([]byte{0x02}, bytes.Repeat([]byte{0xcc}, 32)...)
 	return csp.Envelope{
 		Version:            csp.EnvelopeVersion,
 		WalletID:           wallet,
@@ -395,19 +465,16 @@ func layoutFixture() csp.Envelope {
 			{Txid: [32]byte{0x22}, Vout: 1, ValueSat: 40_000, Chain: 1, Index: 0, IsEscrow: true},
 		},
 		ProposerAddress: common.HexToAddress("0x00000000000000000000000000000000000A11CE"),
-		Escrow: csp.Escrow{
-			PreimageHash:    [32]byte{0x33},
-			CustodianPubKey: custodian,
-			Timeout:         1_900_000_000,
-			Chain:           1,
-			Index:           0,
-		},
-		ParentXpubs: signerXpubs(4, csp.CoinTypeTestnet, &chaincfg.RegressionNetParams),
-		Threshold:   3,
+		Escrow:          escrowTerms(),
+		ParentXpubs:     signerXpubs(4, csp.CoinTypeTestnet, &chaincfg.RegressionNetParams),
+		Threshold:       3,
+		WalletRegistry:  common.HexToAddress("0x00000000000000000000000000000000000C0FFE"),
+		AccountHash:     [32]byte{0x44, 0x55},
 	}
 }
 
-// Decode(Encode(e)) is e, every field — including the two version 2 appended.
+// Decode(Encode(e)) is e, every field — including those versions 2 and 3
+// appended.
 func TestRoundTripIsExact(t *testing.T) {
 	e := layoutFixture()
 	b, err := e.Encode()
@@ -417,25 +484,26 @@ func TestRoundTripIsExact(t *testing.T) {
 	require.Equal(t, e, got)
 }
 
-// The v2 layout vector: layoutFixture's encoding, one 32-byte word per line.
+// The v3 layout vector: layoutFixture's encoding, one 32-byte word per line.
 // It was produced by Foundry's `cast abi-encode` — an ABI encoder independent
 // of go-ethereum's — over the signature
 //
 //	f((uint16,bytes32,bytes32,uint32,uint64,uint64,uint8,uint32,uint32,uint64,uint32,bytes,
-//	   (bytes32,uint32,uint64,uint8,uint32,bool)[],address,(bytes32,bytes,uint64,uint8,uint32),
-//	   bytes[],uint32))
+//	   (bytes32,uint32,uint64,uint8,uint32,bool)[],address,(bytes32,bytes,uint64),
+//	   bytes[],uint32,address,bytes32))
 //
 // and the proposalHash by `cast keccak` over abi.encode(CSP_PROPOSAL, 31337,
 // keccak256(encoding)). Any other implementation of the envelope — a machine,
 // a verifier, a contract — can check itself against these three.
 const (
-	layoutVectorFile        = "testdata/envelope_v2_layout.hex"
-	layoutVectorKeccak      = "0x2eb01b6a91e7d1d6bf3e46f0f52138778aa5c04a74d35c75f31f7d734ce00ec3"
-	layoutVectorProposalHex = "0x08e499c7da0d754427162924ce747f054313a8e0792a09787787f77f6333d9f3"
+	layoutVectorFile        = "testdata/envelope_v3_layout.hex"
+	layoutVectorKeccak      = "0xd4095038fc4c56c42afa443521e71dbec94ef664248bb6d949b2a78b4d0e8628"
+	layoutVectorProposalHex = "0x78cb121a315317a9baaa8fe0dae1dde5bdca7f6b73effacde372ca0169498c8a"
 )
 
-// TestEnvelopeLayout pins the tuple: v1's fifteen fields in v1's order, then
-// parentXpubs and threshold appended. A reorder, an insertion or a changed
+// TestEnvelopeLayout pins the tuple: v1's fifteen fields in v1's order (the
+// escrow tuple reduced to three in v3), then parentXpubs and threshold (v2),
+// then walletRegistry and accountHash (v3). A reorder, an insertion or a changed
 // width fails here, naming the field, rather than as a proposal the other
 // implementations never finalize.
 func TestEnvelopeLayout(t *testing.T) {
@@ -471,7 +539,7 @@ func TestEnvelopeLayout(t *testing.T) {
 		return func(t *testing.T, w []byte, _ int) { assert.Equal(t, want, w) }
 	}
 	fields := []field{
-		{"version", static(word(2))},
+		{"version", static(word(3))},
 		{"walletId", static(e.WalletID[:])},
 		{"sourceId", static(e.SourceID[:])},
 		{"accountIndex", static(word(7))},
@@ -498,7 +566,10 @@ func TestEnvelopeLayout(t *testing.T) {
 		{"escrow", func(t *testing.T, _ []byte, i int) {
 			off := tail(t, i)
 			assert.Equal(t, e.Escrow.PreimageHash[:], at(t, off), "escrow.preimageHash")
-			assert.Equal(t, word(e.Escrow.Timeout), at(t, off+2*32), "escrow.timeout")
+			assert.Equal(t, word(e.Escrow.ExpiresAt), at(t, off+2*32), "escrow.expiresAt")
+			// counterpartyPubKey's offset, relative to the escrow tuple, points
+			// past its three head words.
+			assert.Equal(t, word(3*32), at(t, off+32), "escrow.counterpartyPubKey offset")
 		}},
 		{"parentXpubs", func(t *testing.T, _ []byte, i int) {
 			off := tail(t, i)
@@ -509,6 +580,8 @@ func TestEnvelopeLayout(t *testing.T) {
 			assert.Equal(t, e.ParentXpubs[0][:32], at(t, first+32), "parentXpubs[0] bytes")
 		}},
 		{"threshold", static(word(3))},
+		{"walletRegistry", static(common.LeftPadBytes(e.WalletRegistry[:], 32))},
+		{"accountHash", static(e.AccountHash[:])},
 	}
 
 	for i, f := range fields {

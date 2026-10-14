@@ -26,8 +26,8 @@
 // case-insensitive but its checksum is not, so mixed-case and lowercase forms
 // hash differently, and the HRP differs by network — an ambiguity no encoding
 // removes, because the disagreement is about the value rather than its
-// serialization. The account is (walletID, accountIndex); recipients live
-// inside RawUnsignedTx as raw scriptPubKeys.
+// serialization. Recipients live inside RawUnsignedTx as raw scriptPubKeys, and
+// the account is named by its hash (below), never by its address string.
 //
 // # What changed in version 2: the wallet's shape travels with the proposal
 //
@@ -55,6 +55,26 @@
 // BIP-32 key records the index of its last derivation step in its own bytes, so
 // the coin is read out of the keys (CoinType). A separate field would be a
 // second copy of one fact, and a consistency check to keep them equal.
+//
+// # What changed in version 3: the account in the chain's own terms
+//
+// The WalletPayments diamond keys a wallet by (registry, walletId) — a TEE
+// wallet and a custodian wallet live in different registries, and a walletId is
+// unique only within one — and an account by its hash,
+// keccak256(abi.encode(sourceId, accountAddress)), which is also the topic of
+// every account event. Version 2 named the account only as (walletId,
+// accountIndex), so each party mapped that to the chain's account on its own,
+// and the registry was in no hash at all. Version 3 appends WalletRegistry and
+// AccountHash, so the finalized hash binds the account exactly as the chain
+// stores it, and a consumer that sees an event compares a topic rather than
+// looking an account up.
+//
+// It also drops the escrow's timeout coordinates. The diamond fixes the escrow's
+// timeout branch at the wallet's k-of-n at (EscrowTimeoutChain,
+// EscrowTimeoutIndex), so a field for it could only ever hold that constant, and
+// a check that it does was one more check to forget. The two remaining terms
+// take the contract's names (counterpartyPubKey, expiresAt); their values are
+// unchanged.
 package csp
 
 import (
@@ -74,9 +94,17 @@ import (
 
 // EnvelopeVersion is the only version this package encodes or accepts.
 // Version 2 appended the wallet's shape (parentXpubs, threshold) after escrow;
-// a version-1 package no longer decodes, because its hash commits to a tuple
-// that no longer exists.
-const EnvelopeVersion uint16 = 2
+// version 3 appended the account's registry and hash, and dropped the escrow's
+// timeout coordinates. An older package no longer decodes, because its hash
+// commits to a tuple that no longer exists.
+const EnvelopeVersion uint16 = 3
+
+// The escrow's timeout branch is always the wallet's own k-of-n at this
+// derivation coordinate, as the diamond fixes it; an escrow input carries it.
+const (
+	EscrowTimeoutChain uint8  = 1
+	EscrowTimeoutIndex uint32 = 0
+)
 
 // MaxSigners is OP_CHECKMULTISIG's consensus limit on n.
 const MaxSigners = 20
@@ -125,8 +153,10 @@ type Input struct {
 	//
 	// The coordinates still name the KEY each signer uses — the escrow's
 	// timeout branch is the wallet's own k-of-n — so this changes which script
-	// is committed to, not who may spend. Without it a signer would compute a
-	// sighash over the wrong script and produce a signature no one can use.
+	// is committed to, not who may spend, and an escrow input's coordinates
+	// must be (EscrowTimeoutChain, EscrowTimeoutIndex). Without the flag a
+	// signer would compute a sighash over the wrong script and produce a
+	// signature no one can use.
 	IsEscrow bool
 }
 
@@ -139,16 +169,17 @@ type Input struct {
 // required ParentXpubs to equal the registry's before the hash was finalized,
 // and a machine signs only if its own key is among them, so a proposal naming
 // keys the wallet does not hold is refused before any signature exists.
+//
+// The fields are the diamond's BtcEscrowTerms, under the same names. The
+// timeout branch's keys are at (EscrowTimeoutChain, EscrowTimeoutIndex).
 type Escrow struct {
 	// PreimageHash is SHA256(preimage) for the hash path.
 	PreimageHash [32]byte
-	// CustodianPubKey is the compressed key that can take the hash path.
-	CustodianPubKey []byte
-	// Timeout is the UNIX timestamp after which the wallet may reclaim.
-	Timeout uint64
-	// Chain and Index locate the multisig keys of the TIMEOUT branch.
-	Chain uint8
-	Index uint32
+	// CounterpartyPubKey is the compressed key that can take the hash path.
+	CounterpartyPubKey []byte
+	// ExpiresAt is the UNIX timestamp after which the wallet may reclaim: the
+	// script's CLTV locktime.
+	ExpiresAt uint64
 }
 
 // Envelope is the proposal object.
@@ -186,6 +217,16 @@ type Envelope struct {
 	ParentXpubs [][]byte
 	// Threshold is k in the k-of-n.
 	Threshold uint32
+
+	// Version 3 — appended after every v2 field.
+
+	// WalletRegistry is the contract the wallet is registered in (the TEE
+	// manager or the custodian wallet manager). A walletId is unique only
+	// within its registry.
+	WalletRegistry common.Address
+	// AccountHash is keccak256(abi.encode(sourceId, accountAddress)): the key
+	// the diamond stores the account under, and the topic of its events.
+	AccountHash [32]byte
 }
 
 // envelopeArgs is the ABI type tuple. Field order matches the struct, and the
@@ -219,19 +260,33 @@ func init() {
 		{Name: "proposerAddress", Type: "address"},
 		{Name: "escrow", Type: "tuple", Components: []abi.ArgumentMarshaling{
 			{Name: "preimageHash", Type: "bytes32"},
-			{Name: "custodianPubKey", Type: "bytes"},
-			{Name: "timeout", Type: "uint64"},
-			{Name: "chain", Type: "uint8"},
-			{Name: "index", Type: "uint32"},
+			{Name: "counterpartyPubKey", Type: "bytes"},
+			{Name: "expiresAt", Type: "uint64"},
 		}},
 		{Name: "parentXpubs", Type: "bytes[]"},
 		{Name: "threshold", Type: "uint32"},
+		{Name: "walletRegistry", Type: "address"},
+		{Name: "accountHash", Type: "bytes32"},
 	})
 	if err != nil {
 		panic("building envelope ABI type: " + err.Error())
 	}
 	envelopeArgs = abi.Arguments{{Type: tupleTy}}
+
+	bytes32Ty, err := abi.NewType("bytes32", "", nil)
+	if err != nil {
+		panic("building bytes32 type: " + err.Error())
+	}
+	stringTy, err := abi.NewType("string", "", nil)
+	if err != nil {
+		panic("building string type: " + err.Error())
+	}
+	accountKeyArgs = abi.Arguments{{Type: bytes32Ty}, {Type: stringTy}}
 }
+
+// accountKeyArgs is (bytes32 sourceId, string accountAddress), the tuple the
+// diamond hashes into an account key.
+var accountKeyArgs abi.Arguments
 
 // abiInput mirrors Input with the field tags abi.Pack expects.
 type abiInput struct {
@@ -245,11 +300,9 @@ type abiInput struct {
 
 // abiEscrow mirrors Escrow with the field tags abi.Pack expects.
 type abiEscrow struct {
-	PreimageHash    [32]byte `abi:"preimageHash"`
-	CustodianPubKey []byte   `abi:"custodianPubKey"`
-	Timeout         uint64   `abi:"timeout"`
-	Chain           uint8    `abi:"chain"`
-	Index           uint32   `abi:"index"`
+	PreimageHash       [32]byte `abi:"preimageHash"`
+	CounterpartyPubKey []byte   `abi:"counterpartyPubKey"`
+	ExpiresAt          uint64   `abi:"expiresAt"`
 }
 
 type abiEnvelope struct {
@@ -270,13 +323,15 @@ type abiEnvelope struct {
 	Escrow             abiEscrow      `abi:"escrow"`
 	ParentXpubs        [][]byte       `abi:"parentXpubs"`
 	Threshold          uint32         `abi:"threshold"`
+	WalletRegistry     common.Address `abi:"walletRegistry"`
+	AccountHash        [32]byte       `abi:"accountHash"`
 }
 
 // Validate rejects envelopes that are structurally unusable. It is called by
 // Encode, so no caller can hash something it would refuse.
 //
-// After the version, v1's checks run unchanged on v1's fields; the signer set
-// is checked last, as the part version 2 added.
+// After the version, v1's checks run on v1's fields, then the signer set
+// (version 2), then the account (version 3).
 func (e Envelope) Validate() error {
 	if e.Version != EnvelopeVersion {
 		return fmt.Errorf("envelope version %d, want %d", e.Version, EnvelopeVersion)
@@ -305,6 +360,10 @@ func (e Envelope) Validate() error {
 			if i == 0 {
 				return errors.New("input 0 is the anchor and can never be an escrow output")
 			}
+			if in.Chain != EscrowTimeoutChain || in.Index != EscrowTimeoutIndex {
+				return fmt.Errorf("escrow input %d is at (%d, %d); an escrow's timeout branch is at (%d, %d)",
+					i, in.Chain, in.Index, EscrowTimeoutChain, EscrowTimeoutIndex)
+			}
 		}
 	}
 	if escrowInputs > 1 {
@@ -312,19 +371,37 @@ func (e Envelope) Validate() error {
 	}
 	// Terms without an output to apply them to, or an input with no terms to
 	// rebuild its script from, are both unusable rather than merely odd.
-	hasTerms := e.Escrow.Timeout != 0 || e.Escrow.PreimageHash != [32]byte{} || len(e.Escrow.CustodianPubKey) > 0
+	hasTerms := e.Escrow.ExpiresAt != 0 || e.Escrow.PreimageHash != [32]byte{} || len(e.Escrow.CounterpartyPubKey) > 0
 	if escrowInputs == 1 && !hasTerms {
 		return errors.New("an escrow input needs the escrow terms to rebuild its witness script")
 	}
-	if hasTerms {
-		if len(e.Escrow.CustodianPubKey) != 33 {
-			return fmt.Errorf("escrow custodian key is %d bytes, want a 33-byte compressed key", len(e.Escrow.CustodianPubKey))
-		}
-		if e.Escrow.Chain > 1 {
-			return fmt.Errorf("escrow multisig chain is %d, want 0 or 1", e.Escrow.Chain)
-		}
+	if hasTerms && len(e.Escrow.CounterpartyPubKey) != 33 {
+		return fmt.Errorf("escrow counterparty key is %d bytes, want a 33-byte compressed key", len(e.Escrow.CounterpartyPubKey))
 	}
-	return e.validateSigners()
+	if err := e.validateSigners(); err != nil {
+		return err
+	}
+	// The account is named in the chain's terms or not at all: a zero registry
+	// or hash would leave the hash binding nothing a consumer can compare.
+	if e.WalletRegistry == (common.Address{}) {
+		return errors.New("envelope names no wallet registry")
+	}
+	if e.AccountHash == ([32]byte{}) {
+		return errors.New("envelope names no account hash")
+	}
+	return nil
+}
+
+// AccountHashOf is the diamond's account key for (sourceId, accountAddress):
+// keccak256(abi.encode(sourceId, accountAddress)), the value AccountHash must
+// carry.
+func AccountHashOf(sourceID [32]byte, accountAddress string) [32]byte {
+	packed, err := accountKeyArgs.Pack(sourceID, accountAddress)
+	if err != nil {
+		// A bytes32 and a string always pack.
+		panic("packing account key: " + err.Error())
+	}
+	return crypto.Keccak256Hash(packed)
 }
 
 // Encode returns the canonical bytes.
@@ -354,6 +431,8 @@ func (e Envelope) Encode() ([]byte, error) {
 		Escrow:             abiEscrow(e.Escrow),
 		ParentXpubs:        e.ParentXpubs,
 		Threshold:          e.Threshold,
+		WalletRegistry:     e.WalletRegistry,
+		AccountHash:        e.AccountHash,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("encoding envelope: %w", err)
@@ -411,6 +490,8 @@ func Decode(b []byte) (Envelope, error) {
 		Escrow:             Escrow(raw.Escrow),
 		ParentXpubs:        raw.ParentXpubs,
 		Threshold:          raw.Threshold,
+		WalletRegistry:     raw.WalletRegistry,
+		AccountHash:        raw.AccountHash,
 	}
 	out.Inputs = make([]Input, len(raw.Inputs))
 	for i, in := range raw.Inputs {

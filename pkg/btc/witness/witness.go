@@ -165,21 +165,21 @@ func inputScripts(env csp.Envelope, w Wallet, accountXpubs []string) ([][]byte, 
 	for i, in := range env.Inputs {
 		if in.IsEscrow {
 			// The escrow's TIMEOUT branch. Its quorum is this wallet's own
-			// k-of-n at the escrow's coordinates, so the key ORDER — which
+			// k-of-n at the fixed timeout coordinates, so the key ORDER — which
 			// decides where each signature sits — comes from the same
 			// derivation an ordinary input uses. Only the script differs.
+			chain, index := address.Chain(csp.EscrowTimeoutChain), csp.EscrowTimeoutIndex
 			script, _, err := htlc.ForWallet(w.ParentXpubs, env.AccountIndex, w.Threshold, htlc.Terms{
 				PreimageHash:    env.Escrow.PreimageHash,
-				CustodianPubKey: env.Escrow.CustodianPubKey,
-				Timeout:         int64(env.Escrow.Timeout),
-				Chain:           address.Chain(env.Escrow.Chain),
-				Index:           env.Escrow.Index,
+				CustodianPubKey: env.Escrow.CounterpartyPubKey,
+				Timeout:         int64(env.Escrow.ExpiresAt),
+				Chain:           chain,
+				Index:           index,
 			}, w.Params)
 			if err != nil {
 				return nil, nil, fmt.Errorf("rebuilding the escrow script for input %d: %w", i, err)
 			}
-			_, _, pubs, err := address.Derive(
-				accountXpubs, w.Threshold, address.Chain(env.Escrow.Chain), env.Escrow.Index, w.Params)
+			_, _, pubs, err := address.Derive(accountXpubs, w.Threshold, chain, index, w.Params)
 			if err != nil {
 				return nil, nil, fmt.Errorf("deriving the escrow's keys for input %d: %w", i, err)
 			}
