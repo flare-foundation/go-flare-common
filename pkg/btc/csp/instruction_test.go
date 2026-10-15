@@ -41,8 +41,8 @@ func boundPair(t *testing.T) ([]byte, csp.Instruction) {
 			{TeeId: common.HexToAddress("0xA11CE"), KeyId: 1},
 			{TeeId: common.HexToAddress("0xB0B"), KeyId: 2},
 		},
-		WalletId:         e.WalletID,
-		SourceId:         e.SourceID,
+		WalletId:         e.WalletId,
+		SourceId:         e.SourceId,
 		AccountIndex:     e.AccountIndex,
 		SequencePosition: e.SequencePosition,
 		Attempt:          e.Attempt,
@@ -79,7 +79,7 @@ func TestBindPackageRejectsAnUnsignedProposal(t *testing.T) {
 	encoded, err := e.Encode()
 	require.NoError(t, err)
 	in := csp.Instruction{
-		WalletId: e.WalletID, SourceId: e.SourceID, AccountIndex: e.AccountIndex,
+		WalletId: e.WalletId, SourceId: e.SourceId, AccountIndex: e.AccountIndex,
 		SequencePosition: e.SequencePosition, Attempt: e.Attempt,
 		PackageHash: crypto.Keccak256Hash(encoded),
 	}
@@ -104,7 +104,7 @@ func TestBindPackageRejectsAnotherPartysSignature(t *testing.T) {
 	raw := append(append([]byte{}, encoded...), sig...)
 
 	in := csp.Instruction{
-		WalletId: e.WalletID, SourceId: e.SourceID, AccountIndex: e.AccountIndex,
+		WalletId: e.WalletId, SourceId: e.SourceId, AccountIndex: e.AccountIndex,
 		SequencePosition: e.SequencePosition, Attempt: e.Attempt,
 		PackageHash: crypto.Keccak256Hash(raw),
 	}

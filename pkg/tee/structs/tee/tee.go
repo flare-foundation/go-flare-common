@@ -15,6 +15,9 @@ const (
 	VoteSequenceInit Struct = "voteSequenceInit"
 	VoteSequenceNext Struct = "voteSequenceNext"
 	VoteReceipt      Struct = "voteReceipt"
+	// CspEnvelope is the Bitcoin CSP proposal envelope, which a signer
+	// receives in Instruction.additionalFixedMessage.
+	CspEnvelope Struct = "cspEnvelope"
 )
 
 var StructArg map[Struct]abi.Argument
@@ -28,6 +31,7 @@ func init() {
 		VoteSequenceInit,
 		VoteSequenceNext,
 		VoteReceipt,
+		CspEnvelope,
 	}
 
 	teeAbi, err := TeeMetaData.GetAbi()
