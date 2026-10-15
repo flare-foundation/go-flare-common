@@ -58,6 +58,45 @@ type TeeStructsAttestation struct {
 	MachinePathListHash      [32]byte
 }
 
+// TeeStructsCspEnvelope is an auto generated low-level Go binding around an user-defined struct.
+type TeeStructsCspEnvelope struct {
+	WalletId           [32]byte
+	SourceId           [32]byte
+	AccountIndex       uint32
+	SequencePosition   uint64
+	EligibleGeneration uint64
+	InstructionType    uint8
+	PaymentCount       uint32
+	AnchorIndex        uint32
+	Nonce              uint64
+	Attempt            uint32
+	RawUnsignedTx      []byte
+	Inputs             []TeeStructsCspInput
+	ProposerAddress    common.Address
+	Escrow             TeeStructsCspEscrow
+	ParentXpubs        [][]byte
+	Threshold          uint32
+	WalletRegistry     common.Address
+	AccountHash        [32]byte
+}
+
+// TeeStructsCspEscrow is an auto generated low-level Go binding around an user-defined struct.
+type TeeStructsCspEscrow struct {
+	PreimageHash       [32]byte
+	CounterpartyPubKey []byte
+	ExpiresAt          uint64
+}
+
+// TeeStructsCspInput is an auto generated low-level Go binding around an user-defined struct.
+type TeeStructsCspInput struct {
+	Txid     [32]byte
+	Vout     uint32
+	ValueSat uint64
+	Chain    uint8
+	Index    uint32
+	IsEscrow bool
+}
+
 // TeeStructsInstruction is an auto generated low-level Go binding around an user-defined struct.
 type TeeStructsInstruction struct {
 	InstructionId          [32]byte
@@ -101,7 +140,7 @@ type TeeStructsVoteSequenceNext struct {
 
 // TeeMetaData contains all meta data concerning the Tee contract.
 var TeeMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"challenge\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"x\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"y\",\"type\":\"bytes32\"}],\"internalType\":\"structPublicKey\",\"name\":\"publicKey\",\"type\":\"tuple\"},{\"internalType\":\"uint32\",\"name\":\"initialSigningPolicyId\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"initialSigningPolicyHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"lastSigningPolicyId\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"lastSigningPolicyHash\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"bytes\",\"name\":\"systemState\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"systemStateVersion\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"state\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"stateVersion\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeAvailabilityCheck.TeeState\",\"name\":\"state\",\"type\":\"tuple\"},{\"internalType\":\"uint64\",\"name\":\"teeTimestamp\",\"type\":\"uint64\"},{\"internalType\":\"uint256\",\"name\":\"machinePathListNonce\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"machinePathListHash\",\"type\":\"bytes32\"}],\"internalType\":\"structTeeStructs.Attestation\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"attestationStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"internalType\":\"uint32\",\"name\":\"rewardEpochId\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"opCommand\",\"type\":\"bytes32\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"bytes\",\"name\":\"originalMessage\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"additionalFixedMessage\",\"type\":\"bytes\"}],\"internalType\":\"structTeeStructs.Instruction\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"instructionStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"instructionHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"sequence\",\"type\":\"uint64\"},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"additionalVariableMessageHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"voteHash\",\"type\":\"bytes32\"}],\"internalType\":\"structTeeStructs.VoteReceipt\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"voteReceiptStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"instructionHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"rewardEpochId\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"}],\"internalType\":\"structTeeStructs.VoteSequenceInit\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"voteSequenceInitStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"voteHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"sequence\",\"type\":\"uint64\"},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"additionalVariableMessageHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structTeeStructs.VoteSequenceNext\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"voteSequenceNextStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"chainId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"challenge\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"x\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"y\",\"type\":\"bytes32\"}],\"internalType\":\"structPublicKey\",\"name\":\"publicKey\",\"type\":\"tuple\"},{\"internalType\":\"uint32\",\"name\":\"initialSigningPolicyId\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"initialSigningPolicyHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"lastSigningPolicyId\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"lastSigningPolicyHash\",\"type\":\"bytes32\"},{\"components\":[{\"internalType\":\"bytes\",\"name\":\"systemState\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"systemStateVersion\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"state\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"stateVersion\",\"type\":\"bytes32\"}],\"internalType\":\"structITeeAvailabilityCheck.TeeState\",\"name\":\"state\",\"type\":\"tuple\"},{\"internalType\":\"uint64\",\"name\":\"teeTimestamp\",\"type\":\"uint64\"},{\"internalType\":\"uint256\",\"name\":\"machinePathListNonce\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"machinePathListHash\",\"type\":\"bytes32\"}],\"internalType\":\"structTeeStructs.Attestation\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"attestationStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"walletId\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"sourceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"accountIndex\",\"type\":\"uint32\"},{\"internalType\":\"uint64\",\"name\":\"sequencePosition\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"eligibleGeneration\",\"type\":\"uint64\"},{\"internalType\":\"uint8\",\"name\":\"instructionType\",\"type\":\"uint8\"},{\"internalType\":\"uint32\",\"name\":\"paymentCount\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"anchorIndex\",\"type\":\"uint32\"},{\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"},{\"internalType\":\"uint32\",\"name\":\"attempt\",\"type\":\"uint32\"},{\"internalType\":\"bytes\",\"name\":\"rawUnsignedTx\",\"type\":\"bytes\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"txid\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"vout\",\"type\":\"uint32\"},{\"internalType\":\"uint64\",\"name\":\"valueSat\",\"type\":\"uint64\"},{\"internalType\":\"uint8\",\"name\":\"chain\",\"type\":\"uint8\"},{\"internalType\":\"uint32\",\"name\":\"index\",\"type\":\"uint32\"},{\"internalType\":\"bool\",\"name\":\"isEscrow\",\"type\":\"bool\"}],\"internalType\":\"structTeeStructs.CspInput[]\",\"name\":\"inputs\",\"type\":\"tuple[]\"},{\"internalType\":\"address\",\"name\":\"proposerAddress\",\"type\":\"address\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"preimageHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"counterpartyPubKey\",\"type\":\"bytes\"},{\"internalType\":\"uint64\",\"name\":\"expiresAt\",\"type\":\"uint64\"}],\"internalType\":\"structTeeStructs.CspEscrow\",\"name\":\"escrow\",\"type\":\"tuple\"},{\"internalType\":\"bytes[]\",\"name\":\"parentXpubs\",\"type\":\"bytes[]\"},{\"internalType\":\"uint32\",\"name\":\"threshold\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"walletRegistry\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"accountHash\",\"type\":\"bytes32\"}],\"internalType\":\"structTeeStructs.CspEnvelope\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"cspEnvelopeStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"preimageHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"counterpartyPubKey\",\"type\":\"bytes\"},{\"internalType\":\"uint64\",\"name\":\"expiresAt\",\"type\":\"uint64\"}],\"internalType\":\"structTeeStructs.CspEscrow\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"cspEscrowStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"txid\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"vout\",\"type\":\"uint32\"},{\"internalType\":\"uint64\",\"name\":\"valueSat\",\"type\":\"uint64\"},{\"internalType\":\"uint8\",\"name\":\"chain\",\"type\":\"uint8\"},{\"internalType\":\"uint32\",\"name\":\"index\",\"type\":\"uint32\"},{\"internalType\":\"bool\",\"name\":\"isEscrow\",\"type\":\"bool\"}],\"internalType\":\"structTeeStructs.CspInput\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"cspInputStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"internalType\":\"uint32\",\"name\":\"rewardEpochId\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"opType\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"opCommand\",\"type\":\"bytes32\"},{\"internalType\":\"address[]\",\"name\":\"cosigners\",\"type\":\"address[]\"},{\"internalType\":\"uint64\",\"name\":\"cosignersThreshold\",\"type\":\"uint64\"},{\"internalType\":\"bytes\",\"name\":\"originalMessage\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"additionalFixedMessage\",\"type\":\"bytes\"}],\"internalType\":\"structTeeStructs.Instruction\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"instructionStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"instructionHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"sequence\",\"type\":\"uint64\"},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"additionalVariableMessageHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"voteHash\",\"type\":\"bytes32\"}],\"internalType\":\"structTeeStructs.VoteReceipt\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"voteReceiptStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"instructionId\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"instructionHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"rewardEpochId\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"teeId\",\"type\":\"address\"}],\"internalType\":\"structTeeStructs.VoteSequenceInit\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"voteSequenceInitStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"voteHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"sequence\",\"type\":\"uint64\"},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"additionalVariableMessageHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"timestamp\",\"type\":\"uint64\"}],\"internalType\":\"structTeeStructs.VoteSequenceNext\",\"name\":\"\",\"type\":\"tuple\"}],\"name\":\"voteSequenceNextStruct\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // TeeABI is the input ABI used to generate the binding from.
@@ -269,6 +308,69 @@ func (_Tee *TeeSession) AttestationStruct(arg0 TeeStructsAttestation) (*types.Tr
 // Solidity: function attestationStruct((uint256,bytes32,(bytes32,bytes32),uint32,bytes32,uint32,bytes32,(bytes,bytes32,bytes,bytes32),uint64,uint256,bytes32) ) returns()
 func (_Tee *TeeTransactorSession) AttestationStruct(arg0 TeeStructsAttestation) (*types.Transaction, error) {
 	return _Tee.Contract.AttestationStruct(&_Tee.TransactOpts, arg0)
+}
+
+// CspEnvelopeStruct is a paid mutator transaction binding the contract method 0x1df9c418.
+//
+// Solidity: function cspEnvelopeStruct((bytes32,bytes32,uint32,uint64,uint64,uint8,uint32,uint32,uint64,uint32,bytes,(bytes32,uint32,uint64,uint8,uint32,bool)[],address,(bytes32,bytes,uint64),bytes[],uint32,address,bytes32) ) returns()
+func (_Tee *TeeTransactor) CspEnvelopeStruct(opts *bind.TransactOpts, arg0 TeeStructsCspEnvelope) (*types.Transaction, error) {
+	return _Tee.contract.Transact(opts, "cspEnvelopeStruct", arg0)
+}
+
+// CspEnvelopeStruct is a paid mutator transaction binding the contract method 0x1df9c418.
+//
+// Solidity: function cspEnvelopeStruct((bytes32,bytes32,uint32,uint64,uint64,uint8,uint32,uint32,uint64,uint32,bytes,(bytes32,uint32,uint64,uint8,uint32,bool)[],address,(bytes32,bytes,uint64),bytes[],uint32,address,bytes32) ) returns()
+func (_Tee *TeeSession) CspEnvelopeStruct(arg0 TeeStructsCspEnvelope) (*types.Transaction, error) {
+	return _Tee.Contract.CspEnvelopeStruct(&_Tee.TransactOpts, arg0)
+}
+
+// CspEnvelopeStruct is a paid mutator transaction binding the contract method 0x1df9c418.
+//
+// Solidity: function cspEnvelopeStruct((bytes32,bytes32,uint32,uint64,uint64,uint8,uint32,uint32,uint64,uint32,bytes,(bytes32,uint32,uint64,uint8,uint32,bool)[],address,(bytes32,bytes,uint64),bytes[],uint32,address,bytes32) ) returns()
+func (_Tee *TeeTransactorSession) CspEnvelopeStruct(arg0 TeeStructsCspEnvelope) (*types.Transaction, error) {
+	return _Tee.Contract.CspEnvelopeStruct(&_Tee.TransactOpts, arg0)
+}
+
+// CspEscrowStruct is a paid mutator transaction binding the contract method 0xf15873b6.
+//
+// Solidity: function cspEscrowStruct((bytes32,bytes,uint64) ) returns()
+func (_Tee *TeeTransactor) CspEscrowStruct(opts *bind.TransactOpts, arg0 TeeStructsCspEscrow) (*types.Transaction, error) {
+	return _Tee.contract.Transact(opts, "cspEscrowStruct", arg0)
+}
+
+// CspEscrowStruct is a paid mutator transaction binding the contract method 0xf15873b6.
+//
+// Solidity: function cspEscrowStruct((bytes32,bytes,uint64) ) returns()
+func (_Tee *TeeSession) CspEscrowStruct(arg0 TeeStructsCspEscrow) (*types.Transaction, error) {
+	return _Tee.Contract.CspEscrowStruct(&_Tee.TransactOpts, arg0)
+}
+
+// CspEscrowStruct is a paid mutator transaction binding the contract method 0xf15873b6.
+//
+// Solidity: function cspEscrowStruct((bytes32,bytes,uint64) ) returns()
+func (_Tee *TeeTransactorSession) CspEscrowStruct(arg0 TeeStructsCspEscrow) (*types.Transaction, error) {
+	return _Tee.Contract.CspEscrowStruct(&_Tee.TransactOpts, arg0)
+}
+
+// CspInputStruct is a paid mutator transaction binding the contract method 0x01e6a9d2.
+//
+// Solidity: function cspInputStruct((bytes32,uint32,uint64,uint8,uint32,bool) ) returns()
+func (_Tee *TeeTransactor) CspInputStruct(opts *bind.TransactOpts, arg0 TeeStructsCspInput) (*types.Transaction, error) {
+	return _Tee.contract.Transact(opts, "cspInputStruct", arg0)
+}
+
+// CspInputStruct is a paid mutator transaction binding the contract method 0x01e6a9d2.
+//
+// Solidity: function cspInputStruct((bytes32,uint32,uint64,uint8,uint32,bool) ) returns()
+func (_Tee *TeeSession) CspInputStruct(arg0 TeeStructsCspInput) (*types.Transaction, error) {
+	return _Tee.Contract.CspInputStruct(&_Tee.TransactOpts, arg0)
+}
+
+// CspInputStruct is a paid mutator transaction binding the contract method 0x01e6a9d2.
+//
+// Solidity: function cspInputStruct((bytes32,uint32,uint64,uint8,uint32,bool) ) returns()
+func (_Tee *TeeTransactorSession) CspInputStruct(arg0 TeeStructsCspInput) (*types.Transaction, error) {
+	return _Tee.Contract.CspInputStruct(&_Tee.TransactOpts, arg0)
 }
 
 // InstructionStruct is a paid mutator transaction binding the contract method 0xd92a23ae.

@@ -109,6 +109,235 @@
         "components": [
           {
             "internalType": "bytes32",
+            "name": "walletId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "sourceId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "accountIndex",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint64",
+            "name": "sequencePosition",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "eligibleGeneration",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint8",
+            "name": "instructionType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint32",
+            "name": "paymentCount",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "anchorIndex",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint64",
+            "name": "nonce",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint32",
+            "name": "attempt",
+            "type": "uint32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "rawUnsignedTx",
+            "type": "bytes"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "txid",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint32",
+                "name": "vout",
+                "type": "uint32"
+              },
+              {
+                "internalType": "uint64",
+                "name": "valueSat",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint8",
+                "name": "chain",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint32",
+                "name": "index",
+                "type": "uint32"
+              },
+              {
+                "internalType": "bool",
+                "name": "isEscrow",
+                "type": "bool"
+              }
+            ],
+            "internalType": "struct TeeStructs.CspInput[]",
+            "name": "inputs",
+            "type": "tuple[]"
+          },
+          {
+            "internalType": "address",
+            "name": "proposerAddress",
+            "type": "address"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "preimageHash",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes",
+                "name": "counterpartyPubKey",
+                "type": "bytes"
+              },
+              {
+                "internalType": "uint64",
+                "name": "expiresAt",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct TeeStructs.CspEscrow",
+            "name": "escrow",
+            "type": "tuple"
+          },
+          {
+            "internalType": "bytes[]",
+            "name": "parentXpubs",
+            "type": "bytes[]"
+          },
+          {
+            "internalType": "uint32",
+            "name": "threshold",
+            "type": "uint32"
+          },
+          {
+            "internalType": "address",
+            "name": "walletRegistry",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "accountHash",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct TeeStructs.CspEnvelope",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "cspEnvelopeStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "preimageHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "counterpartyPubKey",
+            "type": "bytes"
+          },
+          {
+            "internalType": "uint64",
+            "name": "expiresAt",
+            "type": "uint64"
+          }
+        ],
+        "internalType": "struct TeeStructs.CspEscrow",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "cspEscrowStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "txid",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "vout",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint64",
+            "name": "valueSat",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint8",
+            "name": "chain",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint32",
+            "name": "index",
+            "type": "uint32"
+          },
+          {
+            "internalType": "bool",
+            "name": "isEscrow",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct TeeStructs.CspInput",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "name": "cspInputStruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
             "name": "instructionId",
             "type": "bytes32"
           },
