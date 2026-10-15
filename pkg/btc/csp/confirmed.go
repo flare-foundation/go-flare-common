@@ -9,7 +9,9 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/flare-foundation/go-flare-common/pkg/abicoder"
 	"github.com/flare-foundation/go-flare-common/pkg/signing"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/walletpayments"
 )
 
 // # The confirmed-attempt proposal
@@ -267,30 +269,21 @@ func (c ConfirmedAttempt) Signer(signature []byte, chainID uint64) (common.Addre
 }
 
 // BtcConfirmedAttemptCommitment is what a confirmed-attempt proposal commits to
-// on the channel: IBtcAccounts.BtcConfirmedAttemptCommitment, the settled
-// attempt and its txid. The proposer passes it in calldata to
-// finalizeConfirmedAttempt, the verifier hashes it into the response, and the
-// contract binds the two by CommitmentHash. Two static words, where a
-// BtcProposalCommitment is five, so no encoding of one is an encoding of the
-// other. FIELD ORDER IS THE CONTRACT'S.
-type BtcConfirmedAttemptCommitment struct {
-	Attempt uint32
-	Txid    [32]byte
-}
-
-var confirmedCommitmentArgs = func() abi.Arguments {
-	u32, _ := abi.NewType("uint32", "", nil)
-	b32, _ := abi.NewType("bytes32", "", nil)
-	return abi.Arguments{{Type: u32}, {Type: b32}}
-}()
+// on the channel: the contract's IBtcAccounts.BtcConfirmedAttemptCommitment, as
+// generated from the struct ABI — the settled attempt and its txid. The
+// proposer passes it in calldata to finalizeConfirmedAttempt, the verifier
+// hashes it into the response, and the contract binds the two by
+// CommitmentHash. Two static words, where a BtcProposalCommitment is five, so
+// no encoding of one is an encoding of the other.
+type BtcConfirmedAttemptCommitment walletpayments.IBtcAccountsBtcConfirmedAttemptCommitment
 
 // CommitmentHash returns keccak256(abi.encode(commitment)), the value the
 // attested response carries as chainCommitmentHash.
 func (c BtcConfirmedAttemptCommitment) CommitmentHash() [32]byte {
-	packed, err := confirmedCommitmentArgs.Pack(c.Attempt, c.Txid)
+	packed, err := abicoder.Encode(walletpayments.BtcConfirmedAttemptCommitmentArgument, walletpayments.IBtcAccountsBtcConfirmedAttemptCommitment(c))
 	if err != nil {
-		// Both fields are static types built above; packing cannot fail.
-		panic("csp: packing BtcConfirmedAttemptCommitment: " + err.Error())
+		// Both fields are static types, so encoding cannot fail on any value.
+		panic("csp: encoding BtcConfirmedAttemptCommitment: " + err.Error())
 	}
 	return [32]byte(crypto.Keccak256Hash(packed))
 }

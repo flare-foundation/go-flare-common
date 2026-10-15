@@ -7,6 +7,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/flare-foundation/go-flare-common/pkg/btc/csp"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/walletpayments"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -36,12 +37,12 @@ func boundPair(t *testing.T) ([]byte, csp.Instruction) {
 	raw := packageOf(t, e, testChainID)
 	h := crypto.Keccak256Hash(raw)
 	return raw, csp.Instruction{
-		TeeIDKeyIDPairs: []csp.TeeIDKeyIDPair{
-			{TeeID: common.HexToAddress("0xA11CE"), KeyID: 1},
-			{TeeID: common.HexToAddress("0xB0B"), KeyID: 2},
+		TeeIdKeyIdPairs: []walletpayments.TeeIdKeyIdPair{
+			{TeeId: common.HexToAddress("0xA11CE"), KeyId: 1},
+			{TeeId: common.HexToAddress("0xB0B"), KeyId: 2},
 		},
-		WalletID:         e.WalletID,
-		SourceID:         e.SourceID,
+		WalletId:         e.WalletID,
+		SourceId:         e.SourceID,
 		AccountIndex:     e.AccountIndex,
 		SequencePosition: e.SequencePosition,
 		Attempt:          e.Attempt,
@@ -78,7 +79,7 @@ func TestBindPackageRejectsAnUnsignedProposal(t *testing.T) {
 	encoded, err := e.Encode()
 	require.NoError(t, err)
 	in := csp.Instruction{
-		WalletID: e.WalletID, SourceID: e.SourceID, AccountIndex: e.AccountIndex,
+		WalletId: e.WalletID, SourceId: e.SourceID, AccountIndex: e.AccountIndex,
 		SequencePosition: e.SequencePosition, Attempt: e.Attempt,
 		PackageHash: crypto.Keccak256Hash(encoded),
 	}
@@ -103,7 +104,7 @@ func TestBindPackageRejectsAnotherPartysSignature(t *testing.T) {
 	raw := append(append([]byte{}, encoded...), sig...)
 
 	in := csp.Instruction{
-		WalletID: e.WalletID, SourceID: e.SourceID, AccountIndex: e.AccountIndex,
+		WalletId: e.WalletID, SourceId: e.SourceID, AccountIndex: e.AccountIndex,
 		SequencePosition: e.SequencePosition, Attempt: e.Attempt,
 		PackageHash: crypto.Keccak256Hash(raw),
 	}
@@ -147,7 +148,7 @@ func TestBindPackageRejectsIdentityMismatch(t *testing.T) {
 // source is not the one decided even when every other identity field agrees.
 func TestBindPackageRejectsSourceMismatch(t *testing.T) {
 	raw, in := boundPair(t)
-	in.SourceID[0] ^= 0xff
+	in.SourceId[0] ^= 0xff
 	_, err := in.BindPackage(raw, testChainID)
 	assert.ErrorContains(t, err, "different source")
 }
@@ -155,10 +156,10 @@ func TestBindPackageRejectsSourceMismatch(t *testing.T) {
 func TestKeysForSelectsThisMachine(t *testing.T) {
 	me := common.HexToAddress("0xA11CE")
 	other := common.HexToAddress("0xB0B")
-	in := csp.Instruction{TeeIDKeyIDPairs: []csp.TeeIDKeyIDPair{
-		{TeeID: other, KeyID: 1},
-		{TeeID: me, KeyID: 7},
-		{TeeID: other, KeyID: 2},
+	in := csp.Instruction{TeeIdKeyIdPairs: []walletpayments.TeeIdKeyIdPair{
+		{TeeId: other, KeyId: 1},
+		{TeeId: me, KeyId: 7},
+		{TeeId: other, KeyId: 2},
 	}}
 	assert.Equal(t, []uint64{7}, in.KeysFor(me))
 	// A machine that is not a signer for this wallet gets nothing, so it

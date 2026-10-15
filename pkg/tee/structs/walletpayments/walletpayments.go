@@ -12,28 +12,36 @@ var opCommands = []op.Command{
 	op.Pay,
 	op.Reissue,
 	op.EscrowCreate,
-	op.EscrowReclaim,
-	op.Consolidate,
 }
 
 // The i-th method is the one in the payments-struct interface whose sole input
-// is the message type emitted with the i-th opCommand.
-//
-// The CSP control plane emits ONE message shape for every instruction kind —
-// settle encodes a `CspInstructionMessage` whatever the batch does — so
-// escrow and consolidation share the payment message's arguments rather than
-// having any of their own. This map is the ACCOUNT model's (`IPayments`); the
-// CSP tuple is resolved separately where it is decoded, because the two planes
-// no longer share a struct.
+// is the message the account-based payment model emits with the i-th
+// opCommand: a payment and its reissue carry a PaymentInstructionMessage, an
+// XRPL escrow an XrpEscrowCreateMessage.
 var methods = []string{
 	"paymentInstructionMessageStruct",
 	"paymentInstructionMessageStruct",
-	"paymentInstructionMessageStruct",
-	"paymentInstructionMessageStruct",
-	"paymentInstructionMessageStruct",
+	"xrpEscrowCreateMessageStruct",
 }
 
+// MessageArguments are the messages of the account-based payment model, by the
+// command they are emitted with.
 var MessageArguments map[op.Command]abi.Argument
+
+// CspMessageArgument is the CspInstructionMessage that CSP settlement emits
+// with every command it dispatches. It is not in MessageArguments because the
+// account-based model emits different messages with the same commands.
+var CspMessageArgument abi.Argument
+
+// BtcProposalCommitmentArgument is the BtcProposalCommitment a Bitcoin CSP
+// proposal commits to, whose keccak256(abi.encode(...)) is the proposal's
+// chainCommitmentHash.
+var BtcProposalCommitmentArgument abi.Argument
+
+// BtcConfirmedAttemptCommitmentArgument is the BtcConfirmedAttemptCommitment a
+// confirmed-attempt proposal commits to, whose keccak256(abi.encode(...)) is
+// the proposal's chainCommitmentHash.
+var BtcConfirmedAttemptCommitmentArgument abi.Argument
 
 func init() {
 	paymentsABI, err := WalletPaymentsMetaData.GetAbi()
@@ -47,10 +55,19 @@ func init() {
 
 	MessageArguments = make(map[op.Command]abi.Argument)
 	for j := range opCommands {
-		method, ok := paymentsABI.Methods[methods[j]]
-		if !ok {
-			panic(fmt.Sprintf("missing method %s", methods[j]))
-		}
-		MessageArguments[opCommands[j]] = method.Inputs[0]
+		MessageArguments[opCommands[j]] = structArgument(paymentsABI, methods[j])
 	}
+
+	CspMessageArgument = structArgument(paymentsABI, "cspInstructionMessageStruct")
+	BtcProposalCommitmentArgument = structArgument(paymentsABI, "btcProposalCommitmentStruct")
+	BtcConfirmedAttemptCommitmentArgument = structArgument(paymentsABI, "btcConfirmedAttemptCommitmentStruct")
+}
+
+// structArgument returns the sole input of the struct ABI's method name.
+func structArgument(a *abi.ABI, name string) abi.Argument {
+	method, ok := a.Methods[name]
+	if !ok {
+		panic(fmt.Sprintf("missing method %s", name))
+	}
+	return method.Inputs[0]
 }

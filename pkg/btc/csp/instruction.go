@@ -5,117 +5,32 @@ import (
 	"fmt"
 
 	"github.com/ethereum/go-ethereum/accounts"
-	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
+
+	"github.com/flare-foundation/go-flare-common/pkg/abicoder"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/walletpayments"
 )
 
-// Instruction is the payload CspInstructions dispatches through the
-// FlareTeeManager diamond when a leader settles, carried in the TEE
-// instruction's OriginalMessage.
+// Instruction is the CspInstructionMessage that CSP settlement dispatches
+// through the FlareTeeManager diamond when a leader settles, carried in the TEE
+// instruction's OriginalMessage. Its fields are the contract's, as generated
+// from the struct ABI.
 //
-// It describes WHAT WAS DECIDED and not what is to be signed: the Bitcoin
-// transaction lives in the DAL under Txid, and ProposalHash is what binds those
-// bytes to this decision. Splitting it that way keeps an unbounded transaction
-// off chain while still making the binding checkable by anyone holding both.
-type Instruction struct {
-	// TeeIDKeyIDPairs says which machine holds which key for this wallet. A
-	// machine filters it for its own id to learn which key to sign with — the
-	// same shape WalletPayments carries for its other payment models, so the
-	// machine-side lookup is unchanged.
-	TeeIDKeyIDPairs  []TeeIDKeyIDPair
-	WalletID         [32]byte
-	SourceID         [32]byte
-	AccountIndex     uint32
-	SequencePosition uint64
-	Attempt          uint32
-	FromPaymentID    uint64
-	ToPaymentID      uint64
-	PackageHash      common.Hash
-	// ChainCommitmentHash replaces Txid, and the replacement is the whole of the
-	// control plane's chain-neutrality: the instruction commits to Bitcoin's
-	// facts without naming any of them, so a rail with no anchor chains and no
-	// pre-signature txid carries the same message. The facts themselves are on
-	// the execution plane, and a signer that needs them reads the envelope it
-	// was going to sign anyway.
-	//
-	// THE WORD IS THE ONE TXID OCCUPIED. Both are bytes32, so a consumer that
-	// kept reading it as a txid gets a hash that looks like one and refers to no
-	// transaction.
-	ChainCommitmentHash common.Hash
-	Proposer            common.Address
-}
+// It describes WHAT WAS DECIDED and not what is to be signed. The proposal
+// package — the envelope and the proposer's signature — lives in the DAL under
+// PackageHash, which binds those bytes to this decision (BindPackage), so an
+// unbounded transaction stays off chain while the binding remains checkable by
+// anyone holding both. ChainCommitmentHash commits to the winning proposal's
+// chain-specific facts without naming them; a signer reads those facts from
+// the envelope it signs. TeeIdKeyIdPairs says which machine holds which of the
+// wallet's keys (KeysFor).
+type Instruction walletpayments.ICspSettlementCspInstructionMessage
 
-// TeeIDKeyIDPair binds a machine to one of its keys.
-type TeeIDKeyIDPair struct {
-	TeeID common.Address
-	KeyID uint64
-}
-
-var instructionArgs abi.Arguments
-
-func init() {
-	ty, err := abi.NewType("tuple", "", []abi.ArgumentMarshaling{
-		{Name: "teeIdKeyIdPairs", Type: "tuple[]", Components: []abi.ArgumentMarshaling{
-			{Name: "teeId", Type: "address"},
-			{Name: "keyId", Type: "uint64"},
-		}},
-		{Name: "walletId", Type: "bytes32"},
-		{Name: "sourceId", Type: "bytes32"},
-		{Name: "accountIndex", Type: "uint32"},
-		{Name: "sequencePosition", Type: "uint64"},
-		{Name: "attempt", Type: "uint32"},
-		{Name: "fromPaymentId", Type: "uint64"},
-		{Name: "toPaymentId", Type: "uint64"},
-		{Name: "packageHash", Type: "bytes32"},
-		{Name: "chainCommitmentHash", Type: "bytes32"},
-		{Name: "proposer", Type: "address"},
-	})
-	if err != nil {
-		panic("building instruction ABI type: " + err.Error())
-	}
-	instructionArgs = abi.Arguments{{Type: ty}}
-}
-
-type abiPair struct {
-	TeeID common.Address `abi:"teeId"`
-	KeyID uint64         `abi:"keyId"`
-}
-
-type abiInstruction struct {
-	TeeIDKeyIDPairs     []abiPair      `abi:"teeIdKeyIdPairs"`
-	WalletID            [32]byte       `abi:"walletId"`
-	SourceID            [32]byte       `abi:"sourceId"`
-	AccountIndex        uint32         `abi:"accountIndex"`
-	SequencePosition    uint64         `abi:"sequencePosition"`
-	Attempt             uint32         `abi:"attempt"`
-	FromPaymentID       uint64         `abi:"fromPaymentId"`
-	ToPaymentID         uint64         `abi:"toPaymentId"`
-	PackageHash         [32]byte       `abi:"packageHash"`
-	ChainCommitmentHash [32]byte       `abi:"chainCommitmentHash"`
-	Proposer            common.Address `abi:"proposer"`
-}
-
-// EncodeInstruction is the mirror of DecodeInstruction, used by tests and by
-// anything simulating the channel.
+// EncodeInstruction ABI-encodes the instruction as the contract dispatches it,
+// for tests and for anything simulating the channel.
 func EncodeInstruction(i Instruction) ([]byte, error) {
-	pairs := make([]abiPair, len(i.TeeIDKeyIDPairs))
-	for n, p := range i.TeeIDKeyIDPairs {
-		pairs[n] = abiPair(p)
-	}
-	b, err := instructionArgs.Pack(abiInstruction{
-		TeeIDKeyIDPairs:     pairs,
-		WalletID:            i.WalletID,
-		SourceID:            i.SourceID,
-		AccountIndex:        i.AccountIndex,
-		SequencePosition:    i.SequencePosition,
-		Attempt:             i.Attempt,
-		FromPaymentID:       i.FromPaymentID,
-		ToPaymentID:         i.ToPaymentID,
-		PackageHash:         i.PackageHash,
-		ChainCommitmentHash: i.ChainCommitmentHash,
-		Proposer:            i.Proposer,
-	})
+	b, err := abicoder.Encode(walletpayments.CspMessageArgument, walletpayments.ICspSettlementCspInstructionMessage(i))
 	if err != nil {
 		return nil, fmt.Errorf("encoding instruction: %w", err)
 	}
@@ -124,34 +39,11 @@ func EncodeInstruction(i Instruction) ([]byte, error) {
 
 // DecodeInstruction parses the dispatched payload.
 func DecodeInstruction(b []byte) (Instruction, error) {
-	vals, err := instructionArgs.Unpack(b)
+	m, err := abicoder.Decode[walletpayments.ICspSettlementCspInstructionMessage](walletpayments.CspMessageArgument, b)
 	if err != nil {
 		return Instruction{}, fmt.Errorf("decoding instruction: %w", err)
 	}
-	if len(vals) != 1 {
-		return Instruction{}, errors.New("instruction decoded to more than one value")
-	}
-	raw, ok := abi.ConvertType(vals[0], new(abiInstruction)).(*abiInstruction)
-	if !ok || raw == nil {
-		return Instruction{}, errors.New("instruction did not convert to the expected shape")
-	}
-	out := Instruction{
-		WalletID:            raw.WalletID,
-		SourceID:            raw.SourceID,
-		AccountIndex:        raw.AccountIndex,
-		SequencePosition:    raw.SequencePosition,
-		Attempt:             raw.Attempt,
-		FromPaymentID:       raw.FromPaymentID,
-		ToPaymentID:         raw.ToPaymentID,
-		PackageHash:         raw.PackageHash,
-		ChainCommitmentHash: raw.ChainCommitmentHash,
-		Proposer:            raw.Proposer,
-	}
-	out.TeeIDKeyIDPairs = make([]TeeIDKeyIDPair, len(raw.TeeIDKeyIDPairs))
-	for n, p := range raw.TeeIDKeyIDPairs {
-		out.TeeIDKeyIDPairs[n] = TeeIDKeyIDPair(p)
-	}
-	return out, nil
+	return Instruction(m), nil
 }
 
 // ProposerSigLen is [R || S || V]: fixed width, so a package splits without a
@@ -197,9 +89,9 @@ func SplitPackage(raw []byte) (Envelope, []byte, error) {
 // signature is what says the proposal is the work of the party being paid for
 // it.
 func (i Instruction) BindPackage(raw []byte, chainID uint64) (Envelope, error) {
-	if crypto.Keccak256Hash(raw) != i.PackageHash {
+	if h := crypto.Keccak256Hash(raw); h != common.Hash(i.PackageHash) {
 		return Envelope{}, fmt.Errorf("package hash %s does not match the finalized package hash %s",
-			crypto.Keccak256Hash(raw), i.PackageHash)
+			h, common.Hash(i.PackageHash))
 	}
 	e, sig, err := SplitPackage(raw)
 	if err != nil {
@@ -229,7 +121,7 @@ func (i Instruction) bindIdentity(e Envelope, sig []byte, chainID uint64) error 
 	// The identity fields must agree too. A hash match already implies it, but
 	// a mismatch here means the two were built from different intentions and is
 	// worth reporting as itself rather than as an opaque hash difference.
-	if e.WalletID != i.WalletID || e.AccountIndex != i.AccountIndex ||
+	if e.WalletID != i.WalletId || e.AccountIndex != i.AccountIndex ||
 		e.SequencePosition != i.SequencePosition || e.Attempt != i.Attempt {
 		return errors.New("envelope identity does not match the instruction")
 	}
@@ -238,7 +130,7 @@ func (i Instruction) bindIdentity(e Envelope, sig []byte, chainID uint64) error 
 	// envelope's keys against. The instruction's comes from the chain, so it is
 	// the one that wins. (It does not choose the network: the keys name their
 	// own coin, Envelope.CoinType.)
-	if e.SourceID != i.SourceID {
+	if e.SourceID != i.SourceId {
 		return errors.New("envelope names a different source than the instruction")
 	}
 	return nil
@@ -251,9 +143,9 @@ func (i Instruction) bindIdentity(e Envelope, sig []byte, chainID uint64) error 
 // its storage for a key it was never asked to use.
 func (i Instruction) KeysFor(teeID common.Address) []uint64 {
 	out := make([]uint64, 0, 1)
-	for _, p := range i.TeeIDKeyIDPairs {
-		if p.TeeID == teeID {
-			out = append(out, p.KeyID)
+	for _, p := range i.TeeIdKeyIdPairs {
+		if p.TeeId == teeID {
+			out = append(out, p.KeyId)
 		}
 	}
 	return out

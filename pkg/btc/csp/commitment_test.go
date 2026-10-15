@@ -3,15 +3,16 @@ package csp
 import (
 	"encoding/hex"
 	"testing"
+
+	"github.com/ethereum/go-ethereum/crypto"
 )
 
 // The commitment is `abi.encode` of five STATIC types, so the preimage is exactly
-// five 32-byte words in declaration order — the CONTRACT's declaration order,
-// in which nextAnchorVout sits third so that it shares a storage slot with
-// anchorIndex and nonce. This asserts the layout directly rather
-// than against our own packer, because the value has to match what Solidity
-// computes — a disagreement would surface only as `CommitmentMismatch` on a
-// proposal that is in fact correct.
+// five 32-byte words in the CONTRACT's declaration order, in which
+// nextAnchorVout sits third so that it shares a storage slot with anchorIndex
+// and nonce. The hash is checked against those words written out by hand,
+// because the value has to match what Solidity computes — a disagreement would
+// surface only as `CommitmentMismatch` on a proposal that is in fact correct.
 func TestCommitmentPreimageIsFiveStaticWords(t *testing.T) {
 	c := BtcProposalCommitment{
 		AnchorIndex:    1,
@@ -20,21 +21,17 @@ func TestCommitmentPreimageIsFiveStaticWords(t *testing.T) {
 		NextAnchorTxid: [32]byte{0xbb},
 		NextAnchorVout: 3,
 	}
-	packed, err := commitmentArgs.Pack(c.AnchorIndex, c.Nonce, c.NextAnchorVout, c.Txid, c.NextAnchorTxid)
-	if err != nil {
-		t.Fatalf("pack: %v", err)
-	}
-	if len(packed) != 5*32 {
-		t.Fatalf("preimage is %d bytes, want 160 (five static words)", len(packed))
-	}
-	want := "" +
+	preimage, err := hex.DecodeString("" +
 		"0000000000000000000000000000000000000000000000000000000000000001" + // anchorIndex
 		"0000000000000000000000000000000000000000000000000000000000000002" + // nonce
 		"0000000000000000000000000000000000000000000000000000000000000003" + // nextAnchorVout
 		"aa00000000000000000000000000000000000000000000000000000000000000" + // txid, left-aligned
-		"bb00000000000000000000000000000000000000000000000000000000000000" //   nextAnchorTxid
-	if got := hex.EncodeToString(packed); got != want {
-		t.Fatalf("preimage layout\n got %s\nwant %s", got, want)
+		"bb00000000000000000000000000000000000000000000000000000000000000") //  nextAnchorTxid
+	if err != nil {
+		t.Fatalf("decoding the preimage: %v", err)
+	}
+	if got, want := c.CommitmentHash(), [32]byte(crypto.Keccak256Hash(preimage)); got != want {
+		t.Fatalf("commitment hash %x, want keccak256 of the five words %x", got, want)
 	}
 }
 
