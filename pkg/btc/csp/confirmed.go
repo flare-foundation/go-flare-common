@@ -46,7 +46,7 @@ import (
 // the other.
 
 // ConfirmedAttemptTag opens every ConfirmedAttempt encoding.
-var ConfirmedAttemptTag = crypto.Keccak256Hash([]byte("CspConfirmedAttempt.v1"))
+var ConfirmedAttemptTag = crypto.Keccak256Hash([]byte("CspConfirmedAttempt"))
 
 // ConfirmedAttemptScore is the score a confirmed-attempt proposal is attested
 // with: the maximum. The channel ranks it above every ordinary proposal by a

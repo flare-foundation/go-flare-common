@@ -103,7 +103,7 @@ func Derive(
 	// Reject duplicate derived pubkeys: identical keys collapse signer
 	// independence (a single holder can satisfy multiple CHECKMULTISIG slots),
 	// so a k-of-n with repeats is not a genuine k-of-n. This guards the script
-	// directly, complementing the parent-xpub uniqueness check in ValidateV1.
+	// directly, complementing the parent-xpub uniqueness check in Validate.
 	seen := make(map[string]struct{}, len(pubKeys))
 	for i, pk := range pubKeys {
 		if _, dup := seen[string(pk)]; dup {
@@ -191,7 +191,7 @@ func DeriveAccountXpubs(
 // ValidateDerivationPath verifies that path is `<prefix>/<chain>/<leafIndex>`
 // where chain is "0" (external) or "1" (internal/change) and leafIndex is a
 // canonical decimal in [0, 2^31). The prefix is the account-level shape
-// validated separately at attestation time (see BtcAccountConfigured.ValidateV1); this
+// validated separately at attestation time (see BtcAccountConfigured.Validate); this
 // helper only checks the per-UTXO leaf segment.
 //
 // If prefix is empty, ValidateDerivationPath returns nil — callers in legacy

@@ -18,12 +18,12 @@ import (
 // 0x2a×32 → m/87'/0' (the same shape xpubAtDepth(t, params, 87, 0) produces).
 const testMainnetXpub = "xpub6AA1xY86BDWPPrATRwypWcB7Z5Kxu2fhAdTLDTUXKbL7mMQ9NJXwnvsitFKg3bCMBComzwbdo3Je1zwAY1GMgfrXbtC2gPknszPQETGv2d1"
 
-// validV1Xpubs returns a fixed 2-of-3 xpub set that ValidateV1 accepts on
+// validXpubs returns a fixed 2-of-3 xpub set that Validate accepts on
 // mainnet. The three keys are DISTINCT (deterministic seeds 1..3, m/87'/0') —
-// ValidateV1 rejects duplicate signers, so a genuine k-of-n fixture must use
+// Validate rejects duplicate signers, so a genuine k-of-n fixture must use
 // independent keys. Tests that don't care about xpub identity reuse it; tests
 // that probe network-identity or n-bound assertions construct their own.
-func validV1Xpubs() []string {
+func validXpubs() []string {
 	return []string{
 		"xpub6BT5TaYRGEymDz7PN6eEwJHaZuR3cDbLaLZGAaGn42YLo5rhz76cUcTnJ9zexAewNRCgCG8bV8PmCzveQCnQGfn7sFyWt2P5WnzSo4S7RRa",
 		"xpub6AizowepZHn9HVBcyFtePudx2ufnhKNNjQCZLnwuzjBrhXnmwKk7b2SAhcXw1ddfgrme9FyBZUspiMRJmX5bGxQLgoGpLtSTUoeyKY6xTCP",
@@ -84,39 +84,30 @@ func TestReservedLayoutInvariants(t *testing.T) {
 	}
 }
 
-func TestValidateV1_HappyPath(t *testing.T) {
+func TestValidateHappyPath(t *testing.T) {
 	b := &BtcAccountConfigured{
 		AccountIndex: 0,
-		Xpubs:        validV1Xpubs(),
+		Xpubs:        validXpubs(),
 		Threshold:    2,
 		Anchors:      defaultAnchorSet(),
 	}
-	if err := b.ValidateV1(&chaincfg.MainNetParams); err != nil {
-		t.Fatalf("ValidateV1: %v", err)
+	if err := b.Validate(&chaincfg.MainNetParams); err != nil {
+		t.Fatalf("Validate: %v", err)
 	}
 }
 
-func TestValidateV1_HappyPath_HigherAccountIndex(t *testing.T) {
+func TestValidateHappyPathHigherAccountIndex(t *testing.T) {
 	// AccountIndex is variable (one published parent xpub serves many accounts,
 	// each a non-hardened child); pin a non-zero value to confirm the verifier
-	// handles it. The path the verifier derives — m/87'/0'/7 (account NON-
-	// hardened) — is implicit; the test asserts ValidateV1 accepts and
-	// DeriveV1PathPrefix threads it.
+	// handles it.
 	b := &BtcAccountConfigured{
 		AccountIndex: 7,
-		Xpubs:        validV1Xpubs(),
+		Xpubs:        validXpubs(),
 		Threshold:    2,
 		Anchors:      defaultAnchorSet(),
 	}
-	if err := b.ValidateV1(&chaincfg.MainNetParams); err != nil {
-		t.Fatalf("ValidateV1 with non-zero accountIndex: %v", err)
-	}
-	got, err := DeriveV1PathPrefix(&chaincfg.MainNetParams, b.AccountIndex)
-	if err != nil {
-		t.Fatalf("DeriveV1PathPrefix: %v", err)
-	}
-	if got != "m/87'/0'/7" {
-		t.Errorf("derived prefix = %q, want m/87'/0'/7", got)
+	if err := b.Validate(&chaincfg.MainNetParams); err != nil {
+		t.Fatalf("Validate with non-zero accountIndex: %v", err)
 	}
 }
 
@@ -172,11 +163,11 @@ func generateTestParentXpubs(t *testing.T, params *chaincfg.Params, n int) []str
 	return out
 }
 
-// TestValidateV1_RejectsAnotherCoin: a key at the right depth and under the
+// TestValidateRejectsAnotherCoin: a key at the right depth and under the
 // network's version bytes is still refused when its child number is another
 // coin. m/87'/0' re-serialized as a tpub is a MAINNET key, and on a test
 // network it would put mainnet keys behind a test wallet.
-func TestValidateV1_RejectsAnotherCoin(t *testing.T) {
+func TestValidateRejectsAnotherCoin(t *testing.T) {
 	params := &chaincfg.RegressionNetParams
 	keys := generateTestParentXpubs(t, params, 3)
 	k, err := hdkeychain.NewMaster(bytes.Repeat([]byte{9}, 32), params)
@@ -194,20 +185,20 @@ func TestValidateV1_RejectsAnotherCoin(t *testing.T) {
 	}
 	keys[1] = pub.String()
 	b := &BtcAccountConfigured{AccountIndex: 0, Xpubs: keys, Threshold: 2, Anchors: defaultAnchorSet()}
-	err = b.ValidateV1(params)
+	err = b.Validate(params)
 	if err == nil || !strings.Contains(err.Error(), "not coin 1'") {
 		t.Fatalf("a coin-0' key passed on regtest: %v", err)
 	}
 }
 
-// TestValidateXpubs_RejectsNonParentLevelDepth pins the per-key depth check
+// TestValidateXpubsRejectsNonParentLevelDepth pins the per-key depth check
 // on BtcAccountConfigured: every published xpub must be at the WALLET
 // (parent) level (BIP-32 depth 2, m/87'/coin'). The account level is a
 // non-hardened child at accountIndex, so a depth-3 (account-level) xpub is
 // one level too deep and is rejected.
-// Called directly (rather than via ValidateV1) so the depth assertion is
+// Called directly (rather than via Validate) so the depth assertion is
 // isolated.
-func TestValidateXpubs_RejectsNonParentLevelDepth(t *testing.T) {
+func TestValidateXpubsRejectsNonParentLevelDepth(t *testing.T) {
 	params := &chaincfg.MainNetParams
 
 	// Depth-3 xpub: m/87'/0'/0' — the (old) account level, now one level too deep.
@@ -223,19 +214,19 @@ func TestValidateXpubs_RejectsNonParentLevelDepth(t *testing.T) {
 	}
 
 	// Distinct depth-2 xpubs: m/87'/0' — the wallet (parent) level — must pass.
-	good := validV1Xpubs()
+	good := validXpubs()
 	if err := validateXpubsAndThreshold(good[:2], 2, params); err != nil {
 		t.Fatalf("wallet-level (depth-2) parent xpubs should validate: %v", err)
 	}
 }
 
-// TestValidateV1_RejectsXpubsThreshold pins the BIP-32 / multisig invariants
+// TestValidateRejectsXpubsThreshold pins the BIP-32 / multisig invariants
 // that the attestation layer must enforce *before* any tx-construction code
 // reaches the wallet. Tests the four reject paths in validateXpubsAndThreshold:
 // empty Xpubs, n>20 (the OP_CHECKMULTISIG cap), threshold out of [1, n], malformed
 // xpub, and a cross-network xpub (mainnet xpub bound to a testnet wallet).
-func TestValidateV1_RejectsXpubsThreshold(t *testing.T) {
-	good := validV1Xpubs() // 3 mainnet xpubs
+func TestValidateRejectsXpubsThreshold(t *testing.T) {
+	good := validXpubs() // 3 mainnet xpubs
 	manyXpubs := make([]string, 21)
 	for i := range manyXpubs {
 		manyXpubs[i] = testMainnetXpub
@@ -266,7 +257,7 @@ func TestValidateV1_RejectsXpubsThreshold(t *testing.T) {
 				Threshold:    c.threshold,
 				Anchors:      defaultAnchorSet(),
 			}
-			err := b.ValidateV1(c.params)
+			err := b.Validate(c.params)
 			if err == nil {
 				t.Fatalf("expected reject for %s, got nil", c.name)
 			}
@@ -304,17 +295,17 @@ func respell(t *testing.T, keyOf, rest string, edit func(pub, chainCode, parentF
 	return hdkeychain.NewExtendedKey(r.Version(), pub, chainCode, parentFP, r.Depth(), child, false).String()
 }
 
-// TestValidateV1_SignerIsThePublicKey pins what the duplicate-signer rule
+// TestValidateSignerIsThePublicKey pins what the duplicate-signer rule
 // compares: the public key up to sign, not the serialization. Each variant
 // carries good[0]'s X coordinate under a chain code, parent fingerprint or
-// parity byte that ValidateV1 does not constrain, and is accepted in good[0]'s
+// parity byte that Validate does not constrain, and is accepted in good[0]'s
 // place; beside good[0] it is the same key holder in a second slot, and is
 // refused. The negated variants flip the parity byte: -P, whose private key is
-// the negation of P's. The child number is not among them: ValidateV1 requires
+// the negation of P's. The child number is not among them: Validate requires
 // it to be the network's coin, so a respelled one is refused alone
-// (TestValidateV1_RejectsAnotherCoin).
-func TestValidateV1_SignerIsThePublicKey(t *testing.T) {
-	good := validV1Xpubs()
+// (TestValidateRejectsAnotherCoin).
+func TestValidateSignerIsThePublicKey(t *testing.T) {
+	good := validXpubs()
 	variants := []struct {
 		name string
 		edit func(pub, chainCode, parentFP []byte, child *uint32)
@@ -335,7 +326,7 @@ func TestValidateV1_SignerIsThePublicKey(t *testing.T) {
 				Threshold: 2,
 				Anchors:   defaultAnchorSet(),
 			}
-			if err := alone.ValidateV1(&chaincfg.MainNetParams); err != nil {
+			if err := alone.Validate(&chaincfg.MainNetParams); err != nil {
 				t.Fatalf("the variant is not a valid key by itself: %v", err)
 			}
 			twice := &BtcAccountConfigured{
@@ -343,7 +334,7 @@ func TestValidateV1_SignerIsThePublicKey(t *testing.T) {
 				Threshold: 2,
 				Anchors:   defaultAnchorSet(),
 			}
-			err := twice.ValidateV1(&chaincfg.MainNetParams)
+			err := twice.Validate(&chaincfg.MainNetParams)
 			if err == nil {
 				t.Fatal("expected reject: xpubs[2] carries xpubs[0]'s X coordinate")
 			}
@@ -369,17 +360,17 @@ func TestValidateV1_SignerIsThePublicKey(t *testing.T) {
 		Threshold: 2,
 		Anchors:   defaultAnchorSet(),
 	}
-	if err := b.ValidateV1(&chaincfg.MainNetParams); err != nil {
+	if err := b.Validate(&chaincfg.MainNetParams); err != nil {
 		t.Fatalf("two xpubs differing only in the X coordinate were refused: %v", err)
 	}
 }
 
-// TestValidateV1_RoundTripsToDerive proves that the attestation-layer
+// TestValidateRoundTripsToDerive proves that the attestation-layer
 // xpub/threshold validation accepts exactly the inputs Derive() also
 // accepts. A mismatch between the two would let the attestation pass an
 // (Xpubs, k) pair that subsequently fails inside Derive — surfacing as a
 // runtime error in tx construction rather than at attestation time.
-func TestValidateV1_RoundTripsToDerive(t *testing.T) {
+func TestValidateRoundTripsToDerive(t *testing.T) {
 	params := &chaincfg.RegressionNetParams
 	const accountIndex = 0
 	parentXpubs := generateTestParentXpubs(t, params, 3)
@@ -390,8 +381,8 @@ func TestValidateV1_RoundTripsToDerive(t *testing.T) {
 		Threshold:    2,
 		Anchors:      defaultAnchorSet(),
 	}
-	if err := b.ValidateV1(params); err != nil {
-		t.Fatalf("ValidateV1 with parent xpubs: %v", err)
+	if err := b.Validate(params); err != nil {
+		t.Fatalf("Validate with parent xpubs: %v", err)
 	}
 	// The same parent xpubs must round-trip through the non-hardened account
 	// step (DeriveAccountXpubs) and then Derive() cleanly — proving the
@@ -405,63 +396,25 @@ func TestValidateV1_RoundTripsToDerive(t *testing.T) {
 	}
 }
 
-// TestValidateV1_RejectsAccountIndexInHardenedRange pins the BIP-32 bound:
+// TestValidateRejectsAccountIndexInHardenedRange pins the BIP-32 bound:
 // the bare integer in a hardened path segment must be < 2^31, otherwise the
 // hardened encoding (n + 2^31) overflows uint32. Bound is the same one
 // derive.go ValidateDerivationPath applies to leaf indices.
-func TestValidateV1_RejectsAccountIndexInHardenedRange(t *testing.T) {
+func TestValidateRejectsAccountIndexInHardenedRange(t *testing.T) {
 	// 2^31 is the smallest value already in the hardened range.
 	const reservedHardened = uint32(1) << 31
 	b := &BtcAccountConfigured{
 		AccountIndex: reservedHardened,
-		Xpubs:        validV1Xpubs(),
+		Xpubs:        validXpubs(),
 		Threshold:    2,
 		Anchors:      defaultAnchorSet(),
 	}
-	err := b.ValidateV1(&chaincfg.MainNetParams)
+	err := b.Validate(&chaincfg.MainNetParams)
 	if err == nil {
 		t.Fatal("expected reject for accountIndex >= 2^31")
 	}
 	if !strings.Contains(err.Error(), "hardened range") {
 		t.Errorf("error %q does not flag hardened-range overflow", err)
-	}
-}
-
-func TestDeriveV1PathPrefix(t *testing.T) {
-	// The shared v1 path-prefix deriver — single source of truth for the
-	// verifier and off-chain callers (e.g. a proposer validating its config).
-	cases := []struct {
-		name    string
-		params  *chaincfg.Params
-		account uint32
-		want    string
-	}{
-		{"mainnet", &chaincfg.MainNetParams, 0, "m/87'/0'/0"},
-		{"mainnet account 7", &chaincfg.MainNetParams, 7, "m/87'/0'/7"},
-		{"signet", &chaincfg.SigNetParams, 0, "m/87'/1'/0"},
-		{"testnet3", &chaincfg.TestNet3Params, 3, "m/87'/1'/3"},
-		{"regtest", &chaincfg.RegressionNetParams, 0, "m/87'/1'/0"},
-	}
-	for _, c := range cases {
-		t.Run(c.name, func(t *testing.T) {
-			got, err := DeriveV1PathPrefix(c.params, c.account)
-			if err != nil {
-				t.Fatalf("DeriveV1PathPrefix(%s, %d): %v", c.name, c.account, err)
-			}
-			if got != c.want {
-				t.Errorf("got %q, want %q", got, c.want)
-			}
-		})
-	}
-}
-
-func TestDeriveV1PathPrefix_Rejects(t *testing.T) {
-	// Hardened-range accountIndex and unsupported network are rejected.
-	if _, err := DeriveV1PathPrefix(&chaincfg.MainNetParams, 1<<31); err == nil {
-		t.Error("expected reject for accountIndex in the hardened range (>= 2^31)")
-	}
-	if _, err := DeriveV1PathPrefix(nil, 0); err == nil {
-		t.Error("expected reject for nil params")
 	}
 }
 
@@ -482,19 +435,19 @@ func defaultAnchorSet() []AnchorBinding {
 	return anchors
 }
 
-func TestValidateV1_HappyPath_WithDefaultAnchorSet(t *testing.T) {
+func TestValidateHappyPathWithDefaultAnchorSet(t *testing.T) {
 	b := &BtcAccountConfigured{
 		AccountIndex: 0,
-		Xpubs:        validV1Xpubs(),
+		Xpubs:        validXpubs(),
 		Threshold:    2,
 		Anchors:      defaultAnchorSet(),
 	}
-	if err := b.ValidateV1(&chaincfg.MainNetParams); err != nil {
-		t.Fatalf("ValidateV1 with default anchor set: %v", err)
+	if err := b.Validate(&chaincfg.MainNetParams); err != nil {
+		t.Fatalf("Validate with default anchor set: %v", err)
 	}
 }
 
-func TestValidateAnchorSet_RejectsEmpty(t *testing.T) {
+func TestValidateAnchorSetRejectsEmpty(t *testing.T) {
 	// Empty must be rejected — a wallet declares at least N=1 chain.
 	err := ValidateAnchorSet(nil)
 	if err == nil {
@@ -505,22 +458,22 @@ func TestValidateAnchorSet_RejectsEmpty(t *testing.T) {
 	}
 }
 
-func TestValidateV1_RejectsEmptyAnchors(t *testing.T) {
-	// ValidateV1 must reject a request missing Anchors: every wallet declares
+func TestValidateRejectsEmptyAnchors(t *testing.T) {
+	// Validate must reject a request missing Anchors: every wallet declares
 	// its N anchor chains at registration, so a legitimate attestation cannot
 	// omit them.
 	b := &BtcAccountConfigured{
 		AccountIndex: 0,
-		Xpubs:        validV1Xpubs(),
+		Xpubs:        validXpubs(),
 		Threshold:    2,
 		// Anchors omitted on purpose
 	}
-	if err := b.ValidateV1(&chaincfg.MainNetParams); err == nil {
-		t.Fatal("ValidateV1 must reject a request with no Anchors")
+	if err := b.Validate(&chaincfg.MainNetParams); err == nil {
+		t.Fatal("Validate must reject a request with no Anchors")
 	}
 }
 
-func TestValidateAnchorSet_AcceptsArbitraryN(t *testing.T) {
+func TestValidateAnchorSetAcceptsArbitraryN(t *testing.T) {
 	// N is per-wallet in [1, MaxAnchors] (chosen at registration, grow-only
 	// after). anchors[i] is chain i by position; no anchorIndex field.
 	for _, n := range []int{1, 2, ActiveAnchors, MaxAnchors} {
@@ -534,7 +487,7 @@ func TestValidateAnchorSet_AcceptsArbitraryN(t *testing.T) {
 	}
 }
 
-func TestValidateAnchorSet_RejectsOverflow(t *testing.T) {
+func TestValidateAnchorSetRejectsOverflow(t *testing.T) {
 	anchors := make([]AnchorBinding, MaxAnchors+1)
 	for i := range anchors {
 		anchors[i] = AnchorBinding{Txid: [32]byte{0xaa}, Vout: uint32(i)}
@@ -548,7 +501,7 @@ func TestValidateAnchorSet_RejectsOverflow(t *testing.T) {
 	}
 }
 
-func TestValidateAnchorSet_RejectsDuplicateOutpoint(t *testing.T) {
+func TestValidateAnchorSetRejectsDuplicateOutpoint(t *testing.T) {
 	// Two positions backed by the same outpoint must be rejected: with
 	// positional anchors that would mean two logical chains sharing one
 	// physical UTXO. (The on-chain per-index scriptPubKey check would also
@@ -580,7 +533,7 @@ func genesisTxidInternal() [32]byte {
 	return [32]byte(chaincfg.MainNetParams.GenesisBlock.Transactions[0].TxHash())
 }
 
-func TestAnchorBinding_StringIsDisplayOrder(t *testing.T) {
+func TestAnchorBindingStringIsDisplayOrder(t *testing.T) {
 	a := AnchorBinding{Txid: genesisTxidInternal(), Vout: 3}
 	if got, want := a.String(), genesisTxidDisplay+":3"; got != want {
 		t.Fatalf("String() = %q, want %q", got, want)
@@ -599,10 +552,10 @@ func TestAnchorBinding_StringIsDisplayOrder(t *testing.T) {
 	}
 }
 
-// TestAnchorErrors_NameDisplayTxid: Txid holds internal order, so printing its
+// TestAnchorErrorsNameDisplayTxid: Txid holds internal order, so printing its
 // bytes as they lie would give a reader a txid no explorer or bitcoind knows.
 // The anchor-set error must name the outpoint in display order.
-func TestAnchorErrors_NameDisplayTxid(t *testing.T) {
+func TestAnchorErrorsNameDisplayTxid(t *testing.T) {
 	genesis := AnchorBinding{Txid: genesisTxidInternal(), Vout: 0}
 	internalHex := hex.EncodeToString(genesis.Txid[:])
 
@@ -626,7 +579,7 @@ func TestAnchorErrors_NameDisplayTxid(t *testing.T) {
 // request carries no value. The verifier reads each anchor UTXO from the
 // chain and checks its value against MinAnchorValueSat (a verifier-side rule).
 
-func TestValidateAnchorSet_AcceptsFullCapacity(t *testing.T) {
+func TestValidateAnchorSetAcceptsFullCapacity(t *testing.T) {
 	// Pin a happy-path with the cap exactly hit (N == MaxAnchors).
 	anchors := make([]AnchorBinding, MaxAnchors)
 	for i := range anchors {
@@ -637,6 +590,6 @@ func TestValidateAnchorSet_AcceptsFullCapacity(t *testing.T) {
 	}
 }
 
-// Note: the attestation carries no changeAddress and ValidateV1 does not
+// Note: the attestation carries no changeAddress and Validate does not
 // validate one; the change destination is derived off-chain, so there is no
 // change-address case here.

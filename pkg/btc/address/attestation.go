@@ -28,7 +28,7 @@ import (
 // with a longer Anchors that keeps the registered set as its prefix, and the
 // contract holding the registered set checks that.
 //
-// ValidateV1 runs the stateless full-body checks, for both a first
+// Validate runs the stateless full-body checks, for both a first
 // registration and a growth re-attestation.
 type BtcAccountConfigured struct {
 	AccountIndex uint32
@@ -176,7 +176,7 @@ func ValidateAnchorSet(anchors []AnchorBinding) error {
 	return nil
 }
 
-// ValidateV1 enforces the v1 invariants on the request:
+// Validate enforces the request's invariants:
 //
 //   - Threshold must satisfy 1 ≤ Threshold ≤ len(Xpubs) ≤ 20 (the
 //     OP_CHECKMULTISIG consensus cap).
@@ -194,14 +194,14 @@ func ValidateAnchorSet(anchors []AnchorBinding) error {
 // The derivation path and script are not on the request; the verifier derives
 // them from (AccountIndex, network, Threshold, Xpubs) for its address and
 // anchor-set checks.
-func (b *BtcAccountConfigured) ValidateV1(params *chaincfg.Params) error {
+func (b *BtcAccountConfigured) Validate(params *chaincfg.Params) error {
 	if b.AccountIndex >= 1<<31 {
 		return fmt.Errorf("attestation: accountIndex %d is in the BIP-32 hardened range (must be < 2^31; the account level is a non-hardened CKDpub child of the parent xpub)", b.AccountIndex)
 	}
 	if err := validateXpubsAndThreshold(b.Xpubs, b.Threshold, params); err != nil {
 		return err
 	}
-	// Anchors is mandatory in v1: every wallet declares N funded anchor
+	// Anchors is mandatory: every wallet declares N funded anchor
 	// chains at registration, so no legitimate attestation can omit them.
 	// ValidateAnchorSet enforces 1 <= N <= MaxAnchors and distinct outpoints
 	// (the array is order-significant, anchors[i] is chain i); the verifier
@@ -218,7 +218,7 @@ func (b *BtcAccountConfigured) ValidateV1(params *chaincfg.Params) error {
 // bip87CoinType returns the BIP-87 coin_type segment for params: 0 on
 // mainnet, 1 on signet / testnet3 / regtest. The verifier picks the
 // network from the FDC2 sourceId header; this helper centralises the
-// mapping so v1 derivation has one place to update if a new test network
+// mapping so derivation has one place to update if a new test network
 // joins.
 func bip87CoinType(params *chaincfg.Params) (uint32, error) {
 	if params == nil {
@@ -232,29 +232,8 @@ func bip87CoinType(params *chaincfg.Params) (uint32, error) {
 		chaincfg.RegressionNetParams.Net:
 		return 1, nil
 	default:
-		return 0, fmt.Errorf("attestation: unsupported network %q for v1 coin_type derivation", params.Name)
+		return 0, fmt.Errorf("attestation: unsupported network %q for coin_type derivation", params.Name)
 	}
-}
-
-// DeriveV1PathPrefix returns the v1 BIP-87 account-level derivation
-// path prefix for a wallet on params at accountIndex:
-// m/87'/<coin_type>'/<accountIndex> (coin_type 0 on mainnet, 1 on
-// signet / testnet3 / regtest). The account level is NON-HARDENED (no trailing
-// apostrophe) — it is a public CKDpub child of the published wallet-level
-// (parent) xpub at accountIndex. This is the single source of truth for the v1
-// path shape: off-chain components (e.g. a proposer validating its config)
-// call it so their expected path cannot drift from what the verifier derives.
-// accountIndex must be in the BIP-32 non-hardened range (< 2^31); params must
-// be a supported network.
-func DeriveV1PathPrefix(params *chaincfg.Params, accountIndex uint32) (string, error) {
-	if accountIndex >= 1<<31 {
-		return "", fmt.Errorf("attestation: accountIndex %d is in the BIP-32 hardened range (must be < 2^31 for non-hardened account derivation)", accountIndex)
-	}
-	coinType, err := bip87CoinType(params)
-	if err != nil {
-		return "", err
-	}
-	return fmt.Sprintf("m/87'/%d'/%d", coinType, accountIndex), nil
 }
 
 // validateXpubsAndThreshold checks the multisig key set against the BIP-87

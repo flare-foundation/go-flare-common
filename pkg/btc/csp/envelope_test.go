@@ -195,11 +195,10 @@ func TestValidateRejectsUnusableEnvelopes(t *testing.T) {
 		// Positions start at 1; 0 means "none" wherever the channel reads one.
 		"position 0": func(e *csp.Envelope) { e.SequencePosition = 0 },
 
-		// Version 3 is the only one: an older package commits to a tuple that
-		// no longer exists.
-		"version 1": func(e *csp.Envelope) { e.Version = 1 },
-		"version 2": func(e *csp.Envelope) { e.Version = 2 },
-		"version 4": func(e *csp.Envelope) { e.Version = 4 },
+		// EnvelopeVersion is the only version.
+		"version zero":  func(e *csp.Envelope) { e.Version = 0 },
+		"version below": func(e *csp.Envelope) { e.Version = csp.EnvelopeVersion - 1 },
+		"version above": func(e *csp.Envelope) { e.Version = csp.EnvelopeVersion + 1 },
 
 		// The account in the chain's terms.
 		"no wallet registry": func(e *csp.Envelope) { e.WalletRegistry = common.Address{} },
@@ -484,7 +483,7 @@ func TestRoundTripIsExact(t *testing.T) {
 	require.Equal(t, e, got)
 }
 
-// The v3 layout vector: layoutFixture's encoding, one 32-byte word per line.
+// The layout vector: layoutFixture's encoding, one 32-byte word per line.
 // It was produced by Foundry's `cast abi-encode` — an ABI encoder independent
 // of go-ethereum's — over the signature
 //
@@ -496,16 +495,15 @@ func TestRoundTripIsExact(t *testing.T) {
 // keccak256(encoding)). Any other implementation of the envelope — a machine,
 // a verifier, a contract — can check itself against these three.
 const (
-	layoutVectorFile        = "testdata/envelope_v3_layout.hex"
+	layoutVectorFile        = "testdata/envelope_layout.hex"
 	layoutVectorKeccak      = "0xd4095038fc4c56c42afa443521e71dbec94ef664248bb6d949b2a78b4d0e8628"
 	layoutVectorProposalHex = "0x78cb121a315317a9baaa8fe0dae1dde5bdca7f6b73effacde372ca0169498c8a"
 )
 
-// TestEnvelopeLayout pins the tuple: v1's fifteen fields in v1's order (the
-// escrow tuple reduced to three in v3), then parentXpubs and threshold (v2),
-// then walletRegistry and accountHash (v3). A reorder, an insertion or a changed
-// width fails here, naming the field, rather than as a proposal the other
-// implementations never finalize.
+// TestEnvelopeLayout pins the tuple: every field in Envelope's order, with the
+// escrow a tuple of three. A reorder, an insertion or a changed width fails
+// here, naming the field, rather than as a proposal the other implementations
+// never finalize.
 func TestEnvelopeLayout(t *testing.T) {
 	e := layoutFixture()
 	enc, err := e.Encode()

@@ -29,13 +29,13 @@
 // serialization. Recipients live inside RawUnsignedTx as raw scriptPubKeys, and
 // the account is named by its hash (below), never by its address string.
 //
-// # What changed in version 2: the wallet's shape travels with the proposal
+// # The wallet's shape travels with the proposal
 //
-// The signer set — the n parent xpubs and k — is carried in the envelope rather
-// than provisioned to each consumer separately. Before, three parties held
-// three copies from three sources: the verifier read the registry, the machines
-// held a KEY_BINDING an authorised sender wrote, and the facilitator was
-// configured. They agreed only because nothing had made them disagree.
+// The signer set — the n parent xpubs and k — is carried in the envelope, so
+// every consumer reads it from the one object the chain finalized. Provisioned
+// separately, the verifier would read the registry, the machines a key binding
+// and the facilitator its configuration, and the three copies would agree only
+// as long as nothing made them disagree.
 //
 // Carrying the keys does not let a proposer choose them. The FDC2 verifier
 // requires them to equal the registry's, so a proposal naming any other set
@@ -44,37 +44,27 @@
 // derives each script itself, from these keys — which is what keeps a proposer
 // from supplying a script.
 //
-// The two fields are APPENDED after escrow; every v1 field keeps its v1
-// position. That is not wire compatibility — adding a dynamic field moves every
-// offset in the tuple head, so no v1 reader can read a v2 package, which is
-// what the version bump says — but it keeps v1's checks applying to v1's
-// fields unchanged, and lets a reviewer who knows v1 read two new fields rather
-// than a re-laid-out struct.
-//
 // There is no coin-type field. Each key is the wallet level m/87'/coin', and a
 // BIP-32 key records the index of its last derivation step in its own bytes, so
 // the coin is read out of the keys (CoinType). A separate field would be a
 // second copy of one fact, and a consistency check to keep them equal.
 //
-// # What changed in version 3: the account in the chain's own terms
+// # The account in the chain's own terms
 //
 // The WalletPayments diamond keys a wallet by (registry, walletId) — a TEE
 // wallet and a custodian wallet live in different registries, and a walletId is
 // unique only within one — and an account by its hash,
 // keccak256(abi.encode(sourceId, accountAddress)), which is also the topic of
-// every account event. Version 2 named the account only as (walletId,
-// accountIndex), so each party mapped that to the chain's account on its own,
-// and the registry was in no hash at all. Version 3 appends WalletRegistry and
-// AccountHash, so the finalized hash binds the account exactly as the chain
-// stores it, and a consumer that sees an event compares a topic rather than
-// looking an account up.
+// every account event. The envelope carries WalletRegistry and AccountHash, so
+// the finalized hash binds the account exactly as the chain stores it, and a
+// consumer that sees an event compares a topic rather than looking an account
+// up.
 //
-// It also drops the escrow's timeout coordinates. The diamond fixes the escrow's
+// The escrow carries no timeout coordinates. The diamond fixes the escrow's
 // timeout branch at the wallet's k-of-n at (EscrowTimeoutChain,
-// EscrowTimeoutIndex), so a field for it could only ever hold that constant, and
-// a check that it does was one more check to forget. The two remaining terms
-// take the contract's names (counterpartyPubKey, expiresAt); their values are
-// unchanged.
+// EscrowTimeoutIndex), so a field for it could only ever hold that constant.
+// The remaining terms take the contract's names (counterpartyPubKey,
+// expiresAt).
 package csp
 
 import (
@@ -92,11 +82,8 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/signing"
 )
 
-// EnvelopeVersion is the only version this package encodes or accepts.
-// Version 2 appended the wallet's shape (parentXpubs, threshold) after escrow;
-// version 3 appended the account's registry and hash, and dropped the escrow's
-// timeout coordinates. An older package no longer decodes, because its hash
-// commits to a tuple that no longer exists.
+// EnvelopeVersion is the only version this package encodes or accepts; a
+// package of any other version does not decode.
 const EnvelopeVersion uint16 = 3
 
 // The escrow's timeout branch is always the wallet's own k-of-n at this
@@ -207,9 +194,6 @@ type Envelope struct {
 	// means the proposal creates or spends no HTLC, which is every payment and
 	// every consolidation.
 	Escrow Escrow
-
-	// Version 2 — appended after every v1 field.
-
 	// ParentXpubs are the wallet's n published keys at m/87'/coin', raw
 	// XpubLen bytes each, in REGISTRY order. Order does not change any script —
 	// BIP-67 sorts the leaf keys — but it is committed, so it has one canonical
@@ -217,9 +201,6 @@ type Envelope struct {
 	ParentXpubs [][]byte
 	// Threshold is k in the k-of-n.
 	Threshold uint32
-
-	// Version 3 — appended after every v2 field.
-
 	// WalletRegistry is the contract the wallet is registered in (the TEE
 	// manager or the custodian wallet manager). A walletId is unique only
 	// within its registry.
@@ -330,8 +311,8 @@ type abiEnvelope struct {
 // Validate rejects envelopes that are structurally unusable. It is called by
 // Encode, so no caller can hash something it would refuse.
 //
-// After the version, v1's checks run on v1's fields, then the signer set
-// (version 2), then the account (version 3).
+// It checks the version, the instruction, its inputs and escrow terms, then
+// the signer set and finally the account.
 func (e Envelope) Validate() error {
 	if e.Version != EnvelopeVersion {
 		return fmt.Errorf("envelope version %d, want %d", e.Version, EnvelopeVersion)
