@@ -1,6 +1,7 @@
 package witness_test
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/btcsuite/btcd/btcec/v2"
@@ -273,4 +274,19 @@ func TestAssemblyUsesTheEnvelopesKeys(t *testing.T) {
 	_, _, err := witness.Assemble(swapped, answers)
 	require.ErrorContains(t, err, "is not in the wallet's script",
 		"signatures by the real wallet's keys were placed in another wallet's script")
+}
+
+// TestInputSignatureJSON pins the JSON a machine sends for each input of a
+// Bitcoin batch: hex with a 0x prefix, under these names, in this order.
+func TestInputSignatureJSON(t *testing.T) {
+	s := witness.InputSignature{Index: 1, Signature: []byte{0x30, 0x44}, PubKey: []byte{0x02, 0xab}}
+	const want = `{"index":1,"signature":"0x3044","pubKey":"0x02ab"}`
+
+	got, err := json.Marshal(s)
+	require.NoError(t, err)
+	assert.Equal(t, want, string(got))
+
+	var back witness.InputSignature
+	require.NoError(t, json.Unmarshal([]byte(want), &back))
+	assert.Equal(t, s, back)
 }

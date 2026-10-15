@@ -25,6 +25,7 @@ import (
 	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/btcsuite/btcd/txscript"
 	"github.com/btcsuite/btcd/wire"
+	"github.com/ethereum/go-ethereum/common/hexutil"
 
 	"github.com/flare-foundation/go-flare-common/pkg/btc/address"
 	"github.com/flare-foundation/go-flare-common/pkg/btc/csp"
@@ -36,17 +37,22 @@ import (
 // arrive from independent machines and arriving late is ordinary.
 var ErrNotEnoughSignatures = errors.New("not enough verified signatures")
 
-// InputSignature is one machine's contribution for one input.
+// InputSignature is one machine's signature over one input.
+//
+// Its JSON form is also the per-input part of the response a TEE machine
+// returns for a Bitcoin batch, so renaming, retagging or adding a field
+// changes that wire format; a field that is not part of it must be tagged
+// `json:"-"`.
 type InputSignature struct {
 	// Index is the input's position in the transaction.
-	Index int
+	Index int `json:"index"`
 	// Signature is DER, WITHOUT the trailing sighash-type byte: whether a
 	// signature is SIGHASH_ALL is a property of how it is used, so the byte is
 	// appended at assembly rather than carried.
-	Signature []byte
+	Signature hexutil.Bytes `json:"signature"`
 	// PubKey is the compressed key that produced it, which is how the signature
 	// is placed in the script's BIP-67 order.
-	PubKey []byte
+	PubKey hexutil.Bytes `json:"pubKey"`
 }
 
 // Answer is one machine's reply for a whole batch.
@@ -213,7 +219,7 @@ func verifiedSlots(i int, sighash []byte, keys [][]byte, answers []Answer) (map[
 
 			slot := slices.IndexFunc(keys, func(k []byte) bool { return bytes.Equal(k, s.PubKey) })
 			if slot < 0 {
-				return nil, fmt.Errorf("machine %d input %d: signing key %x is not in the wallet's script",
+				return nil, fmt.Errorf("machine %d input %d: signing key %s is not in the wallet's script",
 					m.Machine, i, s.PubKey)
 			}
 
