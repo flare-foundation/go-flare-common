@@ -7,17 +7,17 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/instructions"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/machine"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/machinepath"
-	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/payments"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/tee"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/verification"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/vrf"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/wallet"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/walletpayments"
 	"github.com/stretchr/testify/require"
 )
 
 // This test assures that all inits in structs directory are called and do not panic.
 func TestInit(t *testing.T) {
-	require.NotNil(t, payments.MessageArguments)
+	require.NotNil(t, walletpayments.MessageArguments)
 	require.NotNil(t, wallet.MessageArguments)
 	require.NotNil(t, fdc2.MessageArguments)
 	require.NotNil(t, fdc2.AttestationTypeArguments)
