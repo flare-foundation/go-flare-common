@@ -15,6 +15,7 @@ package htlc
 
 import (
 	"encoding/hex"
+	"fmt"
 	"testing"
 
 	"github.com/btcsuite/btcd/chaincfg"
@@ -191,4 +192,44 @@ func TestHTLCWitnessHelpers(t *testing.T) {
 			t.Error("[k+2] should be witnessScript")
 		}
 	})
+}
+
+// TestHTLCTimeoutPushIsMinimal pins the CLTV operand's push across the 2038
+// boundary. The expected bytes are written out by hand from the script-number
+// rules (little-endian magnitude, plus a 0x00 byte when the top bit of the
+// last byte is set) rather than taken from the encoder under test: the n=3
+// vector above with its timeout push replaced.
+func TestHTLCTimeoutPushIsMinimal(t *testing.T) {
+	var preimageRaw [32]byte
+	for i := range preimageRaw {
+		preimageRaw[i] = 0xAA
+	}
+	keys := make([][]byte, 3)
+	for i := range keys {
+		keys[i] = makeFakePubKey(byte(0x20 + i))
+	}
+	const n3Hex = "6382012088a820e0e77a507412b120f6ede61f62295b1a7b2ff19d3dcc8f7253e51663470c888e8821023799f7f28db16bfffbbfd700814fe94eef8f33479b773b9a1f515e81b4116d2bac67" +
+		"%s" + "b1695221021f8a566c205633d029094747d2e18f44e05993dda7a5f88f496078205f656e5921024c0c153fa0c946aa3ba2510b8bf4072f83f86eda3b61bc708f903a65727277b821031d17bd8d96b4bdf49dd1436e5af4f0bd3bff939df8cf8fdc1f621e3c89de2a4753ae68"
+	cases := []struct {
+		name    string
+		timeout int64
+		push    string
+	}{
+		{"1_700_000_000", 1_700_000_000, "0400f15365"},
+		{"0x7FFFFFFF (2038-01-19)", 0x7FFFFFFF, "04ffffff7f"},
+		{"0x80000000", 0x80000000, "050000008000"},
+		{"0xFFFFFFFF (2106-02-07)", 0xFFFFFFFF, "05ffffffff00"},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			script, err := BuildScript(PreimageHash(preimageRaw), makeFakePubKey(0x10), tc.timeout, keys, 2)
+			if err != nil {
+				t.Fatalf("BuildScript: %v", err)
+			}
+			want := fmt.Sprintf(n3Hex, tc.push)
+			if got := hex.EncodeToString(script); got != want {
+				t.Errorf("script\n got %s\nwant %s", got, want)
+			}
+		})
+	}
 }
