@@ -119,7 +119,7 @@ func BuildScript(
 	// Duplicate-key check: k-of-n with duplicates effectively reduces the
 	// threshold (one signer's key, multiplied, can produce k "distinct"
 	// signature slots), so the n signers must be distinct.
-	for i := 0; i < len(multisigKeys); i++ {
+	for i := range len(multisigKeys) {
 		for j := i + 1; j < len(multisigKeys); j++ {
 			if bytes.Equal(multisigKeys[i], multisigKeys[j]) {
 				return nil, fmt.Errorf("multisigKeys contain duplicates at indices %d and %d", i, j)
@@ -207,9 +207,7 @@ func TimeoutPathWitness(sigs [][]byte, witnessScript []byte) [][]byte {
 	// [0] empty dummy (BIP-147 NULLDUMMY)
 	witness := [][]byte{nil}
 	// [1..k] signatures in BIP-67 sorted-pubkey order
-	for _, sig := range sigs {
-		witness = append(witness, sig)
-	}
+	witness = append(witness, sigs...)
 	// [k+1] empty ELSE selector (MINIMALIF)
 	witness = append(witness, []byte{})
 	// [k+2] witness script

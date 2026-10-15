@@ -348,7 +348,7 @@ func TestXpubEncoding(t *testing.T) {
 func TestCoinTypeIsReadFromTheKeys(t *testing.T) {
 	e := sample()
 	for _, x := range e.ParentXpubs {
-		assert.Equal(t, uint32(0x80000000+csp.CoinTypeTestnet), binary.BigEndian.Uint32(x[9:13]))
+		assert.Equal(t, 0x80000000+csp.CoinTypeTestnet, binary.BigEndian.Uint32(x[9:13]))
 	}
 	ct, err := e.CoinType()
 	require.NoError(t, err)
@@ -536,7 +536,10 @@ func TestEnvelopeLayout(t *testing.T) {
 		check func(t *testing.T, w []byte, i int)
 	}
 	static := func(want []byte) func(*testing.T, []byte, int) {
-		return func(t *testing.T, w []byte, _ int) { assert.Equal(t, want, w) }
+		return func(t *testing.T, w []byte, _ int) {
+			t.Helper()
+			assert.Equal(t, want, w)
+		}
 	}
 	fields := []field{
 		{"version", static(word(3))},
@@ -551,11 +554,13 @@ func TestEnvelopeLayout(t *testing.T) {
 		{"nonce", static(word(42))},
 		{"attempt", static(word(1))},
 		{"rawUnsignedTx", func(t *testing.T, _ []byte, i int) {
+			t.Helper()
 			off := tail(t, i)
 			assert.Equal(t, word(uint64(len(e.RawUnsignedTx))), at(t, off), "length")
 			assert.Equal(t, e.RawUnsignedTx, at(t, off+32)[:len(e.RawUnsignedTx)])
 		}},
 		{"inputs", func(t *testing.T, _ []byte, i int) {
+			t.Helper()
 			off := tail(t, i)
 			assert.Equal(t, word(2), at(t, off), "count")
 			// Each input is a static tuple of six words, encoded in place.
@@ -564,6 +569,7 @@ func TestEnvelopeLayout(t *testing.T) {
 		}},
 		{"proposerAddress", static(common.LeftPadBytes(e.ProposerAddress[:], 32))},
 		{"escrow", func(t *testing.T, _ []byte, i int) {
+			t.Helper()
 			off := tail(t, i)
 			assert.Equal(t, e.Escrow.PreimageHash[:], at(t, off), "escrow.preimageHash")
 			assert.Equal(t, word(e.Escrow.ExpiresAt), at(t, off+2*32), "escrow.expiresAt")
@@ -572,6 +578,7 @@ func TestEnvelopeLayout(t *testing.T) {
 			assert.Equal(t, word(3*32), at(t, off+32), "escrow.counterpartyPubKey offset")
 		}},
 		{"parentXpubs", func(t *testing.T, _ []byte, i int) {
+			t.Helper()
 			off := tail(t, i)
 			require.Equal(t, word(uint64(len(e.ParentXpubs))), at(t, off), "count")
 			// Element offsets are relative to the array's first element.

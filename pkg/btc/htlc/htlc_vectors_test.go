@@ -77,7 +77,6 @@ func TestHTLCTestVectors(t *testing.T) {
 	}
 
 	for _, tc := range cases {
-		tc := tc
 		t.Run("n=%d_k=%d", func(t *testing.T) {
 			t.Helper()
 			name := ""
