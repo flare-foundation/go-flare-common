@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/require"
 )
 
@@ -145,6 +146,85 @@ func TestCheckShapeRejectsFieldCountMismatch(t *testing.T) {
 	type oneField struct{ A string }
 	_, errMissing := Decode[oneField](arg, packed) // dest is missing a field
 	require.ErrorIs(t, errMissing, ErrShapeMismatch)
+}
+
+// TestCheckShapeRejectsArrayForSlice covers a Go array for a dynamic ABI array
+// or bytes, which go-ethereum truncates or zero-fills to the array's length.
+func TestCheckShapeRejectsArrayForSlice(t *testing.T) {
+	slice := abi.Argument{Name: "x", Type: newType(t, "uint256[]")}
+	nested := abi.Argument{Name: "p", Type: tupleType(t, []abi.ArgumentMarshaling{{Name: "x", Type: "uint256[]"}})}
+
+	for _, n := range []int{1, 2, 3} {
+		values := make([]*big.Int, n)
+		for i := range values {
+			values[i] = big.NewInt(int64(i + 1))
+		}
+
+		packed, err := Encode(slice, values)
+		require.NoError(t, err)
+
+		_, err = Decode[[2]*big.Int](slice, packed)
+		require.ErrorIs(t, err, ErrShapeMismatch, n)
+
+		packed, err = Encode(nested, struct{ X []*big.Int }{values})
+		require.NoError(t, err)
+
+		_, err = Decode[struct{ X [2]*big.Int }](nested, packed)
+		require.ErrorIs(t, err, ErrShapeMismatch, n)
+	}
+
+	bytesArg := abi.Argument{Type: newType(t, "bytes")}
+	packed, err := Encode(bytesArg, []byte{1, 2})
+	require.NoError(t, err)
+
+	_, err = Decode[[2]byte](bytesArg, packed)
+	require.ErrorIs(t, err, ErrShapeMismatch)
+}
+
+// TestCheckShapeRejectsArrayForNonArray covers a Go array where the ABI type has
+// none. go-ethereum truncates or zero-fills a string into it, and on a *big.Int
+// recurses until a fatal stack overflow, so those are checked without decoding.
+func TestCheckShapeRejectsArrayForNonArray(t *testing.T) {
+	uint256 := abi.Argument{Name: "a", Type: newType(t, "uint256")}
+	require.ErrorIs(t, checkShape[[1]*big.Int](uint256.Type), ErrShapeMismatch)
+	require.ErrorIs(t, checkShape[[16]byte](newType(t, "int128")), ErrShapeMismatch)
+	require.ErrorIs(t, checkShape[[]common.Hash](newType(t, "uint256[]")), ErrShapeMismatch)
+	require.ErrorIs(t, checkShape[struct{ X [1]*big.Int }](tupleType(t, []abi.ArgumentMarshaling{{Name: "x", Type: "uint256"}})), ErrShapeMismatch)
+
+	str := abi.Argument{Type: newType(t, "string")}
+	packed, err := Encode(str, "BTC/USD-long")
+	require.NoError(t, err)
+	_, err = Decode[[4]byte](str, packed)
+	require.ErrorIs(t, err, ErrShapeMismatch)
+	_, err = Decode[[16]byte](str, packed)
+	require.ErrorIs(t, err, ErrShapeMismatch)
+
+	strs := abi.Argument{Type: newType(t, "string[]")}
+	packed, err = Encode(strs, []string{"hello world", "ab"})
+	require.NoError(t, err)
+	_, err = Decode[[][4]byte](strs, packed)
+	require.ErrorIs(t, err, ErrShapeMismatch)
+}
+
+func roundTrip[T any](t *testing.T, solType string, v T) {
+	t.Helper()
+	arg := abi.Argument{Type: newType(t, solType)}
+	packed, err := Encode(arg, v)
+	require.NoError(t, err)
+
+	got, err := Decode[T](arg, packed)
+	require.NoError(t, err)
+	require.Equal(t, v, got)
+}
+
+// TestCheckShapeAllowsArraysForFixedTypes checks the types go-ethereum decodes
+// to Go arrays still decode into them.
+func TestCheckShapeAllowsArraysForFixedTypes(t *testing.T) {
+	roundTrip(t, "address", common.Address{1})
+	roundTrip(t, "bytes32", common.Hash{1})
+	roundTrip(t, "bytes4", [4]byte{1})
+	roundTrip(t, "function", [24]byte{1})
+	roundTrip(t, "bytes32[2]", [2][32]byte{{1}, {2}})
 }
 
 // TestCheckShapeAllowsMatchingAndLeafFlexibility confirms the check does not

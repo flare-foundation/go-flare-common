@@ -8,8 +8,9 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
 )
 
-// ErrShapeMismatch indicates that a decode destination's array length or struct
-// field count diverges from the ABI argument type.
+// ErrShapeMismatch indicates a decode destination whose shape diverges from the
+// ABI argument type: an array or struct of another length or field count, or
+// an array where the type has none.
 var ErrShapeMismatch = errors.New("destination shape does not match ABI type")
 
 // ErrNonCanonical indicates ABI input that is not the canonical encoding of its
@@ -48,9 +49,10 @@ func checkShape[T any](argType abi.Type) error {
 }
 
 // shapeMatches reports a mismatch when dst and abiType are both arrays of
-// different lengths or both structs with different field counts, recursing
-// through arrays, slices, pointers, and structs. Identical types, interface
-// destinations, and any other kind divergence are left to abi.ConvertType.
+// different lengths or both structs with different field counts, or dst is an
+// array where abiType isn't, recursing through arrays, slices, pointers, and
+// structs. Identical types, interface destinations, and any other kind
+// divergence are left to abi.ConvertType.
 func shapeMatches(dst, abiType reflect.Type) error {
 	if dst == abiType || dst.Kind() == reflect.Interface {
 		return nil
@@ -62,6 +64,10 @@ func shapeMatches(dst, abiType reflect.Type) error {
 			return fmt.Errorf("%w: array length %d, want %d", ErrShapeMismatch, dst.Len(), abiType.Len())
 		}
 		return shapeMatches(dst.Elem(), abiType.Elem())
+	case dst.Kind() == reflect.Array:
+		// go-ethereum truncates or zero-fills a slice or string, and on a
+		// *big.Int recurses until a fatal stack overflow
+		return fmt.Errorf("%w: array %v, want %v", ErrShapeMismatch, dst, abiType)
 	case dst.Kind() == reflect.Slice && abiType.Kind() == reflect.Slice:
 		return shapeMatches(dst.Elem(), abiType.Elem())
 	case dst.Kind() == reflect.Pointer && abiType.Kind() == reflect.Pointer:
