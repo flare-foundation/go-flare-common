@@ -7,6 +7,7 @@ import (
 	"reflect"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
+	"github.com/flare-foundation/go-flare-common/pkg/panics"
 )
 
 var errNonPointer = errors.New("dest is not a non nil pointer")
@@ -43,7 +44,7 @@ func DecodeTo[T any](arg abi.Argument, data []byte, dest *T) error {
 // both before decoding. When T is an interface no shape check is performed and
 // tuples decode to go-ethereum's json-tagged anonymous struct.
 func Decode[T any](arg abi.Argument, data []byte) (t T, err error) {
-	defer recoverError(&err)
+	defer panics.Recover(&err)
 
 	values, err := unpack(abi.Arguments{arg}, data)
 	if err != nil {
@@ -115,7 +116,7 @@ func checkEncodeDecode(args *abi.Arguments, data []byte, decodedSlice []any) err
 // or element each argument is copied into as Decode checks T. Fields of T no
 // argument is copied into are left zero.
 func DecodeArguments[T any](args abi.Arguments, data []byte) (t T, err error) {
-	defer recoverError(&err)
+	defer panics.Recover(&err)
 
 	values, err := unpack(args, data)
 	if err != nil {

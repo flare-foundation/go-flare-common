@@ -17,6 +17,7 @@ Contains the following packages:
 - heapt: generically typed heap implementation based on "container/heap"
 - logger: structured logging to standard output in console or JSON format
 - merkle: Merkle tree implementation as used by Flare's protocols
+- panics: turning panics into errors
 - payload: working with transaction inputs for Submission smart contract
 - policy: storing and parsing signing policies
 - priority: heap implementation of a priority queue with two lanes
