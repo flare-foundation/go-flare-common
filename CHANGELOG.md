@@ -4,6 +4,7 @@
 
 ### Added
 
+- `abicoder.DecodeArguments` and `DecodeArgumentsTo` decode a top-level argument list, as Solidity's `abi.encode(a, b, ...)` writes it, checking the data as `Decode` does and the field or element each argument is copied into as `Decode` checks its destination.
 - `abicoder.ErrTruncated`.
 
 ### Changed

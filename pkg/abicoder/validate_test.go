@@ -2,6 +2,7 @@ package abicoder
 
 import (
 	"math/big"
+	"reflect"
 	"testing"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
@@ -166,10 +167,16 @@ func TestCheckShapeRejectsArrayForSlice(t *testing.T) {
 		_, err = Decode[[2]*big.Int](slice, packed)
 		require.ErrorIs(t, err, ErrShapeMismatch, n)
 
+		_, err = DecodeArguments[[2]*big.Int](abi.Arguments{slice}, packed)
+		require.ErrorIs(t, err, ErrShapeMismatch, n)
+
 		packed, err = Encode(nested, struct{ X []*big.Int }{values})
 		require.NoError(t, err)
 
 		_, err = Decode[struct{ X [2]*big.Int }](nested, packed)
+		require.ErrorIs(t, err, ErrShapeMismatch, n)
+
+		_, err = DecodeArguments[struct{ P struct{ X [2]*big.Int } }](abi.Arguments{nested}, packed)
 		require.ErrorIs(t, err, ErrShapeMismatch, n)
 	}
 
@@ -190,6 +197,16 @@ func TestCheckShapeRejectsArrayForNonArray(t *testing.T) {
 	require.ErrorIs(t, checkShape[[16]byte](newType(t, "int128")), ErrShapeMismatch)
 	require.ErrorIs(t, checkShape[[]common.Hash](newType(t, "uint256[]")), ErrShapeMismatch)
 	require.ErrorIs(t, checkShape[struct{ X [1]*big.Int }](tupleType(t, []abi.ArgumentMarshaling{{Name: "x", Type: "uint256"}})), ErrShapeMismatch)
+	require.ErrorIs(t, checkArgsShape(abi.Arguments{uint256}, reflect.TypeFor[[1]*big.Int]()), ErrShapeMismatch)
+
+	//nolint:asciicheck // go-ethereum copies a into A, not into the tagged field
+	type hidden struct {
+		Ñ *big.Int `abi:"a"`
+		A [1]*big.Int
+		B *big.Int
+	}
+	args := abi.Arguments{uint256, {Name: "b", Type: newType(t, "uint256")}}
+	require.ErrorIs(t, checkArgsShape(args, reflect.TypeFor[hidden]()), ErrShapeMismatch)
 
 	str := abi.Argument{Type: newType(t, "string")}
 	packed, err := Encode(str, "BTC/USD-long")
@@ -197,6 +214,8 @@ func TestCheckShapeRejectsArrayForNonArray(t *testing.T) {
 	_, err = Decode[[4]byte](str, packed)
 	require.ErrorIs(t, err, ErrShapeMismatch)
 	_, err = Decode[[16]byte](str, packed)
+	require.ErrorIs(t, err, ErrShapeMismatch)
+	_, err = DecodeArguments[[3]byte](abi.Arguments{str}, packed)
 	require.ErrorIs(t, err, ErrShapeMismatch)
 
 	strs := abi.Argument{Type: newType(t, "string[]")}

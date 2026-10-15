@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"strings"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
 )
@@ -46,6 +47,57 @@ func checkArgType(t abi.Type) error {
 // compare field names (mapping is positional) and skips interface destinations.
 func checkShape[T any](argType abi.Type) error {
 	return shapeMatches(reflect.TypeFor[T](), argType.GetType())
+}
+
+// checkArgsShape is checkShape for each destination abi.Arguments.Copy writes
+// args to within dst.
+func checkArgsShape(args abi.Arguments, dst reflect.Type) error {
+	if len(args) == 1 {
+		if dst.Kind() == reflect.Struct && dst.NumField() > 0 {
+			dst = dst.Field(0).Type
+		}
+		return shapeMatches(dst, args[0].Type.GetType())
+	}
+
+	if dst.Kind() == reflect.Array && dst.Len() != len(args) {
+		return fmt.Errorf("%w: array length %d, want %d arguments", ErrShapeMismatch, dst.Len(), len(args))
+	}
+
+	for _, arg := range args {
+		var field reflect.Type
+		switch dst.Kind() {
+		case reflect.Struct:
+			f, ok := argField(dst, arg.Name)
+			if !ok {
+				continue // Copy fails on it
+			}
+			field = f.Type
+		case reflect.Slice, reflect.Array:
+			field = dst.Elem()
+		default:
+			return nil
+		}
+		if err := shapeMatches(field, arg.Type.GetType()); err != nil {
+			return fmt.Errorf("matching argument %q: %w", arg.Name, err)
+		}
+	}
+
+	return nil
+}
+
+// argField returns the field of struct type t that abi.Arguments.Copy writes
+// the argument name to: the one tagged abi:"name", else the camel-cased name.
+func argField(t reflect.Type, name string) (reflect.StructField, bool) {
+	for i := range t.NumField() {
+		f := t.Field(i)
+		// go-ethereum's test, which also skips names with a non-ASCII initial
+		exported := f.Name[:1] == strings.ToUpper(f.Name[:1])
+		if tag, ok := f.Tag.Lookup("abi"); ok && tag == name && exported {
+			return f, true
+		}
+	}
+
+	return t.FieldByName(abi.ToCamelCase(name))
 }
 
 // shapeMatches reports a mismatch when dst and abiType are both arrays of

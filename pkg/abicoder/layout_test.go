@@ -82,6 +82,10 @@ func TestRejectsAmplificationBeforeAllocation(t *testing.T) {
 			n := allocated(func() { _, err = Decode[any](abi.Argument{Type: test.typ}, test.data) })
 			require.ErrorIs(t, err, ErrNonCanonical)
 			require.Less(t, n, uint64(1<<20), "Decode must reject before allocating")
+
+			n = allocated(func() { _, err = DecodeArguments[any](abi.Arguments{{Type: test.typ}}, test.data) })
+			require.ErrorIs(t, err, ErrNonCanonical)
+			require.Less(t, n, uint64(1<<20), "DecodeArguments must reject before allocating")
 		})
 	}
 }
@@ -263,8 +267,196 @@ func TestCheckLayoutRejectsUnsupportedType(t *testing.T) {
 			require.ErrorIs(t, checkLayout(abi.Arguments{{Type: test.typ}}, test.data), errUnsupportedType)
 			_, err := Decode[any](abi.Argument{Type: test.typ}, test.data)
 			require.ErrorIs(t, err, errUnsupportedType)
+			_, err = DecodeArguments[any](abi.Arguments{{Type: test.typ}}, test.data)
+			require.ErrorIs(t, err, errUnsupportedType)
 		})
 	}
+}
+
+type sendArgs struct {
+	Sender  common.Address
+	Message []byte
+	Names   []string
+	Amount  *big.Int
+}
+
+var sendComponents = []abi.ArgumentMarshaling{
+	{Name: "sender", Type: "address"},
+	{Name: "message", Type: "bytes"},
+	{Name: "names", Type: "string[]"},
+	{Name: "amount", Type: "uint256"},
+}
+
+var sendArguments = func() abi.Arguments {
+	var args abi.Arguments
+	for _, c := range sendComponents {
+		typ, err := abi.NewType(c.Type, "", nil)
+		if err != nil {
+			panic(err)
+		}
+		args = append(args, abi.Argument{Name: c.Name, Type: typ})
+	}
+
+	return args
+}()
+
+func TestDecodeArguments(t *testing.T) {
+	want := sendArgs{common.HexToAddress("0xc0"), []byte("hello"), []string{"a", "b"}, big.NewInt(42)}
+	packed, err := sendArguments.Pack(want.Sender, want.Message, want.Names, want.Amount)
+	require.NoError(t, err)
+
+	got, err := DecodeArguments[sendArgs](sendArguments, packed)
+	require.NoError(t, err)
+	require.Equal(t, want, got)
+
+	var dest sendArgs
+	require.NoError(t, DecodeArgumentsTo(sendArguments, packed, &dest))
+	require.Equal(t, want, dest)
+
+	// one tuple of the same values has a leading offset, so it isn't this encoding
+	_, err = Decode[any](abi.Argument{Type: tupleType(t, sendComponents)}, packed)
+	require.ErrorIs(t, err, ErrNonCanonical)
+}
+
+// TestDecodeArgumentsShape confirms a destination go-ethereum's Copy would
+// truncate or zero-fill is rejected, wherever the argument lands in it.
+func TestDecodeArgumentsShape(t *testing.T) {
+	args := abi.Arguments{{Name: "names", Type: newType(t, "string[2]")}, {Name: "amount", Type: newType(t, "uint256")}}
+	packed, err := args.Pack([2]string{"a", "b"}, big.NewInt(5))
+	require.NoError(t, err)
+	pairArgs := abi.Arguments{
+		{Name: "pair", Type: tupleType(t, []abi.ArgumentMarshaling{{Name: "a", Type: "uint256"}, {Name: "b", Type: "bool"}})},
+		{Name: "n", Type: newType(t, "uint256")},
+	}
+	pairPacked, err := pairArgs.Pack(staticPair{big.NewInt(1), true}, big.NewInt(2))
+	require.NoError(t, err)
+	single := abi.Arguments{{Name: "x", Type: newType(t, "uint256[3]")}}
+	singlePacked, err := single.Pack([3]*big.Int{big.NewInt(1), big.NewInt(2), big.NewInt(3)})
+	require.NoError(t, err)
+
+	type reordered struct {
+		Amount *big.Int
+		Names  [2]string
+	}
+	got, err := DecodeArguments[reordered](args, packed)
+	require.NoError(t, err)
+	require.Equal(t, reordered{big.NewInt(5), [2]string{"a", "b"}}, got)
+
+	type tagged struct {
+		X      [2]string `abi:"names"`
+		Amount *big.Int
+	}
+	gotTagged, err := DecodeArguments[tagged](args, packed)
+	require.NoError(t, err)
+	require.Equal(t, tagged{[2]string{"a", "b"}, big.NewInt(5)}, gotTagged)
+
+	inOrder, err := DecodeArguments[[2]any](args, packed)
+	require.NoError(t, err)
+	require.Equal(t, [2]any{[2]string{"a", "b"}, big.NewInt(5)}, inOrder)
+
+	type shorter struct {
+		Names  [1]string
+		Amount *big.Int
+	}
+	type longer struct {
+		Names  [3]string
+		Amount *big.Int
+	}
+	type shorterTagged struct {
+		X      [1]string `abi:"names"`
+		Amount *big.Int
+	}
+	type fewerFields struct {
+		Pair struct{ A *big.Int }
+		N    *big.Int
+	}
+
+	tests := []struct {
+		name   string
+		decode func() error
+	}{
+		{"shorterArray", decodeInto[shorter](args, packed)},
+		{"longerArray", decodeInto[longer](args, packed)},
+		{"taggedField", decodeInto[shorterTagged](args, packed)},
+		{"fewerTupleFields", decodeInto[fewerFields](pairArgs, pairPacked)},
+		{"extraArrayElement", decodeInto[[3]any](args, packed)},
+		{"missingArrayElement", decodeInto[[1]any](args, packed)},
+		{"single", decodeInto[[1]*big.Int](single, singlePacked)},
+		{"singleFirstField", decodeInto[struct{ X [1]*big.Int }](single, singlePacked)},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			require.ErrorIs(t, test.decode(), ErrShapeMismatch)
+		})
+	}
+}
+
+// decodeInto returns a call of DecodeArguments into a T.
+func decodeInto[T any](args abi.Arguments, data []byte) func() error {
+	return func() error {
+		_, err := DecodeArguments[T](args, data)
+		return err
+	}
+}
+
+func TestDecodeArgumentsSingle(t *testing.T) {
+	args := abi.Arguments{{Name: "pair", Type: newType(t, "string")}}
+	packed, err := args.Pack("BTC/USD")
+	require.NoError(t, err)
+
+	got, err := DecodeArguments[string](args, packed)
+	require.NoError(t, err)
+	require.Equal(t, "BTC/USD", got)
+}
+
+func TestDecodeArgumentsRejects(t *testing.T) {
+	packed, err := sendArguments.Pack(common.HexToAddress("0xc0"), []byte("hello"), []string{"a"}, big.NewInt(1))
+	require.NoError(t, err)
+	dirty := bytes.Clone(packed)
+	dirty[0] = 1 // the address's padding
+
+	_, err = DecodeArguments[sendArgs](sendArguments, dirty)
+	require.ErrorIs(t, err, ErrNonCanonical)
+
+	_, err = DecodeArguments[sendArgs](sendArguments, packed[:len(packed)-32])
+	require.ErrorIs(t, err, ErrTruncated)
+
+	_, err = DecodeArguments[struct{ Other []byte }](sendArguments, packed)
+	require.Error(t, err)
+
+	require.ErrorIs(t, DecodeArgumentsTo[sendArgs](sendArguments, packed, nil), errNonPointer)
+
+	// Copy copies a single tuple into the struct's first field, here an array
+	pair := []abi.ArgumentMarshaling{{Name: "A", Type: "uint256"}, {Name: "B", Type: "bool"}}
+	wrapped := abi.Arguments{{Type: tupleType(t, []abi.ArgumentMarshaling{{Name: "X", Type: "tuple[2]", Components: pair}})}}
+	_, err = DecodeArguments[struct{ X [2]staticPair }](wrapped, make([]byte, 128))
+	require.ErrorIs(t, err, ErrShapeMismatch)
+
+	// go-ethereum's Copy panics on this one: a struct with no first field
+	_, err = DecodeArguments[struct{}](abi.Arguments{{Type: newType(t, "uint256")}}, make([]byte, 32))
+	require.ErrorContains(t, err, "recovered panic")
+
+	kept := sendArgs{Amount: big.NewInt(9)}
+	require.Error(t, DecodeArgumentsTo(sendArguments, dirty, &kept))
+	require.Equal(t, sendArgs{Amount: big.NewInt(9)}, kept)
+
+	// Copy writes the first three fields before failing on the last
+	type badAmount struct {
+		Sender  common.Address
+		Message []byte
+		Names   []string
+		Amount  string
+	}
+	partial, err := DecodeArguments[badAmount](sendArguments, packed)
+	require.Error(t, err)
+	require.Equal(t, badAmount{}, partial)
+	keptBad := badAmount{Amount: "kept"}
+	require.Error(t, DecodeArgumentsTo(sendArguments, packed, &keptBad))
+	require.Equal(t, badAmount{Amount: "kept"}, keptBad)
+
+	_, err = DecodeArguments[sendArgs](abi.Arguments{{}}, packed)
+	require.ErrorIs(t, err, errUninitializedArg)
 }
 
 // TestCheckEncodeDecodeOmitsData confirms a round-trip mismatch names no
