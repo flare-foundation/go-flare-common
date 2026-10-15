@@ -3,6 +3,7 @@ package abicoder
 import (
 	"math/big"
 	"testing"
+	"time"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/stretchr/testify/require"
@@ -213,4 +214,170 @@ func TestEncodeBigInt(t *testing.T) {
 	require.NoError(t, err)
 
 	require.Equal(t, 0, x.Cmp(decoded))
+}
+
+func pow2(n uint) *big.Int {
+	return new(big.Int).Lsh(big.NewInt(1), n)
+}
+
+func ptr[T any](v T) *T {
+	return &v
+}
+
+// TestEncodeRefusesValuesOutOfType covers values go-ethereum packs without a
+// range check into bytes Decode refuses.
+func TestEncodeRefusesValuesOutOfType(t *testing.T) {
+	var hash [32]byte
+	hash[0], hash[31] = 0xaa, 1
+
+	tests := []struct {
+		name    string
+		solType string
+		value   any
+	}{
+		{"uint24", "uint24", pow2(24)},
+		{"uint128", "uint128", pow2(128)},
+		{"int24Above", "int24", pow2(23)},
+		{"int128Below", "int128", new(big.Int).Sub(new(big.Int).Neg(pow2(127)), big.NewInt(1))},
+		{"addressFromHash", "address", hash},
+		{"functionFromHash", "function", hash},
+		{"nested", "uint128[]", []*big.Int{big.NewInt(1), pow2(200)}},
+		{"uint256Above", "uint256", pow2(256)},
+		{"uint256Wrapping", "uint256", new(big.Int).Add(pow2(256), big.NewInt(5))},
+		{"uint256Negative", "uint256", big.NewInt(-1)},
+		{"int256Above", "int256", pow2(255)},
+		{"int256Below", "int256", new(big.Int).Sub(new(big.Int).Neg(pow2(255)), big.NewInt(1))},
+		{"arrayElem", "uint256[2]", [2]*big.Int{big.NewInt(1), pow2(256)}},
+		{"pointer", "int256[]", []**big.Int{ptr(pow2(255))}},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			_, err := Encode(abi.Argument{Type: newType(t, tc.solType)}, tc.value)
+			require.ErrorIs(t, err, ErrNonCanonical)
+		})
+	}
+}
+
+// TestEncodeAllowsValuesAtTypeBounds checks the output check rejects nothing
+// in range, and Decode reads it back.
+func TestEncodeAllowsValuesAtTypeBounds(t *testing.T) {
+	var high [20]byte
+	for i := range high {
+		high[i] = 0xff
+	}
+
+	tests := []struct {
+		name    string
+		solType string
+		value   any
+	}{
+		{"uint24Max", "uint24", new(big.Int).Sub(pow2(24), big.NewInt(1))},
+		{"int24Min", "int24", new(big.Int).Neg(pow2(23))},
+		{"int24Max", "int24", new(big.Int).Sub(pow2(23), big.NewInt(1))},
+		{"uint256Max", "uint256", new(big.Int).Sub(pow2(256), big.NewInt(1))},
+		{"int256Min", "int256", new(big.Int).Neg(pow2(255))},
+		{"int256Max", "int256", new(big.Int).Sub(pow2(255), big.NewInt(1))},
+		{"uint256Zero", "uint256", big.NewInt(0)},
+		{"addressMax", "address", high},
+		{"addressShort", "address", [3]byte{1, 2, 3}},
+		{"addressWord", "address", [32]byte{31: 1}},
+		{"functionWord", "function", [32]byte{1}},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			arg := abi.Argument{Type: newType(t, tc.solType)}
+			packed, err := Encode(arg, tc.value)
+			require.NoError(t, err)
+
+			_, err = Decode[any](arg, packed)
+			require.NoError(t, err)
+		})
+	}
+}
+
+// TestEncodeRefusesLongAddress covers an address or function from more than 32
+// bytes, which go-ethereum writes whole. Here the second word reads as the
+// string's offset, so the output still parses, with another string.
+func TestEncodeRefusesLongAddress(t *testing.T) {
+	var long [64]byte
+	long[63] = 0x40
+
+	for _, solType := range []string{"address", "function"} {
+		arg := abi.Argument{Type: tupleType(t, []abi.ArgumentMarshaling{{Name: "a", Type: solType}, {Name: "s", Type: "string"}})}
+		_, err := Encode(arg, struct {
+			A [64]byte
+			S string
+		}{long, "0123456789abcdef0123456789abcdef"})
+		require.ErrorIs(t, err, ErrNonCanonical, solType)
+	}
+}
+
+type cyclic *cyclic
+
+// TestEncodeRefusesRecursivePointer covers a value of a recursive pointer type,
+// which go-ethereum follows until a fatal stack overflow. A regression loops, so
+// Encode runs under a timeout.
+func TestEncodeRefusesRecursivePointer(t *testing.T) {
+	var p cyclic
+	p = &p
+
+	tests := []struct {
+		name string
+		arg  abi.Argument
+		data any
+	}{
+		{"direct", abi.Argument{Type: newType(t, "uint256")}, p},
+		{"field", abi.Argument{Type: tupleType(t, []abi.ArgumentMarshaling{{Name: "a", Type: "uint256"}})}, struct{ A cyclic }{p}},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			done := make(chan error, 1)
+			go func() {
+				_, err := Encode(tc.arg, tc.data)
+				done <- err
+			}()
+
+			select {
+			case err := <-done:
+				require.ErrorContains(t, err, "recursive pointer type")
+			case <-time.After(5 * time.Second):
+				t.Fatal("Encode loops on a recursive pointer type")
+			}
+		})
+	}
+}
+
+// TestEncodeRefusesUnsupportedTypes covers types Decode refuses whatever the
+// data.
+func TestEncodeRefusesUnsupportedTypes(t *testing.T) {
+	_, err := Encode(abi.Argument{Type: newType(t, "uint256[0]")}, [0]*big.Int{})
+	require.ErrorIs(t, err, errUnsupportedType)
+
+	_, err = Encode(abi.Argument{Type: newType(t, "uint256[0][]")}, [][0]*big.Int{})
+	require.ErrorIs(t, err, errUnsupportedType)
+}
+
+// TestEncodeRangeFollowsFieldNames checks each value against the component
+// Encode writes it to, which it finds by name, not position.
+func TestEncodeRangeFollowsFieldNames(t *testing.T) {
+	arg := abi.Argument{Type: tupleType(t, []abi.ArgumentMarshaling{
+		{Name: "a", Type: "int256"},
+		{Name: "b", Type: "uint256"},
+	})}
+	uintMax := new(big.Int).Sub(pow2(256), big.NewInt(1))
+	minusOne := big.NewInt(-1)
+
+	type swapped struct{ B, A *big.Int }
+	_, err := Encode(arg, swapped{B: uintMax, A: minusOne})
+	require.NoError(t, err)
+
+	type tagged struct {
+		X *big.Int `abi:"b"`
+		Y *big.Int `abi:"a"`
+	}
+	_, err = Encode(arg, tagged{X: uintMax, Y: minusOne})
+	require.NoError(t, err)
+
+	_, err = Encode(arg, swapped{B: minusOne, A: minusOne})
+	require.ErrorIs(t, err, ErrNonCanonical)
 }

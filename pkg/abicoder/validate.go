@@ -17,7 +17,8 @@ var ErrShapeMismatch = errors.New("destination shape does not match ABI type")
 
 // ErrNonCanonical indicates ABI input that is not the canonical encoding of its
 // type: an offset other than the one the encoder writes, non-zero padding, a
-// value out of its type's range, or data after the encoding.
+// value out of its type's range, or data after the encoding. Encode returns it
+// for a value it can't encode canonically, such as one out of its type's range.
 var ErrNonCanonical = errors.New("non-canonical ABI encoding")
 
 // ErrTruncated indicates ABI input that ends before the encoding its type

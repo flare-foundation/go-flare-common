@@ -298,6 +298,43 @@ func TestCheckShapeAllowsMatchingAndLeafFlexibility(t *testing.T) {
 	})
 }
 
+// TestArgFieldSkipsNonASCIITags covers a field tagged with a component name
+// whose own name starts with a non-ASCII letter: go-ethereum ignores the tag
+// and uses the field with the camel-cased name, so the checks must look there.
+func TestArgFieldSkipsNonASCIITags(t *testing.T) {
+	//nolint:asciicheck // the non-ASCII initial is the case under test
+	type tagged struct {
+		Ñ *big.Int `abi:"a"`
+		A *big.Int
+	}
+	single := abi.Argument{Type: tupleType(t, []abi.ArgumentMarshaling{{Name: "a", Type: "uint256"}})}
+	_, err := Encode(single, tagged{big.NewInt(1), new(big.Int).Add(pow2(256), big.NewInt(5))})
+	require.ErrorIs(t, err, ErrNonCanonical)
+
+	//nolint:asciicheck // the non-ASCII initial is the case under test
+	type swapped struct {
+		Ñ uint64 `abi:"a"`
+		A uint64
+	}
+	pair := abi.Argument{Type: tupleType(t, []abi.ArgumentMarshaling{{Name: "a", Type: "uint64"}, {Name: "b", Type: "uint64"}})}
+	packed, err := Encode(pair, struct{ A, B uint64 }{1, 2})
+	require.NoError(t, err)
+	_, err = Decode[swapped](pair, packed)
+	require.ErrorIs(t, err, ErrShapeMismatch)
+
+	//nolint:asciicheck // the non-ASCII initial is the case under test
+	type truncated struct {
+		Ñ []*big.Int `abi:"a"`
+		A [2]*big.Int
+		B *big.Int
+	}
+	args := abi.Arguments{{Name: "a", Type: newType(t, "uint256[]")}, {Name: "b", Type: newType(t, "uint256")}}
+	packed, err = args.Pack([]*big.Int{big.NewInt(1), big.NewInt(2), big.NewInt(3)}, big.NewInt(9))
+	require.NoError(t, err)
+	_, err = DecodeArguments[truncated](args, packed)
+	require.ErrorIs(t, err, ErrShapeMismatch)
+}
+
 func decodeOne[T any](arg abi.Argument, data []byte) func() error {
 	return func() error {
 		_, err := Decode[T](arg, data)
