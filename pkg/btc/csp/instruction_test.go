@@ -44,6 +44,7 @@ func boundPair(t *testing.T) ([]byte, csp.Instruction) {
 		WalletId:         e.WalletId,
 		SourceId:         e.SourceId,
 		AccountIndex:     e.AccountIndex,
+		AccountHash:      e.AccountHash,
 		SequencePosition: e.SequencePosition,
 		Attempt:          e.Attempt,
 		PackageHash:      h,
@@ -151,6 +152,15 @@ func TestBindPackageRejectsSourceMismatch(t *testing.T) {
 	in.SourceId[0] ^= 0xff
 	_, err := in.BindPackage(raw, testChainID)
 	assert.ErrorContains(t, err, "different source")
+}
+
+// The instruction's accountHash comes from the chain; an envelope naming
+// another account is not the one decided.
+func TestBindPackageRejectsAccountMismatch(t *testing.T) {
+	raw, in := boundPair(t)
+	in.AccountHash[0] ^= 0xff
+	_, err := in.BindPackage(raw, testChainID)
+	assert.ErrorContains(t, err, "different account")
 }
 
 func TestKeysForSelectsThisMachine(t *testing.T) {

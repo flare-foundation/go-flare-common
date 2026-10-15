@@ -133,6 +133,16 @@ func (i Instruction) bindIdentity(e Envelope, sig []byte, chainID uint64) error 
 	if e.SourceId != i.SourceId {
 		return errors.New("envelope names a different source than the instruction")
 	}
+	// The instruction's accountHash is the chain's account key,
+	// keccak256(abi.encode(sourceId, accountAddress)). The envelope must name
+	// the same account. This only repeats what the verifiers checked; a machine
+	// that wants the signer set held to the chain without trusting them derives
+	// the account address from ParentXpubs and AccountIndex itself and hashes
+	// it with AccountHashOf, which needs the network's address encoding and so
+	// is not done here.
+	if e.AccountHash != i.AccountHash {
+		return errors.New("envelope names a different account than the instruction")
+	}
 	return nil
 }
 
