@@ -12,6 +12,7 @@
 - **Behavioral:** `abicoder.Decode` and `DecodeTo` check the encoding's layout before decoding: data whose offsets aren't where the encoder puts them fails with `ErrNonCanonical`, and data too short with `ErrTruncated` instead of go-ethereum's error.
 - **Behavioral:** `abicoder` refuses integers out of range for widths go-ethereum doesn't range-check, such as `uint128`, and refuses zero-length fixed arrays, empty tuples and arrays too large to encode as unsupported, whatever the data.
 - **Behavioral:** `abicoder`'s decoders refuse a Go array for any ABI type but a fixed-size array, `bytesN`, `address` or `function` with `ErrShapeMismatch`, instead of truncating or zero-filling a dynamic array, `bytes` or `string` into it.
+- **Behavioral:** `abicoder`'s decoders refuse a struct whose field name or `abi` tag matches a tuple component at another position with `ErrShapeMismatch`: tuples still decode by position while `Encode` matches by name, so such a struct got swapped values.
 - `abicoder`'s round-trip error no longer prints the input.
 
 ### Security

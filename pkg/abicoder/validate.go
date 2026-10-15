@@ -10,8 +10,9 @@ import (
 )
 
 // ErrShapeMismatch indicates a decode destination whose shape diverges from the
-// ABI argument type: an array or struct of another length or field count, or
-// an array where the type has none.
+// ABI argument type: an array or struct of another length or field count, an
+// array where the type has none, or a field named for a tuple component at
+// another position.
 var ErrShapeMismatch = errors.New("destination shape does not match ABI type")
 
 // ErrNonCanonical indicates ABI input that is not the canonical encoding of its
@@ -43,8 +44,10 @@ func checkArgType(t abi.Type) error {
 // abi.ConvertType maps tuples to structs positionally by field index and copies
 // only min(src,dst) array elements, so a destination with a different array
 // length or struct field count decodes via silent truncation or zero-fill
-// rather than an error. checkShape catches those before conversion. It does not
-// compare field names (mapping is positional) and skips interface destinations.
+// rather than an error. checkShape catches those before conversion. Mapping is
+// positional, but a field whose name or abi tag matches a component at another
+// position, as Encode matches them, is rejected. Interface destinations are
+// skipped.
 func checkShape[T any](argType abi.Type) error {
 	return shapeMatches(reflect.TypeFor[T](), argType.GetType())
 }
@@ -101,10 +104,11 @@ func argField(t reflect.Type, name string) (reflect.StructField, bool) {
 }
 
 // shapeMatches reports a mismatch when dst and abiType are both arrays of
-// different lengths or both structs with different field counts, or dst is an
-// array where abiType isn't, recursing through arrays, slices, pointers, and
-// structs. Identical types, interface destinations, and any other kind
-// divergence are left to abi.ConvertType.
+// different lengths, or both structs with different field counts or with a dst
+// field named after a component at another position, or dst is an array where
+// abiType isn't, recursing through arrays, slices, pointers, and structs.
+// Identical types, interface destinations, and any other kind divergence are
+// left to abi.ConvertType.
 func shapeMatches(dst, abiType reflect.Type) error {
 	if dst == abiType || dst.Kind() == reflect.Interface {
 		return nil
@@ -129,6 +133,11 @@ func shapeMatches(dst, abiType reflect.Type) error {
 			return fmt.Errorf("%w: struct has %d fields, want %d", ErrShapeMismatch, dst.NumField(), abiType.NumField())
 		}
 		for i := range dst.NumField() {
+			// go-ethereum tags each tuple field json:"<component name>"
+			name := abiType.Field(i).Tag.Get("json")
+			if f, ok := argField(dst, name); ok && (len(f.Index) != 1 || f.Index[0] != i) {
+				return fmt.Errorf("%w: component %q decodes into field %s but names field %s", ErrShapeMismatch, name, dst.Field(i).Name, f.Name)
+			}
 			if err := shapeMatches(dst.Field(i).Type, abiType.Field(i).Type); err != nil {
 				return err
 			}

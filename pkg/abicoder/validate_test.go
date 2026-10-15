@@ -248,7 +248,7 @@ func TestCheckShapeAllowsArraysForFixedTypes(t *testing.T) {
 
 // TestCheckShapeAllowsMatchingAndLeafFlexibility confirms the check does not
 // over-reject: matching shapes, big.Int vs *big.Int, common.Hash, and any all
-// decode, and positional (name-blind) tuple mapping still works.
+// decode, and fields named after no component still map by position.
 func TestCheckShapeAllowsMatchingAndLeafFlexibility(t *testing.T) {
 	t.Run("bigIntVariants", func(t *testing.T) {
 		arg := abi.Argument{Type: newType(t, "uint256")}
@@ -274,8 +274,7 @@ func TestCheckShapeAllowsMatchingAndLeafFlexibility(t *testing.T) {
 		require.Equal(t, "hi", out)
 	})
 
-	t.Run("positionalNameBlind", func(t *testing.T) {
-		// Same field count and types, names swapped: still decodes positionally.
+	t.Run("positionalOtherNames", func(t *testing.T) {
 		arg := abi.Argument{Type: tupleType(t, []abi.ArgumentMarshaling{
 			{Name: "A", Type: "uint64"},
 			{Name: "B", Type: "uint64"},
@@ -284,9 +283,66 @@ func TestCheckShapeAllowsMatchingAndLeafFlexibility(t *testing.T) {
 		packed, err := abi.Arguments{arg}.Pack(src{A: 1, B: 2})
 		require.NoError(t, err)
 
-		type swapped struct{ B, A uint64 }
-		out, err := Decode[swapped](arg, packed)
+		type renamed struct{ P, Q uint64 }
+		out, err := Decode[renamed](arg, packed)
 		require.NoError(t, err)
-		require.Equal(t, swapped{B: 1, A: 2}, out) // positional: by index, names ignored
+		require.Equal(t, renamed{P: 1, Q: 2}, out)
+
+		type tagged struct {
+			P uint64 `abi:"A"`
+			Q uint64 `abi:"B"`
+		}
+		outTagged, err := Decode[tagged](arg, packed)
+		require.NoError(t, err)
+		require.Equal(t, tagged{P: 1, Q: 2}, outTagged)
+	})
+}
+
+func decodeOne[T any](arg abi.Argument, data []byte) func() error {
+	return func() error {
+		_, err := Decode[T](arg, data)
+		return err
+	}
+}
+
+// TestCheckShapeRejectsReorderedFields covers structs whose field names or abi
+// tags put a component at another position than Decode fills: Encode reads
+// them by name, so Decode would swap the values.
+func TestCheckShapeRejectsReorderedFields(t *testing.T) {
+	pair := []abi.ArgumentMarshaling{{Name: "A", Type: "uint64"}, {Name: "B", Type: "uint64"}}
+	arg := abi.Argument{Name: "p", Type: tupleType(t, pair)}
+	type src struct{ A, B uint64 }
+	packed, err := Encode(arg, src{A: 1, B: 2})
+	require.NoError(t, err)
+
+	type swapped struct{ B, A uint64 }
+	type tagged struct {
+		X uint64 `abi:"B"`
+		Y uint64 `abi:"A"`
+	}
+	type partial struct{ B, Q uint64 }
+
+	tests := []struct {
+		name   string
+		decode func() error
+	}{
+		{"swapped", decodeOne[swapped](arg, packed)},
+		{"tagged", decodeOne[tagged](arg, packed)},
+		{"partial", decodeOne[partial](arg, packed)},
+		{"decodeArguments", decodeInto[struct{ P swapped }](abi.Arguments{arg}, packed)},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			require.ErrorIs(t, tc.decode(), ErrShapeMismatch)
+		})
+	}
+
+	t.Run("nested", func(t *testing.T) {
+		list := abi.Argument{Name: "ps", Type: tupleType(t, []abi.ArgumentMarshaling{{Name: "ps", Type: "tuple[]", Components: pair}})}
+		packed, err := Encode(list, struct{ Ps []src }{[]src{{1, 2}}})
+		require.NoError(t, err)
+
+		_, err = Decode[struct{ Ps []swapped }](list, packed)
+		require.ErrorIs(t, err, ErrShapeMismatch)
 	})
 }
