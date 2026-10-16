@@ -12,7 +12,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/payments"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/walletpayments"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/address"
 )
 
@@ -26,7 +26,7 @@ import (
 //   - TokenId must be empty so an issued-token payment cannot accidentally produce a native-XRP tx;
 //   - the resulting tx is run through CheckNativePayment (CheckNullify for the nullify
 //     path) so the caller never gets back a structurally invalid blob.
-func PaymentTxFromInstruction(i payments.ITeePaymentsPaymentInstructionMessage, try int) (map[string]any, error) {
+func PaymentTxFromInstruction(i walletpayments.IPaymentsPaymentInstructionMessage, try int) (map[string]any, error) {
 	recipient, destinationTag, err := address.Normalize(i.RecipientAddress)
 	if err != nil {
 		return nil, fmt.Errorf("normalizing address: %w", err)
@@ -94,7 +94,7 @@ func PaymentTxFromInstruction(i payments.ITeePaymentsPaymentInstructionMessage, 
 
 // Nullify prepares a transaction that nullifies the transaction prepared for the Payment Instruction Message.
 // Cannot be used as a replacement as the fee is not raised. The result is validated by CheckNullify.
-func Nullify(i payments.ITeePaymentsPaymentInstructionMessage, fee string) (map[string]any, error) {
+func Nullify(i walletpayments.IPaymentsPaymentInstructionMessage, fee string) (map[string]any, error) {
 	if i.Nonce > math.MaxUint32 {
 		return nil, fmt.Errorf("nonce %d exceeds XRPL Sequence (UInt32) range", i.Nonce)
 	}

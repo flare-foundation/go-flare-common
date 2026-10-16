@@ -11,14 +11,16 @@ import (
 	"github.com/btcsuite/btcd/txscript"
 )
 
-// maxTimeout is BIP-65's effective upper bound for OP_CHECKLOCKTIMEVERIFY:
-// CLTV compares against nLockTime as a script number, and script numbers are
-// signed — anything above 2^31-1 wraps to negative and the OP fails. The
-// proposer would never want this value (Bitcoin's chain reaches the
-// timestamp 2^31-1 in 2038, and block height 2^31-1 is centuries away),
-// but rejecting up front turns a confusing consensus reject at spend time
-// into a clear validation error at script-build time.
-const maxTimeout int64 = 0x7FFFFFFF
+// maxTimeout is the largest timeout the timeout path can ever satisfy:
+// nLockTime is an unsigned 32-bit field, so 0xFFFFFFFF (2106-02-07) is its
+// ceiling. OP_CHECKLOCKTIMEVERIFY reads its operand as a script number of up
+// to FIVE bytes (BIP-65), so every value up to this one is expressible; the
+// script pushes it minimally — four bytes up to 0x7FFFFFFF, five from
+// 0x80000000, where the sign bit needs a byte of its own. The diamond bounds
+// a Bitcoin escrow's expiry from below only (it must be in the future), so a
+// builder that stopped at 0x7FFFFFFF (2038-01-19) would refuse an escrow the
+// chain accepted.
+const maxTimeout int64 = 0xFFFFFFFF
 
 // minTimeout is the smallest UNIX timestamp accepted by BuildScript.
 // BIP-65 interprets OP_CHECKLOCKTIMEVERIFY values < 500,000,000 as block
@@ -83,13 +85,16 @@ func BuildScript(
 	if len(multisigKeys) > 20 {
 		return nil, fmt.Errorf("n=%d exceeds OP_CHECKMULTISIG limit of 20", len(multisigKeys))
 	}
-	if timeout < minTimeout || timeout > maxTimeout {
+	if timeout < minTimeout {
 		return nil, fmt.Errorf(
 			"timeout %d out of range: CV escrows must use UNIX timestamps (≥ %d); "+
 				"values < %d are interpreted as block heights by OP_CHECKLOCKTIMEVERIFY (BIP-65) "+
 				"and would create a near-immediately-spendable escrow",
 			timeout, minTimeout, minTimeout,
 		)
+	}
+	if timeout > maxTimeout {
+		return nil, fmt.Errorf("timeout %d out of range: nLockTime cannot exceed %d", timeout, maxTimeout)
 	}
 	// Pubkey validation: every key on either spend path must be a valid
 	// compressed secp256k1 point. btcec.ParsePubKey catches:

@@ -47,9 +47,8 @@ func signerXpubs(n int, coinType uint32, params *chaincfg.Params) [][]byte {
 
 func sample() csp.Envelope {
 	return csp.Envelope{
-		Version:            csp.EnvelopeVersion,
-		WalletID:           [32]byte([]byte("wallet-1\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00")),
-		SourceID:           [32]byte([]byte("BTC\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00")),
+		WalletId:           [32]byte([]byte("wallet-1\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00")),
+		SourceId:           [32]byte([]byte("BTC\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00")),
 		AccountIndex:       0,
 		SequencePosition:   7,
 		EligibleGeneration: 3,
@@ -112,8 +111,8 @@ func TestEveryFieldChangesTheHash(t *testing.T) {
 		"threshold":          func(e *csp.Envelope) { e.Threshold = 3 },
 		"parentXpubs.order":  func(e *csp.Envelope) { e.ParentXpubs[0], e.ParentXpubs[1] = e.ParentXpubs[1], e.ParentXpubs[0] },
 		"parentXpubs.count":  func(e *csp.Envelope) { e.ParentXpubs = e.ParentXpubs[:2] },
-		"walletId":           func(e *csp.Envelope) { e.WalletID[0] ^= 0xff },
-		"sourceId":           func(e *csp.Envelope) { e.SourceID[0] ^= 0xff },
+		"walletId":           func(e *csp.Envelope) { e.WalletId[0] ^= 0xff },
+		"sourceId":           func(e *csp.Envelope) { e.SourceId[0] ^= 0xff },
 		"accountIndex":       func(e *csp.Envelope) { e.AccountIndex = 1 },
 		"sequencePosition":   func(e *csp.Envelope) { e.SequencePosition++ },
 		"eligibleGeneration": func(e *csp.Envelope) { e.EligibleGeneration++ },
@@ -194,11 +193,6 @@ func TestValidateRejectsUnusableEnvelopes(t *testing.T) {
 
 		// Positions start at 1; 0 means "none" wherever the channel reads one.
 		"position 0": func(e *csp.Envelope) { e.SequencePosition = 0 },
-
-		// EnvelopeVersion is the only version.
-		"version zero":  func(e *csp.Envelope) { e.Version = 0 },
-		"version below": func(e *csp.Envelope) { e.Version = csp.EnvelopeVersion - 1 },
-		"version above": func(e *csp.Envelope) { e.Version = csp.EnvelopeVersion + 1 },
 
 		// The account in the chain's terms.
 		"no wallet registry": func(e *csp.Envelope) { e.WalletRegistry = common.Address{} },
@@ -447,9 +441,8 @@ func layoutFixture() csp.Envelope {
 	var source [32]byte
 	copy(source[:], "BTC")
 	return csp.Envelope{
-		Version:            csp.EnvelopeVersion,
-		WalletID:           wallet,
-		SourceID:           source,
+		WalletId:           wallet,
+		SourceId:           source,
 		AccountIndex:       7,
 		SequencePosition:   1001,
 		EligibleGeneration: 17,
@@ -472,8 +465,7 @@ func layoutFixture() csp.Envelope {
 	}
 }
 
-// Decode(Encode(e)) is e, every field — including those versions 2 and 3
-// appended.
+// Decode(Encode(e)) is e, every field.
 func TestRoundTripIsExact(t *testing.T) {
 	e := layoutFixture()
 	b, err := e.Encode()
@@ -487,17 +479,20 @@ func TestRoundTripIsExact(t *testing.T) {
 // It was produced by Foundry's `cast abi-encode` — an ABI encoder independent
 // of go-ethereum's — over the signature
 //
-//	f((uint16,bytes32,bytes32,uint32,uint64,uint64,uint8,uint32,uint32,uint64,uint32,bytes,
+//	f((bytes32,bytes32,uint32,uint64,uint64,uint8,uint32,uint32,uint64,uint32,bytes,
 //	   (bytes32,uint32,uint64,uint8,uint32,bool)[],address,(bytes32,bytes,uint64),
 //	   bytes[],uint32,address,bytes32))
 //
-// and the proposalHash by `cast keccak` over abi.encode(CSP_PROPOSAL, 31337,
-// keccak256(encoding)). Any other implementation of the envelope — a machine,
-// a verifier, a contract — can check itself against these three.
+// — TeeStructs.CspEnvelope — and the proposalHash by `cast keccak` over
+// abi.encode(CSP_PROPOSAL, 31337, keccak256(encoding)). It is also what the
+// owners' CspEnvelopeTest derives from the earlier layout that led with a
+// version word: drop that word and lower every head offset by 32. Any other
+// implementation of the envelope — a machine, a verifier, a contract, the
+// custodian backend — can check itself against these three.
 const (
 	layoutVectorFile        = "testdata/envelope_layout.hex"
-	layoutVectorKeccak      = "0xd4095038fc4c56c42afa443521e71dbec94ef664248bb6d949b2a78b4d0e8628"
-	layoutVectorProposalHex = "0x78cb121a315317a9baaa8fe0dae1dde5bdca7f6b73effacde372ca0169498c8a"
+	layoutVectorKeccak      = "0xf2efbd4f3eb158e14d7bf2a273c8bd8943942062495a22e2b1f5786826822df6"
+	layoutVectorProposalHex = "0x50e8703cb4299b2c56bd8caa8686758915b70082215d3a658db560322cfb34f5"
 )
 
 // TestEnvelopeLayout pins the tuple: every field in Envelope's order, with the
@@ -540,9 +535,8 @@ func TestEnvelopeLayout(t *testing.T) {
 		}
 	}
 	fields := []field{
-		{"version", static(word(3))},
-		{"walletId", static(e.WalletID[:])},
-		{"sourceId", static(e.SourceID[:])},
+		{"walletId", static(e.WalletId[:])},
+		{"sourceId", static(e.SourceId[:])},
 		{"accountIndex", static(word(7))},
 		{"sequencePosition", static(word(1001))},
 		{"eligibleGeneration", static(word(17))},
@@ -594,7 +588,7 @@ func TestEnvelopeLayout(t *testing.T) {
 	}
 	// The head is exactly one word per field: the first tail — rawUnsignedTx's,
 	// since tails follow field order — begins where the head ends.
-	assert.Equal(t, 32*len(fields), tail(t, 11), "the tuple head is not %d words: a field was added or dropped", len(fields))
+	assert.Equal(t, 32*len(fields), tail(t, 10), "the tuple head is not %d words: a field was added or dropped", len(fields))
 
 	// And the whole encoding, byte for byte, against the independent vector.
 	golden, err := os.ReadFile(layoutVectorFile)
@@ -618,4 +612,35 @@ func word(v uint64) []byte {
 	w := make([]byte, 32)
 	binary.BigEndian.PutUint64(w[24:], v)
 	return w
+}
+
+// refusalVectorDir holds encodings that every envelope decoder, in every
+// language, must refuse. Each is a variant of the layout vector; README.md in
+// that directory names what each one is.
+const refusalVectorDir = "testdata/refusals"
+
+// TestDecodeRefusesSharedVectors: there is no version, so canonical decoding
+// is the only format guard, and these are the shapes it exists to catch.
+func TestDecodeRefusesSharedVectors(t *testing.T) {
+	entries, err := os.ReadDir(refusalVectorDir)
+	require.NoError(t, err)
+	n := 0
+	for _, entry := range entries {
+		if !strings.HasSuffix(entry.Name(), ".hex") {
+			continue
+		}
+		n++
+		t.Run(entry.Name(), func(t *testing.T) {
+			raw, err := os.ReadFile(refusalVectorDir + "/" + entry.Name())
+			require.NoError(t, err)
+			b, err := hex.DecodeString(strings.Join(strings.Fields(string(raw)), ""))
+			require.NoError(t, err)
+			_, err = csp.Decode(b)
+			require.Error(t, err, "%s decoded; every decoder must refuse it", entry.Name())
+			// And as a package: the signature split must not rescue it.
+			_, _, err = csp.SplitPackage(append(b, make([]byte, csp.ProposerSigLen)...))
+			require.Error(t, err, "%s decoded as a package", entry.Name())
+		})
+	}
+	require.Equal(t, 5, n, "the refusal vectors in %s", refusalVectorDir)
 }

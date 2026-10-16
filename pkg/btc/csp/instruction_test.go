@@ -41,9 +41,10 @@ func boundPair(t *testing.T) ([]byte, csp.Instruction) {
 			{TeeId: common.HexToAddress("0xA11CE"), KeyId: 1},
 			{TeeId: common.HexToAddress("0xB0B"), KeyId: 2},
 		},
-		WalletId:         e.WalletID,
-		SourceId:         e.SourceID,
+		WalletId:         e.WalletId,
+		SourceId:         e.SourceId,
 		AccountIndex:     e.AccountIndex,
+		AccountHash:      e.AccountHash,
 		SequencePosition: e.SequencePosition,
 		Attempt:          e.Attempt,
 		PackageHash:      h,
@@ -79,7 +80,7 @@ func TestBindPackageRejectsAnUnsignedProposal(t *testing.T) {
 	encoded, err := e.Encode()
 	require.NoError(t, err)
 	in := csp.Instruction{
-		WalletId: e.WalletID, SourceId: e.SourceID, AccountIndex: e.AccountIndex,
+		WalletId: e.WalletId, SourceId: e.SourceId, AccountIndex: e.AccountIndex,
 		SequencePosition: e.SequencePosition, Attempt: e.Attempt,
 		PackageHash: crypto.Keccak256Hash(encoded),
 	}
@@ -104,7 +105,7 @@ func TestBindPackageRejectsAnotherPartysSignature(t *testing.T) {
 	raw := append(append([]byte{}, encoded...), sig...)
 
 	in := csp.Instruction{
-		WalletId: e.WalletID, SourceId: e.SourceID, AccountIndex: e.AccountIndex,
+		WalletId: e.WalletId, SourceId: e.SourceId, AccountIndex: e.AccountIndex,
 		SequencePosition: e.SequencePosition, Attempt: e.Attempt,
 		PackageHash: crypto.Keccak256Hash(raw),
 	}
@@ -151,6 +152,15 @@ func TestBindPackageRejectsSourceMismatch(t *testing.T) {
 	in.SourceId[0] ^= 0xff
 	_, err := in.BindPackage(raw, testChainID)
 	assert.ErrorContains(t, err, "different source")
+}
+
+// The instruction's accountHash comes from the chain; an envelope naming
+// another account is not the one decided.
+func TestBindPackageRejectsAccountMismatch(t *testing.T) {
+	raw, in := boundPair(t)
+	in.AccountHash[0] ^= 0xff
+	_, err := in.BindPackage(raw, testChainID)
+	assert.ErrorContains(t, err, "different account")
 }
 
 func TestKeysForSelectsThisMachine(t *testing.T) {

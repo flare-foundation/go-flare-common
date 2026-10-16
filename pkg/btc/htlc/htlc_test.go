@@ -116,9 +116,12 @@ func TestBuildScript_TimeoutBoundary(t *testing.T) {
 		// Time-mode boundary
 		{"time_boundary_500000000", 500_000_000, false},
 		{"time_current_era", 1_700_000_000, false},
-		{"time_int32max", maxTimeout, false},
-		// Above int32 max (must be rejected)
-		{"above_int32max", maxTimeout + 1, true},
+		{"time_int32max", 0x7FFFFFFF, false},
+		// Past 2038: a five-byte script number, still a valid nLockTime.
+		{"time_above_int32max", 0x80000000, false},
+		{"time_uint32max", maxTimeout, false},
+		// Above nLockTime's ceiling (must be rejected)
+		{"above_uint32max", maxTimeout + 1, true},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {

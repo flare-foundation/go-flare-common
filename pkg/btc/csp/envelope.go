@@ -68,6 +68,7 @@
 package csp
 
 import (
+	"bytes"
 	"encoding/binary"
 	"errors"
 	"fmt"
@@ -79,12 +80,11 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/flare-foundation/go-flare-common/pkg/signing"
-)
 
-// EnvelopeVersion is the only version this package encodes or accepts; a
-// package of any other version does not decode.
-const EnvelopeVersion uint16 = 3
+	"github.com/flare-foundation/go-flare-common/pkg/abicoder"
+	"github.com/flare-foundation/go-flare-common/pkg/signing"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/tee"
+)
 
 // The escrow's timeout branch is always the wallet's own k-of-n at this
 // derivation coordinate, as the diamond fixes it; an escrow input carries it.
@@ -125,29 +125,24 @@ const MaxInputs = 1024
 // Input carries what the transaction bytes cannot supply on their own: the
 // spent value, because BIP-143 signs over it and it is not present in the
 // input; and the derivation coordinates, because a scriptPubKey does not reveal
-// the path that produced it.
-type Input struct {
-	// Txid is the outpoint's transaction id in INTERNAL byte order — the same
-	// order the raw transaction uses, not the reversed display form.
-	Txid     [32]byte
-	Vout     uint32
-	ValueSat uint64
-	// Chain is 0 for external, 1 for internal (change), per BIP-32.
-	Chain uint8
-	Index uint32
-	// IsEscrow marks an input whose witness script is the envelope's ESCROW
-	// script rather than the plain k-of-n multisig at (Chain, Index).
-	//
-	// The coordinates still name the KEY each signer uses — the escrow's
-	// timeout branch is the wallet's own k-of-n — so this changes which script
-	// is committed to, not who may spend, and an escrow input's coordinates
-	// must be (EscrowTimeoutChain, EscrowTimeoutIndex). Without the flag a
-	// signer would compute a sighash over the wrong script and produce a
-	// signature no one can use.
-	IsEscrow bool
-}
+// the path that produced it. It is TeeStructs.CspInput, as generated:
+//
+//   - Txid is the outpoint's transaction id in INTERNAL byte order — the same
+//     order the raw transaction uses, not the reversed display form.
+//   - Chain is 0 for external, 1 for internal (change), per BIP-32.
+//   - IsEscrow marks an input whose witness script is the envelope's ESCROW
+//     script rather than the plain k-of-n multisig at (Chain, Index). The
+//     coordinates still name the KEY each signer uses — the escrow's timeout
+//     branch is the wallet's own k-of-n — so this changes which script is
+//     committed to, not who may spend, and an escrow input's coordinates must
+//     be (EscrowTimeoutChain, EscrowTimeoutIndex). Without the flag a signer
+//     would compute a sighash over the wrong script and produce a signature no
+//     one can use.
+type Input = tee.TeeStructsCspInput
 
-// Escrow is the HTLC an ESCROW_CREATE pays into or an ESCROW_RECLAIM spends.
+// Escrow is the HTLC an ESCROW_CREATE pays into or an ESCROW_RECLAIM spends:
+// TeeStructs.CspEscrow, as generated, whose fields are the diamond's
+// BtcEscrowTerms under the same names.
 //
 // Carried in the envelope, so it is covered by the proposal hash and therefore
 // by everything the chain finalized. A signer rebuilds the script from these
@@ -157,103 +152,51 @@ type Input struct {
 // and a machine signs only if its own key is among them, so a proposal naming
 // keys the wallet does not hold is refused before any signature exists.
 //
-// The fields are the diamond's BtcEscrowTerms, under the same names. The
-// timeout branch's keys are at (EscrowTimeoutChain, EscrowTimeoutIndex).
-type Escrow struct {
-	// PreimageHash is SHA256(preimage) for the hash path.
-	PreimageHash [32]byte
-	// CounterpartyPubKey is the compressed key that can take the hash path.
-	CounterpartyPubKey []byte
-	// ExpiresAt is the UNIX timestamp after which the wallet may reclaim: the
-	// script's CLTV locktime.
-	ExpiresAt uint64
-}
-
-// Envelope is the proposal object.
+//   - PreimageHash is SHA256(preimage) for the hash path.
+//   - CounterpartyPubKey is the compressed key that can take the hash path.
+//   - ExpiresAt is the UNIX timestamp after which the wallet may reclaim: the
+//     script's CLTV locktime.
 //
-// RawUnsignedTx is the NON-WITNESS serialization, which is also the txid
-// preimage — so committing to the envelope pins the txid directly rather than
-// by derivation. This is a serialization choice, not a transaction-type choice:
-// every transaction in this design is SegWit.
-type Envelope struct {
-	Version            uint16
-	WalletID           [32]byte
-	SourceID           [32]byte
-	AccountIndex       uint32
-	SequencePosition   uint64
-	EligibleGeneration uint64
-	InstructionType    uint8
-	PaymentCount       uint32
-	AnchorIndex        uint32
-	Nonce              uint64
-	Attempt            uint32
-	RawUnsignedTx      []byte
-	Inputs             []Input
-	ProposerAddress    common.Address
-	// Escrow is present only for the ESCROW instruction kinds. A zero value
-	// means the proposal creates or spends no HTLC, which is every payment and
-	// every consolidation.
-	Escrow Escrow
-	// ParentXpubs are the wallet's n published keys at m/87'/coin', raw
-	// XpubLen bytes each, in REGISTRY order. Order does not change any script —
-	// BIP-67 sorts the leaf keys — but it is committed, so it has one canonical
-	// value. The keys also name the coin (CoinType).
-	ParentXpubs [][]byte
-	// Threshold is k in the k-of-n.
-	Threshold uint32
-	// WalletRegistry is the contract the wallet is registered in (the TEE
-	// manager or the custodian wallet manager). A walletId is unique only
-	// within its registry.
-	WalletRegistry common.Address
-	// AccountHash is keccak256(abi.encode(sourceId, accountAddress)): the key
-	// the diamond stores the account under, and the topic of its events.
-	AccountHash [32]byte
-}
+// The timeout branch's keys are at (EscrowTimeoutChain, EscrowTimeoutIndex).
+type Escrow = tee.TeeStructsCspEscrow
 
-// envelopeArgs is the ABI type tuple. Field order matches the struct, and the
-// tuple is fixed: changing it changes every proposalHash ever computed, so it
-// is a breaking change to the whole system and not a refactor.
-// TestEnvelopeLayout pins it word by word.
-var envelopeArgs abi.Arguments
+// Envelope is the proposal object: TeeStructs.CspEnvelope, as generated from
+// the struct ABI. The layout is defined there and changes there first; this
+// package keeps only the package framing, the hashing and the checks by hand.
+//
+// There is no version field. A decoder accepts only the canonical encoding of
+// this tuple — decoded and encoded again, the bytes must be identical (Decode)
+// — and that is what a version check was for: an appended field leaves a tail
+// the re-encoding does not reproduce, and a changed or reordered field fails to
+// decode or to re-encode.
+//
+//   - RawUnsignedTx is the NON-WITNESS serialization, which is also the txid
+//     preimage — so committing to the envelope pins the txid directly rather
+//     than by derivation. This is a serialization choice, not a
+//     transaction-type choice: every transaction in this design is SegWit.
+//   - Escrow is present only for the ESCROW instruction kinds. A zero value
+//     means the proposal creates or spends no HTLC, which is every payment and
+//     every consolidation.
+//   - ParentXpubs are the wallet's n published keys at m/87'/coin', raw
+//     XpubLen bytes each, in REGISTRY order. Order does not change any script —
+//     BIP-67 sorts the leaf keys — but it is committed, so it has one canonical
+//     value. The keys also name the coin (CoinType).
+//   - Threshold is k in the k-of-n.
+//   - WalletRegistry is the contract the wallet is registered in (the TEE
+//     manager or the custodian wallet manager). A walletId is unique only
+//     within its registry.
+//   - AccountHash is keccak256(abi.encode(sourceId, accountAddress)): the key
+//     the diamond stores the account under, and the topic of its events.
+//
+// The field order is the struct's, and it is fixed: changing it changes every
+// proposalHash ever computed, so it is a breaking change to the whole system
+// and not a refactor. TestEnvelopeLayout pins it word by word.
+type Envelope tee.TeeStructsCspEnvelope
+
+// envelopeArgument is the generated CspEnvelope's ABI type.
+var envelopeArgument = tee.StructArg[tee.CspEnvelope]
 
 func init() {
-	tupleTy, err := abi.NewType("tuple", "", []abi.ArgumentMarshaling{
-		{Name: "version", Type: "uint16"},
-		{Name: "walletId", Type: "bytes32"},
-		{Name: "sourceId", Type: "bytes32"},
-		{Name: "accountIndex", Type: "uint32"},
-		{Name: "sequencePosition", Type: "uint64"},
-		{Name: "eligibleGeneration", Type: "uint64"},
-		{Name: "instructionType", Type: "uint8"},
-		{Name: "paymentCount", Type: "uint32"},
-		{Name: "anchorIndex", Type: "uint32"},
-		{Name: "nonce", Type: "uint64"},
-		{Name: "attempt", Type: "uint32"},
-		{Name: "rawUnsignedTx", Type: "bytes"},
-		{Name: "inputs", Type: "tuple[]", Components: []abi.ArgumentMarshaling{
-			{Name: "txid", Type: "bytes32"},
-			{Name: "vout", Type: "uint32"},
-			{Name: "valueSat", Type: "uint64"},
-			{Name: "chain", Type: "uint8"},
-			{Name: "index", Type: "uint32"},
-			{Name: "isEscrow", Type: "bool"},
-		}},
-		{Name: "proposerAddress", Type: "address"},
-		{Name: "escrow", Type: "tuple", Components: []abi.ArgumentMarshaling{
-			{Name: "preimageHash", Type: "bytes32"},
-			{Name: "counterpartyPubKey", Type: "bytes"},
-			{Name: "expiresAt", Type: "uint64"},
-		}},
-		{Name: "parentXpubs", Type: "bytes[]"},
-		{Name: "threshold", Type: "uint32"},
-		{Name: "walletRegistry", Type: "address"},
-		{Name: "accountHash", Type: "bytes32"},
-	})
-	if err != nil {
-		panic("building envelope ABI type: " + err.Error())
-	}
-	envelopeArgs = abi.Arguments{{Type: tupleTy}}
-
 	bytes32Ty, err := abi.NewType("bytes32", "", nil)
 	if err != nil {
 		panic("building bytes32 type: " + err.Error())
@@ -269,54 +212,12 @@ func init() {
 // diamond hashes into an account key.
 var accountKeyArgs abi.Arguments
 
-// abiInput mirrors Input with the field tags abi.Pack expects.
-type abiInput struct {
-	Txid     [32]byte `abi:"txid"`
-	Vout     uint32   `abi:"vout"`
-	ValueSat uint64   `abi:"valueSat"`
-	Chain    uint8    `abi:"chain"`
-	Index    uint32   `abi:"index"`
-	IsEscrow bool     `abi:"isEscrow"`
-}
-
-// abiEscrow mirrors Escrow with the field tags abi.Pack expects.
-type abiEscrow struct {
-	PreimageHash       [32]byte `abi:"preimageHash"`
-	CounterpartyPubKey []byte   `abi:"counterpartyPubKey"`
-	ExpiresAt          uint64   `abi:"expiresAt"`
-}
-
-type abiEnvelope struct {
-	Version            uint16         `abi:"version"`
-	WalletID           [32]byte       `abi:"walletId"`
-	SourceID           [32]byte       `abi:"sourceId"`
-	AccountIndex       uint32         `abi:"accountIndex"`
-	SequencePosition   uint64         `abi:"sequencePosition"`
-	EligibleGeneration uint64         `abi:"eligibleGeneration"`
-	InstructionType    uint8          `abi:"instructionType"`
-	PaymentCount       uint32         `abi:"paymentCount"`
-	AnchorIndex        uint32         `abi:"anchorIndex"`
-	Nonce              uint64         `abi:"nonce"`
-	Attempt            uint32         `abi:"attempt"`
-	RawUnsignedTx      []byte         `abi:"rawUnsignedTx"`
-	Inputs             []abiInput     `abi:"inputs"`
-	ProposerAddress    common.Address `abi:"proposerAddress"`
-	Escrow             abiEscrow      `abi:"escrow"`
-	ParentXpubs        [][]byte       `abi:"parentXpubs"`
-	Threshold          uint32         `abi:"threshold"`
-	WalletRegistry     common.Address `abi:"walletRegistry"`
-	AccountHash        [32]byte       `abi:"accountHash"`
-}
-
 // Validate rejects envelopes that are structurally unusable. It is called by
 // Encode, so no caller can hash something it would refuse.
 //
-// It checks the version, the instruction, its inputs and escrow terms, then
-// the signer set and finally the account.
+// It checks the instruction, its inputs and escrow terms, then the signer set
+// and finally the account.
 func (e Envelope) Validate() error {
-	if e.Version != EnvelopeVersion {
-		return fmt.Errorf("envelope version %d, want %d", e.Version, EnvelopeVersion)
-	}
 	// Positions start at 1 on the channel; 0 means "none" everywhere it is
 	// read, so an envelope for position 0 fills no instruction.
 	if e.SequencePosition == 0 {
@@ -385,36 +286,12 @@ func AccountHashOf(sourceID [32]byte, accountAddress string) [32]byte {
 	return crypto.Keccak256Hash(packed)
 }
 
-// Encode returns the canonical bytes.
+// Encode returns the canonical bytes: abi.encode(CspEnvelope).
 func (e Envelope) Encode() ([]byte, error) {
 	if err := e.Validate(); err != nil {
 		return nil, err
 	}
-	ins := make([]abiInput, len(e.Inputs))
-	for i, in := range e.Inputs {
-		ins[i] = abiInput(in)
-	}
-	packed, err := envelopeArgs.Pack(abiEnvelope{
-		Version:            e.Version,
-		WalletID:           e.WalletID,
-		SourceID:           e.SourceID,
-		AccountIndex:       e.AccountIndex,
-		SequencePosition:   e.SequencePosition,
-		EligibleGeneration: e.EligibleGeneration,
-		InstructionType:    e.InstructionType,
-		PaymentCount:       e.PaymentCount,
-		AnchorIndex:        e.AnchorIndex,
-		Nonce:              e.Nonce,
-		Attempt:            e.Attempt,
-		RawUnsignedTx:      e.RawUnsignedTx,
-		Inputs:             ins,
-		ProposerAddress:    e.ProposerAddress,
-		Escrow:             abiEscrow(e.Escrow),
-		ParentXpubs:        e.ParentXpubs,
-		Threshold:          e.Threshold,
-		WalletRegistry:     e.WalletRegistry,
-		AccountHash:        e.AccountHash,
-	})
+	packed, err := abicoder.Encode(envelopeArgument, tee.TeeStructsCspEnvelope(e))
 	if err != nil {
 		return nil, fmt.Errorf("encoding envelope: %w", err)
 	}
@@ -438,60 +315,28 @@ func (e Envelope) Hash(chainID uint64) (common.Hash, error) {
 
 // Decode parses canonical bytes back into an Envelope.
 //
-// Trailing bytes are REJECTED rather than ignored: if two byte strings could
-// decode to one message, the hash no longer identifies the message.
+// Only the canonical encoding is accepted: the bytes are decoded, encoded
+// again, and must come back identical. This is the envelope's only format
+// guard — there is no version. Trailing bytes, an appended word (the shape of
+// an envelope with a field this layout does not have), non-minimal padding and
+// aliased offsets all re-encode to something else and are refused. If two byte
+// strings could decode to one message, the hash would no longer identify the
+// message.
 func Decode(b []byte) (Envelope, error) {
-	vals, err := envelopeArgs.Unpack(b)
+	raw, err := abicoder.Decode[tee.TeeStructsCspEnvelope](envelopeArgument, b)
 	if err != nil {
 		return Envelope{}, fmt.Errorf("decoding envelope: %w", err)
 	}
-	if len(vals) != 1 {
-		return Envelope{}, errors.New("envelope decoded to more than one value")
-	}
-	// The tuple arrives as an anonymous struct; ConvertType maps it onto the
-	// named one field by field.
-	raw, ok := abi.ConvertType(vals[0], new(abiEnvelope)).(*abiEnvelope)
-	if !ok || raw == nil {
-		return Envelope{}, errors.New("envelope did not convert to the expected shape")
-	}
-	out := Envelope{
-		Version:            raw.Version,
-		WalletID:           raw.WalletID,
-		SourceID:           raw.SourceID,
-		AccountIndex:       raw.AccountIndex,
-		SequencePosition:   raw.SequencePosition,
-		EligibleGeneration: raw.EligibleGeneration,
-		InstructionType:    raw.InstructionType,
-		PaymentCount:       raw.PaymentCount,
-		AnchorIndex:        raw.AnchorIndex,
-		Nonce:              raw.Nonce,
-		Attempt:            raw.Attempt,
-		RawUnsignedTx:      raw.RawUnsignedTx,
-		ProposerAddress:    raw.ProposerAddress,
-		Escrow:             Escrow(raw.Escrow),
-		ParentXpubs:        raw.ParentXpubs,
-		Threshold:          raw.Threshold,
-		WalletRegistry:     raw.WalletRegistry,
-		AccountHash:        raw.AccountHash,
-	}
-	out.Inputs = make([]Input, len(raw.Inputs))
-	for i, in := range raw.Inputs {
-		out.Inputs[i] = Input(in)
-	}
-
-	// Re-encode and compare: the cheapest exact check that the input carried no
-	// trailing bytes and no non-canonical padding.
+	out := Envelope(raw)
+	// Encode validates, so nothing this package would refuse to encode
+	// decodes either. abicoder.Decode already re-encodes; the comparison is
+	// repeated here so the guard does not rest on a helper's internals.
 	round, err := out.Encode()
 	if err != nil {
 		return Envelope{}, err
 	}
-	if len(round) != len(b) {
+	if !bytes.Equal(round, b) {
 		return Envelope{}, fmt.Errorf("envelope is not canonical: %d bytes in, %d re-encoded", len(b), len(round))
-	}
-	for i := range round {
-		if round[i] != b[i] {
-			return Envelope{}, errors.New("envelope is not canonical: byte mismatch on re-encode")
-		}
 	}
 	return out, nil
 }

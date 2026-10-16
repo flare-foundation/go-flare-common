@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/payments"
+	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/walletpayments"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/address"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/types"
 	"github.com/stretchr/testify/assert"
@@ -22,9 +22,9 @@ func TestPaymentTransactionMultisig(t *testing.T) {
 	expectedBlob, err := hex.DecodeString(expectedBlobStr)
 	require.NoError(t, err)
 
-	instruction := payments.ITeePaymentsPaymentInstructionMessage{
+	instruction := walletpayments.IPaymentsPaymentInstructionMessage{
 		WalletId:         [32]byte{1},
-		TeeIdKeyIdPairs:  []payments.TeeIdKeyIdPair{},
+		TeeIdKeyIdPairs:  []walletpayments.TeeIdKeyIdPair{},
 		SenderAddress:    "rGYYWKxT1XgNipUJouCq4cKiyAdq8xBoE9",
 		RecipientAddress: "rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe",
 		Amount:           big.NewInt(10),
@@ -50,9 +50,9 @@ func TestPaymentTransactionMultisig(t *testing.T) {
 // Verifies the nullify branch encodes into a valid signing-mode AccountSet blob that round-trips.
 func TestPaymentTxFromInstructionNullify(t *testing.T) {
 	// feeBIPS = -0x2710 = -10000 → Nullify path (parseScheduledFee).
-	instruction := payments.ITeePaymentsPaymentInstructionMessage{
+	instruction := walletpayments.IPaymentsPaymentInstructionMessage{
 		WalletId:         [32]byte{2},
-		TeeIdKeyIdPairs:  []payments.TeeIdKeyIdPair{},
+		TeeIdKeyIdPairs:  []walletpayments.TeeIdKeyIdPair{},
 		SenderAddress:    "rGYYWKxT1XgNipUJouCq4cKiyAdq8xBoE9",
 		RecipientAddress: "rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe",
 		Amount:           big.NewInt(1000),
@@ -88,7 +88,7 @@ func TestPaymentTxFromInstructionNullify(t *testing.T) {
 // TestNullifyRejectsOutOfRangeNonce: Nullify must reject a Nonce above the XRPL Sequence
 // (UInt32) range rather than silently truncating it.
 func TestNullifyRejectsOutOfRangeNonce(t *testing.T) {
-	i := payments.ITeePaymentsPaymentInstructionMessage{
+	i := walletpayments.IPaymentsPaymentInstructionMessage{
 		SenderAddress:    "rGYYWKxT1XgNipUJouCq4cKiyAdq8xBoE9",
 		PaymentReference: crypto.Keccak256Hash([]byte("nullify")),
 		Nonce:            uint64(math.MaxUint32) + 1,
@@ -101,7 +101,7 @@ func TestNullifyRejectsOutOfRangeNonce(t *testing.T) {
 // TestNullifyRejectsZeroFee: a nullify with a zero Fee is structurally invalid and must be
 // rejected rather than returned.
 func TestNullifyRejectsZeroFee(t *testing.T) {
-	i := payments.ITeePaymentsPaymentInstructionMessage{
+	i := walletpayments.IPaymentsPaymentInstructionMessage{
 		SenderAddress:    "rGYYWKxT1XgNipUJouCq4cKiyAdq8xBoE9",
 		PaymentReference: crypto.Keccak256Hash([]byte("nullify")),
 		Nonce:            5,
@@ -114,7 +114,7 @@ func TestNullifyRejectsZeroFee(t *testing.T) {
 // TestPaymentTxFromInstructionNullifyRejectsNilMaxFee: a nil MaxFee makes ScheduledFee.Fee
 // return "0", which the nullify branch must reject rather than emit a Fee "0" tx.
 func TestPaymentTxFromInstructionNullifyRejectsNilMaxFee(t *testing.T) {
-	instruction := payments.ITeePaymentsPaymentInstructionMessage{
+	instruction := walletpayments.IPaymentsPaymentInstructionMessage{
 		SenderAddress:    "rGYYWKxT1XgNipUJouCq4cKiyAdq8xBoE9",
 		RecipientAddress: "rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe",
 		Amount:           big.NewInt(1000),
@@ -135,9 +135,9 @@ func TestPaymentTxFromInstructionNullifyRejectsNilMaxFee(t *testing.T) {
 // is meaningless for native payments; non-empty TokenId means an issued
 // token, which this entrypoint does not support.
 func TestPaymentTxFromInstructionRejects(t *testing.T) {
-	base := payments.ITeePaymentsPaymentInstructionMessage{
+	base := walletpayments.IPaymentsPaymentInstructionMessage{
 		WalletId:         [32]byte{1},
-		TeeIdKeyIdPairs:  []payments.TeeIdKeyIdPair{},
+		TeeIdKeyIdPairs:  []walletpayments.TeeIdKeyIdPair{},
 		SenderAddress:    "rGYYWKxT1XgNipUJouCq4cKiyAdq8xBoE9",
 		RecipientAddress: "rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe",
 		Amount:           big.NewInt(10),
@@ -178,9 +178,9 @@ func TestPaymentTxFromInstructionRejects(t *testing.T) {
 func TestPaymentTxFromInstructionXAddress(t *testing.T) {
 	const classic = "rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe"
 
-	base := payments.ITeePaymentsPaymentInstructionMessage{
+	base := walletpayments.IPaymentsPaymentInstructionMessage{
 		WalletId:         [32]byte{1},
-		TeeIdKeyIdPairs:  []payments.TeeIdKeyIdPair{},
+		TeeIdKeyIdPairs:  []walletpayments.TeeIdKeyIdPair{},
 		SenderAddress:    "rGYYWKxT1XgNipUJouCq4cKiyAdq8xBoE9",
 		Amount:           big.NewInt(10),
 		PaymentReference: crypto.Keccak256Hash([]byte("xaddr")),
