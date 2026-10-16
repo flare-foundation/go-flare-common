@@ -2,6 +2,8 @@
 
 # Go Flare Common V1
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/flare-foundation/go-flare-common.svg)](https://pkg.go.dev/github.com/flare-foundation/go-flare-common@v1.5.0)
+
 Golang packages that are used across multiple Flare projects.
 
 Contains the following packages:

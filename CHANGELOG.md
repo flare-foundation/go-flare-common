@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [v1.5.0](https://github.com/flare-foundation/go-flare-common/tree/v1.5.0) - 2026-10-16
 
 ### Added
 
@@ -21,7 +21,7 @@
 ### Security
 
 - `abicoder`: offsets aliasing one region no longer make decoding allocate per alias.
-  v1.3.0 guarded `string` only, so `bytes[]` and nested arrays could still turn about 150 KB into gigabytes.
+  v1.3.0 and v1.4.0 guarded `string` only, so `bytes[]` and nested arrays could still turn about 150 KB into gigabytes.
 - `abicoder`: decoding an integer go-ethereum holds in a `*big.Int`, such as a `uint256`, into a Go array no longer crashes the process with a stack overflow that `recover` can't catch.
 
 ## [v1.4.0](https://github.com/flare-foundation/go-flare-common/tree/v1.4.0) - 2026-10-13
