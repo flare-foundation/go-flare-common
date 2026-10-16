@@ -1,13 +1,12 @@
 package abicoder
 
 import (
-	"math"
 	"math/big"
 	"reflect"
-	"runtime"
 	"testing"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/require"
 )
 
@@ -22,8 +21,8 @@ type oracleOuter struct {
 	C oracleInner
 }
 
-// word returns the 32-byte big-endian encoding of v.
-func word(v int) []byte {
+// encodedWord returns the 32-byte big-endian encoding of v.
+func encodedWord(v int) []byte {
 	b := make([]byte, 32)
 	for i := range 8 {
 		b[31-i] = byte(uint64(v) >> (8 * i))
@@ -36,13 +35,13 @@ func word(v int) []byte {
 // offsets all point at one blob of blobLen bytes, so a faithful decoder copies
 // n*blobLen bytes out of a much smaller input.
 func stringSliceAmplification(n, blobLen int) []byte {
-	data := word(32) // head: offset to the array data
-	data = append(data, word(n)...)
+	data := encodedWord(32) // head: offset to the array data
+	data = append(data, encodedWord(n)...)
 	blobOffset := n * 32 // relative to the start after the count word
 	for range n {
-		data = append(data, word(blobOffset)...)
+		data = append(data, encodedWord(blobOffset)...)
 	}
-	data = append(data, word(blobLen)...)
+	data = append(data, encodedWord(blobLen)...)
 	data = append(data, make([]byte, blobLen)...)
 	if pad := (32 - blobLen%32) % 32; pad != 0 {
 		data = append(data, make([]byte, pad)...)
@@ -65,193 +64,6 @@ func tupleType(t *testing.T, components []abi.ArgumentMarshaling) abi.Type {
 	require.NoError(t, err)
 
 	return typ
-}
-
-// TestExceedsStringBudgetRejectsAmplification confirms the pre-Unpack guard
-// rejects offset-aliasing string encodings before any large allocation.
-func TestExceedsStringBudgetRejectsAmplification(t *testing.T) {
-	arg := abi.Argument{Name: "x", Type: newType(t, "string[]")}
-	data := stringSliceAmplification(3000, 30000)
-
-	require.True(t, exceedsStringBudget(arg.Type, data), "aliasing string[] must be flagged")
-
-	_, err := Decode[[]string](arg, data)
-	require.ErrorIs(t, err, ErrNonCanonical)
-
-	var dst []string
-	require.ErrorIs(t, DecodeTo(arg, data, &dst), ErrNonCanonical)
-}
-
-// TestRejectsAmplificationBeforeAllocation confirms the guard fixes the DoS,
-// not merely the result: rejecting a 124 KB aliasing input that would otherwise
-// materialize ~90 MB of strings must itself stay far below that.
-func TestRejectsAmplificationBeforeAllocation(t *testing.T) {
-	arg := abi.Argument{Name: "x", Type: newType(t, "string[]")}
-	data := stringSliceAmplification(3000, 30000) // would decode to 90 MB
-
-	var m0, m1 runtime.MemStats
-	runtime.GC()
-	runtime.ReadMemStats(&m0)
-	_, err := Decode[[]string](arg, data)
-	runtime.ReadMemStats(&m1)
-
-	require.ErrorIs(t, err, ErrNonCanonical)
-	require.Less(t, m1.TotalAlloc-m0.TotalAlloc, uint64(10<<20), "rejection must not allocate the amplified payload")
-}
-
-// TestExceedsStringBudgetAmplificationInTuple covers a string nested in a tuple
-// field and in a dynamic array, the other reachable amplification shapes.
-func TestExceedsStringBudgetAmplificationInTuple(t *testing.T) {
-	// (string a, string b) where both offsets alias one blob.
-	tup := tupleType(t, []abi.ArgumentMarshaling{
-		{Name: "A", Type: "string"},
-		{Name: "B", Type: "string"},
-	})
-
-	blobLen := 40000
-	body := word(64)                 // field A offset (within the tuple body)
-	body = append(body, word(64)...) // field B offset -> same blob as A
-	body = append(body, word(blobLen)...)
-	body = append(body, make([]byte, blobLen)...)
-	if pad := (32 - blobLen%32) % 32; pad != 0 {
-		body = append(body, make([]byte, pad)...)
-	}
-	data := append(word(32), body...) // head pointer to the dynamic tuple
-
-	require.True(t, exceedsStringBudget(tup, data), "aliasing tuple strings must be flagged")
-}
-
-// TestExceedsStringBudgetAllowsCanonical is the no-false-rejection guard: a
-// genuinely large but canonical string[] must decode, not be rejected.
-func TestExceedsStringBudgetAllowsCanonical(t *testing.T) {
-	arg := abi.Argument{Name: "x", Type: newType(t, "string[]")}
-
-	in := make([]string, 500)
-	for i := range in {
-		in[i] = "a string element that is reasonably long to exercise the path"
-	}
-
-	packed, err := abi.Arguments{arg}.Pack(in)
-	require.NoError(t, err)
-
-	require.False(t, exceedsStringBudget(arg.Type, packed), "canonical string[] must not be flagged")
-
-	out, err := Decode[[]string](arg, packed)
-	require.NoError(t, err)
-	require.Equal(t, in, out)
-}
-
-// TestExceedsStringBudgetDefersOnMalformed confirms the guard never rejects on
-// malformed or truncated input: it returns false so the real Unpack surfaces
-// the error, and ErrNonCanonical is reserved for confirmed amplification.
-func TestExceedsStringBudgetDefersOnMalformed(t *testing.T) {
-	sliceType := newType(t, "string[]")
-
-	tests := []struct {
-		name string
-		data []byte
-	}{
-		{"empty", nil},
-		{"shortHead", word(32)[:16]},
-		{"offsetPastEnd", word(1 << 40)},
-		{"truncatedCount", append(word(32), word(5)[:8]...)},
-	}
-
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			require.False(t, exceedsStringBudget(sliceType, test.data))
-		})
-	}
-}
-
-// TestExceedsStringBudgetSkipsStringFreeTypes confirms the guard is a no-op for
-// types that cannot reach a string (every in-repo usage), so their decode path
-// is unchanged.
-func TestExceedsStringBudgetSkipsStringFreeTypes(t *testing.T) {
-	for _, solType := range []string{"uint256", "bytes", "bytes32", "uint256[]", "bytes[]"} {
-		require.False(t, containsString(newType(t, solType)), solType)
-		require.False(t, exceedsStringBudget(newType(t, solType), make([]byte, 64)), solType)
-	}
-}
-
-// reflectStringBytes sums the byte length of every string reachable in v.
-func reflectStringBytes(v reflect.Value) int {
-	switch v.Kind() {
-	case reflect.String:
-		return v.Len()
-	case reflect.Slice, reflect.Array:
-		total := 0
-		for i := range v.Len() {
-			total += reflectStringBytes(v.Index(i))
-		}
-		return total
-	case reflect.Struct:
-		total := 0
-		for i := range v.NumField() {
-			total += reflectStringBytes(v.Field(i))
-		}
-		return total
-	case reflect.Pointer, reflect.Interface:
-		if v.IsNil() {
-			return 0
-		}
-		return reflectStringBytes(v.Elem())
-	default:
-		return 0
-	}
-}
-
-// TestStringScanMatchesGoEthereum is the faithfulness oracle: for canonical
-// encodings of every string-bearing shape, the walker's string-byte sum must
-// equal the actual bytes go-ethereum allocates, proving the guard cannot
-// over-count and therefore cannot false-reject canonical input.
-func TestStringScanMatchesGoEthereum(t *testing.T) {
-	nestedTuple := []abi.ArgumentMarshaling{
-		{Name: "A", Type: "uint256"},
-		{Name: "B", Type: "string"},
-		{Name: "C", Type: "tuple", Components: []abi.ArgumentMarshaling{
-			{Name: "D", Type: "string"},
-			{Name: "E", Type: "bytes"},
-		}},
-	}
-
-	tests := []struct {
-		name  string
-		typ   abi.Type
-		value any
-	}{
-		{"string", newType(t, "string"), "hello world"},
-		{"emptyString", newType(t, "string"), ""},
-		{"stringSlice", newType(t, "string[]"), []string{"a", "bb", "ccc"}},
-		{"emptyStringSlice", newType(t, "string[]"), []string{}},
-		{"stringArray", newType(t, "string[2]"), [2]string{"xx", "yyyy"}},
-		{"stringNestedSlice", newType(t, "string[][]"), [][]string{{"a", "bb"}, {"ccc"}}},
-		{"bytesNoStrings", newType(t, "bytes"), []byte{1, 2, 3, 4}},
-		{"uintSliceNoStrings", newType(t, "uint256[]"), []*big.Int{big.NewInt(1), big.NewInt(2)}},
-		{"tupleWithString", tupleType(t, nestedTuple), oracleOuter{
-			A: big.NewInt(7),
-			B: "outer",
-			C: oracleInner{D: "inner", E: []byte{9, 9}},
-		}},
-	}
-
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			packed, err := abi.Arguments{{Type: test.typ}}.Pack(test.value)
-			require.NoError(t, err)
-
-			decoded, err := abi.Arguments{{Type: test.typ}}.Unpack(packed)
-			require.NoError(t, err)
-			wantSum := reflectStringBytes(reflect.ValueOf(decoded[0]))
-
-			s := stringScan{limit: math.MaxInt, budget: math.MaxInt}
-			ok := s.walk(test.typ, packed, 0)
-			require.True(t, ok, "walk should not defer on canonical data")
-			require.Equal(t, wantSum, s.sum, "walker string-byte sum must equal go-ethereum's")
-
-			require.False(t, exceedsStringBudget(test.typ, packed))
-		})
-	}
 }
 
 // TestCheckArgTypeRejectsUninitialized confirms a zero-value abi.Argument is
@@ -337,9 +149,106 @@ func TestCheckShapeRejectsFieldCountMismatch(t *testing.T) {
 	require.ErrorIs(t, errMissing, ErrShapeMismatch)
 }
 
+// TestCheckShapeRejectsArrayForSlice covers a Go array for a dynamic ABI array
+// or bytes, which go-ethereum truncates or zero-fills to the array's length.
+func TestCheckShapeRejectsArrayForSlice(t *testing.T) {
+	slice := abi.Argument{Name: "x", Type: newType(t, "uint256[]")}
+	nested := abi.Argument{Name: "p", Type: tupleType(t, []abi.ArgumentMarshaling{{Name: "x", Type: "uint256[]"}})}
+
+	for _, n := range []int{1, 2, 3} {
+		values := make([]*big.Int, n)
+		for i := range values {
+			values[i] = big.NewInt(int64(i + 1))
+		}
+
+		packed, err := Encode(slice, values)
+		require.NoError(t, err)
+
+		_, err = Decode[[2]*big.Int](slice, packed)
+		require.ErrorIs(t, err, ErrShapeMismatch, n)
+
+		_, err = DecodeArguments[[2]*big.Int](abi.Arguments{slice}, packed)
+		require.ErrorIs(t, err, ErrShapeMismatch, n)
+
+		packed, err = Encode(nested, struct{ X []*big.Int }{values})
+		require.NoError(t, err)
+
+		_, err = Decode[struct{ X [2]*big.Int }](nested, packed)
+		require.ErrorIs(t, err, ErrShapeMismatch, n)
+
+		_, err = DecodeArguments[struct{ P struct{ X [2]*big.Int } }](abi.Arguments{nested}, packed)
+		require.ErrorIs(t, err, ErrShapeMismatch, n)
+	}
+
+	bytesArg := abi.Argument{Type: newType(t, "bytes")}
+	packed, err := Encode(bytesArg, []byte{1, 2})
+	require.NoError(t, err)
+
+	_, err = Decode[[2]byte](bytesArg, packed)
+	require.ErrorIs(t, err, ErrShapeMismatch)
+}
+
+// TestCheckShapeRejectsArrayForNonArray covers a Go array where the ABI type has
+// none. go-ethereum truncates or zero-fills a string into it, and on a *big.Int
+// recurses until a fatal stack overflow, so those are checked without decoding.
+func TestCheckShapeRejectsArrayForNonArray(t *testing.T) {
+	uint256 := abi.Argument{Name: "a", Type: newType(t, "uint256")}
+	require.ErrorIs(t, checkShape[[1]*big.Int](uint256.Type), ErrShapeMismatch)
+	require.ErrorIs(t, checkShape[[16]byte](newType(t, "int128")), ErrShapeMismatch)
+	require.ErrorIs(t, checkShape[[]common.Hash](newType(t, "uint256[]")), ErrShapeMismatch)
+	require.ErrorIs(t, checkShape[struct{ X [1]*big.Int }](tupleType(t, []abi.ArgumentMarshaling{{Name: "x", Type: "uint256"}})), ErrShapeMismatch)
+	require.ErrorIs(t, checkArgsShape(abi.Arguments{uint256}, reflect.TypeFor[[1]*big.Int]()), ErrShapeMismatch)
+
+	//nolint:asciicheck // go-ethereum copies a into A, not into the tagged field
+	type hidden struct {
+		Ñ *big.Int `abi:"a"`
+		A [1]*big.Int
+		B *big.Int
+	}
+	args := abi.Arguments{uint256, {Name: "b", Type: newType(t, "uint256")}}
+	require.ErrorIs(t, checkArgsShape(args, reflect.TypeFor[hidden]()), ErrShapeMismatch)
+
+	str := abi.Argument{Type: newType(t, "string")}
+	packed, err := Encode(str, "BTC/USD-long")
+	require.NoError(t, err)
+	_, err = Decode[[4]byte](str, packed)
+	require.ErrorIs(t, err, ErrShapeMismatch)
+	_, err = Decode[[16]byte](str, packed)
+	require.ErrorIs(t, err, ErrShapeMismatch)
+	_, err = DecodeArguments[[3]byte](abi.Arguments{str}, packed)
+	require.ErrorIs(t, err, ErrShapeMismatch)
+
+	strs := abi.Argument{Type: newType(t, "string[]")}
+	packed, err = Encode(strs, []string{"hello world", "ab"})
+	require.NoError(t, err)
+	_, err = Decode[[][4]byte](strs, packed)
+	require.ErrorIs(t, err, ErrShapeMismatch)
+}
+
+func roundTrip[T any](t *testing.T, solType string, v T) {
+	t.Helper()
+	arg := abi.Argument{Type: newType(t, solType)}
+	packed, err := Encode(arg, v)
+	require.NoError(t, err)
+
+	got, err := Decode[T](arg, packed)
+	require.NoError(t, err)
+	require.Equal(t, v, got)
+}
+
+// TestCheckShapeAllowsArraysForFixedTypes checks the types go-ethereum decodes
+// to Go arrays still decode into them.
+func TestCheckShapeAllowsArraysForFixedTypes(t *testing.T) {
+	roundTrip(t, "address", common.Address{1})
+	roundTrip(t, "bytes32", common.Hash{1})
+	roundTrip(t, "bytes4", [4]byte{1})
+	roundTrip(t, "function", [24]byte{1})
+	roundTrip(t, "bytes32[2]", [2][32]byte{{1}, {2}})
+}
+
 // TestCheckShapeAllowsMatchingAndLeafFlexibility confirms the check does not
 // over-reject: matching shapes, big.Int vs *big.Int, common.Hash, and any all
-// decode, and positional (name-blind) tuple mapping still works.
+// decode, and fields named after no component still map by position.
 func TestCheckShapeAllowsMatchingAndLeafFlexibility(t *testing.T) {
 	t.Run("bigIntVariants", func(t *testing.T) {
 		arg := abi.Argument{Type: newType(t, "uint256")}
@@ -365,8 +274,7 @@ func TestCheckShapeAllowsMatchingAndLeafFlexibility(t *testing.T) {
 		require.Equal(t, "hi", out)
 	})
 
-	t.Run("positionalNameBlind", func(t *testing.T) {
-		// Same field count and types, names swapped: still decodes positionally.
+	t.Run("positionalOtherNames", func(t *testing.T) {
 		arg := abi.Argument{Type: tupleType(t, []abi.ArgumentMarshaling{
 			{Name: "A", Type: "uint64"},
 			{Name: "B", Type: "uint64"},
@@ -375,9 +283,103 @@ func TestCheckShapeAllowsMatchingAndLeafFlexibility(t *testing.T) {
 		packed, err := abi.Arguments{arg}.Pack(src{A: 1, B: 2})
 		require.NoError(t, err)
 
-		type swapped struct{ B, A uint64 }
-		out, err := Decode[swapped](arg, packed)
+		type renamed struct{ P, Q uint64 }
+		out, err := Decode[renamed](arg, packed)
 		require.NoError(t, err)
-		require.Equal(t, swapped{B: 1, A: 2}, out) // positional: by index, names ignored
+		require.Equal(t, renamed{P: 1, Q: 2}, out)
+
+		type tagged struct {
+			P uint64 `abi:"A"`
+			Q uint64 `abi:"B"`
+		}
+		outTagged, err := Decode[tagged](arg, packed)
+		require.NoError(t, err)
+		require.Equal(t, tagged{P: 1, Q: 2}, outTagged)
+	})
+}
+
+// TestArgFieldSkipsNonASCIITags covers a field tagged with a component name
+// whose own name starts with a non-ASCII letter: go-ethereum ignores the tag
+// and uses the field with the camel-cased name, so the checks must look there.
+func TestArgFieldSkipsNonASCIITags(t *testing.T) {
+	//nolint:asciicheck // the non-ASCII initial is the case under test
+	type tagged struct {
+		Ñ *big.Int `abi:"a"`
+		A *big.Int
+	}
+	single := abi.Argument{Type: tupleType(t, []abi.ArgumentMarshaling{{Name: "a", Type: "uint256"}})}
+	_, err := Encode(single, tagged{big.NewInt(1), new(big.Int).Add(pow2(256), big.NewInt(5))})
+	require.ErrorIs(t, err, ErrNonCanonical)
+
+	//nolint:asciicheck // the non-ASCII initial is the case under test
+	type swapped struct {
+		Ñ uint64 `abi:"a"`
+		A uint64
+	}
+	pair := abi.Argument{Type: tupleType(t, []abi.ArgumentMarshaling{{Name: "a", Type: "uint64"}, {Name: "b", Type: "uint64"}})}
+	packed, err := Encode(pair, struct{ A, B uint64 }{1, 2})
+	require.NoError(t, err)
+	_, err = Decode[swapped](pair, packed)
+	require.ErrorIs(t, err, ErrShapeMismatch)
+
+	//nolint:asciicheck // the non-ASCII initial is the case under test
+	type truncated struct {
+		Ñ []*big.Int `abi:"a"`
+		A [2]*big.Int
+		B *big.Int
+	}
+	args := abi.Arguments{{Name: "a", Type: newType(t, "uint256[]")}, {Name: "b", Type: newType(t, "uint256")}}
+	packed, err = args.Pack([]*big.Int{big.NewInt(1), big.NewInt(2), big.NewInt(3)}, big.NewInt(9))
+	require.NoError(t, err)
+	_, err = DecodeArguments[truncated](args, packed)
+	require.ErrorIs(t, err, ErrShapeMismatch)
+}
+
+func decodeOne[T any](arg abi.Argument, data []byte) func() error {
+	return func() error {
+		_, err := Decode[T](arg, data)
+		return err
+	}
+}
+
+// TestCheckShapeRejectsReorderedFields covers structs whose field names or abi
+// tags put a component at another position than Decode fills: Encode reads
+// them by name, so Decode would swap the values.
+func TestCheckShapeRejectsReorderedFields(t *testing.T) {
+	pair := []abi.ArgumentMarshaling{{Name: "A", Type: "uint64"}, {Name: "B", Type: "uint64"}}
+	arg := abi.Argument{Name: "p", Type: tupleType(t, pair)}
+	type src struct{ A, B uint64 }
+	packed, err := Encode(arg, src{A: 1, B: 2})
+	require.NoError(t, err)
+
+	type swapped struct{ B, A uint64 }
+	type tagged struct {
+		X uint64 `abi:"B"`
+		Y uint64 `abi:"A"`
+	}
+	type partial struct{ B, Q uint64 }
+
+	tests := []struct {
+		name   string
+		decode func() error
+	}{
+		{"swapped", decodeOne[swapped](arg, packed)},
+		{"tagged", decodeOne[tagged](arg, packed)},
+		{"partial", decodeOne[partial](arg, packed)},
+		{"decodeArguments", decodeInto[struct{ P swapped }](abi.Arguments{arg}, packed)},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			require.ErrorIs(t, tc.decode(), ErrShapeMismatch)
+		})
+	}
+
+	t.Run("nested", func(t *testing.T) {
+		list := abi.Argument{Name: "ps", Type: tupleType(t, []abi.ArgumentMarshaling{{Name: "ps", Type: "tuple[]", Components: pair}})}
+		packed, err := Encode(list, struct{ Ps []src }{[]src{{1, 2}}})
+		require.NoError(t, err)
+
+		_, err = Decode[struct{ Ps []swapped }](list, packed)
+		require.ErrorIs(t, err, ErrShapeMismatch)
 	})
 }
