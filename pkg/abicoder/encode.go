@@ -11,6 +11,7 @@ import (
 	"slices"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
+	"github.com/flare-foundation/go-flare-common/pkg/panics"
 )
 
 // Encode ABI-encodes data according to the given argument definition.
@@ -22,7 +23,7 @@ import (
 // abi.Arguments.Pack panics on some malformed inputs (e.g. a nil *big.Int),
 // which the deferred recover surfaces as an error.
 func Encode(arg abi.Argument, data any) (encoded []byte, err error) {
-	defer recoverError(&err)
+	defer panics.Recover(&err)
 
 	if err := checkArgType(arg.Type); err != nil {
 		return nil, err

@@ -12,6 +12,7 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/flare-foundation/go-flare-common/pkg/abicoder"
+	"github.com/flare-foundation/go-flare-common/pkg/panics"
 	"github.com/flare-foundation/go-flare-common/pkg/signing"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/structs/tee"
 )
@@ -36,16 +37,7 @@ type DataFixed struct {
 
 // HashFixed computes the hash of the DataFixed.
 func (d *DataFixed) HashFixed() (h common.Hash, err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			e, ok := r.(error)
-			if ok {
-				err = fmt.Errorf("recovered panic: %w", e)
-			} else {
-				err = fmt.Errorf("recovered panic non error: %v", r)
-			}
-		}
-	}()
+	defer panics.Recover(&err)
 	e, err := abicoder.Encode(tee.StructArg[tee.Instruction], d.prepareForEncoding())
 	if err != nil {
 		return common.Hash{}, err
