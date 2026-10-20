@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- `contracts.MustABI`, `MustEvent`, `MustMethod` and `MustError` look up a binding's ABI and its events, methods and custom errors by name for package-level variables and init functions, panicking when one is missing.
+  `MustABI` takes the metadata of an abigen v1 or v2 binding.
+
 ## [v1.5.0](https://github.com/flare-foundation/go-flare-common/tree/v1.5.0) - 2026-10-16
 
 ### Added
