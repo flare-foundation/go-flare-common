@@ -2,9 +2,8 @@
 package verification
 
 import (
-	"fmt"
-
 	"github.com/ethereum/go-ethereum/accounts/abi"
+	"github.com/flare-foundation/go-flare-common/pkg/contracts"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/op"
 )
 
@@ -21,10 +20,7 @@ var methods = []string{
 var MessageArguments map[op.Command]abi.Argument
 
 func init() {
-	verificationABI, err := TeeVerificationMetaData.GetAbi()
-	if err != nil {
-		panic(fmt.Sprintf("error getting verification abi: %v", err))
-	}
+	verificationABI := contracts.MustABI(TeeVerificationMetaData)
 
 	if len(methods) != len(opCommands) {
 		panic("methods, opCommands miss match")
@@ -32,10 +28,6 @@ func init() {
 
 	MessageArguments = make(map[op.Command]abi.Argument)
 	for j := range opCommands {
-		method, ok := verificationABI.Methods[methods[j]]
-		if !ok {
-			panic(fmt.Sprintf("missing method %s", methods[j]))
-		}
-		MessageArguments[opCommands[j]] = method.Inputs[0]
+		MessageArguments[opCommands[j]] = contracts.MustMethod(verificationABI, methods[j]).Inputs[0]
 	}
 }

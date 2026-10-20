@@ -2,9 +2,8 @@
 package wallet
 
 import (
-	"fmt"
-
 	"github.com/ethereum/go-ethereum/accounts/abi"
+	"github.com/flare-foundation/go-flare-common/pkg/contracts"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/op"
 )
 
@@ -33,10 +32,7 @@ var KeyExistenceStructArg abi.Argument
 var BackupIdStructArg abi.Argument
 
 func init() {
-	walletABI, err := TeeWalletMetaData.GetAbi()
-	if err != nil {
-		panic(fmt.Sprintf("error getting registry abi: %v", err))
-	}
+	walletABI := contracts.MustABI(TeeWalletMetaData)
 
 	if len(methods) != len(opCommands) {
 		panic("methods, opCommands miss match")
@@ -44,24 +40,9 @@ func init() {
 
 	MessageArguments = make(map[op.Command]abi.Argument)
 	for j := range opCommands {
-		method, ok := walletABI.Methods[methods[j]]
-		if !ok {
-			panic(fmt.Sprintf("missing method %s", methods[j]))
-		}
-		MessageArguments[opCommands[j]] = method.Inputs[0]
+		MessageArguments[opCommands[j]] = contracts.MustMethod(walletABI, methods[j]).Inputs[0]
 	}
 
-	method, ok := walletABI.Methods["keyExistenceStruct"]
-	if !ok {
-		panic(fmt.Sprintf("missing method %s", "keyExistenceStruct"))
-	}
-
-	KeyExistenceStructArg = method.Inputs[0]
-
-	method, ok = walletABI.Methods["backupIdStruct"]
-	if !ok {
-		panic(fmt.Sprintf("missing method %s", "backupIdStruct"))
-	}
-
-	BackupIdStructArg = method.Inputs[0]
+	KeyExistenceStructArg = contracts.MustMethod(walletABI, "keyExistenceStruct").Inputs[0]
+	BackupIdStructArg = contracts.MustMethod(walletABI, "backupIdStruct").Inputs[0]
 }

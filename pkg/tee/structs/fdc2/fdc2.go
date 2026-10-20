@@ -2,9 +2,8 @@
 package fdc2
 
 import (
-	"fmt"
-
 	"github.com/ethereum/go-ethereum/accounts/abi"
+	"github.com/flare-foundation/go-flare-common/pkg/contracts"
 	"github.com/flare-foundation/go-flare-common/pkg/tee/op"
 )
 
@@ -64,10 +63,7 @@ var AttestationRequestArg abi.Argument
 var AttestationTypeArguments map[AttestationType]AttestationArguments
 
 func init() {
-	fdc2ABI, err := Fdc2MetaData.GetAbi()
-	if err != nil {
-		panic(fmt.Sprintf("error getting tee data connector abi: %v", err))
-	}
+	fdc2ABI := contracts.MustABI(Fdc2MetaData)
 
 	if len(methods) != len(opCommands) {
 		panic("methods, opCommands miss match")
@@ -75,11 +71,7 @@ func init() {
 
 	MessageArguments = make(map[op.Command]abi.Argument)
 	for j := range opCommands {
-		method, ok := fdc2ABI.Methods[methods[j]]
-		if !ok {
-			panic(fmt.Sprintf("missing method %s", methods[j]))
-		}
-		MessageArguments[opCommands[j]] = method.Inputs[0]
+		MessageArguments[opCommands[j]] = contracts.MustMethod(fdc2ABI, methods[j]).Inputs[0]
 	}
 
 	if len(attestationTypes) != len(attestationTypeMethods) {
@@ -89,49 +81,15 @@ func init() {
 	AttestationTypeArguments = make(map[AttestationType]AttestationArguments)
 
 	for j := range attestationTypes {
-		request := attestationTypeMethods[j] + reqStruct
-		method, ok := fdc2ABI.Methods[request]
-		if !ok {
-			panic(fmt.Sprintf("missing method %s", request))
-		}
-		requestABI := method.Inputs[0]
-
-		response := attestationTypeMethods[j] + resStruct
-		method, ok = fdc2ABI.Methods[response]
-		if !ok {
-			panic(fmt.Sprintf("missing method %s", response))
-		}
-		responseABI := method.Inputs[0]
-
-		proof := attestationTypeMethods[j] + proofStruct
-		method, ok = fdc2ABI.Methods[proof]
-		if !ok {
-			panic(fmt.Sprintf("missing method %s", proof))
-		}
-		proofABI := method.Inputs[0]
-
+		name := attestationTypeMethods[j]
 		AttestationTypeArguments[attestationTypes[j]] = AttestationArguments{
-			Request:  requestABI,
-			Response: responseABI,
-			Proof:    proofABI,
+			Request:  contracts.MustMethod(fdc2ABI, name+reqStruct).Inputs[0],
+			Response: contracts.MustMethod(fdc2ABI, name+resStruct).Inputs[0],
+			Proof:    contracts.MustMethod(fdc2ABI, name+proofStruct).Inputs[0],
 		}
 	}
 
-	method, ok := fdc2ABI.Methods["fdc2RequestHeaderStruct"]
-	if !ok {
-		panic("missing method fdc2RequestHeaderStruct")
-	}
-	RequestHeaderArg = method.Inputs[0]
-
-	method, ok = fdc2ABI.Methods["fdc2ResponseHeaderStruct"]
-	if !ok {
-		panic("missing method fdc2ResponseHeaderStruct")
-	}
-	ResponseHeaderArg = method.Inputs[0]
-
-	method, ok = fdc2ABI.Methods["fdc2AttestationRequestStruct"]
-	if !ok {
-		panic("missing method fdc2AttestationRequestStruct")
-	}
-	AttestationRequestArg = method.Inputs[0]
+	RequestHeaderArg = contracts.MustMethod(fdc2ABI, "fdc2RequestHeaderStruct").Inputs[0]
+	ResponseHeaderArg = contracts.MustMethod(fdc2ABI, "fdc2ResponseHeaderStruct").Inputs[0]
+	AttestationRequestArg = contracts.MustMethod(fdc2ABI, "fdc2AttestationRequestStruct").Inputs[0]
 }
