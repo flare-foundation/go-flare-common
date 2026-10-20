@@ -20,16 +20,14 @@
 
 ### Security
 
-- `abicoder`: offsets aliasing one region no longer make decoding allocate per alias.
-  v1.3.0 and v1.4.0 guarded `string` only, so `bytes[]` and nested arrays could still turn about 150 KB into gigabytes.
+- `abicoder`: offsets aliasing one region no longer make decoding allocate per alias. v1.3.0 and v1.4.0 guarded `string` only, so `bytes[]` and nested arrays could still turn about 150 KB into gigabytes.
 - `abicoder`: decoding an integer go-ethereum holds in a `*big.Int`, such as a `uint256`, into a Go array no longer crashes the process with a stack overflow that `recover` can't catch.
 
 ## [v1.4.0](https://github.com/flare-foundation/go-flare-common/tree/v1.4.0) - 2026-10-13
 
 ### Structured logging on log/slog
 
-`pkg/logger` is rebuilt on the standard library's `log/slog` and moves to structured logging.
-zap and lumberjack are gone from the dependency tree.
+`pkg/logger` is rebuilt on the standard library's `log/slog` and moves to structured logging. zap and lumberjack are gone from the dependency tree.
 **Every service that uses `pkg/logger` needs a code or config change to upgrade.**
 
 What changes:
@@ -51,7 +49,8 @@ To upgrade a service:
 
 1. `Logger()` returns `*logger.Log` instead of `*zap.SugaredLogger`.
    Replace `*zap.SugaredLogger` in types and signatures with `*logger.Log` or a small interface, and drop `WithOptions(zap.AddCallerSkip(...))`, which source locations no longer need.
-2. Remove `SyncFileLogger` calls. The function is deprecated and does nothing.
+2. Remove `SyncFileLogger` calls.
+   The function is deprecated and does nothing.
 3. Remove `file`, `max_file_size`, `max_backups`, `max_age_days` and `console` from `[logger]`.
    They are ignored and named in one INFO line at startup.
    Set retention and rotation on the container runtime's logging driver instead.
