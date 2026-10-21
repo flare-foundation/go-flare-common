@@ -39,6 +39,17 @@ Most `tee` packages bind a `<Name>Facet` of the `FlareTeeManager` diamond (EIP-2
 The exceptions are `flareteemanagerinit`, the diamond's init contract, and `teepayments*`, `teerewardoffersmanager` and `vrfverifier`, which are standalone contracts.
 Of these, `teepaymentsbase` is only the abstract base of `teepayments` and `teepaymentsutxo`, so it has no address of its own.
 
+## Looking up ABI items
+
+The package `contracts` itself looks up a binding's events, methods and custom errors by name, for package-level variables and init functions.
+Each `Must` function panics when the item is missing.
+`MustABI` takes a binding's metadata from either tree; pass a pointer to a v2 one:
+
+```go
+relayABI := contracts.MustABI(relay.RelayMetaData) // v2: contracts.MustABI(&relayv2.RelayMetaData)
+topic0 := contracts.MustEvent(relayABI, "SigningPolicyInitialized").ID
+```
+
 ## Deploying
 
 Only `tee/vrfverifier` embeds deployment bytecode, so it is the only binding that can deploy its contract:

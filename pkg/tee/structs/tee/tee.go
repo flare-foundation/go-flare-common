@@ -2,9 +2,8 @@
 package tee
 
 import (
-	"fmt"
-
 	"github.com/ethereum/go-ethereum/accounts/abi"
+	"github.com/flare-foundation/go-flare-common/pkg/contracts"
 )
 
 type Struct string
@@ -30,19 +29,9 @@ func init() {
 		VoteReceipt,
 	}
 
-	teeAbi, err := TeeMetaData.GetAbi()
-	if err != nil {
-		panic(fmt.Sprintf("error getting tee abi: %v", err))
-	}
+	teeAbi := contracts.MustABI(TeeMetaData)
 
 	for j := range s {
-		name := string(s[j]) + "Struct"
-
-		method, ok := teeAbi.Methods[name]
-		if !ok {
-			panic(fmt.Sprintf("missing method %s", name))
-		}
-
-		StructArg[s[j]] = method.Inputs[0]
+		StructArg[s[j]] = contracts.MustMethod(teeAbi, string(s[j])+"Struct").Inputs[0]
 	}
 }

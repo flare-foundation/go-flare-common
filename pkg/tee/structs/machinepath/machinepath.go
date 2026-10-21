@@ -1,7 +1,10 @@
 //go:generate  abigen --abi=machinepath.abi --pkg=machinepath --type=TeeMachinePath --out=autogen.go
 package machinepath
 
-import "github.com/ethereum/go-ethereum/accounts/abi"
+import (
+	"github.com/ethereum/go-ethereum/accounts/abi"
+	"github.com/flare-foundation/go-flare-common/pkg/contracts"
+)
 
 // MachinePathStructArg is the abi.Argument for IMachinePathManager.MachinePath,
 // used to ABI-decode the path payload that off-chain relays forward alongside a
@@ -9,15 +12,6 @@ import "github.com/ethereum/go-ethereum/accounts/abi"
 var MachinePathStructArg abi.Argument
 
 func init() {
-	machinePathABI, err := TeeMachinePathMetaData.GetAbi()
-	if err != nil {
-		panic(err)
-	}
-
-	method, ok := machinePathABI.Methods["machinePathStruct"]
-	if !ok {
-		panic("missing method machinePathStruct")
-	}
-
-	MachinePathStructArg = method.Inputs[0]
+	machinePathABI := contracts.MustABI(TeeMachinePathMetaData)
+	MachinePathStructArg = contracts.MustMethod(machinePathABI, "machinePathStruct").Inputs[0]
 }
