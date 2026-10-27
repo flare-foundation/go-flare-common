@@ -64,11 +64,9 @@ func validTestClaims(now time.Time) GoogleTeeClaims {
 		SubMods: SubMods{
 			Container: Container{ImageID: testImageHashFull},
 		},
-		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    testIssuer,
-			Audience:  jwt.ClaimStrings{testAudience},
-			ExpiresAt: jwt.NewNumericDate(now.Add(time.Hour)),
-		},
+		Issuer:    testIssuer,
+		Audience:  jwt.ClaimStrings{testAudience},
+		ExpiresAt: jwt.NewNumericDate(now.Add(time.Hour)),
 	}
 }
 

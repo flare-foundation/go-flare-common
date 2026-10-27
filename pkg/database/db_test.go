@@ -22,8 +22,6 @@ func logIDs(logs []Log) []uint64 {
 	return ids
 }
 
-func ptr[T any](v T) *T { return &v }
-
 func newTestDB(t *testing.T) *gorm.DB {
 	t.Helper()
 
@@ -46,9 +44,9 @@ func TestDBFetchLogs(t *testing.T) {
 	topic1 := common.HexToHash("0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc")
 
 	logs := []Log{
-		{BaseEntity: BaseEntity{ID: 1}, Address: "1111111111111111111111111111111111111111", Topic0: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", Topic1: "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", Timestamp: 100, BlockNumber: 10, TransactionHash: "tx1", LogIndex: 0},
-		{BaseEntity: BaseEntity{ID: 2}, Address: "1111111111111111111111111111111111111111", Topic0: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", Timestamp: 200, BlockNumber: 20, TransactionHash: "tx2", LogIndex: 0},
-		{BaseEntity: BaseEntity{ID: 3}, Address: "2222222222222222222222222222222222222222", Topic0: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", Topic1: "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", Timestamp: 300, BlockNumber: 30, TransactionHash: "tx3", LogIndex: 0},
+		{ID: 1, Address: "1111111111111111111111111111111111111111", Topic0: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", Topic1: "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", Timestamp: 100, BlockNumber: 10, TransactionHash: "tx1", LogIndex: 0},
+		{ID: 2, Address: "1111111111111111111111111111111111111111", Topic0: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", Timestamp: 200, BlockNumber: 20, TransactionHash: "tx2", LogIndex: 0},
+		{ID: 3, Address: "2222222222222222222222222222222222222222", Topic0: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", Topic1: "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", Timestamp: 300, BlockNumber: 30, TransactionHash: "tx3", LogIndex: 0},
 	}
 	require.NoError(t, db.Create(&logs).Error)
 
@@ -84,37 +82,37 @@ func TestDBFetchLogs(t *testing.T) {
 		},
 		{
 			name:    "filter by timestamp From (exclusive)",
-			params:  LogsQuery{From: ptr(uint64(100))},
+			params:  LogsQuery{From: new(uint64(100))},
 			wantIDs: []uint64{2, 3},
 		},
 		{
 			name:    "filter by timestamp To (inclusive)",
-			params:  LogsQuery{To: ptr(uint64(200))},
+			params:  LogsQuery{To: new(uint64(200))},
 			wantIDs: []uint64{1, 2},
 		},
 		{
 			name:    "filter by timestamp range",
-			params:  LogsQuery{From: ptr(uint64(100)), To: ptr(uint64(200))},
+			params:  LogsQuery{From: new(uint64(100)), To: new(uint64(200))},
 			wantIDs: []uint64{2},
 		},
 		{
 			name:    "filter by block FromB (exclusive)",
-			params:  LogsQuery{FromB: ptr(uint64(10))},
+			params:  LogsQuery{FromB: new(uint64(10))},
 			wantIDs: []uint64{2, 3},
 		},
 		{
 			name:    "filter by block ToB (inclusive)",
-			params:  LogsQuery{ToB: ptr(uint64(20))},
+			params:  LogsQuery{ToB: new(uint64(20))},
 			wantIDs: []uint64{1, 2},
 		},
 		{
 			name:    "zero-value address pointer is applied",
-			params:  LogsQuery{Address: ptr(common.Address{})},
+			params:  LogsQuery{Address: new(common.Address{})},
 			wantIDs: []uint64{},
 		},
 		{
 			name:    "no match returns empty",
-			params:  LogsQuery{Address: &addr2, Topic0: &topic, From: ptr(uint64(300))},
+			params:  LogsQuery{Address: &addr2, Topic0: &topic, From: new(uint64(300))},
 			wantIDs: []uint64{},
 		},
 	}
@@ -137,9 +135,9 @@ func TestDBFetchLogsOrderedByTimestamp(t *testing.T) {
 	db := newTestDB(t)
 
 	logs := []Log{
-		{BaseEntity: BaseEntity{ID: 1}, Timestamp: 300, BlockNumber: 3, TransactionHash: "tx1", LogIndex: 0},
-		{BaseEntity: BaseEntity{ID: 2}, Timestamp: 100, BlockNumber: 1, TransactionHash: "tx2", LogIndex: 0},
-		{BaseEntity: BaseEntity{ID: 3}, Timestamp: 200, BlockNumber: 2, TransactionHash: "tx3", LogIndex: 0},
+		{ID: 1, Timestamp: 300, BlockNumber: 3, TransactionHash: "tx1", LogIndex: 0},
+		{ID: 2, Timestamp: 100, BlockNumber: 1, TransactionHash: "tx2", LogIndex: 0},
+		{ID: 3, Timestamp: 200, BlockNumber: 2, TransactionHash: "tx3", LogIndex: 0},
 	}
 	require.NoError(t, db.Create(&logs).Error)
 
@@ -155,9 +153,9 @@ func TestDBFetchLogsTieBreaksByID(t *testing.T) {
 
 	// Equal timestamps, inserted out of id order; expect ascending id.
 	logs := []Log{
-		{BaseEntity: BaseEntity{ID: 3}, Timestamp: 100, TransactionHash: "tx3", LogIndex: 2},
-		{BaseEntity: BaseEntity{ID: 1}, Timestamp: 100, TransactionHash: "tx1", LogIndex: 0},
-		{BaseEntity: BaseEntity{ID: 2}, Timestamp: 100, TransactionHash: "tx2", LogIndex: 1},
+		{ID: 3, Timestamp: 100, TransactionHash: "tx3", LogIndex: 2},
+		{ID: 1, Timestamp: 100, TransactionHash: "tx1", LogIndex: 0},
+		{ID: 2, Timestamp: 100, TransactionHash: "tx2", LogIndex: 1},
 	}
 	require.NoError(t, db.Create(&logs).Error)
 
@@ -177,9 +175,9 @@ func TestFetchLatestLogsTieBreaksByIDDescending(t *testing.T) {
 	topicHex := hex.EncodeToString(topic0[:])
 
 	logs := []Log{
-		{BaseEntity: BaseEntity{ID: 1}, Address: addrHex, Topic0: topicHex, Timestamp: 100, TransactionHash: "tx1", LogIndex: 0},
-		{BaseEntity: BaseEntity{ID: 2}, Address: addrHex, Topic0: topicHex, Timestamp: 100, TransactionHash: "tx2", LogIndex: 1},
-		{BaseEntity: BaseEntity{ID: 3}, Address: addrHex, Topic0: topicHex, Timestamp: 100, TransactionHash: "tx3", LogIndex: 2},
+		{ID: 1, Address: addrHex, Topic0: topicHex, Timestamp: 100, TransactionHash: "tx1", LogIndex: 0},
+		{ID: 2, Address: addrHex, Topic0: topicHex, Timestamp: 100, TransactionHash: "tx2", LogIndex: 1},
+		{ID: 3, Address: addrHex, Topic0: topicHex, Timestamp: 100, TransactionHash: "tx3", LogIndex: 2},
 	}
 	require.NoError(t, db.Create(&logs).Error)
 
@@ -201,9 +199,9 @@ func TestFetchLogsFullTieBreaksByIDDescending(t *testing.T) {
 	addrHex := hex.EncodeToString(addr[:])
 
 	logs := []Log{
-		{BaseEntity: BaseEntity{ID: 1}, Address: addrHex, Timestamp: 100, TransactionHash: "tx1", LogIndex: 0},
-		{BaseEntity: BaseEntity{ID: 2}, Address: addrHex, Timestamp: 100, TransactionHash: "tx2", LogIndex: 1},
-		{BaseEntity: BaseEntity{ID: 3}, Address: addrHex, Timestamp: 100, TransactionHash: "tx3", LogIndex: 2},
+		{ID: 1, Address: addrHex, Timestamp: 100, TransactionHash: "tx1", LogIndex: 0},
+		{ID: 2, Address: addrHex, Timestamp: 100, TransactionHash: "tx2", LogIndex: 1},
+		{ID: 3, Address: addrHex, Timestamp: 100, TransactionHash: "tx3", LogIndex: 2},
 	}
 	require.NoError(t, db.Create(&logs).Error)
 
@@ -216,7 +214,7 @@ func TestDBFetchLogsMethod(t *testing.T) {
 	db := newTestDB(t)
 
 	logs := []Log{
-		{BaseEntity: BaseEntity{ID: 1}, Address: "1111111111111111111111111111111111111111", Timestamp: 10, TransactionHash: "tx1", LogIndex: 0},
+		{ID: 1, Address: "1111111111111111111111111111111111111111", Timestamp: 10, TransactionHash: "tx1", LogIndex: 0},
 	}
 	require.NoError(t, db.Create(&logs).Error)
 
@@ -238,9 +236,9 @@ func TestDBFetchTransactions(t *testing.T) {
 	sel := [4]byte{0xde, 0xad, 0xbe, 0xef}
 
 	txs := []Transaction{
-		{BaseEntity: BaseEntity{ID: 1}, ToAddress: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", FromAddress: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", FunctionSig: "deadbeef", Timestamp: 100, BlockNumber: 10, Hash: "h1"},
-		{BaseEntity: BaseEntity{ID: 2}, ToAddress: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", FromAddress: "cccccccccccccccccccccccccccccccccccccccc", FunctionSig: "deadbeef", Timestamp: 200, BlockNumber: 20, Hash: "h2"},
-		{BaseEntity: BaseEntity{ID: 3}, ToAddress: "dddddddddddddddddddddddddddddddddddddddd", FromAddress: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", FunctionSig: "cafebabe", Timestamp: 300, BlockNumber: 30, Hash: "h3"},
+		{ID: 1, ToAddress: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", FromAddress: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", FunctionSig: "deadbeef", Timestamp: 100, BlockNumber: 10, Hash: "h1"},
+		{ID: 2, ToAddress: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", FromAddress: "cccccccccccccccccccccccccccccccccccccccc", FunctionSig: "deadbeef", Timestamp: 200, BlockNumber: 20, Hash: "h2"},
+		{ID: 3, ToAddress: "dddddddddddddddddddddddddddddddddddddddd", FromAddress: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", FunctionSig: "cafebabe", Timestamp: 300, BlockNumber: 30, Hash: "h3"},
 	}
 	require.NoError(t, db.Create(&txs).Error)
 
@@ -271,12 +269,12 @@ func TestDBFetchTransactions(t *testing.T) {
 		},
 		{
 			name:    "filter by timestamp range",
-			params:  TxQuery{From: ptr(uint64(100)), To: ptr(uint64(200))},
+			params:  TxQuery{From: new(uint64(100)), To: new(uint64(200))},
 			wantIDs: []uint64{2},
 		},
 		{
 			name:    "filter by block range",
-			params:  TxQuery{FromB: ptr(uint64(10)), ToB: ptr(uint64(20))},
+			params:  TxQuery{FromB: new(uint64(10)), ToB: new(uint64(20))},
 			wantIDs: []uint64{2},
 		},
 		{
@@ -286,7 +284,7 @@ func TestDBFetchTransactions(t *testing.T) {
 		},
 		{
 			name:    "no match returns empty",
-			params:  TxQuery{ToAddr: &toAddr, From: ptr(uint64(300))},
+			params:  TxQuery{ToAddr: &toAddr, From: new(uint64(300))},
 			wantIDs: []uint64{},
 		},
 	}
@@ -309,9 +307,9 @@ func TestDBFetchTransactionsOrderedByTimestamp(t *testing.T) {
 	db := newTestDB(t)
 
 	txs := []Transaction{
-		{BaseEntity: BaseEntity{ID: 1}, Hash: "h1", Timestamp: 300},
-		{BaseEntity: BaseEntity{ID: 2}, Hash: "h2", Timestamp: 100},
-		{BaseEntity: BaseEntity{ID: 3}, Hash: "h3", Timestamp: 200},
+		{ID: 1, Hash: "h1", Timestamp: 300},
+		{ID: 2, Hash: "h2", Timestamp: 100},
+		{ID: 3, Hash: "h3", Timestamp: 200},
 	}
 	require.NoError(t, db.Create(&txs).Error)
 
@@ -324,7 +322,7 @@ func TestDBFetchTransactionsMethod(t *testing.T) {
 	db := newTestDB(t)
 
 	txs := []Transaction{
-		{BaseEntity: BaseEntity{ID: 1}, Hash: "h1", Timestamp: 10},
+		{ID: 1, Hash: "h1", Timestamp: 10},
 	}
 	require.NoError(t, db.Create(&txs).Error)
 
@@ -342,9 +340,9 @@ func TestDBFetchState(t *testing.T) {
 	db := newTestDB(t)
 
 	states := []State{
-		{BaseEntity: BaseEntity{ID: 1}, Name: string(StateFirstDBBlock), Index: 1, BlockTimestamp: 1000},
-		{BaseEntity: BaseEntity{ID: 2}, Name: string(StateLastDBBlock), Index: 99, BlockTimestamp: 9900},
-		{BaseEntity: BaseEntity{ID: 3}, Name: string(StateLastChain), Index: 105, BlockTimestamp: 10500},
+		{ID: 1, Name: string(StateFirstDBBlock), Index: 1, BlockTimestamp: 1000},
+		{ID: 2, Name: string(StateLastDBBlock), Index: 99, BlockTimestamp: 9900},
+		{ID: 3, Name: string(StateLastChain), Index: 105, BlockTimestamp: 10500},
 	}
 	require.NoError(t, db.Create(&states).Error)
 
@@ -378,7 +376,7 @@ func TestDBFetchStateMethod(t *testing.T) {
 	db := newTestDB(t)
 
 	states := []State{
-		{BaseEntity: BaseEntity{ID: 1}, Name: string(StateLastDBBlock), Index: 42, BlockTimestamp: 5000},
+		{ID: 1, Name: string(StateLastDBBlock), Index: 42, BlockTimestamp: 5000},
 	}
 	require.NoError(t, db.Create(&states).Error)
 

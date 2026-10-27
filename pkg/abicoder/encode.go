@@ -79,7 +79,7 @@ func checkRange(t *abi.Type, v reflect.Value) error {
 		if v.Type() != bigIntPtr || v.IsNil() || !v.CanInterface() {
 			return nil
 		}
-		n, ok := v.Interface().(*big.Int)
+		n, ok := reflect.TypeAssert[*big.Int](v)
 		if ok && !fitsInt(t, n) {
 			return fmt.Errorf("%w: %s out of range", ErrNonCanonical, t)
 		}
