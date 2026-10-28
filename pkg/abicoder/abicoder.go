@@ -13,6 +13,9 @@ import (
 // Unpack skips.
 var errIndexedArg = errors.New("indexed abi argument: a Coder is for values, not event topics")
 
+// Coder encodes and decodes T as one ABI argument. [New] checks T against the
+// argument once, so its methods check only the data. A Coder is safe for
+// concurrent use; the zero Coder is not usable.
 type Coder[T any] struct {
 	args abi.Arguments
 }
@@ -20,7 +23,7 @@ type Coder[T any] struct {
 // New returns a Coder for arg and T. It refuses an arg whose type [Decode]
 // doesn't support, and with ErrShapeMismatch a T whose shape Decode refuses
 // and one Encode can't take every tuple component from, so Encode and Decode
-// check only the data.
+// check only the data. The Coder keeps arg, which must not be modified.
 //
 // A Coder is for values such as structs, not events, so New refuses an
 // indexed arg.
@@ -60,6 +63,8 @@ func New[T any](arg abi.Argument) (c *Coder[T], err error) {
 	return &Coder[T]{args: abi.Arguments{arg}}, nil
 }
 
+// MustNew is like [New] but panics on error, for package-level variables and
+// init functions.
 func MustNew[T any](arg abi.Argument) *Coder[T] {
 	c, err := New[T](arg)
 	if err != nil {
@@ -69,6 +74,7 @@ func MustNew[T any](arg abi.Argument) *Coder[T] {
 	return c
 }
 
+// Encode ABI-encodes data as [Encode] does, without checking T again.
 func (c *Coder[T]) Encode(data T) (encoded []byte, err error) {
 	defer panics.Recover(&err)
 
@@ -88,6 +94,7 @@ func (c *Coder[T]) Encode(data T) (encoded []byte, err error) {
 	return encoded, nil
 }
 
+// Decode decodes ABI-encoded data as [Decode] does, without checking T again.
 func (c *Coder[T]) Decode(data []byte) (t T, err error) {
 	defer panics.Recover(&err)
 
@@ -115,6 +122,8 @@ func (c *Coder[T]) Decode(data []byte) (t T, err error) {
 	return t, nil
 }
 
+// DecodeTo decodes data as [Coder.Decode] does and writes it to dest, a
+// non-nil pointer, leaving dest unchanged on error.
 func (c *Coder[T]) DecodeTo(data []byte, dest *T) error {
 	rv := reflect.ValueOf(dest)
 	if rv.Kind() != reflect.Pointer || rv.IsNil() {

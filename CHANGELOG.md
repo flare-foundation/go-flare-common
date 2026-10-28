@@ -6,6 +6,8 @@
 
 - `contracts.MustABI`, `MustEvent`, `MustMethod` and `MustError` look up a binding's ABI and its events, methods and custom errors by name for package-level variables and init functions, panicking when one is missing.
   `MustABI` takes the metadata of an abigen v1 or v2 binding.
+- `abicoder.Coder` encodes and decodes a Go type as one ABI argument: `abicoder.New` and `MustNew` check once that the type fits the argument, so `Encode` and `Decode` check only the data.
+  Each struct field must be named for the tuple component at its position, as abigen's structs are, and `New` refuses an indexed (event) argument.
 
 ### Changed
 
