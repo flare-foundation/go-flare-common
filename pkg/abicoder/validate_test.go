@@ -225,6 +225,81 @@ func TestCheckShapeRejectsArrayForNonArray(t *testing.T) {
 	require.ErrorIs(t, err, ErrShapeMismatch)
 }
 
+// convertPanics reports whether go-ethereum's ConvertType, which Decode ends
+// with, panics converting in to a T.
+func convertPanics[T any](in any) (panicked bool) {
+	defer func() { panicked = recover() != nil }()
+	abi.ConvertType(in, new(T))
+
+	return false
+}
+
+// TestCheckShapeRejectsPointers checks that a pointer to anything but a big.Int
+// is refused exactly where go-ethereum, which never allocates one, panics
+// decoding through it.
+func TestCheckShapeRejectsPointers(t *testing.T) {
+	type bigPtr *big.Int
+	type uintField struct{ A *uint64 }
+	type tupleField struct{ A *struct{ V uint64 } }
+
+	u64 := abi.Argument{Name: "a", Type: newType(t, "uint64")}
+	u256 := abi.Argument{Type: newType(t, "uint256")}
+	tuple := abi.Argument{Type: tupleType(t, []abi.ArgumentMarshaling{{Name: "a", Type: "uint64"}})}
+	nested := abi.Argument{Type: tupleType(t, []abi.ArgumentMarshaling{
+		{Name: "a", Type: "tuple", Components: []abi.ArgumentMarshaling{{Name: "v", Type: "uint64"}}},
+	})}
+
+	tests := []struct {
+		name     string
+		arg      abi.Argument
+		sample   any
+		shape    func(abi.Type) error
+		panics   func(any) bool
+		rejected bool
+	}{
+		{"value", u64, uint64(1), checkShape[*uint64], convertPanics[*uint64], true},
+		{"struct", tuple, struct{ A uint64 }{1}, checkShape[*struct{ A uint64 }], convertPanics[*struct{ A uint64 }], true},
+		{"field", tuple, struct{ A uint64 }{1}, checkShape[uintField], convertPanics[uintField], true},
+		{"tupleField", nested, struct{ A struct{ V uint64 } }{}, checkShape[tupleField], convertPanics[tupleField], true},
+		{"arrayElem", abi.Argument{Type: newType(t, "uint64[2]")}, [2]uint64{}, checkShape[[2]*uint64], convertPanics[[2]*uint64], true},
+		{"sliceElem", abi.Argument{Type: newType(t, "uint64[]")}, []uint64{1}, checkShape[[]*uint64], convertPanics[[]*uint64], true},
+		{"hash", abi.Argument{Type: newType(t, "bytes32")}, common.Hash{1}, checkShape[*common.Hash], convertPanics[*common.Hash], true},
+		{"bigIntPtr", u256, big.NewInt(1), checkShape[**big.Int], convertPanics[**big.Int], true},
+		{"bigInt", u256, big.NewInt(1), checkShape[*big.Int], convertPanics[*big.Int], false},
+		{"namedBigInt", u256, big.NewInt(1), checkShape[bigPtr], convertPanics[bigPtr], false},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			args := abi.Arguments{tc.arg}
+			packed, err := args.Pack(tc.sample)
+			require.NoError(t, err)
+			values, err := args.Unpack(packed)
+			require.NoError(t, err)
+
+			require.Equal(t, tc.rejected, tc.panics(values[0]))
+			if tc.rejected {
+				require.ErrorIs(t, tc.shape(tc.arg.Type), ErrShapeMismatch)
+			} else {
+				require.NoError(t, tc.shape(tc.arg.Type))
+			}
+		})
+	}
+
+	packed, err := Encode(u64, uint64(1))
+	require.NoError(t, err)
+	_, err = Decode[*uint64](u64, packed)
+	require.ErrorIs(t, err, ErrShapeMismatch)
+	_, err = DecodeArguments[uintField](abi.Arguments{u64}, packed)
+	require.ErrorIs(t, err, ErrShapeMismatch)
+	_, err = New[uintField](tuple)
+	require.ErrorIs(t, err, ErrShapeMismatch)
+
+	// Encode never checks the shape, so it still takes pointers
+	x := uint64(1)
+	_, err = Encode(tuple, uintField{&x})
+	require.NoError(t, err)
+}
+
 func roundTrip[T any](t *testing.T, solType string, v T) {
 	t.Helper()
 	arg := abi.Argument{Type: newType(t, solType)}

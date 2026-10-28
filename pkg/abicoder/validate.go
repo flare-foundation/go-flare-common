@@ -3,6 +3,7 @@ package abicoder
 import (
 	"errors"
 	"fmt"
+	"math/big"
 	"reflect"
 	"strings"
 
@@ -11,8 +12,8 @@ import (
 
 // ErrShapeMismatch indicates a decode destination whose shape diverges from the
 // ABI argument type: an array or struct of another length or field count, an
-// array where the type has none, or a field named for a tuple component at
-// another position.
+// array where the type has none, a field named for a tuple component at
+// another position, or a pointer to anything but a big.Int.
 var ErrShapeMismatch = errors.New("destination shape does not match ABI type")
 
 // ErrNonCanonical indicates ABI input that is not the canonical encoding of its
@@ -106,7 +107,8 @@ func argField(t reflect.Type, name string) (reflect.StructField, bool) {
 // shapeMatches reports a mismatch when dst and abiType are both arrays of
 // different lengths, or both structs with different field counts or with a dst
 // field named after a component at another position, or dst is an array where
-// abiType isn't, recursing through arrays, slices, pointers, and structs.
+// abiType isn't, or dst is a pointer to anything but a big.Int, recursing
+// through arrays, slices, and structs.
 // Identical types, interface destinations, and any other kind divergence are
 // left to abi.ConvertType.
 func shapeMatches(dst, abiType reflect.Type) error {
@@ -126,8 +128,9 @@ func shapeMatches(dst, abiType reflect.Type) error {
 		return fmt.Errorf("%w: array %v, want %v", ErrShapeMismatch, dst, abiType)
 	case dst.Kind() == reflect.Slice && abiType.Kind() == reflect.Slice:
 		return shapeMatches(dst.Elem(), abiType.Elem())
-	case dst.Kind() == reflect.Pointer && abiType.Kind() == reflect.Pointer:
-		return shapeMatches(dst.Elem(), abiType.Elem())
+	case dst.Kind() == reflect.Pointer && dst.Elem() != reflect.TypeFor[big.Int]():
+		// go-ethereum decodes through a pointer without allocating it, so it panics
+		return fmt.Errorf("%w: pointer %v, want %v", ErrShapeMismatch, dst, abiType)
 	case dst.Kind() == reflect.Struct && abiType.Kind() == reflect.Struct:
 		if dst.NumField() != abiType.NumField() {
 			return fmt.Errorf("%w: struct has %d fields, want %d", ErrShapeMismatch, dst.NumField(), abiType.NumField())
