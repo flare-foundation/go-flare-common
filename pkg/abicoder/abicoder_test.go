@@ -136,6 +136,7 @@ func TestNewRefusesUnsupportedTypes(t *testing.T) {
 		{"emptyTuple", newType(t, "tuple")},
 		{"handBuiltTuple", abi.Type{T: abi.TupleTy}},
 		{"fixedPoint", abi.Type{T: abi.FixedPointTy, Size: 128}},
+		{"hash", abi.Type{T: abi.HashTy}},
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
@@ -143,6 +144,10 @@ func TestNewRefusesUnsupportedTypes(t *testing.T) {
 			require.ErrorIs(t, err, errUnsupportedType)
 		})
 	}
+
+	// before decoding: go-ethereum decodes HashTy but can't encode it
+	_, err := Decode[[32]byte](abi.Argument{Type: abi.Type{T: abi.HashTy}}, make([]byte, 32))
+	require.ErrorIs(t, err, errUnsupportedType)
 }
 
 // TestCoderChecksData checks that the Coder's calls still check the data.

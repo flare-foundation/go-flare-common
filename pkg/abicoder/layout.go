@@ -146,8 +146,6 @@ func checkWord(t *abi.Type, b []byte) (int, error) {
 		ok = isZero(w[t.Size:])
 	case abi.FunctionTy:
 		ok = isZero(w[24:])
-	case abi.HashTy:
-		ok = true
 	default:
 		return 0, fmt.Errorf("%w: %s", errUnsupportedType, t)
 	}
@@ -172,8 +170,9 @@ func readNumber(b []byte, limit int) (int, error) {
 }
 
 // checkType rejects types whose encoding checkData can't bound or
-// go-ethereum can't decode: zero-size arrays, empty tuples, heads overflowing
-// int, and unknown kinds or sizes.
+// go-ethereum can't decode or encode: zero-size arrays, empty tuples, heads
+// overflowing int, and unknown kinds or sizes, among them HashTy, which no
+// ABI parses to and go-ethereum can't encode.
 func checkType(t *abi.Type) error {
 	ok := true
 	switch t.T {
@@ -181,7 +180,7 @@ func checkType(t *abi.Type) error {
 		ok = t.Size > 0 && t.Size <= 8*word && t.Size%8 == 0
 	case abi.FixedBytesTy:
 		ok = t.Size > 0 && t.Size <= word
-	case abi.BoolTy, abi.AddressTy, abi.FunctionTy, abi.HashTy, abi.StringTy, abi.BytesTy:
+	case abi.BoolTy, abi.AddressTy, abi.FunctionTy, abi.StringTy, abi.BytesTy:
 	case abi.SliceTy:
 		return checkType(t.Elem)
 	case abi.ArrayTy:

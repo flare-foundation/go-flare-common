@@ -13,6 +13,8 @@
 - **Behavioral:** `abicoder`'s decoders refuse a destination holding a pointer to anything but a `big.Int`, such as a `*uint64` field, with `ErrShapeMismatch`. go-ethereum decodes through such a pointer without allocating it, so decoding panicked on every input, or for a slice element on every non-empty slice.
 - **Behavioral:** `abicoder`'s decoders refuse a destination type go-ethereum can't assign the decoded value to with `ErrShapeMismatch`, such as a `string` or `uint64` for a `uint256`, a `type U uint64` for a `uint64`, a `big.Int` field, an unexported field, or an interface the value doesn't implement.
   Decoding into one failed on every input with a recovered panic, or for a slice element on every non-empty slice.
+- `abicoder` refuses an `abi.Type` built by hand with go-ethereum's unused `HashTy` as unsupported.
+  No ABI parses to it and go-ethereum can't encode it, so decoding it failed in the round trip after decoding.
 
 ## [v1.5.0](https://github.com/flare-foundation/go-flare-common/tree/v1.5.0) - 2026-10-16
 
