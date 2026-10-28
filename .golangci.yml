@@ -1,6 +1,6 @@
 version: "2"
 run:
-  go: "1.25"
+  go: "1.27"
   modules-download-mode: readonly
 linters:
   default: standard
@@ -30,12 +30,16 @@ linters:
       default-signifies-exhaustive: true
     nolintlint:
       require-specific: true
-exclusions:
-  generated: lax
-  paths:
-    - third_party$
-    - builtin$
-    - examples$
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+    rules:
+      # secp256k1 keys: the stdlib raw-key replacements support only NIST curves
+      - linters: [staticcheck]
+        text: 'SA1019: \(crypto/ecdsa\.(PublicKey|PrivateKey)\)\.[XYD] has been deprecated'
 formatters:
   enable:
     - gofmt

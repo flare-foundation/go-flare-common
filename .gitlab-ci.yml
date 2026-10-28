@@ -15,11 +15,12 @@ include:
   - component: gitlab.com/flarenetwork/ci-components-private/lint-shell@2
   - component: gitlab.com/flarenetwork/ci-components-private/test-go@2
     inputs:
-      go_version: "1.25.14"
+      go_version: "1.27.3"
+      cobertura_go_version: "1.27.3"
       tags: ["flarenetwork-md"]
   - component: gitlab.com/flarenetwork/ci-components-private/lint-go@2
     inputs:
-      go_version: "1.25.14"
-      golangci_version: "v2.7.0"
+      go_version: "1.27.3"
+      golangci_version: "v2.15.0"
       golangci_config_file: ".golangci.yml"
   - template: Jobs/Secret-Detection.latest.gitlab-ci.yml

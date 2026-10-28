@@ -134,8 +134,7 @@ func retryWithConfig[F any, P any](
 				return result, nil
 			}
 
-			var perm *PermanentError
-			if errors.As(err, &perm) {
+			if perm, ok := errors.AsType[*PermanentError](err); ok {
 				return result, perm.Err
 			}
 

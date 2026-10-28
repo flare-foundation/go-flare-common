@@ -220,10 +220,6 @@ func pow2(n uint) *big.Int {
 	return new(big.Int).Lsh(big.NewInt(1), n)
 }
 
-func ptr[T any](v T) *T {
-	return &v
-}
-
 // TestEncodeRefusesValuesOutOfType covers values go-ethereum packs without a
 // range check into bytes Decode refuses.
 func TestEncodeRefusesValuesOutOfType(t *testing.T) {
@@ -248,7 +244,7 @@ func TestEncodeRefusesValuesOutOfType(t *testing.T) {
 		{"int256Above", "int256", pow2(255)},
 		{"int256Below", "int256", new(big.Int).Sub(new(big.Int).Neg(pow2(255)), big.NewInt(1))},
 		{"arrayElem", "uint256[2]", [2]*big.Int{big.NewInt(1), pow2(256)}},
-		{"pointer", "int256[]", []**big.Int{ptr(pow2(255))}},
+		{"pointer", "int256[]", []**big.Int{new(pow2(255))}},
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {

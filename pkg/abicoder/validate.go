@@ -92,8 +92,7 @@ func checkArgsShape(args abi.Arguments, dst reflect.Type) error {
 // argField returns the field of struct type t that abi.Arguments.Copy writes
 // the argument name to: the one tagged abi:"name", else the camel-cased name.
 func argField(t reflect.Type, name string) (reflect.StructField, bool) {
-	for i := range t.NumField() {
-		f := t.Field(i)
+	for f := range t.Fields() {
 		// go-ethereum's test, which also skips names with a non-ASCII initial
 		exported := f.Name[:1] == strings.ToUpper(f.Name[:1])
 		if tag, ok := f.Tag.Lookup("abi"); ok && tag == name && exported {

@@ -285,8 +285,7 @@ func signHandler(prv *ecdsa.PrivateKey, maxReqBodySize int64) http.HandlerFunc {
 
 		err := decoder.Decode(&rb)
 		if err != nil {
-			var maxErr *http.MaxBytesError
-			if errors.As(err, &maxErr) {
+			if _, ok := errors.AsType[*http.MaxBytesError](err); ok {
 				http.Error(w, "request too large", http.StatusRequestEntityTooLarge)
 				return
 			}
@@ -415,8 +414,7 @@ func decryptHandler(prv *ecdsa.PrivateKey, maxReqBodySize int64) http.HandlerFun
 
 		err := decoder.Decode(&eb)
 		if err != nil {
-			var maxErr *http.MaxBytesError
-			if errors.As(err, &maxErr) {
+			if _, ok := errors.AsType[*http.MaxBytesError](err); ok {
 				http.Error(w, "request too large", http.StatusRequestEntityTooLarge)
 				return
 			}

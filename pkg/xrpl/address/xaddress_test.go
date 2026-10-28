@@ -11,8 +11,6 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/hash"
 )
 
-func tagPtr(v uint32) *uint32 { return &v }
-
 // Golden vectors generated with the reference implementation ripple-address-codec.
 var xVectors = []struct {
 	name    string
@@ -22,11 +20,11 @@ var xVectors = []struct {
 	x       string
 }{
 	{"no tag", "rGWrZyQqhTp9Xu7G5Pkayo7bXjH4k4QYpf", nil, false, "XVLhHMPHU98es4dbozjVtdWzVrDjtV5fdx1mHp98tDMoQXb"},
-	{"tag 0", "rGWrZyQqhTp9Xu7G5Pkayo7bXjH4k4QYpf", tagPtr(0), false, "XVLhHMPHU98es4dbozjVtdWzVrDjtV8AqEL4xcZj5whKbmc"},
-	{"tag 13371337", "rGWrZyQqhTp9Xu7G5Pkayo7bXjH4k4QYpf", tagPtr(13371337), false, "XVLhHMPHU98es4dbozjVtdWzVrDjtVijiy6dVhdE4mRdMDU"},
-	{"tag max", "rGWrZyQqhTp9Xu7G5Pkayo7bXjH4k4QYpf", tagPtr(4294967295), false, "XVLhHMPHU98es4dbozjVtdWzVrDjtV18pX8yuPT7y4xaEHi"},
+	{"tag 0", "rGWrZyQqhTp9Xu7G5Pkayo7bXjH4k4QYpf", new(uint32(0)), false, "XVLhHMPHU98es4dbozjVtdWzVrDjtV8AqEL4xcZj5whKbmc"},
+	{"tag 13371337", "rGWrZyQqhTp9Xu7G5Pkayo7bXjH4k4QYpf", new(uint32(13371337)), false, "XVLhHMPHU98es4dbozjVtdWzVrDjtVijiy6dVhdE4mRdMDU"},
+	{"tag max", "rGWrZyQqhTp9Xu7G5Pkayo7bXjH4k4QYpf", new(uint32(4294967295)), false, "XVLhHMPHU98es4dbozjVtdWzVrDjtV18pX8yuPT7y4xaEHi"},
 	{"testnet no tag", "rGWrZyQqhTp9Xu7G5Pkayo7bXjH4k4QYpf", nil, true, "TVE26TYGhfLC7tQDno7G8dGtxSkYQn49b3qD26PK7FcGSKE"},
-	{"other account", "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh", tagPtr(42), false, "XVPcpSm47b1CZkf5AkKM9a84dQHe3mTCLZc5ZAoh11sd5nY"},
+	{"other account", "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh", new(uint32(42)), false, "XVPcpSm47b1CZkf5AkKM9a84dQHe3mTCLZc5ZAoh11sd5nY"},
 }
 
 func TestClassicToX(t *testing.T) {
@@ -114,7 +112,7 @@ func TestNormalize(t *testing.T) {
 	}{
 		{"classic passthrough", "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh", "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh", nil},
 		{"x tagless", "XVLhHMPHU98es4dbozjVtdWzVrDjtV5fdx1mHp98tDMoQXb", "rGWrZyQqhTp9Xu7G5Pkayo7bXjH4k4QYpf", nil},
-		{"x tagged", "XVLhHMPHU98es4dbozjVtdWzVrDjtVijiy6dVhdE4mRdMDU", "rGWrZyQqhTp9Xu7G5Pkayo7bXjH4k4QYpf", tagPtr(13371337)},
+		{"x tagged", "XVLhHMPHU98es4dbozjVtdWzVrDjtVijiy6dVhdE4mRdMDU", "rGWrZyQqhTp9Xu7G5Pkayo7bXjH4k4QYpf", new(uint32(13371337))},
 		{"x testnet", "TVE26TYGhfLC7tQDno7G8dGtxSkYQn49b3qD26PK7FcGSKE", "rGWrZyQqhTp9Xu7G5Pkayo7bXjH4k4QYpf", nil},
 	}
 	for _, tc := range cases {
