@@ -13,8 +13,10 @@ type Coder[T any] struct {
 	args abi.Arguments
 }
 
-// New returns a Coder for arg and T. It refuses with ErrShapeMismatch a T whose
-// shape [Decode] refuses, and one Encode can't take every tuple component from.
+// New returns a Coder for arg and T. It refuses an arg whose type [Decode]
+// doesn't support, and with ErrShapeMismatch a T whose shape Decode refuses
+// and one Encode can't take every tuple component from, so Encode and Decode
+// check only the data.
 //
 // The fields of each struct in T must be in the order of the tuple's
 // components and named for them, by an abi tag or as abi.ToCamelCase names
@@ -25,6 +27,11 @@ type Coder[T any] struct {
 // field, which go-ethereum can't encode either, so New refuses it.
 func New[T any](arg abi.Argument) (*Coder[T], error) {
 	if err := checkArgType(arg.Type); err != nil {
+		return nil, err
+	}
+
+	// before checkShape, as GetType panics on some types checkType refuses
+	if err := checkType(&arg.Type); err != nil {
 		return nil, err
 	}
 
@@ -60,7 +67,7 @@ func (c *Coder[T]) Encode(data T) (encoded []byte, err error) {
 		return nil, fmt.Errorf("encoding type %T: %w", data, err)
 	}
 
-	if err := checkLayout(c.args, encoded); err != nil {
+	if err := checkData(c.args, encoded); err != nil {
 		return nil, fmt.Errorf("encoding type %T: %w", data, err)
 	}
 
@@ -70,7 +77,7 @@ func (c *Coder[T]) Encode(data T) (encoded []byte, err error) {
 func (c *Coder[T]) Decode(data []byte) (t T, err error) {
 	defer panics.Recover(&err)
 
-	if err := checkLayout(c.args, data); err != nil {
+	if err := checkData(c.args, data); err != nil {
 		return t, err
 	}
 

@@ -1,6 +1,7 @@
 package abicoder
 
 import (
+	"bytes"
 	"math/big"
 	"testing"
 
@@ -122,6 +123,49 @@ func TestNewChecksNames(t *testing.T) {
 	out, err := Decode[renamed](tuple, packed)
 	require.NoError(t, err)
 	require.Equal(t, renamed{1, "x"}, out)
+}
+
+// TestNewRefusesUnsupportedTypes checks that New refuses the types Decode
+// refuses whatever the data, before GetType panics on some of them.
+func TestNewRefusesUnsupportedTypes(t *testing.T) {
+	tests := []struct {
+		name string
+		typ  abi.Type
+	}{
+		{"zeroLengthArray", newType(t, "uint256[0]")},
+		{"emptyTuple", newType(t, "tuple")},
+		{"handBuiltTuple", abi.Type{T: abi.TupleTy}},
+		{"fixedPoint", abi.Type{T: abi.FixedPointTy, Size: 128}},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			_, err := New[any](abi.Argument{Type: tc.typ})
+			require.ErrorIs(t, err, errUnsupportedType)
+		})
+	}
+}
+
+// TestCoderChecksData checks that the Coder's calls still check the data.
+func TestCoderChecksData(t *testing.T) {
+	c, err := New[uint64](abi.Argument{Type: newType(t, "uint64")})
+	require.NoError(t, err)
+	packed, err := c.Encode(1)
+	require.NoError(t, err)
+
+	dirty := bytes.Clone(packed)
+	dirty[0] = 1 // padding
+	_, err = c.Decode(dirty)
+	require.ErrorIs(t, err, ErrNonCanonical)
+	_, err = c.Decode(packed[:31])
+	require.ErrorIs(t, err, ErrTruncated)
+	_, err = c.Decode(append(bytes.Clone(packed), 0))
+	require.ErrorIs(t, err, ErrNonCanonical)
+
+	// go-ethereum writes a 32-byte address whole, high bytes and all
+	addr, err := New[any](abi.Argument{Type: newType(t, "address")})
+	require.NoError(t, err)
+	_, err = addr.Encode(common.MaxHash)
+	require.ErrorIs(t, err, ErrNonCanonical)
 }
 
 // TestNewAcceptsAbigenStructs checks abigen's structs, v1 and v2, against the
