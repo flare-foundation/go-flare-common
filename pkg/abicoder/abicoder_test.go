@@ -157,6 +157,82 @@ func TestNewRefusesIndexed(t *testing.T) {
 	require.ErrorIs(t, err, errIndexedArg)
 }
 
+// coderCase round-trips a sample through a Coder for arg.
+type coderCase struct {
+	name string
+	run  func(*testing.T)
+}
+
+func newCoderCase[T any](name string, arg abi.Argument, v T) coderCase {
+	run := func(t *testing.T) {
+		t.Helper()
+		c, err := New[T](arg)
+		require.NoError(t, err)
+		packed, err := c.Encode(v)
+		require.NoError(t, err)
+		want, err := Encode(arg, v)
+		require.NoError(t, err)
+		require.Equal(t, want, packed)
+		got, err := c.Decode(packed)
+		require.NoError(t, err)
+		require.Equal(t, v, got)
+	}
+
+	return coderCase{name, run}
+}
+
+// TestNewAcceptsTuplesAndBasicTypes checks that a Coder takes tuples and basic
+// types, and encodes them as Encode does.
+func TestNewAcceptsTuplesAndBasicTypes(t *testing.T) {
+	type pair struct {
+		A uint64
+		B string
+	}
+	type nested struct {
+		A []pair
+		B [2][]byte
+	}
+
+	arg := func(solType string) abi.Argument { return abi.Argument{Type: newType(t, solType)} }
+	components := []abi.ArgumentMarshaling{{Name: "a", Type: "uint64"}, {Name: "b", Type: "string"}}
+	tuple := abi.Argument{Type: tupleType(t, components)}
+	tuples, err := abi.NewType("tuple[]", "", components)
+	require.NoError(t, err)
+	nestedTuple := abi.Argument{Type: tupleType(t, []abi.ArgumentMarshaling{
+		{Name: "a", Type: "tuple[]", Components: components},
+		{Name: "b", Type: "bytes[2]"},
+	})}
+
+	tests := []coderCase{
+		newCoderCase("string", arg("string"), "x"),
+		newCoderCase("bytes", arg("bytes"), []byte{1, 2}),
+		newCoderCase("bytes32", arg("bytes32"), common.Hash{1}),
+		newCoderCase("bytes32AsArray", arg("bytes32"), [32]byte{1}),
+		newCoderCase("bytes4", arg("bytes4"), [4]byte{1}),
+		newCoderCase("bool", arg("bool"), true),
+		newCoderCase("uint8", arg("uint8"), uint8(1)),
+		newCoderCase("uint64", arg("uint64"), uint64(1)),
+		newCoderCase("int8", arg("int8"), int8(-1)),
+		newCoderCase("uint24", arg("uint24"), big.NewInt(1)),
+		newCoderCase("uint256", arg("uint256"), big.NewInt(1)),
+		newCoderCase("int256", arg("int256"), big.NewInt(-1)),
+		newCoderCase("address", arg("address"), common.Address{1}),
+		newCoderCase("function", arg("function"), [24]byte{1}),
+		newCoderCase("uint8Slice", arg("uint8[]"), []uint8{1, 2}),
+		newCoderCase("stringSlice", arg("string[]"), []string{"x", "y"}),
+		newCoderCase("bytesSlice", arg("bytes[]"), [][]byte{{1}, {2}}),
+		newCoderCase("addressSlice", arg("address[]"), []common.Address{{1}}),
+		newCoderCase("uint8Array", arg("uint8[3]"), [3]uint8{1, 2, 3}),
+		newCoderCase("bytes32Pair", arg("bytes32[2]"), [2][32]byte{{1}, {2}}),
+		newCoderCase("tuple", tuple, pair{1, "x"}),
+		newCoderCase("tupleSlice", abi.Argument{Type: tuples}, []pair{{1, "x"}, {2, "y"}}),
+		newCoderCase("nested", nestedTuple, nested{[]pair{{1, "x"}}, [2][]byte{{1}, {2}}}),
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, tc.run)
+	}
+}
+
 // TestCoderChecksData checks that the Coder's calls still check the data.
 func TestCoderChecksData(t *testing.T) {
 	c, err := New[uint64](abi.Argument{Type: newType(t, "uint64")})
