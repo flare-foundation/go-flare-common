@@ -14,7 +14,8 @@ import (
 // ABI argument type: an array or struct of another length or field count, an
 // array where the type has none, a field named for a tuple component at
 // another position, an unexported field, a pointer to anything but a big.Int,
-// or a type the decoded value can't be assigned to.
+// or a type the decoded value can't be assigned to. New also returns it for a
+// struct field not named for the tuple component at its position.
 var ErrShapeMismatch = errors.New("destination shape does not match ABI type")
 
 // ErrNonCanonical indicates ABI input that is not the canonical encoding of its
@@ -101,14 +102,51 @@ func checkArgsShape(args abi.Arguments, dst reflect.Type) error {
 // the argument name to: the one tagged abi:"name", else the camel-cased name.
 func argField(t reflect.Type, name string) (reflect.StructField, bool) {
 	for f := range t.Fields() {
-		// go-ethereum's test, which also skips names with a non-ASCII initial
-		exported := f.Name[:1] == strings.ToUpper(f.Name[:1])
-		if tag, ok := f.Tag.Lookup("abi"); ok && tag == name && exported {
+		if tag, ok := abiTag(f); ok && tag == name {
 			return f, true
 		}
 	}
 
 	return t.FieldByName(abi.ToCamelCase(name))
+}
+
+// abiTag returns the abi tag go-ethereum reads on f.
+func abiTag(f reflect.StructField) (string, bool) {
+	// go-ethereum's exported test, which also skips names with a non-ASCII initial
+	if f.Name[:1] != strings.ToUpper(f.Name[:1]) {
+		return "", false
+	}
+
+	return f.Tag.Lookup("abi")
+}
+
+// checkNames rejects a dst, which passed checkShape for t, that
+// abi.Arguments.Pack can't take every tuple component from: Pack takes a
+// component from the field named for it, so in each struct field i must be
+// the one component i names, and carry no abi tag but that name.
+func checkNames(dst reflect.Type, t *abi.Type) error {
+	switch {
+	case t.T == abi.TupleTy && dst.Kind() == reflect.Struct:
+		for i, name := range t.TupleRawNames {
+			f := dst.Field(i)
+			// Pack refuses an empty tag, or one naming no component or one already taken
+			if tag, ok := abiTag(f); ok && tag != name {
+				return fmt.Errorf("%w: field %s is tagged %q, not %q", ErrShapeMismatch, f.Name, tag, name)
+			}
+			if g, ok := argField(dst, name); !ok || len(g.Index) != 1 || g.Index[0] != i {
+				return fmt.Errorf("%w: field %s is not named for component %q", ErrShapeMismatch, f.Name, name)
+			}
+			if err := checkNames(f.Type, t.TupleElems[i]); err != nil {
+				return err
+			}
+		}
+	case t.T == abi.SliceTy || t.T == abi.ArrayTy:
+		if dst.Kind() == reflect.Slice || dst.Kind() == reflect.Array {
+			return checkNames(dst.Elem(), t.Elem)
+		}
+	}
+
+	return nil
 }
 
 // shapeMatches checks dst against abiType as go-ethereum's set, which
