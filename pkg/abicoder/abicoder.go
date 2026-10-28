@@ -32,7 +32,10 @@ type Coder[T any] struct {
 // one field per component, in order, named abi.ToCamelCase of the component.
 // Where two components camel-case to one name abigen suffixes the second
 // field, which go-ethereum can't encode either, so New refuses it.
-func New[T any](arg abi.Argument) (*Coder[T], error) {
+func New[T any](arg abi.Argument) (c *Coder[T], err error) {
+	// go-ethereum's reflection panics on some hand-built types
+	defer panics.Recover(&err)
+
 	if arg.Indexed {
 		return nil, errIndexedArg
 	}

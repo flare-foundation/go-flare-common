@@ -157,6 +157,37 @@ func TestNewRefusesIndexed(t *testing.T) {
 	require.ErrorIs(t, err, errIndexedArg)
 }
 
+// TestNewRecoversPanic checks that New returns an error for hand-built types
+// go-ethereum's reflection panics on.
+func TestNewRecoversPanic(t *testing.T) {
+	type pair struct {
+		A uint64
+		B string
+	}
+
+	u64 := newType(t, "uint64")
+	noGoType := abi.Type{T: abi.TupleTy, TupleElems: []*abi.Type{&u64}, TupleRawNames: []string{"a"}}
+	extraNames := tupleType(t, []abi.ArgumentMarshaling{{Name: "a", Type: "uint64"}, {Name: "b", Type: "string"}})
+	extraNames.TupleRawNames = append(extraNames.TupleRawNames, "c")
+
+	tests := []struct {
+		name  string
+		build func() (any, error)
+	}{
+		{"noGoType", func() (any, error) { return New[struct{ A uint64 }](abi.Argument{Type: noGoType}) }},
+		{"extraNames", func() (any, error) { return New[pair](abi.Argument{Type: extraNames}) }},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			var c any
+			var err error
+			require.NotPanics(t, func() { c, err = tc.build() })
+			require.Error(t, err)
+			require.Nil(t, c)
+		})
+	}
+}
+
 // coderCase round-trips a sample through a Coder for arg.
 type coderCase struct {
 	name string
