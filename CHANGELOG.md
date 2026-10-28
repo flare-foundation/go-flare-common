@@ -16,6 +16,10 @@
 - `abicoder` refuses an `abi.Type` built by hand with go-ethereum's unused `HashTy` as unsupported.
   No ABI parses to it and go-ethereum can't encode it, so decoding it failed in the round trip after decoding.
 
+### Deprecated
+
+- `structs.Decode` and `structs.DecodeTo`: use `abicoder.Decode` and `abicoder.DecodeTo`, or an `abicoder.Coder` from `abicoder.New` to decode one type repeatedly.
+
 ## [v1.5.0](https://github.com/flare-foundation/go-flare-common/tree/v1.5.0) - 2026-10-16
 
 ### Added
