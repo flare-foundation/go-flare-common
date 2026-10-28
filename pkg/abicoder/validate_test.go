@@ -1,12 +1,14 @@
 package abicoder
 
 import (
+	"fmt"
 	"math/big"
 	"reflect"
 	"testing"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/stretchr/testify/require"
 )
 
@@ -234,41 +236,26 @@ func convertPanics[T any](in any) (panicked bool) {
 	return false
 }
 
-// TestCheckShapeRejectsPointers checks that a pointer to anything but a big.Int
-// is refused exactly where go-ethereum, which never allocates one, panics
-// decoding through it.
-func TestCheckShapeRejectsPointers(t *testing.T) {
-	type bigPtr *big.Int
-	type uintField struct{ A *uint64 }
-	type tupleField struct{ A *struct{ V uint64 } }
+// shapeCase is a destination type checked for arg against what go-ethereum's
+// ConvertType does with the decoding of sample.
+type shapeCase struct {
+	name     string
+	arg      abi.Argument
+	sample   any
+	shape    func(abi.Type) error
+	panics   func(any) bool
+	rejected bool
+}
 
-	u64 := abi.Argument{Name: "a", Type: newType(t, "uint64")}
-	u256 := abi.Argument{Type: newType(t, "uint256")}
-	tuple := abi.Argument{Type: tupleType(t, []abi.ArgumentMarshaling{{Name: "a", Type: "uint64"}})}
-	nested := abi.Argument{Type: tupleType(t, []abi.ArgumentMarshaling{
-		{Name: "a", Type: "tuple", Components: []abi.ArgumentMarshaling{{Name: "v", Type: "uint64"}}},
-	})}
+func newShapeCase[T any](name string, arg abi.Argument, sample any, rejected bool) shapeCase {
+	return shapeCase{name, arg, sample, checkShape[T], convertPanics[T], rejected}
+}
 
-	tests := []struct {
-		name     string
-		arg      abi.Argument
-		sample   any
-		shape    func(abi.Type) error
-		panics   func(any) bool
-		rejected bool
-	}{
-		{"value", u64, uint64(1), checkShape[*uint64], convertPanics[*uint64], true},
-		{"struct", tuple, struct{ A uint64 }{1}, checkShape[*struct{ A uint64 }], convertPanics[*struct{ A uint64 }], true},
-		{"field", tuple, struct{ A uint64 }{1}, checkShape[uintField], convertPanics[uintField], true},
-		{"tupleField", nested, struct{ A struct{ V uint64 } }{}, checkShape[tupleField], convertPanics[tupleField], true},
-		{"arrayElem", abi.Argument{Type: newType(t, "uint64[2]")}, [2]uint64{}, checkShape[[2]*uint64], convertPanics[[2]*uint64], true},
-		{"sliceElem", abi.Argument{Type: newType(t, "uint64[]")}, []uint64{1}, checkShape[[]*uint64], convertPanics[[]*uint64], true},
-		{"hash", abi.Argument{Type: newType(t, "bytes32")}, common.Hash{1}, checkShape[*common.Hash], convertPanics[*common.Hash], true},
-		{"bigIntPtr", u256, big.NewInt(1), checkShape[**big.Int], convertPanics[**big.Int], true},
-		{"bigInt", u256, big.NewInt(1), checkShape[*big.Int], convertPanics[*big.Int], false},
-		{"namedBigInt", u256, big.NewInt(1), checkShape[bigPtr], convertPanics[bigPtr], false},
-	}
-	for _, tc := range tests {
+// runShapeCases checks that checkShape refuses each case exactly where
+// go-ethereum panics converting into it.
+func runShapeCases(t *testing.T, cases []shapeCase) {
+	t.Helper()
+	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
 			args := abi.Arguments{tc.arg}
 			packed, err := args.Pack(tc.sample)
@@ -284,6 +271,35 @@ func TestCheckShapeRejectsPointers(t *testing.T) {
 			}
 		})
 	}
+}
+
+// TestCheckShapeRejectsPointers checks that a pointer to anything but a big.Int
+// is refused exactly where go-ethereum, which never allocates one, panics
+// decoding through it.
+func TestCheckShapeRejectsPointers(t *testing.T) {
+	type bigPtr *big.Int
+	type uintField struct{ A *uint64 }
+	type tupleField struct{ A *struct{ V uint64 } }
+
+	u64 := abi.Argument{Name: "a", Type: newType(t, "uint64")}
+	u256 := abi.Argument{Type: newType(t, "uint256")}
+	tuple := abi.Argument{Type: tupleType(t, []abi.ArgumentMarshaling{{Name: "a", Type: "uint64"}})}
+	nested := abi.Argument{Type: tupleType(t, []abi.ArgumentMarshaling{
+		{Name: "a", Type: "tuple", Components: []abi.ArgumentMarshaling{{Name: "v", Type: "uint64"}}},
+	})}
+
+	runShapeCases(t, []shapeCase{
+		newShapeCase[*uint64]("value", u64, uint64(1), true),
+		newShapeCase[*struct{ A uint64 }]("struct", tuple, struct{ A uint64 }{1}, true),
+		newShapeCase[uintField]("field", tuple, struct{ A uint64 }{1}, true),
+		newShapeCase[tupleField]("tupleField", nested, struct{ A struct{ V uint64 } }{}, true),
+		newShapeCase[[2]*uint64]("arrayElem", abi.Argument{Type: newType(t, "uint64[2]")}, [2]uint64{}, true),
+		newShapeCase[[]*uint64]("sliceElem", abi.Argument{Type: newType(t, "uint64[]")}, []uint64{1}, true),
+		newShapeCase[*common.Hash]("hash", abi.Argument{Type: newType(t, "bytes32")}, common.Hash{1}, true),
+		newShapeCase[**big.Int]("bigIntPtr", u256, big.NewInt(1), true),
+		newShapeCase[*big.Int]("bigInt", u256, big.NewInt(1), false),
+		newShapeCase[bigPtr]("namedBigInt", u256, big.NewInt(1), false),
+	})
 
 	packed, err := Encode(u64, uint64(1))
 	require.NoError(t, err)
@@ -298,6 +314,78 @@ func TestCheckShapeRejectsPointers(t *testing.T) {
 	x := uint64(1)
 	_, err = Encode(tuple, uintField{&x})
 	require.NoError(t, err)
+}
+
+// TestCheckShapeChecksLeaves checks that a leaf is refused exactly where
+// go-ethereum can't assign the decoded value to it.
+func TestCheckShapeChecksLeaves(t *testing.T) {
+	type amount big.Int
+	type count uint64
+	type pair struct {
+		A uint64
+		B string
+	}
+	type renamed struct {
+		P uint64
+		Q string
+	}
+	type wrongKind struct {
+		A string
+		B string
+	}
+	type unexported struct {
+		A uint64
+		b string //nolint:unused // go-ethereum can't set it
+	}
+
+	arg := func(solType string) abi.Argument { return abi.Argument{Type: newType(t, solType)} }
+	u256 := arg("uint256")
+	u64 := arg("uint64")
+	components := []abi.ArgumentMarshaling{{Name: "a", Type: "uint64"}, {Name: "b", Type: "string"}}
+	tuple := abi.Argument{Type: tupleType(t, components)}
+	tuples, err := abi.NewType("tuple[]", "", components)
+	require.NoError(t, err)
+	bigTuple := abi.Argument{Type: tupleType(t, []abi.ArgumentMarshaling{{Name: "a", Type: "uint256"}})}
+
+	runShapeCases(t, []shapeCase{
+		newShapeCase[big.Int]("bigIntValue", u256, big.NewInt(1), false),
+		newShapeCase[amount]("namedBigIntValue", u256, big.NewInt(1), false),
+		newShapeCase[uint64]("uint64ForUint256", u256, big.NewInt(1), true),
+		newShapeCase[string]("stringForUint256", u256, big.NewInt(1), true),
+		newShapeCase[any]("any", u256, big.NewInt(1), false),
+		newShapeCase[fmt.Stringer]("implemented", u256, big.NewInt(1), false),
+		newShapeCase[error]("notImplemented", u256, big.NewInt(1), true),
+		newShapeCase[count]("namedUint64", u64, uint64(1), true),
+		newShapeCase[int]("int", u64, uint64(1), true),
+		newShapeCase[uint32]("narrower", u64, uint64(1), true),
+		newShapeCase[uint32]("bigIntWidth", arg("uint24"), big.NewInt(1), true),
+		newShapeCase[common.Hash]("hash", arg("bytes32"), common.Hash{1}, false),
+		newShapeCase[[]byte]("sliceForBytes32", arg("bytes32"), common.Hash{1}, true),
+		newShapeCase[[20]byte]("addressArray", arg("address"), common.Address{1}, false),
+		newShapeCase[hexutil.Bytes]("hexBytes", arg("bytes"), []byte{1}, false),
+		newShapeCase[string]("stringForBytes", arg("bytes"), []byte{1}, true),
+		newShapeCase[[]byte]("bytesForString", arg("string"), "x", true),
+		newShapeCase[int]("intForBool", arg("bool"), true, true),
+		newShapeCase[[]any]("anyElem", arg("uint64[]"), []uint64{1}, false),
+		newShapeCase[[]int]("sliceElem", arg("uint64[]"), []uint64{1}, true),
+		newShapeCase[[2]int]("arrayElem", arg("uint64[2]"), [2]uint64{1, 2}, true),
+		newShapeCase[pair]("tuple", tuple, pair{1, "x"}, false),
+		newShapeCase[renamed]("renamed", tuple, pair{1, "x"}, false),
+		newShapeCase[wrongKind]("tupleField", tuple, pair{1, "x"}, true),
+		newShapeCase[unexported]("unexported", tuple, pair{1, "x"}, true),
+		newShapeCase[struct{ A big.Int }]("bigIntField", bigTuple, struct{ A *big.Int }{big.NewInt(1)}, true),
+		newShapeCase[struct{ A any }]("anyField", bigTuple, struct{ A *big.Int }{big.NewInt(1)}, false),
+		newShapeCase[[]wrongKind]("tupleSliceField", abi.Argument{Type: tuples}, []pair{{1, "x"}}, true),
+	})
+
+	packed, err := Encode(tuple, pair{1, "x"})
+	require.NoError(t, err)
+	_, err = Decode[wrongKind](tuple, packed)
+	require.ErrorIs(t, err, ErrShapeMismatch)
+	_, err = New[wrongKind](tuple)
+	require.ErrorIs(t, err, ErrShapeMismatch)
+	_, err = DecodeArguments[struct{ A string }](abi.Arguments{u64}, make([]byte, 32))
+	require.ErrorIs(t, err, ErrShapeMismatch)
 }
 
 func roundTrip[T any](t *testing.T, solType string, v T) {

@@ -433,9 +433,9 @@ func TestDecodeArgumentsRejects(t *testing.T) {
 	_, err = DecodeArguments[struct{ X [2]staticPair }](wrapped, make([]byte, 128))
 	require.ErrorIs(t, err, ErrShapeMismatch)
 
-	// go-ethereum's Copy panics on this one: a struct with no first field
+	// go-ethereum's Copy panics on a struct with no first field
 	_, err = DecodeArguments[struct{}](abi.Arguments{{Type: newType(t, "uint256")}}, make([]byte, 32))
-	require.ErrorContains(t, err, "recovered panic")
+	require.ErrorIs(t, err, ErrShapeMismatch)
 
 	kept := sendArgs{Amount: big.NewInt(9)}
 	require.Error(t, DecodeArgumentsTo(sendArguments, dirty, &kept))

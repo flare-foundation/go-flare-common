@@ -36,13 +36,15 @@ func DecodeTo[T any](arg abi.Argument, data []byte, dest *T) error {
 //
 // T's array lengths and struct field counts must match the ABI argument, T
 // may have a Go array only where the argument has a fixed-size array, bytesN,
-// address or function, and no pointer but a *big.Int, else ErrShapeMismatch is
-// returned. Tuples map to structs by position, and a struct field whose name
-// or abi tag matches a component at another position, where [Encode] would
-// take it from, is ErrShapeMismatch. Data that isn't the canonical encoding of
-// a value is rejected with ErrNonCanonical, and data too short for one with
-// ErrTruncated, both before decoding. When T is an interface no shape check is
-// performed and tuples decode to go-ethereum's json-tagged anonymous struct.
+// address or function, no pointer but a *big.Int and no unexported field, and
+// each decoded value must be assignable to its place in T, else
+// ErrShapeMismatch is returned. Tuples map to structs by position, and a
+// struct field whose name or abi tag matches a component at another position,
+// where [Encode] would take it from, is ErrShapeMismatch. Data that isn't the
+// canonical encoding of a value is rejected with ErrNonCanonical, and data too
+// short for one with ErrTruncated, both before decoding. When T is an
+// interface the decoded value must implement it, and tuples decode to
+// go-ethereum's json-tagged anonymous struct.
 func Decode[T any](arg abi.Argument, data []byte) (t T, err error) {
 	defer panics.Recover(&err)
 
