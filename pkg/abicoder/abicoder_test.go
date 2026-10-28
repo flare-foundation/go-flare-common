@@ -150,6 +150,13 @@ func TestNewRefusesUnsupportedTypes(t *testing.T) {
 	require.ErrorIs(t, err, errUnsupportedType)
 }
 
+// TestNewRefusesIndexed checks that New refuses an event's indexed argument,
+// which go-ethereum's Unpack skips, failing every decode.
+func TestNewRefusesIndexed(t *testing.T) {
+	_, err := New[uint64](abi.Argument{Type: newType(t, "uint64"), Indexed: true})
+	require.ErrorIs(t, err, errIndexedArg)
+}
+
 // TestCoderChecksData checks that the Coder's calls still check the data.
 func TestCoderChecksData(t *testing.T) {
 	c, err := New[uint64](abi.Argument{Type: newType(t, "uint64")})

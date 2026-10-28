@@ -9,6 +9,10 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/panics"
 )
 
+// errIndexedArg reports an indexed argument, an event topic go-ethereum's
+// Unpack skips.
+var errIndexedArg = errors.New("indexed abi argument: a Coder is for values, not event topics")
+
 type Coder[T any] struct {
 	args abi.Arguments
 }
@@ -18,6 +22,9 @@ type Coder[T any] struct {
 // and one Encode can't take every tuple component from, so Encode and Decode
 // check only the data.
 //
+// A Coder is for values such as structs, not events, so New refuses an
+// indexed arg.
+//
 // The fields of each struct in T must be in the order of the tuple's
 // components and named for them, by an abi tag or as abi.ToCamelCase names
 // them: Decode fills the fields by position, while Encode takes each component
@@ -26,6 +33,10 @@ type Coder[T any] struct {
 // Where two components camel-case to one name abigen suffixes the second
 // field, which go-ethereum can't encode either, so New refuses it.
 func New[T any](arg abi.Argument) (*Coder[T], error) {
+	if arg.Indexed {
+		return nil, errIndexedArg
+	}
+
 	if err := checkArgType(arg.Type); err != nil {
 		return nil, err
 	}
