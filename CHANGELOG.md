@@ -8,6 +8,8 @@
   `MustABI` takes the metadata of an abigen v1 or v2 binding.
 - `abicoder.Coder` encodes and decodes a Go type as one ABI argument: `abicoder.New` and `MustNew` check once that the type fits the argument, so `Encode` and `Decode` check only the data.
   Each struct field must be named for the tuple component at its position, as abigen's structs are, and `New` refuses an indexed (event) argument.
+- `abicoder.ArgumentsDecoder` decodes an argument list as `DecodeArguments` does: `abicoder.NewArgumentsDecoder` and `MustNewArgumentsDecoder` check once that the type fits the arguments, so `Decode` and `DecodeTo` check only the data.
+  `NewArgumentsDecoder` refuses an indexed (event) argument, and a type with no place for an argument with `ErrShapeMismatch`.
 
 ### Changed
 

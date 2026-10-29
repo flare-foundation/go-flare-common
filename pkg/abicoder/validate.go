@@ -15,7 +15,8 @@ import (
 // array where the type has none, a field named for a tuple component at
 // another position, an unexported field, a pointer to anything but a big.Int,
 // or a type the decoded value can't be assigned to. New also returns it for a
-// struct field not named for the tuple component at its position.
+// struct field not named for the tuple component at its position, and
+// NewArgumentsDecoder for a destination with no place for an argument.
 var ErrShapeMismatch = errors.New("destination shape does not match ABI type")
 
 // ErrNonCanonical indicates ABI input that is not the canonical encoding of its

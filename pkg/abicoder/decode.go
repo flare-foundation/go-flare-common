@@ -70,13 +70,30 @@ func Decode[T any](arg abi.Argument, data []byte) (t T, err error) {
 
 // unpack checks that data is the canonical encoding of args and decodes it.
 func unpack(args abi.Arguments, data []byte) ([]any, error) {
-	for _, arg := range args {
-		if err := checkArgType(arg.Type); err != nil {
-			return nil, err
+	if err := checkTypes(args); err != nil {
+		return nil, err
+	}
+
+	return unpackData(args, data)
+}
+
+// checkTypes checks that args' types are initialized and supported.
+func checkTypes(args abi.Arguments) error {
+	for i := range args {
+		if err := checkArgType(args[i].Type); err != nil {
+			return err
+		}
+		if err := checkType(&args[i].Type); err != nil {
+			return err
 		}
 	}
 
-	if err := checkLayout(args, data); err != nil {
+	return nil
+}
+
+// unpackData is unpack for args whose types passed checkTypes.
+func unpackData(args abi.Arguments, data []byte) ([]any, error) {
+	if err := checkData(args, data); err != nil {
 		return nil, err
 	}
 

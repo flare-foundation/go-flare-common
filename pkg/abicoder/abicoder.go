@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"slices"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/flare-foundation/go-flare-common/pkg/panics"
@@ -11,7 +12,7 @@ import (
 
 // errIndexedArg reports an indexed argument, an event topic go-ethereum's
 // Unpack skips.
-var errIndexedArg = errors.New("indexed abi argument: a Coder is for values, not event topics")
+var errIndexedArg = errors.New("indexed abi argument: an event topic, not a value")
 
 // Coder encodes and decodes T as one ABI argument. [New] checks T against the
 // argument once, so its methods check only the data. A Coder is safe for
@@ -98,16 +99,8 @@ func (c *Coder[T]) Encode(data T) (encoded []byte, err error) {
 func (c *Coder[T]) Decode(data []byte) (t T, err error) {
 	defer panics.Recover(&err)
 
-	if err := checkData(c.args, data); err != nil {
-		return t, err
-	}
-
-	values, err := c.args.Unpack(data)
+	values, err := unpackData(c.args, data)
 	if err != nil {
-		return t, err
-	}
-
-	if err := checkEncodeDecode(&c.args, data, values); err != nil {
 		return t, err
 	}
 
@@ -131,6 +124,94 @@ func (c *Coder[T]) DecodeTo(data []byte, dest *T) error {
 	}
 
 	t, err := c.Decode(data)
+	if err != nil {
+		return err
+	}
+
+	*dest = t
+
+	return nil
+}
+
+// ArgumentsDecoder decodes T from the encoding of an argument list, as
+// [DecodeArguments] does. [NewArgumentsDecoder] checks T against the arguments
+// once, so its methods check only the data. An ArgumentsDecoder is safe for
+// concurrent use; the zero ArgumentsDecoder is not usable.
+type ArgumentsDecoder[T any] struct {
+	args abi.Arguments
+}
+
+// NewArgumentsDecoder returns an ArgumentsDecoder for args and T. It refuses
+// args with a type [DecodeArguments] doesn't support or an indexed argument,
+// and with ErrShapeMismatch a T DecodeArguments can't decode any data into.
+// The ArgumentsDecoder keeps args' types, which must not be modified.
+func NewArgumentsDecoder[T any](args abi.Arguments) (d *ArgumentsDecoder[T], err error) {
+	// go-ethereum's reflection panics on some hand-built types
+	defer panics.Recover(&err)
+
+	for _, arg := range args {
+		if arg.Indexed {
+			return nil, errIndexedArg
+		}
+	}
+
+	if err := checkTypes(args); err != nil {
+		return nil, err
+	}
+
+	if err := checkArgsShape(args, reflect.TypeFor[T]()); err != nil {
+		return nil, err
+	}
+
+	// Copy fails for any data where T has no place for an argument
+	zeros := make([]any, len(args))
+	for i := range args {
+		zeros[i] = reflect.Zero(args[i].Type.GetType()).Interface()
+	}
+	if err := args.Copy(new(T), zeros); err != nil {
+		return nil, fmt.Errorf("%w: copying into %v: %w", ErrShapeMismatch, reflect.TypeFor[T](), err)
+	}
+
+	return &ArgumentsDecoder[T]{args: slices.Clone(args)}, nil
+}
+
+// MustNewArgumentsDecoder is like [NewArgumentsDecoder] but panics on error,
+// for package-level variables and init functions.
+func MustNewArgumentsDecoder[T any](args abi.Arguments) *ArgumentsDecoder[T] {
+	d, err := NewArgumentsDecoder[T](args)
+	if err != nil {
+		panic(err)
+	}
+
+	return d
+}
+
+// Decode decodes data as [DecodeArguments] does, without checking T again.
+func (d *ArgumentsDecoder[T]) Decode(data []byte) (t T, err error) {
+	defer panics.Recover(&err)
+
+	values, err := unpackData(d.args, data)
+	if err != nil {
+		return t, err
+	}
+
+	// a copy that fails part way leaves fields written, so t stays zero until it succeeds
+	var out T
+	if err := d.args.Copy(&out, values); err != nil {
+		return t, fmt.Errorf("copying into %v: %w", reflect.TypeFor[T](), err)
+	}
+
+	return out, nil
+}
+
+// DecodeTo decodes data as [ArgumentsDecoder.Decode] does and writes it to
+// dest, a non-nil pointer, leaving dest unchanged on error.
+func (d *ArgumentsDecoder[T]) DecodeTo(data []byte, dest *T) error {
+	if dest == nil {
+		return errNonPointer
+	}
+
+	t, err := d.Decode(data)
 	if err != nil {
 		return err
 	}
