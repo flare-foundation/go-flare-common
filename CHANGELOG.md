@@ -10,6 +10,7 @@
   Each struct field must be named for the tuple component at its position, as abigen's structs are, and `New` refuses an indexed (event) argument.
 - `abicoder.ArgumentsDecoder` decodes an argument list as `DecodeArguments` does: `abicoder.NewArgumentsDecoder` and `MustNewArgumentsDecoder` check once that the type fits the arguments, so `Decode` and `DecodeTo` check only the data.
   `NewArgumentsDecoder` refuses an indexed (event) argument, and a type with no place for an argument with `ErrShapeMismatch`.
+- `Coder.Decode` and `ArgumentsDecoder.Decode` don't re-encode the decoded values to compare them with the input, as `Decode` and `DecodeArguments` do: with indexed arguments refused, the layout check alone refuses the same inputs.
 
 ### Changed
 

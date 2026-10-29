@@ -74,7 +74,17 @@ func unpack(args abi.Arguments, data []byte) ([]any, error) {
 		return nil, err
 	}
 
-	return unpackData(args, data)
+	values, err := unpackData(args, data)
+	if err != nil {
+		return nil, err
+	}
+
+	// checkData already refuses what this does, but for indexed args, which Unpack skips
+	if err := checkEncodeDecode(&args, data, values); err != nil {
+		return nil, err
+	}
+
+	return values, nil
 }
 
 // checkTypes checks that args' types are initialized and supported.
@@ -91,22 +101,14 @@ func checkTypes(args abi.Arguments) error {
 	return nil
 }
 
-// unpackData is unpack for args whose types passed checkTypes.
+// unpackData is unpack without re-encoding, for args whose types passed
+// checkTypes and none of which is indexed.
 func unpackData(args abi.Arguments, data []byte) ([]any, error) {
 	if err := checkData(args, data); err != nil {
 		return nil, err
 	}
 
-	values, err := args.Unpack(data)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := checkEncodeDecode(&args, data, values); err != nil {
-		return nil, err
-	}
-
-	return values, nil
+	return args.Unpack(data)
 }
 
 // checkEncodeDecode encodes decodedSlice using args and compares it to data.
