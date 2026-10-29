@@ -10,6 +10,9 @@ import (
 )
 
 // Encode is an alias for [abicoder.Encode].
+//
+// Deprecated: Use [abicoder.Encode], or an [abicoder.Coder] from [abicoder.New]
+// to encode one type repeatedly.
 func Encode(arg abi.Argument, data any) ([]byte, error) {
 	return abicoder.Encode(arg, data)
 }
