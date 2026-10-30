@@ -1,0 +1,472 @@
+package abicoder
+
+import (
+	"bytes"
+	"math/big"
+	"testing"
+
+	"github.com/ethereum/go-ethereum/accounts/abi"
+	"github.com/ethereum/go-ethereum/common"
+	relayv1 "github.com/flare-foundation/go-flare-common/pkg/contracts/relay"
+	relayv2 "github.com/flare-foundation/go-flare-common/pkg/contracts/v2/relay"
+	"github.com/stretchr/testify/require"
+)
+
+// packFails reports whether go-ethereum's Pack, which Encode calls, fails on v.
+func packFails(arg abi.Argument, v any) (failed bool) {
+	defer func() {
+		if recover() != nil {
+			failed = true
+		}
+	}()
+	_, err := abi.Arguments{arg}.Pack(v)
+
+	return err != nil
+}
+
+// nameCase is a sample of a struct type checked for arg by New against what
+// go-ethereum's Pack does with it.
+type nameCase struct {
+	name     string
+	arg      abi.Argument
+	sample   any
+	build    func(abi.Argument) error
+	rejected bool
+}
+
+func newNameCase[T any](name string, arg abi.Argument, sample T, rejected bool) nameCase {
+	build := func(arg abi.Argument) error {
+		_, err := New[T](arg)
+		return err
+	}
+
+	return nameCase{name, arg, sample, build, rejected}
+}
+
+// TestNewChecksNames checks that New refuses a struct exactly where
+// go-ethereum's Pack can't take every tuple component from it.
+func TestNewChecksNames(t *testing.T) {
+	type pair struct {
+		A uint64
+		B string
+	}
+	type tagged struct {
+		X uint64 `abi:"a"`
+		Y string `abi:"b"`
+	}
+	type renamed struct {
+		P uint64
+		Q string
+	}
+	type strayTag struct {
+		A uint64 `abi:"c"`
+		B string
+	}
+	type emptyTag struct {
+		A uint64 `abi:""`
+		B string
+	}
+	type inner struct{ W uint64 }
+	type nested struct {
+		A uint64
+		B inner
+	}
+	// as abigen names fields for components a_b and aB
+	type suffixed struct{ AB, AB0 uint64 }
+	type suffixTagged struct {
+		AB uint64
+		X  uint64 `abi:"aB"`
+	}
+	// go-ethereum's own decode type for a_b and aB
+	type decodeType = struct {
+		AB  uint64 `json:"a_b"`
+		AB0 uint64 `json:"aB"`
+	}
+
+	components := []abi.ArgumentMarshaling{{Name: "a", Type: "uint64"}, {Name: "b", Type: "string"}}
+	tuple := abi.Argument{Type: tupleType(t, components)}
+	tuples, err := abi.NewType("tuple[]", "", components)
+	require.NoError(t, err)
+	nestedTuple := abi.Argument{Type: tupleType(t, []abi.ArgumentMarshaling{
+		{Name: "a", Type: "uint64"},
+		{Name: "b", Type: "tuple", Components: []abi.ArgumentMarshaling{{Name: "v", Type: "uint64"}}},
+	})}
+	collision := abi.Argument{Type: tupleType(t, []abi.ArgumentMarshaling{{Name: "a_b", Type: "uint64"}, {Name: "aB", Type: "uint64"}})}
+
+	tests := []nameCase{
+		newNameCase("pair", tuple, pair{1, "x"}, false),
+		newNameCase("tagged", tuple, tagged{1, "x"}, false),
+		newNameCase("renamed", tuple, renamed{1, "x"}, true),
+		newNameCase("strayTag", tuple, strayTag{1, "x"}, true),
+		newNameCase("emptyTag", tuple, emptyTag{1, "x"}, true),
+		newNameCase("nested", nestedTuple, nested{1, inner{2}}, true),
+		newNameCase("slice", abi.Argument{Type: tuples}, []pair{{1, "x"}}, false),
+		newNameCase("sliceRenamed", abi.Argument{Type: tuples}, []renamed{{1, "x"}}, true),
+		newNameCase("suffixed", collision, suffixed{1, 2}, true),
+		newNameCase("suffixTagged", collision, suffixTagged{1, 2}, false),
+		newNameCase("decodeType", collision, decodeType{1, 2}, true),
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			require.Equal(t, tc.rejected, packFails(tc.arg, tc.sample))
+			if tc.rejected {
+				require.ErrorIs(t, tc.build(tc.arg), ErrShapeMismatch)
+			} else {
+				require.NoError(t, tc.build(tc.arg))
+			}
+		})
+	}
+
+	// Decode fills fields by position, so it still takes a renamed struct
+	packed, err := Encode(tuple, pair{1, "x"})
+	require.NoError(t, err)
+	out, err := Decode[renamed](tuple, packed)
+	require.NoError(t, err)
+	require.Equal(t, renamed{1, "x"}, out)
+}
+
+// TestNewRefusesUnsupportedTypes checks that New refuses the types Decode
+// refuses whatever the data, before GetType panics on some of them.
+func TestNewRefusesUnsupportedTypes(t *testing.T) {
+	tests := []struct {
+		name string
+		typ  abi.Type
+	}{
+		{"zeroLengthArray", newType(t, "uint256[0]")},
+		{"emptyTuple", newType(t, "tuple")},
+		{"handBuiltTuple", abi.Type{T: abi.TupleTy}},
+		{"fixedPoint", abi.Type{T: abi.FixedPointTy, Size: 128}},
+		{"hash", abi.Type{T: abi.HashTy}},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			_, err := New[any](abi.Argument{Type: tc.typ})
+			require.ErrorIs(t, err, errUnsupportedType)
+		})
+	}
+
+	// before decoding: go-ethereum decodes HashTy but can't encode it
+	_, err := Decode[[32]byte](abi.Argument{Type: abi.Type{T: abi.HashTy}}, make([]byte, 32))
+	require.ErrorIs(t, err, errUnsupportedType)
+}
+
+// TestNewRefusesIndexed checks that New refuses an event's indexed argument,
+// which go-ethereum's Unpack skips, failing every decode.
+func TestNewRefusesIndexed(t *testing.T) {
+	_, err := New[uint64](abi.Argument{Type: newType(t, "uint64"), Indexed: true})
+	require.ErrorIs(t, err, errIndexedArg)
+}
+
+// TestNewRecoversPanic checks that New returns an error for hand-built types
+// go-ethereum's reflection panics on.
+func TestNewRecoversPanic(t *testing.T) {
+	type pair struct {
+		A uint64
+		B string
+	}
+
+	u64 := newType(t, "uint64")
+	noGoType := abi.Type{T: abi.TupleTy, TupleElems: []*abi.Type{&u64}, TupleRawNames: []string{"a"}}
+	extraNames := tupleType(t, []abi.ArgumentMarshaling{{Name: "a", Type: "uint64"}, {Name: "b", Type: "string"}})
+	extraNames.TupleRawNames = append(extraNames.TupleRawNames, "c")
+
+	tests := []struct {
+		name  string
+		build func() (any, error)
+	}{
+		{"noGoType", func() (any, error) { return New[struct{ A uint64 }](abi.Argument{Type: noGoType}) }},
+		{"extraNames", func() (any, error) { return New[pair](abi.Argument{Type: extraNames}) }},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			var c any
+			var err error
+			require.NotPanics(t, func() { c, err = tc.build() })
+			require.Error(t, err)
+			require.Nil(t, c)
+		})
+	}
+}
+
+// coderCase round-trips a sample through a Coder for arg.
+type coderCase struct {
+	name string
+	run  func(*testing.T)
+}
+
+func newCoderCase[T any](name string, arg abi.Argument, v T) coderCase {
+	run := func(t *testing.T) {
+		t.Helper()
+		c, err := New[T](arg)
+		require.NoError(t, err)
+		packed, err := c.Encode(v)
+		require.NoError(t, err)
+		want, err := Encode(arg, v)
+		require.NoError(t, err)
+		require.Equal(t, want, packed)
+		got, err := c.Decode(packed)
+		require.NoError(t, err)
+		require.Equal(t, v, got)
+	}
+
+	return coderCase{name, run}
+}
+
+// TestNewAcceptsTuplesAndBasicTypes checks that a Coder takes tuples and basic
+// types, and encodes them as Encode does.
+func TestNewAcceptsTuplesAndBasicTypes(t *testing.T) {
+	type pair struct {
+		A uint64
+		B string
+	}
+	type nested struct {
+		A []pair
+		B [2][]byte
+	}
+
+	arg := func(solType string) abi.Argument { return abi.Argument{Type: newType(t, solType)} }
+	components := []abi.ArgumentMarshaling{{Name: "a", Type: "uint64"}, {Name: "b", Type: "string"}}
+	tuple := abi.Argument{Type: tupleType(t, components)}
+	tuples, err := abi.NewType("tuple[]", "", components)
+	require.NoError(t, err)
+	nestedTuple := abi.Argument{Type: tupleType(t, []abi.ArgumentMarshaling{
+		{Name: "a", Type: "tuple[]", Components: components},
+		{Name: "b", Type: "bytes[2]"},
+	})}
+
+	tests := []coderCase{
+		newCoderCase("string", arg("string"), "x"),
+		newCoderCase("bytes", arg("bytes"), []byte{1, 2}),
+		newCoderCase("bytes32", arg("bytes32"), common.Hash{1}),
+		newCoderCase("bytes32AsArray", arg("bytes32"), [32]byte{1}),
+		newCoderCase("bytes4", arg("bytes4"), [4]byte{1}),
+		newCoderCase("bool", arg("bool"), true),
+		newCoderCase("uint8", arg("uint8"), uint8(1)),
+		newCoderCase("uint64", arg("uint64"), uint64(1)),
+		newCoderCase("int8", arg("int8"), int8(-1)),
+		newCoderCase("uint24", arg("uint24"), big.NewInt(1)),
+		newCoderCase("uint256", arg("uint256"), big.NewInt(1)),
+		newCoderCase("int256", arg("int256"), big.NewInt(-1)),
+		newCoderCase("address", arg("address"), common.Address{1}),
+		newCoderCase("function", arg("function"), [24]byte{1}),
+		newCoderCase("uint8Slice", arg("uint8[]"), []uint8{1, 2}),
+		newCoderCase("stringSlice", arg("string[]"), []string{"x", "y"}),
+		newCoderCase("bytesSlice", arg("bytes[]"), [][]byte{{1}, {2}}),
+		newCoderCase("addressSlice", arg("address[]"), []common.Address{{1}}),
+		newCoderCase("uint8Array", arg("uint8[3]"), [3]uint8{1, 2, 3}),
+		newCoderCase("bytes32Pair", arg("bytes32[2]"), [2][32]byte{{1}, {2}}),
+		newCoderCase("tuple", tuple, pair{1, "x"}),
+		newCoderCase("tupleSlice", abi.Argument{Type: tuples}, []pair{{1, "x"}, {2, "y"}}),
+		newCoderCase("nested", nestedTuple, nested{[]pair{{1, "x"}}, [2][]byte{{1}, {2}}}),
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, tc.run)
+	}
+}
+
+// TestCoderChecksData checks that the Coder's calls still check the data.
+func TestCoderChecksData(t *testing.T) {
+	c, err := New[uint64](abi.Argument{Type: newType(t, "uint64")})
+	require.NoError(t, err)
+	packed, err := c.Encode(1)
+	require.NoError(t, err)
+
+	dirty := bytes.Clone(packed)
+	dirty[0] = 1 // padding
+	_, err = c.Decode(dirty)
+	require.ErrorIs(t, err, ErrNonCanonical)
+	_, err = c.Decode(packed[:31])
+	require.ErrorIs(t, err, ErrTruncated)
+	_, err = c.Decode(append(bytes.Clone(packed), 0))
+	require.ErrorIs(t, err, ErrNonCanonical)
+
+	// go-ethereum writes a 32-byte address whole, high bytes and all
+	addr, err := New[any](abi.Argument{Type: newType(t, "address")})
+	require.NoError(t, err)
+	_, err = addr.Encode(common.MaxHash)
+	require.ErrorIs(t, err, ErrNonCanonical)
+}
+
+// TestNewAcceptsAbigenStructs checks abigen's structs, v1 and v2, against the
+// tuple they were generated for.
+func TestNewAcceptsAbigenStructs(t *testing.T) {
+	v1, err := relayv1.RelayMetaData.GetAbi()
+	require.NoError(t, err)
+	v2, err := relayv2.RelayMetaData.ParseABI()
+	require.NoError(t, err)
+
+	policy := relayv1.IIRelaySigningPolicy{
+		RewardEpochId:      big.NewInt(1),
+		StartVotingRoundId: 2,
+		Threshold:          3,
+		Seed:               big.NewInt(4),
+		Voters:             []common.Address{{5}},
+		Weights:            []uint16{6},
+	}
+
+	c1, err := New[relayv1.IIRelaySigningPolicy](v1.Methods["setSigningPolicy"].Inputs[0])
+	require.NoError(t, err)
+	packed, err := c1.Encode(policy)
+	require.NoError(t, err)
+	got, err := c1.Decode(packed)
+	require.NoError(t, err)
+	require.Equal(t, policy, got)
+
+	c2, err := New[relayv2.IIRelaySigningPolicy](v2.Methods["setSigningPolicy"].Inputs[0])
+	require.NoError(t, err)
+	packed2, err := c2.Encode(relayv2.IIRelaySigningPolicy(policy))
+	require.NoError(t, err)
+	require.Equal(t, packed, packed2)
+}
+
+// TestArgumentsDecoder checks that an ArgumentsDecoder decodes as
+// DecodeArguments does and still checks the data.
+func TestArgumentsDecoder(t *testing.T) {
+	want := sendArgs{common.HexToAddress("0xc0"), []byte("hello"), []string{"a", "b"}, big.NewInt(42)}
+	packed, err := sendArguments.Pack(want.Sender, want.Message, want.Names, want.Amount)
+	require.NoError(t, err)
+
+	d := MustNewArgumentsDecoder[sendArgs](sendArguments)
+	got, err := d.Decode(packed)
+	require.NoError(t, err)
+	require.Equal(t, want, got)
+
+	var dest sendArgs
+	require.NoError(t, d.DecodeTo(packed, &dest))
+	require.Equal(t, want, dest)
+	require.ErrorIs(t, d.DecodeTo(packed, nil), errNonPointer)
+
+	dirty := bytes.Clone(packed)
+	dirty[0] = 1 // the address's padding
+	_, err = d.Decode(dirty)
+	require.ErrorIs(t, err, ErrNonCanonical)
+	_, err = d.Decode(packed[:len(packed)-32])
+	require.ErrorIs(t, err, ErrTruncated)
+	_, err = d.Decode(append(bytes.Clone(packed), 0))
+	require.ErrorIs(t, err, ErrNonCanonical)
+
+	kept := sendArgs{Amount: big.NewInt(9)}
+	require.Error(t, d.DecodeTo(dirty, &kept))
+	require.Equal(t, sendArgs{Amount: big.NewInt(9)}, kept)
+}
+
+func newArgsCase[T any](name string, args abi.Arguments, data []byte, refused bool) coderCase {
+	run := func(t *testing.T) {
+		t.Helper()
+		want, wantErr := DecodeArguments[T](args, data)
+		d, err := NewArgumentsDecoder[T](args)
+		if refused {
+			require.ErrorIs(t, err, ErrShapeMismatch)
+			require.Error(t, wantErr)
+			return
+		}
+		require.NoError(t, err)
+		require.NoError(t, wantErr)
+		got, err := d.Decode(data)
+		require.NoError(t, err)
+		require.Equal(t, want, got)
+	}
+
+	return coderCase{name, run}
+}
+
+// TestNewArgumentsDecoderMatchesDecodeArguments checks that
+// NewArgumentsDecoder refuses a T exactly where DecodeArguments fails on
+// canonical data.
+func TestNewArgumentsDecoderMatchesDecodeArguments(t *testing.T) {
+	packed, err := sendArguments.Pack(common.HexToAddress("0xc0"), []byte("hello"), []string{"a"}, big.NewInt(1))
+	require.NoError(t, err)
+	args := abi.Arguments{{Name: "names", Type: newType(t, "string[2]")}, {Name: "amount", Type: newType(t, "uint256")}}
+	pairPacked, err := args.Pack([2]string{"a", "b"}, big.NewInt(5))
+	require.NoError(t, err)
+	single := abi.Arguments{{Name: "pair", Type: newType(t, "string")}}
+	singlePacked, err := single.Pack("BTC/USD")
+	require.NoError(t, err)
+	pairType := tupleType(t, []abi.ArgumentMarshaling{{Name: "a", Type: "uint256"}, {Name: "b", Type: "bool"}})
+	tupleArgs := abi.Arguments{{Name: "pair", Type: pairType}, {Name: "n", Type: newType(t, "uint256")}}
+	tuplePacked, err := tupleArgs.Pack(staticPair{big.NewInt(1), true}, big.NewInt(2))
+	require.NoError(t, err)
+	oneTuple := abi.Arguments{{Name: "pair", Type: pairType}}
+	oneTuplePacked, err := oneTuple.Pack(staticPair{big.NewInt(1), true})
+	require.NoError(t, err)
+
+	type reordered struct {
+		Amount *big.Int
+		Names  [2]string
+	}
+	type tagged struct {
+		X      [2]string `abi:"names"`
+		Amount *big.Int
+	}
+	type shorter struct {
+		Names  [1]string
+		Amount *big.Int
+	}
+	type missing struct{ Names [2]string }
+	type unexported struct {
+		names  [2]string //nolint:unused // go-ethereum can't set it
+		Amount *big.Int
+	}
+	type twiceTagged struct {
+		X      [2]string `abi:"names"`
+		Y      [2]string `abi:"names"`
+		Amount *big.Int
+	}
+
+	tests := []coderCase{
+		newArgsCase[sendArgs]("send", sendArguments, packed, false),
+		newArgsCase[reordered]("reordered", args, pairPacked, false),
+		newArgsCase[tagged]("tagged", args, pairPacked, false),
+		newArgsCase[[2]any]("array", args, pairPacked, false),
+		newArgsCase[string]("single", single, singlePacked, false),
+		newArgsCase[struct{ Pair string }]("singleFirstField", single, singlePacked, false),
+		newArgsCase[struct {
+			Pair staticPair
+			N    *big.Int
+		}]("tuple", tupleArgs, tuplePacked, false),
+		// Copy copies a single argument into a struct's first field
+		newArgsCase[struct{ P staticPair }]("singleTuple", oneTuple, oneTuplePacked, false),
+		newArgsCase[staticPair]("singleTupleUnwrapped", oneTuple, oneTuplePacked, true),
+		newArgsCase[shorter]("shorterArray", args, pairPacked, true),
+		newArgsCase[[3]any]("extraArrayElement", args, pairPacked, true),
+		newArgsCase[missing]("missingField", args, pairPacked, true),
+		newArgsCase[unexported]("unexportedField", args, pairPacked, true),
+		newArgsCase[twiceTagged]("twiceTagged", args, pairPacked, true),
+		newArgsCase[[]any]("slice", args, pairPacked, true),
+		newArgsCase[uint64]("scalar", args, pairPacked, true),
+		newArgsCase[struct{ pair string }]("unexportedFirstField", single, singlePacked, true),
+		newArgsCase[struct{}]("noFirstField", single, singlePacked, true),
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, tc.run)
+	}
+}
+
+// TestNewArgumentsDecoderRefusesArgs checks that NewArgumentsDecoder refuses
+// arguments no data decodes as, without panicking.
+func TestNewArgumentsDecoderRefusesArgs(t *testing.T) {
+	u64 := newType(t, "uint64")
+	noGoType := abi.Type{T: abi.TupleTy, TupleElems: []*abi.Type{&u64}, TupleRawNames: []string{"a"}}
+
+	tests := []struct {
+		name string
+		args abi.Arguments
+		want error
+	}{
+		{"indexed", abi.Arguments{{Name: "a", Type: u64}, {Name: "b", Type: u64, Indexed: true}}, errIndexedArg},
+		{"uninitialized", abi.Arguments{{Name: "a", Type: u64}, {Name: "b"}}, errUninitializedArg},
+		{"hash", abi.Arguments{{Name: "a", Type: abi.Type{T: abi.HashTy}}}, errUnsupportedType},
+		{"noGoType", abi.Arguments{{Name: "a", Type: noGoType}}, nil},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			var err error
+			require.NotPanics(t, func() { _, err = NewArgumentsDecoder[any](tc.args) })
+			require.Error(t, err)
+			if tc.want != nil {
+				require.ErrorIs(t, err, tc.want)
+			}
+			require.Panics(t, func() { MustNewArgumentsDecoder[any](tc.args) })
+		})
+	}
+}

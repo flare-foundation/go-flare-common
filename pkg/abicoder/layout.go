@@ -14,10 +14,8 @@ const word = 32
 
 var errUnsupportedType = errors.New("abi type not supported")
 
-// checkLayout checks that data is the canonical encoding of args without
-// decoding it: every offset is the one the encoder writes, every padding byte
-// is zero, every value fits its type, and nothing follows. go-ethereum decodes
-// a region once per offset pointing at it, so this bounds allocation by len(data).
+// checkLayout checks that args' types are supported and data is their
+// canonical encoding.
 func checkLayout(args abi.Arguments, data []byte) error {
 	for i := range args {
 		if err := checkType(&args[i].Type); err != nil {
@@ -25,6 +23,15 @@ func checkLayout(args abi.Arguments, data []byte) error {
 		}
 	}
 
+	return checkData(args, data)
+}
+
+// checkData checks that data is the canonical encoding of args, whose types
+// passed checkType, without decoding it: every offset is the one the encoder
+// writes, every padding byte is zero, every value fits its type, and nothing
+// follows. go-ethereum decodes a region once per offset pointing at it, so this
+// bounds allocation by len(data).
+func checkData(args abi.Arguments, data []byte) error {
 	n, err := checkSequence(len(args), func(i int) *abi.Type { return &args[i].Type }, data)
 	if err != nil {
 		return err
@@ -139,8 +146,6 @@ func checkWord(t *abi.Type, b []byte) (int, error) {
 		ok = isZero(w[t.Size:])
 	case abi.FunctionTy:
 		ok = isZero(w[24:])
-	case abi.HashTy:
-		ok = true
 	default:
 		return 0, fmt.Errorf("%w: %s", errUnsupportedType, t)
 	}
@@ -164,9 +169,10 @@ func readNumber(b []byte, limit int) (int, error) {
 	return int(v), nil
 }
 
-// checkType rejects types whose encoding checkLayout can't bound or
-// go-ethereum can't decode: zero-size arrays, empty tuples, heads overflowing
-// int, and unknown kinds or sizes.
+// checkType rejects types whose encoding checkData can't bound or
+// go-ethereum can't decode or encode: zero-size arrays, empty tuples, heads
+// overflowing int, and unknown kinds or sizes, among them HashTy, which no
+// ABI parses to and go-ethereum can't encode.
 func checkType(t *abi.Type) error {
 	ok := true
 	switch t.T {
@@ -174,7 +180,7 @@ func checkType(t *abi.Type) error {
 		ok = t.Size > 0 && t.Size <= 8*word && t.Size%8 == 0
 	case abi.FixedBytesTy:
 		ok = t.Size > 0 && t.Size <= word
-	case abi.BoolTy, abi.AddressTy, abi.FunctionTy, abi.HashTy, abi.StringTy, abi.BytesTy:
+	case abi.BoolTy, abi.AddressTy, abi.FunctionTy, abi.StringTy, abi.BytesTy:
 	case abi.SliceTy:
 		return checkType(t.Elem)
 	case abi.ArrayTy:
