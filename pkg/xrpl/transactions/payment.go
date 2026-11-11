@@ -12,7 +12,8 @@ import (
 )
 
 // CheckAndEncodePayment validates and serializes a plain native or
-// single-currency-IOU payment for signing. Self-payments are rejected;
+// single-currency-IOU payment for signing. Self-payments, payments to
+// the zero account and IOUs issued by it are rejected;
 // SendMax, DeliverMin, Paths are rejected; Flags is restricted to
 // tfFullyCanonicalSig (tfPartialPayment would let rippled deliver less
 // than Amount). DeliverMax is accepted as a JSON-only alias for Amount,
@@ -61,6 +62,11 @@ func CheckAndEncodePayment(tx map[string]any, native bool) ([]byte, error) {
 
 	if account == destination {
 		return nil, errors.New("destination should not be equal to the account")
+	}
+
+	// rippled Payment preflight: temDST_NEEDED
+	if destination == zeroAccount {
+		return nil, errors.New("destination is the zero account")
 	}
 
 	for _, f := range [...]string{"SendMax", "DeliverMin", "Paths"} {
@@ -112,6 +118,10 @@ func CheckAndEncodePayment(tx map[string]any, native bool) ([]byte, error) {
 	if !ok {
 		return nil, errors.New("missing Amount")
 	}
+	// rippled STAmount deserialization: "invalid native account"
+	if iou, ok := amountAny.(map[string]any); ok && iou["issuer"] == zeroAccount {
+		return nil, errors.New("amount issuer is the zero account")
+	}
 	if native {
 		amountStr, ok := amountAny.(string)
 		if !ok {
@@ -128,6 +138,9 @@ func CheckAndEncodePayment(tx map[string]any, native bool) ([]byte, error) {
 
 	return encoded, nil
 }
+
+// zeroAccount is the address of the all-zero AccountID (rippled xrpAccount).
+const zeroAccount = "rrrrrrrrrrrrrrrrrrrrrhoLvTp"
 
 // tfFullyCanonicalSig is the only Payment flag bit CheckAndEncodePayment
 // accepts. tfNoDirectRipple/tfPartialPayment/tfLimitQuality steer rippled

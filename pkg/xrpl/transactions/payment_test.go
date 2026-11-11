@@ -6,6 +6,7 @@ import (
 	"maps"
 	"testing"
 
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/address"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/types"
 	"github.com/stretchr/testify/require"
 )
@@ -52,6 +53,8 @@ func TestCheckAndEncodePaymentErrors(t *testing.T) {
 		"Destination":     "rfNgpzQecR231M6d9rRZKsMCmrykK5bYLB",
 		"Fee":             "1",
 		"Amount":          "1",
+		"Sequence":        uint32(1),
+		"SigningPubKey":   "",
 	}
 
 	copyTx := func() map[string]any {
@@ -64,6 +67,7 @@ func TestCheckAndEncodePaymentErrors(t *testing.T) {
 		name   string
 		modify func(map[string]any)
 		native bool
+		errMsg string
 	}{
 		{
 			name: "wrong transaction type",
@@ -80,6 +84,14 @@ func TestCheckAndEncodePaymentErrors(t *testing.T) {
 			native: true,
 		},
 		{
+			name: "zero account destination",
+			modify: func(tx map[string]any) {
+				tx["Destination"] = zeroAccount
+			},
+			native: true,
+			errMsg: "zero account",
+		},
+		{
 			name: "zero fee",
 			modify: func(tx map[string]any) {
 				tx["Fee"] = "0"
@@ -92,6 +104,17 @@ func TestCheckAndEncodePaymentErrors(t *testing.T) {
 				tx["Amount"] = "0"
 			},
 			native: true,
+		},
+		{
+			name: "zero account IOU issuer",
+			modify: func(tx map[string]any) {
+				tx["Amount"] = map[string]any{
+					"currency": "USD",
+					"value":    "10",
+					"issuer":   zeroAccount,
+				}
+			},
+			errMsg: "issuer is the zero account",
 		},
 		{
 			name: "non-string amount when native",
@@ -134,12 +157,15 @@ func TestCheckAndEncodePaymentErrors(t *testing.T) {
 		},
 	}
 
+	_, err := CheckAndEncodePayment(copyTx(), true)
+	require.NoError(t, err)
+
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			tx := copyTx()
 			test.modify(tx)
 			_, err := CheckAndEncodePayment(tx, test.native)
-			require.Error(t, err)
+			require.ErrorContains(t, err, test.errMsg)
 		})
 	}
 }
@@ -464,4 +490,8 @@ func TestCheckAndEncodePaymentRejectsMalformedMemo(t *testing.T) {
 			require.Contains(t, err.Error(), c.wantError)
 		})
 	}
+}
+
+func TestZeroAccount(t *testing.T) {
+	require.Equal(t, address.IDToAddress(make([]byte, 20)), zeroAccount)
 }

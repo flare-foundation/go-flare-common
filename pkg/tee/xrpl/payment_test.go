@@ -163,6 +163,17 @@ func TestPaymentTxFromInstructionRejects(t *testing.T) {
 		require.Contains(t, err.Error(), "sender equals recipient")
 	})
 
+	t.Run("zero account recipient", func(t *testing.T) {
+		zeroX, err := address.ClassicToX(zeroAccount, nil, false)
+		require.NoError(t, err)
+		for _, r := range []string{zeroAccount, zeroX} {
+			i := base
+			i.RecipientAddress = r
+			_, err := PaymentTxFromInstruction(i, 0)
+			require.ErrorContains(t, err, "zero account", r)
+		}
+	})
+
 	t.Run("non-empty TokenId rejected", func(t *testing.T) {
 		i := base
 		i.TokenId = []byte{0xAA, 0xBB}
@@ -290,6 +301,26 @@ func TestCheckNativePaymentRejectsZeroAmount(t *testing.T) {
 		"SigningPubKey":   "",
 	}
 	require.Error(t, CheckNativePayment(tx))
+}
+
+func TestCheckNativePaymentRejectsZeroAccount(t *testing.T) {
+	tx := map[string]any{
+		"TransactionType": "Payment",
+		"Account":         "rGYYWKxT1XgNipUJouCq4cKiyAdq8xBoE9",
+		"Destination":     "rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe",
+		"Amount":          "10",
+		"Fee":             "10",
+		"Sequence":        uint32(1),
+		"SigningPubKey":   "",
+	}
+	require.NoError(t, CheckNativePayment(tx))
+
+	tx["Destination"] = zeroAccount
+	require.ErrorContains(t, CheckNativePayment(tx), "zero account")
+}
+
+func TestZeroAccount(t *testing.T) {
+	require.Equal(t, address.IDToAddress(make([]byte, 20)), zeroAccount)
 }
 
 // TestCheckNativePaymentRejectsNonEmptySigningPubKey documents multisig convention.

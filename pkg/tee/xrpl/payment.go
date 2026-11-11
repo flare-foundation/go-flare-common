@@ -133,6 +133,7 @@ func Nullify(i payments.ITeePaymentsPaymentInstructionMessage, fee string) (map[
 // CheckNativePayment checks the following for a native xrpl payment for multi-signing:
 //   - correct transaction type
 //   - Account address and Destination address are set and are not equal (validity of the addresses is checked during serializing)
+//   - Destination is not the zero account
 //   - Fee is set and nonzero
 //   - Amount is for native token and is nonzero
 //   - Sequence is set (formatting of sequence is checked during serialization)
@@ -156,6 +157,11 @@ func CheckNativePayment(tx map[string]any) error {
 
 	if account == destination {
 		return errors.New("account is equal to the destination")
+	}
+
+	// rippled Payment preflight: temDST_NEEDED
+	if destination == zeroAccount {
+		return errors.New("destination is the zero account")
 	}
 
 	// Fee
@@ -193,6 +199,9 @@ func CheckNativePayment(tx map[string]any) error {
 
 	return nil
 }
+
+// zeroAccount is the address of the all-zero AccountID (rippled xrpAccount).
+const zeroAccount = "rrrrrrrrrrrrrrrrrrrrrhoLvTp"
 
 // CheckNullify validates a nullify (AccountSet) transaction for multi-signing:
 //   - correct transaction type
