@@ -12,8 +12,8 @@ import (
 )
 
 // CheckAndEncodePayment validates and serializes a plain native or
-// single-currency-IOU payment for signing. Self-payments, payments to
-// the zero account and IOUs issued by it are rejected;
+// single-currency-IOU payment for signing. Self-payments, payments from
+// or to the zero account and IOUs issued by it are rejected;
 // SendMax, DeliverMin, Paths are rejected; Flags is restricted to
 // tfFullyCanonicalSig (tfPartialPayment would let rippled deliver less
 // than Amount). DeliverMax is accepted as a JSON-only alias for Amount,
@@ -53,6 +53,11 @@ func CheckAndEncodePayment(tx map[string]any, native bool) ([]byte, error) {
 	account, ok := decoded["Account"] // format is checked during encoding
 	if !ok {
 		return nil, errors.New("missing Account")
+	}
+
+	// rippled preflight1: temBAD_SRC_ACCOUNT
+	if account == zeroAccount {
+		return nil, errors.New("account is the zero account")
 	}
 
 	destination, ok := decoded["Destination"] // format is checked during encoding

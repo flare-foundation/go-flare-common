@@ -84,12 +84,20 @@ func TestCheckAndEncodePaymentErrors(t *testing.T) {
 			native: true,
 		},
 		{
+			name: "zero account sender",
+			modify: func(tx map[string]any) {
+				tx["Account"] = zeroAccount
+			},
+			native: true,
+			errMsg: "account is the zero account",
+		},
+		{
 			name: "zero account destination",
 			modify: func(tx map[string]any) {
 				tx["Destination"] = zeroAccount
 			},
 			native: true,
-			errMsg: "zero account",
+			errMsg: "destination is the zero account",
 		},
 		{
 			name: "zero fee",

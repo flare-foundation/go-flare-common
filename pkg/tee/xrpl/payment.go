@@ -133,7 +133,7 @@ func Nullify(i payments.ITeePaymentsPaymentInstructionMessage, fee string) (map[
 // CheckNativePayment checks the following for a native xrpl payment for multi-signing:
 //   - correct transaction type
 //   - Account address and Destination address are set and are not equal (validity of the addresses is checked during serializing)
-//   - Destination is not the zero account
+//   - Account and Destination are not the zero account
 //   - Fee is set and nonzero
 //   - Amount is for native token and is nonzero
 //   - Sequence is set (formatting of sequence is checked during serialization)
@@ -148,6 +148,11 @@ func CheckNativePayment(tx map[string]any) error {
 	account, ok := tx["Account"]
 	if !ok {
 		return errors.New("missing Account")
+	}
+
+	// rippled preflight1: temBAD_SRC_ACCOUNT
+	if account == zeroAccount {
+		return errors.New("account is the zero account")
 	}
 
 	destination, ok := tx["Destination"]
@@ -205,7 +210,7 @@ const zeroAccount = "rrrrrrrrrrrrrrrrrrrrrhoLvTp"
 
 // CheckNullify validates a nullify (AccountSet) transaction for multi-signing:
 //   - correct transaction type
-//   - Account is set
+//   - Account is set and is not the zero account
 //   - Fee is set and nonzero
 //   - Sequence is set
 //   - SigningPubKey is set to empty string
@@ -214,8 +219,14 @@ func CheckNullify(tx map[string]any) error {
 		return fmt.Errorf("invalid transaction type %v", tx["TransactionType"])
 	}
 
-	if _, ok := tx["Account"]; !ok {
+	account, ok := tx["Account"]
+	if !ok {
 		return errors.New("missing Account")
+	}
+
+	// rippled preflight1: temBAD_SRC_ACCOUNT
+	if account == zeroAccount {
+		return errors.New("account is the zero account")
 	}
 
 	if err := checkNonzeroFee(tx); err != nil {

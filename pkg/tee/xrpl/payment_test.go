@@ -170,7 +170,17 @@ func TestPaymentTxFromInstructionRejects(t *testing.T) {
 			i := base
 			i.RecipientAddress = r
 			_, err := PaymentTxFromInstruction(i, 0)
-			require.ErrorContains(t, err, "zero account", r)
+			require.ErrorContains(t, err, "destination is the zero account", r)
+		}
+	})
+
+	t.Run("zero account sender", func(t *testing.T) {
+		i := base
+		i.SenderAddress = zeroAccount
+		i.FeeSchedule = []byte{0x27, 0x10, 0, 0, 0xD8, 0xF0, 0, 1} // pay, then nullify
+		for try := range 2 {
+			_, err := PaymentTxFromInstruction(i, try)
+			require.ErrorContains(t, err, "account is the zero account", try)
 		}
 	})
 
@@ -315,8 +325,28 @@ func TestCheckNativePaymentRejectsZeroAccount(t *testing.T) {
 	}
 	require.NoError(t, CheckNativePayment(tx))
 
-	tx["Destination"] = zeroAccount
-	require.ErrorContains(t, CheckNativePayment(tx), "zero account")
+	for field, errMsg := range map[string]string{
+		"Account":     "account is the zero account",
+		"Destination": "destination is the zero account",
+	} {
+		zeroed := maps.Clone(tx)
+		zeroed[field] = zeroAccount
+		require.ErrorContains(t, CheckNativePayment(zeroed), errMsg, field)
+	}
+}
+
+func TestCheckNullifyRejectsZeroAccount(t *testing.T) {
+	tx := map[string]any{
+		"TransactionType": "AccountSet",
+		"Account":         "rGYYWKxT1XgNipUJouCq4cKiyAdq8xBoE9",
+		"Fee":             "10",
+		"Sequence":        uint32(1),
+		"SigningPubKey":   "",
+	}
+	require.NoError(t, CheckNullify(tx))
+
+	tx["Account"] = zeroAccount
+	require.ErrorContains(t, CheckNullify(tx), "account is the zero account")
 }
 
 func TestZeroAccount(t *testing.T) {
