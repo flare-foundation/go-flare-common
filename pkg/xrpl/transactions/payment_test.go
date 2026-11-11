@@ -112,6 +112,42 @@ func TestCheckAndEncodePaymentErrors(t *testing.T) {
 				tx["Amount"] = "0"
 			},
 			native: true,
+			errMsg: "zero amount",
+		},
+		{
+			name: "zero XRP amount when not native",
+			modify: func(tx map[string]any) {
+				tx["Amount"] = "0"
+			},
+			errMsg: "zero amount",
+		},
+		{
+			name: "zero IOU amount",
+			modify: func(tx map[string]any) {
+				tx["Amount"] = map[string]any{"currency": "USD", "value": "0", "issuer": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh"}
+			},
+			errMsg: "non-positive amount",
+		},
+		{
+			name: "negative IOU amount",
+			modify: func(tx map[string]any) {
+				tx["Amount"] = map[string]any{"currency": "USD", "value": "-10", "issuer": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh"}
+			},
+			errMsg: "non-positive amount",
+		},
+		{
+			name: "zero MPT amount",
+			modify: func(tx map[string]any) {
+				tx["Amount"] = map[string]any{"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF", "value": "0"}
+			},
+			errMsg: "non-positive amount",
+		},
+		{
+			name: "negative MPT amount",
+			modify: func(tx map[string]any) {
+				tx["Amount"] = map[string]any{"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF", "value": "-10"}
+			},
+			errMsg: "non-positive amount",
 		},
 		{
 			name: "zero account IOU issuer",

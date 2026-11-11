@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"maps"
+	"math/big"
 	"reflect"
 	"strconv"
 
@@ -18,8 +19,8 @@ import (
 // tfFullyCanonicalSig (tfPartialPayment would let rippled deliver less
 // than Amount). DeliverMax is accepted as a JSON-only alias for Amount,
 // matching rippled TransactionSign.cpp: if both are present they must
-// compare equal, otherwise DeliverMax becomes Amount. Native zero Amount
-// is rejected; IOU zero is rejected by types.Encode.
+// compare equal, otherwise DeliverMax becomes Amount. Amount must be
+// positive.
 //
 // Returns the for-signing canonical form (no STX\0 prefix, signing fields
 // stripped). The caller hashes with SHA-512-Half after prepending STX\0
@@ -127,21 +128,41 @@ func CheckAndEncodePayment(tx map[string]any, native bool) ([]byte, error) {
 	if iou, ok := amountAny.(map[string]any); ok && iou["issuer"] == zeroAccount {
 		return nil, errors.New("amount issuer is the zero account")
 	}
-	if native {
-		amountStr, ok := amountAny.(string)
-		if !ok {
-			return nil, fmt.Errorf("invalid native amount %v", amountAny) // check that fee is xrp amount
-		}
-		amount, err := strconv.ParseUint(amountStr, 10, 64)
-		if err != nil {
-			return nil, fmt.Errorf("invalid amount %s: %w", amountStr, err) // should never happen
-		}
-		if amount == 0 {
-			return nil, errors.New("zero amount")
-		}
+	if _, ok := amountAny.(string); native && !ok {
+		return nil, fmt.Errorf("invalid native amount %v", amountAny)
+	}
+	// rippled Payment preflight: temBAD_AMOUNT
+	if err := checkPositive(amountAny); err != nil {
+		return nil, err
 	}
 
 	return encoded, nil
+}
+
+// checkPositive refuses a decoded Amount that is not above zero.
+func checkPositive(amount any) error {
+	switch a := amount.(type) {
+	case string: // XRP drops
+		v, err := strconv.ParseUint(a, 10, 64)
+		if err != nil {
+			return fmt.Errorf("invalid amount %s: %w", a, err) // should never happen
+		}
+		if v == 0 {
+			return errors.New("zero amount")
+		}
+	case map[string]any: // IOU or MPT
+		s, _ := a["value"].(string)
+		v, ok := new(big.Float).SetString(s)
+		if !ok {
+			return fmt.Errorf("invalid amount value %v", a["value"]) // should never happen
+		}
+		if v.Sign() <= 0 {
+			return fmt.Errorf("non-positive amount %s", s)
+		}
+	default:
+		return fmt.Errorf("invalid amount %v", amount)
+	}
+	return nil
 }
 
 // zeroAccount is the address of the all-zero AccountID (rippled xrpAccount).
