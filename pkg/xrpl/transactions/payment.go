@@ -12,15 +12,16 @@ import (
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/types"
 )
 
-// CheckAndEncodePayment validates and serializes a plain native or
-// single-currency-IOU payment for signing. Self-payments, payments from
-// or to the zero account and IOUs issued by it are rejected;
-// SendMax, DeliverMin, Paths are rejected; Flags is restricted to
-// tfFullyCanonicalSig (tfPartialPayment would let rippled deliver less
-// than Amount). DeliverMax is accepted as a JSON-only alias for Amount,
-// matching rippled TransactionSign.cpp: if both are present they must
-// compare equal, otherwise DeliverMax becomes Amount. Amount must be
-// positive.
+// CheckAndEncodePayment validates and serializes a plain XRP,
+// single-currency IOU or MPT payment for signing; native requires an XRP
+// Amount. An MPT payment needs the MPTokensV1 amendment on the target
+// network. Self-payments, payments from or to the zero account and IOUs
+// issued by it are rejected; SendMax, DeliverMin, Paths are rejected;
+// Flags is restricted to tfFullyCanonicalSig (tfPartialPayment would let
+// rippled deliver less than Amount). DeliverMax is accepted as a JSON-only
+// alias for Amount, matching rippled TransactionSign.cpp: if both are
+// present they must compare equal, otherwise DeliverMax becomes Amount.
+// Amount must be positive.
 //
 // Returns the for-signing canonical form (no STX\0 prefix, signing fields
 // stripped). The caller hashes with SHA-512-Half after prepending STX\0

@@ -46,6 +46,32 @@ func TestCheckAndEncodePaymentNonNative(t *testing.T) {
 	require.NoError(t, err)
 }
 
+// expected: ripple-binary-codec 2.7.0 encodeForSigning without the STX\0 prefix
+func TestCheckAndEncodePaymentMPT(t *testing.T) {
+	tx := map[string]any{
+		"TransactionType": "Payment",
+		"Account":         "rw16SLQGtfnjQJxgp1RCfkxsMCk8G7PaCJ",
+		"Destination":     "rfNgpzQecR231M6d9rRZKsMCmrykK5bYLB",
+		"DestinationTag":  uint32(7),
+		"Fee":             "12",
+		"Amount": map[string]any{
+			"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+			"value":           "100",
+		},
+		"Sequence":      uint32(1),
+		"SigningPubKey": "",
+	}
+	expected, err := hex.DecodeString("12000024000000012E000000076160000000000000006400002403C84A0A28E0190E208E982C352BBD5006600555CF68400000000000000C730081146C4FAF61C723167EA7F478AF412E12C3ECFADA8183144466BF1458F920CB095A1B7A92DEEF68DEAEB84B")
+	require.NoError(t, err)
+
+	encoded, err := CheckAndEncodePayment(tx, false)
+	require.NoError(t, err)
+	require.Equal(t, expected, encoded)
+
+	_, err = CheckAndEncodePayment(tx, true)
+	require.ErrorContains(t, err, "invalid native amount")
+}
+
 func TestCheckAndEncodePaymentErrors(t *testing.T) {
 	base := map[string]any{
 		"TransactionType": "Payment",
