@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [v1.6.0](https://github.com/flare-foundation/go-flare-common/tree/v1.6.0) - 2026-11-11
 
 ### Added
 
