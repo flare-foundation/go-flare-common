@@ -6,6 +6,7 @@ import (
 	"maps"
 	"testing"
 
+	"github.com/flare-foundation/go-flare-common/pkg/xrpl/address"
 	"github.com/flare-foundation/go-flare-common/pkg/xrpl/encoding/types"
 	"github.com/stretchr/testify/require"
 )
@@ -45,6 +46,32 @@ func TestCheckAndEncodePaymentNonNative(t *testing.T) {
 	require.NoError(t, err)
 }
 
+// expected: ripple-binary-codec 2.7.0 encodeForSigning without the STX\0 prefix
+func TestCheckAndEncodePaymentMPT(t *testing.T) {
+	tx := map[string]any{
+		"TransactionType": "Payment",
+		"Account":         "rw16SLQGtfnjQJxgp1RCfkxsMCk8G7PaCJ",
+		"Destination":     "rfNgpzQecR231M6d9rRZKsMCmrykK5bYLB",
+		"DestinationTag":  uint32(7),
+		"Fee":             "12",
+		"Amount": map[string]any{
+			"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF",
+			"value":           "100",
+		},
+		"Sequence":      uint32(1),
+		"SigningPubKey": "",
+	}
+	expected, err := hex.DecodeString("12000024000000012E000000076160000000000000006400002403C84A0A28E0190E208E982C352BBD5006600555CF68400000000000000C730081146C4FAF61C723167EA7F478AF412E12C3ECFADA8183144466BF1458F920CB095A1B7A92DEEF68DEAEB84B")
+	require.NoError(t, err)
+
+	encoded, err := CheckAndEncodePayment(tx, false)
+	require.NoError(t, err)
+	require.Equal(t, expected, encoded)
+
+	_, err = CheckAndEncodePayment(tx, true)
+	require.ErrorContains(t, err, "invalid native amount")
+}
+
 func TestCheckAndEncodePaymentErrors(t *testing.T) {
 	base := map[string]any{
 		"TransactionType": "Payment",
@@ -52,6 +79,8 @@ func TestCheckAndEncodePaymentErrors(t *testing.T) {
 		"Destination":     "rfNgpzQecR231M6d9rRZKsMCmrykK5bYLB",
 		"Fee":             "1",
 		"Amount":          "1",
+		"Sequence":        uint32(1),
+		"SigningPubKey":   "",
 	}
 
 	copyTx := func() map[string]any {
@@ -64,6 +93,7 @@ func TestCheckAndEncodePaymentErrors(t *testing.T) {
 		name   string
 		modify func(map[string]any)
 		native bool
+		errMsg string
 	}{
 		{
 			name: "wrong transaction type",
@@ -80,6 +110,22 @@ func TestCheckAndEncodePaymentErrors(t *testing.T) {
 			native: true,
 		},
 		{
+			name: "zero account sender",
+			modify: func(tx map[string]any) {
+				tx["Account"] = zeroAccount
+			},
+			native: true,
+			errMsg: "account is the zero account",
+		},
+		{
+			name: "zero account destination",
+			modify: func(tx map[string]any) {
+				tx["Destination"] = zeroAccount
+			},
+			native: true,
+			errMsg: "destination is the zero account",
+		},
+		{
 			name: "zero fee",
 			modify: func(tx map[string]any) {
 				tx["Fee"] = "0"
@@ -92,6 +138,53 @@ func TestCheckAndEncodePaymentErrors(t *testing.T) {
 				tx["Amount"] = "0"
 			},
 			native: true,
+			errMsg: "zero amount",
+		},
+		{
+			name: "zero XRP amount when not native",
+			modify: func(tx map[string]any) {
+				tx["Amount"] = "0"
+			},
+			errMsg: "zero amount",
+		},
+		{
+			name: "zero IOU amount",
+			modify: func(tx map[string]any) {
+				tx["Amount"] = map[string]any{"currency": "USD", "value": "0", "issuer": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh"}
+			},
+			errMsg: "non-positive amount",
+		},
+		{
+			name: "negative IOU amount",
+			modify: func(tx map[string]any) {
+				tx["Amount"] = map[string]any{"currency": "USD", "value": "-10", "issuer": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh"}
+			},
+			errMsg: "non-positive amount",
+		},
+		{
+			name: "zero MPT amount",
+			modify: func(tx map[string]any) {
+				tx["Amount"] = map[string]any{"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF", "value": "0"}
+			},
+			errMsg: "non-positive amount",
+		},
+		{
+			name: "negative MPT amount",
+			modify: func(tx map[string]any) {
+				tx["Amount"] = map[string]any{"mpt_issuance_id": "00002403C84A0A28E0190E208E982C352BBD5006600555CF", "value": "-10"}
+			},
+			errMsg: "non-positive amount",
+		},
+		{
+			name: "zero account IOU issuer",
+			modify: func(tx map[string]any) {
+				tx["Amount"] = map[string]any{
+					"currency": "USD",
+					"value":    "10",
+					"issuer":   zeroAccount,
+				}
+			},
+			errMsg: "issuer is the zero account",
 		},
 		{
 			name: "non-string amount when native",
@@ -134,12 +227,15 @@ func TestCheckAndEncodePaymentErrors(t *testing.T) {
 		},
 	}
 
+	_, err := CheckAndEncodePayment(copyTx(), true)
+	require.NoError(t, err)
+
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			tx := copyTx()
 			test.modify(tx)
 			_, err := CheckAndEncodePayment(tx, test.native)
-			require.Error(t, err)
+			require.ErrorContains(t, err, test.errMsg)
 		})
 	}
 }
@@ -464,4 +560,8 @@ func TestCheckAndEncodePaymentRejectsMalformedMemo(t *testing.T) {
 			require.Contains(t, err.Error(), c.wantError)
 		})
 	}
+}
+
+func TestZeroAccount(t *testing.T) {
+	require.Equal(t, address.IDToAddress(make([]byte, 20)), zeroAccount)
 }
