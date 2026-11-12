@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [v1.6.0](https://github.com/flare-foundation/go-flare-common/tree/v1.6.0) - 2026-11-11
 
 ### Added
 
@@ -16,7 +16,7 @@
 
 ### Changed
 
-- **Breaking:** requires Go 1.27.3.
+- **Breaking:** requires Go 1.27.4.
 - **Behavioral:** `transactions.CheckAndEncodePayment` and `tee/xrpl.CheckNativePayment` refuse a payment from or to the zero account `rrrrrrrrrrrrrrrrrrrrrhoLvTp`, which rippled rejects with `temBAD_SRC_ACCOUNT` or `temDST_NEEDED`, and `tee/xrpl.CheckNullify` refuses an `AccountSet` from it.
   `tee/xrpl.PaymentTxFromInstruction` therefore refuses a zero-account sender on every try, and a zero-account recipient, also as an X-address, on every try except a nullify try, which still builds the `AccountSet`.
   `CheckAndEncodePayment` also refuses an IOU `Amount` issued by the zero account, which rippled can't deserialize.
