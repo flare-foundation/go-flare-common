@@ -67,6 +67,11 @@
   },
   {
     "inputs": [],
+    "name": "SigningAlgoNotVrf",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "TeeMachineNotAvailable",
     "type": "error"
   },
